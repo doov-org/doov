@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>org.modelmap</groupId>
-            <artifactId>modelmap-generator</artifactId>
+            <artifactId>modelmap-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.squareup</groupId>
