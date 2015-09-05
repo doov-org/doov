@@ -1,0 +1,3 @@
+
+		if (projet.${partial.path}.size() < ${position})
+			projet.${partial.path}.add(${index}, null);

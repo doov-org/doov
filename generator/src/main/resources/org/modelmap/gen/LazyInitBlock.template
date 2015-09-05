@@ -1,0 +1,2 @@
+		if (projet.${partial.path} == null)
+			projet.${partial.path.init};

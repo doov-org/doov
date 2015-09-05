@@ -1,0 +1,2 @@
+        if (fieldId instanceof ${field.id.type})
+            set((${field.id.type}) fieldId, value);

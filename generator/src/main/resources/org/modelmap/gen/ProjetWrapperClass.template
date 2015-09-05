@@ -1,0 +1,56 @@
+package ${package.name};
+
+import javax.annotation.Generated;
+
+import ${package.name}.gwt.${target.field.info.class.name};
+import net.courtanet.map.common.ProjetWrapper;
+import ${target.project.class.full.name};
+import net.courtanet.tm.backoffice.EStatutFiche;
+import net.courtanet.tm.common.FullContext;
+import net.courtanet.tm.gwt.common.tracking.TrafficSource;
+import net.courtanet.ui.core.FieldContext;
+import net.courtanet.ui.core.FieldID;
+
+@SuppressWarnings("serial")
+@Generated(value = "${source.generator.name}", comments="from ${process.class}")
+public final class ${target.class.name} extends ProjetWrapper<${project.template.params}, ${target.project.class.name}> {
+
+	public ${target.class.name}(${target.project.class.name} projet) {
+		this(projet, null, null, null, 0);
+	}
+
+	public ${target.class.name}(${target.project.class.name} projet, String version, EStatutFiche statut, TrafficSource trafficSource, int revision) {
+		super(projet, ${target.field.info.class.name}.values(), version, statut, trafficSource, revision);
+    }
+    
+    public ${target.class.name}(FieldContext context) {
+    	this(context, null, null, null, 0);
+    }
+    
+    public ${target.class.name}(FieldContext context, String version, EStatutFiche statut, TrafficSource trafficSource, int revision) {
+        super(new ${target.project.class.name}(), ${target.field.info.class.name}.values(), version, statut, trafficSource, revision);
+        getProjet().setOffreUid(context.getOffreUid());
+        setAll(context);
+    }
+    
+    public ${target.class.name}(FullContext<${context.template.params}> context) {
+        super(new ${target.project.class.name}(), context);
+    }
+    
+    @Override
+    public <T> T get(FieldID fieldId) {
+        if(fieldId.type().isReadOnly())
+            return null;
+${map.getter.if}        return null;
+    }
+
+    @Override
+    public void set(FieldID fieldId, Object value) {
+        if(fieldId.type().isReadOnly())
+            return;
+${map.setter.if}    }
+
+${map.setter}
+
+${map.getter}
+}

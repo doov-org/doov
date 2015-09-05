@@ -1,0 +1,2 @@
+        if (fieldId instanceof ${field.id.type})
+            return get((${field.id.type}) fieldId);

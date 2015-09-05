@@ -1,0 +1,8 @@
+    private void set(${field.id.type} fieldId, Object value) {
+        switch (fieldId) {
+${switch.content}
+            default:
+                throw new IllegalArgumentException("unsupported field " + fieldId);
+        }
+    }
+
