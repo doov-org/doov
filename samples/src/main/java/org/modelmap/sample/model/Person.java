@@ -15,8 +15,11 @@ public class Person implements Serializable {
     private String firstName;
     @SamplePath(field = SampleFieldId.LAST_NAME)
     private String lastName;
+
     @SamplePath(field = SampleFieldId.BIRTHDATE)
     private Date birthDate;
+
+    // FIXME add field full name computed from first & last name
 
     public Person() {
     }

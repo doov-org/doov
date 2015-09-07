@@ -7,8 +7,10 @@ import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.field.SamplePath;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 public class UserAccount implements Serializable {
 
@@ -31,6 +33,9 @@ public class UserAccount implements Serializable {
     private Boolean acceptEmail;
     @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES)
     private Collection<EmailType> emailTypes = new HashSet<>();
+
+    //FIXME add field for web site property (3 * 2 = 6 fields)
+    private List<FavoriteWebsite> top3WebSite = new ArrayList<>();
 
     public UserAccount() {
     }
