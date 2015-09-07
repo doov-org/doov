@@ -4,14 +4,11 @@ package org.modelmap.gen;
 import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldTarget;
 import org.modelmap.core.Path;
-import org.modelmap.core.PathConstraint;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 final class Visitor {
     private final Class<?> baseClass;
@@ -87,11 +84,12 @@ final class Visitor {
     }
 
     private static boolean checkFieldTargetConstraint(Path path, List<Method> paths, FieldId FieldId) {
-        final PathConstraint constraint = path.constraint();
-        if (isNotEmpty(constraint.includePath())) {
-            final String getterPath = VisitorPath.getterPath(paths, FieldId.position(), false);
-            return getterPath.contains(constraint.includePath());
-        }
+//        final PathConstraint constraint = path.constraint();
+//        if (isNotEmpty(constraint.includePath())) {
+//            final String getterPath = VisitorPath.getterPath(paths, FieldId.position(), false);
+//            return getterPath.contains(constraint.includePath());
+//        }
+        // FIXME use meta-annotations to find
         return true;
     }
 
