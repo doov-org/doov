@@ -1,7 +1,10 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package org.modelmap.sample;
+package org.modelmap.sample.model;
+
+import org.modelmap.sample.field.SampleFieldId;
+import org.modelmap.sample.field.SamplePath;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -9,18 +12,25 @@ import java.util.HashSet;
 
 public class UserAccount implements Serializable {
 
+    @SamplePath(field = SampleFieldId.LOGIN)
     private String login;
+    @SamplePath(field = SampleFieldId.PASSWORD)
     private String password;
-    private String passwordConfirmation;
 
+    @SamplePath(field = SampleFieldId.TIMEZONE)
     private Timezone timezone = Timezone.ETC_GMT;
+    @SamplePath(field = SampleFieldId.LANGUAGE)
     private Language language = Language.EN;
 
+    @SamplePath(field = SampleFieldId.PHONE_NUMBER)
     private String phoneNumber;
+
+    @SamplePath(field = SampleFieldId.EMAIL)
     private String email;
+    @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED)
     private Boolean acceptEmail;
+    @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES)
     private Collection<EmailType> emailTypes = new HashSet<>();
-    private int maxEmailPerWeek;
 
     public UserAccount() {
     }
@@ -39,14 +49,6 @@ public class UserAccount implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPasswordConfirmation() {
-        return passwordConfirmation;
-    }
-
-    public void setPasswordConfirmation(String passwordConfirmation) {
-        this.passwordConfirmation = passwordConfirmation;
     }
 
     public Timezone getTimezone() {
@@ -79,14 +81,6 @@ public class UserAccount implements Serializable {
 
     public void setEmailTypes(Collection<EmailType> emailTypes) {
         this.emailTypes = emailTypes;
-    }
-
-    public int getMaxEmailPerWeek() {
-        return maxEmailPerWeek;
-    }
-
-    public void setMaxEmailPerWeek(int maxEmailPerWeek) {
-        this.maxEmailPerWeek = maxEmailPerWeek;
     }
 
     public String getEmail() {

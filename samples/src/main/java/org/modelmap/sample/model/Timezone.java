@@ -1,7 +1,7 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package org.modelmap.sample;
+package org.modelmap.sample.model;
 
 public enum Timezone {
     ETC_GMT_PLUS_12("GMT-12:00"), //

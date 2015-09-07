@@ -1,8 +1,8 @@
-package org.modelmap.sample;
+package org.modelmap.sample.field;
 
 import org.modelmap.core.FieldId;
 
-public enum FieldSample implements FieldId {
+public enum SampleFieldId implements FieldId {
     FIRST_NAME,
     LAST_NAME,
     EMAIL,
@@ -13,11 +13,9 @@ public enum FieldSample implements FieldId {
     PHONE_NUMBER,
     EMAIL_ACCEPTED,
     EMAILS_PREFERENCES,
-    MAX_WEEKLY_EMAILS,
 
     LOGIN,
-    PASSWORD,
-    PASSWORD_CONFIRMATION;
+    PASSWORD,;
 
     @Override
     public String getCode() {
