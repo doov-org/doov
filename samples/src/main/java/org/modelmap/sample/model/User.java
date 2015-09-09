@@ -6,22 +6,29 @@ package org.modelmap.sample.model;
 import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.field.SamplePath;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class Person implements Serializable {
+public class User extends Identity {
 
     @SamplePath(field = SampleFieldId.FIRST_NAME)
     private String firstName;
+
     @SamplePath(field = SampleFieldId.LAST_NAME)
     private String lastName;
 
     @SamplePath(field = SampleFieldId.BIRTHDATE)
     private Date birthDate;
 
-    // FIXME add field full name computed from first & last name
+    public User() {
+    }
 
-    public Person() {
+    @SamplePath(field = SampleFieldId.FULLNAME)
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    public void setFullName(String fullname) {
+        // not supported
     }
 
     public String getFirstName() {

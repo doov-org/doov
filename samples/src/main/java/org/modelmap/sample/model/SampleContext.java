@@ -5,14 +5,22 @@ package org.modelmap.sample.model;
 
 public class SampleContext {
 
-    private Person person = new Person();
-    private UserAccount userAccount = new UserAccount();
+    private User user = new User();
+    private Account account = new Account();
 
-    public Person getPerson() {
-        return person;
+    public User getUser() {
+        return user;
     }
 
-    public UserAccount getUserAccount() {
-        return userAccount;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

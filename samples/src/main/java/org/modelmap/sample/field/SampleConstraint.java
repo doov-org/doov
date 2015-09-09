@@ -4,12 +4,13 @@ import org.modelmap.core.PathConstraint;
 
 public enum SampleConstraint implements PathConstraint {
     NONE(""), //
-    FOO_BAR("foo().bar()"), //
+    USER("getUser()"), //
+    ACCOUNT("getAccount()"), //
     ;
 
     private final String includePath;
 
-    private SampleConstraint(String includePath) {
+    SampleConstraint(String includePath) {
         this.includePath = includePath;
     }
 
