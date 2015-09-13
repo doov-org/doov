@@ -1,13 +1,11 @@
 package org.modelmap.gen;
 
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.modelmap.core.FieldId;
-import org.modelmap.core.FieldTarget;
-import org.modelmap.core.Path;
+import org.modelmap.core.PathConstraint;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 final class Visitor {
@@ -19,22 +17,16 @@ final class Visitor {
         this.collected = collected;
     }
 
-    void visit(FieldTarget fieldTarget, Method getMethod, Method setMethod, boolean isTransient, List<Method> paths) {
-        for (Path path : fieldTarget.value()) {
-            final Collection<FieldId> fields = collect(path);
-            if (fields.isEmpty()) {
+    void visit(List<Pair<FieldId, PathConstraint>> fieldTarget, Method getMethod, Method setMethod, List<Method> paths) {
+        for (Pair<FieldId, PathConstraint> pair : fieldTarget) {
+            if (!checkFieldTargetConstraint(paths, pair.getLeft(), pair.getRight())) {
                 continue;
             }
-            for (FieldId FieldId : fields) {
-                if (!checkFieldTargetConstraint(path, paths, FieldId)) {
-                    continue;
-                }
-                final VisitorPath vPath = new VisitorPath(baseClass, paths, FieldId, getMethod, setMethod, isTransient);
-                if (contains(vPath)) {
-                    continue;
-                }
-                collected.add(vPath);
+            final VisitorPath path = new VisitorPath(baseClass, paths, pair.getKey(), getMethod, setMethod);
+            if (contains(path)) {
+                continue;
             }
+            collected.add(path);
         }
     }
 
@@ -47,43 +39,7 @@ final class Visitor {
 //        return EModule.core;
 //    }
 
-    // FIXME use meta-annotations to collect fields
-    private static Collection<FieldId> collect(Path path) {
-        final Collection<FieldId> fields = new ArrayList<>();
-//        fields.addAll(asList(path.coordonnees()));
-//        fields.addAll(asList(path.core()));
-//        switch (module) {
-//            case auto:
-//                fields.addAll(asList(path.auto()));
-//                break;
-//            case extra:
-//                fields.addAll(asList(path.contact()));
-//                fields.addAll(asList(path.resiliation()));
-//                fields.addAll(asList(path.switching()));
-//                fields.addAll(asList(path.rewards()));
-//                break;
-//            case emprunteur:
-//                fields.addAll(asList(path.emprunteur()));
-//                break;
-//            case moto:
-//                fields.addAll(asList(path.moto()));
-//                break;
-//            case mrh:
-//                fields.addAll(asList(path.mrh()));
-//                break;
-//            case sante:
-//                fields.addAll(asList(path.sante()));
-//                break;
-//            case telco:
-//                fields.addAll(asList(path.telco()));
-//                break;
-//            default:
-//                throw new IllegalArgumentException(module.toString());
-//        }
-        return fields;
-    }
-
-    private static boolean checkFieldTargetConstraint(Path path, List<Method> paths, FieldId FieldId) {
+    private static boolean checkFieldTargetConstraint(List<Method> paths, FieldId FieldId, PathConstraint constraint) {
 //        final PathConstraint constraint = path.constraint();
 //        if (isNotEmpty(constraint.includePath())) {
 //            final String getterPath = VisitorPath.getterPath(paths, FieldId.position(), false);

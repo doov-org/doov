@@ -14,12 +14,9 @@ public final class VisitorPath {
     private final FieldId fieldId;
     private final Method getMethod;
     private final Method setMethod;
-    private final boolean isTransient;
 
-    public VisitorPath(Class<?> baseClass, List<Method> getPath, FieldId fieldId, Method getMethod, Method setMethod,
-                       boolean isTransient) {
+    public VisitorPath(Class<?> baseClass, List<Method> getPath, FieldId fieldId, Method getMethod, Method setMethod) {
         this.baseClass = baseClass;
-        this.isTransient = isTransient;
         this.path = new ArrayList<>(getPath);
         this.fieldId = fieldId;
         this.getMethod = getMethod;
@@ -66,10 +63,6 @@ public final class VisitorPath {
 
     public String displayPath(boolean canonical) {
         return getterPath(path, fieldId.position(), canonical);
-    }
-
-    public boolean isTransient() {
-        return isTransient;
     }
 
     @Override

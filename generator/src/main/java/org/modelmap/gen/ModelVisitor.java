@@ -1,31 +1,20 @@
 package org.modelmap.gen;
 
-import com.google.common.collect.ImmutableSet;
+import org.apache.commons.lang3.tuple.Pair;
 import org.modelmap.core.FieldId;
-import org.modelmap.core.FieldTarget;
-import org.modelmap.core.FieldTransient;
-import org.modelmap.core.Path;
+import org.modelmap.core.PathConstraint;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 final class ModelVisitor {
-
-    // FIXME add primitives types
-    // FIXME replace date by localdate?
-    private static Set<Class<?>> SERIALIZABLE_CLASSES = ImmutableSet.of(
-            Boolean.class,
-            Boolean.TYPE,
-            Double.class,
-            Double.TYPE,
-            Integer.class,
-            Integer.TYPE,
-            Date.class
-    );
 
     public static void visitModel(Class<?> clazz, Visitor visitor, String packageFilter)
             throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
@@ -49,14 +38,11 @@ final class ModelVisitor {
         for (PropertyDescriptor desc : propertyDescriptors) {
             path.addLast(desc.getReadMethod());
             try {
-                final FieldTarget formParam = getFieldTarget(clazz, desc);
-                if (formParam == null) {
+                final List<Pair<FieldId, PathConstraint>> formParam = getFieldTarget(clazz, desc);
+                if (formParam == null || formParam.isEmpty()) {
                     continue;
                 }
-
-                boolean isTransient = isTransient(clazz, desc, formParam);
-
-                visitor.visit(formParam, desc.getReadMethod(), desc.getWriteMethod(), isTransient, path);
+                visitor.visit(formParam, desc.getReadMethod(), desc.getWriteMethod(), path);
             } finally {
                 path.removeLast();
             }
@@ -73,60 +59,26 @@ final class ModelVisitor {
         visitModel(clazz.getSuperclass(), visitor, path, packageFilter, deep + 1);
     }
 
-    /**
-     * @return <code>true</code> if the field should be persisted in the storage system. <code>false</code> otherwise.
-     */
-    private static boolean isTransient(Class<?> clazz, PropertyDescriptor desc, FieldTarget formParam) {
-        Class<?> returnType = desc.getReadMethod().getReturnType();
-
-        // FIXME clean hack about unsupported types
-        if (!SERIALIZABLE_CLASSES.contains(returnType))
-//                && !CodeValuable.class.isAssignableFrom(returnType)
-//                && !Intervalle.class.isAssignableFrom(returnType))
-        {
-            return true;
-        }
-
-        try {
-            Field field = clazz.getDeclaredField(desc.getName());
-            return field.getAnnotation(FieldTransient.class) != null;
-        } catch (NoSuchFieldException e) {
-            // derived field without declared field
-            return false;
-        }
-    }
-
-    // FIXME fix references to EFieldQuote
-    private static boolean containsField(FieldTarget formParam, FieldId fieldID) {
-        for (Path path : formParam.value()) {
-//            for (EFieldQuote fieldQuote : path.core()) {
-//                if (fieldQuote == fieldID) {
-//                    return true;
-//                }
-//            }
-        }
-        return false;
-    }
-
-    private static FieldTarget getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
-        if (desc.getReadMethod() == null || desc.getWriteMethod() == null) {
-            return null;
-        }
-
-        FieldTarget formParam = null;
-        try {
-            Field field = clazz.getDeclaredField(desc.getName());
-            formParam = field.getAnnotation(FieldTarget.class);
-        } catch (NoSuchFieldException e) {
-            // derived field without declared field
-        }
-        if (formParam == null) {
-            formParam = desc.getReadMethod().getAnnotation(FieldTarget.class);
-        }
-        if (formParam == null) {
-            formParam = desc.getWriteMethod().getAnnotation(FieldTarget.class);
-        }
-        return formParam;
+    private static List<Pair<FieldId, PathConstraint>> getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
+//        if (desc.getReadMethod() == null || desc.getWriteMethod() == null) {
+//            return null;
+//        }
+//
+//        FieldTarget formParam = null;
+//        try {
+//            Field field = clazz.getDeclaredField(desc.getName());
+//            formParam = field.getAnnotation(FieldTarget.class);
+//        } catch (NoSuchFieldException e) {
+//            // derived field without declared field
+//        }
+//        if (formParam == null) {
+//            formParam = desc.getReadMethod().getAnnotation(FieldTarget.class);
+//        }
+//        if (formParam == null) {
+//            formParam = desc.getWriteMethod().getAnnotation(FieldTarget.class);
+//        }
+//        return formParam;
+        return Collections.emptyList();
     }
 
     private static Collection<Method> methods(Class<?> clazz, String packageFilter) {
@@ -193,6 +145,7 @@ final class ModelVisitor {
         if (method.getGenericReturnType() == null) {
             return method.getReturnType();
         }
+        // FIXME type are not compatible
         if (method.getGenericReturnType().equals(method.getReturnType())) {
             return method.getReturnType();
         }

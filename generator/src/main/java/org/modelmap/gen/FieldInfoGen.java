@@ -39,8 +39,6 @@ final class FieldInfoGen {
             builder.append("    ");
             builder.append(FieldId.toString());
             builder.append("(");
-            builder.append(currentPath.isTransient());
-            builder.append(", ");
             builder.append(FieldId.getClass().getName());
             builder.append(".");
             builder.append(FieldId.toString());
@@ -88,13 +86,10 @@ final class FieldInfoGen {
 
     private static List<FieldId> sortFields(final List<FieldId> fieldsOrder, Set<FieldId> FieldIds) {
         final List<FieldId> sortedList = new ArrayList<>(FieldIds);
-        Collections.sort(sortedList, new Comparator<FieldId>() {
-            @Override
-            public int compare(FieldId o1, FieldId o2) {
-                final int p1 = fieldsOrder.indexOf(o1);
-                final int p2 = fieldsOrder.indexOf(o2);
-                return Integer.compare(p1, p2);
-            }
+        sortedList.sort((o1, o2) -> {
+            final int p1 = fieldsOrder.indexOf(o1);
+            final int p2 = fieldsOrder.indexOf(o2);
+            return Integer.compare(p1, p2);
         });
         return sortedList;
     }
