@@ -14,7 +14,7 @@
     <modules>
         <module>core</module>
         <module>generator</module>
-        <module>samples</module>
+        <module>sample</module>
     </modules>
 
     <properties>
