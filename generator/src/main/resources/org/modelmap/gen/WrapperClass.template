@@ -1,0 +1,38 @@
+package ${package.name};
+
+import javax.annotation.Generated;
+
+import ${package.name}.gwt.${target.field.info.class.name};
+import net.courtanet.map.common.ProjetWrapper;
+import ${target.project.class.full.name};
+import net.courtanet.tm.backoffice.EStatutFiche;
+import net.courtanet.tm.common.FullContext;
+import net.courtanet.tm.gwt.common.tracking.TrafficSource;
+import net.courtanet.ui.core.FieldContext;
+import net.courtanet.ui.core.FieldID;
+
+@Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
+public final class ${target.class.name} extends DefaultFieldModel {
+
+    public ${target.class.name}() {
+        super(new ${target.project.class.name}(), ${target.field.info.class.name}.values());
+    }
+    
+    public ${target.class.name}(FieldModel context) {
+        this();
+        setAll(context);
+    }
+    
+    @Override
+    public <T> T get(FieldID fieldId) {
+${map.getter.if}        return null;
+    }
+
+    @Override
+    public void set(FieldID fieldId, Object value) {
+${map.setter.if}    }
+
+${map.setter}
+
+${map.getter}
+}

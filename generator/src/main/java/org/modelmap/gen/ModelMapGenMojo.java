@@ -11,7 +11,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.modelmap.core.FieldId;
-import org.modelmap.gen.temp.PropertyParsingException;
+import org.modelmap.gen.processor.PropertyParsingException;
 
 import java.beans.IntrospectionException;
 import java.io.File;
@@ -27,11 +27,12 @@ import static java.nio.file.Files.createDirectories;
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
 import static java.time.format.FormatStyle.SHORT;
+import static java.util.Arrays.asList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.INSTALL;
 import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE;
 import static org.modelmap.gen.FieldInfoGen.literals;
 import static org.modelmap.gen.ProjetWrapperGen.*;
-import static org.modelmap.gen.temp.MacroProcessor.replaceProperties;
+import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
 
 @Mojo(name = "generate", defaultPhase = INSTALL, threadSafe = true, requiresDependencyResolution = COMPILE)
 public final class ModelMapGenMojo extends AbstractMojo {
@@ -49,7 +50,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
     private List<String> projectClasses;
 
     @Parameter(required = true)
-    private List<String> tunnelClasses;
+    private List<String> fieldClasses;
 
     @Parameter(required = true, readonly = true, property = "project")
     private MavenProject project;
@@ -63,11 +64,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
             getLog().warn("no project classes");
         if (projectClasses.isEmpty())
             getLog().warn("project is empty");
-        if (tunnelClasses == null)
+        if (fieldClasses == null)
             getLog().warn("no tunnel classes");
-        if (tunnelClasses.isEmpty())
+        if (fieldClasses.isEmpty())
             getLog().warn("tunnel is empty");
-        if (tunnelClasses.size() != projectClasses.size())
+        if (fieldClasses.size() != projectClasses.size())
             getLog().warn("tunnel and projet have different size");
         if (outputDirectory.exists() && !outputDirectory.isDirectory())
             throw new MojoFailureException(outputDirectory + " is not directory");
@@ -100,8 +101,10 @@ public final class ModelMapGenMojo extends AbstractMojo {
         final URLClassLoader classLoader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
         try {
             for (int i = 0; i < projectClasses.size(); i++) {
-                final Class<?> tunnelClazz = Class.forName(tunnelClasses.get(i), true, classLoader);
-                final List<FieldId> fieldsOrder = fieldsOrder(tunnelClazz);
+                @SuppressWarnings("unchecked")
+                final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>)
+                        Class.forName(fieldClasses.get(i), true, classLoader);
+                final List<FieldId> fieldsOrder = asList(fieldClazz.getEnumConstants());
                 final Class<?> projectClazz = Class.forName(projectClasses.get(i), true, classLoader);
                 final List<VisitorPath> collected = process(projectClazz, packageFilter);
                 generateCsv(collected, projectClazz);
@@ -111,19 +114,6 @@ public final class ModelMapGenMojo extends AbstractMojo {
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-    }
-
-    private static List<FieldId> fieldsOrder(Class<?> tunnelClazz) throws IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        final List<FieldId> fields = new ArrayList<>();
-        // FIXME import all fields for annotations? from annotations?
-        // final TunnelID[] tunnels = (TunnelID[]) tunnelClazz.getMethod("values").invoke(null);
-        //        for (TunnelID tunnelId : tunnels) {
-        //            for (ElementID screenId : tunnelId.screens()) {
-        //                fields.addAll(screenId.fields());
-        //            }
-        //        }
-        return fields;
     }
 
     private static List<VisitorPath> process(Class<?> projetClass, String packageFilter)
@@ -183,7 +173,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
         final String targetPackage = targetPackage(clazz.getPackage(), false);
         final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'), targetClassName
                 + ".java");
-        final String classTemplate = template("ProjetWrapperClass.template");
+        final String classTemplate = template("WrapperClass.template");
         createDirectories(targetFile.getParentFile().toPath());
         final Map<String, String> conf = new HashMap<>();
         conf.put("package.name", targetPackage);
@@ -191,9 +181,6 @@ public final class ModelMapGenMojo extends AbstractMojo {
         conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
         conf.put("target.project.class.name", clazz.getSimpleName());
         conf.put("target.project.class.full.name", clazz.getName());
-        // FIXME supported tempalte params in a better way
-//        conf.put("project.template.params", extractTemplateParams(clazz));
-//        conf.put("context.template.params", extractFormulePrimeTemplateParams(clazz));
         conf.put("target.field.info.class.name", "E" + clazz.getSimpleName().replace("Projet", "Field") + "Info");
         conf.put("target.class.name", targetClassName);
         conf.put("map.getter", mapGetter(collected));
@@ -206,24 +193,6 @@ public final class ModelMapGenMojo extends AbstractMojo {
         getLog().info("written : " + targetFile);
     }
 
-//    private static String extractTemplateParams(Class<?> clazz) {
-//        return asList(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()).stream()
-//                .map(t -> t.getTypeName()).collect(joining(", "));
-//    }
-//
-//    private static String extractFormulePrimeTemplateParams(Class<?> clazz) {
-//        return asList(((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()).stream()
-//                .filter(t -> formulePrime(t)).map(t -> t.getTypeName()).collect(joining(", "));
-//    }
-//    private static boolean formulePrime(Type type) {
-//        try {
-//            return Formule.class.isAssignableFrom(Class.forName(type.getTypeName()))
-//                    || Prime.class.isAssignableFrom(Class.forName(type.getTypeName()));
-//        } catch (ClassNotFoundException e) {
-//            return false;
-//        }
-//    }
-
     private String targetPackage(Package sourcePackage, boolean gwt) {
         return sourcePackage.getName().replace(".tm.", ".map.") + (gwt ? ".gwt" : "");
     }
@@ -233,23 +202,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
         final Set<FieldId> fields = new HashSet<>();
         for (VisitorPath path : collected) {
             final FieldId[] values = (FieldId[]) path.getFieldId().getClass().getMethod("values").invoke(null);
-            fields.addAll(Arrays.asList(values));
+            fields.addAll(asList(values));
         }
         for (VisitorPath path : collected) {
             fields.remove(path.getFieldId());
         }
-        return filterFieldsType(fields);
-    }
-
-    private static Set<FieldId> filterFieldsType(Set<FieldId> fields) {
-        final Set<FieldId> filterFields = new HashSet<>();
-        for (FieldId FieldId : fields) {
-            // FIXME read-only fields?
-//            if (FieldId.type().isReadOnly()) {
-//                continue;
-//            }
-            filterFields.add(FieldId);
-        }
-        return filterFields;
+        return fields;
     }
 }

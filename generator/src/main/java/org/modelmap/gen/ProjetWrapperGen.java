@@ -2,7 +2,7 @@ package org.modelmap.gen;
 
 import org.apache.commons.lang3.StringUtils;
 import org.modelmap.core.FieldId;
-import org.modelmap.gen.temp.PropertyParsingException;
+import org.modelmap.gen.processor.PropertyParsingException;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -15,7 +15,7 @@ import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.modelmap.gen.ModelMapGenMojo.template;
-import static org.modelmap.gen.temp.MacroProcessor.replaceProperties;
+import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
 
 final class ProjetWrapperGen {
     static final String SUPPRESS_WARN_RAW = "@SuppressWarnings({ \"unchecked\", \"rawtypes\" })";

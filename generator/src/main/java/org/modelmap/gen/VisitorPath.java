@@ -31,24 +31,6 @@ public final class VisitorPath {
         return path;
     }
 
-    public boolean containsList() {
-        for (int i = 0; i < path.size() - 1; i++) {
-            if (List.class.isAssignableFrom(path.get(i).getReturnType())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean containsGenerics() {
-        for (int i = 0; i < path.size() - 1; i++) {
-            if (path.get(i).getGenericReturnType().toString().contains("<")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public FieldId getFieldId() {
         return fieldId;
     }
@@ -61,6 +43,15 @@ public final class VisitorPath {
         return setMethod;
     }
 
+    public boolean containsList() {
+        return path.stream().anyMatch(p -> List.class.isAssignableFrom(p.getReturnType()));
+    }
+
+    public boolean containsGenerics() {
+        return path.stream().anyMatch(p -> p.getGenericReturnType().toString().contains("<"));
+    }
+
+
     public String displayPath(boolean canonical) {
         return getterPath(path, fieldId.position(), canonical);
     }
@@ -70,10 +61,6 @@ public final class VisitorPath {
         return uncapitalize(baseClass.getSimpleName()) + "." + displayPath(false) + ":" + fieldId;
     }
 
-    /**
-     * FIXME keep CSV generation?
-     */
-    @Deprecated
     public String toCsv() {
         return uncapitalize(baseClass.getSimpleName()) + "." + displayPath(false) + ';'
                 + fieldId + ';'
@@ -84,6 +71,7 @@ public final class VisitorPath {
         return getterPath(path, -1, canonical);
     }
 
+    // FIXME canonical name ?
     static String getterPath(List<Method> path, int index, boolean canonical) {
         final StringBuilder buffer = new StringBuilder();
         for (Method method : path) {
@@ -93,7 +81,7 @@ public final class VisitorPath {
                 buffer.append(index - 1);
                 buffer.append(")");
             } else {
-                buffer.append(canonical ? canonicalName(method) : method.getName());
+                buffer.append(method.getName());
                 buffer.append("()");
             }
             if (path.indexOf(method) < path.size() - 1) {
@@ -101,29 +89,5 @@ public final class VisitorPath {
             }
         }
         return buffer.toString();
-    }
-
-    /**
-     * FIXME remove specific code
-     */
-    @Deprecated
-    static String canonicalName(Method method) {
-        if ("getContactClient".equals(method.getName()))
-            return "getA";
-        if ("getSouscripteur".equals(method.getName()))
-            return "getA";
-        if ("getConducteurPrincipal".equals(method.getName()))
-            return "getA";
-        if ("getEmprunteur".equals(method.getName()))
-            return "getA";
-        if ("getConducteur".equals(method.getName()))
-            return "getA";
-        if ("getAssure".equals(method.getName()))
-            return "getA";
-        if ("getAdherent".equals(method.getName()))
-            return "getA";
-        if ("getToyClaimer".equals(method.getName()))
-            return "getA";
-        return method.getName();
     }
 }
