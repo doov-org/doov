@@ -5,13 +5,15 @@ package org.modelmap.core;
 
 import java.util.*;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
+// FIXME separate implementation Wrapper/Map?
+// FIXME FieldModelMap / FieldModelWrapper
 public class DefaultFieldModel implements FieldModel {
-    // FIXME separate implementation Wrapper/Map?
+
     private final Map<FieldId, Object> values = new HashMap<>();
     private final Set<FieldInfo> fieldInfos;
 
@@ -20,7 +22,7 @@ public class DefaultFieldModel implements FieldModel {
     }
 
     public DefaultFieldModel(FieldInfo... fieldInfos) {
-        this.fieldInfos = newHashSet(fieldInfos);
+        this.fieldInfos = stream(fieldInfos).collect(toSet());
     }
 
     @Override

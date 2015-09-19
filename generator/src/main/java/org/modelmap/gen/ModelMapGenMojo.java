@@ -31,7 +31,7 @@ import static java.util.Arrays.asList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.INSTALL;
 import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE;
 import static org.modelmap.gen.FieldInfoGen.literals;
-import static org.modelmap.gen.ProjetWrapperGen.*;
+import static org.modelmap.gen.ModelWrapperGen.*;
 import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
 
 @Mojo(name = "generate", defaultPhase = INSTALL, threadSafe = true, requiresDependencyResolution = COMPILE)
@@ -153,7 +153,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
         final String targetPackage = targetPackage(clazz.getPackage(), true);
         final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'), targetClassName
                 + ".java");
-        final String classTemplate = template("EFieldInfoEnum.template");
+        final String classTemplate = template("FieldInfoEnum.template");
         createDirectories(targetFile.getParentFile().toPath());
         final Map<String, String> conf = new HashMap<>();
         conf.put("package.name", targetPackage);

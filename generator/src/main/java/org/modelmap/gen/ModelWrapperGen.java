@@ -1,6 +1,6 @@
 package org.modelmap.gen;
 
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.base.Joiner;
 import org.modelmap.core.FieldId;
 import org.modelmap.gen.processor.PropertyParsingException;
 
@@ -11,13 +11,13 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.*;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static org.apache.commons.lang3.StringUtils.join;
+import static java.util.stream.Collectors.toSet;
 import static org.modelmap.gen.ModelMapGenMojo.template;
 import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
 
-final class ProjetWrapperGen {
+final class ModelWrapperGen {
     static final String SUPPRESS_WARN_RAW = "@SuppressWarnings({ \"unchecked\", \"rawtypes\" })";
     static final String SUPPRESS_WARN_UNCHECKED = "@SuppressWarnings(\"unchecked\")\n";
     static final String MISSING_VALUE = "/** missing value **/";
@@ -26,10 +26,7 @@ final class ProjetWrapperGen {
             PropertyParsingException {
         final StringBuilder buffer = new StringBuilder();
         final String template = template(templateFileName);
-        final Set<Class<?>> fieldTypes = new HashSet<>();
-        for (VisitorPath path : collected) {
-            fieldTypes.add(path.getFieldId().getClass());
-        }
+        final Set<Class<?>> fieldTypes = collected.stream().map(path -> path.getFieldId().getClass()).collect(toSet());
         for (Class<?> fieldType : sortClass(fieldTypes)) {
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
@@ -41,10 +38,7 @@ final class ProjetWrapperGen {
     static String mapGetter(List<VisitorPath> collected) throws IOException, PropertyParsingException {
         final StringBuilder buffer = new StringBuilder();
         final String getterTemplate = template("MapGetMethod.template");
-        final Set<Class<?>> fieldTypes = new HashSet<>();
-        for (VisitorPath path : collected) {
-            fieldTypes.add(path.getFieldId().getClass());
-        }
+        final Set<Class<?>> fieldTypes = collected.stream().map(path -> path.getFieldId().getClass()).collect(toSet());
         for (Class<?> fieldType : sortClass(fieldTypes)) {
             final Map<FieldId, List<VisitorPath>> pathGroups = pathGroups(filter(collected, fieldType));
             final Map<String, String> conf = new HashMap<>();
@@ -79,10 +73,7 @@ final class ProjetWrapperGen {
     static String mapSetter(List<VisitorPath> collected) throws IOException, PropertyParsingException {
         final StringBuilder buffer = new StringBuilder();
         final String setterTemplate = template("MapSetMethod.template");
-        final Set<Class<?>> fieldTypes = new HashSet<>();
-        for (VisitorPath path : collected) {
-            fieldTypes.add(path.getFieldId().getClass());
-        }
+        final Set<Class<?>> fieldTypes = collected.stream().map(path -> path.getFieldId().getClass()).collect(toSet());
         for (Class<?> fieldType : sortClass(fieldTypes)) {
             final Map<FieldId, List<VisitorPath>> pathGroups = pathGroups(filter(collected, fieldType));
             final Map<String, String> conf = new HashMap<>();
@@ -159,7 +150,7 @@ final class ProjetWrapperGen {
         final String lazyInitTemplate = template("NullCheckBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
-        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index), true));
+        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
         buffer.append(replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
         return buffer.toString();
     }
@@ -183,7 +174,7 @@ final class ProjetWrapperGen {
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         final String setterName = setterName(lastGetMethod);
-        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index), true));
+        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
         conf.put("partial.path.init", setterPath(paths.subList(0, index), setterName, field.position(), false));
         conf.put("param", "new " + lastGetMethod.getReturnType().getName() + "()");
         buffer.append(replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
@@ -197,7 +188,7 @@ final class ProjetWrapperGen {
         final Map<String, String> conf = new HashMap<>();
         final String setterName = setterName(lastGetMethod);
         conf.put("list.content.as.null", listContentAsNull(paths.subList(0, index), index, field));
-        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index), true));
+        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
         conf.put("partial.path.init", setterPath(paths.subList(0, index), setterName, field.position(), false));
         conf.put("param", "new java.util.ArrayList()");
         conf.put("index", Integer.toString(field.position() - 1));
@@ -215,7 +206,7 @@ final class ProjetWrapperGen {
         final String lazyInitTemplate = template("LazyInitListBlockNull.template");
         for (int i = 0; i < field.position() - 1; i++) {
             final Map<String, String> conf = new HashMap<>();
-            conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index), true));
+            conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
             conf.put("index", Integer.toString(i));
             conf.put("position", Integer.toString(i + 1));
             buffer.append(replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
@@ -225,23 +216,13 @@ final class ProjetWrapperGen {
 
     static List<Class<?>> sortClass(Set<Class<?>> classSet) {
         final List<Class<?>> sortedList = new ArrayList<>(classSet);
-        Collections.sort(sortedList, new Comparator<Class<?>>() {
-            @Override
-            public int compare(Class<?> o1, Class<?> o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
+        sortedList.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
         return sortedList;
     }
 
     private static List<FieldId> sortFields(Set<FieldId> FieldIds) {
         final List<FieldId> sortedList = new ArrayList<>(FieldIds);
-        Collections.sort(sortedList, new Comparator<FieldId>() {
-            @Override
-            public int compare(FieldId o1, FieldId o2) {
-                return o1.toString().compareTo(o2.toString());
-            }
-        });
+        sortedList.sort((o1, o2) -> o1.toString().compareTo(o2.toString()));
         return sortedList;
     }
 
@@ -411,7 +392,7 @@ final class ProjetWrapperGen {
             for (Type typeName : parameterizedType.getActualTypeArguments()) {
                 typeNames.add(typeName(typeName));
             }
-            return typeName(type) + "<" + StringUtils.join(typeNames, ", ") + ">";
+            return typeName(type) + "<" + Joiner.on(", ").join(typeNames) + ">";
         }
         return typeName(type);
     }
@@ -435,7 +416,7 @@ final class ProjetWrapperGen {
         for (Type paramType : parameterizedType.getActualTypeArguments()) {
             parameterizedTypeName.add(((Class<?>) paramType).getName());
         }
-        return "<" + join(parameterizedTypeName, ",") + ">";
+        return "<" + Joiner.on(",").join(parameterizedTypeName) + ">";
     }
 
     static String setterPath(VisitorPath path, boolean initAtPosition) {
@@ -479,7 +460,7 @@ final class ProjetWrapperGen {
                 buffer.append("().get(");
                 buffer.append(index - 1);
                 buffer.append(")");
-            } else if (isNotEmpty(setMethod) && path.indexOf(method) == path.size() - 1) {
+            } else if (!isNullOrEmpty(setMethod) && path.indexOf(method) == path.size() - 1) {
                 buffer.append(setMethod);
                 buffer.append("(${param})");
             } else {

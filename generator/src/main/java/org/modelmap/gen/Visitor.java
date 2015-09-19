@@ -1,12 +1,14 @@
 package org.modelmap.gen;
 
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.modelmap.core.FieldId;
 import org.modelmap.core.PathConstraint;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 final class Visitor {
     private final Class<?> baseClass;
@@ -17,45 +19,29 @@ final class Visitor {
         this.collected = collected;
     }
 
-    void visit(List<Pair<FieldId, PathConstraint>> fieldTarget, Method getMethod, Method setMethod, List<Method> paths) {
-        for (Pair<FieldId, PathConstraint> pair : fieldTarget) {
-            if (!checkFieldTargetConstraint(paths, pair.getLeft(), pair.getRight())) {
-                continue;
+    void visit(Map<FieldId, PathConstraint> fieldTarget, Method getMethod, Method setMethod, List<Method> paths) {
+        fieldTarget.forEach((fieldId, constraint) -> {
+            if (!checkFieldTargetConstraint(paths, fieldId, constraint)) {
+                return;
             }
-            final VisitorPath path = new VisitorPath(baseClass, paths, pair.getKey(), getMethod, setMethod);
+            final VisitorPath path = new VisitorPath(baseClass, paths, fieldId, getMethod, setMethod);
             if (contains(path)) {
-                continue;
+                return;
             }
             collected.add(path);
-        }
+        });
     }
 
-//    private static EModule parseModule(Class<?> clazz) {
-//        for (EModule module : EModule.values()) {
-//            if (clazz.getPackage().getName().contains(module.getCode())) {
-//                return module;
-//            }
-//        }
-//        return EModule.core;
-//    }
-
     private static boolean checkFieldTargetConstraint(List<Method> paths, FieldId FieldId, PathConstraint constraint) {
-//        final PathConstraint constraint = path.constraint();
-//        if (isNotEmpty(constraint.includePath())) {
-//            final String getterPath = VisitorPath.getterPath(paths, FieldId.position(), false);
-//            return getterPath.contains(constraint.includePath());
-//        }
-        // FIXME use meta-annotations to find
+        if (!isNullOrEmpty(constraint.includePath())) {
+            final String getterPath = VisitorPath.getterPath(paths, FieldId.position());
+            return getterPath.contains(constraint.includePath());
+        }
         return true;
     }
 
     private boolean contains(VisitorPath vPath) {
         final String displayPath = vPath.toString();
-        for (VisitorPath aPath : collected) {
-            if (aPath.toString().equals(displayPath)) {
-                return true;
-            }
-        }
-        return false;
+        return collected.stream().anyMatch(path -> path.toString().equals(displayPath));
     }
 }

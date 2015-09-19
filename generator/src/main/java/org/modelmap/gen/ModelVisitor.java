@@ -1,6 +1,5 @@
 package org.modelmap.gen;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.modelmap.core.FieldId;
 import org.modelmap.core.PathConstraint;
 
@@ -38,7 +37,7 @@ final class ModelVisitor {
         for (PropertyDescriptor desc : propertyDescriptors) {
             path.addLast(desc.getReadMethod());
             try {
-                final List<Pair<FieldId, PathConstraint>> formParam = getFieldTarget(clazz, desc);
+                final Map<FieldId, PathConstraint> formParam = getFieldTarget(clazz, desc);
                 if (formParam == null || formParam.isEmpty()) {
                     continue;
                 }
@@ -59,7 +58,7 @@ final class ModelVisitor {
         visitModel(clazz.getSuperclass(), visitor, path, packageFilter, deep + 1);
     }
 
-    private static List<Pair<FieldId, PathConstraint>> getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
+    private static Map<FieldId, PathConstraint> getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
 //        if (desc.getReadMethod() == null || desc.getWriteMethod() == null) {
 //            return null;
 //        }
@@ -78,7 +77,7 @@ final class ModelVisitor {
 //            formParam = desc.getWriteMethod().getAnnotation(FieldTarget.class);
 //        }
 //        return formParam;
-        return Collections.emptyList();
+        return Collections.emptyMap();
     }
 
     private static Collection<Method> methods(Class<?> clazz, String packageFilter) {
@@ -145,8 +144,7 @@ final class ModelVisitor {
         if (method.getGenericReturnType() == null) {
             return method.getReturnType();
         }
-        // FIXME type are not compatible
-        if (method.getGenericReturnType().equals(method.getReturnType())) {
+        if (method.getGenericReturnType().getTypeName().equals(method.getReturnType().getTypeName())) {
             return method.getReturnType();
         }
         if (method.getGenericReturnType() instanceof Class) {

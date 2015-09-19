@@ -27,12 +27,12 @@ public class MacroProcessor {
     public static String replaceProperties(String value, Map<String, ?> conf, MacroParamProcessor paramProcessor)
             throws PropertyParsingException {
         return replacePropertiesRec(value, (Map<String, Object>) conf, new ArrayList<>(),
-                new ArrayList<>(), 0, false, null, paramProcessor, DEFAULT_STRING_EVAL);
+                new ArrayList<>(), 0, null, paramProcessor, DEFAULT_STRING_EVAL);
     }
 
     public static String replaceProperties(String value, Map<String, ?> conf, String defaultReplacement)
             throws PropertyParsingException {
-        return replacePropertiesRec(value, conf, new ArrayList<>(), new ArrayList<>(), 0, false,
+        return replacePropertiesRec(value, conf, new ArrayList<>(), new ArrayList<>(), 0,
                 defaultReplacement);
     }
 
@@ -40,14 +40,14 @@ public class MacroProcessor {
     public static String replaceProperties(String value, Map<String, ?> conf, String defaultReplacement,
                                            Evaluator evaluator) throws PropertyParsingException {
         return replacePropertiesRec(value, (Map<String, Object>) conf, new ArrayList<>(),
-                new ArrayList<>(), 0, false, defaultReplacement, null, evaluator);
+                new ArrayList<>(), 0, defaultReplacement, null, evaluator);
     }
 
     @SuppressWarnings("unchecked")
     public static String replaceProperties(String value, Map<String, ?> conf, int depth)
             throws PropertyParsingException {
         return replacePropertiesRec(value, (Map<String, Object>) conf, new ArrayList<>(),
-                new ArrayList<>(), depth, false, null, null, DEFAULT_STRING_EVAL);
+                new ArrayList<>(), depth, null, null, DEFAULT_STRING_EVAL);
     }
 
     /**
@@ -60,21 +60,20 @@ public class MacroProcessor {
      * @param fragments
      * @param propertyRefs
      * @param depth              recursivity index, limited to {@value MacroProcessor#MAX_DEPTH}.
-     * @param encodeHTML
      * @param defaultReplacement
      * @return macro-expanded value.
      * @throws PropertyParsingException if recursivity goes beyond {@value MacroProcessor#MAX_DEPTH} limit.
      */
     @SuppressWarnings("unchecked")
     public static String replacePropertiesRec(String value, Map<String, ?> conf, List<String> fragments,
-                                              List<String> propertyRefs, int depth, boolean encodeHTML, String defaultReplacement)
+                                              List<String> propertyRefs, int depth, String defaultReplacement)
             throws PropertyParsingException {
-        return replacePropertiesRec(value, (Map<String, Object>) conf, fragments, propertyRefs, depth, encodeHTML,
+        return replacePropertiesRec(value, (Map<String, Object>) conf, fragments, propertyRefs, depth,
                 defaultReplacement, null, DEFAULT_STRING_EVAL);
     }
 
     private static String replacePropertiesRec(String value, Map<String, Object> conf, List<String> fragments,
-                                               List<String> propertyRefs, int depth, boolean encodeHTML, String defaultReplacement,
+                                               List<String> propertyRefs, int depth, String defaultReplacement,
                                                MacroParamProcessor paramProcessor, Evaluator evaluator) throws PropertyParsingException {
         parsePropertyString(value, fragments, propertyRefs);
         final StringBuilder unkownParam = new StringBuilder();
@@ -85,7 +84,7 @@ public class MacroProcessor {
             String fragment = i.next();
             if (fragment == null) {
                 final String propertyName = j.next();
-                fragment = evaluator.eval(conf, propertyName, defaultReplacement, paramProcessor, encodeHTML);
+                fragment = evaluator.eval(conf, propertyName, defaultReplacement, paramProcessor);
                 final boolean sameProperty = fragment.contains(REF_PREFIX + propertyName + REF_SUFFIX);
                 final boolean alwaysProperty = containProperty(fragment);
                 if (alwaysProperty && !sameProperty) {
@@ -99,7 +98,7 @@ public class MacroProcessor {
         if (containProperty && depth <= MAX_DEPTH) {
             fragments.clear();
             propertyRefs.clear();
-            return replacePropertiesRec(expandedValue, conf, fragments, propertyRefs, depth + 1, encodeHTML,
+            return replacePropertiesRec(expandedValue, conf, fragments, propertyRefs, depth + 1,
                     defaultReplacement, paramProcessor, evaluator);
         } else if (containProperty && depth > MAX_DEPTH) {
             throw new PropertyParsingException(MORE_THAN_0_LEVEL_TO_EXPAND_1.format(new Object[]{MAX_DEPTH,

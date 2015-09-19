@@ -3,31 +3,12 @@ package org.modelmap.gen;
 
 import org.modelmap.core.FieldId;
 
-import java.lang.reflect.Method;
 import java.util.*;
 
-import static org.modelmap.gen.ProjetWrapperGen.getterBoxingType;
-import static org.modelmap.gen.ProjetWrapperGen.pathGroups;
+import static org.modelmap.gen.ModelWrapperGen.getterBoxingType;
+import static org.modelmap.gen.ModelWrapperGen.pathGroups;
 
 final class FieldInfoGen {
-
-    // FIXME remove all specific types
-    private static boolean isCodeValuable(VisitorPath path) {
-//        return isAssignable(path, CodeValuable.class);
-        return false;
-    }
-
-    // FIXME remove all specific types
-    private static boolean isIntValuable(VisitorPath path) {
-//        return isAssignable(path, IntValuable.class);
-        return false;
-    }
-
-    private static boolean isAssignable(VisitorPath path, Class<?> assignableClass) {
-        final Method lastMethod = path.getPath().get(path.getPath().size() - 1);
-        final Class<?> type = lastMethod.getReturnType();
-        return assignableClass.isAssignableFrom(type);
-    }
 
     static String literals(List<FieldId> fieldsOrder, List<VisitorPath> collected) {
         final StringBuilder builder = new StringBuilder();
@@ -44,10 +25,7 @@ final class FieldInfoGen {
             builder.append(FieldId.toString());
             builder.append(", ");
             builder.append(getterBoxingType);
-            builder.append(".class, ");
-            builder.append(Boolean.toString(isCodeValuable(pathGroups.get(FieldId).get(0))));
-            builder.append(", ");
-            builder.append(Boolean.toString(isIntValuable(pathGroups.get(FieldId).get(0))));
+            builder.append(".class ");
             builder.append(formatSiblings(siblings(currentPath, collected)));
             builder.append("), //\n");
         }
@@ -73,12 +51,12 @@ final class FieldInfoGen {
     }
 
     private static Set<FieldId> siblings(VisitorPath currentPath, List<VisitorPath> collected) {
-        final String currentCanonicalPath = currentPath.displayPath(true);
+        final String currentCanonicalPath = currentPath.displayPath();
         final Set<FieldId> siblings = new HashSet<>();
         for (VisitorPath path : collected) {
             if (path.getFieldId() == currentPath.getFieldId())
                 continue;
-            if (path.displayPath(true).equals(currentCanonicalPath))
+            if (path.displayPath().equals(currentCanonicalPath))
                 siblings.add(path.getFieldId());
         }
         return siblings;
@@ -93,5 +71,4 @@ final class FieldInfoGen {
         });
         return sortedList;
     }
-
 }

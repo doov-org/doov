@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
 public final class VisitorPath {
     private final Class<?> baseClass;
@@ -52,27 +51,27 @@ public final class VisitorPath {
     }
 
 
-    public String displayPath(boolean canonical) {
-        return getterPath(path, fieldId.position(), canonical);
+    public String displayPath() {
+        return getterPath(path, fieldId.position());
     }
 
     @Override
     public String toString() {
-        return uncapitalize(baseClass.getSimpleName()) + "." + displayPath(false) + ":" + fieldId;
+
+        return baseClass.getSimpleName().toLowerCase() + "." + displayPath() + ":" + fieldId;
     }
 
     public String toCsv() {
-        return uncapitalize(baseClass.getSimpleName()) + "." + displayPath(false) + ';'
+        return baseClass.getSimpleName().toLowerCase() + "." + displayPath() + ';'
                 + fieldId + ';'
                 + getMethod.getReturnType().getSimpleName() + '\n';
     }
 
-    static String getterPath(List<Method> path, boolean canonical) {
-        return getterPath(path, -1, canonical);
+    static String getterPath(List<Method> path) {
+        return getterPath(path, -1);
     }
 
-    // FIXME canonical name ?
-    static String getterPath(List<Method> path, int index, boolean canonical) {
+    static String getterPath(List<Method> path, int index) {
         final StringBuilder buffer = new StringBuilder();
         for (Method method : path) {
             if (List.class.isAssignableFrom(method.getReturnType()) && index >= 0) {

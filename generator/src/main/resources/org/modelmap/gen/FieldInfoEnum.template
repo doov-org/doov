@@ -1,0 +1,49 @@
+package ${package.name};
+
+import java.util.List;
+import java.util.ArrayList;
+
+import javax.annotation.Generated;
+
+import net.courtanet.ui.core.FieldID;
+import net.courtanet.ui.core.FieldInfo;
+
+@Generated(value = "${source.generator.name}", comments="from ${process.class}")
+public enum ${target.class.name} implements FieldInfo {
+${literals}
+
+    private final FieldID fieldId;
+    private final Class<?> type;
+    private final FieldID[] siblings;
+
+    ${target.class.name}(FieldID fieldId, Class<?> type, FieldID... siblings) {
+        this.fieldId = fieldId;
+        this.type = type;
+        this.siblings = siblings;
+    }
+
+    @Override
+    public FieldID id() {
+        return fieldId;
+    }
+
+    @Override
+    public Class<?> type() {
+        return type;
+    }
+
+    @Override
+    public FieldInfo fromField(FieldID fieldID) {
+        for (FieldInfo fieldInfo : values()) {
+            if (fieldInfo.id().equals(fieldID)) {
+                return fieldInfo;
+            }
+        }
+        return null;
+    }
+    
+    @Override
+    public FieldID[] siblings() {
+        return siblings;
+    }
+}
