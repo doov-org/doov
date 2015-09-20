@@ -47,7 +47,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
     private File buildResourceDirectory;
 
     @Parameter(required = true)
-    private List<String> projectClasses;
+    private List<String> sourceClasses;
 
     @Parameter(required = true)
     private List<String> fieldClasses;
@@ -60,15 +60,15 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        if (projectClasses == null)
+        if (sourceClasses == null)
             getLog().warn("no project classes");
-        if (projectClasses.isEmpty())
+        if (sourceClasses.isEmpty())
             getLog().warn("project is empty");
         if (fieldClasses == null)
             getLog().warn("no tunnel classes");
         if (fieldClasses.isEmpty())
             getLog().warn("tunnel is empty");
-        if (fieldClasses.size() != projectClasses.size())
+        if (fieldClasses.size() != sourceClasses.size())
             getLog().warn("tunnel and projet have different size");
         if (outputDirectory.exists() && !outputDirectory.isDirectory())
             throw new MojoFailureException(outputDirectory + " is not directory");
@@ -100,12 +100,12 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
         final URLClassLoader classLoader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
         try {
-            for (int i = 0; i < projectClasses.size(); i++) {
+            for (int i = 0; i < sourceClasses.size(); i++) {
                 @SuppressWarnings("unchecked")
                 final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>)
                         Class.forName(fieldClasses.get(i), true, classLoader);
                 final List<FieldId> fieldsOrder = asList(fieldClazz.getEnumConstants());
-                final Class<?> projectClazz = Class.forName(projectClasses.get(i), true, classLoader);
+                final Class<?> projectClazz = Class.forName(sourceClasses.get(i), true, classLoader);
                 final List<VisitorPath> collected = process(projectClazz, packageFilter);
                 generateCsv(collected, projectClazz);
                 generateProjetWrapper(collected, projectClazz);

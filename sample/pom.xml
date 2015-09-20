@@ -12,6 +12,39 @@
     <artifactId>modelmap-sample</artifactId>
     <name>ModelMap Samples</name>
 
+    <profiles>
+        <profile>
+            <id>generate</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.modelmap</groupId>
+                        <artifactId>modelmap-generator</artifactId>
+                        <version>${project.version}</version>
+                        <executions>
+                            <execution>
+                                <id>model-map-gen</id>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <phase>generate-sources</phase>
+                                <configuration>
+                                    <outputDirectory>${basedir}/src/generated/java</outputDirectory>
+                                    <sourceClasses>
+                                        <sourceClass>net.courtanet.tm.auto.ProjetAuto</sourceClass>
+                                    </sourceClasses>
+                                    <fieldClasses>
+                                        <fieldClass>net.courtanet.ui.auto.ETunnelAuto</fieldClass>
+                                    </fieldClasses>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>org.modelmap</groupId>

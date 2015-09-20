@@ -1,17 +1,24 @@
 package org.modelmap.gen;
 
 import org.modelmap.core.FieldId;
+import org.modelmap.core.Path;
 import org.modelmap.core.PathConstraint;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toList;
 
 final class ModelVisitor {
 
@@ -38,7 +45,7 @@ final class ModelVisitor {
             path.addLast(desc.getReadMethod());
             try {
                 final Map<FieldId, PathConstraint> formParam = getFieldTarget(clazz, desc);
-                if (formParam == null || formParam.isEmpty()) {
+                if (formParam.isEmpty()) {
                     continue;
                 }
                 visitor.visit(formParam, desc.getReadMethod(), desc.getWriteMethod(), path);
@@ -59,69 +66,69 @@ final class ModelVisitor {
     }
 
     private static Map<FieldId, PathConstraint> getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
-//        if (desc.getReadMethod() == null || desc.getWriteMethod() == null) {
-//            return null;
-//        }
-//
-//        FieldTarget formParam = null;
-//        try {
-//            Field field = clazz.getDeclaredField(desc.getName());
-//            formParam = field.getAnnotation(FieldTarget.class);
-//        } catch (NoSuchFieldException e) {
-//            // derived field without declared field
-//        }
-//        if (formParam == null) {
-//            formParam = desc.getReadMethod().getAnnotation(FieldTarget.class);
-//        }
-//        if (formParam == null) {
-//            formParam = desc.getWriteMethod().getAnnotation(FieldTarget.class);
-//        }
-//        return formParam;
-        return Collections.emptyMap();
+        // TODO to be re-implemented
+        if (desc.getReadMethod() == null || desc.getWriteMethod() == null) {
+            return emptyMap();
+        }
+
+        Map<FieldId, PathConstraint> fieldTarget = emptyMap();
+        try {
+            Field field = clazz.getDeclaredField(desc.getName());
+            fieldTarget = getFieldTarget(field, field.getAnnotations());
+        } catch (NoSuchFieldException e) {
+            // derived field without declared field
+        }
+        if (fieldTarget.isEmpty()) {
+            fieldTarget = getFieldTarget(desc.getReadMethod());
+        }
+        if (fieldTarget.isEmpty()) {
+            fieldTarget = getFieldTarget(desc.getWriteMethod());
+        }
+        return fieldTarget;
+    }
+
+
+    private static Map<FieldId, PathConstraint> getFieldTarget(AccessibleObject executable, Annotation... annotations) {
+        Set<Class<? extends Annotation>> pathAnnotations = stream(annotations)
+                .filter(a -> a.annotationType().getAnnotation(Path.class) != null)
+                .map(Annotation::annotationType)
+                .collect(Collectors.toSet());
+
+        return pathAnnotations.stream()
+                .map(a -> asList(executable.getAnnotationsByType(a)))
+                .flatMap(Collection::stream)
+                .map(a -> {
+                    // FIXME extract FieldId and constraint
+                    return new SimpleImmutableEntry<FieldId, PathConstraint>(null, null);
+                })
+                .collect(Collectors.toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
     }
 
     private static Collection<Method> methods(Class<?> clazz, String packageFilter) {
         if (clazz == null) {
-            return Collections.emptySet();
+            return emptySet();
         }
         if (clazz.getPackage() == null) {
-            return Collections.emptySet();
+            return emptySet();
         }
         if (!clazz.getPackage().getName().startsWith(packageFilter)) {
-            return Collections.emptySet();
+            return emptySet();
         }
         return filter(clazz.getMethods(), packageFilter);
     }
 
     private static Collection<Method> filter(Method[] methods, String packageFilter) {
-        final List<Method> filtered = new ArrayList<>();
-        for (Method method : methods) {
-            if (Modifier.isStatic(method.getModifiers())) {
-                continue;
-            }
-            if (Modifier.isNative(method.getModifiers())) {
-                continue;
-            }
-            if (!Modifier.isPublic(method.getModifiers())) {
-                continue;
-            }
-            if (method.getReturnType() == null) {
-                continue;
-            }
-            if (method.getReturnType().equals(Void.TYPE)) {
-                continue;
-            }
-            if (method.getParameterTypes().length > 0) {
-                continue;
-            }
-            if (!method.getDeclaringClass().getPackage().getName().startsWith(packageFilter)) {
-                continue;
-            }
-            if (method.getName().toLowerCase().contains("clone")) {
-                continue;
-            }
-            filtered.add(method);
-        }
+        final List<Method> filtered = Arrays.stream(methods)
+                .filter(m -> !Modifier.isStatic(m.getModifiers()))
+                .filter(m -> !Modifier.isNative(m.getModifiers()))
+                .filter(m -> Modifier.isPublic(m.getModifiers()))
+                .filter(m -> m.getReturnType() != null)
+                .filter(m -> !m.getReturnType().equals(Void.TYPE))
+                .filter(m -> m.getParameterTypes().length == 0)
+                .filter(m -> m.getDeclaringClass().getPackage().getName().startsWith(packageFilter))
+                .filter(m -> !m.getName().toLowerCase().contains("clone"))
+                .collect(toList());
+
         final List<Method> overrided = new ArrayList<>();
         for (Method method : filtered) {
             for (Method method2 : filtered) {
