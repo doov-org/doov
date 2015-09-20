@@ -61,6 +61,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.modelmap</groupId>
+                <artifactId>modelmap-sample-base</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.squareup</groupId>
                 <artifactId>javapoet</artifactId>
                 <version>${javapoet.version}</version>

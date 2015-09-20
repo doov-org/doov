@@ -1,30 +1,27 @@
 package ${package.name};
 
-import java.util.List;
-import java.util.ArrayList;
-
 import javax.annotation.Generated;
 
-import net.courtanet.ui.core.FieldID;
-import net.courtanet.ui.core.FieldInfo;
+import org.modelmap.core.FieldId;
+import org.modelmap.core.FieldInfo;
 
 @Generated(value = "${source.generator.name}", comments="from ${process.class}")
 public enum ${target.class.name} implements FieldInfo {
 ${literals}
 
-    private final FieldID fieldId;
+    private final FieldId FieldId;
     private final Class<?> type;
-    private final FieldID[] siblings;
+    private final FieldId[] siblings;
 
-    ${target.class.name}(FieldID fieldId, Class<?> type, FieldID... siblings) {
-        this.fieldId = fieldId;
+    ${target.class.name}(FieldId FieldId, Class<?> type, FieldId... siblings) {
+        this.FieldId = FieldId;
         this.type = type;
         this.siblings = siblings;
     }
 
     @Override
-    public FieldID id() {
-        return fieldId;
+    public FieldId id() {
+        return FieldId;
     }
 
     @Override
@@ -33,17 +30,7 @@ ${literals}
     }
 
     @Override
-    public FieldInfo fromField(FieldID fieldID) {
-        for (FieldInfo fieldInfo : values()) {
-            if (fieldInfo.id().equals(fieldID)) {
-                return fieldInfo;
-            }
-        }
-        return null;
-    }
-    
-    @Override
-    public FieldID[] siblings() {
+    public FieldId[] siblings() {
         return siblings;
     }
 }

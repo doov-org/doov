@@ -3,6 +3,7 @@ package org.modelmap.gen;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -28,13 +29,12 @@ import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
 import static java.time.format.FormatStyle.SHORT;
 import static java.util.Arrays.asList;
-import static org.apache.maven.plugins.annotations.LifecyclePhase.INSTALL;
-import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE;
+import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES;
 import static org.modelmap.gen.FieldInfoGen.literals;
 import static org.modelmap.gen.ModelWrapperGen.*;
 import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
 
-@Mojo(name = "generate", defaultPhase = INSTALL, threadSafe = true, requiresDependencyResolution = COMPILE)
+@Mojo(name = "generate", defaultPhase = GENERATE_SOURCES, threadSafe = true)
 public final class ModelMapGenMojo extends AbstractMojo {
 
     @Parameter(required = true, property = "project.build.sourceDirectory")
@@ -81,35 +81,33 @@ public final class ModelMapGenMojo extends AbstractMojo {
             throw new MojoExecutionException("unable to create source folder", e);
         }
 
-        final List<?> classpathFiles;
+
+        final List<URL> urls = new ArrayList<>();
         try {
-            classpathFiles = project.getCompileClasspathElements();
-        } catch (DependencyResolutionRequiredException e) {
+            for (String element : project.getCompileClasspathElements()) {
+                urls.add(new File(element).toURI().toURL());
+            }
+            for (Artifact artifact : project.getDependencyArtifacts()) {
+                urls.add(artifact.getFile().toURI().toURL());
+            }
+            urls.add(new File(buildDirectory + "/classes").toURI().toURL());
+        } catch (DependencyResolutionRequiredException | MalformedURLException e) {
             throw new MojoFailureException(e.getMessage());
         }
-        final URL[] urls = new URL[classpathFiles.size() + 1];
-        try {
-            for (int i = 0; i < classpathFiles.size(); ++i) {
-                getLog().debug((String) classpathFiles.get(i));
-                urls[i] = new File((String) classpathFiles.get(i)).toURI().toURL();
-            }
-            urls[classpathFiles.size()] = new File(buildDirectory + "/classes").toURI().toURL();
-        } catch (MalformedURLException e) {
-            throw new MojoFailureException(e.getMessage(), e);
-        }
 
-        final URLClassLoader classLoader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
+        final URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),
+                Thread.currentThread().getContextClassLoader());
         try {
             for (int i = 0; i < sourceClasses.size(); i++) {
                 @SuppressWarnings("unchecked")
                 final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>)
                         Class.forName(fieldClasses.get(i), true, classLoader);
                 final List<FieldId> fieldsOrder = asList(fieldClazz.getEnumConstants());
-                final Class<?> projectClazz = Class.forName(sourceClasses.get(i), true, classLoader);
-                final List<VisitorPath> collected = process(projectClazz, packageFilter);
-                generateCsv(collected, projectClazz);
-                generateProjetWrapper(collected, projectClazz);
-                generateFieldInfo(collected, fieldsOrder, projectClazz);
+                final Class<?> modelClazz = Class.forName(sourceClasses.get(i), true, classLoader);
+                final List<VisitorPath> collected = process(modelClazz, packageFilter);
+                generateCsv(collected, modelClazz);
+                generateWrapper(collected, modelClazz, fieldClazz);
+                generateFieldInfo(collected, fieldsOrder, fieldClazz);
             }
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
@@ -149,8 +147,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
     private void generateFieldInfo(List<VisitorPath> collected, List<FieldId> fieldsOrder, Class<?> clazz)
             throws IOException, PropertyParsingException {
-        final String targetClassName = "E" + clazz.getSimpleName().replace("Projet", "Field") + "Info";
-        final String targetPackage = targetPackage(clazz.getPackage(), true);
+        final String targetClassName = clazz.getSimpleName() + "Info";
+        final String targetPackage = clazz.getPackage().getName();
         final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'), targetClassName
                 + ".java");
         final String classTemplate = template("FieldInfoEnum.template");
@@ -167,21 +165,22 @@ public final class ModelMapGenMojo extends AbstractMojo {
         getLog().info("written : " + targetFile);
     }
 
-    private void generateProjetWrapper(List<VisitorPath> collected, Class<?> clazz) throws IOException,
-            PropertyParsingException {
-        final String targetClassName = clazz.getSimpleName() + "Wrapper";
-        final String targetPackage = targetPackage(clazz.getPackage(), false);
+    private void generateWrapper(List<VisitorPath> collected, Class<?> modelClass, Class<?> fieldClass)
+            throws IOException, PropertyParsingException {
+        final String targetClassName = modelClass.getSimpleName() + "Wrapper";
+        final String targetPackage = modelClass.getPackage().getName();
         final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'), targetClassName
                 + ".java");
         final String classTemplate = template("WrapperClass.template");
         createDirectories(targetFile.getParentFile().toPath());
         final Map<String, String> conf = new HashMap<>();
         conf.put("package.name", targetPackage);
-        conf.put("process.class", clazz.getName());
+        conf.put("process.class", modelClass.getName());
         conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
-        conf.put("target.project.class.name", clazz.getSimpleName());
-        conf.put("target.project.class.full.name", clazz.getName());
-        conf.put("target.field.info.class.name", "E" + clazz.getSimpleName().replace("Projet", "Field") + "Info");
+        conf.put("target.project.class.name", modelClass.getSimpleName());
+        conf.put("target.project.class.full.name", modelClass.getName());
+        conf.put("target.field.info.package.name", fieldClass.getPackage().getName());
+        conf.put("target.field.info.class.name", fieldClass.getSimpleName() + "Info");
         conf.put("target.class.name", targetClassName);
         conf.put("map.getter", mapGetter(collected));
         conf.put("map.getter.if", mapFieldTypeIfStatement("MapGetIfStatement.template", collected));
@@ -191,10 +190,6 @@ public final class ModelMapGenMojo extends AbstractMojo {
         final String content = replaceProperties(classTemplate, conf, MISSING_VALUE);
         Files.write(content.getBytes(), targetFile);
         getLog().info("written : " + targetFile);
-    }
-
-    private String targetPackage(Package sourcePackage, boolean gwt) {
-        return sourcePackage.getName().replace(".tm.", ".map.") + (gwt ? ".gwt" : "");
     }
 
     private static Collection<FieldId> fieldsWithoutPath(List<VisitorPath> collected) throws IllegalArgumentException,

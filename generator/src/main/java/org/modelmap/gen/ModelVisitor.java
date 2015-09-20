@@ -19,6 +19,7 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 final class ModelVisitor {
 
@@ -66,7 +67,6 @@ final class ModelVisitor {
     }
 
     private static Map<FieldId, PathConstraint> getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
-        // TODO to be re-implemented
         if (desc.getReadMethod() == null || desc.getWriteMethod() == null) {
             return emptyMap();
         }
@@ -98,10 +98,23 @@ final class ModelVisitor {
                 .map(a -> asList(executable.getAnnotationsByType(a)))
                 .flatMap(Collection::stream)
                 .map(a -> {
-                    // FIXME extract FieldId and constraint
-                    return new SimpleImmutableEntry<FieldId, PathConstraint>(null, null);
+                    try {
+                        Field fieldIdField = getFieldByClass(a.getClass(), FieldId.class);
+                        Field contraintField = getFieldByClass(a.getClass(), PathConstraint.class);
+                        return new SimpleImmutableEntry<>((FieldId) fieldIdField.get(a),
+                                (PathConstraint) contraintField.get(a));
+                    } catch (IllegalAccessException e) {
+                        return null;
+                    }
                 })
-                .collect(Collectors.toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
+                .filter(Objects::nonNull)
+                .collect(toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
+    }
+
+    private static Field getFieldByClass(Class<?> clazz, Class<?> interfaceType) {
+        return Arrays.stream(clazz.getFields())
+                .filter(f -> asList(f.getType().getInterfaces()).contains(interfaceType))
+                .findFirst().get();
     }
 
     private static Collection<Method> methods(Class<?> clazz, String packageFilter) {
