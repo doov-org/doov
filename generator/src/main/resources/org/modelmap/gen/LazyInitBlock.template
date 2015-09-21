@@ -1,2 +1,2 @@
-		if (projet.${partial.path} == null)
-			projet.${partial.path.init};
+		if (model.${partial.path} == null)
+			model.${partial.path.init};

@@ -61,7 +61,7 @@ final class ModelVisitor {
                 if (formParam.isEmpty()) {
                     continue;
                 }
-                log.info(" found " + formParam.size() + " paths");
+                log.info(formParam.size() + " path(s) found ");
                 visitor.visit(formParam, desc.getReadMethod(), desc.getWriteMethod(), path);
             } finally {
                 path.removeLast();
@@ -115,11 +115,12 @@ final class ModelVisitor {
                 .flatMap(Collection::stream)
                 .map(a -> {
                     try {
-                        Field fieldIdField = getFieldByClass(a.getClass(), FieldId.class);
-                        Field contraintField = getFieldByClass(a.getClass(), PathConstraint.class);
-                        return new SimpleImmutableEntry<>((FieldId) fieldIdField.get(a),
-                                (PathConstraint) contraintField.get(a));
-                    } catch (IllegalAccessException e) {
+                        log.info("process annotation " + a.toString());
+                        Method fieldIdGetter = getMethodByClass(a.annotationType(), FieldId.class);
+                        Method contraintGetter = getMethodByClass(a.annotationType(), PathConstraint.class);
+                        return new SimpleImmutableEntry<>((FieldId) fieldIdGetter.invoke(a),
+                                (PathConstraint) contraintGetter.invoke(a));
+                    } catch (IllegalAccessException | InvocationTargetException e) {
                         return null;
                     }
                 })
@@ -127,9 +128,13 @@ final class ModelVisitor {
                 .collect(toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
     }
 
-    private Field getFieldByClass(Class<?> clazz, Class<?> interfaceType) {
-        return Arrays.stream(clazz.getFields())
-                .filter(f -> asList(f.getType().getInterfaces()).contains(interfaceType))
+    private Method getMethodByClass(Class<?> clazz, Class<?> interfaceType) {
+        log.info("process annotation type " + clazz.getName());
+        return stream(clazz.getMethods())
+                .filter(f -> {
+                    log.info("process annotation field " + f.toString());
+                    return asList(f.getReturnType().getInterfaces()).contains(interfaceType);
+                })
                 .findFirst().get();
     }
 
@@ -147,7 +152,7 @@ final class ModelVisitor {
     }
 
     private Collection<Method> filter(Method[] methods, String packageFilter) {
-        final List<Method> filtered = Arrays.stream(methods)
+        final List<Method> filtered = stream(methods)
                 .filter(m -> !Modifier.isStatic(m.getModifiers()))
                 .filter(m -> !Modifier.isNative(m.getModifiers()))
                 .filter(m -> Modifier.isPublic(m.getModifiers()))

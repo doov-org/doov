@@ -2,6 +2,6 @@
      * @see ${field.class.name}#${field.id.name}
      */${suppress.warning}
     private void set_${field.id.name}(${field.type} value) {
-${lazy.init}		projet.${setter.path};${fix.me}
+${lazy.init}		model.${setter.path};${fix.me}
     }
 

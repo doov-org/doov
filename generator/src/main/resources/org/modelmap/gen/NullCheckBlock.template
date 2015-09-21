@@ -1,2 +1,2 @@
-		if (projet.${partial.path} == null)
+		if (model.${partial.path} == null)
 			return null;

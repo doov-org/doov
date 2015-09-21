@@ -1,6 +1,6 @@
-		if (projet.${partial.path} == null)
-			projet.${partial.path.init};${list.content.as.null}
-		if (projet.${partial.path}.size() < ${position})
-			projet.${partial.path}.add(${index}, new ${target.type}());
-		if (projet.${partial.path}.get(${index}) == null)
-			projet.${partial.path}.set(${index}, new ${target.type}());
+		if (model.${partial.path} == null)
+			model.${partial.path.init};${list.content.as.null}
+		if (model.${partial.path}.size() < ${position})
+			model.${partial.path}.add(${index}, new ${target.type}());
+		if (model.${partial.path}.get(${index}) == null)
+			model.${partial.path}.set(${index}, new ${target.type}());
