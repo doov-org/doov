@@ -43,6 +43,7 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${basedir}/src/generated/java</outputDirectory>
+                            <packageFilter>org.modelmap</packageFilter>
                             <sourceClasses>
                                 <sourceClass>org.modelmap.sample.model.SampleContext</sourceClass>
                             </sourceClasses>

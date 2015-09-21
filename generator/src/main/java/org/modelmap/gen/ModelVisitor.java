@@ -1,5 +1,6 @@
 package org.modelmap.gen;
 
+import org.apache.maven.plugin.logging.Log;
 import org.modelmap.core.FieldId;
 import org.modelmap.core.Path;
 import org.modelmap.core.PathConstraint;
@@ -12,43 +13,55 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 
 final class ModelVisitor {
 
-    public static void visitModel(Class<?> clazz, Visitor visitor, String packageFilter)
+    private final Log log;
+
+    public ModelVisitor(Log log) {
+        this.log = log;
+    }
+
+    public void visitModel(Class<?> clazz, Visitor visitor, String packageFilter)
             throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
             InvocationTargetException {
+        log.info("starting visiting class " + clazz.getName());
         visitModel(clazz, visitor, new LinkedList<>(), packageFilter, 0);
     }
 
-    private static void visitModel(Class<?> clazz, Visitor visitor, LinkedList<Method> path, String packageFilter,
-                                   int deep) throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException {
+    private void visitModel(Class<?> clazz, Visitor visitor, LinkedList<Method> path, String packageFilter,
+                            int deep)
+            throws IntrospectionException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         if (clazz == null)
             return;
         if (clazz.getPackage() == null)
             return;
         if (!clazz.getPackage().getName().startsWith(packageFilter))
             return;
+        if (clazz.isEnum())
+            return;
         if (deep > 8)
             return;
+
+        log.info("class " + clazz.getName());
         final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
         final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor desc : propertyDescriptors) {
+            log.info("property " + desc.getName() + " : " + desc.getPropertyType().getSimpleName()
+                    + " from " + clazz.getName());
             path.addLast(desc.getReadMethod());
             try {
                 final Map<FieldId, PathConstraint> formParam = getFieldTarget(clazz, desc);
                 if (formParam.isEmpty()) {
                     continue;
                 }
+                log.info(" found " + formParam.size() + " paths");
                 visitor.visit(formParam, desc.getReadMethod(), desc.getWriteMethod(), path);
             } finally {
                 path.removeLast();
@@ -66,11 +79,10 @@ final class ModelVisitor {
         visitModel(clazz.getSuperclass(), visitor, path, packageFilter, deep + 1);
     }
 
-    private static Map<FieldId, PathConstraint> getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
+    private Map<FieldId, PathConstraint> getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
         if (desc.getReadMethod() == null || desc.getWriteMethod() == null) {
             return emptyMap();
         }
-
         Map<FieldId, PathConstraint> fieldTarget = emptyMap();
         try {
             Field field = clazz.getDeclaredField(desc.getName());
@@ -88,11 +100,15 @@ final class ModelVisitor {
     }
 
 
-    private static Map<FieldId, PathConstraint> getFieldTarget(AccessibleObject executable, Annotation... annotations) {
+    private Map<FieldId, PathConstraint> getFieldTarget(AccessibleObject executable, Annotation... annotations) {
+        log.info(annotations.length + " annotations to process from " + executable.toString());
+
         Set<Class<? extends Annotation>> pathAnnotations = stream(annotations)
                 .filter(a -> a.annotationType().getAnnotation(Path.class) != null)
                 .map(Annotation::annotationType)
-                .collect(Collectors.toSet());
+                .collect(toSet());
+
+        log.info(pathAnnotations.size() + " paths annotations to process from " + executable.toString());
 
         return pathAnnotations.stream()
                 .map(a -> asList(executable.getAnnotationsByType(a)))
@@ -111,13 +127,13 @@ final class ModelVisitor {
                 .collect(toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
     }
 
-    private static Field getFieldByClass(Class<?> clazz, Class<?> interfaceType) {
+    private Field getFieldByClass(Class<?> clazz, Class<?> interfaceType) {
         return Arrays.stream(clazz.getFields())
                 .filter(f -> asList(f.getType().getInterfaces()).contains(interfaceType))
                 .findFirst().get();
     }
 
-    private static Collection<Method> methods(Class<?> clazz, String packageFilter) {
+    private Collection<Method> methods(Class<?> clazz, String packageFilter) {
         if (clazz == null) {
             return emptySet();
         }
@@ -130,7 +146,7 @@ final class ModelVisitor {
         return filter(clazz.getMethods(), packageFilter);
     }
 
-    private static Collection<Method> filter(Method[] methods, String packageFilter) {
+    private Collection<Method> filter(Method[] methods, String packageFilter) {
         final List<Method> filtered = Arrays.stream(methods)
                 .filter(m -> !Modifier.isStatic(m.getModifiers()))
                 .filter(m -> !Modifier.isNative(m.getModifiers()))
@@ -160,7 +176,7 @@ final class ModelVisitor {
         return filtered;
     }
 
-    private static Class<?> returnType(Method method, String packageFilter) {
+    private Class<?> returnType(Method method, String packageFilter) {
         if (method.getGenericReturnType() == null) {
             return method.getReturnType();
         }

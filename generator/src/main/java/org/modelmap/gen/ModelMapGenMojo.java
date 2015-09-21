@@ -55,7 +55,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
     @Parameter(required = true, readonly = true, property = "project")
     private MavenProject project;
 
-    @Parameter(required = true, readonly = true, defaultValue = "net.courtanet")
+    @Parameter(required = true)
     private String packageFilter;
 
     @Override
@@ -114,11 +114,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
         }
     }
 
-    private static List<VisitorPath> process(Class<?> projetClass, String packageFilter)
+    private List<VisitorPath> process(Class<?> projetClass, String packageFilter)
             throws IllegalArgumentException, SecurityException, IllegalAccessException,
             InvocationTargetException, IntrospectionException {
         final List<VisitorPath> collected = new ArrayList<>();
-        ModelVisitor.visitModel(projetClass, new Visitor(projetClass, collected), packageFilter);
+        new ModelVisitor(getLog()).visitModel(projetClass, new Visitor(projetClass, collected), packageFilter);
         return collected;
     }
 
@@ -169,8 +169,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
             throws IOException, PropertyParsingException {
         final String targetClassName = modelClass.getSimpleName() + "Wrapper";
         final String targetPackage = modelClass.getPackage().getName();
-        final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'), targetClassName
-                + ".java");
+        final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
+                targetClassName + ".java");
         final String classTemplate = template("WrapperClass.template");
         createDirectories(targetFile.getParentFile().toPath());
         final Map<String, String> conf = new HashMap<>();
