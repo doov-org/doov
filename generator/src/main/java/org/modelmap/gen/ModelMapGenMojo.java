@@ -16,17 +16,17 @@ import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
 import java.beans.IntrospectionException;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.net.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.modelmap.core.FieldId;
 import org.modelmap.gen.processor.PropertyParsingException;
+import org.sonatype.aether.RepositorySystemSession;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -56,6 +56,9 @@ public final class ModelMapGenMojo extends AbstractMojo {
     @Parameter(required = true)
     private String packageFilter;
 
+    @Parameter(required = true, readonly = true, property = "repositorySystemSession")
+    private RepositorySystemSession session;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (sourceClasses == null)
@@ -79,21 +82,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             throw new MojoExecutionException("unable to create source folder", e);
         }
 
-        final List<URL> urls = new ArrayList<>();
-        try {
-            for (String element : project.getCompileClasspathElements()) {
-                urls.add(new File(element).toURI().toURL());
-            }
-            for (Artifact artifact : project.getDependencyArtifacts()) {
-                urls.add(artifact.getFile().toURI().toURL());
-            }
-            urls.add(new File(buildDirectory + "/classes").toURI().toURL());
-        } catch (DependencyResolutionRequiredException | MalformedURLException e) {
-            throw new MojoFailureException(e.getMessage());
-        }
-
-        final URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),
-                        Thread.currentThread().getContextClassLoader());
+        final URLClassLoader classLoader = ClassLoaderUtils.getUrlClassLoader(project);
         try {
             for (int i = 0; i < sourceClasses.size(); i++) {
                 @SuppressWarnings("unchecked")
