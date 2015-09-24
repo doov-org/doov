@@ -28,7 +28,7 @@ final class ModelVisitor {
     public void visitModel(Class<?> clazz, Visitor visitor, String packageFilter)
                     throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
                     InvocationTargetException {
-        log.info("starting visiting class " + clazz.getName());
+        log.debug("starting visiting class " + clazz.getName());
         visitModel(clazz, visitor, new LinkedList<>(), packageFilter, 0);
     }
 
@@ -47,11 +47,11 @@ final class ModelVisitor {
         if (deep > 8)
             return;
 
-        log.info("class " + clazz.getName());
+        log.debug("class " + clazz.getName());
         final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
         final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor desc : propertyDescriptors) {
-            log.info("property " + desc.getName() + " : " + desc.getPropertyType().getSimpleName()
+            log.debug("property " + desc.getName() + " : " + desc.getPropertyType().getSimpleName()
                             + " from " + clazz.getName());
             path.addLast(desc.getReadMethod());
             try {
@@ -59,7 +59,7 @@ final class ModelVisitor {
                 if (formParam.isEmpty()) {
                     continue;
                 }
-                log.info(formParam.size() + " path(s) found ");
+                log.debug(formParam.size() + " path(s) found ");
                 visitor.visit(formParam, desc.getReadMethod(), desc.getWriteMethod(), path);
             } finally {
                 path.removeLast();
@@ -98,21 +98,21 @@ final class ModelVisitor {
     }
 
     private Map<FieldId, PathConstraint> getFieldTarget(AccessibleObject executable, Annotation... annotations) {
-        log.info(annotations.length + " annotations to process from " + executable.toString());
+        log.debug(annotations.length + " annotations to process from " + executable.toString());
 
         Set<Class<? extends Annotation>> pathAnnotations = stream(annotations)
                         .filter(a -> a.annotationType().getAnnotation(Path.class) != null)
                         .map(Annotation::annotationType)
                         .collect(toSet());
 
-        log.info(pathAnnotations.size() + " paths annotations to process from " + executable.toString());
+        log.debug(pathAnnotations.size() + " paths annotations to process from " + executable.toString());
 
         return pathAnnotations.stream()
                         .map(a -> asList(executable.getAnnotationsByType(a)))
                         .flatMap(Collection::stream)
                         .map(a -> {
                             try {
-                                log.info("process annotation " + a.toString());
+                                log.debug("process annotation " + a.toString());
                                 Method fieldIdGetter = getMethodByClass(a.annotationType(), FieldId.class);
                                 Method contraintGetter = getMethodByClass(a.annotationType(), PathConstraint.class);
                                 return new SimpleImmutableEntry<>((FieldId) fieldIdGetter.invoke(a),
@@ -126,10 +126,10 @@ final class ModelVisitor {
     }
 
     private Method getMethodByClass(Class<?> clazz, Class<?> interfaceType) {
-        log.info("process annotation type " + clazz.getName());
+        log.debug("process annotation type " + clazz.getName());
         return stream(clazz.getMethods())
                         .filter(f -> {
-                            log.info("process annotation field " + f.toString());
+                            log.debug("process annotation field " + f.toString());
                             return asList(f.getReturnType().getInterfaces()).contains(interfaceType);
                         })
                         .findFirst().get();

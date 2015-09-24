@@ -14,7 +14,8 @@ import static org.modelmap.gen.ModelWrapperGen.mapSetter;
 import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
 
 import java.beans.IntrospectionException;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -26,7 +27,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.modelmap.core.FieldId;
 import org.modelmap.gen.processor.PropertyParsingException;
-import org.sonatype.aether.RepositorySystemSession;
+import org.modelmap.gen.utils.ClassLoaderUtils;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -55,9 +56,6 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
     @Parameter(required = true)
     private String packageFilter;
-
-    @Parameter(required = true, readonly = true, property = "repositorySystemSession")
-    private RepositorySystemSession session;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -111,18 +109,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
     private void generateCsv(List<VisitorPath> collected, Class<?> clazz) throws IOException, MojoExecutionException {
         final File targetFile = new File(buildResourceDirectory, clazz.getSimpleName() + ".csv");
         targetFile.getParentFile().mkdirs();
-        try (FileWriter writter = new FileWriter(targetFile)) {
-            for (VisitorPath path : collected) {
-                writter.write(path.toCsv());
-            }
-            for (FieldId field : fieldsWithoutPath(collected)) {
-                writter.write("NO_PATH;");
-                writter.write(field.toString());
-                writter.write('\n');
-            }
-        } catch (Exception e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        }
+        FieldCsvGen.write(targetFile, collected);
         getLog().info("written : " + targetFile);
     }
 
@@ -176,18 +163,5 @@ public final class ModelMapGenMojo extends AbstractMojo {
         final String content = replaceProperties(classTemplate, conf, MISSING_VALUE);
         Files.write(content.getBytes(), targetFile);
         getLog().info("written : " + targetFile);
-    }
-
-    private static Collection<FieldId> fieldsWithoutPath(List<VisitorPath> collected) throws IllegalArgumentException,
-                    SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-        final Set<FieldId> fields = new HashSet<>();
-        for (VisitorPath path : collected) {
-            final FieldId[] values = (FieldId[]) path.getFieldId().getClass().getMethod("values").invoke(null);
-            fields.addAll(asList(values));
-        }
-        for (VisitorPath path : collected) {
-            fields.remove(path.getFieldId());
-        }
-        return fields;
     }
 }

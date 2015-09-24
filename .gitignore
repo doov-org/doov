@@ -1,7 +1,11 @@
 .idea
-target
 *.iml
-sample/generated/src/generated
+
 .classpath
 .project
 .settings
+
+target
+target-eclipse
+
+**/src/generated
