@@ -1,13 +1,13 @@
 package org.modelmap.sample.field;
 
-import org.modelmap.core.FieldId;
-import org.modelmap.core.TagId;
-
-import java.util.Collection;
-
 import static java.util.Arrays.asList;
 import static org.modelmap.sample.field.SampleTag.ACCOUNT;
 import static org.modelmap.sample.field.SampleTag.USER;
+
+import java.util.Collection;
+
+import org.modelmap.core.FieldId;
+import org.modelmap.core.TagId;
 
 public enum SampleFieldId implements FieldId {
 

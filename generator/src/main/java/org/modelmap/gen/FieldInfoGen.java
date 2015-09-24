@@ -1,12 +1,11 @@
 package org.modelmap.gen;
 
-
-import org.modelmap.core.FieldId;
+import static org.modelmap.gen.ModelWrapperGen.getterBoxingType;
+import static org.modelmap.gen.ModelWrapperGen.pathGroups;
 
 import java.util.*;
 
-import static org.modelmap.gen.ModelWrapperGen.getterBoxingType;
-import static org.modelmap.gen.ModelWrapperGen.pathGroups;
+import org.modelmap.core.FieldId;
 
 final class FieldInfoGen {
 

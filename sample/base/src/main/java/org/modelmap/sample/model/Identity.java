@@ -1,8 +1,6 @@
 package org.modelmap.sample.model;
 
-import org.modelmap.sample.field.SampleConstraint;
-import org.modelmap.sample.field.SampleFieldId;
-import org.modelmap.sample.field.SamplePath;
+import org.modelmap.sample.field.*;
 
 public class Identity {
 

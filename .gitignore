@@ -2,3 +2,6 @@
 target
 *.iml
 sample/generated/src/generated
+.classpath
+.project
+.settings

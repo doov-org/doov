@@ -1,29 +1,28 @@
 package org.modelmap.gen;
 
-import com.google.common.base.Joiner;
-import org.modelmap.core.FieldId;
-import org.modelmap.gen.processor.PropertyParsingException;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.*;
-
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 import static org.modelmap.gen.ModelMapGenMojo.template;
 import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
 
+import java.io.IOException;
+import java.lang.reflect.*;
+import java.util.*;
+
+import org.modelmap.core.FieldId;
+import org.modelmap.gen.processor.PropertyParsingException;
+
+import com.google.common.base.Joiner;
+
 final class ModelWrapperGen {
+
     static final String SUPPRESS_WARN_RAW = "@SuppressWarnings({ \"unchecked\", \"rawtypes\" })";
     static final String SUPPRESS_WARN_UNCHECKED = "@SuppressWarnings(\"unchecked\")\n";
     static final String MISSING_VALUE = "/** missing value **/";
 
     static String mapFieldTypeIfStatement(String templateFileName, List<VisitorPath> collected) throws IOException,
-            PropertyParsingException {
+                    PropertyParsingException {
         final StringBuilder buffer = new StringBuilder();
         final String template = template(templateFileName);
         final Set<Class<?>> fieldTypes = collected.stream().map(path -> path.getFieldId().getClass()).collect(toSet());
@@ -169,7 +168,7 @@ final class ModelWrapperGen {
     }
 
     private static String lazyInit(List<Method> paths, int index, FieldId field, Method lastGetMethod)
-            throws IOException, PropertyParsingException {
+                    throws IOException, PropertyParsingException {
         final String lazyInitTemplate = template("LazyInitBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
@@ -182,7 +181,7 @@ final class ModelWrapperGen {
     }
 
     private static String lazyInitList(List<Method> paths, int index, FieldId field, Method lastGetMethod)
-            throws IOException, PropertyParsingException {
+                    throws IOException, PropertyParsingException {
         final String lazyInitTemplate = template("LazyInitListBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
@@ -201,7 +200,7 @@ final class ModelWrapperGen {
     }
 
     private static String listContentAsNull(List<Method> paths, int index, FieldId field) throws IOException,
-            PropertyParsingException {
+                    PropertyParsingException {
         final StringBuilder buffer = new StringBuilder();
         final String lazyInitTemplate = template("LazyInitListBlockNull.template");
         for (int i = 0; i < field.position() - 1; i++) {
@@ -251,7 +250,7 @@ final class ModelWrapperGen {
     }
 
     private static String setterSwitchContent(Map<FieldId, List<VisitorPath>> pathGroups) throws IOException,
-            PropertyParsingException {
+                    PropertyParsingException {
         final StringBuilder buffer = new StringBuilder();
         final String switchContent = template("SetSwitchBlock.template");
         for (FieldId FieldId : sortFields(pathGroups.keySet())) {
@@ -287,7 +286,7 @@ final class ModelWrapperGen {
     }
 
     private static String getterSwitchContent(Map<FieldId, List<VisitorPath>> pathGroups) throws IOException,
-            PropertyParsingException {
+                    PropertyParsingException {
         final StringBuilder buffer = new StringBuilder();
         final String switchContent = template("GetSwitchBlock.template");
         for (FieldId FieldId : sortFields(pathGroups.keySet())) {
@@ -309,7 +308,7 @@ final class ModelWrapperGen {
     private static String setterBoxingChecker(VisitorPath path) {
         final Class<?> type = path.getGetMethod().getReturnType();
         if (Integer.TYPE.equals(type) || Double.TYPE.equals(type) || //
-                Float.TYPE.equals(type) || Long.TYPE.equals(type) || Short.TYPE.equals(type)) {
+                        Float.TYPE.equals(type) || Long.TYPE.equals(type) || Short.TYPE.equals(type)) {
             return "value != null ? value : 0";
         }
         if (Boolean.TYPE.equals(type)) {

@@ -1,24 +1,21 @@
 package org.modelmap.gen;
 
-import org.apache.maven.plugin.logging.Log;
-import org.modelmap.core.FieldId;
-import org.modelmap.core.Path;
-import org.modelmap.core.PathConstraint;
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import java.beans.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.*;
 
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.*;
+import org.apache.maven.plugin.logging.Log;
+import org.modelmap.core.*;
 
 final class ModelVisitor {
 
@@ -29,15 +26,16 @@ final class ModelVisitor {
     }
 
     public void visitModel(Class<?> clazz, Visitor visitor, String packageFilter)
-            throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException {
+                    throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
+                    InvocationTargetException {
         log.info("starting visiting class " + clazz.getName());
         visitModel(clazz, visitor, new LinkedList<>(), packageFilter, 0);
     }
 
     private void visitModel(Class<?> clazz, Visitor visitor, LinkedList<Method> path, String packageFilter,
-                            int deep)
-            throws IntrospectionException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+                    int deep)
+                    throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
+                    InvocationTargetException {
         if (clazz == null)
             return;
         if (clazz.getPackage() == null)
@@ -54,7 +52,7 @@ final class ModelVisitor {
         final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor desc : propertyDescriptors) {
             log.info("property " + desc.getName() + " : " + desc.getPropertyType().getSimpleName()
-                    + " from " + clazz.getName());
+                            + " from " + clazz.getName());
             path.addLast(desc.getReadMethod());
             try {
                 final Map<FieldId, PathConstraint> formParam = getFieldTarget(clazz, desc);
@@ -99,43 +97,42 @@ final class ModelVisitor {
         return fieldTarget;
     }
 
-
     private Map<FieldId, PathConstraint> getFieldTarget(AccessibleObject executable, Annotation... annotations) {
         log.info(annotations.length + " annotations to process from " + executable.toString());
 
         Set<Class<? extends Annotation>> pathAnnotations = stream(annotations)
-                .filter(a -> a.annotationType().getAnnotation(Path.class) != null)
-                .map(Annotation::annotationType)
-                .collect(toSet());
+                        .filter(a -> a.annotationType().getAnnotation(Path.class) != null)
+                        .map(Annotation::annotationType)
+                        .collect(toSet());
 
         log.info(pathAnnotations.size() + " paths annotations to process from " + executable.toString());
 
         return pathAnnotations.stream()
-                .map(a -> asList(executable.getAnnotationsByType(a)))
-                .flatMap(Collection::stream)
-                .map(a -> {
-                    try {
-                        log.info("process annotation " + a.toString());
-                        Method fieldIdGetter = getMethodByClass(a.annotationType(), FieldId.class);
-                        Method contraintGetter = getMethodByClass(a.annotationType(), PathConstraint.class);
-                        return new SimpleImmutableEntry<>((FieldId) fieldIdGetter.invoke(a),
-                                (PathConstraint) contraintGetter.invoke(a));
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
+                        .map(a -> asList(executable.getAnnotationsByType(a)))
+                        .flatMap(Collection::stream)
+                        .map(a -> {
+                            try {
+                                log.info("process annotation " + a.toString());
+                                Method fieldIdGetter = getMethodByClass(a.annotationType(), FieldId.class);
+                                Method contraintGetter = getMethodByClass(a.annotationType(), PathConstraint.class);
+                                return new SimpleImmutableEntry<>((FieldId) fieldIdGetter.invoke(a),
+                                                (PathConstraint) contraintGetter.invoke(a));
+                            } catch (IllegalAccessException | InvocationTargetException e) {
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
+                        .collect(toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
     }
 
     private Method getMethodByClass(Class<?> clazz, Class<?> interfaceType) {
         log.info("process annotation type " + clazz.getName());
         return stream(clazz.getMethods())
-                .filter(f -> {
-                    log.info("process annotation field " + f.toString());
-                    return asList(f.getReturnType().getInterfaces()).contains(interfaceType);
-                })
-                .findFirst().get();
+                        .filter(f -> {
+                            log.info("process annotation field " + f.toString());
+                            return asList(f.getReturnType().getInterfaces()).contains(interfaceType);
+                        })
+                        .findFirst().get();
     }
 
     private Collection<Method> methods(Class<?> clazz, String packageFilter) {
@@ -153,15 +150,15 @@ final class ModelVisitor {
 
     private Collection<Method> filter(Method[] methods, String packageFilter) {
         final List<Method> filtered = stream(methods)
-                .filter(m -> !Modifier.isStatic(m.getModifiers()))
-                .filter(m -> !Modifier.isNative(m.getModifiers()))
-                .filter(m -> Modifier.isPublic(m.getModifiers()))
-                .filter(m -> m.getReturnType() != null)
-                .filter(m -> !m.getReturnType().equals(Void.TYPE))
-                .filter(m -> m.getParameterTypes().length == 0)
-                .filter(m -> m.getDeclaringClass().getPackage().getName().startsWith(packageFilter))
-                .filter(m -> !m.getName().toLowerCase().contains("clone"))
-                .collect(toList());
+                        .filter(m -> !Modifier.isStatic(m.getModifiers()))
+                        .filter(m -> !Modifier.isNative(m.getModifiers()))
+                        .filter(m -> Modifier.isPublic(m.getModifiers()))
+                        .filter(m -> m.getReturnType() != null)
+                        .filter(m -> !m.getReturnType().equals(Void.TYPE))
+                        .filter(m -> m.getParameterTypes().length == 0)
+                        .filter(m -> m.getDeclaringClass().getPackage().getName().startsWith(packageFilter))
+                        .filter(m -> !m.getName().toLowerCase().contains("clone"))
+                        .collect(toList());
 
         final List<Method> overrided = new ArrayList<>();
         for (Method method : filtered) {
@@ -192,7 +189,7 @@ final class ModelVisitor {
             return (Class<?>) method.getGenericReturnType();
         }
         if (List.class.isAssignableFrom(method.getReturnType())
-                && method.getGenericReturnType() instanceof ParameterizedType) {
+                        && method.getGenericReturnType() instanceof ParameterizedType) {
             final ParameterizedType returnType = (ParameterizedType) method.getGenericReturnType();
             if (returnType == null) {
                 return null;

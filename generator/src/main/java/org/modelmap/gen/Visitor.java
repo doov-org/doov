@@ -1,16 +1,16 @@
 package org.modelmap.gen;
 
-
-import org.modelmap.core.FieldId;
-import org.modelmap.core.PathConstraint;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
+import org.modelmap.core.FieldId;
+import org.modelmap.core.PathConstraint;
 
 final class Visitor {
+
     private final Class<?> baseClass;
     private final List<VisitorPath> collected;
 

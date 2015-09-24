@@ -4,10 +4,7 @@
 package org.modelmap.gen.processor;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Substitution récursive de variables ${...} dans un template (à la script Ant).
@@ -17,43 +14,43 @@ public class MacroProcessor {
     private static final int MAX_DEPTH = 5;
     public static final String REF_PREFIX = "${";
     public static final String REF_SUFFIX = "}";
-    private static final String STR_MORE_THAN_0_LEVEL_TO_EXPAND_1 = "There is more than {0} level to expand the property : ''{1}'')";
+    private static final String STR_MORE_THAN_0_LEVEL_TO_EXPAND_1 = "There is more than {0} level to expand the " +
+                    "property : ''{1}'')";
     private static final String STR_SYNTAX_ERROR_IN_0 = "Syntax error in property: ''{0}''";
     private static final MessageFormat MORE_THAN_0_LEVEL_TO_EXPAND_1 = new MessageFormat(
-            STR_MORE_THAN_0_LEVEL_TO_EXPAND_1);
+                    STR_MORE_THAN_0_LEVEL_TO_EXPAND_1);
     private static final Evaluator DEFAULT_STRING_EVAL = new DefaultEvaluator();
 
     @SuppressWarnings("unchecked")
     public static String replaceProperties(String value, Map<String, ?> conf, MacroParamProcessor paramProcessor)
-            throws PropertyParsingException {
+                    throws PropertyParsingException {
         return replacePropertiesRec(value, (Map<String, Object>) conf, new ArrayList<>(),
-                new ArrayList<>(), 0, null, paramProcessor, DEFAULT_STRING_EVAL);
+                        new ArrayList<>(), 0, null, paramProcessor, DEFAULT_STRING_EVAL);
     }
 
     public static String replaceProperties(String value, Map<String, ?> conf, String defaultReplacement)
-            throws PropertyParsingException {
+                    throws PropertyParsingException {
         return replacePropertiesRec(value, conf, new ArrayList<>(), new ArrayList<>(), 0,
-                defaultReplacement);
+                        defaultReplacement);
     }
 
     @SuppressWarnings("unchecked")
     public static String replaceProperties(String value, Map<String, ?> conf, String defaultReplacement,
-                                           Evaluator evaluator) throws PropertyParsingException {
+                    Evaluator evaluator) throws PropertyParsingException {
         return replacePropertiesRec(value, (Map<String, Object>) conf, new ArrayList<>(),
-                new ArrayList<>(), 0, defaultReplacement, null, evaluator);
+                        new ArrayList<>(), 0, defaultReplacement, null, evaluator);
     }
 
     @SuppressWarnings("unchecked")
     public static String replaceProperties(String value, Map<String, ?> conf, int depth)
-            throws PropertyParsingException {
+                    throws PropertyParsingException {
         return replacePropertiesRec(value, (Map<String, Object>) conf, new ArrayList<>(),
-                new ArrayList<>(), depth, null, null, DEFAULT_STRING_EVAL);
+                        new ArrayList<>(), depth, null, null, DEFAULT_STRING_EVAL);
     }
 
     /**
-     * Macro-expand parameter references <code>${xx}</code>.<br>
-     * If a reference is not found, the value of {@code param} is used if it is not null - otherwise referenc is not
-     * replaced.
+     * Macro-expand parameter references <code>${xx}</code>.<br> If a reference is not found, the value of {@code param}
+     * is used if it is not null - otherwise referenc is not replaced.
      *
      * @param value              input string
      * @param conf               map containing all known parameters
@@ -66,15 +63,15 @@ public class MacroProcessor {
      */
     @SuppressWarnings("unchecked")
     public static String replacePropertiesRec(String value, Map<String, ?> conf, List<String> fragments,
-                                              List<String> propertyRefs, int depth, String defaultReplacement)
-            throws PropertyParsingException {
+                    List<String> propertyRefs, int depth, String defaultReplacement)
+                    throws PropertyParsingException {
         return replacePropertiesRec(value, (Map<String, Object>) conf, fragments, propertyRefs, depth,
-                defaultReplacement, null, DEFAULT_STRING_EVAL);
+                        defaultReplacement, null, DEFAULT_STRING_EVAL);
     }
 
     private static String replacePropertiesRec(String value, Map<String, Object> conf, List<String> fragments,
-                                               List<String> propertyRefs, int depth, String defaultReplacement,
-                                               MacroParamProcessor paramProcessor, Evaluator evaluator) throws PropertyParsingException {
+                    List<String> propertyRefs, int depth, String defaultReplacement,
+                    MacroParamProcessor paramProcessor, Evaluator evaluator) throws PropertyParsingException {
         parsePropertyString(value, fragments, propertyRefs);
         final StringBuilder unkownParam = new StringBuilder();
         final StringBuilder sb = new StringBuilder();
@@ -99,10 +96,10 @@ public class MacroProcessor {
             fragments.clear();
             propertyRefs.clear();
             return replacePropertiesRec(expandedValue, conf, fragments, propertyRefs, depth + 1,
-                    defaultReplacement, paramProcessor, evaluator);
+                            defaultReplacement, paramProcessor, evaluator);
         } else if (containProperty && depth > MAX_DEPTH) {
-            throw new PropertyParsingException(MORE_THAN_0_LEVEL_TO_EXPAND_1.format(new Object[]{MAX_DEPTH,
-                    expandedValue}));
+            throw new PropertyParsingException(MORE_THAN_0_LEVEL_TO_EXPAND_1.format(new Object[] { MAX_DEPTH,
+                            expandedValue }));
         } else {
             return expandedValue;
         }
@@ -112,9 +109,8 @@ public class MacroProcessor {
     /**
      * Parses a string containing <code>${xxx}</code> style property references into two lists. The first list is a
      * collection of text fragments, while the other is a set of string property names. <code>null</code> entries in the
-     * first list indicate a property reference from the second list.
-     * <p>
-     * It can be overridden with a more efficient or customized version.
+     * first list indicate a property reference from the second list. <p> It can be overridden with a more efficient or
+     * customized version.
      *
      * @param textToParse  Text to parse. Must not be <code>null</code>.
      * @param fragments    List to add text fragments to. Must not be <code>null</code>.
@@ -123,7 +119,7 @@ public class MacroProcessor {
      *                                  <code>}</code>
      */
     public static void parsePropertyString(String textToParse, List<String> fragments, List<String> propertyRefs)
-            throws PropertyParsingException {
+                    throws PropertyParsingException {
         final MessageFormat SYNTAX_ERROR_IN_0 = new MessageFormat(STR_SYNTAX_ERROR_IN_0);
         int prev = 0;
         int pos;
@@ -163,7 +159,7 @@ public class MacroProcessor {
                 // property found, extract its name or bail on a typo
                 final int endName = textToParse.indexOf('}', pos);
                 if (endName < 0) {
-                    throw new PropertyParsingException(SYNTAX_ERROR_IN_0.format(new String[]{textToParse}));
+                    throw new PropertyParsingException(SYNTAX_ERROR_IN_0.format(new String[] { textToParse }));
                 }
                 String propertyName = textToParse.substring(pos + 2, endName);
                 fragments.add(null);

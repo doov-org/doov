@@ -1,13 +1,13 @@
 package org.modelmap.gen;
 
-import org.modelmap.core.FieldId;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmap.core.FieldId;
 
 public final class VisitorPath {
+
     private final Class<?> baseClass;
     private final List<Method> path;
     private final FieldId fieldId;
@@ -50,7 +50,6 @@ public final class VisitorPath {
         return path.stream().anyMatch(p -> p.getGenericReturnType().toString().contains("<"));
     }
 
-
     public String displayPath() {
         return getterPath(path, fieldId.position());
     }
@@ -63,8 +62,8 @@ public final class VisitorPath {
 
     public String toCsv() {
         return baseClass.getSimpleName().toLowerCase() + "." + displayPath() + ';'
-                + fieldId + ';'
-                + getMethod.getReturnType().getSimpleName() + '\n';
+                        + fieldId + ';'
+                        + getMethod.getReturnType().getSimpleName() + '\n';
     }
 
     static String getterPath(List<Method> path) {

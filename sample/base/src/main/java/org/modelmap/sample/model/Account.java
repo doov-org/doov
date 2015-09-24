@@ -3,13 +3,10 @@
  */
 package org.modelmap.sample.model;
 
+import java.util.*;
+
 import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.field.SamplePath;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 
 public class Account extends Identity {
 

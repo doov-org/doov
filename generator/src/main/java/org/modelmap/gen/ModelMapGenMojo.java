@@ -1,29 +1,5 @@
 package org.modelmap.gen;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-import com.google.common.io.Resources;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
-import org.modelmap.core.FieldId;
-import org.modelmap.gen.processor.PropertyParsingException;
-
-import java.beans.IntrospectionException;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.*;
-
 import static java.nio.file.Files.createDirectories;
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
@@ -31,8 +7,30 @@ import static java.time.format.FormatStyle.SHORT;
 import static java.util.Arrays.asList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES;
 import static org.modelmap.gen.FieldInfoGen.literals;
-import static org.modelmap.gen.ModelWrapperGen.*;
+import static org.modelmap.gen.ModelWrapperGen.MISSING_VALUE;
+import static org.modelmap.gen.ModelWrapperGen.mapFieldTypeIfStatement;
+import static org.modelmap.gen.ModelWrapperGen.mapGetter;
+import static org.modelmap.gen.ModelWrapperGen.mapSetter;
 import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
+
+import java.beans.IntrospectionException;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.net.*;
+import java.util.*;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.plugin.*;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
+import org.modelmap.core.FieldId;
+import org.modelmap.gen.processor.PropertyParsingException;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+import com.google.common.io.Resources;
 
 @Mojo(name = "generate", defaultPhase = GENERATE_SOURCES, threadSafe = true)
 public final class ModelMapGenMojo extends AbstractMojo {
@@ -81,7 +79,6 @@ public final class ModelMapGenMojo extends AbstractMojo {
             throw new MojoExecutionException("unable to create source folder", e);
         }
 
-
         final List<URL> urls = new ArrayList<>();
         try {
             for (String element : project.getCompileClasspathElements()) {
@@ -96,12 +93,12 @@ public final class ModelMapGenMojo extends AbstractMojo {
         }
 
         final URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),
-                Thread.currentThread().getContextClassLoader());
+                        Thread.currentThread().getContextClassLoader());
         try {
             for (int i = 0; i < sourceClasses.size(); i++) {
                 @SuppressWarnings("unchecked")
                 final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>)
-                        Class.forName(fieldClasses.get(i), true, classLoader);
+                                Class.forName(fieldClasses.get(i), true, classLoader);
                 final List<FieldId> fieldsOrder = asList(fieldClazz.getEnumConstants());
                 final Class<?> modelClazz = Class.forName(sourceClasses.get(i), true, classLoader);
                 final List<VisitorPath> collected = process(modelClazz, packageFilter);
@@ -115,8 +112,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
     }
 
     private List<VisitorPath> process(Class<?> projetClass, String packageFilter)
-            throws IllegalArgumentException, SecurityException, IllegalAccessException,
-            InvocationTargetException, IntrospectionException {
+                    throws IllegalArgumentException, SecurityException, IllegalAccessException,
+                    InvocationTargetException, IntrospectionException {
         final List<VisitorPath> collected = new ArrayList<>();
         new ModelVisitor(getLog()).visitModel(projetClass, new Visitor(projetClass, collected), packageFilter);
         return collected;
@@ -146,11 +143,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
     }
 
     private void generateFieldInfo(List<VisitorPath> collected, List<FieldId> fieldsOrder, Class<?> clazz)
-            throws IOException, PropertyParsingException {
+                    throws IOException, PropertyParsingException {
         final String targetClassName = clazz.getSimpleName() + "Info";
         final String targetPackage = clazz.getPackage().getName();
         final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'), targetClassName
-                + ".java");
+                        + ".java");
         final String classTemplate = template("FieldInfoEnum.template");
         createDirectories(targetFile.getParentFile().toPath());
         final Map<String, String> conf = new HashMap<>();
@@ -166,11 +163,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
     }
 
     private void generateWrapper(List<VisitorPath> collected, Class<?> modelClass, Class<?> fieldClass)
-            throws IOException, PropertyParsingException {
+                    throws IOException, PropertyParsingException {
         final String targetClassName = modelClass.getSimpleName() + "Wrapper";
         final String targetPackage = modelClass.getPackage().getName();
         final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
-                targetClassName + ".java");
+                        targetClassName + ".java");
         final String classTemplate = template("WrapperClass.template");
         createDirectories(targetFile.getParentFile().toPath());
         final Map<String, String> conf = new HashMap<>();
@@ -193,7 +190,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
     }
 
     private static Collection<FieldId> fieldsWithoutPath(List<VisitorPath> collected) throws IllegalArgumentException,
-            SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+                    SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         final Set<FieldId> fields = new HashSet<>();
         for (VisitorPath path : collected) {
             final FieldId[] values = (FieldId[]) path.getFieldId().getClass().getMethod("values").invoke(null);

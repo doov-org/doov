@@ -3,7 +3,6 @@
  */
 package org.modelmap.gen.processor;
 
-
 import java.util.Map;
 
 public class DefaultEvaluator implements Evaluator {

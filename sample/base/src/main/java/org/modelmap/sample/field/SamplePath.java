@@ -1,12 +1,10 @@
 package org.modelmap.sample.field;
 
-import org.modelmap.core.Path;
-
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import static org.modelmap.sample.field.SampleConstraint.NONE;
+
+import java.lang.annotation.*;
+
+import org.modelmap.core.Path;
 
 @Path
 @Repeatable(SamplePaths.class)

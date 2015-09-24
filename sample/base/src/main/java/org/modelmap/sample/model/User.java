@@ -3,10 +3,10 @@
  */
 package org.modelmap.sample.model;
 
+import java.util.Date;
+
 import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.field.SamplePath;
-
-import java.util.Date;
 
 public class User extends Identity {
 
