@@ -32,8 +32,7 @@ final class ModelVisitor {
         visitModel(clazz, visitor, new LinkedList<>(), packageFilter, 0);
     }
 
-    private void visitModel(Class<?> clazz, Visitor visitor, LinkedList<Method> path, String packageFilter,
-                    int deep)
+    private void visitModel(Class<?> clazz, Visitor visitor, LinkedList<Method> path, String packageFilter, int deep)
                     throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
                     InvocationTargetException {
         if (clazz == null)

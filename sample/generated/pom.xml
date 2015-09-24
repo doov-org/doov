@@ -45,7 +45,7 @@
               <outputDirectory>${basedir}/src/generated/java</outputDirectory>
               <packageFilter>org.modelmap</packageFilter>
               <sourceClasses>
-                <sourceClass>org.modelmap.sample.model.SampleContext</sourceClass>
+                <sourceClass>org.modelmap.sample.model.SampleModel</sourceClass>
               </sourceClasses>
               <fieldClasses>
                 <fieldClass>org.modelmap.sample.field.SampleFieldId</fieldClass>

@@ -1,19 +1,30 @@
 package ${package.name};
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toSet;
+
+import java.util.Set;
 import javax.annotation.Generated;
 
-import org.modelmap.core.DefaultFieldModel;
+import org.modelmap.core.FieldModel;
 import org.modelmap.core.FieldId;
+import org.modelmap.core.FieldInfo;
 import ${target.field.info.package.name}.${target.field.info.class.name};
 
 @Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
-public final class ${target.class.name} extends DefaultFieldModel {
+public final class ${target.class.name} implements FieldModel {
 
+    private final Set<FieldInfo> fieldInfos;
     private final ${target.project.class.name} model;
 
     public ${target.class.name}() {
-        super(${target.field.info.class.name}.values());
+        this.fieldInfos = stream(${target.field.info.class.name}.values()).collect(toSet());
         this.model = new ${target.project.class.name}();
+    }
+
+    @Override
+    public Set<FieldInfo> getFieldInfos() {
+        return fieldInfos;
     }
 
     @Override
