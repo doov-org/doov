@@ -50,6 +50,7 @@ public final class VisitorPath {
         return path.stream().anyMatch(p -> p.getGenericReturnType().toString().contains("<"));
     }
 
+    // FIXME method naming ?
     public String displayPath() {
         return getterPath(path, fieldId.position());
     }
