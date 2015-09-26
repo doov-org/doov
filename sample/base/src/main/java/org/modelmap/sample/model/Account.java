@@ -64,7 +64,7 @@ public class Account extends Identity {
         this.language = language;
     }
 
-    public Boolean isAcceptEmail() {
+    public Boolean getAcceptEmail() {
         return acceptEmail;
     }
 
@@ -94,5 +94,13 @@ public class Account extends Identity {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public List<FavoriteWebsite> getTop3WebSite() {
+        return top3WebSite;
+    }
+
+    public void setTop3WebSite(List<FavoriteWebsite> top3WebSite) {
+        this.top3WebSite = top3WebSite;
     }
 }

@@ -58,7 +58,7 @@ final class ModelVisitor {
                 if (formParam.isEmpty()) {
                     continue;
                 }
-                log.info(formParam.size() + " path(s) found ");
+                log.info(formParam.size() + " path(s) found from  " + desc);
                 visitor.visit(formParam, desc.getReadMethod(), desc.getWriteMethod(), path);
             } finally {
                 path.removeLast();
@@ -83,7 +83,7 @@ final class ModelVisitor {
         Map<FieldId, PathConstraint> fieldTarget = emptyMap();
         try {
             Field field = clazz.getDeclaredField(desc.getName());
-            fieldTarget = getFieldTarget(field, field.getAnnotations());
+            fieldTarget = getFieldTarget(field);
         } catch (NoSuchFieldException e) {
             // derived field without declared field
         }
@@ -96,16 +96,32 @@ final class ModelVisitor {
         return fieldTarget;
     }
 
-    private Map<FieldId, PathConstraint> getFieldTarget(AccessibleObject executable, Annotation... annotations) {
+    private Map<FieldId, PathConstraint> getFieldTarget(AccessibleObject executable) {
+        final Annotation[] annotations = executable.getAnnotations();
         log.info(annotations.length + " annotations to process from " + executable.toString());
 
+        // retrive declared path annotations type
         Set<Class<? extends Annotation>> pathAnnotations = stream(annotations)
                         .filter(a -> a.annotationType().getAnnotation(Path.class) != null)
                         .map(Annotation::annotationType)
                         .collect(toSet());
 
-        log.info(pathAnnotations.size() + " paths annotations to process from " + executable.toString());
+        // add those from repeatable annotations
+        stream(annotations).forEach(a -> {
+            try {
+                Method value = a.annotationType().getMethod("value");
+                Class<?> returnType = value.getReturnType();
+                if (returnType.isArray() && returnType.getComponentType().isAnnotation()) {
+                    @SuppressWarnings("unchecked")
+                    Class<? extends Annotation> type = (Class<? extends Annotation>) returnType.getComponentType();
+                    pathAnnotations.add(type);
+                }
+            } catch (NoSuchMethodException e) {
+                // no a repeatable annotations, skipping
+            }
+        });
 
+        log.info(pathAnnotations.size() + " paths annotations to process from " + executable.toString());
         return pathAnnotations.stream()
                         .map(a -> asList(executable.getAnnotationsByType(a)))
                         .flatMap(Collection::stream)

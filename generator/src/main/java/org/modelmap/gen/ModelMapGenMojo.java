@@ -105,9 +105,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
         getLog().info(collected.size() + " fields target found");
         collected.stream().forEach(c -> getLog().info(c.getFieldId() + " : " + c.displayPath()));
-
-        getLog().warn(collected.size() + " fields target missing");
-        fieldsOrder.stream().filter(f -> !founds.contains(f)).forEach(f -> getLog().warn(f.name()));
+        fieldsOrder.stream().filter(f -> !founds.contains(f)).forEach(f -> getLog().warn(f.name() + " missing"));
 
         return collected;
     }
