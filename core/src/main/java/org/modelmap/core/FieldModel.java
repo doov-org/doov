@@ -1,6 +1,3 @@
-/*
- * Copyright (C) by Courtanet, All Rights Reserved.
- */
 package org.modelmap.core;
 
 import static java.util.stream.Collectors.toList;

@@ -1,6 +1,3 @@
-/*
- * Copyright (C) by Courtanet, All Rights Reserved.
- */
 package org.modelmap.gen.utils;
 
 import static java.lang.Thread.currentThread;

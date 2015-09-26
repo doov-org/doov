@@ -1,6 +1,3 @@
-/*
- * Copyright (C) by Courtanet, All Rights Reserved.
- */
 package org.modelmap.core;
 
 import static java.util.Arrays.stream;
@@ -39,7 +36,7 @@ public class DefaultFieldModel implements FieldModel {
         stream(siblingsOf(fieldId)).forEach(s -> values.put(s, value));
     }
 
-    private static final FieldId[] NO_SIBLINGS = new FieldId[] { };
+    private static final FieldId[] NO_SIBLINGS = new FieldId[] {};
 
     private FieldId[] siblingsOf(FieldId fieldId) {
         Optional<FieldInfo> sublings = fieldInfos.stream()

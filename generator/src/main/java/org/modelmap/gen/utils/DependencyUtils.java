@@ -1,6 +1,3 @@
-/*
- * Copyright (C) by Courtanet, All Rights Reserved.
- */
 package org.modelmap.gen.utils;
 
 import java.io.File;
