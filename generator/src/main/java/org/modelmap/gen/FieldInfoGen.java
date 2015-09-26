@@ -1,7 +1,7 @@
 package org.modelmap.gen;
 
 import static org.modelmap.gen.ModelWrapperGen.getterBoxingType;
-import static org.modelmap.gen.ModelWrapperGen.pathGroups;
+import static org.modelmap.gen.VisitorPath.pathByFieldId;
 
 import java.util.*;
 
@@ -11,17 +11,17 @@ final class FieldInfoGen {
 
     static String literals(List<FieldId> fieldsOrder, List<VisitorPath> collected) {
         final StringBuilder builder = new StringBuilder();
-        final Map<FieldId, List<VisitorPath>> pathGroups = pathGroups(collected);
-        for (FieldId FieldId : sortFields(fieldsOrder, pathGroups.keySet())) {
-            final VisitorPath currentPath = pathGroups.get(FieldId).get(0);
-            String getterBoxingType = getterBoxingType(pathGroups.get(FieldId).get(0), FieldId.position());
+        final Map<FieldId, List<VisitorPath>> pathGroups = pathByFieldId(collected);
+        for (FieldId fieldId : sortFields(fieldsOrder, pathGroups.keySet())) {
+            final VisitorPath currentPath = pathGroups.get(fieldId).get(0);
+            String getterBoxingType = getterBoxingType(pathGroups.get(fieldId).get(0), fieldId.position());
             getterBoxingType = getterBoxingType.replace("<", "/*<").replace(">", ">*/");
             builder.append("    ");
-            builder.append(FieldId.toString());
+            builder.append(fieldId.toString());
             builder.append("(");
-            builder.append(FieldId.getClass().getName());
+            builder.append(fieldId.getClass().getName());
             builder.append(".");
-            builder.append(FieldId.toString());
+            builder.append(fieldId.toString());
             builder.append(", ");
             builder.append(getterBoxingType);
             builder.append(".class ");

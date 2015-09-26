@@ -33,11 +33,8 @@ final class Visitor {
     }
 
     private static boolean checkFieldTargetConstraint(List<Method> paths, FieldId FieldId, PathConstraint constraint) {
-        if (!isNullOrEmpty(constraint.includePath())) {
-            final String getterPath = VisitorPath.getterPath(paths, FieldId.position());
-            return getterPath.contains(constraint.includePath());
-        }
-        return true;
+        return isNullOrEmpty(constraint.includePath())
+                        || VisitorPath.getterPath(paths, FieldId.position()).contains(constraint.includePath());
     }
 
     private boolean contains(VisitorPath vPath) {

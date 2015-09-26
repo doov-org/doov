@@ -1,8 +1,7 @@
 package org.modelmap.gen;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.modelmap.core.FieldId;
 
@@ -50,7 +49,6 @@ public final class VisitorPath {
         return path.stream().anyMatch(p -> p.getGenericReturnType().toString().contains("<"));
     }
 
-    // FIXME method naming ?
     public String displayPath() {
         return getterPath(path, fieldId.position());
     }
@@ -59,12 +57,6 @@ public final class VisitorPath {
     public String toString() {
 
         return baseClass.getSimpleName().toLowerCase() + "." + displayPath() + ":" + fieldId;
-    }
-
-    public String toCsv() {
-        return baseClass.getSimpleName().toLowerCase() + "." + displayPath() + ';'
-                        + fieldId + ';'
-                        + getMethod.getReturnType().getSimpleName() + '\n';
     }
 
     static String getterPath(List<Method> path) {
@@ -89,4 +81,19 @@ public final class VisitorPath {
         }
         return buffer.toString();
     }
+
+    static Map<FieldId, List<VisitorPath>> pathByFieldId(List<VisitorPath> paths) {
+        final Map<FieldId, List<VisitorPath>> textPaths = new HashMap<>();
+        paths.forEach(path -> textPaths.computeIfAbsent(path.getFieldId(), f -> new ArrayList<>()).add(path));
+        // remove duplicate paths
+        textPaths.forEach((fieldId, visitorPaths) -> {
+            Map<String, VisitorPath> pathMap = new HashMap<>();
+            visitorPaths.forEach(p -> pathMap.put(p.toString(), p));
+            textPaths.put(fieldId, new ArrayList<>(pathMap.values()));
+        });
+        // sort paths
+        textPaths.values().forEach(mappedPaths -> mappedPaths.sort((o1, o2) -> o1.toString().compareTo(o2.toString())));
+        return textPaths;
+    }
+
 }

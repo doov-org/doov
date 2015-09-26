@@ -1,6 +1,6 @@
 package org.modelmap.gen;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.addAll;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -14,7 +14,7 @@ public class FieldCsvGen {
     public static void write(File output, List<VisitorPath> collected) throws MojoExecutionException {
         try (FileWriter writter = new FileWriter(output)) {
             for (VisitorPath path : collected) {
-                writter.write(path.toCsv());
+                writter.write(toCsv(path));
             }
             for (FieldId field : fieldsWithoutPath(collected)) {
                 writter.write("NO_PATH;");
@@ -26,16 +26,17 @@ public class FieldCsvGen {
         }
     }
 
-    private static Collection<FieldId> fieldsWithoutPath(List<VisitorPath> collected) throws Exception {
-        final Set<FieldId> fields = new HashSet<>();
-        for (VisitorPath path : collected) {
-            final FieldId[] values = (FieldId[]) path.getFieldId().getClass().getMethod("values").invoke(null);
-            fields.addAll(asList(values));
-        }
-        for (VisitorPath path : collected) {
-            fields.remove(path.getFieldId());
-        }
-        return fields;
+    public static String toCsv(VisitorPath path) {
+        return path.getBaseClass().getSimpleName().toLowerCase() + "." + path.displayPath() + ';'
+                        + path.getFieldId() + ';'
+                        + path.getGetMethod().getReturnType().getSimpleName() + '\n';
     }
 
+
+    private static Collection<FieldId> fieldsWithoutPath(List<VisitorPath> collected) throws Exception {
+        final Set<FieldId> fields = new HashSet<>();
+        collected.forEach(path -> addAll(fields, path.getFieldId().getClass().getEnumConstants()));
+        collected.forEach(path -> fields.remove(path.getFieldId()));
+        return fields;
+    }
 }

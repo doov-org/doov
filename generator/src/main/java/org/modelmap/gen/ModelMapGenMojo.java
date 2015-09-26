@@ -5,7 +5,6 @@ import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
 import static java.time.format.FormatStyle.SHORT;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES;
 import static org.modelmap.gen.FieldInfoGen.literals;
 import static org.modelmap.gen.ModelWrapperGen.MISSING_VALUE;
@@ -87,7 +86,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
                                 Class.forName(fieldClasses.get(i), true, classLoader);
                 final List<FieldId> fieldsOrder = asList(fieldClazz.getEnumConstants());
                 final Class<?> modelClazz = Class.forName(sourceClasses.get(i), true, classLoader);
-                final List<VisitorPath> collected = process(modelClazz, fieldsOrder, packageFilter);
+                final List<VisitorPath> collected = process(modelClazz, packageFilter);
                 generateCsv(collected, modelClazz);
                 generateWrapper(collected, modelClazz, fieldClazz);
                 generateFieldInfo(collected, fieldsOrder, fieldClazz);
@@ -97,16 +96,9 @@ public final class ModelMapGenMojo extends AbstractMojo {
         }
     }
 
-    private List<VisitorPath> process(Class<?> projetClass, List<FieldId> fieldsOrder, String filter) throws Exception {
+    private List<VisitorPath> process(Class<?> projetClass, String filter) throws Exception {
         final List<VisitorPath> collected = new ArrayList<>();
         new ModelVisitor(getLog()).visitModel(projetClass, new Visitor(projetClass, collected), filter);
-
-        final List<FieldId> founds = collected.stream().map(VisitorPath::getFieldId).collect(toList());
-
-        getLog().info(collected.size() + " fields target found");
-        collected.stream().forEach(c -> getLog().info(c.getFieldId() + " : " + c.displayPath()));
-        fieldsOrder.stream().filter(f -> !founds.contains(f)).forEach(f -> getLog().warn(f.name() + " missing"));
-
         return collected;
     }
 

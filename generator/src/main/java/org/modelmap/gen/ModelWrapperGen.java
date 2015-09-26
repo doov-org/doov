@@ -1,9 +1,10 @@
 package org.modelmap.gen;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.modelmap.gen.ModelMapGenMojo.template;
+import static org.modelmap.gen.VisitorPath.pathByFieldId;
 
 import java.io.IOException;
 import java.lang.reflect.*;
@@ -39,7 +40,7 @@ final class ModelWrapperGen {
         final String getterTemplate = template("MapGetMethod.template");
         final Set<Class<?>> fieldTypes = collected.stream().map(path -> path.getFieldId().getClass()).collect(toSet());
         for (Class<?> fieldType : sortClass(fieldTypes)) {
-            final Map<FieldId, List<VisitorPath>> pathGroups = pathGroups(filter(collected, fieldType));
+            final Map<FieldId, List<VisitorPath>> pathGroups = pathByFieldId(filterByFieldType(collected, fieldType));
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
             conf.put("switch.content", getterSwitchContent(pathGroups));
@@ -47,7 +48,7 @@ final class ModelWrapperGen {
         }
         final String fieldSetTemplate = template("FieldGetMethod.template");
         for (Class<?> fieldType : sortClass(fieldTypes)) {
-            final Map<FieldId, List<VisitorPath>> pathGroups = pathGroups(filter(collected, fieldType));
+            final Map<FieldId, List<VisitorPath>> pathGroups = pathByFieldId(filterByFieldType(collected, fieldType));
             for (FieldId FieldId : sortFields(pathGroups.keySet())) {
                 final Map<String, String> conf = new HashMap<>();
                 final List<VisitorPath> pathGroup = pathGroups.get(FieldId);
@@ -74,7 +75,7 @@ final class ModelWrapperGen {
         final String setterTemplate = template("MapSetMethod.template");
         final Set<Class<?>> fieldTypes = collected.stream().map(path -> path.getFieldId().getClass()).collect(toSet());
         for (Class<?> fieldType : sortClass(fieldTypes)) {
-            final Map<FieldId, List<VisitorPath>> pathGroups = pathGroups(filter(collected, fieldType));
+            final Map<FieldId, List<VisitorPath>> pathGroups = pathByFieldId(filterByFieldType(collected, fieldType));
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
             conf.put("switch.content", setterSwitchContent(pathGroups));
@@ -82,7 +83,7 @@ final class ModelWrapperGen {
         }
         final String fieldSetTemplate = template("FieldSetMethod.template");
         for (Class<?> fieldType : sortClass(fieldTypes)) {
-            final Map<FieldId, List<VisitorPath>> pathGroups = pathGroups(filter(collected, fieldType));
+            final Map<FieldId, List<VisitorPath>> pathGroups = pathByFieldId(filterByFieldType(collected, fieldType));
             for (FieldId FieldId : sortFields(pathGroups.keySet())) {
                 final Map<String, String> conf = new HashMap<>();
                 final List<VisitorPath> pathGroup = pathGroups.get(FieldId);
@@ -108,39 +109,10 @@ final class ModelWrapperGen {
         return buffer.toString();
     }
 
-    static Map<FieldId, List<VisitorPath>> pathGroups(List<VisitorPath> paths) {
-        final Map<FieldId, List<VisitorPath>> textPaths = new HashMap<>();
-        for (VisitorPath path : paths) {
-            if (!textPaths.containsKey(path.getFieldId())) {
-                textPaths.put(path.getFieldId(), new ArrayList<>());
-            }
-            textPaths.get(path.getFieldId()).add(path);
-        }
-        // remove duplicate paths
-        for (FieldId FieldId : textPaths.keySet()) {
-            List<VisitorPath> fieldPaths = textPaths.get(FieldId);
-            Map<String, VisitorPath> pathMap = new HashMap<>();
-            for (VisitorPath visitorPath : fieldPaths) {
-                pathMap.put(visitorPath.toString(), visitorPath);
-            }
-            textPaths.put(FieldId, new ArrayList<>(pathMap.values()));
-        }
-        // sort paths
-        for (List<VisitorPath> mappedPaths : textPaths.values()) {
-            mappedPaths.sort((o1, o2) -> o1.toString().compareTo(o2.toString()));
-        }
-        return textPaths;
-    }
-
     private static String nullCheck(VisitorPath path) throws IOException, PropertyParsingException {
         final StringBuilder buffer = new StringBuilder();
         for (int i = 1; i < path.getPath().size(); i++) {
-            final Method lastGetMethod = path.getPath().get(i - 1);
-            if (List.class.isAssignableFrom(lastGetMethod.getReturnType())) {
-                buffer.append(nullCheck(path.getPath(), i));
-            } else {
-                buffer.append(nullCheck(path.getPath(), i));
-            }
+            buffer.append(nullCheck(path.getPath(), i));
         }
         return buffer.toString();
     }
@@ -238,15 +210,10 @@ final class ModelWrapperGen {
         return null;
     }
 
-    static List<VisitorPath> filter(List<VisitorPath> paths, Class<?> type) {
-        final List<VisitorPath> collected = new ArrayList<>();
-        for (VisitorPath path : paths) {
-            if (!type.isAssignableFrom(path.getFieldId().getClass())) {
-                continue;
-            }
-            collected.add(path);
-        }
-        return collected;
+    static List<VisitorPath> filterByFieldType(List<VisitorPath> paths, Class<?> type) {
+        return paths.stream()
+                        .filter(p -> type.isAssignableFrom(p.getFieldId().getClass()))
+                        .collect(toList());
     }
 
     private static String setterSwitchContent(Map<FieldId, List<VisitorPath>> pathGroups) throws IOException,
@@ -330,27 +297,8 @@ final class ModelWrapperGen {
         return "value";
     }
 
-    static final List<String> PROJET_GENERIC_TYPES = asList("A", "B", "C", "D");
-
     static String getterBoxingType(VisitorPath path, int position) {
         final Method lastMethod = path.getPath().get(path.getPath().size() - 1);
-        final Class<?> type = lastMethod.getReturnType();
-        final Type genericReturnType = lastMethod.getGenericReturnType();
-        if (Object.class.equals(type)) {
-            TypeVariable<?> genericType = (TypeVariable<?>) genericReturnType;
-            String genericTypeName = genericType.getName();
-            if (PROJET_GENERIC_TYPES.contains(genericTypeName)) {
-                final int paramTypeIndex = PROJET_GENERIC_TYPES.indexOf(genericTypeName);
-                final Class<?> baseClass = path.getBaseClass();
-                final ParameterizedType genericSuperclass = (ParameterizedType) baseClass.getGenericSuperclass();
-                final Type argumentType = genericSuperclass.getActualTypeArguments()[paramTypeIndex];
-                return typeName(argumentType);
-            }
-        }
-        return getterBoxingType(lastMethod, position);
-    }
-
-    private static String getterBoxingType(Method lastMethod, int position) {
         final Type genericReturnType = lastMethod.getGenericReturnType();
         final Class<?> type = lastMethod.getReturnType();
         if (Integer.TYPE.equals(type)) {
