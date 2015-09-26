@@ -9,40 +9,35 @@ import java.util.*;
 public class MacroProcessor {
 
     private static final int MAX_DEPTH = 5;
-    public static final String REF_PREFIX = "${";
-    public static final String REF_SUFFIX = "}";
-    private static final String STR_MORE_THAN_0_LEVEL_TO_EXPAND_1 = "There is more than {0} level to expand the " +
-                    "property : ''{1}'')";
+    private static final String REF_PREFIX = "${";
+    private static final String REF_SUFFIX = "}";
+    private static final String STR_MORE_THAN_0_LEVEL_TO_EXPAND_1 =
+                    "There is more than {0} level to expand the property : ''{1}'')";
     private static final String STR_SYNTAX_ERROR_IN_0 = "Syntax error in property: ''{0}''";
-    private static final MessageFormat MORE_THAN_0_LEVEL_TO_EXPAND_1 = new MessageFormat(
-                    STR_MORE_THAN_0_LEVEL_TO_EXPAND_1);
-    private static final Evaluator DEFAULT_STRING_EVAL = new DefaultEvaluator();
+    private static final MessageFormat MORE_THAN_0_LEVEL_TO_EXPAND_1 =
+                    new MessageFormat(STR_MORE_THAN_0_LEVEL_TO_EXPAND_1);
 
-    @SuppressWarnings("unchecked")
-    public static String replaceProperties(String value, Map<String, ?> conf, MacroParamProcessor paramProcessor)
-                    throws PropertyParsingException {
-        return replacePropertiesRec(value, (Map<String, Object>) conf, new ArrayList<>(),
-                        new ArrayList<>(), 0, null, paramProcessor, DEFAULT_STRING_EVAL);
+    public static String eval(Map<String, Object> conf, String key, String replacement) {
+        if (conf == null) {
+            return replacement;
+        }
+        final Object value = conf.get(key);
+        if (value == null && replacement != null) {
+            return replacement;
+        } else if (value == null) {
+            return MacroProcessor.REF_PREFIX + key + MacroProcessor.REF_SUFFIX;
+        }
+        return value.toString();
     }
 
-    public static String replaceProperties(String value, Map<String, ?> conf, String defaultReplacement)
-                    throws PropertyParsingException {
-        return replacePropertiesRec(value, conf, new ArrayList<>(), new ArrayList<>(), 0,
+    @SuppressWarnings("unchecked")
+    public static String replaceProperties(String value, Map<String, ?> conf, String defaultReplacement) {
+        return replacePropertiesRec(value,
+                        (Map<String, Object>) conf,
+                        new ArrayList<>(),
+                        new ArrayList<>(),
+                        0,
                         defaultReplacement);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static String replaceProperties(String value, Map<String, ?> conf, String defaultReplacement,
-                    Evaluator evaluator) throws PropertyParsingException {
-        return replacePropertiesRec(value, (Map<String, Object>) conf, new ArrayList<>(),
-                        new ArrayList<>(), 0, defaultReplacement, null, evaluator);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static String replaceProperties(String value, Map<String, ?> conf, int depth)
-                    throws PropertyParsingException {
-        return replacePropertiesRec(value, (Map<String, Object>) conf, new ArrayList<>(),
-                        new ArrayList<>(), depth, null, null, DEFAULT_STRING_EVAL);
     }
 
     /**
@@ -58,17 +53,12 @@ public class MacroProcessor {
      * @return macro-expanded value.
      * @throws PropertyParsingException if recursivity goes beyond {@value MacroProcessor#MAX_DEPTH} limit.
      */
-    @SuppressWarnings("unchecked")
-    public static String replacePropertiesRec(String value, Map<String, ?> conf, List<String> fragments,
-                    List<String> propertyRefs, int depth, String defaultReplacement)
-                    throws PropertyParsingException {
-        return replacePropertiesRec(value, (Map<String, Object>) conf, fragments, propertyRefs, depth,
-                        defaultReplacement, null, DEFAULT_STRING_EVAL);
-    }
-
-    private static String replacePropertiesRec(String value, Map<String, Object> conf, List<String> fragments,
-                    List<String> propertyRefs, int depth, String defaultReplacement,
-                    MacroParamProcessor paramProcessor, Evaluator evaluator) throws PropertyParsingException {
+    public static String replacePropertiesRec(String value,
+                    Map<String, Object> conf,
+                    List<String> fragments,
+                    List<String> propertyRefs,
+                    int depth,
+                    String defaultReplacement) {
         parsePropertyString(value, fragments, propertyRefs);
         final StringBuilder unkownParam = new StringBuilder();
         final StringBuilder sb = new StringBuilder();
@@ -78,7 +68,7 @@ public class MacroProcessor {
             String fragment = i.next();
             if (fragment == null) {
                 final String propertyName = j.next();
-                fragment = evaluator.eval(conf, propertyName, defaultReplacement, paramProcessor);
+                fragment = eval(conf, propertyName, defaultReplacement);
                 final boolean sameProperty = fragment.contains(REF_PREFIX + propertyName + REF_SUFFIX);
                 final boolean alwaysProperty = containProperty(fragment);
                 if (alwaysProperty && !sameProperty) {
@@ -92,15 +82,13 @@ public class MacroProcessor {
         if (containProperty && depth <= MAX_DEPTH) {
             fragments.clear();
             propertyRefs.clear();
-            return replacePropertiesRec(expandedValue, conf, fragments, propertyRefs, depth + 1,
-                            defaultReplacement, paramProcessor, evaluator);
+            return replacePropertiesRec(expandedValue, conf, fragments, propertyRefs, depth + 1, defaultReplacement);
         } else if (containProperty && depth > MAX_DEPTH) {
-            throw new PropertyParsingException(MORE_THAN_0_LEVEL_TO_EXPAND_1.format(new Object[] { MAX_DEPTH,
-                            expandedValue }));
+            throw new PropertyParsingException(MORE_THAN_0_LEVEL_TO_EXPAND_1
+                            .format(new Object[] { MAX_DEPTH, expandedValue }));
         } else {
             return expandedValue;
         }
-
     }
 
     /**
@@ -112,11 +100,9 @@ public class MacroProcessor {
      * @param textToParse  Text to parse. Must not be <code>null</code>.
      * @param fragments    List to add text fragments to. Must not be <code>null</code>.
      * @param propertyRefs List to add property names to. Must not be <code>null</code>.
-     * @throws PropertyParsingException if the string contains an opening <code>${</code> without a closing
-     *                                  <code>}</code>
+     * @throws PropertyParsingException if the string contains an opening <code>${</code> without closing <code>}</code>
      */
-    public static void parsePropertyString(String textToParse, List<String> fragments, List<String> propertyRefs)
-                    throws PropertyParsingException {
+    public static void parsePropertyString(String textToParse, List<String> fragments, List<String> propertyRefs) {
         final MessageFormat SYNTAX_ERROR_IN_0 = new MessageFormat(STR_SYNTAX_ERROR_IN_0);
         int prev = 0;
         int pos;

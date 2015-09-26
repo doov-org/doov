@@ -4,13 +4,13 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 import static org.modelmap.gen.ModelMapGenMojo.template;
-import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
 
 import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
 
 import org.modelmap.core.FieldId;
+import org.modelmap.gen.processor.MacroProcessor;
 import org.modelmap.gen.processor.PropertyParsingException;
 
 import com.google.common.base.Joiner;
@@ -29,7 +29,7 @@ final class ModelWrapperGen {
         for (Class<?> fieldType : sortClass(fieldTypes)) {
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
-            buffer.append(replaceProperties(template, conf, MISSING_VALUE));
+            buffer.append(MacroProcessor.replaceProperties(template, conf, MISSING_VALUE));
         }
         return buffer.toString();
     }
@@ -43,7 +43,7 @@ final class ModelWrapperGen {
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
             conf.put("switch.content", getterSwitchContent(pathGroups));
-            buffer.append(replaceProperties(getterTemplate, conf, MISSING_VALUE));
+            buffer.append(MacroProcessor.replaceProperties(getterTemplate, conf, MISSING_VALUE));
         }
         final String fieldSetTemplate = template("FieldGetMethod.template");
         for (Class<?> fieldType : sortClass(fieldTypes)) {
@@ -63,7 +63,7 @@ final class ModelWrapperGen {
                     fixMe.append(";");
                 }
                 conf.put("fix.me", fixMe.toString());
-                buffer.append(replaceProperties(fieldSetTemplate, conf, MISSING_VALUE));
+                buffer.append(MacroProcessor.replaceProperties(fieldSetTemplate, conf, MISSING_VALUE));
             }
         }
         return buffer.toString();
@@ -78,7 +78,7 @@ final class ModelWrapperGen {
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
             conf.put("switch.content", setterSwitchContent(pathGroups));
-            buffer.append(replaceProperties(setterTemplate, conf, MISSING_VALUE));
+            buffer.append(MacroProcessor.replaceProperties(setterTemplate, conf, MISSING_VALUE));
         }
         final String fieldSetTemplate = template("FieldSetMethod.template");
         for (Class<?> fieldType : sortClass(fieldTypes)) {
@@ -102,7 +102,7 @@ final class ModelWrapperGen {
                     fixMe.append(";");
                 }
                 conf.put("fix.me", fixMe.toString());
-                buffer.append(replaceProperties(fieldSetTemplate, conf, MISSING_VALUE));
+                buffer.append(MacroProcessor.replaceProperties(fieldSetTemplate, conf, MISSING_VALUE));
             }
         }
         return buffer.toString();
@@ -150,7 +150,7 @@ final class ModelWrapperGen {
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
-        buffer.append(replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
+        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
         return buffer.toString();
     }
 
@@ -176,7 +176,7 @@ final class ModelWrapperGen {
         conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
         conf.put("partial.path.init", setterPath(paths.subList(0, index), setterName, field.position(), false));
         conf.put("param", "new " + lastGetMethod.getReturnType().getName() + "()");
-        buffer.append(replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
+        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
         return buffer.toString();
     }
 
@@ -195,7 +195,7 @@ final class ModelWrapperGen {
         final ParameterizedType paramType = (ParameterizedType) lastGetMethod.getGenericReturnType();
         final Class<?> paramType0 = (Class<?>) paramType.getActualTypeArguments()[0];
         conf.put("target.type", paramType0.getName());
-        buffer.append(replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
+        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
         return buffer.toString();
     }
 
@@ -208,7 +208,7 @@ final class ModelWrapperGen {
             conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
             conf.put("index", Integer.toString(i));
             conf.put("position", Integer.toString(i + 1));
-            buffer.append(replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
+            buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
         }
         return buffer.toString();
     }
@@ -280,7 +280,7 @@ final class ModelWrapperGen {
                 caseContent.append(");\n");
             }
             conf.put("case.content", caseContent.toString());
-            buffer.append(replaceProperties(switchContent, conf, MISSING_VALUE));
+            buffer.append(MacroProcessor.replaceProperties(switchContent, conf, MISSING_VALUE));
         }
         return buffer.toString();
     }
@@ -300,7 +300,7 @@ final class ModelWrapperGen {
                 caseContent.append("get_${field.id.name}();\n");
             }
             conf.put("case.content", caseContent.toString());
-            buffer.append(replaceProperties(switchContent, conf, MISSING_VALUE));
+            buffer.append(MacroProcessor.replaceProperties(switchContent, conf, MISSING_VALUE));
         }
         return buffer.toString();
     }

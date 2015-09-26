@@ -12,7 +12,6 @@ import static org.modelmap.gen.ModelWrapperGen.MISSING_VALUE;
 import static org.modelmap.gen.ModelWrapperGen.mapFieldTypeIfStatement;
 import static org.modelmap.gen.ModelWrapperGen.mapGetter;
 import static org.modelmap.gen.ModelWrapperGen.mapSetter;
-import static org.modelmap.gen.processor.MacroProcessor.replaceProperties;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +24,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.modelmap.core.FieldId;
+import org.modelmap.gen.processor.MacroProcessor;
 import org.modelmap.gen.processor.PropertyParsingException;
 import org.modelmap.gen.utils.ClassLoaderUtils;
 
@@ -137,7 +137,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
         conf.put("target.class.name", targetClassName);
         conf.put("literals", literals(fieldsOrder, collected));
         conf.put("source.generator.name", getClass().getName());
-        final String content = replaceProperties(classTemplate, conf, MISSING_VALUE);
+        final String content = MacroProcessor.replaceProperties(classTemplate, conf, MISSING_VALUE);
         Files.write(content.getBytes(), targetFile);
         getLog().info("written : " + targetFile);
     }
@@ -164,7 +164,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
         conf.put("map.setter", mapSetter(collected));
         conf.put("map.setter.if", mapFieldTypeIfStatement("MapSetIfStatement.template", collected));
         conf.put("source.generator.name", getClass().getName());
-        final String content = replaceProperties(classTemplate, conf, MISSING_VALUE);
+        final String content = MacroProcessor.replaceProperties(classTemplate, conf, MISSING_VALUE);
         Files.write(content.getBytes(), targetFile);
         getLog().info("written : " + targetFile);
     }
