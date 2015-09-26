@@ -2,6 +2,7 @@ package org.modelmap.sample.field;
 
 import static java.util.Arrays.asList;
 import static org.modelmap.sample.field.SampleTag.ACCOUNT;
+import static org.modelmap.sample.field.SampleTag.READ_ONLY;
 import static org.modelmap.sample.field.SampleTag.USER;
 
 import java.util.Collection;
@@ -15,7 +16,7 @@ public enum SampleFieldId implements FieldId {
 
     FIRST_NAME(USER),
     LAST_NAME(USER),
-    FULLNAME(USER),
+    FULLNAME(USER, READ_ONLY),
     BIRTHDATE(USER),
 
     ACCOUNT_ID(ACCOUNT),

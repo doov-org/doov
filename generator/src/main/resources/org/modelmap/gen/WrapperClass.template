@@ -18,8 +18,16 @@ public final class ${target.class.name} implements FieldModel {
     private final ${target.project.class.name} model;
 
     public ${target.class.name}() {
+        this(new ${target.project.class.name}());
+    }
+
+    public ${target.class.name}(${target.project.class.name} model) {
         this.fieldInfos = stream(${target.field.info.class.name}.values()).collect(toSet());
-        this.model = new ${target.project.class.name}();
+        this.model = model;
+    }
+
+    public ${target.project.class.name} getModel() {
+        return model;
     }
 
     @Override
