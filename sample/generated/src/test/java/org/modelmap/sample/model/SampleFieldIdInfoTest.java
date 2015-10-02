@@ -4,7 +4,7 @@
 package org.modelmap.sample.model;
 
 import static java.util.Arrays.stream;
-import static org.assertj.core.api.StrictAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
 import java.util.Optional;

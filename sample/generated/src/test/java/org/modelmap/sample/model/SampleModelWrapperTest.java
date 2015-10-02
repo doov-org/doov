@@ -35,6 +35,7 @@ public class SampleModelWrapperTest {
     @Test
     public void should_contains_all_field_info() {
         assertThat(wrapper.getFieldInfos()).contains(field);
+        assertThat(wrapper.getFieldIds()).contains(field.id());
     }
 
     @Test

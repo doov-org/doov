@@ -31,16 +31,7 @@ public interface FieldModel {
     /**
      * @return all {@code FieldId}, with a not-null value
      */
-    default List<FieldId> getFields() {
-        return stream(getFieldInfos())
-                        .filter(info -> get(info.id()) != null)
-                        .map(FieldInfo::id).collect(toList());
-    }
-
-    /**
-     * * @return all  {@code FieldId}
-     */
-    default List<FieldId> getAllFields() {
+    default List<FieldId> getFieldIds() {
         return stream(getFieldInfos()).map(FieldInfo::id).collect(toList());
     }
 

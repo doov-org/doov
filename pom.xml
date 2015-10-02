@@ -39,7 +39,7 @@
 
     <!-- Test Dependencies -->
     <junit.version>4.12</junit.version>
-    <assertj.version>3.1.0</assertj.version>
+    <assertj.version>3.2.0</assertj.version>
   </properties>
 
   <scm>
@@ -70,11 +70,6 @@
         <groupId>org.modelmap</groupId>
         <artifactId>modelmap-sample-base</artifactId>
         <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.squareup</groupId>
-        <artifactId>javapoet</artifactId>
-        <version>${javapoet.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -137,13 +132,17 @@
             <testSourcesLast>true</testSourcesLast>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.3</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.5</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
