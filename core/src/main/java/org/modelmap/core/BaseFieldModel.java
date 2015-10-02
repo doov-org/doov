@@ -4,6 +4,9 @@ import static java.util.Arrays.stream;
 
 import java.util.*;
 
+/**
+ * {@code FieldModel} implementation based on {@code java.util.Map}
+ */
 public class BaseFieldModel implements FieldModel {
 
     private final Map<FieldId, Object> values;

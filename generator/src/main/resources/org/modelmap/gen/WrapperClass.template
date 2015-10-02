@@ -1,9 +1,5 @@
 package ${package.name};
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toSet;
-
-import java.util.Set;
 import javax.annotation.Generated;
 
 import org.modelmap.core.FieldModel;

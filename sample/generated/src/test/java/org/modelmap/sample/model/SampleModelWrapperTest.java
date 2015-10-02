@@ -1,7 +1,8 @@
 package org.modelmap.sample.model;
 
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
-import static org.assertj.core.api.StrictAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,6 +38,21 @@ public class SampleModelWrapperTest {
     }
 
     @Test
+    public void should_be_null_when_clear_all() {
+        wrapper.clear();
+        assertValueNull();
+    }
+
+    @Test
+    public void should_be_null_when_clear_tag() {
+        if (field.id().tags().length == 0) {
+            return;
+        }
+        wrapper.clear(field.id().tags()[0]);
+        assertValueNull();
+    }
+
+    @Test
     public void should_not_throw_NPE_when_null_value_set() throws Exception {
         wrapper.set(field.id(), null);
     }
@@ -46,10 +62,19 @@ public class SampleModelWrapperTest {
         Object value = value(field);
         wrapper.set(field.id(), value);
 
-        if (field.id().tags().contains(SampleTag.READ_ONLY)) {
+        if (asList(field.id().tags()).contains(SampleTag.READ_ONLY)) {
             assertThat(wrapper.<T> get(field.id())).isNull();
         } else {
             assertThat(wrapper.<T> get(field.id())).isEqualTo(value);
+        }
+    }
+
+    private void assertValueNull() {
+        Object value = wrapper.get(field.id());
+        if (Number.class.isAssignableFrom(field.type())) {
+            assertThat(((Number) value).longValue()).isEqualTo(0);
+        } else {
+            assertThat(value).isNull();
         }
     }
 

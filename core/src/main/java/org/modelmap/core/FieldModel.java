@@ -1,20 +1,35 @@
 package org.modelmap.core;
 
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
+/**
+ * An model that maps {@code FieldId} to values. Each {@code FieldId} can map to at most one value.
+ */
 public interface FieldModel {
 
+    /**
+     * @param fieldId the {@code FieldId} to read
+     * @return the the {@code FieldId} value
+     */
     <T> T get(FieldId fieldId);
 
-    void set(FieldId fieldId, Object value);
+    /**
+     * @param fieldId the {@code FieldId} to update
+     * @param value   the new {@code FieldId} value
+     */
+    <T> void set(FieldId fieldId, T value);
 
+    /**
+     * @return the {@code FieldInfo} FieldInfo for all this model {@code FieldId}
+     */
     FieldInfo[] getFieldInfos();
 
     /**
-     * @return all field ids with a not-null value
+     * @return all {@code FieldId}, with a not-null value
      */
     default List<FieldId> getFields() {
         return stream(getFieldInfos())
@@ -23,14 +38,14 @@ public interface FieldModel {
     }
 
     /**
-     * * @return all field ids
+     * * @return all  {@code FieldId}
      */
     default List<FieldId> getAllFields() {
         return stream(getFieldInfos()).map(FieldInfo::id).collect(toList());
     }
 
     /**
-     * Copy all the values for the model <code>source</code>
+     * Copy all the values for the {@code FieldModel} <code>source</code>
      *
      * @param source the source field model
      */
@@ -41,7 +56,7 @@ public interface FieldModel {
     }
 
     /**
-     * For all the field ids, set their value to <code>null</code>
+     * For all the {@code FieldId}, set their value to <code>null</code>
      */
     default void clear() {
         stream(getFieldInfos())
@@ -50,11 +65,11 @@ public interface FieldModel {
     }
 
     /**
-     * For all the field ids tagged with <code>tag</code>, set their value to <code>null</code>
+     * For all the {@code FieldId} tagged with the specified {@code TagId}, set their value to <code>null</code>
      */
     default void clear(TagId tag) {
         stream(getFieldInfos())
-                        .filter(info -> info.id().tags().contains(tag) && get(info.id()) != null)
+                        .filter(info -> asList(info.id().tags()).contains(tag) && get(info.id()) != null)
                         .forEach(info -> set(info.id(), null));
     }
 }

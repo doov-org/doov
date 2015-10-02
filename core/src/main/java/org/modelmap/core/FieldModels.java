@@ -12,6 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.*;
 import java.util.stream.*;
 
+/**
+ * Utility methods for creating and manipulating {@code FieldModel}.
+ */
 public class FieldModels {
 
     /**

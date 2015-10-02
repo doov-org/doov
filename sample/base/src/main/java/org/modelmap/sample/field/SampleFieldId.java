@@ -1,11 +1,8 @@
 package org.modelmap.sample.field;
 
-import static java.util.Arrays.asList;
 import static org.modelmap.sample.field.SampleTag.ACCOUNT;
 import static org.modelmap.sample.field.SampleTag.READ_ONLY;
 import static org.modelmap.sample.field.SampleTag.USER;
-
-import java.util.Collection;
 
 import org.modelmap.core.FieldId;
 import org.modelmap.core.TagId;
@@ -41,7 +38,7 @@ public enum SampleFieldId implements FieldId {
     PASSWORD(ACCOUNT);
 
     private final int position;
-    private final Collection<TagId> tags;
+    private final TagId[] tags;
 
     SampleFieldId(TagId... tags) {
         this(-1, tags);
@@ -49,7 +46,7 @@ public enum SampleFieldId implements FieldId {
 
     SampleFieldId(int position, TagId... tags) {
         this.position = position;
-        this.tags = asList(tags);
+        this.tags = tags;
     }
 
     @Override
@@ -58,7 +55,7 @@ public enum SampleFieldId implements FieldId {
     }
 
     @Override
-    public Collection<TagId> tags() {
+    public TagId[] tags() {
         return tags;
     }
 }

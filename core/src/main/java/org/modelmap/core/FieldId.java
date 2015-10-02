@@ -1,12 +1,22 @@
 package org.modelmap.core;
 
-import java.util.Collection;
-
+/**
+ * Id representing a value of the  {@code FieldModel}
+ */
 public interface FieldId {
 
+    /**
+     * @return the field unique identifier
+     */
     String name();
 
+    /**
+     * @return the field position, when referencing an element in a {@code Collection}
+     */
     int position();
 
-    Collection<TagId> tags();
+    /**
+     * @return optionnal tags used to decorate this field
+     */
+    TagId[] tags();
 }
