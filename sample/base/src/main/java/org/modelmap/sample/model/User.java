@@ -1,6 +1,6 @@
 package org.modelmap.sample.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.field.SamplePath;
@@ -14,7 +14,7 @@ public class User extends Identity {
     private String lastName;
 
     @SamplePath(field = SampleFieldId.BIRTHDATE)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     public User() {
     }
@@ -48,11 +48,11 @@ public class User extends Identity {
         this.lastName = lastName;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 }

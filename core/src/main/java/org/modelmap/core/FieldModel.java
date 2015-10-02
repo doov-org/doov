@@ -1,9 +1,9 @@
 package org.modelmap.core;
 
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
-import java.util.Set;
 
 public interface FieldModel {
 
@@ -11,13 +11,13 @@ public interface FieldModel {
 
     void set(FieldId fieldId, Object value);
 
-    Set<FieldInfo> getFieldInfos();
+    FieldInfo[] getFieldInfos();
 
     /**
      * @return all field ids with a not-null value
      */
     default List<FieldId> getFields() {
-        return getFieldInfos().stream()
+        return stream(getFieldInfos())
                         .filter(info -> get(info.id()) != null)
                         .map(FieldInfo::id).collect(toList());
     }
@@ -26,7 +26,7 @@ public interface FieldModel {
      * * @return all field ids
      */
     default List<FieldId> getAllFields() {
-        return getFieldInfos().stream().map(FieldInfo::id).collect(toList());
+        return stream(getFieldInfos()).map(FieldInfo::id).collect(toList());
     }
 
     /**
@@ -35,7 +35,7 @@ public interface FieldModel {
      * @param source the source field model
      */
     default void setAll(FieldModel source) {
-        getFieldInfos().stream()
+        stream(getFieldInfos())
                         .filter(info -> source.get(info.id()) != null)
                         .forEach(info -> set(info.id(), source.get(info.id())));
     }
@@ -44,7 +44,7 @@ public interface FieldModel {
      * For all the field ids, set their value to <code>null</code>
      */
     default void clear() {
-        getFieldInfos().stream()
+        stream(getFieldInfos())
                         .filter(info -> get(info.id()) != null)
                         .forEach(info -> set(info.id(), null));
     }
@@ -53,7 +53,7 @@ public interface FieldModel {
      * For all the field ids tagged with <code>tag</code>, set their value to <code>null</code>
      */
     default void clear(TagId tag) {
-        getFieldInfos().stream()
+        stream(getFieldInfos())
                         .filter(info -> info.id().tags().contains(tag) && get(info.id()) != null)
                         .forEach(info -> set(info.id(), null));
     }

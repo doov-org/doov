@@ -5,6 +5,13 @@ import org.modelmap.sample.field.SamplePath;
 
 public class FavoriteWebsite {
 
+    public static FavoriteWebsite webSite(String name, String url) {
+        FavoriteWebsite website = new FavoriteWebsite();
+        website.setName(name);
+        website.setUrl(url);
+        return website;
+    }
+
     @SamplePath(field = SampleFieldId.FAVORITE_SITE_NAME_1)
     @SamplePath(field = SampleFieldId.FAVORITE_SITE_NAME_2)
     @SamplePath(field = SampleFieldId.FAVORITE_SITE_NAME_3)
@@ -15,7 +22,7 @@ public class FavoriteWebsite {
     @SamplePath(field = SampleFieldId.FAVORITE_SITE_URL_3)
     private String url;
 
-    FavoriteWebsite() {
+    public FavoriteWebsite() {
     }
 
     public String getName() {

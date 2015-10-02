@@ -3,6 +3,7 @@ package org.modelmap.sample.model;
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -24,18 +25,24 @@ public class SampleModelWrapperTest {
     private final SampleModelWrapper wrapper;
     private final SampleFieldIdInfo field;
 
-    public SampleModelWrapperTest(@SuppressWarnings("UnusedParameters") String name, SampleFieldIdInfo field) {
+    public SampleModelWrapperTest(@SuppressWarnings("UnusedParameters") String name, SampleFieldIdInfo
+                    field) {
         this.wrapper = new SampleModelWrapper();
         this.field = field;
     }
 
     @Test
-    public void should_set_null_value_without_npe() throws Exception {
+    public void should_contains_all_field_info() {
+        assertThat(wrapper.getFieldInfos()).contains(field);
+    }
+
+    @Test
+    public void should_not_throw_NPE_when_null_value_set() throws Exception {
         wrapper.set(field.id(), null);
     }
 
     @Test
-    public <T> void should_return_value_after_set() throws Exception {
+    public <T> void should_return_same_value_when_updated() throws Exception {
         Object value = value(field);
         wrapper.set(field.id(), value);
 
@@ -63,6 +70,8 @@ public class SampleModelWrapperTest {
             return field.type().getEnumConstants()[0];
         } else if (Collection.class.isAssignableFrom(field.type())) {
             return new ArrayList<>();
+        } else if (field.type().equals(LocalDate.class)) {
+            return LocalDate.now();
         } else if (field.type().equals(String.class)) {
             return "foo";
         }

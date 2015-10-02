@@ -14,7 +14,7 @@ import ${target.field.info.package.name}.${target.field.info.class.name};
 @Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
 public final class ${target.class.name} implements FieldModel {
 
-    private final Set<FieldInfo> fieldInfos;
+    private final FieldInfo[] fieldInfos;
     private final ${target.project.class.name} model;
 
     public ${target.class.name}() {
@@ -22,7 +22,7 @@ public final class ${target.class.name} implements FieldModel {
     }
 
     public ${target.class.name}(${target.project.class.name} model) {
-        this.fieldInfos = stream(${target.field.info.class.name}.values()).collect(toSet());
+        this.fieldInfos = ${target.field.info.class.name}.values();
         this.model = model;
     }
 
@@ -31,7 +31,7 @@ public final class ${target.class.name} implements FieldModel {
     }
 
     @Override
-    public Set<FieldInfo> getFieldInfos() {
+    public FieldInfo[] getFieldInfos() {
         return fieldInfos;
     }
 
