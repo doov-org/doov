@@ -11,12 +11,12 @@ import org.modelmap.core.FieldId;
 
 public class FieldCsvGen {
 
-    public static void write(File output, List<VisitorPath> collected) throws MojoExecutionException {
+    public static void write(File output, Map<FieldId, VisitorPath> fieldPaths) throws MojoExecutionException {
         try (FileWriter writter = new FileWriter(output)) {
-            for (VisitorPath path : collected) {
+            for (VisitorPath path : fieldPaths.values()) {
                 writter.write(toCsv(path));
             }
-            for (FieldId field : fieldsWithoutPath(collected)) {
+            for (FieldId field : fieldsWithoutPath(fieldPaths.values())) {
                 writter.write("NO_PATH;");
                 writter.write(field.toString());
                 writter.write('\n');
@@ -32,8 +32,7 @@ public class FieldCsvGen {
                         + path.getGetMethod().getReturnType().getSimpleName() + '\n';
     }
 
-
-    private static Collection<FieldId> fieldsWithoutPath(List<VisitorPath> collected) throws Exception {
+    private static Collection<FieldId> fieldsWithoutPath(Collection<VisitorPath> collected) throws Exception {
         final Set<FieldId> fields = new HashSet<>();
         collected.forEach(path -> addAll(fields, path.getFieldId().getClass().getEnumConstants()));
         collected.forEach(path -> fields.remove(path.getFieldId()));

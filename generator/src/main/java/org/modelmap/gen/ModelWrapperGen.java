@@ -2,114 +2,126 @@ package org.modelmap.gen;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import static org.modelmap.gen.ModelMapGenMojo.template;
 import static org.modelmap.gen.VisitorPath.pathByFieldId;
 
-import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.modelmap.core.FieldId;
 import org.modelmap.gen.processor.MacroProcessor;
-import org.modelmap.gen.processor.PropertyParsingException;
 
 import com.google.common.base.Joiner;
 
 final class ModelWrapperGen {
 
-    static final String SUPPRESS_WARN_RAW = "@SuppressWarnings({ \"unchecked\", \"rawtypes\" })";
-    static final String SUPPRESS_WARN_UNCHECKED = "@SuppressWarnings(\"unchecked\")\n";
-    static final String MISSING_VALUE = "/** missing value **/";
+    private static final String SUPPRESS_WARN_RAW = "@SuppressWarnings({ \"unchecked\", \"rawtypes\" })";
+    private static final String SUPPRESS_WARN_UNCHECKED = "@SuppressWarnings(\"unchecked\")\n";
 
-    static String mapFieldTypeIfStatement(String templateFileName, List<VisitorPath> collected) throws IOException,
-                    PropertyParsingException {
+    static String mapFieldTypeIfStatement(String templateFileName, Map<FieldId, VisitorPath> collected) {
         final StringBuilder buffer = new StringBuilder();
         final String template = template(templateFileName);
-        final Set<Class<?>> fieldTypes = collected.stream().map(path -> path.getFieldId().getClass()).collect(toSet());
-        for (Class<?> fieldType : sortClass(fieldTypes)) {
-            final Map<String, String> conf = new HashMap<>();
-            conf.put("field.id.type", fieldType.getName());
-            buffer.append(MacroProcessor.replaceProperties(template, conf, MISSING_VALUE));
-        }
+        collected.keySet().stream()
+                        .map((Object::getClass)).distinct()
+                        .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                        .forEach(fieldType -> {
+                            final Map<String, String> conf = new HashMap<>();
+                            conf.put("field.id.type", fieldType.getName());
+                            buffer.append(MacroProcessor.replaceProperties(template, conf));
+                        });
         return buffer.toString();
     }
 
-    static String mapGetter(List<VisitorPath> collected) throws IOException, PropertyParsingException {
+    static Map<FieldId, VisitorPath> validatePath(List<VisitorPath> collected) {
+        Map<FieldId, List<VisitorPath>> pathByFieldId = pathByFieldId(collected);
+
+        List<FieldId> invalidFieldId = pathByFieldId.entrySet().stream()
+                        .filter(e -> e.getValue().size() > 1)
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toList());
+        if (!invalidFieldId.isEmpty()) {
+            throw new IllegalStateException("some field ids have more than one path : " + invalidFieldId.toString());
+        }
+
+        Map<FieldId, VisitorPath> paths = new HashMap<>();
+        pathByFieldId.forEach((fieldId, fieldPaths) -> paths.put(fieldId, fieldPaths.iterator().next()));
+        return paths;
+    }
+
+    static String mapGetter(Map<FieldId, VisitorPath> collected) {
+        final List<Class<?>> fieldTypes = collected.keySet().stream()
+                        .map(Object::getClass).distinct()
+                        .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                        .collect(toList());
+
         final StringBuilder buffer = new StringBuilder();
+
         final String getterTemplate = template("MapGetMethod.template");
-        final Set<Class<?>> fieldTypes = collected.stream().map(path -> path.getFieldId().getClass()).collect(toSet());
-        for (Class<?> fieldType : sortClass(fieldTypes)) {
-            final Map<FieldId, List<VisitorPath>> pathGroups = pathByFieldId(filterByFieldType(collected, fieldType));
-            final Map<String, String> conf = new HashMap<>();
+        fieldTypes.forEach(fieldType -> {
+            Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
+            Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
-            conf.put("switch.content", getterSwitchContent(pathGroups));
-            buffer.append(MacroProcessor.replaceProperties(getterTemplate, conf, MISSING_VALUE));
-        }
+            conf.put("switch.content", getterSwitchContent(paths));
+            buffer.append(MacroProcessor.replaceProperties(getterTemplate, conf));
+        });
+
         final String fieldSetTemplate = template("FieldGetMethod.template");
-        for (Class<?> fieldType : sortClass(fieldTypes)) {
-            final Map<FieldId, List<VisitorPath>> pathGroups = pathByFieldId(filterByFieldType(collected, fieldType));
-            for (FieldId FieldId : sortFields(pathGroups.keySet())) {
+        fieldTypes.forEach(fieldType -> {
+            Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
+            for (FieldId FieldId : sortFields(paths.keySet())) {
+                final VisitorPath path = paths.get(FieldId);
                 final Map<String, String> conf = new HashMap<>();
-                final List<VisitorPath> pathGroup = pathGroups.get(FieldId);
                 conf.put("field.class.name", FieldId.getClass().getName());
                 conf.put("field.id.name", FieldId.toString());
-                conf.put("field.type", getterBoxingType(pathGroup.get(0), FieldId.position()));
-                conf.put("null.check", nullCheck(pathGroup.get(0)));
-                conf.put("getter.path", getterPath(pathGroup.get(0)));
-                final StringBuilder fixMe = new StringBuilder();
-                for (int i = 1; i < pathGroup.size(); i++) {
-                    fixMe.append("\n        FIXME ");
-                    fixMe.append(getterPath(pathGroup.get(i)));
-                    fixMe.append(";");
-                }
-                conf.put("fix.me", fixMe.toString());
-                buffer.append(MacroProcessor.replaceProperties(fieldSetTemplate, conf, MISSING_VALUE));
+                conf.put("field.type", getterBoxingType(path, FieldId.position()));
+                conf.put("null.check", nullCheck(path));
+                conf.put("getter.path", getterPath(path));
+                buffer.append(MacroProcessor.replaceProperties(fieldSetTemplate, conf));
             }
-        }
+        });
         return buffer.toString();
     }
 
-    static String mapSetter(List<VisitorPath> collected) throws IOException, PropertyParsingException {
+    static String mapSetter(Map<FieldId, VisitorPath> collected) {
+        // FIXME duplicated
+        final List<Class<?>> fieldTypes = collected.keySet().stream()
+                        .map(Object::getClass).distinct()
+                        .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                        .collect(toList());
+
         final StringBuilder buffer = new StringBuilder();
+
         final String setterTemplate = template("MapSetMethod.template");
-        final Set<Class<?>> fieldTypes = collected.stream().map(path -> path.getFieldId().getClass()).collect(toSet());
-        for (Class<?> fieldType : sortClass(fieldTypes)) {
-            final Map<FieldId, List<VisitorPath>> pathGroups = pathByFieldId(filterByFieldType(collected, fieldType));
+        fieldTypes.forEach(fieldType -> {
+            final Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
-            conf.put("switch.content", setterSwitchContent(pathGroups));
-            buffer.append(MacroProcessor.replaceProperties(setterTemplate, conf, MISSING_VALUE));
-        }
+            conf.put("switch.content", setterSwitchContent(paths));
+            buffer.append(MacroProcessor.replaceProperties(setterTemplate, conf));
+        });
+
         final String fieldSetTemplate = template("FieldSetMethod.template");
-        for (Class<?> fieldType : sortClass(fieldTypes)) {
-            final Map<FieldId, List<VisitorPath>> pathGroups = pathByFieldId(filterByFieldType(collected, fieldType));
-            for (FieldId FieldId : sortFields(pathGroups.keySet())) {
+        fieldTypes.forEach(fieldType -> {
+            final Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
+            for (FieldId FieldId : sortFields(paths.keySet())) {
                 final Map<String, String> conf = new HashMap<>();
-                final List<VisitorPath> pathGroup = pathGroups.get(FieldId);
-                final VisitorPath firstGroup = pathGroup.get(0);
+                final VisitorPath path = paths.get(FieldId);
                 conf.put("field.class.name", FieldId.getClass().getName());
                 conf.put("field.id.name", FieldId.toString());
-                conf.put("field.type", getterBoxingType(firstGroup, FieldId.position()));
-                conf.put("lazy.init", lazyInit(firstGroup));
-                conf.put("setter.path", setterPath(firstGroup, true));
-                conf.put("param", setterBoxingChecker(firstGroup));
-                final boolean suppressWarn = firstGroup.containsList() || firstGroup.containsGenerics();
+                conf.put("field.type", getterBoxingType(path, FieldId.position()));
+                conf.put("lazy.init", lazyInit(path));
+                conf.put("setter.path", setterPath(path, true));
+                conf.put("param", setterBoxingChecker(path));
+                final boolean suppressWarn = path.containsList() || path.containsGenerics();
                 conf.put("suppress.warning", suppressWarn ? "\n    " + SUPPRESS_WARN_RAW : "");
-                final StringBuilder fixMe = new StringBuilder();
-                for (int i = 1; i < pathGroup.size(); i++) {
-                    fixMe.append("\n        FIXME ");
-                    fixMe.append(setterPath(pathGroup.get(i), true));
-                    fixMe.append(";");
-                }
-                conf.put("fix.me", fixMe.toString());
-                buffer.append(MacroProcessor.replaceProperties(fieldSetTemplate, conf, MISSING_VALUE));
+                buffer.append(MacroProcessor.replaceProperties(fieldSetTemplate, conf));
             }
-        }
+        });
         return buffer.toString();
     }
 
-    private static String nullCheck(VisitorPath path) throws IOException, PropertyParsingException {
+    private static String nullCheck(VisitorPath path) {
         final StringBuilder buffer = new StringBuilder();
         for (int i = 1; i < path.getPath().size(); i++) {
             buffer.append(nullCheck(path.getPath(), i));
@@ -117,16 +129,16 @@ final class ModelWrapperGen {
         return buffer.toString();
     }
 
-    private static String nullCheck(List<Method> paths, int index) throws IOException, PropertyParsingException {
+    private static String nullCheck(List<Method> paths, int index) {
         final String lazyInitTemplate = template("NullCheckBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
-        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
+        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
         return buffer.toString();
     }
 
-    private static String lazyInit(VisitorPath path) throws IOException, PropertyParsingException {
+    private static String lazyInit(VisitorPath path) {
         final StringBuilder buffer = new StringBuilder();
         for (int i = 1; i < path.getPath().size(); i++) {
             final Method lastGetMethod = path.getPath().get(i - 1);
@@ -139,8 +151,7 @@ final class ModelWrapperGen {
         return buffer.toString();
     }
 
-    private static String lazyInit(List<Method> paths, int index, FieldId field, Method lastGetMethod)
-                    throws IOException, PropertyParsingException {
+    private static String lazyInit(List<Method> paths, int index, FieldId field, Method lastGetMethod) {
         final String lazyInitTemplate = template("LazyInitBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
@@ -148,12 +159,11 @@ final class ModelWrapperGen {
         conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
         conf.put("partial.path.init", setterPath(paths.subList(0, index), setterName, field.position(), false));
         conf.put("param", "new " + lastGetMethod.getReturnType().getName() + "()");
-        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
+        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
         return buffer.toString();
     }
 
-    private static String lazyInitList(List<Method> paths, int index, FieldId field, Method lastGetMethod)
-                    throws IOException, PropertyParsingException {
+    private static String lazyInitList(List<Method> paths, int index, FieldId field, Method lastGetMethod) {
         final String lazyInitTemplate = template("LazyInitListBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
@@ -167,12 +177,11 @@ final class ModelWrapperGen {
         final ParameterizedType paramType = (ParameterizedType) lastGetMethod.getGenericReturnType();
         final Class<?> paramType0 = (Class<?>) paramType.getActualTypeArguments()[0];
         conf.put("target.type", paramType0.getName());
-        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
+        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
         return buffer.toString();
     }
 
-    private static String listContentAsNull(List<Method> paths, int index, FieldId field) throws IOException,
-                    PropertyParsingException {
+    private static String listContentAsNull(List<Method> paths, int index, FieldId field) {
         final StringBuilder buffer = new StringBuilder();
         final String lazyInitTemplate = template("LazyInitListBlockNull.template");
         for (int i = 0; i < field.position() - 1; i++) {
@@ -180,15 +189,9 @@ final class ModelWrapperGen {
             conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
             conf.put("index", Integer.toString(i));
             conf.put("position", Integer.toString(i + 1));
-            buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf, MISSING_VALUE));
+            buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
         }
         return buffer.toString();
-    }
-
-    static List<Class<?>> sortClass(Set<Class<?>> classSet) {
-        final List<Class<?>> sortedList = new ArrayList<>(classSet);
-        sortedList.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
-        return sortedList;
     }
 
     private static List<FieldId> sortFields(Set<FieldId> FieldIds) {
@@ -210,21 +213,20 @@ final class ModelWrapperGen {
         return null;
     }
 
-    static List<VisitorPath> filterByFieldType(List<VisitorPath> paths, Class<?> type) {
-        return paths.stream()
-                        .filter(p -> type.isAssignableFrom(p.getFieldId().getClass()))
-                        .collect(toList());
+    private static Map<FieldId, VisitorPath> filterByFieldType(Map<FieldId, VisitorPath> paths, Class<?> type) {
+        return paths.keySet().stream()
+                        .filter(f -> type.isAssignableFrom(f.getClass()))
+                        .collect(Collectors.toMap(f -> f, paths::get));
     }
 
-    private static String setterSwitchContent(Map<FieldId, List<VisitorPath>> pathGroups) throws IOException,
-                    PropertyParsingException {
+    private static String setterSwitchContent(Map<FieldId, VisitorPath> paths) {
         final StringBuilder buffer = new StringBuilder();
         final String switchContent = template("SetSwitchBlock.template");
-        for (FieldId FieldId : sortFields(pathGroups.keySet())) {
+        for (FieldId FieldId : sortFields(paths.keySet())) {
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.name", FieldId.toString());
-            final List<VisitorPath> pathGroup = pathGroups.get(FieldId);
-            final String setterBoxingType = getterBoxingType(pathGroup.get(0), FieldId.position());
+            final VisitorPath path = paths.get(FieldId);
+            final String setterBoxingType = getterBoxingType(path, FieldId.position());
             final StringBuilder caseContent = new StringBuilder();
             if (setterBoxingType.contains("<")) {
                 caseContent.append("                " + SUPPRESS_WARN_UNCHECKED + "\n");
@@ -240,34 +242,20 @@ final class ModelWrapperGen {
             caseContent.append("set_${field.id.name}(");
             caseContent.append(FieldId.toString().toLowerCase());
             caseContent.append(");\n");
-            for (int i = 1; i < pathGroup.size(); i++) {
-                caseContent.append("                FIXME ");
-                caseContent.append("set_${field.id.name}(");
-                caseContent.append(FieldId.toString().toLowerCase());
-                caseContent.append(");\n");
-            }
             conf.put("case.content", caseContent.toString());
-            buffer.append(MacroProcessor.replaceProperties(switchContent, conf, MISSING_VALUE));
+            buffer.append(MacroProcessor.replaceProperties(switchContent, conf));
         }
         return buffer.toString();
     }
 
-    private static String getterSwitchContent(Map<FieldId, List<VisitorPath>> pathGroups) throws IOException,
-                    PropertyParsingException {
+    private static String getterSwitchContent(Map<FieldId, VisitorPath> paths) {
         final StringBuilder buffer = new StringBuilder();
         final String switchContent = template("GetSwitchBlock.template");
-        for (FieldId FieldId : sortFields(pathGroups.keySet())) {
+        for (FieldId FieldId : sortFields(paths.keySet())) {
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.name", FieldId.toString());
-            final List<VisitorPath> pathGroup = pathGroups.get(FieldId);
-            final StringBuilder caseContent = new StringBuilder();
-            caseContent.append("get_${field.id.name}();\n");
-            for (int i = 1; i < pathGroup.size(); i++) {
-                caseContent.append("                    FIXME return ");
-                caseContent.append("get_${field.id.name}();\n");
-            }
-            conf.put("case.content", caseContent.toString());
-            buffer.append(MacroProcessor.replaceProperties(switchContent, conf, MISSING_VALUE));
+            conf.put("case.content", "get_${field.id.name}();\n");
+            buffer.append(MacroProcessor.replaceProperties(switchContent, conf));
         }
         return buffer.toString();
     }

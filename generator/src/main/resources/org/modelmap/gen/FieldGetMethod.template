@@ -2,6 +2,6 @@
      * @see ${field.class.name}#${field.id.name}
      */
     private ${field.type} get_${field.id.name}() {
-${null.check}		return model.${getter.path};${fix.me}
+${null.check}		return model.${getter.path};
     }
 
