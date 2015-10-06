@@ -22,9 +22,11 @@ public class FieldModels {
      * {@code FieldModel}.
      */
     public static Spliterator<Entry<FieldId, Object>> spliterator(FieldModel model) {
-        BaseFieldModel source = new BaseFieldModel(model.getFieldInfos());
-        source.setAll(model);
-        return source.asMap().entrySet().spliterator();
+        Map<FieldId, Object> map = new HashMap<>();
+        for (FieldInfo info : model.getFieldInfos()) {
+            map.put(info.id(), model.get(info.id()));
+        }
+        return map.entrySet().spliterator();
     }
 
     /**

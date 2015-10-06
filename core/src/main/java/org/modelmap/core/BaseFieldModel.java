@@ -21,6 +21,11 @@ public class BaseFieldModel implements FieldModel {
         this.fieldInfos = fieldInfos;
     }
 
+    public BaseFieldModel(FieldModel fieldModel) {
+        this(fieldModel.getFieldInfos());
+        setAll(fieldModel);
+    }
+
     public Map<FieldId, Object> asMap() {
         return new HashMap<>(values);
     }

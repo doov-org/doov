@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.EnumSet;
 
-class SampleModels {
+public class SampleModels {
 
-    static SampleModel sample() {
+    public static SampleModel sample() {
         SampleModel model = new SampleModel();
 
         User user = new User();
