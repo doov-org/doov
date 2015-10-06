@@ -16,5 +16,6 @@
   <modules>
     <module>base</module>
     <module>generated</module>
+    <module>test</module>
   </modules>
 </project>
