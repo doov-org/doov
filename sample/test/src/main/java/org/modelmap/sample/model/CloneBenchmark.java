@@ -92,7 +92,7 @@ public class CloneBenchmark {
     @Benchmark
     public FieldModel clone_stream_parallel() {
         FieldModel wrapper = new SampleModelWrapper(source);
-        return FieldModels.stream(wrapper, true).filter(e -> e.getValue() != null)
+        return FieldModels.stream(wrapper, true).parallel().filter(e -> e.getValue() != null)
                         .collect(FieldModels.toFieldModel(SampleFieldIdInfo.values()));
     }
 }

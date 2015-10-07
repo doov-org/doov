@@ -38,11 +38,9 @@ public class SampleModelStreamTest {
         should_peek_fields_values_when_using_stream(FieldModels.stream(source, true));
     }
 
-    private static void should_peek_fields_values_when_using_stream(
-                    Stream<Entry<FieldId, Object>> stream) {
+    private static void should_peek_fields_values_when_using_stream(Stream<Entry<FieldId, Object>> stream) {
         Set<FieldId> peeked = newSetFromMap(new ConcurrentHashMap<>());
         stream.forEach(e -> peeked.add(e.getKey()));
-
         assertThat(peeked).containsAll(EnumSet.allOf(SampleFieldId.class));
     }
 }

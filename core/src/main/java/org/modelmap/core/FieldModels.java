@@ -18,29 +18,15 @@ import java.util.stream.*;
 public class FieldModels {
 
     /**
-     * A {@code Spliterator} designed for use by sources that traverse and split all key/value pairs maintained in a
-     * {@code FieldModel}.
-     */
-    public static Spliterator<Entry<FieldId, Object>> spliterator(FieldModel model) {
-        Map<FieldId, Object> map = new HashMap<>();
-        for (FieldInfo info : model.getFieldInfos()) {
-            map.put(info.id(), model.get(info.id()));
-        }
-        return map.entrySet().spliterator();
-    }
-
-    /**
-     * Creates a new sequential  from a {@code FieldModel}.
-     */
-    public static Stream<Entry<FieldId, Object>> stream(FieldModel model) {
-        return StreamSupport.stream(spliterator(model), false);
-    }
-
-    /**
-     * Creates a new sequential or parallel {@code Stream} from a {@code FieldModel}.
+     * Creates a Stream from a {@code FieldModel}.
      */
     public static Stream<Entry<FieldId, Object>> stream(FieldModel model, boolean parallel) {
-        return StreamSupport.stream(spliterator(model), parallel);
+        if (parallel)
+            return Arrays.stream(model.getFieldInfos()).parallel()
+                            .map(info -> new AbstractMap.SimpleEntry<>(info.id(), model.get(info.id())));
+        else
+            return Arrays.stream(model.getFieldInfos()).map(
+                            info -> new AbstractMap.SimpleEntry<>(info.id(), model.get(info.id())));
     }
 
     /**
@@ -57,8 +43,7 @@ public class FieldModels {
         return new FieldModelCollector(() -> model, model.getFieldInfos());
     }
 
-    private static final class FieldModelCollector
-                    implements Collector<Entry<FieldId, Object>, FieldModel, FieldModel> {
+    private static final class FieldModelCollector implements Collector<Entry<FieldId, Object>, FieldModel, FieldModel> {
 
         private final FieldInfo[] fieldInfos;
         private final Supplier<FieldModel> finisher;
