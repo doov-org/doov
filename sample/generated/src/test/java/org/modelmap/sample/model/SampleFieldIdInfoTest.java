@@ -23,7 +23,7 @@ public class SampleFieldIdInfoTest {
 
     private final SampleFieldId field;
 
-    public SampleFieldIdInfoTest(@SuppressWarnings("UnusedParameters") String name, SampleFieldId field) {
+    public SampleFieldIdInfoTest(String name, SampleFieldId field) {
         this.field = field;
     }
 

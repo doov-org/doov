@@ -94,14 +94,10 @@ ${map.setter}
 ${map.properties}
         ;
 
-        private final FieldId fieldId;
+        final FieldId fieldId;
 
         ${target.model.class.name}Property(FieldId fieldId) {
             this.fieldId = fieldId;
-        }
-
-        public FieldId fieldId() {
-            return fieldId;
         }
 
         public abstract <T> BiConsumer<SampleModel, T> consumer();
