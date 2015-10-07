@@ -1,119 +1,55 @@
-/*
- * Copyright (c) 2014, Oracle America, Inc.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *  * Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- *  * Neither the name of Oracle nor the names of its contributors may be used
- *    to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.modelmap.sample.test;
 
-import static java.util.Arrays.asList;
-import static org.modelmap.sample.model.FavoriteWebsite.webSite;
-
-import java.util.ArrayList;
-
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.modelmap.core.FieldModel;
-import org.modelmap.core.FieldModels;
-import org.modelmap.sample.field.SampleFieldIdInfo;
-import org.modelmap.sample.model.*;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+import org.modelmap.sample.model.CloneBenchmark;
 
 public class CloneBenchmarkTest {
+    @Rule
+    public TestRule chrono = new TestRule() {
+        @Override
+        public Statement apply(Statement base, Description description) {
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+                    final long startTime = System.nanoTime();
+                    base.evaluate();
+                    final long elapsedTime = System.nanoTime() - startTime;
+                    System.out.println(description.getMethodName() + " " + elapsedTime / 1000 + " micros");
+                }
+            };
+        }
 
-    private SampleModel source;
+    };
+
+    private CloneBenchmark clone = new CloneBenchmark();
 
     @Before
     public void before() {
-        source = SampleModels.sample();
+        clone.init();
     }
 
     @Test
     public void clone_java_bean() {
-        long startTime = System.nanoTime();
-
-        SampleModel clone = new SampleModel();
-
-        User user = new User();
-        user.setId(source.getUser().getId());
-        user.setFirstName(source.getUser().getFirstName());
-        user.setLastName(source.getUser().getLastName());
-        user.setBirthDate(source.getUser().getBirthDate());
-        clone.setUser(user);
-
-        Account account = new Account();
-        account.setId(source.getAccount().getId());
-        account.setAcceptEmail(source.getAccount().getAcceptEmail());
-        account.setEmail(source.getAccount().getEmail());
-        account.setEmailTypes(source.getAccount().getEmailTypes());
-        account.setLanguage(source.getAccount().getLanguage());
-        account.setLogin(source.getAccount().getLogin());
-        account.setPassword(source.getAccount().getPassword());
-        account.setPhoneNumber(source.getAccount().getPhoneNumber());
-        account.setTimezone(source.getAccount().getTimezone());
-
-        account.setTop3WebSite(new ArrayList<>());
-        source.getAccount().getTop3WebSite()
-                        .forEach(site -> account.getTop3WebSite().add(webSite(site.getName(), site.getUrl())));
-        clone.setAccount(account);
-
-        System.err.println("clone_java_bean " + ((System.nanoTime() - startTime) / 1000) + " micros");
+        clone.clone_java_bean();
     }
 
     @Test
     public void clone_field_model() {
-        long startTime = System.nanoTime();
-
-        FieldModel fieldModel = new SampleModelWrapper(source);
-        FieldModel clone = new SampleModelWrapper();
-        asList(fieldModel.getFieldInfos()).forEach(e -> clone.set(e.id(), fieldModel.get(e.id())));
-
-        System.err.println("clone_field_model " + ((System.nanoTime() - startTime) / 1000) + " micros");
+        clone.clone_field_model();
     }
 
     @Test
     public void clone_stream_sequential() {
-        long startTime = System.nanoTime();
-
-        FieldModels.stream(new SampleModelWrapper(source), false)
-                        .filter(e -> e.getValue() != null)
-                        .collect(FieldModels.toFieldModel(SampleFieldIdInfo.values()));
-
-        System.err.println("clone_stream_sequential " + ((System.nanoTime() - startTime) / 1000) + " micros");
+        clone.clone_stream_sequential();
     }
 
     @Test
     public void clone_stream_parallel() {
-        long startTime = System.nanoTime();
-
-        FieldModels.stream(new SampleModelWrapper(source), true)
-                        .filter(e -> e.getValue() != null)
-                        .collect(FieldModels.toFieldModel(SampleFieldIdInfo.values()));
-
-        System.err.println("clone_stream_parallel " + ((System.nanoTime() - startTime) / 1000) + " micros");
+        clone.clone_stream_parallel();
     }
 }
