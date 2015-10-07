@@ -1,2 +1,2 @@
                 case ${field.id.name}:
-                    return (Function<${target.model.class.name}, T>) ${field.id.name}_SUPPLIER;
+                    return ${target.model.class.name}Property.${field.id.name}.supplier();

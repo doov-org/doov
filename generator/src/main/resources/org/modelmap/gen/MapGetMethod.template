@@ -6,4 +6,3 @@ ${switch.content}
                 throw new IllegalArgumentException("unsupported field " + fieldId);
         }
     }
-

@@ -1,2 +1,2 @@
             case ${field.id.name}:
-                return (BiConsumer<${target.model.class.name}, T>) ${field.id.name}_CONSUMER;
+                return ${target.model.class.name}Property.${field.id.name}.consumer();

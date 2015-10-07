@@ -87,67 +87,28 @@ final class ModelWrapperGen {
         return MacroProcessor.replaceProperties(getterTemplate, conf);
     }
 
-    static String mapGetter(Map<FieldId, VisitorPath> collected, Class<?> modelClass) {
+    static String mapGetter(Map<FieldId, VisitorPath> collected) {
         final StringBuilder buffer = new StringBuilder();
-        final List<Class<?>> fieldTypes = fieldTypes(collected);
-
         final String getterTemplate = template("MapGetMethod.template");
-        fieldTypes.forEach(fieldType -> {
+        fieldTypes(collected).forEach(fieldType -> {
             Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
             Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
             conf.put("switch.content", getterSwitchContent(paths));
             buffer.append(MacroProcessor.replaceProperties(getterTemplate, conf));
         });
-
-        // TODO to remove
-        final String fieldSupplierTemplate = template("FieldSupplier.template");
-        fieldTypes.forEach(fieldType -> {
-            Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
-            for (FieldId fieldid : sortFields(paths.keySet())) {
-                final VisitorPath path = paths.get(fieldid);
-                final Map<String, String> conf = new HashMap<>();
-                conf.put("field.class.name", fieldid.getClass().getName());
-                conf.put("field.id.name", fieldid.toString());
-                conf.put("field.type", getterBoxingType(path, fieldid.position()));
-                conf.put("target.model.class.name", modelClass.getSimpleName());
-                conf.put("null.check", nullCheck(path));
-                conf.put("getter.path", getterPath(path));
-                buffer.append(MacroProcessor.replaceProperties(fieldSupplierTemplate, conf));
-            }
-        });
         return buffer.toString();
     }
 
-    static String mapSetter(Map<FieldId, VisitorPath> collected, Class<?> modelClass) {
+    static String mapSetter(Map<FieldId, VisitorPath> collected) {
         final StringBuilder buffer = new StringBuilder();
-        final List<Class<?>> fieldTypes = fieldTypes(collected);
-
         final String setterTemplate = template("MapSetMethod.template");
-        fieldTypes.forEach(fieldType -> {
+        fieldTypes(collected).forEach(fieldType -> {
             final Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
             conf.put("switch.content", setterSwitchContent(paths));
             buffer.append(MacroProcessor.replaceProperties(setterTemplate, conf));
-        });
-
-        // TODO to remove
-        final String fieldConsumerTemplate = template("FieldConsumer.template");
-        fieldTypes.forEach(fieldType -> {
-            final Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
-            for (FieldId fieldid : sortFields(paths.keySet())) {
-                final Map<String, String> conf = new HashMap<>();
-                final VisitorPath path = paths.get(fieldid);
-                conf.put("field.class.name", fieldid.getClass().getName());
-                conf.put("field.id.name", fieldid.toString());
-                conf.put("field.type", getterBoxingType(path, fieldid.position()));
-                conf.put("target.model.class.name", modelClass.getSimpleName());
-                conf.put("lazy.init", lazyInit(path));
-                conf.put("setter.path", setterPath(path, true));
-                conf.put("param", setterBoxingChecker(path));
-                buffer.append(MacroProcessor.replaceProperties(fieldConsumerTemplate, conf));
-            }
         });
         return buffer.toString();
     }

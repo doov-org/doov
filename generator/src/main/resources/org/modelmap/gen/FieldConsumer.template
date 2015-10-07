@@ -1,7 +1,0 @@
-    /**
-     * @see ${field.class.name}#${field.id.name}
-     */
-    private static final BiConsumer<${target.model.class.name}, ${field.type}> ${field.id.name}_CONSUMER = (model, value) -> {
-${lazy.init}        model.${setter.path};
-    };
-
