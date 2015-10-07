@@ -1,13 +1,9 @@
 package org.modelmap.sample.test;
 
-import static java.util.Arrays.stream;
-import static org.modelmap.sample.model.FavoriteWebsite.webSite;
-
-import java.util.ArrayList;
-
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestRule;
-import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.modelmap.sample.model.CloneBenchmark;
 
