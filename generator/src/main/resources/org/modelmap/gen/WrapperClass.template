@@ -1,6 +1,8 @@
 package ${package.name};
 
 import javax.annotation.Generated;
+import java.util.function.Function;
+import java.util.function.BiConsumer;
 
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.FieldId;
@@ -11,18 +13,18 @@ import ${target.field.info.package.name}.${target.field.info.class.name};
 public final class ${target.class.name} implements FieldModel {
 
     private final FieldInfo[] fieldInfos;
-    private final ${target.project.class.name} model;
+    private final ${target.model.class.name} model;
 
     public ${target.class.name}() {
-        this(new ${target.project.class.name}());
+        this(new ${target.model.class.name}());
     }
 
-    public ${target.class.name}(${target.project.class.name} model) {
+    public ${target.class.name}(${target.model.class.name} model) {
         this.fieldInfos = ${target.field.info.class.name}.values();
         this.model = model;
     }
 
-    public ${target.project.class.name} getModel() {
+    public ${target.model.class.name} getModel() {
         return model;
     }
 
@@ -36,11 +38,12 @@ public final class ${target.class.name} implements FieldModel {
 ${map.getter.if}        return null;
     }
 
+${map.getter}
+
     @Override
     public void set(FieldId fieldId, Object value) {
 ${map.setter.if}    }
 
 ${map.setter}
 
-${map.getter}
 }

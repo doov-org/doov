@@ -17,7 +17,7 @@ import com.google.common.base.Joiner;
 final class ModelWrapperGen {
 
     private static final String SUPPRESS_WARN_RAW = "@SuppressWarnings({ \"unchecked\", \"rawtypes\" })";
-    private static final String SUPPRESS_WARN_UNCHECKED = "@SuppressWarnings(\"unchecked\")\n";
+    private static final String SUPPRESS_WARN_UNCHECKED = "@SuppressWarnings(\"unchecked\")";
 
     static String mapFieldTypeIfStatement(String templateFileName, Map<FieldId, VisitorPath> collected) {
         final StringBuilder buffer = new StringBuilder();
@@ -49,7 +49,7 @@ final class ModelWrapperGen {
         return paths;
     }
 
-    static String mapGetter(Map<FieldId, VisitorPath> collected) {
+    static String mapGetter(Map<FieldId, VisitorPath> collected, Class<?> modelClass) {
         final List<Class<?>> fieldTypes = collected.keySet().stream()
                         .map(Object::getClass).distinct()
                         .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
@@ -66,24 +66,25 @@ final class ModelWrapperGen {
             buffer.append(MacroProcessor.replaceProperties(getterTemplate, conf));
         });
 
-        final String fieldSetTemplate = template("FieldGetMethod.template");
+        final String fieldSupplierTemplate = template("FieldSupplier.template");
         fieldTypes.forEach(fieldType -> {
             Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
-            for (FieldId FieldId : sortFields(paths.keySet())) {
-                final VisitorPath path = paths.get(FieldId);
+            for (FieldId fieldid : sortFields(paths.keySet())) {
+                final VisitorPath path = paths.get(fieldid);
                 final Map<String, String> conf = new HashMap<>();
-                conf.put("field.class.name", FieldId.getClass().getName());
-                conf.put("field.id.name", FieldId.toString());
-                conf.put("field.type", getterBoxingType(path, FieldId.position()));
+                conf.put("field.class.name", fieldid.getClass().getName());
+                conf.put("field.id.name", fieldid.toString());
+                conf.put("field.type", getterBoxingType(path, fieldid.position()));
+                conf.put("target.model.class.name", modelClass.getSimpleName());
                 conf.put("null.check", nullCheck(path));
                 conf.put("getter.path", getterPath(path));
-                buffer.append(MacroProcessor.replaceProperties(fieldSetTemplate, conf));
+                buffer.append(MacroProcessor.replaceProperties(fieldSupplierTemplate, conf));
             }
         });
         return buffer.toString();
     }
 
-    static String mapSetter(Map<FieldId, VisitorPath> collected) {
+    static String mapSetter(Map<FieldId, VisitorPath> collected, Class<?> modelClass) {
         // FIXME duplicated
         final List<Class<?>> fieldTypes = collected.keySet().stream()
                         .map(Object::getClass).distinct()
@@ -101,21 +102,22 @@ final class ModelWrapperGen {
             buffer.append(MacroProcessor.replaceProperties(setterTemplate, conf));
         });
 
-        final String fieldSetTemplate = template("FieldSetMethod.template");
+        final String fieldConsumerTemplate = template("FieldConsumer.template");
         fieldTypes.forEach(fieldType -> {
             final Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
-            for (FieldId FieldId : sortFields(paths.keySet())) {
+            for (FieldId fieldid : sortFields(paths.keySet())) {
                 final Map<String, String> conf = new HashMap<>();
-                final VisitorPath path = paths.get(FieldId);
-                conf.put("field.class.name", FieldId.getClass().getName());
-                conf.put("field.id.name", FieldId.toString());
-                conf.put("field.type", getterBoxingType(path, FieldId.position()));
+                final VisitorPath path = paths.get(fieldid);
+                conf.put("field.class.name", fieldid.getClass().getName());
+                conf.put("field.id.name", fieldid.toString());
+                conf.put("field.type", getterBoxingType(path, fieldid.position()));
+                conf.put("target.model.class.name", modelClass.getSimpleName());
                 conf.put("lazy.init", lazyInit(path));
                 conf.put("setter.path", setterPath(path, true));
                 conf.put("param", setterBoxingChecker(path));
                 final boolean suppressWarn = path.containsList() || path.containsGenerics();
                 conf.put("suppress.warning", suppressWarn ? "\n    " + SUPPRESS_WARN_RAW : "");
-                buffer.append(MacroProcessor.replaceProperties(fieldSetTemplate, conf));
+                buffer.append(MacroProcessor.replaceProperties(fieldConsumerTemplate, conf));
             }
         });
         return buffer.toString();
@@ -219,28 +221,29 @@ final class ModelWrapperGen {
                         .collect(Collectors.toMap(f -> f, paths::get));
     }
 
+    // FIXME templa
     private static String setterSwitchContent(Map<FieldId, VisitorPath> paths) {
         final StringBuilder buffer = new StringBuilder();
         final String switchContent = template("SetSwitchBlock.template");
-        for (FieldId FieldId : sortFields(paths.keySet())) {
+        for (FieldId fieldid : sortFields(paths.keySet())) {
             final Map<String, String> conf = new HashMap<>();
-            conf.put("field.id.name", FieldId.toString());
-            final VisitorPath path = paths.get(FieldId);
-            final String setterBoxingType = getterBoxingType(path, FieldId.position());
+            conf.put("field.id.name", fieldid.toString());
+            final VisitorPath path = paths.get(fieldid);
+            final String setterBoxingType = getterBoxingType(path, fieldid.position());
             final StringBuilder caseContent = new StringBuilder();
             if (setterBoxingType.contains("<")) {
                 caseContent.append("                " + SUPPRESS_WARN_UNCHECKED + "\n");
             }
             caseContent.append("                ");
             caseContent.append(setterBoxingType).append(" ");
-            caseContent.append(FieldId.toString().toLowerCase());
+            caseContent.append(fieldid.toString().toLowerCase());
             caseContent.append(" = (");
             caseContent.append(setterBoxingType);
             caseContent.append(") value;\n");
 
             caseContent.append("                ");
-            caseContent.append("set_${field.id.name}(");
-            caseContent.append(FieldId.toString().toLowerCase());
+            caseContent.append(fieldid.toString()).append("_CONSUMER.accept(model, ");
+            caseContent.append(fieldid.toString().toLowerCase());
             caseContent.append(");\n");
             conf.put("case.content", caseContent.toString());
             buffer.append(MacroProcessor.replaceProperties(switchContent, conf));
@@ -251,10 +254,10 @@ final class ModelWrapperGen {
     private static String getterSwitchContent(Map<FieldId, VisitorPath> paths) {
         final StringBuilder buffer = new StringBuilder();
         final String switchContent = template("GetSwitchBlock.template");
-        for (FieldId FieldId : sortFields(paths.keySet())) {
+        for (FieldId fieldId : sortFields(paths.keySet())) {
             final Map<String, String> conf = new HashMap<>();
-            conf.put("field.id.name", FieldId.toString());
-            conf.put("case.content", "get_${field.id.name}();\n");
+            conf.put("field.id.name", fieldId.toString());
+            conf.put("case.content", fieldId.toString() + "_SUPPLIER.apply(model);\n");
             buffer.append(MacroProcessor.replaceProperties(switchContent, conf));
         }
         return buffer.toString();

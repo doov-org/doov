@@ -149,14 +149,14 @@ public final class ModelMapGenMojo extends AbstractMojo {
         conf.put("package.name", targetPackage);
         conf.put("process.class", modelClass.getName());
         conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
-        conf.put("target.project.class.name", modelClass.getSimpleName());
-        conf.put("target.project.class.full.name", modelClass.getName());
+        conf.put("target.model.class.name", modelClass.getSimpleName());
+        conf.put("target.model.class.full.name", modelClass.getName());
         conf.put("target.field.info.package.name", fieldClass.getPackage().getName());
         conf.put("target.field.info.class.name", fieldClass.getSimpleName() + "Info");
         conf.put("target.class.name", targetClassName);
-        conf.put("map.getter", mapGetter(fieldPaths));
+        conf.put("map.getter", mapGetter(fieldPaths, modelClass));
         conf.put("map.getter.if", mapFieldTypeIfStatement("MapGetIfStatement.template", fieldPaths));
-        conf.put("map.setter", mapSetter(fieldPaths));
+        conf.put("map.setter", mapSetter(fieldPaths, modelClass));
         conf.put("map.setter.if", mapFieldTypeIfStatement("MapSetIfStatement.template", fieldPaths));
         conf.put("source.generator.name", getClass().getName());
 

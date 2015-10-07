@@ -1,0 +1,7 @@
+    /**
+     * @see ${field.class.name}#${field.id.name}
+     */
+    private static final Function<${target.model.class.name}, ${field.type}> ${field.id.name}_SUPPLIER = model -> {
+${null.check}        return model.${getter.path};
+    };
+
