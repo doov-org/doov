@@ -17,7 +17,6 @@ import com.google.common.base.Joiner;
 final class ModelWrapperGen {
 
     private static final String SUPPRESS_WARN_RAW = "@SuppressWarnings({ \"unchecked\", \"rawtypes\" })";
-    private static final String SUPPRESS_WARN_UNCHECKED = "@SuppressWarnings(\"unchecked\")";
 
     static String mapFieldTypeIfStatement(String templateFileName, Map<FieldId, VisitorPath> collected) {
         final StringBuilder buffer = new StringBuilder();
