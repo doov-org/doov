@@ -3,6 +3,7 @@ package org.modelmap.core;
 import static java.util.Arrays.stream;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * {@code FieldModel} implementation based on {@code java.util.Map}
@@ -45,6 +46,11 @@ public class BaseFieldModel implements FieldModel {
     public void set(FieldId fieldId, Object value) {
         values.put(fieldId, value);
         stream(siblingsOf(fieldId)).forEach(s -> values.put(s, value));
+    }
+
+    @Override
+    public Iterator<Entry<FieldId, Object>> iterator() {
+        return values.entrySet().iterator();
     }
 
     private static final FieldId[] NO_SIBLINGS = new FieldId[] {};

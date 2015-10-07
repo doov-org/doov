@@ -1,16 +1,15 @@
 package org.modelmap.sample.model;
 
-import static java.util.Arrays.stream;
 import static org.modelmap.sample.model.FavoriteWebsite.webSite;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.StreamSupport;
 
 import org.modelmap.core.FieldInfo;
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.FieldModels;
-import org.modelmap.sample.field.SampleFieldIdInfo;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -21,13 +20,12 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
-import org.openjdk.jmh.annotations.*;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 2)
-@Measurement(iterations = 3)
+@Warmup(iterations = 2, time = 1)
+@Measurement(iterations = 3, time = 2)
 @Fork(2)
 public class CloneBenchmark {
 
@@ -71,7 +69,6 @@ public class CloneBenchmark {
 
     @Benchmark
     public FieldModel clone_field_model() {
-        FieldModel wrapper = new SampleModelWrapper(source);
         FieldModel clone = new SampleModelWrapper();
         Arrays.stream(wrapper.getFieldInfos()).forEach(e -> clone.set(e.id(), wrapper.get(e.id())));
         return clone;
@@ -79,7 +76,6 @@ public class CloneBenchmark {
 
     @Benchmark
     public FieldModel clone_by_fieldid() {
-        FieldModel wrapper = new SampleModelWrapper(source);
         FieldModel clone = new SampleModelWrapper();
         for (FieldInfo fieldInfo : wrapper.getFieldInfos())
             clone.set(fieldInfo.id(), wrapper.get(fieldInfo.id()));
@@ -88,15 +84,13 @@ public class CloneBenchmark {
 
     @Benchmark
     public FieldModel clone_stream_sequential() {
-        FieldModel wrapper = new SampleModelWrapper(source);
-        return FieldModels.stream(wrapper, false).filter(e -> e.getValue() != null)
+        return StreamSupport.stream(wrapper.spliterator(), false).filter(e -> e.getValue() != null)
                         .collect(FieldModels.toFieldModel(SampleModelWrapper::new));
     }
 
     @Benchmark
     public FieldModel clone_stream_parallel() {
-        FieldModel wrapper = new SampleModelWrapper(source);
-        return FieldModels.stream(wrapper, true).parallel().filter(e -> e.getValue() != null)
+        return StreamSupport.stream(wrapper.spliterator(), true).filter(e -> e.getValue() != null)
                         .collect(FieldModels.toFieldModel(SampleModelWrapper::new));
     }
 }

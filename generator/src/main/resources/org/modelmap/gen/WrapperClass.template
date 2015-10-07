@@ -1,12 +1,16 @@
 package ${package.name};
 
-import javax.annotation.Generated;
-import java.util.function.Function;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
-import org.modelmap.core.FieldModel;
+import javax.annotation.Generated;
+
 import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldInfo;
+import org.modelmap.core.FieldModel;
 import ${target.field.info.package.name}.${target.field.info.class.name};
 
 @Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
@@ -31,6 +35,45 @@ public final class ${target.class.name} implements FieldModel {
     @Override
     public FieldInfo[] getFieldInfos() {
         return fieldInfos;
+    }
+    
+    @Override
+    public Iterator<Map.Entry<FieldId, Object>> iterator() {
+        return new Iterator<Map.Entry<FieldId, Object>>() {
+            int position = 0;
+
+            @Override
+            public boolean hasNext() {
+                return position < fieldInfos.length;
+            }
+
+            @Override
+            public Entry<FieldId, Object> next() {
+                try {
+                    return new Map.Entry<FieldId, Object>() {
+                        final FieldId fieldId = fieldInfos[position].id();
+
+                        @Override
+                        public FieldId getKey() {
+                            return fieldId;
+                        }
+
+                        @Override
+                        public Object getValue() {
+                            return get(fieldId);
+                        }
+
+                        @Override
+                        public Object setValue(Object value) {
+                            throw new UnsupportedOperationException();
+                        }
+
+                    };
+                } finally {
+                    position++;
+                }
+            }
+        };
     }
 
     @Override

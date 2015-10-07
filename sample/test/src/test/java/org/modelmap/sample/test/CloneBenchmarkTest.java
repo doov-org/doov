@@ -22,35 +22,35 @@ public class CloneBenchmarkTest {
         }
     };
 
-    private CloneBenchmark clone = new CloneBenchmark();
+    private CloneBenchmark bench = new CloneBenchmark();
 
     @Before
     public void before() {
-        clone.init();
+        bench.init();
     }
 
     @Test
     public void clone_java_bean() {
-        clone.clone_java_bean();
+        bench.clone_java_bean();
     }
 
     @Test
     public void clone_by_fieldid() {
-        clone.clone_by_fieldid();
+        bench.clone_by_fieldid();
     }
 
     @Test
     public void clone_field_model() {
-        clone.clone_field_model();
+        bench.clone_field_model();
     }
 
     @Test
     public void clone_stream_sequential() {
-        clone.clone_stream_sequential();
+        bench.clone_stream_sequential();
     }
 
     @Test
     public void clone_stream_parallel() {
-        clone.clone_stream_parallel();
+        bench.clone_stream_parallel();
     }
 }
