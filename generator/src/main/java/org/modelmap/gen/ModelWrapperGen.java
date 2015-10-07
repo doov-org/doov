@@ -46,6 +46,47 @@ final class ModelWrapperGen {
         return paths;
     }
 
+    static String mapFieldProperties(Map<FieldId, VisitorPath> collected, Class<?> modelClass) {
+        final StringBuilder buffer = new StringBuilder();
+        final String getterTemplate = template("PropertyIdEnum.template");
+
+        collected.forEach((fieldId, visitorPath) -> {
+            Map<String, String> conf = new HashMap<>();
+            conf.put("field.id.name", fieldId.toString());
+            conf.put("field.id.type", fieldId.getClass().getName());
+            conf.put("supplier.method", supplierMethod(fieldId, visitorPath, modelClass));
+            conf.put("consumer.method", consumerMethod(fieldId, visitorPath, modelClass));
+            buffer.append(MacroProcessor.replaceProperties(getterTemplate, conf));
+        });
+
+        return buffer.toString();
+    }
+
+    private static String supplierMethod(FieldId fieldId, VisitorPath path, Class<?> modelClass) {
+        final String getterTemplate = template("PropertyLiteralSupplier.template");
+        Map<String, String> conf = new HashMap<>();
+        conf.put("field.class.name", fieldId.getClass().getName());
+        conf.put("field.id.name", fieldId.toString());
+        conf.put("field.type", getterBoxingType(path, fieldId.position()));
+        conf.put("target.model.class.name", modelClass.getSimpleName());
+        conf.put("null.check", nullCheck(path));
+        conf.put("getter.path", getterPath(path));
+        return MacroProcessor.replaceProperties(getterTemplate, conf);
+    }
+
+    private static String consumerMethod(FieldId fieldId, VisitorPath path, Class<?> modelClass) {
+        final String getterTemplate = template("PropertyLiteralConsumer.template");
+        final Map<String, String> conf = new HashMap<>();
+        conf.put("field.class.name", fieldId.getClass().getName());
+        conf.put("field.id.name", fieldId.toString());
+        conf.put("field.type", getterBoxingType(path, fieldId.position()));
+        conf.put("target.model.class.name", modelClass.getSimpleName());
+        conf.put("lazy.init", lazyInit(path));
+        conf.put("setter.path", setterPath(path, true));
+        conf.put("param", setterBoxingChecker(path));
+        return MacroProcessor.replaceProperties(getterTemplate, conf);
+    }
+
     static String mapGetter(Map<FieldId, VisitorPath> collected, Class<?> modelClass) {
         final StringBuilder buffer = new StringBuilder();
         final List<Class<?>> fieldTypes = fieldTypes(collected);
@@ -59,6 +100,7 @@ final class ModelWrapperGen {
             buffer.append(MacroProcessor.replaceProperties(getterTemplate, conf));
         });
 
+        // TODO to remove
         final String fieldSupplierTemplate = template("FieldSupplier.template");
         fieldTypes.forEach(fieldType -> {
             Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
@@ -90,6 +132,7 @@ final class ModelWrapperGen {
             buffer.append(MacroProcessor.replaceProperties(setterTemplate, conf));
         });
 
+        // TODO to remove
         final String fieldConsumerTemplate = template("FieldConsumer.template");
         fieldTypes.forEach(fieldType -> {
             final Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);

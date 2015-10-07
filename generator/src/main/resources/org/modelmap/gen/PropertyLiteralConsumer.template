@@ -1,0 +1,6 @@
+            @Override
+            public BiConsumer<${target.model.class.name}, ${field.type}> consumer() {
+                return (model, value) -> {
+${lazy.init}                    model.${setter.path};
+                };
+            }

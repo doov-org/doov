@@ -46,4 +46,19 @@ ${map.setter.if}    }
 
 ${map.setter}
 
+    private static enum ${target.model.class.name}Property {
+${map.properties}
+        ;
+
+        private final FieldId fieldId;
+
+        ${target.model.class.name}Property(FieldId fieldId) {
+            this.fieldId = fieldId;
+        }
+
+        public abstract <T> BiConsumer<SampleModel, T> consumer();
+
+        public abstract <T> Function<SampleModel, T> supplier();
+    }
+
 }

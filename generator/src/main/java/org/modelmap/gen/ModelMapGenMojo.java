@@ -6,10 +6,7 @@ import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
 import static java.time.format.FormatStyle.SHORT;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES;
 import static org.modelmap.gen.FieldInfoGen.literals;
-import static org.modelmap.gen.ModelWrapperGen.mapFieldTypeIfStatement;
-import static org.modelmap.gen.ModelWrapperGen.mapGetter;
-import static org.modelmap.gen.ModelWrapperGen.mapSetter;
-import static org.modelmap.gen.ModelWrapperGen.validatePath;
+import static org.modelmap.gen.ModelWrapperGen.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -158,6 +155,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
         conf.put("map.getter.if", mapFieldTypeIfStatement("MapGetIfStatement.template", fieldPaths));
         conf.put("map.setter", mapSetter(fieldPaths, modelClass));
         conf.put("map.setter.if", mapFieldTypeIfStatement("MapSetIfStatement.template", fieldPaths));
+        conf.put("map.properties", mapFieldProperties(fieldPaths, modelClass));
         conf.put("source.generator.name", getClass().getName());
 
         String content = MacroProcessor.replaceProperties(classTemplate, conf);

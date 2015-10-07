@@ -1,0 +1,6 @@
+            @Override
+            public Function<${target.model.class.name}, ${field.type}> supplier() {
+                return model -> {
+${null.check}                    return model.${getter.path};
+                };
+            }
