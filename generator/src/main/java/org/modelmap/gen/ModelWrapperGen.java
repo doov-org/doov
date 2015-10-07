@@ -238,24 +238,6 @@ final class ModelWrapperGen {
         for (FieldId fieldid : sortFields(paths.keySet())) {
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.name", fieldid.toString());
-            final VisitorPath path = paths.get(fieldid);
-            final String setterBoxingType = getterBoxingType(path, fieldid.position());
-            final StringBuilder caseContent = new StringBuilder();
-            if (setterBoxingType.contains("<")) {
-                caseContent.append("                " + SUPPRESS_WARN_UNCHECKED + "\n");
-            }
-            caseContent.append("                ");
-            caseContent.append(setterBoxingType).append(" ");
-            caseContent.append(fieldid.toString().toLowerCase());
-            caseContent.append(" = (");
-            caseContent.append(setterBoxingType);
-            caseContent.append(") value;\n");
-
-            caseContent.append("                ");
-            caseContent.append(fieldid.toString()).append("_CONSUMER.accept(model, ");
-            caseContent.append(fieldid.toString().toLowerCase());
-            caseContent.append(");\n");
-            conf.put("case.content", caseContent.toString());
             buffer.append(MacroProcessor.replaceProperties(switchContent, conf));
         }
         return buffer.toString();
@@ -267,7 +249,6 @@ final class ModelWrapperGen {
         for (FieldId fieldId : sortFields(paths.keySet())) {
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.name", fieldId.toString());
-            conf.put("case.content", fieldId.toString() + "_SUPPLIER.apply(model);\n");
             buffer.append(MacroProcessor.replaceProperties(switchContent, conf));
         }
         return buffer.toString();

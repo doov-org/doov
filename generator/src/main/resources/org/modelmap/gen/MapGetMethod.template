@@ -1,5 +1,5 @@
     @SuppressWarnings("unchecked")
-    private <T> T get(${field.id.type} fieldId) {
+    private static <T> Function<${target.model.class.name}, T> supplier(${field.id.type} fieldId) {
         switch (fieldId) {
 ${switch.content}
             default:

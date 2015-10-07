@@ -1,2 +1,2 @@
         if (fieldId instanceof ${field.id.type})
-            return get((${field.id.type}) fieldId);
+            return this.<T> supplier((${field.id.type}) fieldId).apply(model);

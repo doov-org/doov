@@ -41,7 +41,7 @@ ${map.getter.if}        return null;
 ${map.getter}
 
     @Override
-    public void set(FieldId fieldId, Object value) {
+    public <T> void set(FieldId fieldId, T value) {
 ${map.setter.if}    }
 
 ${map.setter}

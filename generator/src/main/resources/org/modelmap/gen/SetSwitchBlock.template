@@ -1,2 +1,2 @@
             case ${field.id.name}:
-${case.content}                break;
+                return (BiConsumer<${target.model.class.name}, T>) ${field.id.name}_CONSUMER;

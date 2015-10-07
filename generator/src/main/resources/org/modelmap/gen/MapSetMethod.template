@@ -1,4 +1,4 @@
-    private void set(${field.id.type} fieldId, Object value) {
+    private static <T> BiConsumer<${target.model.class.name}, T> consumer(${field.id.type} fieldId) {
         switch (fieldId) {
 ${switch.content}
             default:

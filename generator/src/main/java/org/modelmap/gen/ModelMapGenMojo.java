@@ -120,8 +120,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
     private void generateFieldInfo(Map<FieldId, VisitorPath> fieldPaths, Class<?> clazz) throws IOException {
         final String targetClassName = clazz.getSimpleName() + "Info";
         final String targetPackage = clazz.getPackage().getName();
-        final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'), targetClassName
-                        + ".java");
+        final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
+                        targetClassName + ".java");
         final String classTemplate = template("FieldInfoEnum.template");
         createDirectories(targetFile.getParentFile().toPath());
         final Map<String, String> conf = new HashMap<>();

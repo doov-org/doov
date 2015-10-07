@@ -1,2 +1,2 @@
                 case ${field.id.name}:
-                    return (T) ${case.content}
+                    return (Function<${target.model.class.name}, T>) ${field.id.name}_SUPPLIER;
