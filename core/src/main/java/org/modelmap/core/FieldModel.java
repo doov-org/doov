@@ -4,9 +4,11 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Spliterator;
+import java.util.Spliterators;
 
 /**
  * An model that maps {@code FieldId} to values. Each {@code FieldId} can map to at most one value.
@@ -60,5 +62,11 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
     default void clear(TagId tag) {
         stream(getFieldInfos()).filter(info -> asList(info.id().tags()).contains(tag) && get(info.id()) != null)
                         .forEach(info -> set(info.id(), null));
+    }
+
+    default Spliterator<Entry<FieldId, Object>> spliterator() {
+        return Spliterators.spliterator(iterator(), getFieldInfos().length, Spliterator.DISTINCT
+                        | Spliterator.IMMUTABLE | Spliterator.NONNULL | Spliterator.SUBSIZED | Spliterator.CONCURRENT
+                        | Spliterator.SIZED);
     }
 }
