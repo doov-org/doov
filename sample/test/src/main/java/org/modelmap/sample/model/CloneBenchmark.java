@@ -1,5 +1,3 @@
-
-
 package org.modelmap.sample.model;
 
 import static org.modelmap.sample.model.FavoriteWebsite.webSite;
@@ -8,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import org.modelmap.core.FieldInfo;
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.FieldModels;
 import org.modelmap.sample.field.SampleFieldIdInfo;
@@ -68,21 +67,32 @@ public class CloneBenchmark {
 
     @Benchmark
     public FieldModel clone_field_model() {
-        FieldModel fieldModel = new SampleModelWrapper(source);
+        FieldModel wrapper = new SampleModelWrapper(source);
         FieldModel clone = new SampleModelWrapper();
-        Arrays.stream(fieldModel.getFieldInfos()).forEach(e -> clone.set(e.id(), fieldModel.get(e.id())));
+        Arrays.stream(wrapper.getFieldInfos()).forEach(e -> clone.set(e.id(), wrapper.get(e.id())));
+        return clone;
+    }
+
+    @Benchmark
+    public FieldModel clone_by_fieldid() {
+        FieldModel wrapper = new SampleModelWrapper(source);
+        FieldModel clone = new SampleModelWrapper();
+        for (FieldInfo fieldInfo : wrapper.getFieldInfos())
+            clone.set(fieldInfo.id(), wrapper.get(fieldInfo.id()));
         return clone;
     }
 
     @Benchmark
     public FieldModel clone_stream_sequential() {
-        return FieldModels.stream(new SampleModelWrapper(source), false).filter(e -> e.getValue() != null)
+        FieldModel wrapper = new SampleModelWrapper(source);
+        return FieldModels.stream(wrapper, false).filter(e -> e.getValue() != null)
                         .collect(FieldModels.toFieldModel(SampleFieldIdInfo.values()));
     }
 
     @Benchmark
     public FieldModel clone_stream_parallel() {
-        return FieldModels.stream(new SampleModelWrapper(source), true).filter(e -> e.getValue() != null)
+        FieldModel wrapper = new SampleModelWrapper(source);
+        return FieldModels.stream(wrapper, true).filter(e -> e.getValue() != null)
                         .collect(FieldModels.toFieldModel(SampleFieldIdInfo.values()));
     }
 }
