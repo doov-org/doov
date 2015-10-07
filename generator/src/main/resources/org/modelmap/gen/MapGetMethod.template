@@ -1,13 +1,9 @@
     @SuppressWarnings("unchecked")
     private <T> T get(${field.id.type} fieldId) {
-        try {
-            switch (fieldId) {
+        switch (fieldId) {
 ${switch.content}
-                default:
-                    throw new IllegalArgumentException("unsupported field " + fieldId);
-            }
-        } catch (IndexOutOfBoundsException e) {
-        	return null;
+            default:
+                throw new IllegalArgumentException("unsupported field " + fieldId);
         }
     }
 

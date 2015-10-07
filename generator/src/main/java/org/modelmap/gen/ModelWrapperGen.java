@@ -50,12 +50,8 @@ final class ModelWrapperGen {
     }
 
     static String mapGetter(Map<FieldId, VisitorPath> collected, Class<?> modelClass) {
-        final List<Class<?>> fieldTypes = collected.keySet().stream()
-                        .map(Object::getClass).distinct()
-                        .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
-                        .collect(toList());
-
         final StringBuilder buffer = new StringBuilder();
+        final List<Class<?>> fieldTypes = fieldTypes(collected);
 
         final String getterTemplate = template("MapGetMethod.template");
         fieldTypes.forEach(fieldType -> {
@@ -85,13 +81,8 @@ final class ModelWrapperGen {
     }
 
     static String mapSetter(Map<FieldId, VisitorPath> collected, Class<?> modelClass) {
-        // FIXME duplicated
-        final List<Class<?>> fieldTypes = collected.keySet().stream()
-                        .map(Object::getClass).distinct()
-                        .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
-                        .collect(toList());
-
         final StringBuilder buffer = new StringBuilder();
+        final List<Class<?>> fieldTypes = fieldTypes(collected);
 
         final String setterTemplate = template("MapSetMethod.template");
         fieldTypes.forEach(fieldType -> {
@@ -123,10 +114,20 @@ final class ModelWrapperGen {
         return buffer.toString();
     }
 
+    private static List<Class<?>> fieldTypes(Map<FieldId, VisitorPath> collected) {
+        return collected.keySet().stream()
+                            .map(Object::getClass).distinct()
+                            .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                            .collect(toList());
+    }
+
     private static String nullCheck(VisitorPath path) {
         final StringBuilder buffer = new StringBuilder();
         for (int i = 1; i < path.getPath().size(); i++) {
             buffer.append(nullCheck(path.getPath(), i));
+            if (path.getFieldId().position() != -1 && i == (path.getPath().size() - 1)) {
+                buffer.append(sizeCheck(path.getPath(), i, path.getFieldId().position()));
+            }
         }
         return buffer.toString();
     }
@@ -136,6 +137,16 @@ final class ModelWrapperGen {
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
+        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
+        return buffer.toString();
+    }
+
+    private static String sizeCheck(List<Method> paths, int index, int position) {
+        final String lazyInitTemplate = template("SizeCheckBlock.template");
+        final StringBuilder buffer = new StringBuilder();
+        final Map<String, String> conf = new HashMap<>();
+        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
+        conf.put("size", String.valueOf(position));
         buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
         return buffer.toString();
     }
@@ -221,7 +232,6 @@ final class ModelWrapperGen {
                         .collect(Collectors.toMap(f -> f, paths::get));
     }
 
-    // FIXME templa
     private static String setterSwitchContent(Map<FieldId, VisitorPath> paths) {
         final StringBuilder buffer = new StringBuilder();
         final String switchContent = template("SetSwitchBlock.template");

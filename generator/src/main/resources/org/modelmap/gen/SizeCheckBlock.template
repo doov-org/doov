@@ -1,0 +1,2 @@
+		if (model.${partial.path}.size() < ${size})
+			return null;
