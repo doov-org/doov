@@ -16,8 +16,6 @@ import com.google.common.base.Joiner;
 
 final class ModelWrapperGen {
 
-    private static final String SUPPRESS_WARN_RAW = "@SuppressWarnings({ \"unchecked\", \"rawtypes\" })";
-
     static String mapFieldTypeIfStatement(String templateFileName, Map<FieldId, VisitorPath> collected) {
         final StringBuilder buffer = new StringBuilder();
         final String template = template(templateFileName);
@@ -105,8 +103,6 @@ final class ModelWrapperGen {
                 conf.put("lazy.init", lazyInit(path));
                 conf.put("setter.path", setterPath(path, true));
                 conf.put("param", setterBoxingChecker(path));
-                final boolean suppressWarn = path.containsList() || path.containsGenerics();
-                conf.put("suppress.warning", suppressWarn ? "\n    " + SUPPRESS_WARN_RAW : "");
                 buffer.append(MacroProcessor.replaceProperties(fieldConsumerTemplate, conf));
             }
         });
@@ -183,7 +179,7 @@ final class ModelWrapperGen {
         conf.put("list.content.as.null", listContentAsNull(paths.subList(0, index), index, field));
         conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
         conf.put("partial.path.init", setterPath(paths.subList(0, index), setterName, field.position(), false));
-        conf.put("param", "new java.util.ArrayList()");
+        conf.put("param", "new " + ArrayList.class.getName() + "<>()");
         conf.put("index", Integer.toString(field.position() - 1));
         conf.put("position", Integer.toString(field.position()));
         final ParameterizedType paramType = (ParameterizedType) lastGetMethod.getGenericReturnType();
