@@ -32,8 +32,9 @@ public class SampleModelCollectorTest {
         should_collect_all_values_when_collect(FieldModels.stream(source, true), source);
     }
 
-    private static void should_collect_all_values_when_collect(Stream<Entry<FieldId, Object>> stream, FieldModel source) {
-        FieldModel target = stream.collect(FieldModels.toFieldModel(SampleFieldIdInfo.values()));
+    private static void should_collect_all_values_when_collect(Stream<Entry<FieldId, Object>> stream,
+                    FieldModel source) {
+        FieldModel target = stream.collect(FieldModels.toFieldModel(SampleModelWrapper::new));
 
         SoftAssertions softly = new SoftAssertions();
         stream(SampleFieldIdInfo.values()).forEach(info -> {

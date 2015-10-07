@@ -1,5 +1,6 @@
 package org.modelmap.sample.model;
 
+import static java.util.Arrays.stream;
 import static org.modelmap.sample.model.FavoriteWebsite.webSite;
 
 import java.util.ArrayList;
@@ -20,20 +21,23 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.annotations.*;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 5)
-@Measurement(iterations = 5)
-@Fork(3)
+@Warmup(iterations = 2)
+@Measurement(iterations = 3)
+@Fork(2)
 public class CloneBenchmark {
 
     private SampleModel source;
+    private SampleModelWrapper wrapper;
 
     @Setup
     public void init() {
         source = SampleModels.sample();
+        wrapper = new SampleModelWrapper(source);
     }
 
     @Benchmark
@@ -86,13 +90,13 @@ public class CloneBenchmark {
     public FieldModel clone_stream_sequential() {
         FieldModel wrapper = new SampleModelWrapper(source);
         return FieldModels.stream(wrapper, false).filter(e -> e.getValue() != null)
-                        .collect(FieldModels.toFieldModel(SampleFieldIdInfo.values()));
+                        .collect(FieldModels.toFieldModel(SampleModelWrapper::new));
     }
 
     @Benchmark
     public FieldModel clone_stream_parallel() {
         FieldModel wrapper = new SampleModelWrapper(source);
         return FieldModels.stream(wrapper, true).parallel().filter(e -> e.getValue() != null)
-                        .collect(FieldModels.toFieldModel(SampleFieldIdInfo.values()));
+                        .collect(FieldModels.toFieldModel(SampleModelWrapper::new));
     }
 }
