@@ -24,7 +24,7 @@ import org.openjdk.jmh.annotations.Warmup;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 2, time = 1)
+@Warmup(iterations = 3, time = 2)
 @Measurement(iterations = 3, time = 2)
 @Fork(2)
 public class CloneBenchmark {
@@ -90,7 +90,7 @@ public class CloneBenchmark {
 
     @Benchmark
     public FieldModel clone_stream_parallel() {
-        return StreamSupport.stream(wrapper.spliterator(), true).filter(e -> e.getValue() != null)
+        return StreamSupport.stream(wrapper.spliterator(), false).parallel().filter(e -> e.getValue() != null)
                         .collect(FieldModels.toFieldModel(SampleModelWrapper::new));
     }
 }
