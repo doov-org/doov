@@ -15,7 +15,8 @@ public class FieldModels {
     /**
      * Returns a {@code Collector} that accumulates the input elements into a new {@code FieldModel}.
      */
-    public static Collector<Entry<FieldId, Object>, ?, FieldModel> toFieldModel(Supplier<FieldModel> modelSupplier) {
+    public static Collector<Entry<FieldId, Object>, ?, FieldModel> toMapThenFieldModel(
+                    Supplier<FieldModel> modelSupplier) {
         return Collectors.collectingAndThen(
                         Collectors.toMap(Entry::getKey, Entry::getValue),
                         m -> {

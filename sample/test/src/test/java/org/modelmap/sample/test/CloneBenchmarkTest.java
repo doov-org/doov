@@ -1,8 +1,6 @@
 package org.modelmap.sample.test;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
 import org.modelmap.sample.model.CloneBenchmark;
@@ -35,13 +33,18 @@ public class CloneBenchmarkTest {
     }
 
     @Test
-    public void clone_by_fieldid() {
-        bench.clone_by_fieldid();
+    public void clone_by_field_info_stream_sequential() {
+        bench.clone_by_field_info_stream_sequential();
     }
 
     @Test
-    public void clone_field_model() {
-        bench.clone_field_model();
+    public void clone_by_field_info_for() {
+        bench.clone_by_field_info_for();
+    }
+
+    @Test
+    public void clone_by_field_info_for_each() {
+        bench.clone_by_field_info_for_each();
     }
 
     @Test

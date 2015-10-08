@@ -1,5 +1,6 @@
 package org.modelmap.sample.model;
 
+import static java.util.Arrays.asList;
 import static org.modelmap.sample.model.FavoriteWebsite.webSite;
 
 import java.util.ArrayList;
@@ -7,20 +8,10 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.StreamSupport;
 
-import org.modelmap.core.FieldInfo;
-import org.modelmap.core.FieldModel;
-import org.modelmap.core.FieldModels;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Warmup;
+import org.modelmap.core.*;
+import org.openjdk.jmh.annotations.*;
 
+@Threads(Threads.MAX)
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -68,14 +59,14 @@ public class CloneBenchmark {
     }
 
     @Benchmark
-    public FieldModel clone_field_model() {
+    public FieldModel clone_by_field_info_stream_sequential() {
         FieldModel clone = new SampleModelWrapper();
         Arrays.stream(wrapper.getFieldInfos()).forEach(e -> clone.set(e.id(), wrapper.get(e.id())));
         return clone;
     }
 
     @Benchmark
-    public FieldModel clone_by_fieldid() {
+    public FieldModel clone_by_field_info_for() {
         FieldModel clone = new SampleModelWrapper();
         for (FieldInfo fieldInfo : wrapper.getFieldInfos())
             clone.set(fieldInfo.id(), wrapper.get(fieldInfo.id()));
@@ -83,14 +74,21 @@ public class CloneBenchmark {
     }
 
     @Benchmark
+    public FieldModel clone_by_field_info_for_each() {
+        FieldModel clone = new SampleModelWrapper();
+        asList(wrapper.getFieldInfos()).forEach(fieldInfo -> clone.set(fieldInfo.id(), wrapper.get(fieldInfo.id())));
+        return clone;
+    }
+
+    @Benchmark
     public FieldModel clone_stream_sequential() {
-        return StreamSupport.stream(wrapper.spliterator(), false).filter(e -> e.getValue() != null)
-                        .collect(FieldModels.toFieldModel(SampleModelWrapper::new));
+        return StreamSupport.stream(wrapper.spliterator(), false)
+                        .collect(FieldModels.toFieldModel(new SampleModelWrapper()));
     }
 
     @Benchmark
     public FieldModel clone_stream_parallel() {
-        return StreamSupport.stream(wrapper.spliterator(), false).parallel().filter(e -> e.getValue() != null)
-                        .collect(FieldModels.toFieldModel(SampleModelWrapper::new));
+        return StreamSupport.stream(wrapper.spliterator(), false).parallel()
+                        .collect(FieldModels.toMapThenFieldModel(SampleModelWrapper::new));
     }
 }
