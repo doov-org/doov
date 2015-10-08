@@ -50,25 +50,7 @@ public final class ${target.class.name} implements FieldModel {
             @Override
             public Entry<FieldId, Object> next() {
                 try {
-                    return new Map.Entry<FieldId, Object>() {
-                        final FieldId fieldId = fieldInfos[position].id();
-
-                        @Override
-                        public FieldId getKey() {
-                            return fieldId;
-                        }
-
-                        @Override
-                        public Object getValue() {
-                            return get(fieldId);
-                        }
-
-                        @Override
-                        public Object setValue(Object value) {
-                            throw new UnsupportedOperationException();
-                        }
-
-                    };
+                    return ${target.model.class.name}Property.values()[position].toEntry(model);
                 } finally {
                     position++;
                 }
@@ -94,15 +76,52 @@ ${map.setter}
 ${map.properties}
         ;
 
-        final FieldId fieldId;
+        private final FieldId fieldId;
+        private Map.Entry<FieldId, Object> entry;
 
         ${target.model.class.name}Property(FieldId fieldId) {
             this.fieldId = fieldId;
         }
+        
+        Map.Entry<FieldId, Object> toEntry(${target.model.class.name} model) {
+            if (entry == null)
+                synchronized (this) {
+                    if (entry == null)
+                        entry = new SupplierEntry<>(fieldId, model, supplier());
+                }
+            return entry;
+        }
 
-        public abstract <T> BiConsumer<SampleModel, T> consumer();
+        public abstract <T> BiConsumer<${target.model.class.name}, T> consumer();
 
-        public abstract <T> Function<SampleModel, T> supplier();
+        public abstract <T> Function<${target.model.class.name}, T> supplier();
     }
 
+    private static class SupplierEntry<M, T> implements Map.Entry<FieldId, Object> {
+        final FieldId fieldId;
+        final M model;
+        final Function<M, T> supplier;
+
+        SupplierEntry(FieldId fieldId, M model, Function<M, T> supplier) {
+            super();
+            this.fieldId = fieldId;
+            this.model = model;
+            this.supplier = supplier;
+        }
+
+        @Override
+        public FieldId getKey() {
+            return fieldId;
+        }
+
+        @Override
+        public Object getValue() {
+            return supplier.apply(model);
+        }
+
+        @Override
+        public Object setValue(Object value) {
+            throw new UnsupportedOperationException();
+        }
+    }
 }
