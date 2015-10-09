@@ -6,7 +6,7 @@ import org.junit.runners.model.Statement;
 
 public class Clone2BenchmarkTest {
 
-    private static final int LOOP = 1000;
+    private static final int LOOP = 100;
 
     @Rule
     public TestRule chrono = (base, description) -> new Statement() {

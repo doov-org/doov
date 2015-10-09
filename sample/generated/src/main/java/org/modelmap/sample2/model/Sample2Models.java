@@ -7,7 +7,6 @@ import static org.modelmap.sample2.field.Sample2Tag.ID;
 import static org.modelmap.sample2.field.Sample2Tag.LOGIN;
 import static org.modelmap.sample2.field.Sample2Tag.PASSWORD;
 
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.modelmap.core.FieldInfo;
