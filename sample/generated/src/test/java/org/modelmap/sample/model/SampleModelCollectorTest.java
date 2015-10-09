@@ -24,7 +24,7 @@ public class SampleModelCollectorTest {
 
     @Test
     public void should_collect_all_values_when_collect_sequential() {
-        FieldModel target = StreamSupport.stream(source.spliterator(), true)
+        FieldModel target = StreamSupport.stream(source.spliterator(), false)
                         .collect(FieldModels.toFieldModel(new SampleModelWrapper()));
         should_collect_all_values_when_collect(target, source);
     }
