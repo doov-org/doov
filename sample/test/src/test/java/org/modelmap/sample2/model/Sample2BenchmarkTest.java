@@ -6,11 +6,11 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.modelmap.sample.util.LoopingRule;
 
-public class Clone2BenchmarkTest {
+public class Sample2BenchmarkTest {
     private static final int LOOP = 100;
     @Rule
     public final TestRule looping = new LoopingRule(LOOP);
-    private CloneBenchmark bench = new CloneBenchmark();
+    private final Sample2Benchmark bench = new Sample2Benchmark();
 
     @Before
     public void before() {

@@ -18,14 +18,13 @@ import org.openjdk.jmh.annotations.*;
 @Warmup(iterations = 5, time = 2)
 @Measurement(iterations = 5, time = 2)
 @Fork(1)
-public class CloneBenchmark {
+public class Sample2Benchmark {
 
     private Sample2ModelWrapper wrapper;
 
     @Setup
     public void init() {
-        Sample2Model source = Sample2Models.sample();
-        wrapper = new Sample2ModelWrapper(source);
+        wrapper = new Sample2ModelWrapper(Sample2Models.sample());
     }
 
     @Benchmark

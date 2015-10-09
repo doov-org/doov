@@ -20,7 +20,7 @@ public class LoopingRule implements TestRule {
                 for (int i = 0; i < loopNumber; i++)
                     base.evaluate();
                 final long elapsedTime = System.nanoTime() - startTime;
-                System.out.println(description.getMethodName() + "" + elapsedTime / 1000 + " micros");
+                System.out.println(description.getMethodName() + "\t" + elapsedTime / 1000 + " micros");
             }
         };
     }

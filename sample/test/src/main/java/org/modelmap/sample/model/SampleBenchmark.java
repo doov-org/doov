@@ -17,7 +17,7 @@ import org.openjdk.jmh.annotations.*;
 @Warmup(iterations = 5, time = 2)
 @Measurement(iterations = 5, time = 2)
 @Fork(1)
-public class CloneBenchmark {
+public class SampleBenchmark {
 
     private SampleModel source;
     private SampleModelWrapper wrapper;
