@@ -1,9 +1,9 @@
 package org.modelmap.core;
 
-import static java.util.Arrays.stream;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 /**
  * {@code FieldModel} implementation based on {@code java.util.Map}
@@ -45,7 +45,15 @@ public class BaseFieldModel implements FieldModel {
     @Override
     public void set(FieldId fieldId, Object value) {
         values.put(fieldId, value);
-        stream(siblingsOf(fieldId)).forEach(s -> values.put(s, value));
+        Arrays.stream(siblingsOf(fieldId)).forEach(s -> values.put(s, value));
+    }
+
+
+    private static final FieldId[] NO_SIBLINGS = new FieldId[] {};
+
+    private FieldId[] siblingsOf(FieldId fieldId) {
+        Optional<FieldInfo> sublings = Arrays.stream(fieldInfos).filter(info -> info.id() == fieldId).findFirst();
+        return sublings.isPresent() ? sublings.get().siblings() : NO_SIBLINGS;
     }
 
     @Override
@@ -53,10 +61,18 @@ public class BaseFieldModel implements FieldModel {
         return values.entrySet().iterator();
     }
 
-    private static final FieldId[] NO_SIBLINGS = new FieldId[] {};
+    @Override
+    public Spliterator<Entry<FieldId, Object>> spliterator() {
+        return values.entrySet().spliterator();
+    }
 
-    private FieldId[] siblingsOf(FieldId fieldId) {
-        Optional<FieldInfo> sublings = stream(fieldInfos).filter(info -> info.id() == fieldId).findFirst();
-        return sublings.isPresent() ? sublings.get().siblings() : NO_SIBLINGS;
+    @Override
+    public Stream<Entry<FieldId, Object>> stream() {
+        return values.entrySet().stream();
+    }
+
+    @Override
+    public Stream<Entry<FieldId, Object>> parallelStream() {
+        return values.entrySet().parallelStream();
     }
 }

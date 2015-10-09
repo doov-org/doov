@@ -6,7 +6,6 @@ import static org.modelmap.sample.model.FavoriteWebsite.webSite;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.StreamSupport;
 
 import org.modelmap.core.*;
 import org.openjdk.jmh.annotations.*;
@@ -15,9 +14,9 @@ import org.openjdk.jmh.annotations.*;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 3, time = 2)
-@Measurement(iterations = 3, time = 2)
-@Fork(2)
+@Warmup(iterations = 5, time = 2)
+@Measurement(iterations = 5, time = 2)
+@Fork(1)
 public class CloneBenchmark {
 
     private SampleModel source;
@@ -82,13 +81,11 @@ public class CloneBenchmark {
 
     @Benchmark
     public FieldModel clone_stream_sequential() {
-        return StreamSupport.stream(wrapper.spliterator(), false)
-                        .collect(FieldModels.toFieldModel(new SampleModelWrapper()));
+        return wrapper.stream().collect(FieldModels.toFieldModel(new SampleModelWrapper()));
     }
 
-    //    @Benchmark
+    @Benchmark
     public FieldModel clone_stream_parallel() {
-        return StreamSupport.stream(wrapper.spliterator(), false).parallel()
-                        .collect(FieldModels.toMapThenFieldModel(SampleModelWrapper::new));
+        return wrapper.parallelStream().collect(FieldModels.toMapThenFieldModel(SampleModelWrapper::new));
     }
 }

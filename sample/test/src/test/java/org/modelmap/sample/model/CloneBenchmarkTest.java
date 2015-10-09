@@ -3,9 +3,9 @@ package org.modelmap.sample.model;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
-import org.modelmap.sample.model.CloneBenchmark;
 
 public class CloneBenchmarkTest {
+
     private static final int LOOP = 100000;
 
     @Rule

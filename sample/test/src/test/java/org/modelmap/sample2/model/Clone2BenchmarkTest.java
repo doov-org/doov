@@ -4,7 +4,8 @@ import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
 
-public class CloneBenchmarkTest {
+public class Clone2BenchmarkTest {
+
     private static final int LOOP = 1000;
 
     @Rule

@@ -1,14 +1,10 @@
 package org.modelmap.core;
 
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * An model that maps {@code FieldId} to values. Each {@code FieldId} can map to at most one value.
@@ -28,6 +24,19 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
     <T> void set(FieldId fieldId, T value);
 
     /**
+     * return a sequential {@code Stream} with all key-value pairs
+     */
+    Stream<Map.Entry<FieldId, Object>> stream();
+
+    @Override
+    Spliterator<Map.Entry<FieldId, Object>> spliterator();
+
+    /**
+     * return a parallel {@code Stream} with all key-value pairs
+     */
+    Stream<Map.Entry<FieldId, Object>> parallelStream();
+
+    /**
      * @return the {@code FieldInfo} FieldInfo for all this model {@code FieldId}
      */
     FieldInfo[] getFieldInfos();
@@ -36,7 +45,7 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
      * @return all {@code FieldId}, with a not-null value
      */
     default List<FieldId> getFieldIds() {
-        return stream(getFieldInfos()).map(FieldInfo::id).collect(toList());
+        return Arrays.stream(getFieldInfos()).map(FieldInfo::id).collect(toList());
     }
 
     /**
@@ -45,7 +54,7 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
      * @param source the source field model
      */
     default void setAll(FieldModel source) {
-        stream(getFieldInfos()).filter(info -> source.get(info.id()) != null).forEach(
+        Arrays.stream(getFieldInfos()).filter(info -> source.get(info.id()) != null).forEach(
                         info -> set(info.id(), source.get(info.id())));
     }
 
@@ -53,20 +62,15 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
      * For all the {@code FieldId}, set their value to <code>null</code>
      */
     default void clear() {
-        stream(getFieldInfos()).filter(info -> get(info.id()) != null).forEach(info -> set(info.id(), null));
+        Arrays.stream(getFieldInfos()).filter(info -> get(info.id()) != null).forEach(info -> set(info.id(), null));
     }
 
     /**
      * For all the {@code FieldId} tagged with the specified {@code TagId}, set their value to <code>null</code>
      */
     default void clear(TagId tag) {
-        stream(getFieldInfos()).filter(info -> asList(info.id().tags()).contains(tag) && get(info.id()) != null)
+        Arrays.stream(getFieldInfos()).filter(info -> asList(info.id().tags()).contains(tag) && get(info.id()) != null)
                         .forEach(info -> set(info.id(), null));
     }
 
-    default Spliterator<Entry<FieldId, Object>> spliterator() {
-        return Spliterators.spliterator(iterator(), getFieldInfos().length, Spliterator.DISTINCT
-                        | Spliterator.IMMUTABLE | Spliterator.NONNULL | Spliterator.SUBSIZED | Spliterator.CONCURRENT
-                        | Spliterator.SIZED);
-    }
 }

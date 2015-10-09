@@ -2,8 +2,6 @@ package org.modelmap.sample.model;
 
 import static java.util.Arrays.stream;
 
-import java.util.stream.StreamSupport;
-
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,15 +22,13 @@ public class SampleModelCollectorTest {
 
     @Test
     public void should_collect_all_values_when_collect_sequential() {
-        FieldModel target = StreamSupport.stream(source.spliterator(), false)
-                        .collect(FieldModels.toFieldModel(new SampleModelWrapper()));
+        FieldModel target = source.stream().collect(FieldModels.toFieldModel(new SampleModelWrapper()));
         should_collect_all_values_when_collect(target, source);
     }
 
     @Test
     public void should_collect_all_values_when_collect_parallel() {
-        FieldModel target = StreamSupport.stream(source.spliterator(), true)
-                        .collect(FieldModels.toMapThenFieldModel(SampleModelWrapper::new));
+        FieldModel target = source.parallelStream().collect(FieldModels.toMapThenFieldModel(SampleModelWrapper::new));
         should_collect_all_values_when_collect(target, source);
     }
 

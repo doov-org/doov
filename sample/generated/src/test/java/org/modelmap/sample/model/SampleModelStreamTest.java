@@ -8,11 +8,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.modelmap.core.*;
+import org.modelmap.core.FieldId;
+import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleFieldId;
 
 public class SampleModelStreamTest {
@@ -28,12 +28,12 @@ public class SampleModelStreamTest {
 
     @Test
     public void should_peek_fields_values_when_using_stream_sequential() {
-        should_peek_fields_values_when_using_stream(StreamSupport.stream(source.spliterator(), false));
+        should_peek_fields_values_when_using_stream(source.stream());
     }
 
     @Test
     public void should_peek_fields_values_when_using_stream_parallel() {
-        should_peek_fields_values_when_using_stream(StreamSupport.stream(source.spliterator(), true));
+        should_peek_fields_values_when_using_stream(source.parallelStream());
     }
 
     private static void should_peek_fields_values_when_using_stream(Stream<Entry<FieldId, Object>> stream) {
