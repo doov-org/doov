@@ -1,0 +1,60 @@
+### revision 7796f8e036610303b672a25459caddb592bcee15
+### CollectAndThen Collector
+
+Benchmark                                Mode  Cnt     Score     Error   Units
+CloneBenchmark.clone_by_fieldid         thrpt    6  2034.405 ± 136.820  ops/ms
+CloneBenchmark.clone_field_model        thrpt    6  1989.026 ±  24.142  ops/ms
+CloneBenchmark.clone_java_bean          thrpt    6  9237.269 ± 788.160  ops/ms
+CloneBenchmark.clone_stream_parallel    thrpt    6    51.874 ±  14.824  ops/ms
+CloneBenchmark.clone_stream_sequential  thrpt    6   614.458 ±  19.090  ops/ms
+
+### revision 7796f8e036610303b672a25459caddb592bcee15
+### SingleInstance Collector
+
+Benchmark                                Mode  Cnt     Score      Error   Units
+CloneBenchmark.clone_by_fieldid         thrpt    6  2163.533 ±   51.151  ops/ms
+CloneBenchmark.clone_field_model        thrpt    6  1721.534 ± 1144.777  ops/ms
+CloneBenchmark.clone_java_bean          thrpt    6  9375.130 ± 1980.287  ops/ms
+CloneBenchmark.clone_stream_sequential  thrpt    6  1313.705 ±  192.640  ops/ms
+
+### CollectAndThenCollector 
+### no collections
+
+Benchmark                                Mode  Cnt     Score      Error   Units
+CloneBenchmark.clone_by_fieldid         thrpt    6  3598.842 ±  125.258  ops/ms
+CloneBenchmark.clone_field_model        thrpt    6  3409.206 ±   60.348  ops/ms
+CloneBenchmark.clone_java_bean          thrpt    6  9551.083 ± 1038.206  ops/ms
+CloneBenchmark.clone_stream_parallel    thrpt    6    55.969 ±   11.114  ops/ms
+CloneBenchmark.clone_stream_sequential  thrpt    6   911.744 ±   88.253  ops/ms
+
+### ToUniqueFielModel Collector
+### no collections : required since collections modifications is not thread-safe
+
+Benchmark                                Mode  Cnt     Score     Error   Units
+CloneBenchmark.clone_by_fieldid         thrpt    6  3458.647 ± 218.404  ops/ms
+CloneBenchmark.clone_field_model        thrpt    6  3359.242 ± 385.092  ops/ms
+CloneBenchmark.clone_java_bean          thrpt    6  9183.046 ± 656.302  ops/ms
+CloneBenchmark.clone_stream_parallel    thrpt    6   102.126 ±   6.852  ops/ms
+CloneBenchmark.clone_stream_sequential  thrpt    6  1491.593 ± 169.588  ops/ms
+
+### ToUniqueFielModel Collector
+### with collections and synchronized
+
+Benchmark                                Mode  Cnt     Score    Error   Units
+CloneBenchmark.clone_by_fieldid         thrpt    6  2134.197 ± 65.554  ops/ms
+CloneBenchmark.clone_field_model        thrpt    6  1991.846 ± 67.777  ops/ms
+CloneBenchmark.clone_java_bean          thrpt    6  9859.760 ± 34.493  ops/ms
+CloneBenchmark.clone_stream_parallel    thrpt    6    91.777 ±  7.506  ops/ms
+CloneBenchmark.clone_stream_sequential  thrpt    6   911.637 ± 45.413  ops/ms
+
+### revision 7796f8e036610303b672a25459caddb592bcee15
+### CollectAndThen Collector
+### executed on meteor.admin.lan.courtanet.net
+
+CloneBenchmark.clone_by_fieldid         thrpt  100  1581,095 ±  36,189  ops/ms
+CloneBenchmark.clone_field_model        thrpt  100  1441,076 ±  53,430  ops/ms
+CloneBenchmark.clone_java_bean          thrpt  100  5459,138 ± 426,901  ops/ms
+CloneBenchmark.clone_stream_parallel    thrpt  100    34,594 ±   1,651  ops/ms
+CloneBenchmark.clone_stream_sequential  thrpt  100   446,720 ±  20,919  ops/ms
+
+
