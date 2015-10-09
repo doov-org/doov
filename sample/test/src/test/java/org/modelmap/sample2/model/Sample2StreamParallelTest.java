@@ -13,7 +13,7 @@ public class Sample2StreamParallelTest {
     public void stream_parallel_apply_wait() {
         new Sample2ModelWrapper(Sample2Models.sample()).parallelStream().map(e -> {
             try {
-                Thread.sleep(100);
+                Thread.sleep(5);
             } catch (Exception ex) {
             }
             return e;
@@ -24,7 +24,7 @@ public class Sample2StreamParallelTest {
     public void stream_apply_wait() {
         new Sample2ModelWrapper(Sample2Models.sample()).stream().map(e -> {
             try {
-                Thread.sleep(100);
+                Thread.sleep(5);
             } catch (Exception ex) {
             }
             return e;
