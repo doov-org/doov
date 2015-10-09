@@ -1,19 +1,19 @@
-package org.modelmap.sample.model;
+package org.modelmap.sample2.model;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.modelmap.sample.util.LoopingRule;
 
-public class SampleStreamParallelTest {
+public class Sample2StreamParallelTest {
     @Rule
-    public final TestRule looping = new LoopingRule(10);
+    public final TestRule looping = new LoopingRule(1);
 
     @Test
     public void stream_parallel_apply_wait() {
-        new SampleModelWrapper(SampleModels.sample()).parallelStream().map(e -> {
+        new Sample2ModelWrapper(Sample2Models.sample()).parallelStream().map(e -> {
             try {
-                Thread.sleep(20);
+                Thread.sleep(100);
             } catch (Exception ex) {
             }
             return e;
@@ -22,9 +22,9 @@ public class SampleStreamParallelTest {
 
     @Test
     public void stream_apply_wait() {
-        new SampleModelWrapper(SampleModels.sample()).stream().map(e -> {
+        new Sample2ModelWrapper(Sample2Models.sample()).stream().map(e -> {
             try {
-                Thread.sleep(20);
+                Thread.sleep(100);
             } catch (Exception ex) {
             }
             return e;
