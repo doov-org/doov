@@ -1,12 +1,12 @@
-package org.modelmap.sample.test;
+package org.modelmap.sample2.model;
 
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
-import org.modelmap.sample.model.CloneBenchmark;
+import org.modelmap.sample2.model.CloneBenchmark;
 
 public class CloneBenchmarkTest {
-    private static final int LOOP = 100000;
+    private static final int LOOP = 1000;
 
     @Rule
     public TestRule chrono = (base, description) -> new Statement() {
@@ -25,11 +25,6 @@ public class CloneBenchmarkTest {
     @Before
     public void before() {
         bench.init();
-    }
-
-    @Test
-    public void clone_java_bean() {
-        bench.clone_java_bean();
     }
 
     @Test
