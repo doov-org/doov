@@ -1,25 +1,15 @@
 package org.modelmap.sample.model;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestRule;
-import org.junit.runners.model.Statement;
+import org.modelmap.sample.util.LoopingRule;
 
 public class CloneBenchmarkTest {
-
     private static final int LOOP = 100000;
-
     @Rule
-    public TestRule chrono = (base, description) -> new Statement() {
-        @Override
-        public void evaluate() throws Throwable {
-            final long startTime = System.nanoTime();
-            for (int i = 0; i < LOOP; i++)
-                base.evaluate();
-            final long elapsedTime = System.nanoTime() - startTime;
-            System.out.println(description.getMethodName() + " " + elapsedTime / 1000 + " micros");
-        }
-    };
-
+    public final TestRule chrono = new LoopingRule(LOOP);
     private CloneBenchmark bench = new CloneBenchmark();
 
     @Before
