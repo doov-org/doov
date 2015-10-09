@@ -1,6 +1,8 @@
 package org.modelmap.sample2.model;
 
 import static java.util.Arrays.asList;
+import static org.modelmap.core.FieldModels.toFieldModel;
+import static org.modelmap.core.FieldModels.toMapThenFieldModel;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -8,18 +10,8 @@ import java.util.stream.StreamSupport;
 
 import org.modelmap.core.FieldInfo;
 import org.modelmap.core.FieldModel;
-import org.modelmap.core.FieldModels;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Threads;
-import org.openjdk.jmh.annotations.Warmup;
+import org.modelmap.sample2.model.Sample2ModelWrapper.Sample2ModelProperty;
+import org.openjdk.jmh.annotations.*;
 
 @Threads(Threads.MAX)
 @State(Scope.Benchmark)
@@ -30,12 +22,12 @@ import org.openjdk.jmh.annotations.Warmup;
 @Fork(2)
 public class CloneBenchmark {
 
-    private Sample2Model source;
     private Sample2ModelWrapper wrapper;
+
 
     @Setup
     public void init() {
-        source = Sample2Models.sample();
+        Sample2Model source = Sample2Models.sample();
         wrapper = new Sample2ModelWrapper(source);
     }
 
@@ -62,14 +54,48 @@ public class CloneBenchmark {
     }
 
     @Benchmark
-    public FieldModel clone_stream_sequential() {
-        return StreamSupport.stream(wrapper.spliterator(), false).collect(
-                        FieldModels.toFieldModel(new Sample2ModelWrapper()));
+    public FieldModel clone_stream_sequential_and_collect() {
+        return StreamSupport.stream(wrapper.spliterator(), false).collect(toFieldModel(new Sample2ModelWrapper()));
     }
 
     @Benchmark
-    public FieldModel clone_stream_parallel() {
+    public FieldModel clone_stream_parallel_and_collect() {
         return StreamSupport.stream(wrapper.spliterator(), false).parallel()
-                        .collect(FieldModels.toMapThenFieldModel(Sample2ModelWrapper::new));
+                        .collect(toMapThenFieldModel(Sample2ModelWrapper::new));
     }
+
+    @Benchmark
+    public FieldModel clone_stream_sequential_for_each() {
+        FieldModel clone = new Sample2ModelWrapper();
+        StreamSupport.stream(wrapper.spliterator(), false).forEach(e -> {
+            final Object value = e.getValue();
+            if (value != null) {
+                clone.set(e.getKey(), value);
+            }
+        });
+        return clone;
+    }
+
+    @Benchmark
+    public FieldModel clone_stream_parallel_for_each() {
+        FieldModel clone = new Sample2ModelWrapper();
+        StreamSupport.stream(wrapper.spliterator(), true).forEach(e -> {
+            final Object value = e.getValue();
+            if (value != null) {
+                clone.set(e.getKey(), value);
+            }
+        });
+        return clone;
+    }
+
+    @Benchmark
+    public void clone_stream_sequential_property() {
+        Sample2ModelWrapper clone = new Sample2ModelWrapper();
+
+        Arrays.stream(Sample2ModelProperty.values()).forEach(p -> {
+            p.consumer().accept(clone.getModel(), p.supplier().apply(wrapper.getModel()));
+        });
+
+    }
+
 }

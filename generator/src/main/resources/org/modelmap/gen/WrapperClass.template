@@ -72,7 +72,7 @@ ${map.setter.if}    }
 ${map.setter}
 
     @SuppressWarnings("unchecked")
-    private static enum ${target.model.class.name}Property {
+    public static enum ${target.model.class.name}Property {
 ${map.properties}
         ;
 
@@ -97,7 +97,7 @@ ${map.properties}
         public abstract <T> Function<${target.model.class.name}, T> supplier();
     }
 
-    private static class SupplierEntry<M, T> implements Map.Entry<FieldId, Object> {
+    public static class SupplierEntry<M, T> implements Map.Entry<FieldId, Object> {
         final FieldId fieldId;
         final M model;
         final Function<M, T> supplier;

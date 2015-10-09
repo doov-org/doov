@@ -58,7 +58,12 @@ public class FieldModels {
 
         @Override
         public BiConsumer<FieldModel, Entry<FieldId, Object>> accumulator() {
-            return (model, entry) -> model.set(entry.getKey(), entry.getValue());
+            return (model, entry) -> {
+                Object value = entry.getValue();
+                if (value != null) {
+                    model.set(entry.getKey(), value);
+                }
+            };
         }
 
         @Override

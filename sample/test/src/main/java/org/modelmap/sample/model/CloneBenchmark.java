@@ -86,7 +86,7 @@ public class CloneBenchmark {
                         .collect(FieldModels.toFieldModel(new SampleModelWrapper()));
     }
 
-    @Benchmark
+    //    @Benchmark
     public FieldModel clone_stream_parallel() {
         return StreamSupport.stream(wrapper.spliterator(), false).parallel()
                         .collect(FieldModels.toMapThenFieldModel(SampleModelWrapper::new));
