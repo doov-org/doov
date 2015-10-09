@@ -9,7 +9,7 @@ import org.modelmap.sample.util.LoopingRule;
 public class CloneBenchmarkTest {
     private static final int LOOP = 100000;
     @Rule
-    public final TestRule chrono = new LoopingRule(LOOP);
+    public final TestRule looping = new LoopingRule(LOOP);
     private CloneBenchmark bench = new CloneBenchmark();
 
     @Before
