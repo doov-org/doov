@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.modelmap.core.FieldInfo;
 import org.modelmap.core.FieldModel;
-import org.modelmap.sample2.model.Sample2ModelWrapper.Sample2ModelProperty;
 import org.openjdk.jmh.annotations.*;
 
 @Threads(Threads.MAX)
@@ -21,12 +20,11 @@ import org.openjdk.jmh.annotations.*;
 @Fork(1)
 public class CloneBenchmark {
 
-    private Sample2Model source;
     private Sample2ModelWrapper wrapper;
 
     @Setup
     public void init() {
-        source = Sample2Models.sample();
+        Sample2Model source = Sample2Models.sample();
         wrapper = new Sample2ModelWrapper(source);
     }
 
@@ -75,13 +73,4 @@ public class CloneBenchmark {
         wrapper.parallelStream().forEach(e -> clone.set(e.getKey(), e.getValue()));
         return clone;
     }
-
-    @Benchmark
-    public void clone_stream_sequential_property() {
-        Sample2ModelWrapper clone = new Sample2ModelWrapper();
-        Arrays.stream(Sample2ModelProperty.values()).forEach(p -> {
-            p.consumer().accept(clone.getModel(), p.supplier().apply(wrapper.getModel()));
-        });
-    }
-
 }

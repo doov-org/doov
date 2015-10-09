@@ -61,9 +61,4 @@ public class Clone2BenchmarkTest {
     public void clone_stream_parallel_for_each() {
         bench.clone_stream_parallel_for_each();
     }
-
-    @Test
-    public void clone_stream_sequential_property() {
-        bench.clone_stream_sequential_property();
-    }
 }
