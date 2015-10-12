@@ -26,8 +26,7 @@ public class SampleModelWrapperTest {
     private final SampleModelWrapper wrapper;
     private final SampleFieldIdInfo field;
 
-    public SampleModelWrapperTest(@SuppressWarnings("UnusedParameters") String name, SampleFieldIdInfo
-                    field) {
+    public SampleModelWrapperTest(String name, SampleFieldIdInfo field) {
         this.wrapper = new SampleModelWrapper();
         this.field = field;
     }
