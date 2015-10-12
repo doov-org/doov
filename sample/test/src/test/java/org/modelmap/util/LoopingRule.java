@@ -1,10 +1,11 @@
-package org.modelmap.sample.util;
+package org.modelmap.util;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 public class LoopingRule implements TestRule {
+
     private final int loopNumber;
 
     public LoopingRule(int loopNumber) {
@@ -20,9 +21,17 @@ public class LoopingRule implements TestRule {
                 for (int i = 0; i < loopNumber; i++)
                     base.evaluate();
                 final long elapsedTime = System.nanoTime() - startTime;
-                System.out.println(description.getMethodName() + "\t" + elapsedTime / 1000 + " micros");
+                System.out.println(description.getMethodName() + "\t" + elapsedTime / 1000000 + " ms");
             }
         };
+    }
+
+    public static void doSomeStuff() {
+        try {
+            Thread.sleep(5);
+        } catch (Exception ex) {
+            // ignored
+        }
     }
 
 }
