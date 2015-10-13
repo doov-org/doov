@@ -39,3 +39,5 @@ build/Release
 
 # users environment variables
 .lock-wscript
+
+doc/Backup_of_org_modelmap.cdr
