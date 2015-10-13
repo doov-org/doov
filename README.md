@@ -1,4 +1,4 @@
-DomainModel().stream()
+DomainModel.stream()
 ======================
 
 Session description:
