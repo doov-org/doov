@@ -82,7 +82,7 @@ final class ModelWrapperGen {
         conf.put("field.type", getterBoxingType(path, fieldId.position()));
         conf.put("target.model.class.name", modelClass.getSimpleName());
         conf.put("lazy.init", lazyInit(path));
-        conf.put("setter.path", setterPath(path, true));
+        conf.put("setter.path", setterPath(path));
         conf.put("param", setterBoxingChecker(path));
         return MacroProcessor.replaceProperties(getterTemplate, conf);
     }
@@ -123,29 +123,30 @@ final class ModelWrapperGen {
     private static String nullCheck(VisitorPath path) {
         final StringBuilder buffer = new StringBuilder();
         for (int i = 1; i < path.getPath().size(); i++) {
-            buffer.append(nullCheck(path.getPath(), i));
+            final List<Method> subPaths = path.getPath().subList(0, i);
+            buffer.append(nullCheck(subPaths));
             if (path.getFieldId().position() != -1 && i == (path.getPath().size() - 1)) {
-                buffer.append(sizeCheck(path.getPath(), i, path.getFieldId().position()));
+                buffer.append(sizeCheck(subPaths, path.getFieldId()));
             }
         }
         return buffer.toString();
     }
 
-    private static String nullCheck(List<Method> paths, int index) {
+    private static String nullCheck(List<Method> paths) {
         final String lazyInitTemplate = template("NullCheckBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
-        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
+        conf.put("partial.path", VisitorPath.getterPath(paths));
         buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
         return buffer.toString();
     }
 
-    private static String sizeCheck(List<Method> paths, int index, int position) {
+    private static String sizeCheck(List<Method> paths, FieldId fieldId) {
         final String lazyInitTemplate = template("SizeCheckBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
-        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
-        conf.put("size", String.valueOf(position));
+        conf.put("partial.path", VisitorPath.getterPath(paths));
+        conf.put("size", String.valueOf(fieldId.position()));
         buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
         return buffer.toString();
     }
@@ -154,35 +155,36 @@ final class ModelWrapperGen {
         final StringBuilder buffer = new StringBuilder();
         for (int i = 1; i < path.getPath().size(); i++) {
             final Method lastGetMethod = path.getPath().get(i - 1);
+            final List<Method> pathSubList = path.getPath().subList(0, i);
             if (List.class.isAssignableFrom(lastGetMethod.getReturnType())) {
-                buffer.append(lazyInitList(path.getPath(), i, path.getFieldId(), lastGetMethod));
+                buffer.append(lazyInitList(pathSubList, path.getFieldId(), lastGetMethod));
             } else {
-                buffer.append(lazyInit(path.getPath(), i, path.getFieldId(), lastGetMethod));
+                buffer.append(lazyInit(pathSubList, path.getFieldId(), lastGetMethod));
             }
         }
         return buffer.toString();
     }
 
-    private static String lazyInit(List<Method> paths, int index, FieldId field, Method lastGetMethod) {
+    private static String lazyInit(List<Method> paths, FieldId field, Method lastGetMethod) {
         final String lazyInitTemplate = template("LazyInitBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         final String setterName = setterName(lastGetMethod);
-        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
-        conf.put("partial.path.init", setterPath(paths.subList(0, index), setterName, field.position(), false));
+        conf.put("partial.path", VisitorPath.getterPath(paths));
+        conf.put("partial.path.init", setterPath(paths, setterName, field.position(), false));
         conf.put("param", "new " + lastGetMethod.getReturnType().getName() + "()");
         buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
         return buffer.toString();
     }
 
-    private static String lazyInitList(List<Method> paths, int index, FieldId field, Method lastGetMethod) {
+    private static String lazyInitList(List<Method> paths, FieldId field, Method lastGetMethod) {
         final String lazyInitTemplate = template("LazyInitListBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         final String setterName = setterName(lastGetMethod);
-        conf.put("list.content.as.null", listContentAsNull(paths.subList(0, index), index, field));
-        conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
-        conf.put("partial.path.init", setterPath(paths.subList(0, index), setterName, field.position(), false));
+        conf.put("list.content.as.null", listContentAsNull(paths, field));
+        conf.put("partial.path", VisitorPath.getterPath(paths));
+        conf.put("partial.path.init", setterPath(paths, setterName, field.position(), false));
         conf.put("param", "new " + ArrayList.class.getName() + "<>()");
         conf.put("index", Integer.toString(field.position() - 1));
         conf.put("position", Integer.toString(field.position()));
@@ -193,12 +195,12 @@ final class ModelWrapperGen {
         return buffer.toString();
     }
 
-    private static String listContentAsNull(List<Method> paths, int index, FieldId field) {
+    private static String listContentAsNull(List<Method> paths, FieldId field) {
         final StringBuilder buffer = new StringBuilder();
         final String lazyInitTemplate = template("LazyInitListBlockNull.template");
         for (int i = 0; i < field.position() - 1; i++) {
             final Map<String, String> conf = new HashMap<>();
-            conf.put("partial.path", VisitorPath.getterPath(paths.subList(0, index)));
+            conf.put("partial.path", VisitorPath.getterPath(paths));
             conf.put("index", Integer.toString(i));
             conf.put("position", Integer.toString(i + 1));
             buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
@@ -347,9 +349,9 @@ final class ModelWrapperGen {
         return "<" + Joiner.on(",").join(parameterizedTypeName) + ">";
     }
 
-    static String setterPath(VisitorPath path, boolean initAtPosition) {
+    static String setterPath(VisitorPath path) {
         final String setMethodName = path.getSetMethod() != null ? path.getSetMethod().getName() : null;
-        return setterPath(path.getPath(), setMethodName, path.getFieldId().position(), initAtPosition);
+        return setterPath(path.getPath(), setMethodName, path.getFieldId().position(), true);
     }
 
     private static String getterPath(VisitorPath path) {
