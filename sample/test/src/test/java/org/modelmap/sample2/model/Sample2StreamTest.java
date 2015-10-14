@@ -34,7 +34,7 @@ public class Sample2StreamTest {
         new Sample2ModelWrapper(Sample2Models.sample()).parallelStream().map(e -> {
             doSomeStuff();
             return e;
-        }).collect(FieldModels.toMapThenFieldModel(Sample2ModelWrapper::new));
+        }).collect(FieldModels.toConcurrentFieldModel(new Sample2ModelWrapper()));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class Sample2StreamTest {
         new Sample2ModelWrapper(Sample2Models.sample()).parallelStream().map(e -> {
             doSomeStuff();
             return e;
-        }).collect(FieldModels.toMapThenFieldModel(Sample2ModelWrapper::new));
+        }).collect(FieldModels.toConcurrentFieldModel(new Sample2ModelWrapper()));
     }
 
     @Test
