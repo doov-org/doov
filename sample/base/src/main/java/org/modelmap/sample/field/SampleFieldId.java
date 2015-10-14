@@ -10,13 +10,12 @@ import org.modelmap.core.TagId;
 public enum SampleFieldId implements FieldId {
 
     USER_ID(USER),
+    ACCOUNT_ID(ACCOUNT),
 
     FIRST_NAME(USER),
     LAST_NAME(USER),
     FULLNAME(USER, READ_ONLY),
     BIRTHDATE(USER),
-
-    ACCOUNT_ID(ACCOUNT),
 
     EMAIL(ACCOUNT),
     LANGUAGE(ACCOUNT),
