@@ -15,22 +15,18 @@ public class ExampleUser {
     public class WithJavaBean {
 
         public LocalDate readSomeStuff(SampleModel model) {
-            if (model == null) {
+            if (model == null)
                 return null;
-            }
-            if (model.getUser() == null) {
+            if (model.getUser() == null)
                 return null;
-            }
             return model.getUser().getBirthDate();
         }
 
         public void updateSomeStuff(SampleModel model, LocalDate birthDate) {
-            if (model == null) {
+            if (model == null)
                 return;
-            }
-            if (model.getUser() == null) {
+            if (model.getUser() == null)
                 return;
-            }
             model.getUser().setBirthDate(birthDate);
         }
 
