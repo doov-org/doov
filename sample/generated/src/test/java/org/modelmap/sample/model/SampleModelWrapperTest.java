@@ -39,12 +39,18 @@ public class SampleModelWrapperTest {
 
     @Test
     public void should_be_null_when_clear_all() {
+        if (field.type().isPrimitive()) {
+            return;
+        }
         wrapper.clear();
         assertValueNull();
     }
 
     @Test
     public void should_be_null_when_clear_tag() {
+        if (field.type().isPrimitive()) {
+            return;
+        }
         if (field.id().tags().length == 0) {
             return;
         }
@@ -79,17 +85,17 @@ public class SampleModelWrapperTest {
     }
 
     private static Object value(SampleFieldIdInfo field) throws IllegalAccessException, InstantiationException {
-        if (field.type().equals(Long.class)) {
+        if (field.type().equals(Long.class) || field.type().equals(Long.TYPE)) {
             return Long.MAX_VALUE;
-        } else if (field.type().equals(Integer.class)) {
+        } else if (field.type().equals(Integer.class) || field.type().equals(Integer.TYPE)) {
             return Integer.MAX_VALUE;
-        } else if (field.type().equals(Short.class)) {
+        } else if (field.type().equals(Short.class) || field.type().equals(Short.TYPE)) {
             return Short.MAX_VALUE;
-        } else if (field.type().equals(Double.class)) {
+        } else if (field.type().equals(Double.class) || field.type().equals(Double.TYPE)) {
             return Double.MAX_VALUE;
-        } else if (field.type().equals(Byte.class)) {
+        } else if (field.type().equals(Byte.class) || field.type().equals(Byte.TYPE)) {
             return Byte.MAX_VALUE;
-        } else if (field.type().equals(Boolean.class)) {
+        } else if (field.type().equals(Boolean.class) || field.type().equals(Boolean.TYPE)) {
             return Boolean.FALSE;
         } else if (field.type().isEnum()) {
             return field.type().getEnumConstants()[0];

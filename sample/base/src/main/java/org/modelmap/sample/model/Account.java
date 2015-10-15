@@ -23,7 +23,7 @@ public class Account extends Identity {
     @SamplePath(field = SampleFieldId.EMAIL)
     private String email;
     @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED)
-    private Boolean acceptEmail;
+    private boolean acceptEmail;
     @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES)
     private Collection<EmailType> emailTypes = new HashSet<>();
 
@@ -64,11 +64,11 @@ public class Account extends Identity {
         this.language = language;
     }
 
-    public Boolean getAcceptEmail() {
+    public boolean getAcceptEmail() {
         return acceptEmail;
     }
 
-    public void setAcceptEmail(Boolean acceptEmail) {
+    public void setAcceptEmail(boolean acceptEmail) {
         this.acceptEmail = acceptEmail;
     }
 

@@ -22,6 +22,8 @@ final class FieldInfoGen {
                             final String siblings = formatSiblings(siblings(currentPath, fieldPaths.values()));
                             final String rawType;
                             final String parameterTypes;
+                            final boolean isPrimitive = currentPath.getGetMethod().getReturnType().isPrimitive();
+
                             if (boxingType.contains("<")) {
                                 rawType = boxingType.substring(0, boxingType.indexOf('<'));
                                 Type methodType = currentPath.getGetMethod().getGenericReturnType();
@@ -40,7 +42,7 @@ final class FieldInfoGen {
                             builder.append(fieldId.toString());
                             builder.append(", ");
                             builder.append(rawType);
-                            builder.append(".class");
+                            builder.append(isPrimitive ? ".TYPE" : ".class");
                             builder.append(parameterTypes);
                             builder.append(siblings);
                             builder.append("), //\n");
