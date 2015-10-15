@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.EnumSet;
 
+import org.modelmap.core.FieldModel;
+
 public class SampleModels {
 
     public static SampleModel sample() {
@@ -33,5 +35,9 @@ public class SampleModels {
         model.setAccount(account);
 
         return model;
+    }
+
+    public static FieldModel wrapper() {
+        return new SampleModelWrapper(sample());
     }
 }

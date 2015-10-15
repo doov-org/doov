@@ -1,7 +1,7 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package org.modelmap;
+package org.modelmap.example;
 
 import java.time.LocalDate;
 

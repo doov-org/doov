@@ -1,5 +1,7 @@
 package org.modelmap.core;
 
+import java.util.List;
+
 /**
  * Id representing a value of the  {@code FieldModel}
  */
@@ -18,5 +20,13 @@ public interface FieldId {
     /**
      * @return optionnal tags used to decorate this field
      */
-    TagId[] tags();
+    List<TagId> tags();
+
+    /**
+     * @param tag the tag to check
+     * @return <code>true</code> if this field is tagged by <code>tag</code>
+     */
+    default boolean hasTag(TagId tag) {
+        return tags().contains(tag);
+    }
 }

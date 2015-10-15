@@ -28,6 +28,7 @@
     <javapoet.version>1.3.0</javapoet.version>
     <commons.lang3.version>3.4</commons.lang3.version>
     <guava.version>18.0</guava.version>
+    <jackson.version>2.6.3</jackson.version>
 
     <!-- Maven Dependencies -->
     <maven.core.version>3.0.5</maven.core.version>
@@ -79,6 +80,11 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>

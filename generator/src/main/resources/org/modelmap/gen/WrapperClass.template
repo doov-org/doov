@@ -145,5 +145,10 @@ ${map.properties}
         public Object setValue(Object value) {
             throw new UnsupportedOperationException();
         }
+
+        @Override
+        public String toString() {
+            return fieldId + ", " + String.valueOf(getValue());
+        }
     }
 }

@@ -5,6 +5,9 @@ import static org.modelmap.sample2.field.Sample2Tag.ID;
 import static org.modelmap.sample2.field.Sample2Tag.LOGIN;
 import static org.modelmap.sample2.field.Sample2Tag.PASSWORD;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.modelmap.core.FieldId;
 import org.modelmap.core.TagId;
 
@@ -412,7 +415,7 @@ public enum Sample2FieldId implements FieldId {
     ;
 
     private final int position;
-    private final TagId[] tags;
+    private final List<TagId> tags;
 
     Sample2FieldId(TagId... tags) {
         this(-1, tags);
@@ -420,7 +423,7 @@ public enum Sample2FieldId implements FieldId {
 
     Sample2FieldId(int position, TagId... tags) {
         this.position = position;
-        this.tags = tags;
+        this.tags = Arrays.asList(tags);
     }
 
     @Override
@@ -429,7 +432,7 @@ public enum Sample2FieldId implements FieldId {
     }
 
     @Override
-    public TagId[] tags() {
+    public List<TagId> tags() {
         return tags;
     }
 }

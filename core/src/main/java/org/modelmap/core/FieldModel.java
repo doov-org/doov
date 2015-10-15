@@ -1,6 +1,5 @@
 package org.modelmap.core;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.*;
@@ -28,7 +27,9 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
      */
     Stream<Map.Entry<FieldId, Object>> stream();
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     Spliterator<Map.Entry<FieldId, Object>> spliterator();
 
     /**
@@ -54,22 +55,26 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
      * @param source the source field model
      */
     default void setAll(FieldModel source) {
-        Arrays.stream(getFieldInfos()).filter(info -> source.get(info.id()) != null).forEach(
-                        info -> set(info.id(), source.get(info.id())));
+        Arrays.stream(getFieldInfos())
+                        .filter(info -> source.get(info.id()) != null)
+                        .forEach(info -> set(info.id(), source.get(info.id())));
     }
 
     /**
      * For all the {@code FieldId}, set their value to <code>null</code>
      */
     default void clear() {
-        Arrays.stream(getFieldInfos()).filter(info -> get(info.id()) != null).forEach(info -> set(info.id(), null));
+        Arrays.stream(getFieldInfos())
+                        .filter(info -> get(info.id()) != null)
+                        .forEach(info -> set(info.id(), null));
     }
 
     /**
      * For all the {@code FieldId} tagged with the specified {@code TagId}, set their value to <code>null</code>
      */
     default void clear(TagId tag) {
-        Arrays.stream(getFieldInfos()).filter(info -> asList(info.id().tags()).contains(tag) && get(info.id()) != null)
+        Arrays.stream(getFieldInfos())
+                        .filter(info -> info.id().hasTag(tag) && get(info.id()) != null)
                         .forEach(info -> set(info.id(), null));
     }
 

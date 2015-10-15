@@ -1,7 +1,7 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package org.modelmap;
+package org.modelmap.example;
 
 import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleFieldId;

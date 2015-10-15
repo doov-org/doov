@@ -1,6 +1,5 @@
 package org.modelmap.sample.model;
 
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,10 +50,10 @@ public class SampleModelWrapperTest {
         if (field.type().isPrimitive()) {
             return;
         }
-        if (field.id().tags().length == 0) {
+        if (field.id().tags().isEmpty()) {
             return;
         }
-        wrapper.clear(field.id().tags()[0]);
+        wrapper.clear(field.id().tags().get(0));
         assertValueNull();
     }
 
@@ -68,7 +67,7 @@ public class SampleModelWrapperTest {
         Object value = value(field);
         wrapper.set(field.id(), value);
 
-        if (asList(field.id().tags()).contains(SampleTag.READ_ONLY)) {
+        if (field.id().hasTag(SampleTag.READ_ONLY)) {
             assertThat(wrapper.<T> get(field.id())).isNull();
         } else {
             assertThat(wrapper.<T> get(field.id())).isEqualTo(value);
