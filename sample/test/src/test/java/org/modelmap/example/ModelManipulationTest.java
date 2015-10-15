@@ -4,6 +4,7 @@
 package org.modelmap.example;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class ModelManipulationTest {
         Sample2Model sample = Sample2Models.sample();
 
         Map<FieldId, String> values = new Sample2ModelWrapper(sample).stream()
-                        .collect(Collectors.toMap(Map.Entry::getKey, e -> String.valueOf(e.getValue())));
+                        .collect(Collectors.toMap(Entry::getKey, e -> String.valueOf(e.getValue())));
 
         System.out.println(new ObjectMapper().writeValueAsString(values));
     }
