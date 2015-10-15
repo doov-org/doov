@@ -1,10 +1,14 @@
 package org.modelmap.gen;
 
 import static org.modelmap.gen.ModelWrapperGen.getterBoxingType;
+import static org.modelmap.gen.ModelWrapperGen.typeParameters;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 import org.modelmap.core.FieldId;
+
+import com.google.common.base.Joiner;
 
 final class FieldInfoGen {
 
@@ -13,9 +17,21 @@ final class FieldInfoGen {
         fieldPaths.keySet().stream()
                         .sorted((f1, f2) -> f1.name().compareTo(f2.name()))
                         .forEach(fieldId -> {
-                            VisitorPath currentPath = fieldPaths.get(fieldId);
-                            String getterBoxingType = getterBoxingType(fieldPaths.get(fieldId), fieldId.position());
-                            getterBoxingType = getterBoxingType.replace("<", "/*<").replace(">", ">*/");
+                            final VisitorPath currentPath = fieldPaths.get(fieldId);
+                            final String boxingType = getterBoxingType(fieldPaths.get(fieldId), fieldId.position());
+                            final String siblings = formatSiblings(siblings(currentPath, fieldPaths.values()));
+                            final String rawType;
+                            final String parameterTypes;
+                            if (boxingType.contains("<")) {
+                                rawType = boxingType.substring(0, boxingType.indexOf('<'));
+                                Type methodType = currentPath.getGetMethod().getGenericReturnType();
+                                parameterTypes = ",\n                    new Class<?>[] { " +
+                                                Joiner.on(".class, ").join(typeParameters(methodType)) + ".class } ";
+                            } else {
+                                rawType = boxingType;
+                                parameterTypes = "";
+                            }
+
                             builder.append("    ");
                             builder.append(fieldId.toString());
                             builder.append("(");
@@ -23,9 +39,10 @@ final class FieldInfoGen {
                             builder.append(".");
                             builder.append(fieldId.toString());
                             builder.append(", ");
-                            builder.append(getterBoxingType);
-                            builder.append(".class ");
-                            builder.append(formatSiblings(siblings(currentPath, fieldPaths.values())));
+                            builder.append(rawType);
+                            builder.append(".class");
+                            builder.append(parameterTypes);
+                            builder.append(siblings);
                             builder.append("), //\n");
                         });
         builder.append("    ;");

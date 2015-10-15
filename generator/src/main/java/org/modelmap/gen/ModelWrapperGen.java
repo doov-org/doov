@@ -305,6 +305,9 @@ final class ModelWrapperGen {
         if (Character.TYPE.equals(type)) {
             return Character.class.getSimpleName();
         }
+        if ("java.lang".equals(type.getPackage().getName())) {
+            return type.getSimpleName();
+        }
         if (List.class.isAssignableFrom(type)) {
             if (position != -1 && genericReturnType instanceof ParameterizedType) {
                 final ParameterizedType parameterizedType = (ParameterizedType) genericReturnType;
@@ -312,9 +315,6 @@ final class ModelWrapperGen {
                 return typeName(typeArg);
             }
             return genericReturnType.toString();
-        }
-        if ("java.lang".equals(type.getPackage().getName())) {
-            return type.getSimpleName();
         }
         if (genericReturnType instanceof ParameterizedType) {
             final ParameterizedType parameterizedType = (ParameterizedType) genericReturnType;
@@ -331,7 +331,8 @@ final class ModelWrapperGen {
         if (argumentType instanceof ParameterizedType) {
             final ParameterizedType parameterizedType = (ParameterizedType) argumentType;
             final Class<?> rawType = (Class<?>) parameterizedType.getRawType();
-            return rawType.getName() + parameterizedTypeName(parameterizedType);
+            final List<String> typeParameters = typeParameters(parameterizedType);
+            return rawType.getName() + "<" + Joiner.on(",").join(typeParameters) + ">";
         } else if (argumentType instanceof TypeVariable) {
             final TypeVariable<?> typeVariable = (TypeVariable<?>) argumentType;
             return typeVariable.getName();
@@ -340,13 +341,13 @@ final class ModelWrapperGen {
         }
     }
 
-    private static String parameterizedTypeName(Type genericReturnType) {
+    static List<String> typeParameters(Type genericReturnType) {
         final ParameterizedType parameterizedType = (ParameterizedType) genericReturnType;
         final List<String> parameterizedTypeName = new ArrayList<>();
         for (Type paramType : parameterizedType.getActualTypeArguments()) {
             parameterizedTypeName.add(((Class<?>) paramType).getName());
         }
-        return "<" + Joiner.on(",").join(parameterizedTypeName) + ">";
+        return parameterizedTypeName;
     }
 
     static String setterPath(VisitorPath path) {

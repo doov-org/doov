@@ -9,19 +9,25 @@ import org.modelmap.core.FieldInfo;
 public enum ${target.class.name} implements FieldInfo {
 ${literals}
 
-    private final FieldId FieldId;
+    private final FieldId fieldId;
     private final Class<?> type;
+    private final Class<?>[] genericTypes;
     private final FieldId[] siblings;
 
-    ${target.class.name}(FieldId FieldId, Class<?> type, FieldId... siblings) {
-        this.FieldId = FieldId;
+    ${target.class.name}(FieldId fieldId, Class<?> type, FieldId... siblings) {
+        this(fieldId, type, new Class<?>[]{}, siblings);
+    }
+
+    ${target.class.name}(FieldId fieldId, Class<?> type, Class<?>[] genericTypes, FieldId... siblings) {
+        this.fieldId = fieldId;
         this.type = type;
+        this.genericTypes = genericTypes;
         this.siblings = siblings;
     }
 
     @Override
     public FieldId id() {
-        return FieldId;
+        return fieldId;
     }
 
     @Override
@@ -32,5 +38,10 @@ ${literals}
     @Override
     public FieldId[] siblings() {
         return siblings;
+    }
+
+    @Override
+    public Class<?>[] genericTypes() {
+        return genericTypes;
     }
 }

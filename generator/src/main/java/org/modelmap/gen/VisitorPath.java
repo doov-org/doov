@@ -55,7 +55,6 @@ public final class VisitorPath {
 
     @Override
     public String toString() {
-
         return baseClass.getSimpleName().toLowerCase() + "." + displayPath() + ":" + fieldId;
     }
 
@@ -82,7 +81,6 @@ public final class VisitorPath {
         return buffer.toString();
     }
 
-    // FIXME return unique path!
     static Map<FieldId, List<VisitorPath>> pathByFieldId(List<VisitorPath> paths) {
         final Map<FieldId, List<VisitorPath>> textPaths = new HashMap<>();
         paths.forEach(path -> textPaths.computeIfAbsent(path.getFieldId(), f -> new ArrayList<>()).add(path));

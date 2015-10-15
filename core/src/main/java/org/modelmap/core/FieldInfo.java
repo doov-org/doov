@@ -19,4 +19,9 @@ public interface FieldInfo {
      * @return the {@code FieldId} type
      */
     Class<?> type();
+
+    /**
+     * @return the {@code FieldId} type parameters
+     */
+    Class<?>[] genericTypes();
 }
