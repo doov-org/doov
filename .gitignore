@@ -40,6 +40,7 @@ build/Release
 # users environment variables
 .lock-wscript
 
+doc/ppt/~$org_modelmap.pptx
 doc/Backup_of_org_modelmap.cdr
 doc/cdr/Backup_of_org_modelmap.cdr
 doc/cdr/Backup_of_org_modelmap_archi_evol.cdr
