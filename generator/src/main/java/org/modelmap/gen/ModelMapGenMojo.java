@@ -35,7 +35,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
     @Parameter(required = true, property = "project.build.outputDirectory")
     private File buildDirectory;
 
-    @Parameter(required = true, property = "project.build.outputDirectory")
+    @Parameter(required = true, defaultValue = "${basedir}/target")
     private File outputResourceDirectory;
 
     @Parameter(required = true)

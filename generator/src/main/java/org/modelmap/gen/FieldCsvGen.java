@@ -13,6 +13,7 @@ public class FieldCsvGen {
 
     public static void write(File output, Map<FieldId, VisitorPath> fieldPaths) throws MojoExecutionException {
         try (FileWriter writter = new FileWriter(output)) {
+            writter.write("Path;Id;Type\n");
             for (VisitorPath path : fieldPaths.values()) {
                 writter.write(toCsv(path));
             }
