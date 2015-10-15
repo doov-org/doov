@@ -8,3 +8,4 @@ public @interface SamplePaths {
 
     SamplePath[] value();
 }
+

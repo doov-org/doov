@@ -21,11 +21,7 @@ public class User extends Identity {
 
     @SamplePath(field = SampleFieldId.FULLNAME)
     public String getFullName() {
-        if (firstName != null && lastName != null) {
-            return firstName + " " + lastName;
-        } else {
-            return null;
-        }
+        return firstName != null && lastName != null ? firstName + " " + lastName : null;
     }
 
     public void setFullName(String fullname) {

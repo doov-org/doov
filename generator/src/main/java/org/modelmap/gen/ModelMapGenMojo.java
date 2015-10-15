@@ -29,14 +29,14 @@ import com.google.common.io.Resources;
 @Mojo(name = "generate", defaultPhase = GENERATE_SOURCES, threadSafe = true)
 public final class ModelMapGenMojo extends AbstractMojo {
 
-    @Parameter(required = true, property = "project.build.sourceDirectory")
+    @Parameter(required = true, defaultValue = "${basedir}/src/generated/java")
     private File outputDirectory;
 
     @Parameter(required = true, property = "project.build.outputDirectory")
     private File buildDirectory;
 
     @Parameter(required = true, property = "project.build.outputDirectory")
-    private File buildResourceDirectory;
+    private File outputResourceDirectory;
 
     @Parameter(required = true)
     private List<String> sourceClasses;
@@ -99,7 +99,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
     private void generateCsv(Map<FieldId, VisitorPath> fieldPaths, Class<?> clazz) throws IOException,
                     MojoExecutionException {
-        final File targetFile = new File(buildResourceDirectory, clazz.getSimpleName() + ".csv");
+        final File targetFile = new File(outputResourceDirectory, clazz.getSimpleName() + ".csv");
         targetFile.getParentFile().mkdirs();
         FieldCsvGen.write(targetFile, fieldPaths);
         getLog().info("written : " + targetFile);

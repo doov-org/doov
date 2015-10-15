@@ -15,3 +15,4 @@ public @interface SamplePath {
 
     SampleConstraint constraint() default NONE;
 }
+
