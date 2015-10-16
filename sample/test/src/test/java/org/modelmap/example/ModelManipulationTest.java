@@ -6,6 +6,7 @@ package org.modelmap.example;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 import org.modelmap.core.FieldId;
@@ -26,24 +27,66 @@ public class ModelManipulationTest {
                         .map(e -> e.getKey() + ";" + String.valueOf(e.getValue()) + "\n")
                         .reduce("", String::concat);
 
-        //        System.out.println(csv);
+        System.out.println(csv);
     }
 
     @Test
     public void diff() {
         FieldModel sampleV1 = SampleModels.wrapper();
-        FieldModel samplev2 = SampleModels.wrapper();
+        FieldModel sampleV2 = SampleModels.wrapper();
 
-        samplev2.set(SampleFieldId.FAVORITE_SITE_NAME_1, "LesFurets.com");
-        samplev2.set(SampleFieldId.FAVORITE_SITE_URL_1, "www.lesfurets.com");
-        samplev2.set(SampleFieldId.EMAILS_PREFERENCES, Collections.emptyList());
+        sampleV1.set(SampleFieldId.FAVORITE_SITE_NAME_3, null);
+        sampleV1.set(SampleFieldId.FAVORITE_SITE_URL_3, null);
 
-        String diff = sampleV1.parallelStream()
-                        .filter(e -> !Objects.equals(e.getValue(), samplev2.get(e.getKey())))
-                        .map(e -> e.getKey() + ";" + sampleV1.get(e.getKey()) + ";" + samplev2.get(e.getKey()) + "\n")
-                        .reduce("", String::concat);
+        sampleV2.set(SampleFieldId.FAVORITE_SITE_NAME_1, "LesFurets.com");
+        sampleV2.set(SampleFieldId.FAVORITE_SITE_URL_1, "www.lesfurets.com");
+        sampleV2.set(SampleFieldId.EMAILS_PREFERENCES, Collections.emptyList());
 
-        //        System.out.println(diff);
+        Stream.concat(sampleV1.stream().map(ValueDifference::left), sampleV2.stream().map(ValueDifference::right))
+                        .collect(Collectors.toMap(diff -> diff.fieldId, diff -> diff, ValueDifference::merge))
+                        .entrySet().stream()
+                        .filter(e -> !e.getValue().isEquals())
+                        .forEach(e -> System.out.println(e.getValue()));
+    }
+
+    private static final class ValueDifference {
+
+        static ValueDifference left(Entry<FieldId, Object> entry) {
+            ValueDifference diff = new ValueDifference(entry.getKey());
+            diff.left = entry.getValue();
+            return diff;
+        }
+
+        static ValueDifference right(Entry<FieldId, Object> entry) {
+            ValueDifference diff = new ValueDifference(entry.getKey());
+            diff.right = entry.getValue();
+            return diff;
+        }
+
+        static ValueDifference merge(ValueDifference d1, ValueDifference d2) {
+            if (d2.left != null)
+                d1.left = d2.left;
+            if (d2.right != null)
+                d1.right = d2.right;
+            return d1;
+        }
+
+        final FieldId fieldId;
+        Object left;
+        Object right;
+
+        ValueDifference(FieldId fieldId) {
+            this.fieldId = fieldId;
+        }
+
+        boolean isEquals() {
+            return Objects.equals(left, right);
+        }
+
+        @Override
+        public String toString() {
+            return fieldId + ";" + String.valueOf(left) + ";" + String.valueOf(right);
+        }
     }
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -58,6 +101,6 @@ public class ModelManipulationTest {
 
         OBJECT_MAPPER.writeValueAsString(values);
 
-        //        System.out.println(OBJECT_MAPPER.writeValueAsString(values));
+        System.out.println(OBJECT_MAPPER.writeValueAsString(values));
     }
 }
