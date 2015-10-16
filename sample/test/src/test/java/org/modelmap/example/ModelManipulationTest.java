@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldModel;
@@ -47,6 +48,7 @@ public class ModelManipulationTest {
     }
 
     @Test
+    @Ignore
     public void json() throws JsonProcessingException {
         Sample2Model sample = Sample2Models.sample();
 

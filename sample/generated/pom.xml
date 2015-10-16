@@ -42,8 +42,6 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <outputDirectory>${basedir}/src/generated/java</outputDirectory>
-              <buildResourceDirectory>${basedir}/target</buildResourceDirectory>
               <packageFilter>org.modelmap</packageFilter>
               <sourceClasses>
                 <sourceClass>org.modelmap.sample.model.SampleModel</sourceClass>
