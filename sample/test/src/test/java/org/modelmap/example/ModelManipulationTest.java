@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldModel;
@@ -27,7 +26,7 @@ public class ModelManipulationTest {
                         .map(e -> e.getKey() + ";" + String.valueOf(e.getValue()) + "\n")
                         .reduce("", String::concat);
 
-        System.out.println(csv);
+        //        System.out.println(csv);
     }
 
     @Test
@@ -44,17 +43,21 @@ public class ModelManipulationTest {
                         .map(e -> e.getKey() + ";" + sampleV1.get(e.getKey()) + ";" + samplev2.get(e.getKey()) + "\n")
                         .reduce("", String::concat);
 
-        System.out.println(diff);
+        //        System.out.println(diff);
     }
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     @Test
-    @Ignore
     public void json() throws JsonProcessingException {
+
         Sample2Model sample = Sample2Models.sample();
 
         Map<FieldId, String> values = new Sample2ModelWrapper(sample).stream()
                         .collect(Collectors.toMap(Entry::getKey, e -> String.valueOf(e.getValue())));
 
-        System.out.println(new ObjectMapper().writeValueAsString(values));
+        OBJECT_MAPPER.writeValueAsString(values);
+
+        //        System.out.println(OBJECT_MAPPER.writeValueAsString(values));
     }
 }

@@ -17,21 +17,20 @@ public class LoopingRule implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                final long startTime = System.nanoTime();
+                // final long startTime = System.nanoTime();
                 for (int i = 0; i < loopNumber; i++)
                     base.evaluate();
-                final long elapsedTime = System.nanoTime() - startTime;
-                System.out.println(description.getMethodName() + "\t" + elapsedTime / 1000000 + " ms");
+                // final long elapsedTime = System.nanoTime() - startTime;
+                // System.out.println(description.getMethodName() + "\t" + elapsedTime / 1000000 + " ms");
             }
         };
     }
 
     public static void doSomeStuff() {
         try {
-            Thread.sleep(5);
+            Thread.sleep(2);
         } catch (Exception ex) {
             // ignored
         }
     }
-
 }
