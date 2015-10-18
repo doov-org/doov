@@ -51,9 +51,9 @@ public class ModelManipulationTest {
 
         Stream.concat(sampleV1.stream().map(ValueDifference::left), sampleV2.stream().map(ValueDifference::right))
                         .collect(Collectors.toMap(diff -> diff.fieldId, diff -> diff, ValueDifference::merge))
-                        .entrySet().stream()
-                        .filter(e -> !e.getValue().isEquals())
-                        .forEach(e -> System.out.println(e.getValue()));
+                        .values().stream()
+                        .filter(diff -> !diff.isEquals())
+                        .forEach(System.out::println);
     }
 
 }
