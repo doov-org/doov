@@ -3,8 +3,9 @@
  */
 package org.modelmap.example;
 
-import java.util.*;
+import java.util.Collections;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,10 +14,8 @@ import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.model.*;
-import org.modelmap.sample2.model.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ModelManipulationTest {
 
@@ -28,6 +27,17 @@ public class ModelManipulationTest {
                         .reduce("", String::concat);
 
         System.out.println(csv);
+    }
+
+    @Test
+    public void json() throws JsonProcessingException {
+        SampleModel sample = SampleModels.sample();
+        String jsonValues = new SampleModelWrapper(sample).parallelStream()
+                        .map(e -> "  \"" + e.getKey() + "=" + String.valueOf(e.getValue()) + "\"\n")
+                        .reduce("", String::concat);
+        String json = "{\n" + jsonValues + "\n}";
+
+        System.out.println(json);
     }
 
     @Test
@@ -87,20 +97,5 @@ public class ModelManipulationTest {
         public String toString() {
             return fieldId + ";" + String.valueOf(left) + ";" + String.valueOf(right);
         }
-    }
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-    @Test
-    public void json() throws JsonProcessingException {
-
-        Sample2Model sample = Sample2Models.sample();
-
-        Map<FieldId, String> values = new Sample2ModelWrapper(sample).stream()
-                        .collect(Collectors.toMap(Entry::getKey, e -> String.valueOf(e.getValue())));
-
-        OBJECT_MAPPER.writeValueAsString(values);
-
-        System.out.println(OBJECT_MAPPER.writeValueAsString(values));
     }
 }

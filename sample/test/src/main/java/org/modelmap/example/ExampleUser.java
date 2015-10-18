@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.model.SampleModel;
+import org.modelmap.sample.model.SampleModelWrapper;
 
 @SuppressWarnings("unused")
 public class ExampleUser {
@@ -33,6 +34,8 @@ public class ExampleUser {
     }
 
     public class WithKeyValueModel {
+
+        private final FieldModel model = new SampleModelWrapper(new SampleModel());
 
         public LocalDate readSomeStuff(FieldModel model) {
             return model.get(SampleFieldId.BIRTHDATE);

@@ -5,8 +5,7 @@ package org.modelmap.example;
 
 import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleFieldId;
-import org.modelmap.sample.model.FavoriteWebsite;
-import org.modelmap.sample.model.SampleModel;
+import org.modelmap.sample.model.*;
 
 @SuppressWarnings("unused")
 public class ExampleAccount {
@@ -43,6 +42,8 @@ public class ExampleAccount {
     }
 
     public class WithKeyValueModel {
+
+        private final FieldModel model = new SampleModelWrapper(new SampleModel());
 
         public String readSomeStuff(FieldModel model) {
             return model.get(SampleFieldId.FAVORITE_SITE_URL_2);
