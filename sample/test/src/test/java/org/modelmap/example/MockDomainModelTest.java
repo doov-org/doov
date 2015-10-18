@@ -3,7 +3,6 @@
  */
 package org.modelmap.example;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.modelmap.core.FieldModel;
@@ -26,9 +25,6 @@ public class MockDomainModelTest {
         model.setUser(user);
 
         // ... do some testing
-
-        FieldModel fieldModel = new SampleModelWrapper(model);
-        should_contains_name_and_email(fieldModel);
     }
 
 
@@ -45,9 +41,6 @@ public class MockDomainModelTest {
         Mockito.when(model.getUser().getFirstName()).thenReturn("bar");
 
         // ... do some testing
-
-        FieldModel fieldModel = new SampleModelWrapper(model);
-        should_contains_name_and_email(fieldModel);
     }
 
     @Test
@@ -59,14 +52,6 @@ public class MockDomainModelTest {
         fieldModel.set(SampleFieldId.FIRST_NAME, "bar");
 
         // ... do some testing
-
-        should_contains_name_and_email(fieldModel);
-    }
-
-    private void should_contains_name_and_email(FieldModel fieldModel) {
-        Assertions.assertThat(fieldModel.<String> get(SampleFieldId.EMAIL)).isEqualTo("foo@bar.com");
-        Assertions.assertThat(fieldModel.<String> get(SampleFieldId.LAST_NAME)).isEqualTo("foo");
-        Assertions.assertThat(fieldModel.<String> get(SampleFieldId.FIRST_NAME)).isEqualTo("bar");
     }
 }
 
