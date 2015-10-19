@@ -50,7 +50,7 @@ public class ModelManipulationTest {
         sampleV2.set(SampleFieldId.EMAILS_PREFERENCES, Collections.emptyList());
 
         Stream.concat(sampleV1.stream().map(ValueDifference::left), sampleV2.stream().map(ValueDifference::right))
-                        .collect(Collectors.toMap(diff -> diff.fieldId, diff -> diff, ValueDifference::merge))
+                        .collect(Collectors.toMap(ValueDifference::getKey, diff -> diff, ValueDifference::merge))
                         .values().stream()
                         .filter(diff -> !diff.isEquals())
                         .forEach(System.out::println);
