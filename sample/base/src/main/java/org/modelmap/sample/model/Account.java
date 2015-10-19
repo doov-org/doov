@@ -9,11 +9,13 @@ public class Account extends Identity {
 
     @SamplePath(field = SampleFieldId.LOGIN)
     private String login;
+
     @SamplePath(field = SampleFieldId.PASSWORD)
     private String password;
 
     @SamplePath(field = SampleFieldId.TIMEZONE)
     private Timezone timezone = Timezone.ETC_GMT;
+
     @SamplePath(field = SampleFieldId.LANGUAGE)
     private Language language = Language.EN;
 
@@ -22,8 +24,10 @@ public class Account extends Identity {
 
     @SamplePath(field = SampleFieldId.EMAIL)
     private String email;
+
     @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED)
     private boolean acceptEmail;
+
     @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES)
     private Collection<EmailType> emailTypes = new HashSet<>();
 
