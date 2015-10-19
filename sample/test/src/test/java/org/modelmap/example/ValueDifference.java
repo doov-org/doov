@@ -25,8 +25,7 @@ final class ValueDifference {
     }
 
     private final FieldId key;
-    private final Object left;
-    private final Object right;
+    private final Object left, right;
 
     ValueDifference(FieldId key, Object left, Object right) {
         this.key = key;

@@ -43,14 +43,16 @@ public class ExampleAccount {
 
     public class WithKeyValueModel {
 
-        private final FieldModel model = new SampleModelWrapper(new SampleModel());
-
-        public String readSomeStuff(FieldModel model) {
-            return model.get(SampleFieldId.FAVORITE_SITE_URL_2);
+        public FieldModel asFielModel(SampleModel model) {
+            return new SampleModelWrapper(model);
         }
 
-        public void updateSomeStuff(FieldModel model, String url) {
-            model.set(SampleFieldId.FAVORITE_SITE_URL_2, url);
+        public String readSomeStuff(FieldModel fieldModel) {
+            return fieldModel.get(SampleFieldId.FAVORITE_SITE_URL_2);
+        }
+
+        public void updateSomeStuff(FieldModel fieldModel, String url) {
+            fieldModel.set(SampleFieldId.FAVORITE_SITE_URL_2, url);
         }
 
     }

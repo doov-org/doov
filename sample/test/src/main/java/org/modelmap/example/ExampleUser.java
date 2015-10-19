@@ -35,14 +35,16 @@ public class ExampleUser {
 
     public class WithKeyValueModel {
 
-        private final FieldModel model = new SampleModelWrapper(new SampleModel());
-
-        public LocalDate readSomeStuff(FieldModel model) {
-            return model.get(SampleFieldId.BIRTHDATE);
+        public FieldModel asFielModel(SampleModel model) {
+            return new SampleModelWrapper(model);
         }
 
-        public void updateSomeStuff(FieldModel model, LocalDate birthDate) {
-            model.set(SampleFieldId.BIRTHDATE, birthDate);
+        public LocalDate readSomeStuff(FieldModel fieldModel) {
+            return fieldModel.get(SampleFieldId.BIRTHDATE);
+        }
+
+        public void updateSomeStuff(FieldModel fieldModel, LocalDate birthDate) {
+            fieldModel.set(SampleFieldId.BIRTHDATE, birthDate);
         }
 
     }

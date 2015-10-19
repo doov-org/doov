@@ -49,10 +49,17 @@ public class ModelManipulationTest {
         sampleV2.set(SampleFieldId.FAVORITE_SITE_URL_1, "www.lesfurets.com");
         sampleV2.set(SampleFieldId.EMAILS_PREFERENCES, Collections.emptyList());
 
-        Stream.concat(sampleV1.stream().map(ValueDifference::left), sampleV2.stream().map(ValueDifference::right))
+        /* stream all key-values pair from both models */
+        Stream.concat(sampleV1.parallelStream().map(ValueDifference::left),
+                        sampleV2.parallelStream().map(ValueDifference::right))
+
+                        /* merging key-value pair in a map */
                         .collect(Collectors.toMap(ValueDifference::getKey, diff -> diff, ValueDifference::merge))
-                        .values().stream()
-                        .filter(diff -> !diff.isEquals())
+
+                        /* filter to keep only key with 2 differents values */
+                        .values().stream().filter(diff -> !diff.isEquals())
+
+                        /* print keys with differents values */
                         .forEach(System.out::println);
     }
 

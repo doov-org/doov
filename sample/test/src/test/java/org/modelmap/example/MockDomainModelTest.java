@@ -34,7 +34,7 @@ public class MockDomainModelTest {
          * This feature will not work when any return type of methods included in the chain cannot be mocked
          * (for example: is a primitive or a final class). This is because of java type system.
          */
-        final SampleModel model = Mockito.mock(SampleModel.class, Mockito.RETURNS_DEEP_STUBS);
+        SampleModel model = Mockito.mock(SampleModel.class, Mockito.RETURNS_DEEP_STUBS);
 
         Mockito.when(model.getAccount().getEmail()).thenReturn("foo@bar.com");
         Mockito.when(model.getUser().getLastName()).thenReturn("foo");
