@@ -97,8 +97,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
         return collected;
     }
 
-    private void generateCsv(Map<FieldId, VisitorPath> fieldPaths, Class<?> clazz) throws IOException,
-                    MojoExecutionException {
+    private void generateCsv(Map<FieldId, VisitorPath> fieldPaths, Class<?> clazz) throws      MojoExecutionException {
         final File targetFile = new File(outputResourceDirectory, clazz.getSimpleName() + ".csv");
         targetFile.getParentFile().mkdirs();
         FieldCsvGen.write(targetFile, fieldPaths);

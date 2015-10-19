@@ -327,7 +327,7 @@ final class ModelWrapperGen {
         return typeName(type);
     }
 
-    static String typeName(final Type argumentType) {
+    private static String typeName(final Type argumentType) {
         if (argumentType instanceof ParameterizedType) {
             final ParameterizedType parameterizedType = (ParameterizedType) argumentType;
             final Class<?> rawType = (Class<?>) parameterizedType.getRawType();
@@ -350,7 +350,7 @@ final class ModelWrapperGen {
         return parameterizedTypeName;
     }
 
-    static String setterPath(VisitorPath path) {
+    private static String setterPath(VisitorPath path) {
         final String setMethodName = path.getSetMethod() != null ? path.getSetMethod().getName() : null;
         return setterPath(path.getPath(), setMethodName, path.getFieldId().position(), true);
     }

@@ -31,7 +31,7 @@ public enum Timezone {
 
     private final String description;
 
-    private Timezone(String displayName) {
+    Timezone(String displayName) {
         this.description = displayName;
     }
 

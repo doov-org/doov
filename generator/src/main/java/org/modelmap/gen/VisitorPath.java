@@ -5,7 +5,7 @@ import java.util.*;
 
 import org.modelmap.core.FieldId;
 
-public final class VisitorPath {
+final class VisitorPath {
 
     private final Class<?> baseClass;
     private final List<Method> path;

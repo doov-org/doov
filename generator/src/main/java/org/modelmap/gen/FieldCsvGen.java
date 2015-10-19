@@ -9,7 +9,7 @@ import java.util.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.modelmap.core.FieldId;
 
-public class FieldCsvGen {
+class FieldCsvGen {
 
     public static void write(File output, Map<FieldId, VisitorPath> fieldPaths) throws MojoExecutionException {
         try (FileWriter writter = new FileWriter(output)) {
@@ -27,13 +27,13 @@ public class FieldCsvGen {
         }
     }
 
-    public static String toCsv(VisitorPath path) {
+    private static String toCsv(VisitorPath path) {
         return path.getBaseClass().getSimpleName().toLowerCase() + "." + path.displayPath() + ';'
                         + path.getFieldId() + ';'
                         + path.getGetMethod().getReturnType().getSimpleName() + '\n';
     }
 
-    private static Collection<FieldId> fieldsWithoutPath(Collection<VisitorPath> collected) throws Exception {
+    private static Collection<FieldId> fieldsWithoutPath(Collection<VisitorPath> collected) {
         final Set<FieldId> fields = new HashSet<>();
         collected.forEach(path -> addAll(fields, path.getFieldId().getClass().getEnumConstants()));
         collected.forEach(path -> fields.remove(path.getFieldId()));

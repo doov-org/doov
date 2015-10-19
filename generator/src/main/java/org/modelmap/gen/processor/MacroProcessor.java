@@ -17,7 +17,7 @@ public class MacroProcessor {
     private static final MessageFormat MORE_THAN_0_LEVEL_TO_EXPAND_1 =
                     new MessageFormat(STR_MORE_THAN_0_LEVEL_TO_EXPAND_1);
 
-    public static String eval(Map<String, Object> conf, String key) {
+    private  static String eval(Map<String, Object> conf, String key) {
         final String replacement = MacroProcessor.REF_PREFIX + key + MacroProcessor.REF_SUFFIX;
         if (conf == null) {
             return replacement;
@@ -48,7 +48,7 @@ public class MacroProcessor {
      * @return macro-expanded value.
      * @throws PropertyParsingException if recursivity goes beyond {@value MacroProcessor#MAX_DEPTH} limit.
      */
-    public static String replacePropertiesRec(String value,
+    private  static String replacePropertiesRec(String value,
                     Map<String, Object> conf,
                     List<String> fragments,
                     List<String> propertyRefs,
@@ -96,7 +96,7 @@ public class MacroProcessor {
      * @param propertyRefs List to add property names to. Must not be <code>null</code>.
      * @throws PropertyParsingException if the string contains an opening <code>${</code> without closing <code>}</code>
      */
-    public static void parsePropertyString(String textToParse, List<String> fragments, List<String> propertyRefs) {
+    private  static void parsePropertyString(String textToParse, List<String> fragments, List<String> propertyRefs) {
         final MessageFormat SYNTAX_ERROR_IN_0 = new MessageFormat(STR_SYNTAX_ERROR_IN_0);
         int prev = 0;
         int pos;
@@ -152,7 +152,7 @@ public class MacroProcessor {
         }
     }
 
-    static boolean containProperty(final String value) {
+    private static boolean containProperty(final String value) {
         return value.contains(REF_PREFIX);
     }
 }

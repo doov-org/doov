@@ -33,8 +33,7 @@ final class ModelVisitor {
     }
 
     private void visitModel(Class<?> clazz, Visitor visitor, LinkedList<Method> path, String packageFilter, int deep)
-                    throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
-                    InvocationTargetException {
+                    throws IntrospectionException, IllegalArgumentException                     {
         if (clazz == null)
             return;
         if (clazz.getPackage() == null)
