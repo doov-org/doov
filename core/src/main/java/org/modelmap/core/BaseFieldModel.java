@@ -63,16 +63,16 @@ public class BaseFieldModel implements FieldModel {
 
     @Override
     public Spliterator<Entry<FieldId, Object>> spliterator() {
-        return values.entrySet().spliterator();
+        return new HashSet<>(values.entrySet()).spliterator();
     }
 
     @Override
     public Stream<Entry<FieldId, Object>> stream() {
-        return values.entrySet().stream();
+        return new HashSet<>(values.entrySet()).stream();
     }
 
     @Override
     public Stream<Entry<FieldId, Object>> parallelStream() {
-        return values.entrySet().parallelStream();
+        return new HashSet<>(values.entrySet()).parallelStream();
     }
 }

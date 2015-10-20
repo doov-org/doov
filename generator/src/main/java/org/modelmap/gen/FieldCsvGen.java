@@ -6,12 +6,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.modelmap.core.FieldId;
 
 class FieldCsvGen {
 
-    public static void write(File output, Map<FieldId, VisitorPath> fieldPaths) throws MojoExecutionException {
+    public static void write(File output, Map<FieldId, VisitorPath> fieldPaths) {
         try (FileWriter writter = new FileWriter(output)) {
             writter.write("Path;Id;Type\n");
             for (VisitorPath path : fieldPaths.values()) {
@@ -23,7 +22,7 @@ class FieldCsvGen {
                 writter.write('\n');
             }
         } catch (Exception e) {
-            throw new MojoExecutionException(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
