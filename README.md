@@ -1,7 +1,7 @@
 DomainModel.stream()
 ======================
 
-http://jubaudry.github.io/model-map/
+http://lesfurets.github.io/model-map/
 
 Session description:
 --------------------
