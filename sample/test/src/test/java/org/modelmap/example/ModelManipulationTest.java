@@ -60,7 +60,7 @@ public class ModelManipulationTest {
                         .values().stream().filter(diff -> !diff.isEquals())
 
                         /* print keys with differents values */
-                        .forEach(System.out::println);
+                        .forEachOrdered(System.out::println);
     }
 
 }

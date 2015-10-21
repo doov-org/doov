@@ -44,12 +44,12 @@
             <configuration>
               <packageFilter>org.modelmap</packageFilter>
               <sourceClasses>
-                <sourceClass>org.modelmap.sample2.model.Sample2Model</sourceClass>
                 <sourceClass>org.modelmap.sample.model.SampleModel</sourceClass>
+                <sourceClass>org.modelmap.sample2.model.Sample2Model</sourceClass>
               </sourceClasses>
               <fieldClasses>
-                <fieldClass>org.modelmap.sample2.field.Sample2FieldId</fieldClass>
                 <fieldClass>org.modelmap.sample.field.SampleFieldId</fieldClass>
+                <fieldClass>org.modelmap.sample2.field.Sample2FieldId</fieldClass>
               </fieldClasses>
             </configuration>
           </execution>
