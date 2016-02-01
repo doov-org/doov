@@ -4,6 +4,7 @@
 package org.modelmap.example;
 
 import java.util.Collections;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,8 +21,7 @@ public class ModelManipulationTest {
     public void cvs() {
         SampleModel sample = SampleModels.sample();
         String csv = new SampleModelWrapper(sample).parallelStream()
-                        .map(e -> e.getKey() + ";" + String.valueOf(e.getValue()) + "\n")
-                        .reduce("", String::concat);
+                        .map(e -> e.getKey() + ";" + String.valueOf(e.getValue()) + "\n").reduce("", String::concat);
 
         System.out.println(csv);
     }
@@ -54,7 +54,7 @@ public class ModelManipulationTest {
                         sampleV2.parallelStream().map(ValueDifference::right))
 
                         /* merging key-value pair in a map */
-                        .collect(Collectors.toMap(ValueDifference::getKey, diff -> diff, ValueDifference::merge))
+                        .collect(Collectors.toMap(ValueDifference::getKey, Function.identity(), ValueDifference::merge))
 
                         /* filter to keep only key with 2 differents values */
                         .values().stream().filter(diff -> !diff.isEquals())
