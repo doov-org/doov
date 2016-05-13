@@ -38,6 +38,7 @@ public class SampleFieldIdInfoTest {
 
     @Test
     public void should_have_field_type() {
-        assertThat(fieldInfo().get().type()).isNotNull();
+        assertThat(fieldInfo()).isPresent();
+        assertThat(fieldInfo().orElse(null).type()).isNotNull();
     }
 }

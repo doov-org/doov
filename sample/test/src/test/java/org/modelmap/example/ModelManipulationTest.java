@@ -13,8 +13,6 @@ import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.model.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 public class ModelManipulationTest {
 
     @Test
@@ -27,7 +25,7 @@ public class ModelManipulationTest {
     }
 
     @Test
-    public void json() throws JsonProcessingException {
+    public void json() {
         SampleModel sample = SampleModels.sample();
         String jsonValues = new SampleModelWrapper(sample).parallelStream()
                         .map(e -> "  \"" + e.getKey() + "=" + String.valueOf(e.getValue()) + "\"\n")

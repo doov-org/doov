@@ -14,7 +14,7 @@ class DependencyUtils {
      * @param project  the current Maven project
      * @return the resolved artifact from the current local repository
      */
-    public static File resolve(Artifact artifact, MavenProject project) {
+    static File resolve(Artifact artifact, MavenProject project) {
         ProjectBuildingRequest projectBuildingRequest = project.getProjectBuildingRequest();
         ArtifactRepository localRepository = projectBuildingRequest.getLocalRepository();
         Artifact resolvedArtifact = localRepository.find(artifact);
