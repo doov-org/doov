@@ -1,2 +1,4 @@
             		if (model.${partial.path}.size() < ${size})
             			return null;
+                    if (model.${partial.path}.get(${index}) == null)
+                        return null;

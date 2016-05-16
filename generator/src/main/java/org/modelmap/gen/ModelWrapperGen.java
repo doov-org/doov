@@ -147,6 +147,7 @@ final class ModelWrapperGen {
         final Map<String, String> conf = new HashMap<>();
         conf.put("partial.path", VisitorPath.getterPath(paths));
         conf.put("size", String.valueOf(fieldId.position()));
+        conf.put("index", String.valueOf(fieldId.position() - 1));
         buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
         return buffer.toString();
     }
