@@ -8,7 +8,7 @@ Session description:
 
 This session will explain during a live code session the journey taken by the french insurance comparison website LesFurets.com to migrate from MySQL to Cassandra.
 The team has open sourced their framework that provides: domain model to key value mapping, Cassandra schema generator and CQL query builder on top of the Java driver.
-Everything is relying on Java 8 streams and immutable data patterns, and live since 6 months with 20 M of comparisons history.
+Everything is relying on Java 8 streams and immutable data patterns, live since 6 months with 20 M of comparisons history.
 
 The session will start by decorating a Java beans data model with annotations to obtain a complete key value mapping.
 We will then store the key value model in Cassandra with a strongly typed schema using the tooling of the framework.
