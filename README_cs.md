@@ -6,7 +6,7 @@ http://lesfurets.github.io/model-map/
 Session description:
 --------------------
 
-This session will explain during a live code session the journey taken by the french insurance comparison website LesFurets.com to migrate from MySQL to Cassandra.
+This session will explain during a live coding session the journey taken by the french insurance comparison website LesFurets.com to migrate from MySQL to Cassandra.
 The team has open sourced their framework that provides: domain model to key value mapping, Cassandra schema generator and CQL query builder on top of the Java driver.
 Everything is relying on Java 8 streams and immutable data patterns, live since 6 months with 20 M of comparisons history.
 
