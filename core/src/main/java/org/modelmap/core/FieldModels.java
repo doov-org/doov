@@ -4,7 +4,10 @@ import java.util.EnumSet;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 /**
@@ -15,33 +18,33 @@ public class FieldModels {
     /**
      * Returns a {@code Collector} that accumulates the input elements into a unique {@code FieldModel}.
      */
-    public static Collector<Entry<FieldId, Object>, ?, FieldModel> toFieldModel(FieldModel model) {
-        return new FieldModelCollector(model);
+    public static <Fm extends FieldModel> Collector<Entry<FieldId, Object>, ?, Fm> toFieldModel(Fm model) {
+        return new FieldModelCollector<Fm>(model);
     }
 
     /**
      * Returns a concurrent {@code Collector} that accumulates the input elements into a unique {@code FieldModel}.
      */
-    public static Collector<Entry<FieldId, Object>, ?, FieldModel> toConcurrentFieldModel(FieldModel model) {
-        return new ConcurrentFieldModelCollector(model);
+    public static <Fm extends FieldModel> Collector<Entry<FieldId, Object>, ?, Fm> toConcurrentFieldModel(Fm model) {
+        return new ConcurrentFieldModelCollector<Fm>(model);
     }
 
-    private static final class FieldModelCollector
-                    implements Collector<Entry<FieldId, Object>, FieldModel, FieldModel> {
+    private static final class FieldModelCollector<Fm extends FieldModel>
+                    implements Collector<Entry<FieldId, Object>, Fm, Fm> {
 
-        private final FieldModel model;
+        private final Fm model;
 
-        FieldModelCollector(FieldModel model) {
+        FieldModelCollector(Fm model) {
             this.model = model;
         }
 
         @Override
-        public Supplier<FieldModel> supplier() {
+        public Supplier<Fm> supplier() {
             return () -> model;
         }
 
         @Override
-        public BiConsumer<FieldModel, Entry<FieldId, Object>> accumulator() {
+        public BiConsumer<Fm, Entry<FieldId, Object>> accumulator() {
             return (model, entry) -> {
                 Object value = entry.getValue();
                 if (value != null) {
@@ -51,12 +54,12 @@ public class FieldModels {
         }
 
         @Override
-        public BinaryOperator<FieldModel> combiner() {
+        public BinaryOperator<Fm> combiner() {
             return (m1, m2) -> m1;
         }
 
         @Override
-        public Function<FieldModel, FieldModel> finisher() {
+        public Function<Fm, Fm> finisher() {
             return (m) -> model;
         }
 
@@ -66,24 +69,24 @@ public class FieldModels {
         }
     }
 
-    private static final class ConcurrentFieldModelCollector
-                    implements Collector<Entry<FieldId, Object>, FieldModel, FieldModel> {
+    private static final class ConcurrentFieldModelCollector<Fm extends FieldModel>
+                    implements Collector<Entry<FieldId, Object>, Fm, Fm> {
 
-        private final FieldModel model;
+        private final Fm model;
         private final ReentrantLock lock;
 
-        ConcurrentFieldModelCollector(FieldModel model) {
+        ConcurrentFieldModelCollector(Fm model) {
             this.model = model;
             this.lock = new ReentrantLock();
         }
 
         @Override
-        public Supplier<FieldModel> supplier() {
+        public Supplier<Fm> supplier() {
             return () -> model;
         }
 
         @Override
-        public BiConsumer<FieldModel, Entry<FieldId, Object>> accumulator() {
+        public BiConsumer<Fm, Entry<FieldId, Object>> accumulator() {
             return (supplier, entry) -> {
                 Object value = entry.getValue();
                 if (value == null) {
@@ -99,12 +102,12 @@ public class FieldModels {
         }
 
         @Override
-        public BinaryOperator<FieldModel> combiner() {
+        public BinaryOperator<Fm> combiner() {
             return (m1, m2) -> m1;
         }
 
         @Override
-        public Function<FieldModel, FieldModel> finisher() {
+        public Function<Fm, Fm> finisher() {
             return (m) -> model;
         }
 

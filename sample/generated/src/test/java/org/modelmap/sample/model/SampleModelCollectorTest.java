@@ -1,8 +1,8 @@
 package org.modelmap.sample.model;
 
 import static java.util.Arrays.stream;
-import static org.modelmap.core.FieldModels.toConcurrentFieldModel;
-import static org.modelmap.core.FieldModels.toFieldModel;
+import static org.modelmap.sample.model.SampleModelWrapper.toConcurrentFieldModel;
+import static org.modelmap.sample.model.SampleModelWrapper.toFieldModel;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
@@ -25,13 +25,13 @@ public class SampleModelCollectorTest {
 
     @Test
     public void should_collect_all_values_when_collect_sequential() {
-        FieldModel target = source.stream().collect(toFieldModel(new SampleModelWrapper()));
+        SampleModelWrapper target = source.stream().collect(toFieldModel());
         should_collect_all_values_when_collect(target, source);
     }
 
     @Test
     public void should_collect_all_values_when_collect_parallel() {
-        FieldModel target = source.parallelStream().collect(toConcurrentFieldModel(new SampleModelWrapper()));
+        SampleModelWrapper target = source.parallelStream().collect(toConcurrentFieldModel());
         should_collect_all_values_when_collect(target, source);
     }
 

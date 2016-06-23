@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import javax.annotation.Generated;
@@ -14,6 +15,7 @@ import javax.annotation.Generated;
 import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldInfo;
 import org.modelmap.core.FieldModel;
+import org.modelmap.core.FieldModels;
 import ${target.field.info.package.name}.${target.field.info.class.name};
 
 @Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
@@ -21,6 +23,14 @@ public final class ${target.class.name} implements FieldModel {
 
     private final FieldInfo[] fieldInfos;
     private final ${target.model.class.name} model;
+    
+    public static Collector<Entry<FieldId, Object>, ?, ${target.class.name}> toFieldModel() {
+        return FieldModels.<${target.class.name}> toFieldModel(new ${target.class.name}());
+    }
+    
+    public static Collector<Entry<FieldId, Object>, ?, ${target.class.name}> toConcurrentFieldModel() {
+        return FieldModels.<${target.class.name}> toConcurrentFieldModel(new ${target.class.name}());
+    }
 
     public ${target.class.name}() {
         this(new ${target.model.class.name}());

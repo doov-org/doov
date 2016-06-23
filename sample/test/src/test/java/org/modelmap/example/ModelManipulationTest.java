@@ -4,6 +4,7 @@
 package org.modelmap.example;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BinaryOperator;
@@ -22,6 +23,16 @@ import org.modelmap.sample.model.SampleModelWrapper;
 import org.modelmap.sample.model.SampleModels;
 
 public class ModelManipulationTest {
+
+    @Test
+    public void mixingWithMap() {
+        SampleModel sample = SampleModels.sample();
+        System.out.println(sample.getUser().getFullName());
+        Map<FieldId, Object> aMap = new SampleModelWrapper(sample).stream()
+                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        SampleModel clone = aMap.entrySet().stream().collect(SampleModelWrapper.toFieldModel()).getModel();
+        System.out.println(clone.getUser().getFullName());
+    }
 
     @Test
     public void cvs() {
