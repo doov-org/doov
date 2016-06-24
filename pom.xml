@@ -25,6 +25,7 @@
     <commons.lang3.version>3.4</commons.lang3.version>
     <guava.version>19.0</guava.version>
     <cassandra-driver>3.0.0</cassandra-driver>
+    <slf4j>1.7.21</slf4j>
 
     <!-- Maven Dependencies -->
     <maven.core.version>3.0.5</maven.core.version>
@@ -92,6 +93,16 @@
         <groupId>com.datastax.cassandra</groupId>
         <artifactId>cassandra-driver-extras</artifactId>
         <version>${cassandra-driver}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4j}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
