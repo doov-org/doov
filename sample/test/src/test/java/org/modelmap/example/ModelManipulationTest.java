@@ -7,6 +7,7 @@ import static com.datastax.driver.core.DataType.text;
 import static com.datastax.driver.core.DataType.timeuuid;
 import static com.datastax.driver.core.schemabuilder.SchemaBuilder.Direction.DESC;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 import static org.modelmap.sample.field.SampleFieldId.LOGIN;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -31,10 +33,14 @@ import org.modelmap.sample.model.SampleModel;
 import org.modelmap.sample.model.SampleModelWrapper;
 import org.modelmap.sample.model.SampleModels;
 
+import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.querybuilder.Insert;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.schemabuilder.Create;
 import com.datastax.driver.core.schemabuilder.Create.Options;
 import com.datastax.driver.core.schemabuilder.SchemaBuilder;
+import com.datastax.driver.extras.codecs.jdk8.InstantCodec;
 
 public class ModelManipulationTest {
 
@@ -47,7 +53,7 @@ public class ModelManipulationTest {
             createRequest.addColumn(info.id().name(), cqlType(info));
         });
         Options createRequestWithOptions = createRequest.withOptions().clusteringOrder(LOGIN.name(), DESC);
-        System.out.println(createRequestWithOptions);
+        System.out.println(createRequestWithOptions.getQueryString());
     }
 
     private static DataType cqlType(FieldInfo info) {
@@ -64,6 +70,18 @@ public class ModelManipulationTest {
         else if (Collection.class.isAssignableFrom(info.type()))
             return DataType.set(DataType.text());
         throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
+    }
+
+    @Test
+    public void simpleCasandraInsert() {
+        FieldModel model = SampleModels.wrapper();
+        Insert insertRequest = QueryBuilder.insertInto("fields_model");
+        insertRequest.value("snapshot_id", UUID.randomUUID());
+        insertRequest.values(model.stream().map(e -> e.getKey().name()).collect(toList()),
+                        model.stream().map(Entry::getValue).collect(toList()));
+        CodecRegistry codec = new CodecRegistry();
+        codec.register(InstantCodec.instance);
+        System.out.println(insertRequest.getQueryString(codec));
     }
 
     @Test
