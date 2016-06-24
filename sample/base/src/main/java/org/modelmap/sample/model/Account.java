@@ -10,7 +10,7 @@ public class Account extends Identity {
     @SamplePath(field = SampleFieldId.LOGIN)
     private String login;
 
-    @SamplePath(field = SampleFieldId.PASSWORD)
+    @SamplePath(field = SampleFieldId.PASSWD)
     private String password;
 
     @SamplePath(field = SampleFieldId.TIMEZONE)

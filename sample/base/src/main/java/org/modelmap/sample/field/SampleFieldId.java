@@ -37,7 +37,7 @@ public enum SampleFieldId implements FieldId {
     FAVORITE_SITE_URL_3(3, ACCOUNT),
 
     LOGIN(ACCOUNT),
-    PASSWORD(ACCOUNT);
+    PASSWD(ACCOUNT);
 
     private final int position;
     private final List<TagId> tags;
