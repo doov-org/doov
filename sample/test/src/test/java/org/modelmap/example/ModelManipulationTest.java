@@ -95,7 +95,7 @@ public class ModelManipulationTest {
     }
 
     @Test
-    public void cvs() {
+    public void csv() {
         SampleModel sample = SampleModels.sample();
         String csv = new SampleModelWrapper(sample).parallelStream()
                         .map(e -> e.getKey() + ";" + String.valueOf(e.getValue()) + "\n").reduce("", String::concat);
