@@ -27,7 +27,7 @@ import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.schemabuilder.Create;
 import com.datastax.driver.core.schemabuilder.SchemaBuilder;
-import com.datastax.driver.extras.codecs.jdk8.InstantCodec;
+import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
 
 public class LiveCode {
 
@@ -87,8 +87,7 @@ public class LiveCode {
         Insert insert = QueryBuilder.insertInto("Field");
         model.stream().forEach(e -> insert.value(e.getKey().name(), e.getValue()));
         CodecRegistry codecRegistry = new CodecRegistry();
-        codecRegistry.register(InstantCodec.instance);
-
+        codecRegistry.register(LocalDateCodec.instance);
         System.out.println(insert.getQueryString(codecRegistry));
     }
 
