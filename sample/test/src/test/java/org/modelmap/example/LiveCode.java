@@ -11,6 +11,7 @@ import static org.modelmap.sample.field.SampleFieldId.LOGIN;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldInfo;
@@ -55,7 +56,7 @@ public class LiveCode {
         FieldModel model = SampleModels.wrapper();
         System.out.println(model.<String> get(EMAIL));
         model.stream().forEach(System.out::println);
-        Map<FieldId, Object> map = model.stream().collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
         System.out.println(map);
         SampleModelWrapper newModel = new SampleModelWrapper();
         map.entrySet().forEach(e -> newModel.set(e.getKey(), e.getValue()));
@@ -65,7 +66,7 @@ public class LiveCode {
 
     private static void example2() {
         FieldModel model = SampleModels.wrapper();
-        Map<FieldId, Object> map = model.stream().collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
         SampleModelWrapper newModel = new SampleModelWrapper();
         map.entrySet().stream().filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
                         // .filter(e -> e.getKey().hasTag(SampleTag.USER))
