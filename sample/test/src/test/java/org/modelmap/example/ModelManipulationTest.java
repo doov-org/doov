@@ -26,9 +26,9 @@ public class ModelManipulationTest {
         SampleModel sample = SampleModels.sample();
         System.out.println(sample.getUser().getFullName());
         Map<FieldId, Object> aMap = new SampleModelWrapper(sample).stream()
-                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
-        SampleModel clone = aMap.entrySet().stream().collect(SampleModelWrapper.toFieldModel()).getModel();
-        System.out.println(clone.getUser().getFullName());
+                        .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        SampleModelWrapper clone = aMap.entrySet().stream().collect(SampleModelWrapper.toFieldModel());
+        System.out.println(clone.getModel().getUser().getFullName());
     }
 
     @Test
