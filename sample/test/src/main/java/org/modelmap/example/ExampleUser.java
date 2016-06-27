@@ -1,6 +1,3 @@
-/*
- * Copyright (C) by Courtanet, All Rights Reserved.
- */
 package org.modelmap.example;
 
 import java.time.LocalDate;
@@ -10,7 +7,6 @@ import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.model.SampleModel;
 import org.modelmap.sample.model.SampleModelWrapper;
 
-@SuppressWarnings("unused")
 public class ExampleUser {
 
     public class WithJavaBean {

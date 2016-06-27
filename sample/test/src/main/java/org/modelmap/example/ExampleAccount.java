@@ -1,13 +1,9 @@
-/*
- * Copyright (C) by Courtanet, All Rights Reserved.
- */
 package org.modelmap.example;
 
 import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.model.*;
 
-@SuppressWarnings("unused")
 public class ExampleAccount {
 
     public class WithJavaBean {

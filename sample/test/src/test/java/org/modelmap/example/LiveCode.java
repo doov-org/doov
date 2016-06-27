@@ -1,6 +1,3 @@
-/*
- * Copyright (C) by Courtanet, All Rights Reserved.
- */
 package org.modelmap.example;
 
 import static com.datastax.driver.core.DataType.text;
@@ -14,11 +11,15 @@ import static org.modelmap.sample.field.SampleFieldId.LOGIN;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.modelmap.core.*;
+import org.modelmap.core.FieldId;
+import org.modelmap.core.FieldInfo;
+import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleTag;
-import org.modelmap.sample.model.*;
+import org.modelmap.sample.model.Account;
+import org.modelmap.sample.model.SampleModel;
+import org.modelmap.sample.model.SampleModelWrapper;
+import org.modelmap.sample.model.SampleModels;
 
 import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.DataType;
@@ -31,6 +32,7 @@ import com.datastax.driver.extras.codecs.jdk8.InstantCodec;
 public class LiveCode {
 
     public static void main(String[] args) {
+        intro();
         example1();
         example2();
         exemple3();
@@ -65,25 +67,21 @@ public class LiveCode {
         FieldModel model = SampleModels.wrapper();
         Map<FieldId, Object> map = model.stream().collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
         SampleModelWrapper newModel = new SampleModelWrapper();
-        map.entrySet().stream()
-                        .filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
-                        //.filter(e -> e.getKey().hasTag(SampleTag.USER))
+        map.entrySet().stream().filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
+                        // .filter(e -> e.getKey().hasTag(SampleTag.USER))
                         .forEach(e -> newModel.set(e.getKey(), e.getValue()));
         newModel.stream().forEach(System.out::println);
     }
 
     private static void exemple3() {
         FieldModel model = SampleModels.wrapper();
-        Create create = SchemaBuilder.createTable("Field")
-                        .addClusteringColumn(LOGIN.name(), text())
+        Create create = SchemaBuilder.createTable("Field").addClusteringColumn(LOGIN.name(), text())
                         .addPartitionKey("snapshot_id", timeuuid());
 
-        stream(model.getFieldInfos())
-                        .filter(f -> !f.id().equals(LOGIN))
+        stream(model.getFieldInfos()).filter(f -> !f.id().equals(LOGIN))
                         .forEach(f -> create.addColumn(f.id().name(), cqlType(f)));
 
-        Create.Options createWithOptions = create.withOptions()
-                        .clusteringOrder(LOGIN.name(), DESC);
+        Create.Options createWithOptions = create.withOptions().clusteringOrder(LOGIN.name(), DESC);
         System.out.println(createWithOptions);
 
         Insert insert = QueryBuilder.insertInto("Field");

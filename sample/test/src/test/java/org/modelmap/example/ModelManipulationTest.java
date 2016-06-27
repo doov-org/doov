@@ -1,6 +1,3 @@
-/*
- * Copyright (C) by Courtanet, All Rights Reserved.
- */
 package org.modelmap.example;
 
 import static com.datastax.driver.core.DataType.text;
