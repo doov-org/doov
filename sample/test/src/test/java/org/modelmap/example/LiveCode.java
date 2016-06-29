@@ -6,13 +6,26 @@ import static com.datastax.driver.core.schemabuilder.SchemaBuilder.Direction.DES
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toMap;
 import static org.modelmap.sample.field.SampleFieldId.EMAIL;
+import static org.modelmap.sample.field.SampleFieldId.EMAILS_PREFERENCES;
+import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_NAME_1;
+import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_NAME_3;
+import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_URL_1;
+import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_URL_3;
 import static org.modelmap.sample.field.SampleFieldId.LOGIN;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.tuple.Triple;
 import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldInfo;
 import org.modelmap.core.FieldModel;
@@ -79,7 +92,7 @@ public class LiveCode {
         Create create = SchemaBuilder.createTable("Field").addClusteringColumn(LOGIN.name(), text())
                         .addPartitionKey("snapshot_id", timeuuid());
 
-        stream(model.getFieldInfos()).filter(f -> !f.id().equals(LOGIN))
+        stream(model.getFieldInfos()).filter(f -> f.id() != LOGIN)
                         .forEach(f -> create.addColumn(f.id().name(), cqlType(f)));
 
         Create.Options createWithOptions = create.withOptions().clusteringOrder(LOGIN.name(), DESC);
@@ -87,9 +100,37 @@ public class LiveCode {
 
         Insert insert = QueryBuilder.insertInto("Field");
         model.stream().forEach(e -> insert.value(e.getKey().name(), e.getValue()));
-        CodecRegistry codecRegistry = new CodecRegistry();
-        codecRegistry.register(LocalDateCodec.instance);
-        System.out.println(insert.getQueryString(codecRegistry));
+
+        System.out.println(insert.getQueryString(codecRegistry()));
+    }
+
+    public void exemple4() {
+        FieldModel sample_1 = SampleModels.wrapper();
+        FieldModel sample_2 = SampleModels.wrapper();
+
+        sample_1.set(FAVORITE_SITE_NAME_3, null);
+        sample_1.set(FAVORITE_SITE_URL_3, null);
+        sample_2.set(FAVORITE_SITE_NAME_1, "LesFurets.com");
+        sample_2.set(FAVORITE_SITE_URL_1, "www.lesfurets.com");
+        sample_2.set(EMAILS_PREFERENCES, Collections.emptyList());
+
+        /* stream all key-values pair from both models */
+        Stream.concat(sample_1.stream().map(buildRight), sample_2.stream().map(buildLeft))
+
+                        /* merging key-value pair in a map */
+                        .collect(Collectors.toMap(Triple::getMiddle, Function.identity(), merge))
+
+                        /* filter to keep only key with 2 differents values */
+                        .values().stream().filter(isNotSame)
+
+                        /* print keys with differents values */
+                        .forEach(System.out::println);
+    }
+
+    private static CodecRegistry codecRegistry() {
+        final CodecRegistry registry = new CodecRegistry();
+        registry.register(LocalDateCodec.instance);
+        return registry;
     }
 
     private static DataType cqlType(FieldInfo info) {
@@ -107,4 +148,22 @@ public class LiveCode {
             return DataType.set(text());
         throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
     }
+
+    static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) -> {
+        return Triple.of(entry.getValue(), entry.getKey(), null);
+    };
+
+    static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) -> {
+        return Triple.of(null, entry.getKey(), entry.getValue());
+    };
+
+    static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) -> {
+        return !Objects.equals(triple.getLeft(), triple.getRight());
+    };
+
+    static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
+        Object left = t1.getLeft() != null ? t1.getLeft() : t2.getLeft();
+        Object right = t2.getRight() != null ? t2.getRight() : t1.getRight();
+        return Triple.of(left, t1.getMiddle(), right);
+    };
 }

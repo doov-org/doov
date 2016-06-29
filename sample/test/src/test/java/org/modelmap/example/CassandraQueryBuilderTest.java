@@ -47,6 +47,12 @@ public class CassandraQueryBuilderTest {
         throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
     }
 
+    private static CodecRegistry codecRegistry() {
+        final CodecRegistry registry = new CodecRegistry();
+        registry.register(LocalDateCodec.instance);
+        return registry;
+    }
+
     @Test
     public void simpleCassandraSchema() {
         FieldModel model = SampleModels.wrapper();
@@ -66,8 +72,6 @@ public class CassandraQueryBuilderTest {
         insertRequest.value("snapshot_id", UUID.randomUUID());
         insertRequest.values(model.stream().map(e -> e.getKey().name()).collect(toList()),
                         model.stream().map(Entry::getValue).collect(toList()));
-        CodecRegistry codec = new CodecRegistry();
-        codec.register(LocalDateCodec.instance);
-        System.out.println(insertRequest.getQueryString(codec));
+        System.out.println(insertRequest.getQueryString(codecRegistry()));
     }
 }
