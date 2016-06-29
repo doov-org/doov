@@ -71,8 +71,7 @@ public class LiveCode {
         model.stream().forEach(System.out::println);
         Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
         System.out.println(map);
-        SampleModelWrapper newModel = new SampleModelWrapper();
-        map.entrySet().forEach(e -> newModel.set(e.getKey(), e.getValue()));
+        SampleModelWrapper newModel = map.entrySet().stream().collect(SampleModelWrapper.toFieldModel());
         newModel.stream().forEach(System.out::println);
         System.out.println(newModel.getModel().getAccount().getEmail());
     }
@@ -80,10 +79,9 @@ public class LiveCode {
     private static void example2() {
         FieldModel model = SampleModels.wrapper();
         Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
-        SampleModelWrapper newModel = new SampleModelWrapper();
-        map.entrySet().stream().filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
+        SampleModelWrapper newModel = map.entrySet().stream().filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
                         // .filter(e -> e.getKey().hasTag(SampleTag.USER))
-                        .forEach(e -> newModel.set(e.getKey(), e.getValue()));
+                        .collect(SampleModelWrapper.toFieldModel());
         newModel.stream().forEach(System.out::println);
     }
 
