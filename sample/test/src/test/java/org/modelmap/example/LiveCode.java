@@ -47,25 +47,25 @@ public class LiveCode {
 
     public static void main(String[] args) {
         intro();
-        example1();
-        example2();
-        exemple3();
+        mixingWithMap();
+        tagFiltering();
+        cqlBuilders();
     }
 
     private static void intro() {
         SampleModel model = new SampleModel();
         model.setAccount(new Account());
-        model.getAccount().setEmail("parisjug@gmail.com");
+        model.getAccount().setEmail("chtijug@gmail.com");
         System.out.println(model.getAccount().getEmail());
 
         FieldModel fieldModel = new SampleModelWrapper(model);
         System.out.println(fieldModel.<String> get(EMAIL));
 
-        fieldModel.set(EMAIL, "parisjug.gmail.com");
+        fieldModel.set(EMAIL, "lesfurets@gmail.com");
         System.out.println(fieldModel.<String> get(EMAIL));
     }
 
-    private static void example1() {
+    private static void mixingWithMap() {
         FieldModel model = SampleModels.wrapper();
         System.out.println(model.<String> get(EMAIL));
         model.stream().forEach(System.out::println);
@@ -76,7 +76,7 @@ public class LiveCode {
         System.out.println(newModel.getModel().getAccount().getEmail());
     }
 
-    private static void example2() {
+    private static void tagFiltering() {
         FieldModel model = SampleModels.wrapper();
         Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
         SampleModelWrapper newModel = map.entrySet().stream().filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
@@ -85,7 +85,7 @@ public class LiveCode {
         newModel.stream().forEach(System.out::println);
     }
 
-    private static void exemple3() {
+    private static void cqlBuilders() {
         FieldModel model = SampleModels.wrapper();
         Create create = SchemaBuilder.createTable("Field").addClusteringColumn(LOGIN.name(), text())
                         .addPartitionKey("snapshot_id", timeuuid());
@@ -102,7 +102,7 @@ public class LiveCode {
         System.out.println(insert.getQueryString(codecRegistry()));
     }
 
-    public void exemple4() {
+    public void modelDiff() {
         FieldModel sample_1 = SampleModels.wrapper();
         FieldModel sample_2 = SampleModels.wrapper();
 
