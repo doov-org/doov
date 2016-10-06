@@ -5,35 +5,19 @@ import static com.datastax.driver.core.DataType.timeuuid;
 import static com.datastax.driver.core.schemabuilder.SchemaBuilder.Direction.DESC;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toMap;
-import static org.modelmap.sample.field.SampleFieldId.EMAIL;
-import static org.modelmap.sample.field.SampleFieldId.EMAILS_PREFERENCES;
-import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_NAME_1;
-import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_NAME_3;
-import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_URL_1;
-import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_URL_3;
-import static org.modelmap.sample.field.SampleFieldId.LOGIN;
+import static org.modelmap.sample.field.SampleFieldId.*;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Triple;
-import org.modelmap.core.FieldId;
-import org.modelmap.core.FieldInfo;
-import org.modelmap.core.FieldModel;
+import org.modelmap.core.*;
 import org.modelmap.sample.field.SampleTag;
-import org.modelmap.sample.model.Account;
-import org.modelmap.sample.model.SampleModel;
-import org.modelmap.sample.model.SampleModelWrapper;
-import org.modelmap.sample.model.SampleModels;
+import org.modelmap.sample.model.*;
 
 import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.DataType;
@@ -147,19 +131,16 @@ public class LiveCode {
         throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
     }
 
-    static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) -> {
-        return Triple.of(entry.getValue(), entry.getKey(), null);
-    };
+    private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) ->
+                    Triple.of(entry.getValue(), entry.getKey(), null);
 
-    static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) -> {
-        return Triple.of(null, entry.getKey(), entry.getValue());
-    };
+    private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) ->
+                    Triple.of(null, entry.getKey(), entry.getValue());
 
-    static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) -> {
-        return !Objects.equals(triple.getLeft(), triple.getRight());
-    };
+    private static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) ->
+                    !Objects.equals(triple.getLeft(), triple.getRight());
 
-    static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
+    private static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
         Object left = t1.getLeft() != null ? t1.getLeft() : t2.getLeft();
         Object right = t2.getRight() != null ? t2.getRight() : t1.getRight();
         return Triple.of(left, t1.getMiddle(), right);

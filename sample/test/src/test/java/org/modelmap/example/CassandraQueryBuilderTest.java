@@ -48,7 +48,7 @@ public class CassandraQueryBuilderTest {
     }
 
     private static CodecRegistry codecRegistry() {
-        final CodecRegistry registry = new CodecRegistry();
+        CodecRegistry registry = new CodecRegistry();
         registry.register(LocalDateCodec.instance);
         return registry;
     }
@@ -56,11 +56,15 @@ public class CassandraQueryBuilderTest {
     @Test
     public void simpleCassandraSchema() {
         FieldModel model = SampleModels.wrapper();
-        Create createRequest = SchemaBuilder.createTable("fields_model").addClusteringColumn(LOGIN.name(), text())
+
+        Create createRequest = SchemaBuilder.createTable("fields_model")
+                        .addClusteringColumn(LOGIN.name(), text())
                         .addPartitionKey("snapshot_id", timeuuid());
-        stream(model.getFieldInfos()).filter(info -> info.id() != LOGIN).forEach(info -> {
-            createRequest.addColumn(info.id().name(), cqlType(info));
-        });
+
+        stream(model.getFieldInfos())
+                        .filter(info -> info.id() != LOGIN)
+                        .forEach(info -> createRequest.addColumn(info.id().name(), cqlType(info)));
+
         Options createRequestWithOptions = createRequest.withOptions().clusteringOrder(LOGIN.name(), DESC);
         System.out.println(createRequestWithOptions.getQueryString());
     }
@@ -70,7 +74,8 @@ public class CassandraQueryBuilderTest {
         FieldModel model = SampleModels.wrapper();
         Insert insertRequest = QueryBuilder.insertInto("fields_model");
         insertRequest.value("snapshot_id", UUID.randomUUID());
-        insertRequest.values(model.stream().map(e -> e.getKey().name()).collect(toList()),
+        insertRequest.values(
+                        model.stream().map(e -> e.getKey().name()).collect(toList()),
                         model.stream().map(Entry::getValue).collect(toList()));
         System.out.println(insertRequest.getQueryString(codecRegistry()));
     }

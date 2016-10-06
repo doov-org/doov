@@ -1,12 +1,10 @@
 package org.modelmap.example;
 
-import java.util.Collections;
-import java.util.Map;
+import static java.util.stream.Collectors.toMap;
+
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -15,9 +13,7 @@ import org.junit.Test;
 import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleFieldId;
-import org.modelmap.sample.model.SampleModel;
-import org.modelmap.sample.model.SampleModelWrapper;
-import org.modelmap.sample.model.SampleModels;
+import org.modelmap.sample.model.*;
 
 public class ModelManipulationTest {
 
@@ -25,8 +21,9 @@ public class ModelManipulationTest {
     public void mixingWithMap() {
         SampleModel sample = SampleModels.sample();
         System.out.println(sample.getUser().getFullName());
+
         Map<FieldId, Object> aMap = new SampleModelWrapper(sample).stream()
-                        .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+                        .collect(toMap(Entry::getKey, Entry::getValue));
         SampleModelWrapper clone = aMap.entrySet().stream().collect(SampleModelWrapper.toFieldModel());
         System.out.println(clone.getModel().getUser().getFullName());
     }
@@ -66,7 +63,7 @@ public class ModelManipulationTest {
         Stream.concat(sample_1.stream().map(buildRight), sample_2.stream().map(buildLeft))
 
                         /* merging key-value pair in a map */
-                        .collect(Collectors.toMap(Triple::getMiddle, Function.identity(), merge))
+                        .collect(toMap(Triple::getMiddle, Function.identity(), merge))
 
                         /* filter to keep only key with 2 differents values */
                         .values().stream().filter(isNotSame)
@@ -75,19 +72,16 @@ public class ModelManipulationTest {
                         .forEach(System.out::println);
     }
 
-    static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) -> {
-        return Triple.of(entry.getValue(), entry.getKey(), null);
-    };
+    private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) ->
+                    Triple.of(entry.getValue(), entry.getKey(), null);
 
-    static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) -> {
-        return Triple.of(null, entry.getKey(), entry.getValue());
-    };
+    private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) ->
+                    Triple.of(null, entry.getKey(), entry.getValue());
 
-    static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) -> {
-        return !Objects.equals(triple.getLeft(), triple.getRight());
-    };
+    private static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) ->
+                    !Objects.equals(triple.getLeft(), triple.getRight());
 
-    static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
+    private static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
         Object left = t1.getLeft() != null ? t1.getLeft() : t2.getLeft();
         Object right = t2.getRight() != null ? t2.getRight() : t1.getRight();
         return Triple.of(left, t1.getMiddle(), right);
