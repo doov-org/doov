@@ -6,9 +6,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 import org.apache.commons.lang3.tuple.Triple;
 import org.modelmap.core.FieldId;
@@ -19,8 +17,8 @@ import com.datastax.driver.core.DataType;
 import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
 
 public class LiveCode_ChtiJug {
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
     }
 
     @SuppressWarnings("unused")
@@ -47,17 +45,14 @@ public class LiveCode_ChtiJug {
         throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
     }
 
-    static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) -> {
-        return Triple.of(entry.getValue(), entry.getKey(), null);
-    };
+    private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) ->
+                    Triple.of(entry.getValue(), entry.getKey(), null);
 
-    static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) -> {
-        return Triple.of(null, entry.getKey(), entry.getValue());
-    };
+    private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) ->
+                    Triple.of(null, entry.getKey(), entry.getValue());
 
-    static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) -> {
-        return !Objects.equals(triple.getLeft(), triple.getRight());
-    };
+    private static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) ->
+                    !Objects.equals(triple.getLeft(), triple.getRight());
 
     static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
         Object left = t1.getLeft() != null ? t1.getLeft() : t2.getLeft();
