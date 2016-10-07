@@ -16,7 +16,7 @@ import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
 
-public class LiveCode_ChtiJug {
+public class LiveCode_UPMC {
 
     public static void main(String[] args) {
     }
@@ -54,7 +54,7 @@ public class LiveCode_ChtiJug {
     private static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) ->
                     !Objects.equals(triple.getLeft(), triple.getRight());
 
-    static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
+    private static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
         Object left = t1.getLeft() != null ? t1.getLeft() : t2.getLeft();
         Object right = t2.getRight() != null ? t2.getRight() : t1.getRight();
         return Triple.of(left, t1.getMiddle(), right);
