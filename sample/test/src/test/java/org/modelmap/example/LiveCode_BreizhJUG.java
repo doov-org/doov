@@ -16,7 +16,7 @@ import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
 
-public class LiveCode_UPMC {
+public class LiveCode_BreizhJUG {
 
     public static void main(String[] args) {
     }
