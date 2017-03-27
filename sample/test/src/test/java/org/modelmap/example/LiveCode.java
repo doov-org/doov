@@ -34,6 +34,7 @@ public class LiveCode {
         mixingWithMap();
         tagFiltering();
         cqlBuilders();
+        modelDiff();
     }
 
     private static void intro() {
@@ -53,8 +54,10 @@ public class LiveCode {
         FieldModel model = SampleModels.wrapper();
         System.out.println(model.<String> get(EMAIL));
         model.stream().forEach(System.out::println);
+
         Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
         System.out.println(map);
+
         SampleModelWrapper newModel = map.entrySet().stream().collect(SampleModelWrapper.toFieldModel());
         newModel.stream().forEach(System.out::println);
         System.out.println(newModel.getModel().getAccount().getEmail());
@@ -62,10 +65,13 @@ public class LiveCode {
 
     private static void tagFiltering() {
         FieldModel model = SampleModels.wrapper();
+
         Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
-        SampleModelWrapper newModel = map.entrySet().stream().filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
+        SampleModelWrapper newModel = map.entrySet().stream()
+                        .filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
                         // .filter(e -> e.getKey().hasTag(SampleTag.USER))
                         .collect(SampleModelWrapper.toFieldModel());
+
         newModel.stream().forEach(System.out::println);
     }
 
@@ -86,7 +92,7 @@ public class LiveCode {
         System.out.println(insert.getQueryString(codecRegistry()));
     }
 
-    public void modelDiff() {
+    private static void modelDiff() {
         FieldModel sample_1 = SampleModels.wrapper();
         FieldModel sample_2 = SampleModels.wrapper();
 

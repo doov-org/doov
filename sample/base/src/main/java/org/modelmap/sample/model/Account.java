@@ -14,10 +14,10 @@ public class Account extends Identity {
     private String password;
 
     @SamplePath(field = SampleFieldId.TIMEZONE)
-    private Timezone timezone = Timezone.ETC_GMT;
+    private Timezone timezone;
 
     @SamplePath(field = SampleFieldId.LANGUAGE)
-    private Language language = Language.EN;
+    private Language language;
 
     @SamplePath(field = SampleFieldId.PHONE_NUMBER)
     private String phoneNumber;
