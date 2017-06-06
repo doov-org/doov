@@ -9,6 +9,9 @@ Chez LesFurets.com nous avons résolu ce problème en développant un KVM (Key V
 
 Le projet est disponible sur GitHub: https://github.com/lesfurets/model-map
 
+Pour faire du traitement de données, les listes, tableaux et maps sont les structures de données les plus faciles à manipuler. La plupart des applications sont conçues autour d'un modèle métier.
+Chez LesFurets.com nous avons résolu ce problème en développant un framework de Key Value Mapping. Grâce au mapping bidirectionnel de notre modèle métier vers un modèle clé-valeur, les manipulations de données deviennent extrêmement simples à réaliser. La mise en place a permis d'ouvrir notre application à de nombreux outils actuels (Stream Java 8, RxJava, Spark, Cassandra)
+
 Session speakers:
 -----------------
 
