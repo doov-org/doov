@@ -3,21 +3,36 @@ package org.modelmap.example;
 import static com.datastax.driver.core.DataType.text;
 import static com.datastax.driver.core.DataType.timeuuid;
 import static com.datastax.driver.core.schemabuilder.SchemaBuilder.Direction.DESC;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toMap;
-import static org.modelmap.sample.field.SampleFieldId.*;
+import static org.modelmap.sample.field.SampleFieldId.EMAIL;
+import static org.modelmap.sample.field.SampleFieldId.EMAILS_PREFERENCES;
+import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_NAME_1;
+import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_NAME_3;
+import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_URL_1;
+import static org.modelmap.sample.field.SampleFieldId.FAVORITE_SITE_URL_3;
+import static org.modelmap.sample.field.SampleFieldId.LOGIN;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.*;
+import java.util.Objects;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Triple;
-import org.modelmap.core.*;
+import org.modelmap.core.FieldId;
+import org.modelmap.core.FieldInfo;
+import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleTag;
-import org.modelmap.sample.model.*;
+import org.modelmap.sample.model.Account;
+import org.modelmap.sample.model.SampleModel;
+import org.modelmap.sample.model.SampleModelWrapper;
+import org.modelmap.sample.model.SampleModels;
 
 import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.DataType;
@@ -80,7 +95,7 @@ public class LiveCode {
         Create create = SchemaBuilder.createTable("Field").addClusteringColumn(LOGIN.name(), text())
                         .addPartitionKey("snapshot_id", timeuuid());
 
-        stream(model.getFieldInfos()).filter(f -> f.id() != LOGIN)
+        model.getFieldInfos().stream().filter(f -> f.id() != LOGIN)
                         .forEach(f -> create.addColumn(f.id().name(), cqlType(f)));
 
         Create.Options createWithOptions = create.withOptions().clusteringOrder(LOGIN.name(), DESC);

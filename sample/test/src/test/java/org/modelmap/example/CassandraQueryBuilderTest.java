@@ -6,7 +6,6 @@ package org.modelmap.example;
 import static com.datastax.driver.core.DataType.text;
 import static com.datastax.driver.core.DataType.timeuuid;
 import static com.datastax.driver.core.schemabuilder.SchemaBuilder.Direction.DESC;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.modelmap.sample.field.SampleFieldId.LOGIN;
 
@@ -61,7 +60,7 @@ public class CassandraQueryBuilderTest {
                         .addClusteringColumn(LOGIN.name(), text())
                         .addPartitionKey("snapshot_id", timeuuid());
 
-        stream(model.getFieldInfos())
+        model.getFieldInfos().stream()
                         .filter(info -> info.id() != LOGIN)
                         .forEach(info -> createRequest.addColumn(info.id().name(), cqlType(info)));
 

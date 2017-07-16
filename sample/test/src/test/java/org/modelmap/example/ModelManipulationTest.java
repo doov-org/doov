@@ -2,10 +2,13 @@ package org.modelmap.example;
 
 import static java.util.stream.Collectors.toMap;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.*;
-import java.util.stream.Collectors;
+import java.util.Objects;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Triple;
@@ -13,7 +16,9 @@ import org.junit.Test;
 import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldModel;
 import org.modelmap.sample.field.SampleFieldId;
-import org.modelmap.sample.model.*;
+import org.modelmap.sample.model.SampleModel;
+import org.modelmap.sample.model.SampleModelWrapper;
+import org.modelmap.sample.model.SampleModels;
 
 public class ModelManipulationTest {
 

@@ -1,6 +1,5 @@
 package org.modelmap.sample.model;
 
-import static java.util.Arrays.stream;
 import static org.modelmap.sample.model.SampleModelWrapper.toConcurrentFieldModel;
 import static org.modelmap.sample.model.SampleModelWrapper.toFieldModel;
 
@@ -44,10 +43,10 @@ public class SampleModelCollectorTest {
 
     private static void should_collect_all_values_when_collect(FieldModel target, FieldModel source) {
         SoftAssertions softly = new SoftAssertions();
-        stream(SampleFieldIdInfo.values()).forEach(info -> {
+        SampleFieldIdInfo.values().forEach(info -> {
             Object after = target.get(info.id());
             Object before = source.get(info.id());
-            softly.assertThat(after).describedAs(info.name()).isEqualTo(before);
+            softly.assertThat(after).describedAs(info.id().name()).isEqualTo(before);
         });
         softly.assertAll();
     }

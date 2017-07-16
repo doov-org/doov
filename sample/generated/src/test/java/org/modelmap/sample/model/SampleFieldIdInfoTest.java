@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.modelmap.core.FieldInfo;
 import org.modelmap.sample.field.SampleFieldId;
 import org.modelmap.sample.field.SampleFieldIdInfo;
 
@@ -27,8 +28,8 @@ public class SampleFieldIdInfoTest {
         this.field = field;
     }
 
-    private Optional<SampleFieldIdInfo> fieldInfo() {
-        return stream(SampleFieldIdInfo.values()).filter(info -> info.id() == field).findFirst();
+    private Optional<FieldInfo> fieldInfo() {
+        return SampleFieldIdInfo.values().stream().filter(info -> info.id() == field).findFirst();
     }
 
     @Test

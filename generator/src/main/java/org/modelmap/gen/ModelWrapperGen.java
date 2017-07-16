@@ -280,6 +280,10 @@ final class ModelWrapperGen {
         }
         return "value";
     }
+    
+    static Class<?> getterType(VisitorPath path) {
+        return path.getPath().get(path.getPath().size() - 1).getReturnType();
+    }
 
     static String getterBoxingType(VisitorPath path, int position) {
         final Method lastMethod = path.getPath().get(path.getPath().size() - 1);

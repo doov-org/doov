@@ -40,13 +40,13 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
     /**
      * @return the {@code FieldInfo} FieldInfo for all this model {@code FieldId}
      */
-    FieldInfo[] getFieldInfos();
+    List<FieldInfo> getFieldInfos();
 
     /**
      * @return all {@code FieldId}, with a not-null value
      */
     default List<FieldId> getFieldIds() {
-        return Arrays.stream(getFieldInfos()).map(FieldInfo::id).collect(toList());
+        return getFieldInfos().stream().map(FieldInfo::id).collect(toList());
     }
 
     /**
@@ -55,7 +55,7 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
      * @param source the source field model
      */
     default void setAll(FieldModel source) {
-        Arrays.stream(getFieldInfos()).filter(info -> source.get(info.id()) != null)
+        getFieldInfos().stream().filter(info -> source.get(info.id()) != null)
                         .forEach(info -> set(info.id(), source.get(info.id())));
     }
 
@@ -63,18 +63,18 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
      * For all the {@code FieldId}, set their value to <code>null</code>
      */
     default void clear() {
-        Arrays.stream(getFieldInfos()).filter(info -> get(info.id()) != null).forEach(info -> set(info.id(), null));
+        getFieldInfos().stream().filter(info -> get(info.id()) != null).forEach(info -> set(info.id(), null));
     }
 
     /**
      * For all the {@code FieldId} tagged with the specified {@code TagId}, set their value to <code>null</code>
      */
     default void clear(TagId tag) {
-        Arrays.stream(getFieldInfos()).filter(info -> info.id().hasTag(tag) && get(info.id()) != null)
+        getFieldInfos().stream().filter(info -> info.id().hasTag(tag) && get(info.id()) != null)
                         .forEach(info -> set(info.id(), null));
     }
 
     default FieldInfo info(FieldId id) {
-        return Arrays.stream(getFieldInfos()).filter(info -> info.id() == id).findFirst().orElse(null);
+        return getFieldInfos().stream().filter(info -> info.id() == id).findFirst().orElse(null);
     }
 }

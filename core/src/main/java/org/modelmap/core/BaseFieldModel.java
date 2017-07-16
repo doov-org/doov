@@ -11,13 +11,13 @@ import java.util.stream.Stream;
 public class BaseFieldModel implements FieldModel {
 
     private final Map<FieldId, Object> values;
-    private final FieldInfo[] fieldInfos;
+    private final List<FieldInfo> fieldInfos;
 
-    public BaseFieldModel(FieldInfo... fieldInfos) {
+    public BaseFieldModel(List<FieldInfo> fieldInfos) {
         this(new HashMap<>(), fieldInfos);
     }
 
-    public BaseFieldModel(Map<FieldId, Object> values, FieldInfo... fieldInfos) {
+    public BaseFieldModel(Map<FieldId, Object> values, List<FieldInfo> fieldInfos) {
         this.values = values;
         this.fieldInfos = fieldInfos;
     }
@@ -32,7 +32,7 @@ public class BaseFieldModel implements FieldModel {
     }
 
     @Override
-    public FieldInfo[] getFieldInfos() {
+    public List<FieldInfo> getFieldInfos() {
         return fieldInfos;
     }
 
@@ -52,7 +52,7 @@ public class BaseFieldModel implements FieldModel {
     private static final FieldId[] NO_SIBLINGS = new FieldId[] {};
 
     private FieldId[] siblingsOf(FieldId fieldId) {
-        Optional<FieldInfo> sublings = Arrays.stream(fieldInfos).filter(info -> info.id() == fieldId).findFirst();
+        Optional<FieldInfo> sublings = fieldInfos.stream().filter(info -> info.id() == fieldId).findFirst();
         return sublings.isPresent() ? sublings.get().siblings() : NO_SIBLINGS;
     }
 

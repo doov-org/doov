@@ -6,17 +6,26 @@ import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
 import static java.time.format.FormatStyle.SHORT;
 import static java.util.Arrays.asList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES;
-import static org.modelmap.gen.FieldInfoGen.literals;
-import static org.modelmap.gen.ModelWrapperGen.*;
+import static org.modelmap.gen.FieldInfoGen.constants;
+import static org.modelmap.gen.FieldInfoGen.imports;
+import static org.modelmap.gen.ModelWrapperGen.mapFieldProperties;
+import static org.modelmap.gen.ModelWrapperGen.mapFieldTypeIfStatement;
+import static org.modelmap.gen.ModelWrapperGen.mapGetter;
+import static org.modelmap.gen.ModelWrapperGen.mapSetter;
+import static org.modelmap.gen.ModelWrapperGen.validatePath;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.maven.plugin.*;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -25,7 +34,6 @@ import org.modelmap.gen.processor.MacroProcessor;
 import org.modelmap.gen.utils.ClassLoaderUtils;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Stopwatch;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
@@ -81,8 +89,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
         try {
             for (int i = 0; i < sourceClasses.size(); i++) {
                 @SuppressWarnings("unchecked")
-                final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>)
-                                Class.forName(fieldClasses.get(i), true, classLoader);
+                final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>) Class
+                                .forName(fieldClasses.get(i), true, classLoader);
                 final Class<?> modelClazz = Class.forName(sourceClasses.get(i), true, classLoader);
                 generationInput.put(fieldClazz, modelClazz);
             }
@@ -134,18 +142,19 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
     private void generateFieldInfo(Map<FieldId, VisitorPath> fieldPaths, Class<?> clazz) {
         try {
-            final String targetClassName = clazz.getSimpleName() + "Info";
+            final String targetClassName = fieldInfoClassName(clazz);
             final String targetPackage = clazz.getPackage().getName();
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                             targetClassName + ".java");
-            final String classTemplate = template("FieldInfoEnum.template");
+            final String classTemplate = template("FieldInfo.template");
             createDirectories(targetFile.getParentFile().toPath());
             final Map<String, String> conf = new HashMap<>();
             conf.put("package.name", targetPackage);
             conf.put("process.class", clazz.getName());
             conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
             conf.put("target.class.name", targetClassName);
-            conf.put("literals", literals(fieldPaths));
+            conf.put("imports", imports(fieldPaths));
+            conf.put("constants", constants(fieldPaths));
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(classTemplate, conf);
             Files.write(content.getBytes(), targetFile);
@@ -153,6 +162,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
         } catch (IOException e) {
             throw new RuntimeException("error when generating wrapper", e);
         }
+    }
+
+    private static final String fieldInfoClassName(Class<?> clazz) {
+        return clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1)
+                        : clazz.getSimpleName() + "Info";
     }
 
     private void generateWrapper(Map<FieldId, VisitorPath> fieldPaths, Class<?> modelClass, Class<?> fieldClass)
@@ -173,7 +187,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("target.model.class.name", modelClass.getSimpleName());
             conf.put("target.model.class.full.name", modelClass.getName());
             conf.put("target.field.info.package.name", fieldClass.getPackage().getName());
-            conf.put("target.field.info.class.name", fieldClass.getSimpleName() + "Info");
+            conf.put("target.field.info.class.name", fieldInfoClassName(fieldClass));
             conf.put("target.class.name", targetClassName);
             conf.put("map.getter", mapGetter(fieldPaths));
             conf.put("map.getter.if", mapFieldTypeIfStatement("MapGetIfStatement.template", fieldPaths));

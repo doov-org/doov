@@ -1,54 +1,182 @@
 package org.modelmap.gen;
 
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.joining;
 import static org.modelmap.gen.ModelWrapperGen.getterBoxingType;
+import static org.modelmap.gen.ModelWrapperGen.getterType;
 import static org.modelmap.gen.ModelWrapperGen.typeParameters;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.modelmap.core.FieldId;
-
-import com.google.common.base.Joiner;
+import org.modelmap.core.dsl.field.BooleanFieldInfo;
+import org.modelmap.core.dsl.field.CharacterFieldInfo;
+import org.modelmap.core.dsl.field.DefaultFieldInfo;
+import org.modelmap.core.dsl.field.DoubleFieldInfo;
+import org.modelmap.core.dsl.field.EnumFieldInfo;
+import org.modelmap.core.dsl.field.FloatFieldInfo;
+import org.modelmap.core.dsl.field.IntegerFieldInfo;
+import org.modelmap.core.dsl.field.LocalDateFieldInfo;
+import org.modelmap.core.dsl.field.LocalDateTimeFieldInfo;
+import org.modelmap.core.dsl.field.LocalTimeFieldInfo;
+import org.modelmap.core.dsl.field.LongFieldInfo;
+import org.modelmap.core.dsl.field.StringFieldInfo;
 
 final class FieldInfoGen {
 
-    static String literals(Map<FieldId, VisitorPath> fieldPaths) {
+    static String imports(Map<FieldId, VisitorPath> fieldPaths) {
+        return fieldPaths.entrySet().stream().flatMap(e -> {
+            List<String> imports = new ArrayList<>();
+
+            FieldId fieldId = e.getKey();
+            String boxingType = getterBoxingType(fieldPaths.get(fieldId), fieldId.position());
+            VisitorPath currentPath = fieldPaths.get(fieldId);
+
+            if (boxingType.contains("<")) {
+                Type methodType = currentPath.getGetMethod().getGenericReturnType();
+                imports.addAll(typeParameters(methodType));
+                imports.add(boxingType.substring(0, boxingType.indexOf('<')));
+            } else {
+                imports.add(boxingType);
+            }
+            imports.add(fieldId.getClass().getName());
+
+            return imports.stream();
+        }).filter(clazz -> clazz.contains(".")) // excluding java.lang.* types
+                        .distinct().sorted().map(clazz -> "import " + clazz + ";").collect(joining("\n"));
+    }
+
+    static String constants(Map<FieldId, VisitorPath> fieldPaths) {
         final StringBuilder builder = new StringBuilder();
         fieldPaths.keySet().stream()
-                        .sorted((f1, f2) -> f1.name().compareTo(f2.name()))
+                        .sorted(comparing(FieldId::name))
                         .forEach(fieldId -> {
                             final VisitorPath currentPath = fieldPaths.get(fieldId);
+                            final Class<?> type = getterType(fieldPaths.get(fieldId));
                             final String boxingType = getterBoxingType(fieldPaths.get(fieldId), fieldId.position());
                             final String siblings = formatSiblings(siblings(currentPath, fieldPaths.values()));
                             final String rawType;
-                            final String parameterTypes;
+                            final String genericTypes;
+                            final String genericTypesAsClass;
                             final boolean isPrimitive = currentPath.getGetMethod().getReturnType().isPrimitive();
 
                             if (boxingType.contains("<")) {
-                                rawType = boxingType.substring(0, boxingType.indexOf('<'));
+                                rawType = simpleName(boxingType.substring(0, boxingType.indexOf('<')));
                                 Type methodType = currentPath.getGetMethod().getGenericReturnType();
-                                parameterTypes = ",\n                    new Class<?>[] { " +
-                                                Joiner.on(".class, ").join(typeParameters(methodType)) + ".class } ";
+                                genericTypes = typeParameters(methodType).stream().map(t -> simpleName(t))
+                                                .collect(joining(", "));
+                                genericTypesAsClass = typeParameters(methodType).stream()
+                                                .map(t -> simpleName(t) + ".class")
+                                                .collect(joining(", "));
                             } else {
-                                rawType = boxingType;
-                                parameterTypes = "";
+                                rawType = simpleName(boxingType);
+                                genericTypesAsClass = "";
+                                genericTypes = "";
                             }
 
-                            builder.append("    ");
+                            builder.append("    public static final ");
+                            builder.append(fieldType(type, rawType, genericTypes));
+                            builder.append(" ");
                             builder.append(fieldId.toString());
-                            builder.append("(");
-                            builder.append(fieldId.getClass().getName());
+                            builder.append(" = ");
+                            builder.append(fieldFactoryMethod(type, rawType, genericTypes));
+                            builder.append("\n                    ");
+                            builder.append(".fieldId(");
+                            builder.append(fieldId.getClass().getSimpleName());
                             builder.append(".");
                             builder.append(fieldId.toString());
-                            builder.append(", ");
+                            builder.append(")");
+                            builder.append("\n                    ");
+                            builder.append(".type(");
                             builder.append(rawType);
                             builder.append(isPrimitive ? ".TYPE" : ".class");
-                            builder.append(parameterTypes);
-                            builder.append(siblings);
-                            builder.append("), //\n");
+                            builder.append(")");
+                            if (!genericTypes.isEmpty()) {
+                                builder.append("\n                    ");
+                                builder.append(".genericTypes(");
+                                builder.append(genericTypesAsClass);
+                                builder.append(")");
+                            }
+                            if (!siblings.isEmpty()) {
+                                builder.append("\n                    ");
+                                builder.append(".siblings(");
+                                builder.append(siblings);
+                                builder.append(")");
+                            }
+                            builder.append("\n                    ");
+                            builder.append(".build(ALL);\n\n");
                         });
-        builder.append("    ;");
         return builder.toString();
+    }
+
+    private static String simpleName(String className) {
+        int lastIndex = className.lastIndexOf('.');
+        return lastIndex > 0 ? className.substring(lastIndex + 1, className.length()) : className;
+    }
+
+    private static String fieldType(Class<?> type, String rawType, String genericTypes) {
+        if (String.class.equals(type))
+            return StringFieldInfo.class.getSimpleName();
+        if (Character.class.equals(type) || Character.TYPE.equals(type))
+            return CharacterFieldInfo.class.getSimpleName();
+        if (Integer.class.equals(type) || Integer.TYPE.equals(type))
+            return IntegerFieldInfo.class.getSimpleName();
+        if (Boolean.class.equals(type) || Boolean.TYPE.equals(type))
+            return BooleanFieldInfo.class.getSimpleName();
+        if (Double.class.equals(type) || Double.TYPE.equals(type))
+            return DoubleFieldInfo.class.getSimpleName();
+        if (Float.class.equals(type) || Float.TYPE.equals(type))
+            return FloatFieldInfo.class.getSimpleName();
+        if (Long.class.equals(type) || Long.TYPE.equals(type))
+            return LongFieldInfo.class.getSimpleName();
+        if (LocalDate.class.equals(type))
+            return LocalDateFieldInfo.class.getSimpleName();
+        if (LocalDateTime.class.equals(type))
+            return LocalDateTimeFieldInfo.class.getSimpleName();
+        if (LocalTime.class.equals(type))
+            return LocalTimeFieldInfo.class.getSimpleName();
+        if (Enum.class.isAssignableFrom(type))
+            return EnumFieldInfo.class.getSimpleName() + "<" + rawType + ">";
+        return DefaultFieldInfo.class.getSimpleName() + "<" + rawType
+                        + (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">") + ">";
+    }
+
+    private static String fieldFactoryMethod(Class<?> type, String rawType, String genericTypes) {
+        if (String.class.equals(type))
+            return "stringField()";
+        if (Character.class.equals(type) || Character.TYPE.equals(type))
+            return "characterField()";
+        if (Integer.class.equals(type) || Integer.TYPE.equals(type))
+            return "integerField()";
+        if (Boolean.class.equals(type) || Boolean.TYPE.equals(type))
+            return "booleanField()";
+        if (Double.class.equals(type) || Double.TYPE.equals(type))
+            return "doubleField()";
+        if (Float.class.equals(type) || Float.TYPE.equals(type))
+            return "floatField()";
+        if (Long.class.equals(type) || Long.TYPE.equals(type))
+            return "longField()";
+        if (LocalDate.class.equals(type))
+            return "localDateField()";
+        if (LocalDateTime.class.equals(type))
+            return "localDateTimeField()";
+        if (LocalTime.class.equals(type))
+            return "localTimeField()";
+        if (Enum.class.isAssignableFrom(type))
+            return "FieldInfoProvider\n                    .<" + rawType + "> enumField()";
+        return "FieldInfoProvider\n                    .<" + rawType
+                        + (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">")
+                        + "> defaultField()";
     }
 
     private static String formatSiblings(Set<FieldId> siblings) {

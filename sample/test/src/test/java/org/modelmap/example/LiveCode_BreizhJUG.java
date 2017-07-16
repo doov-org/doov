@@ -6,7 +6,9 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.*;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Triple;
 import org.modelmap.core.FieldId;

@@ -1,6 +1,5 @@
 package org.modelmap.sample.model;
 
-import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -11,6 +10,7 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.modelmap.core.FieldInfo;
 import org.modelmap.sample.field.SampleFieldIdInfo;
 import org.modelmap.sample.field.SampleTag;
 
@@ -19,13 +19,13 @@ public class SampleModelWrapperTest {
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<Object[]> data() {
-        return stream(SampleFieldIdInfo.values()).map(f -> new Object[] { f.name(), f }).collect(Collectors.toList());
+        return SampleFieldIdInfo.values().stream().map(f -> new Object[] { f.id().name(), f }).collect(Collectors.toList());
     }
 
     private final SampleModelWrapper wrapper;
-    private final SampleFieldIdInfo field;
+    private final FieldInfo field;
 
-    public SampleModelWrapperTest(String name, SampleFieldIdInfo field) {
+    public SampleModelWrapperTest(String name, FieldInfo field) {
         this.wrapper = new SampleModelWrapper();
         this.field = field;
     }
@@ -83,7 +83,7 @@ public class SampleModelWrapperTest {
         }
     }
 
-    private static Object value(SampleFieldIdInfo field) throws IllegalAccessException, InstantiationException {
+    private static Object value(FieldInfo field) throws IllegalAccessException, InstantiationException {
         if (field.type().equals(Long.class) || field.type().equals(Long.TYPE)) {
             return Long.MAX_VALUE;
         } else if (field.type().equals(Integer.class) || field.type().equals(Integer.TYPE)) {
