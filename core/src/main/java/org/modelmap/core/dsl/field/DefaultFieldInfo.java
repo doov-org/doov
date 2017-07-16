@@ -30,7 +30,6 @@ public class DefaultFieldInfo<T> implements FieldInfo {
         return type;
     }
 
-
     @Override
     public FieldId[] siblings() {
         return siblings;
@@ -44,5 +43,9 @@ public class DefaultFieldInfo<T> implements FieldInfo {
     public StepCondition eq(T value) {
         return new DefaultStepCondition(c -> Optional.ofNullable(c.get(id())) //
                         .map(v -> v.equals(value)).orElse(false));
+    }
+
+    public StepCondition notEq(T value) {
+        return eq(value).not();
     }
 }
