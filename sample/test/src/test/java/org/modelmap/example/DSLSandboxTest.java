@@ -16,6 +16,7 @@ import org.modelmap.sample.model.SampleModels;
 import org.modelmap.sample.model.Timezone;
 
 public class DSLSandboxTest {
+
     @Test
     public void sample1() {
         FieldModel model = SampleModels.wrapper();
@@ -27,7 +28,7 @@ public class DSLSandboxTest {
     @Test(expected = RuntimeException.class)
     public void sample2() {
         FieldModel model = SampleModels.wrapper();
-        DSL.when(ACCOUNT_ID.notEq(1l)) //
+        DSL.when(ACCOUNT_ID.eq(1l).not()) //
                         .throwMessage("incorrect account id") //
                         .executeOn(model);
     }
@@ -52,9 +53,11 @@ public class DSLSandboxTest {
     public void sample5() {
         FieldModel model = SampleModels.wrapper();
         DSL.when(BIRTHDATE.between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31)) //
-                        .and(ACCOUNT_ID.notEq(9l))
+                        .and(ACCOUNT_ID.eq(9l).not())
                         .or(TIMEZONE.eq(Timezone.ETC_GMT))) //
-                        .throwMessage("you can't be born in 1980 and have an ID different of 9 or having timezone equals to ETC_GMT")
+                        .throwMessage("you can't be born in 1980 and have an ID different of 9 or having timezone " +
+                                        "equals to ETC_GMT")
                         .executeOn(model);
     }
+
 }

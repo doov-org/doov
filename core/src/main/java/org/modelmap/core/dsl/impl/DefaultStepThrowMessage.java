@@ -4,11 +4,10 @@
 package org.modelmap.core.dsl.impl;
 
 import org.modelmap.core.FieldModel;
-import org.modelmap.core.dsl.lang.StepThrowMessage;
-import org.modelmap.core.dsl.lang.StepWhen;
-import org.modelmap.core.dsl.lang.ValidationRule;
+import org.modelmap.core.dsl.lang.*;
 
 public class DefaultStepThrowMessage implements StepThrowMessage {
+
     private final StepWhen stepWhen;
     private final String message;
 
@@ -36,4 +35,10 @@ public class DefaultStepThrowMessage implements StepThrowMessage {
     public ValidationRule validationRule() {
         return new DefaultValidationRule(this);
     }
+
+    @Override
+    public String readable() {
+        return stepWhen.readable();
+    }
+
 }

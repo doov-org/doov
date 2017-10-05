@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) by Courtanet, All Rights Reserved.
+ */
 package org.modelmap.core.dsl.field;
 
 import java.util.List;
@@ -56,7 +59,8 @@ public class FieldInfoProvider {
     }
 
     @SuppressWarnings("unchecked")
-    protected static abstract class BaseFieldInfoBuilder<F extends DefaultFieldInfo<?>, B extends BaseFieldInfoBuilder<F, B>> {
+    protected static abstract class BaseFieldInfoBuilder<F extends DefaultFieldInfo<?>,
+                    B extends BaseFieldInfoBuilder<F, B>> {
 
         protected FieldId fieldId;
         protected Class<?> type;

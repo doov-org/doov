@@ -4,10 +4,12 @@
 package org.modelmap.core.dsl.impl;
 
 import org.modelmap.core.FieldModel;
+import org.modelmap.core.dsl.exclusion.ExclusionException;
 import org.modelmap.core.dsl.lang.StepThrowMessage;
 import org.modelmap.core.dsl.lang.ValidationRule;
 
 public class DefaultValidationRule implements ValidationRule {
+
     private final StepThrowMessage stepThrowMessage;
 
     public DefaultValidationRule(StepThrowMessage stepThrowMessage) {
@@ -16,8 +18,14 @@ public class DefaultValidationRule implements ValidationRule {
 
     @Override
     public void executeOn(FieldModel model) {
-        if (stepThrowMessage.stepWhen().stepCondition().predicate().test(model))
-            throw new RuntimeException(stepThrowMessage.message());
+        if (stepThrowMessage.stepWhen().stepCondition().predicate().test(model)) {
+            throw new ExclusionException(stepThrowMessage.message(), stepThrowMessage);
+        }
+    }
+
+    @Override
+    public String readable() {
+        return stepThrowMessage.readable();
     }
 
 }

@@ -1,38 +1,32 @@
+/*
+ * Copyright (C) by Courtanet, All Rights Reserved.
+ */
 package org.modelmap.core.dsl.field;
 
-import java.util.Optional;
-
 import org.modelmap.core.FieldId;
-import org.modelmap.core.dsl.impl.DefaultStepCondition;
+import org.modelmap.core.dsl.impl.LongCondition;
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class LongFieldInfo extends DefaultFieldInfo<Long> implements NumericFieldInfo<Long> {
+public class LongFieldInfo extends DefaultFieldInfo<Long> {
 
     LongFieldInfo(FieldId fieldId, Class<?> type, FieldId[] siblings) {
         super(fieldId, type, new Class[] {}, siblings);
     }
 
-    @Override
-    public StepCondition lessThan(Long value) {
-        return new DefaultStepCondition(c -> Optional.ofNullable(c.<Long> get(id())) //
-                        .map(v -> v < value).orElse(false));
+    public StepCondition lesserThan(long value) {
+        return LongCondition.lesserThan(this, value);
     }
 
-    @Override
-    public StepCondition lessOrEqual(Long value) {
-        return new DefaultStepCondition(c -> Optional.ofNullable(c.<Long> get(id())) //
-                        .map(v -> v <= value).orElse(false));
+    public StepCondition lesserOrEquals(long value) {
+        return LongCondition.lesserOrEquals(this, value);
     }
 
-    @Override
-    public StepCondition greaterThan(Long value) {
-        return new DefaultStepCondition(c -> Optional.ofNullable(c.<Long> get(id())) //
-                        .map(v -> v > value).orElse(false));
+    public StepCondition greaterThan(long value) {
+        return LongCondition.greaterThan(this, value);
     }
 
-    @Override
-    public StepCondition greaterOrEqual(Long value) {
-        return new DefaultStepCondition(c -> Optional.ofNullable(c.<Long> get(id())) //
-                        .map(v -> v >= value).orElse(false));
+    public StepCondition greaterOrEquals(long value) {
+        return LongCondition.greaterOrEquals(this, value);
     }
+
 }

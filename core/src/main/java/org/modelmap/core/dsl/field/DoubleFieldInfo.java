@@ -1,38 +1,32 @@
+/*
+ * Copyright (C) by Courtanet, All Rights Reserved.
+ */
 package org.modelmap.core.dsl.field;
 
-import java.util.Optional;
-
 import org.modelmap.core.FieldId;
-import org.modelmap.core.dsl.impl.DefaultStepCondition;
+import org.modelmap.core.dsl.impl.DoubleCondition;
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class DoubleFieldInfo extends DefaultFieldInfo<Double> implements NumericFieldInfo<Double> {
+public class DoubleFieldInfo extends DefaultFieldInfo<Double> {
 
     DoubleFieldInfo(FieldId fieldId, Class<?> type, FieldId[] siblings) {
         super(fieldId, type, new Class[] {}, siblings);
     }
 
-    @Override
-    public StepCondition lessThan(Double value) {
-        return new DefaultStepCondition(c -> Optional.ofNullable(c.<Double> get(id())) //
-                        .map(v -> v < value).orElse(false));
+    public StepCondition lesserThan(double value) {
+        return DoubleCondition.lesserThan(this, value);
     }
 
-    @Override
-    public StepCondition lessOrEqual(Double value) {
-        return new DefaultStepCondition(c -> Optional.ofNullable(c.<Double> get(id())) //
-                        .map(v -> v <= value).orElse(false));
+    public StepCondition lesserOrEquals(double value) {
+        return DoubleCondition.lesserOrEquals(this, value);
     }
 
-    @Override
-    public StepCondition greaterThan(Double value) {
-        return new DefaultStepCondition(c -> Optional.ofNullable(c.<Double> get(id())) //
-                        .map(v -> v > value).orElse(false));
+    public StepCondition greaterThan(double value) {
+        return DoubleCondition.greaterThan(this, value);
     }
 
-    @Override
-    public StepCondition greaterOrEqual(Double value) {
-        return new DefaultStepCondition(c -> Optional.ofNullable(c.<Double> get(id())) //
-                        .map(v -> v >= value).orElse(false));
+    public StepCondition greaterOrEquals(double value) {
+        return DoubleCondition.greaterOrEquals(this, value);
     }
+
 }

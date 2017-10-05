@@ -3,11 +3,10 @@
  */
 package org.modelmap.core.dsl.impl;
 
-import org.modelmap.core.dsl.lang.StepCondition;
-import org.modelmap.core.dsl.lang.StepThrowMessage;
-import org.modelmap.core.dsl.lang.StepWhen;
+import org.modelmap.core.dsl.lang.*;
 
 public class DefaultStepWhen implements StepWhen {
+
     private final StepCondition stepCondition;
 
     public DefaultStepWhen(StepCondition stepCondition) {
@@ -23,4 +22,10 @@ public class DefaultStepWhen implements StepWhen {
     public StepThrowMessage throwMessage(String message) {
         return new DefaultStepThrowMessage(this, message);
     }
+
+    @Override
+    public String readable() {
+        return stepCondition.readable();
+    }
+
 }

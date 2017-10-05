@@ -3,8 +3,12 @@
  */
 package org.modelmap.core.dsl.lang;
 
-public interface StepWhen {
+import org.modelmap.core.dsl.meta.Readable;
+
+public interface StepWhen extends Readable {
+
     StepCondition stepCondition();
-    
+
     StepThrowMessage throwMessage(String message);
+
 }

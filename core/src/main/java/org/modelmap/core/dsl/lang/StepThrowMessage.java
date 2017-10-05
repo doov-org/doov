@@ -4,8 +4,9 @@
 package org.modelmap.core.dsl.lang;
 
 import org.modelmap.core.FieldModel;
+import org.modelmap.core.dsl.meta.Readable;
 
-public interface StepThrowMessage {
+public interface StepThrowMessage extends Readable {
 
     String message();
 
@@ -14,4 +15,5 @@ public interface StepThrowMessage {
     void executeOn(FieldModel model);
 
     ValidationRule validationRule();
+
 }

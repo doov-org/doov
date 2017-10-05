@@ -1,13 +1,15 @@
+/*
+ * Copyright (C) by Courtanet, All Rights Reserved.
+ */
 package org.modelmap.core.dsl.field;
-
-import java.util.Optional;
 
 import org.modelmap.core.FieldId;
 import org.modelmap.core.FieldInfo;
-import org.modelmap.core.dsl.impl.DefaultStepCondition;
+import org.modelmap.core.dsl.impl.TypeCondition;
 import org.modelmap.core.dsl.lang.StepCondition;
 
 public class DefaultFieldInfo<T> implements FieldInfo {
+
     private final FieldId fieldId;
     private final Class<?> type;
     private final Class<?>[] genericTypes;
@@ -41,11 +43,7 @@ public class DefaultFieldInfo<T> implements FieldInfo {
     }
 
     public StepCondition eq(T value) {
-        return new DefaultStepCondition(c -> Optional.ofNullable(c.get(id())) //
-                        .map(v -> v.equals(value)).orElse(false));
+        return TypeCondition.eq(this, value);
     }
 
-    public StepCondition notEq(T value) {
-        return eq(value).not();
-    }
 }
