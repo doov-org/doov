@@ -16,6 +16,11 @@ public interface FieldInfo {
     FieldId[] siblings();
 
     /**
+     * @return the human readable {@code FieldId}
+     */
+    String readable();
+
+    /**
      * @return the {@code FieldId} type
      */
     Class<?> type();
@@ -24,4 +29,10 @@ public interface FieldInfo {
      * @return the {@code FieldId} type parameters
      */
     Class<?>[] genericTypes();
+
+    /**
+     * @return the {@code FieldId} with different readable
+     */
+    FieldInfo as(String readable);
+
 }

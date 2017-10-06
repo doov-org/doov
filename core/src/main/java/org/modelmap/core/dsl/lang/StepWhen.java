@@ -3,12 +3,18 @@
  */
 package org.modelmap.core.dsl.lang;
 
+import java.util.Optional;
+
 import org.modelmap.core.dsl.meta.Readable;
 
-public interface StepWhen extends Readable {
+public interface StepWhen extends ValidationRule, Readable {
+
+    StepWhen withMessage(String message);
 
     StepCondition stepCondition();
 
-    StepThrowMessage throwMessage(String message);
+    Optional<String> message();
+
+    ValidationRule validationRule();
 
 }

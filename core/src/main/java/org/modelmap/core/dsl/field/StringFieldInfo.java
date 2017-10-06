@@ -9,8 +9,8 @@ import org.modelmap.core.dsl.lang.StepCondition;
 
 public class StringFieldInfo extends DefaultFieldInfo<String> {
 
-    StringFieldInfo(FieldId fieldId, FieldId[] siblings) {
-        super(fieldId, String.class, new Class[] {}, siblings);
+    StringFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
+        super(fieldId, readable, String.class, new Class[] {}, siblings);
     }
 
     public StepCondition contains(String regex) {
@@ -27,6 +27,11 @@ public class StringFieldInfo extends DefaultFieldInfo<String> {
 
     public StepCondition endsWith(String regex) {
         return StringCondition.endsWith(this, regex);
+    }
+
+    @Override
+    public StringFieldInfo as(String readable) {
+        return new StringFieldInfo(id(), readable, siblings());
     }
 
 }

@@ -9,8 +9,8 @@ import org.modelmap.core.dsl.lang.StepCondition;
 
 public class DoubleFieldInfo extends DefaultFieldInfo<Double> {
 
-    DoubleFieldInfo(FieldId fieldId, Class<?> type, FieldId[] siblings) {
-        super(fieldId, type, new Class[] {}, siblings);
+    DoubleFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
+        super(fieldId, readable, type, new Class[] {}, siblings);
     }
 
     public StepCondition lesserThan(double value) {
@@ -27,6 +27,11 @@ public class DoubleFieldInfo extends DefaultFieldInfo<Double> {
 
     public StepCondition greaterOrEquals(double value) {
         return DoubleCondition.greaterOrEquals(this, value);
+    }
+
+    @Override
+    public DoubleFieldInfo as(String readable) {
+        return new DoubleFieldInfo(id(), readable, type(), siblings());
     }
 
 }

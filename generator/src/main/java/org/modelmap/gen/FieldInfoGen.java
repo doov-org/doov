@@ -1,5 +1,6 @@
 package org.modelmap.gen;
 
+import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.modelmap.gen.ModelWrapperGen.getterBoxingType;
@@ -7,30 +8,11 @@ import static org.modelmap.gen.ModelWrapperGen.getterType;
 import static org.modelmap.gen.ModelWrapperGen.typeParameters;
 
 import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.*;
+import java.util.*;
 
 import org.modelmap.core.FieldId;
-import org.modelmap.core.dsl.field.BooleanFieldInfo;
-import org.modelmap.core.dsl.field.CharacterFieldInfo;
-import org.modelmap.core.dsl.field.DefaultFieldInfo;
-import org.modelmap.core.dsl.field.DoubleFieldInfo;
-import org.modelmap.core.dsl.field.EnumFieldInfo;
-import org.modelmap.core.dsl.field.FloatFieldInfo;
-import org.modelmap.core.dsl.field.IntegerFieldInfo;
-import org.modelmap.core.dsl.field.LocalDateFieldInfo;
-import org.modelmap.core.dsl.field.LocalDateTimeFieldInfo;
-import org.modelmap.core.dsl.field.LocalTimeFieldInfo;
-import org.modelmap.core.dsl.field.LongFieldInfo;
-import org.modelmap.core.dsl.field.StringFieldInfo;
+import org.modelmap.core.dsl.field.*;
 
 final class FieldInfoGen {
 
@@ -97,6 +79,12 @@ final class FieldInfoGen {
                             builder.append(fieldId.toString());
                             builder.append(")");
                             builder.append("\n                    ");
+                            builder.append(".readable(\"");
+                            builder.append(stream(fieldId.name().split("_"))
+                                            .map(String::toLowerCase)
+                                            .collect(joining(" ")));
+                            builder.append("\")");
+                            builder.append("\n                    ");
                             builder.append(".type(");
                             builder.append(rawType);
                             builder.append(isPrimitive ? ".TYPE" : ".class");
@@ -125,63 +113,86 @@ final class FieldInfoGen {
     }
 
     private static String fieldType(Class<?> type, String rawType, String genericTypes) {
-        if (String.class.equals(type))
+        if (String.class.equals(type)) {
             return StringFieldInfo.class.getSimpleName();
-        if (Character.class.equals(type) || Character.TYPE.equals(type))
+        }
+        if (Character.class.equals(type) || Character.TYPE.equals(type)) {
             return CharacterFieldInfo.class.getSimpleName();
-        if (Integer.class.equals(type) || Integer.TYPE.equals(type))
+        }
+        if (Integer.class.equals(type) || Integer.TYPE.equals(type)) {
             return IntegerFieldInfo.class.getSimpleName();
-        if (Boolean.class.equals(type) || Boolean.TYPE.equals(type))
+        }
+        if (Boolean.class.equals(type) || Boolean.TYPE.equals(type)) {
             return BooleanFieldInfo.class.getSimpleName();
-        if (Double.class.equals(type) || Double.TYPE.equals(type))
+        }
+        if (Double.class.equals(type) || Double.TYPE.equals(type)) {
             return DoubleFieldInfo.class.getSimpleName();
-        if (Float.class.equals(type) || Float.TYPE.equals(type))
+        }
+        if (Float.class.equals(type) || Float.TYPE.equals(type)) {
             return FloatFieldInfo.class.getSimpleName();
-        if (Long.class.equals(type) || Long.TYPE.equals(type))
+        }
+        if (Long.class.equals(type) || Long.TYPE.equals(type)) {
             return LongFieldInfo.class.getSimpleName();
-        if (LocalDate.class.equals(type))
+        }
+        if (LocalDate.class.equals(type)) {
             return LocalDateFieldInfo.class.getSimpleName();
-        if (LocalDateTime.class.equals(type))
+        }
+        if (LocalDateTime.class.equals(type)) {
             return LocalDateTimeFieldInfo.class.getSimpleName();
-        if (LocalTime.class.equals(type))
+        }
+        if (LocalTime.class.equals(type)) {
             return LocalTimeFieldInfo.class.getSimpleName();
-        if (Enum.class.isAssignableFrom(type))
+        }
+        if (Enum.class.isAssignableFrom(type)) {
             return EnumFieldInfo.class.getSimpleName() + "<" + rawType + ">";
+        }
         return DefaultFieldInfo.class.getSimpleName() + "<" + rawType
                         + (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">") + ">";
     }
 
     private static String fieldFactoryMethod(Class<?> type, String rawType, String genericTypes) {
-        if (String.class.equals(type))
+        if (String.class.equals(type)) {
             return "stringField()";
-        if (Character.class.equals(type) || Character.TYPE.equals(type))
+        }
+        if (Character.class.equals(type) || Character.TYPE.equals(type)) {
             return "characterField()";
-        if (Integer.class.equals(type) || Integer.TYPE.equals(type))
+        }
+        if (Integer.class.equals(type) || Integer.TYPE.equals(type)) {
             return "integerField()";
-        if (Boolean.class.equals(type) || Boolean.TYPE.equals(type))
+        }
+        if (Boolean.class.equals(type) || Boolean.TYPE.equals(type)) {
             return "booleanField()";
-        if (Double.class.equals(type) || Double.TYPE.equals(type))
+        }
+        if (Double.class.equals(type) || Double.TYPE.equals(type)) {
             return "doubleField()";
-        if (Float.class.equals(type) || Float.TYPE.equals(type))
+        }
+        if (Float.class.equals(type) || Float.TYPE.equals(type)) {
             return "floatField()";
-        if (Long.class.equals(type) || Long.TYPE.equals(type))
+        }
+        if (Long.class.equals(type) || Long.TYPE.equals(type)) {
             return "longField()";
-        if (LocalDate.class.equals(type))
+        }
+        if (LocalDate.class.equals(type)) {
             return "localDateField()";
-        if (LocalDateTime.class.equals(type))
+        }
+        if (LocalDateTime.class.equals(type)) {
             return "localDateTimeField()";
-        if (LocalTime.class.equals(type))
+        }
+        if (LocalTime.class.equals(type)) {
             return "localTimeField()";
-        if (Enum.class.isAssignableFrom(type))
+        }
+        if (Enum.class.isAssignableFrom(type)) {
             return "FieldInfoProvider\n                    .<" + rawType + "> enumField()";
+        }
         return "FieldInfoProvider\n                    .<" + rawType
                         + (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">")
                         + "> defaultField()";
     }
 
     private static String formatSiblings(Set<FieldId> siblings) {
-        if (siblings.isEmpty())
+        if (siblings.isEmpty()) {
             return "";
+        }
         final StringBuilder builder = new StringBuilder();
         builder.append(", ");
         final Iterator<FieldId> it = siblings.iterator();
@@ -190,8 +201,9 @@ final class FieldInfoGen {
             builder.append(FieldId.getClass().getName());
             builder.append(".");
             builder.append(FieldId.toString());
-            if (it.hasNext())
+            if (it.hasNext()) {
                 builder.append(", ");
+            }
         }
         return builder.toString();
     }
@@ -200,10 +212,12 @@ final class FieldInfoGen {
         final String currentCanonicalPath = currentPath.displayPath();
         final Set<FieldId> siblings = new HashSet<>();
         for (VisitorPath path : collected) {
-            if (path.getFieldId() == currentPath.getFieldId())
+            if (path.getFieldId() == currentPath.getFieldId()) {
                 continue;
-            if (path.displayPath().equals(currentCanonicalPath))
+            }
+            if (path.displayPath().equals(currentCanonicalPath)) {
                 siblings.add(path.getFieldId());
+            }
         }
         return siblings;
     }

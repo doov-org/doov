@@ -38,7 +38,7 @@ public class FieldMetadata<F extends FieldInfo, V> implements Readable {
 
     @Override
     public String readable() {
-        return field.id() + " " + operator + " " + value;
+        return field.readable() + " " + operator + " " + value;
     }
 
 }

@@ -9,8 +9,8 @@ import org.modelmap.core.dsl.lang.StepCondition;
 
 public class BooleanFieldInfo extends DefaultFieldInfo<Boolean> {
 
-    BooleanFieldInfo(FieldId fieldId, Class<?> type, FieldId[] siblings) {
-        super(fieldId, type, new Class[] {}, siblings);
+    BooleanFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
+        super(fieldId, readable, type, new Class[] {}, siblings);
     }
 
     public StepCondition isTrue(boolean value) {
@@ -19,6 +19,11 @@ public class BooleanFieldInfo extends DefaultFieldInfo<Boolean> {
 
     public StepCondition isFalse(boolean value) {
         return BooleanCondition.isFalse(this, value);
+    }
+
+    @Override
+    public BooleanFieldInfo as(String readable) {
+        return new BooleanFieldInfo(id(), readable, type(), siblings());
     }
 
 }

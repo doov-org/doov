@@ -9,8 +9,8 @@ import org.modelmap.core.dsl.lang.StepCondition;
 
 public class FloatFieldInfo extends DefaultFieldInfo<Float> {
 
-    FloatFieldInfo(FieldId fieldId, Class<?> type, FieldId[] siblings) {
-        super(fieldId, type, new Class[] {}, siblings);
+    FloatFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
+        super(fieldId, readable, type, new Class[] {}, siblings);
     }
 
     public StepCondition lesserThan(float value) {
@@ -27,6 +27,11 @@ public class FloatFieldInfo extends DefaultFieldInfo<Float> {
 
     public StepCondition greaterOrEquals(float value) {
         return FloatCondition.greaterOrEquals(this, value);
+    }
+
+    @Override
+    public FloatFieldInfo as(String readable) {
+        return new FloatFieldInfo(id(), readable, type(), siblings());
     }
 
 }

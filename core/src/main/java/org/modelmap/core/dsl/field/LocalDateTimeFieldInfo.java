@@ -9,8 +9,13 @@ import org.modelmap.core.FieldId;
 
 public class LocalDateTimeFieldInfo extends DefaultFieldInfo<LocalTime> {
 
-    LocalDateTimeFieldInfo(FieldId fieldId, FieldId[] siblings) {
-        super(fieldId, LocalTime.class, new Class[] {}, siblings);
+    LocalDateTimeFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
+        super(fieldId, readable, LocalTime.class, new Class[] {}, siblings);
+    }
+
+    @Override
+    public LocalDateTimeFieldInfo as(String readable) {
+        return new LocalDateTimeFieldInfo(id(), readable, siblings());
     }
 
 }

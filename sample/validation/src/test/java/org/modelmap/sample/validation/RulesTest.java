@@ -1,6 +1,6 @@
 package org.modelmap.sample.validation;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.modelmap.sample.validation.Rules.EMAIL_INVALID;
 
 import java.time.LocalDate;
@@ -9,7 +9,6 @@ import java.util.EnumSet;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.modelmap.core.dsl.exclusion.ExclusionException;
 import org.modelmap.sample.model.*;
 
 public class RulesTest {
@@ -52,11 +51,10 @@ public class RulesTest {
     @Test
     public void test_valid_email() {
         System.out.println(EMAIL_INVALID.readable());
-        EMAIL_INVALID.executeOn(wrapper);
+        assertThat(EMAIL_INVALID.executeOn(wrapper)).isEmpty();
 
         account.setEmail("test@test.gh");
-        assertThatThrownBy(() -> EMAIL_INVALID.executeOn(wrapper))
-                        .isInstanceOf(ExclusionException.class);
+        assertThat(EMAIL_INVALID.executeOn(wrapper)).isNotEmpty();
     }
 
 }

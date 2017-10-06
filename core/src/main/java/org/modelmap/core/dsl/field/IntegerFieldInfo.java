@@ -9,8 +9,8 @@ import org.modelmap.core.dsl.lang.StepCondition;
 
 public class IntegerFieldInfo extends DefaultFieldInfo<Integer> {
 
-    IntegerFieldInfo(FieldId fieldId, Class<?> type, FieldId[] siblings) {
-        super(fieldId, type, new Class[] {}, siblings);
+    IntegerFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
+        super(fieldId, readable, type, new Class[] {}, siblings);
     }
 
     public StepCondition lesserThan(int value) {
@@ -27,6 +27,11 @@ public class IntegerFieldInfo extends DefaultFieldInfo<Integer> {
 
     public StepCondition greaterOrEquals(int value) {
         return IntegerCondition.greaterOrEquals(this, value);
+    }
+
+    @Override
+    public IntegerFieldInfo as(String readable) {
+        return new IntegerFieldInfo(id(), readable, type(), siblings());
     }
 
 }

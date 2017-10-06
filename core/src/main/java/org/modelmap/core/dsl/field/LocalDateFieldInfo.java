@@ -11,8 +11,8 @@ import org.modelmap.core.dsl.lang.StepCondition;
 
 public class LocalDateFieldInfo extends DefaultFieldInfo<LocalDate> {
 
-    LocalDateFieldInfo(FieldId fieldId, FieldId[] siblings) {
-        super(fieldId, LocalDate.class, new Class[] {}, siblings);
+    LocalDateFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
+        super(fieldId, readable, LocalDate.class, new Class[] {}, siblings);
     }
 
     public StepCondition before(LocalDate value) {
@@ -37,6 +37,11 @@ public class LocalDateFieldInfo extends DefaultFieldInfo<LocalDate> {
 
     public StepCondition notBetween(LocalDate minValue, LocalDate maxValue) {
         return LocalDateCondition.notBetween(this, minValue, maxValue);
+    }
+
+    @Override
+    public LocalDateFieldInfo as(String readable) {
+        return new LocalDateFieldInfo(id(), readable, siblings());
     }
 
 }

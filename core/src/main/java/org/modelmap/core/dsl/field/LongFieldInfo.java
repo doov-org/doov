@@ -9,8 +9,8 @@ import org.modelmap.core.dsl.lang.StepCondition;
 
 public class LongFieldInfo extends DefaultFieldInfo<Long> {
 
-    LongFieldInfo(FieldId fieldId, Class<?> type, FieldId[] siblings) {
-        super(fieldId, type, new Class[] {}, siblings);
+    LongFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
+        super(fieldId, readable, type, new Class[] {}, siblings);
     }
 
     public StepCondition lesserThan(long value) {
@@ -27,6 +27,11 @@ public class LongFieldInfo extends DefaultFieldInfo<Long> {
 
     public StepCondition greaterOrEquals(long value) {
         return LongCondition.greaterOrEquals(this, value);
+    }
+
+    @Override
+    public LongFieldInfo as(String readable) {
+        return new LongFieldInfo(id(), readable, type(), siblings());
     }
 
 }
