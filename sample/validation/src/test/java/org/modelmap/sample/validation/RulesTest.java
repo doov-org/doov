@@ -1,6 +1,8 @@
 package org.modelmap.sample.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.modelmap.core.dsl.lang.EValidity.INVALID;
+import static org.modelmap.core.dsl.lang.EValidity.VALID;
 import static org.modelmap.sample.validation.Rules.EMAIL_INVALID;
 
 import java.time.LocalDate;
@@ -51,10 +53,10 @@ public class RulesTest {
     @Test
     public void test_valid_email() {
         System.out.println(EMAIL_INVALID.readable());
-        assertThat(EMAIL_INVALID.executeOn(wrapper)).isEmpty();
+        assertThat(EMAIL_INVALID.executeOn(wrapper).validity()).isEqualTo(VALID);
 
         account.setEmail("test@test.gh");
-        assertThat(EMAIL_INVALID.executeOn(wrapper)).isNotEmpty();
+        assertThat(EMAIL_INVALID.executeOn(wrapper).validity()).isEqualTo(INVALID);
     }
 
 }

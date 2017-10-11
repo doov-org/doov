@@ -3,13 +3,13 @@
  */
 package org.modelmap.core.dsl.lang;
 
-import java.util.Optional;
-
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.meta.Readable;
 
-public interface ValidationRule extends Readable {
+public interface StepValidate extends Readable {
 
-    Optional<String> executeOn(FieldModel model);
+    StepValidate withMessage(String message);
+
+    Result executeOn(FieldModel model);
 
 }

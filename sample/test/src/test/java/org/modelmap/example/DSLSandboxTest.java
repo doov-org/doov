@@ -4,18 +4,20 @@
 package org.modelmap.example;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.modelmap.sample.field.SampleFieldIdInfo.ACCOUNT_ID;
-import static org.modelmap.sample.field.SampleFieldIdInfo.BIRTHDATE;
-import static org.modelmap.sample.field.SampleFieldIdInfo.TIMEZONE;
+import static org.modelmap.core.dsl.lang.EValidity.INVALID;
+import static org.modelmap.core.dsl.lang.EValidity.VALID;
+import static org.modelmap.sample.field.SampleFieldIdInfo.accountId;
+import static org.modelmap.sample.field.SampleFieldIdInfo.birthdate;
+import static org.modelmap.sample.field.SampleFieldIdInfo.timezone;
+import static org.modelmap.sample.model.Timezone.ETC_GMT;
 
 import java.time.LocalDate;
 
 import org.junit.Test;
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.DSL;
-import org.modelmap.core.dsl.lang.StepWhen;
+import org.modelmap.core.dsl.lang.StepValidate;
 import org.modelmap.sample.model.SampleModels;
-import org.modelmap.sample.model.Timezone;
 
 public class DSLSandboxTest {
 
@@ -23,45 +25,64 @@ public class DSLSandboxTest {
 
     @Test
     public void sample1() {
-        StepWhen step = DSL.when(ACCOUNT_ID.eq(1L))
+        StepValidate step = DSL.when(accountId().eq(1L))
+                        .validate()
                         .withMessage("incorrect account id");
         System.out.println(step.readable());
-        assertThat(step.executeOn(model)).isEmpty();
+        assertThat(step.executeOn(model).validity()).isEqualTo(INVALID);
+        assertThat(step.executeOn(model).message()).isEqualTo("incorrect account id");
     }
 
     @Test
     public void sample2() {
-        StepWhen step = DSL.when(ACCOUNT_ID.eq(1L).not())
-                        .withMessage("incorrect account id");
+        StepValidate step = DSL.when(accountId().eq(1L))
+                        .validate();
         System.out.println(step.readable());
-        assertThat(step.executeOn(model)).isNotEmpty();
+        assertThat(step.executeOn(model).validity()).isEqualTo(INVALID);
+        assertThat(step.executeOn(model).message()).isEqualTo("account id equals 1");
     }
 
     @Test
     public void sample3() {
-        StepWhen step = DSL.when(BIRTHDATE.eq(LocalDate.of(1980, 8, 1)))
-                        .withMessage("you can't be born the August 1, 1980");
+        StepValidate step = DSL.when(accountId().eq(1L).not())
+                        .validate()
+                        .withMessage("incorrect account id");
         System.out.println(step.readable());
-        assertThat(step.executeOn(model)).isNotEmpty();
+        assertThat(step.executeOn(model).validity()).isEqualTo(VALID);
+        assertThat(step.executeOn(model).message()).isNull();
     }
 
     @Test
     public void sample4() {
-        StepWhen step = DSL.when(BIRTHDATE.between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31)))
-                        .withMessage("you can't be born in 1980");
+        StepValidate step = DSL.when(birthdate().eq(LocalDate.of(1980, 8, 1)))
+                        .validate()
+                        .withMessage("you can't be born the August 1, 1980");
         System.out.println(step.readable());
-        assertThat(step.executeOn(model)).isNotEmpty();
+        assertThat(step.executeOn(model).validity()).isEqualTo(VALID);
+        assertThat(step.executeOn(model).message()).isNull();
     }
 
     @Test
     public void sample5() {
-        StepWhen step = DSL.when(BIRTHDATE.between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31))
-                        .and(ACCOUNT_ID.eq(9L).not())
-                        .or(TIMEZONE.eq(Timezone.ETC_GMT)))
+        StepValidate step = DSL.when(birthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31)))
+                        .validate()
+                        .withMessage("you can't be born in 1980");
+        System.out.println(step.readable());
+        assertThat(step.executeOn(model).validity()).isEqualTo(VALID);
+        assertThat(step.executeOn(model).message()).isNull();
+    }
+
+    @Test
+    public void sample6() {
+        StepValidate step = DSL.when(birthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31))
+                        .and(accountId().notEq(9L))
+                        .or(timezone().eq(ETC_GMT)))
+                        .validate()
                         .withMessage("you can't be born in 1980 and have an ID different of 9 or having timezone " +
                                         "equals to ETC_GMT");
         System.out.println(step.readable());
-        assertThat(step.executeOn(model)).isNotEmpty();
+        assertThat(step.executeOn(model).validity()).isEqualTo(VALID);
+        assertThat(step.executeOn(model).message()).isNull();
     }
 
 }

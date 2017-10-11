@@ -58,4 +58,8 @@ public class DefaultFieldInfo<T> implements FieldInfo {
         return TypeCondition.eq(this, value);
     }
 
+    public StepCondition notEq(T value) {
+        return TypeCondition.notEq(this, value);
+    }
+
 }
