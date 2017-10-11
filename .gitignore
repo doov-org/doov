@@ -7,6 +7,9 @@
 target
 target-eclipse
 
+# vim
+*.swp
+
 # generated sources
 **/src/generated
 
