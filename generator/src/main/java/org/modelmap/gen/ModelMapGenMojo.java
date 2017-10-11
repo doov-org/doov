@@ -8,24 +8,16 @@ import static java.util.Arrays.asList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES;
 import static org.modelmap.gen.FieldInfoGen.constants;
 import static org.modelmap.gen.FieldInfoGen.imports;
-import static org.modelmap.gen.ModelWrapperGen.mapFieldProperties;
-import static org.modelmap.gen.ModelWrapperGen.mapFieldTypeIfStatement;
-import static org.modelmap.gen.ModelWrapperGen.mapGetter;
-import static org.modelmap.gen.ModelWrapperGen.mapSetter;
-import static org.modelmap.gen.ModelWrapperGen.validatePath;
+import static org.modelmap.gen.ModelWrapperGen.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.Charset;
+import java.util.*;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -63,18 +55,24 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        if (sourceClasses == null)
+        if (sourceClasses == null) {
             getLog().warn("no project classes");
-        if (sourceClasses.isEmpty())
+        }
+        if (sourceClasses.isEmpty()) {
             getLog().warn("project is empty");
-        if (fieldClasses == null)
+        }
+        if (fieldClasses == null) {
             getLog().warn("no tunnel classes");
-        if (fieldClasses.isEmpty())
+        }
+        if (fieldClasses.isEmpty()) {
             getLog().warn("tunnel is empty");
-        if (fieldClasses.size() != sourceClasses.size())
+        }
+        if (fieldClasses.size() != sourceClasses.size()) {
             getLog().warn("tunnel and projet have different size");
-        if (outputDirectory.exists() && !outputDirectory.isDirectory())
+        }
+        if (outputDirectory.exists() && !outputDirectory.isDirectory()) {
             throw new MojoFailureException(outputDirectory + " is not directory");
+        }
 
         // add source directory to current project
         try {
@@ -157,14 +155,14 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("constants", constants(fieldPaths));
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(classTemplate, conf);
-            Files.write(content.getBytes(), targetFile);
+            Files.write(content, targetFile, Charset.forName("UTF8"));
             getLog().info("written : " + targetFile);
         } catch (IOException e) {
             throw new RuntimeException("error when generating wrapper", e);
         }
     }
 
-    private static final String fieldInfoClassName(Class<?> clazz) {
+    private static String fieldInfoClassName(Class<?> clazz) {
         return clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1)
                         : clazz.getSimpleName() + "Info";
     }
@@ -197,10 +195,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("source.generator.name", getClass().getName());
 
             String content = MacroProcessor.replaceProperties(classTemplate, conf);
-            Files.write(content.getBytes(), targetFile);
+            Files.write(content, targetFile, Charset.forName("UTF8"));
             getLog().info("written : " + targetFile);
         } catch (IOException e) {
             throw new RuntimeException("error when generating wrapper", e);
         }
     }
+
 }
