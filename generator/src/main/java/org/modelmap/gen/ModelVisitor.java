@@ -2,17 +2,16 @@ package org.modelmap.gen;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
-import static java.util.Collections.emptyMap;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import java.beans.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.logging.Log;
 import org.modelmap.core.*;
@@ -33,17 +32,22 @@ final class ModelVisitor {
     }
 
     private void visitModel(Class<?> clazz, Visitor visitor, LinkedList<Method> path, String packageFilter, int deep)
-                    throws IntrospectionException, IllegalArgumentException                     {
-        if (clazz == null)
+                    throws IntrospectionException, IllegalArgumentException {
+        if (clazz == null) {
             return;
-        if (clazz.getPackage() == null)
+        }
+        if (clazz.getPackage() == null) {
             return;
-        if (!clazz.getPackage().getName().startsWith(packageFilter))
+        }
+        if (!clazz.getPackage().getName().startsWith(packageFilter)) {
             return;
-        if (clazz.isEnum())
+        }
+        if (clazz.isEnum()) {
             return;
-        if (deep > 8)
+        }
+        if (deep > 8) {
             return;
+        }
 
         log.debug("class " + clazz.getName());
         final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
@@ -53,7 +57,7 @@ final class ModelVisitor {
                             + " from " + clazz.getName());
             path.addLast(desc.getReadMethod());
             try {
-                final Map<FieldId, PathConstraint> formParam = getFieldTarget(clazz, desc);
+                final List<PathAnnotation> formParam = getFieldTarget(clazz, desc);
                 if (formParam.isEmpty()) {
                     continue;
                 }
@@ -75,11 +79,11 @@ final class ModelVisitor {
         visitModel(clazz.getSuperclass(), visitor, path, packageFilter, deep + 1);
     }
 
-    private Map<FieldId, PathConstraint> getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
+    private List<PathAnnotation> getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
         if (desc.getReadMethod() == null || desc.getWriteMethod() == null) {
-            return emptyMap();
+            return emptyList();
         }
-        Map<FieldId, PathConstraint> fieldTarget = emptyMap();
+        List<PathAnnotation> fieldTarget = emptyList();
         try {
             Field field = clazz.getDeclaredField(desc.getName());
             fieldTarget = getFieldTarget(field);
@@ -95,7 +99,7 @@ final class ModelVisitor {
         return fieldTarget;
     }
 
-    private Map<FieldId, PathConstraint> getFieldTarget(AccessibleObject executable) {
+    private List<PathAnnotation> getFieldTarget(AccessibleObject executable) {
         final Annotation[] annotations = executable.getAnnotations();
         log.debug(annotations.length + " annotations to process from " + executable.toString());
 
@@ -128,15 +132,17 @@ final class ModelVisitor {
                             try {
                                 log.debug("process annotation " + a.toString());
                                 Method fieldIdGetter = getMethodByClass(a.annotationType(), FieldId.class);
-                                Method contraintGetter = getMethodByClass(a.annotationType(), PathConstraint.class);
-                                return new SimpleImmutableEntry<>((FieldId) fieldIdGetter.invoke(a),
-                                                (PathConstraint) contraintGetter.invoke(a));
+                                Method constraintGetter = getMethodByClass(a.annotationType(), PathConstraint.class);
+                                Method readableGetter = getMethodByName(a.annotationType(), "readable");
+                                return new PathAnnotation((FieldId) fieldIdGetter.invoke(a),
+                                                (PathConstraint) constraintGetter.invoke(a),
+                                                readableGetter == null ? null : (String) readableGetter.invoke(a));
                             } catch (IllegalAccessException | InvocationTargetException e) {
                                 return null;
                             }
                         })
                         .filter(Objects::nonNull)
-                        .collect(toMap(SimpleImmutableEntry::getKey, SimpleImmutableEntry::getValue));
+                        .collect(Collectors.toList());
     }
 
     private Method getMethodByClass(Class<?> clazz, Class<?> interfaceType) {
@@ -146,7 +152,19 @@ final class ModelVisitor {
                             log.debug("process annotation field " + f.toString());
                             return asList(f.getReturnType().getInterfaces()).contains(interfaceType);
                         })
-                        .findFirst().get();
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException(clazz + " needs method with " + interfaceType));
+    }
+
+    private Method getMethodByName(Class<?> clazz, String name) {
+        log.debug("process annotation type " + clazz.getName());
+        return stream(clazz.getMethods())
+                        .filter(f -> {
+                            log.debug("process annotation field " + f.toString());
+                            return f.getName().equals(name);
+                        })
+                        .findFirst()
+                        .orElse(null);
     }
 
     private Collection<Method> methods(Class<?> clazz, String packageFilter) {
@@ -221,4 +239,19 @@ final class ModelVisitor {
         }
         return method.getReturnType();
     }
+
+    static class PathAnnotation {
+
+        final FieldId fieldId;
+        final PathConstraint constraint;
+        final String readable;
+
+        private PathAnnotation(FieldId fieldId, PathConstraint constraint, String readable) {
+            this.fieldId = fieldId;
+            this.constraint = constraint;
+            this.readable = readable;
+        }
+
+    }
+
 }

@@ -10,13 +10,16 @@ final class VisitorPath {
     private final Class<?> baseClass;
     private final List<Method> path;
     private final FieldId fieldId;
+    private final String readable;
     private final Method getMethod;
     private final Method setMethod;
 
-    public VisitorPath(Class<?> baseClass, List<Method> getPath, FieldId fieldId, Method getMethod, Method setMethod) {
+    public VisitorPath(Class<?> baseClass, List<Method> getPath, FieldId fieldId, String readable,
+                    Method getMethod, Method setMethod) {
         this.baseClass = baseClass;
         this.path = new ArrayList<>(getPath);
         this.fieldId = fieldId;
+        this.readable = readable;
         this.getMethod = getMethod;
         this.setMethod = setMethod;
     }
@@ -31,6 +34,10 @@ final class VisitorPath {
 
     public FieldId getFieldId() {
         return fieldId;
+    }
+
+    public String getReadable() {
+        return readable;
     }
 
     public Method getGetMethod() {

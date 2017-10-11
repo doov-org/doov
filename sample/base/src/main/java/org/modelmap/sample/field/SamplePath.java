@@ -14,5 +14,8 @@ public @interface SamplePath {
     SampleFieldId field();
 
     SampleConstraint constraint() default NONE;
+
+    String readable() default "";
+
 }
 

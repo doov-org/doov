@@ -1,5 +1,6 @@
 package org.modelmap.gen;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
@@ -8,13 +9,21 @@ import static org.modelmap.gen.ModelWrapperGen.getterType;
 import static org.modelmap.gen.ModelWrapperGen.typeParameters;
 
 import java.lang.reflect.Type;
+import java.text.Normalizer;
 import java.time.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import org.modelmap.core.FieldId;
 import org.modelmap.core.dsl.field.*;
 
+import com.google.common.base.CaseFormat;
+
 final class FieldInfoGen {
+
+    private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
+    private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
+    private static final Pattern UNDER = Pattern.compile("_");
 
     static String imports(Map<FieldId, VisitorPath> fieldPaths) {
         return fieldPaths.entrySet().stream().flatMap(e -> {
@@ -39,72 +48,96 @@ final class FieldInfoGen {
     }
 
     static String constants(Map<FieldId, VisitorPath> fieldPaths) {
-        final StringBuilder builder = new StringBuilder();
-        fieldPaths.keySet().stream()
-                        .sorted(comparing(FieldId::name))
-                        .forEach(fieldId -> {
-                            final VisitorPath currentPath = fieldPaths.get(fieldId);
-                            final Class<?> type = getterType(fieldPaths.get(fieldId));
-                            final String boxingType = getterBoxingType(fieldPaths.get(fieldId), fieldId.position());
-                            final String siblings = formatSiblings(siblings(currentPath, fieldPaths.values()));
-                            final String rawType;
-                            final String genericTypes;
-                            final String genericTypesAsClass;
-                            final boolean isPrimitive = currentPath.getGetMethod().getReturnType().isPrimitive();
+        StringBuilder constants = new StringBuilder();
+        StringBuilder methods = new StringBuilder();
 
-                            if (boxingType.contains("<")) {
-                                rawType = simpleName(boxingType.substring(0, boxingType.indexOf('<')));
-                                Type methodType = currentPath.getGetMethod().getGenericReturnType();
-                                genericTypes = typeParameters(methodType).stream().map(t -> simpleName(t))
-                                                .collect(joining(", "));
-                                genericTypesAsClass = typeParameters(methodType).stream()
-                                                .map(t -> simpleName(t) + ".class")
-                                                .collect(joining(", "));
-                            } else {
-                                rawType = simpleName(boxingType);
-                                genericTypesAsClass = "";
-                                genericTypes = "";
-                            }
+        fieldPaths.keySet().stream().sorted(comparing(FieldId::name)).forEach(fieldId -> {
+            final VisitorPath currentPath = fieldPaths.get(fieldId);
+            final Class<?> type = getterType(fieldPaths.get(fieldId));
+            final String boxingType = getterBoxingType(fieldPaths.get(fieldId), fieldId.position());
+            final String siblings = formatSiblings(siblings(currentPath, fieldPaths.values()));
+            final String rawType;
+            final String genericTypes;
+            final String genericTypesAsClass;
+            final boolean isPrimitive = currentPath.getGetMethod().getReturnType().isPrimitive();
 
-                            builder.append("    public static final ");
-                            builder.append(fieldType(type, rawType, genericTypes));
-                            builder.append(" ");
-                            builder.append(fieldId.toString());
-                            builder.append(" = ");
-                            builder.append(fieldFactoryMethod(type, rawType, genericTypes));
-                            builder.append("\n                    ");
-                            builder.append(".fieldId(");
-                            builder.append(fieldId.getClass().getSimpleName());
-                            builder.append(".");
-                            builder.append(fieldId.toString());
-                            builder.append(")");
-                            builder.append("\n                    ");
-                            builder.append(".readable(\"");
-                            builder.append(stream(fieldId.name().split("_"))
-                                            .map(String::toLowerCase)
-                                            .collect(joining(" ")));
-                            builder.append("\")");
-                            builder.append("\n                    ");
-                            builder.append(".type(");
-                            builder.append(rawType);
-                            builder.append(isPrimitive ? ".TYPE" : ".class");
-                            builder.append(")");
-                            if (!genericTypes.isEmpty()) {
-                                builder.append("\n                    ");
-                                builder.append(".genericTypes(");
-                                builder.append(genericTypesAsClass);
-                                builder.append(")");
-                            }
-                            if (!siblings.isEmpty()) {
-                                builder.append("\n                    ");
-                                builder.append(".siblings(");
-                                builder.append(siblings);
-                                builder.append(")");
-                            }
-                            builder.append("\n                    ");
-                            builder.append(".build(ALL);\n\n");
-                        });
-        return builder.toString();
+            if (boxingType.contains("<")) {
+                rawType = simpleName(boxingType.substring(0, boxingType.indexOf('<')));
+                Type methodType = currentPath.getGetMethod().getGenericReturnType();
+                genericTypes = typeParameters(methodType).stream().map(t -> simpleName(t))
+                                .collect(joining(", "));
+                genericTypesAsClass = typeParameters(methodType).stream()
+                                .map(t -> simpleName(t) + ".class")
+                                .collect(joining(", "));
+            } else {
+                rawType = simpleName(boxingType);
+                genericTypesAsClass = "";
+                genericTypes = "";
+            }
+
+            constants.append("    public static final ");
+            constants.append(fieldType(type, rawType, genericTypes));
+            constants.append(" ");
+            constants.append(fieldId.toString());
+            constants.append(" = ");
+            constants.append(fieldFactoryMethod(type, rawType, genericTypes));
+            constants.append("\n                    ");
+            constants.append(".fieldId(");
+            constants.append(fieldId.getClass().getSimpleName());
+            constants.append(".");
+            constants.append(fieldId.toString());
+            constants.append(")");
+            constants.append("\n                    ");
+            constants.append(".readable(\"");
+            constants.append(formatReadable(fieldId, currentPath));
+            constants.append("\")");
+            constants.append("\n                    ");
+            constants.append(".type(");
+            constants.append(rawType);
+            constants.append(isPrimitive ? ".TYPE" : ".class");
+            constants.append(")");
+            if (!genericTypes.isEmpty()) {
+                constants.append("\n                    ");
+                constants.append(".genericTypes(");
+                constants.append(genericTypesAsClass);
+                constants.append(")");
+            }
+            if (!siblings.isEmpty()) {
+                constants.append("\n                    ");
+                constants.append(".siblings(");
+                constants.append(siblings);
+                constants.append(")");
+            }
+            constants.append("\n                    ");
+            constants.append(".build(ALL);\n\n");
+
+            methods.append("    public static ");
+            methods.append(fieldType(type, rawType, genericTypes));
+            methods.append(" ");
+            methods.append(formatMethod(fieldId, currentPath));
+            methods.append("() {");
+            methods.append("\n        ");
+            methods.append("return ");
+            methods.append(fieldId.toString());
+            methods.append(";");
+            methods.append("\n    }\n\n");
+        });
+
+        return constants.toString() + methods.toString();
+    }
+
+    private static String formatMethod(FieldId fieldId, VisitorPath currentPath) {
+        String readable = formatReadable(fieldId, currentPath);
+        String underscore = WHITESPACE.matcher(readable).replaceAll("_");
+        String normalized = Normalizer.normalize(underscore, Normalizer.Form.NFD);
+        String latin = NONLATIN.matcher(normalized).replaceAll("").toLowerCase(Locale.ENGLISH);
+        return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, latin);
+    }
+
+    private static String formatReadable(FieldId fieldId, VisitorPath currentPath) {
+        return isNullOrEmpty(currentPath.getReadable())
+                        ? stream(UNDER.split(fieldId.name())).map(String::toLowerCase).collect(joining(" "))
+                        : currentPath.getReadable();
     }
 
     private static String simpleName(String className) {

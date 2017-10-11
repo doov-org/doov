@@ -10,7 +10,7 @@ public class Account extends Identity {
     @SamplePath(field = SampleFieldId.LOGIN)
     private String login;
 
-    @SamplePath(field = SampleFieldId.PASSWD)
+    @SamplePath(field = SampleFieldId.PASSWD, readable = "password")
     private String password;
 
     @SamplePath(field = SampleFieldId.TIMEZONE)
@@ -28,7 +28,7 @@ public class Account extends Identity {
     @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED)
     private boolean acceptEmail;
 
-    @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES)
+    @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "préférences mail")
     private Collection<EmailType> emailTypes = new HashSet<>();
 
     private List<FavoriteWebsite> top3WebSite = new ArrayList<>();
