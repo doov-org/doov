@@ -1,21 +1,25 @@
 package org.modelmap.core.dsl.impl;
 
-import org.modelmap.core.dsl.lang.EValidity;
 import org.modelmap.core.dsl.lang.Result;
 
 public class DefaultResult implements Result {
 
-    private final EValidity validity;
+    private final boolean validity;
     private final String message;
 
-    public DefaultResult(EValidity validity, String message) {
+    public DefaultResult(boolean validity, String message) {
         this.validity = validity;
         this.message = message;
     }
 
     @Override
-    public EValidity validity() {
+    public boolean isValid() {
         return validity;
+    }
+
+    @Override
+    public boolean isInvalid() {
+        return !validity;
     }
 
     @Override

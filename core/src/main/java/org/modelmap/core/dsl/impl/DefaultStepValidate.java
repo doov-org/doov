@@ -5,7 +5,7 @@ import static java.text.MessageFormat.format;
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.lang.*;
 
-public class DefaultStepValidate implements StepValidate {
+public class DefaultStepValidate implements ValidationRule {
 
     private final StepWhen stepWhen;
     private final String message;
@@ -20,7 +20,7 @@ public class DefaultStepValidate implements StepValidate {
     }
 
     @Override
-    public StepValidate withMessage(String message) {
+    public ValidationRule withMessage(String message) {
         return new DefaultStepValidate(stepWhen, message);
     }
 
@@ -34,8 +34,7 @@ public class DefaultStepValidate implements StepValidate {
     public Result executeOn(FieldModel model) {
         boolean valid = stepWhen.stepCondition().predicate().test(model);
         String readable = valid ? null : (message == null ? stepWhen.stepCondition().readable() : message);
-        EValidity status = valid ? EValidity.VALID : EValidity.INVALID;
-        return new DefaultResult(status, readable);
+        return new DefaultResult(valid, readable);
     }
 
 }

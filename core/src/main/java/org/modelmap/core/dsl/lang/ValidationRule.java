@@ -6,9 +6,9 @@ package org.modelmap.core.dsl.lang;
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.meta.Readable;
 
-public interface StepValidate extends Readable {
+public interface ValidationRule extends Readable {
 
-    StepValidate withMessage(String message);
+    ValidationRule withMessage(String message);
 
     Result executeOn(FieldModel model);
 

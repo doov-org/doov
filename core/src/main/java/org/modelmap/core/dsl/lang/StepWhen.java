@@ -9,6 +9,6 @@ public interface StepWhen extends Readable {
 
     StepCondition stepCondition();
 
-    StepValidate validate();
+    ValidationRule validate();
 
 }

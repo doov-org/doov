@@ -2,7 +2,9 @@ package org.modelmap.core.dsl.lang;
 
 public interface Result {
 
-    EValidity validity();
+    boolean isValid();
+
+    boolean isInvalid();
 
     String message();
 
