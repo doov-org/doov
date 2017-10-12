@@ -3,6 +3,8 @@
  */
 package org.modelmap.core.dsl.impl;
 
+import static java.text.MessageFormat.format;
+
 import org.modelmap.core.dsl.lang.*;
 
 public class DefaultStepWhen implements StepWhen {
@@ -25,7 +27,7 @@ public class DefaultStepWhen implements StepWhen {
 
     @Override
     public String readable() {
-        return stepCondition.readable();
+        return format("When {0}", stepCondition.readable());
     }
 
 }
