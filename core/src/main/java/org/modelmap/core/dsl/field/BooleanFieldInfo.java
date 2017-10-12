@@ -21,9 +21,4 @@ public class BooleanFieldInfo extends DefaultFieldInfo<Boolean> {
         return BooleanCondition.isFalse(this, value);
     }
 
-    @Override
-    public BooleanFieldInfo as(String readable) {
-        return new BooleanFieldInfo(id(), readable, type(), siblings());
-    }
-
 }

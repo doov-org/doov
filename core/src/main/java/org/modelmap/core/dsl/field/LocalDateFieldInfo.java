@@ -39,9 +39,4 @@ public class LocalDateFieldInfo extends DefaultFieldInfo<LocalDate> {
         return LocalDateCondition.notBetween(this, minValue, maxValue);
     }
 
-    @Override
-    public LocalDateFieldInfo as(String readable) {
-        return new LocalDateFieldInfo(id(), readable, siblings());
-    }
-
 }

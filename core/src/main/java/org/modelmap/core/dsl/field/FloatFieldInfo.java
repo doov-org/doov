@@ -29,9 +29,4 @@ public class FloatFieldInfo extends DefaultFieldInfo<Float> {
         return FloatCondition.greaterOrEquals(this, value);
     }
 
-    @Override
-    public FloatFieldInfo as(String readable) {
-        return new FloatFieldInfo(id(), readable, type(), siblings());
-    }
-
 }

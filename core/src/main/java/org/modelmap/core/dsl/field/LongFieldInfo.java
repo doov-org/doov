@@ -29,9 +29,4 @@ public class LongFieldInfo extends DefaultFieldInfo<Long> {
         return LongCondition.greaterOrEquals(this, value);
     }
 
-    @Override
-    public LongFieldInfo as(String readable) {
-        return new LongFieldInfo(id(), readable, type(), siblings());
-    }
-
 }

@@ -11,9 +11,4 @@ public class CharacterFieldInfo extends DefaultFieldInfo<Character> {
         super(fieldId, readable, type, new Class[] {}, siblings);
     }
 
-    @Override
-    public CharacterFieldInfo as(String readable) {
-        return new CharacterFieldInfo(id(), readable, type(), siblings());
-    }
-
 }

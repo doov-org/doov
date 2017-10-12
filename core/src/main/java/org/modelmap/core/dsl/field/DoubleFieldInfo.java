@@ -29,9 +29,4 @@ public class DoubleFieldInfo extends DefaultFieldInfo<Double> {
         return DoubleCondition.greaterOrEquals(this, value);
     }
 
-    @Override
-    public DoubleFieldInfo as(String readable) {
-        return new DoubleFieldInfo(id(), readable, type(), siblings());
-    }
-
 }

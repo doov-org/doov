@@ -29,9 +29,4 @@ public class StringFieldInfo extends DefaultFieldInfo<String> {
         return StringCondition.endsWith(this, regex);
     }
 
-    @Override
-    public StringFieldInfo as(String readable) {
-        return new StringFieldInfo(id(), readable, siblings());
-    }
-
 }

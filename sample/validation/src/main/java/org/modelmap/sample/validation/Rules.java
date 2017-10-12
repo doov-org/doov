@@ -7,10 +7,10 @@ import org.modelmap.core.dsl.lang.StepValidate;
 
 public class Rules {
 
-    public static final StepValidate EMAIL_INVALID = DSL
-                    .when(EMAIL.matches("\\w+[@]\\w+\\.com").not()
-                                    .and(EMAIL.matches("\\w+[@]\\w+\\.fr").not()))
+    public static final StepValidate EMAIL_VALID = DSL
+                    .when(EMAIL.matches("\\w+[@]\\w+\\.com")
+                                    .or(EMAIL.matches("\\w+[@]\\w+\\.fr")))
                     .validate()
-                    .withMessage("invalid email");
+                    .withMessage("email finishes with .com or .fr");
 
 }

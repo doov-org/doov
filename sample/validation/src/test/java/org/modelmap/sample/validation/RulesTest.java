@@ -3,7 +3,7 @@ package org.modelmap.sample.validation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.modelmap.core.dsl.lang.EValidity.INVALID;
 import static org.modelmap.core.dsl.lang.EValidity.VALID;
-import static org.modelmap.sample.validation.Rules.EMAIL_INVALID;
+import static org.modelmap.sample.validation.Rules.EMAIL_VALID;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -52,11 +52,11 @@ public class RulesTest {
 
     @Test
     public void test_valid_email() {
-        System.out.println(EMAIL_INVALID.readable());
-        assertThat(EMAIL_INVALID.executeOn(wrapper).validity()).isEqualTo(VALID);
+        System.out.println(EMAIL_VALID.readable());
+        assertThat(EMAIL_VALID.executeOn(wrapper).validity()).isEqualTo(VALID);
 
         account.setEmail("test@test.gh");
-        assertThat(EMAIL_INVALID.executeOn(wrapper).validity()).isEqualTo(INVALID);
+        assertThat(EMAIL_VALID.executeOn(wrapper).validity()).isEqualTo(INVALID);
     }
 
 }

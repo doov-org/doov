@@ -30,9 +30,4 @@ public interface FieldInfo {
      */
     Class<?>[] genericTypes();
 
-    /**
-     * @return the {@code FieldId} with different readable
-     */
-    FieldInfo as(String readable);
-
 }

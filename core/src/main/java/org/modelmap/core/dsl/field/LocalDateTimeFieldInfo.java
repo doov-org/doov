@@ -13,9 +13,4 @@ public class LocalDateTimeFieldInfo extends DefaultFieldInfo<LocalTime> {
         super(fieldId, readable, LocalTime.class, new Class[] {}, siblings);
     }
 
-    @Override
-    public LocalDateTimeFieldInfo as(String readable) {
-        return new LocalDateTimeFieldInfo(id(), readable, siblings());
-    }
-
 }

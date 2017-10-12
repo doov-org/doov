@@ -29,9 +29,4 @@ public class IntegerFieldInfo extends DefaultFieldInfo<Integer> {
         return IntegerCondition.greaterOrEquals(this, value);
     }
 
-    @Override
-    public IntegerFieldInfo as(String readable) {
-        return new IntegerFieldInfo(id(), readable, type(), siblings());
-    }
-
 }

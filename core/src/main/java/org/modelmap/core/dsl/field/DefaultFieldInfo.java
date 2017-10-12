@@ -35,11 +35,6 @@ public class DefaultFieldInfo<T> implements FieldInfo {
     }
 
     @Override
-    public DefaultFieldInfo<T> as(String readable) {
-        return new DefaultFieldInfo<>(fieldId, readable, type, genericTypes, siblings);
-    }
-
-    @Override
     public Class<?> type() {
         return type;
     }

@@ -11,9 +11,4 @@ public class EnumFieldInfo<E extends Enum<E>> extends DefaultFieldInfo<E> {
         super(fieldId, readable, type, new Class[] {}, siblings);
     }
 
-    @Override
-    public EnumFieldInfo<E> as(String readable) {
-        return new EnumFieldInfo<>(id(), readable, type(), siblings());
-    }
-
 }
