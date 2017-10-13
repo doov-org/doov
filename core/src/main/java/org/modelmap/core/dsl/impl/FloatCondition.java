@@ -15,20 +15,10 @@ import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.field.FloatFieldInfo;
 import org.modelmap.core.dsl.meta.FieldMetadata;
 
-public class FloatCondition extends AbstractStepCondition<FloatFieldInfo, Float> {
+public class FloatCondition extends AbstractStepCondition {
 
     private FloatCondition(FieldMetadata<FloatFieldInfo, Float> metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
-    }
-
-    @Override
-    public Predicate<FieldModel> predicate() {
-        return predicate;
-    }
-
-    @Override
-    public String readable() {
-        return metadata.readable();
     }
 
     public static FloatCondition lesserThan(FloatFieldInfo field, float value) {

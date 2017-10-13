@@ -5,7 +5,7 @@ package org.modelmap.core.dsl.meta;
 
 import org.modelmap.core.FieldInfo;
 
-public class FieldMetadata<F extends FieldInfo, V> implements Readable {
+public class FieldMetadata<F extends FieldInfo, V> implements Metadata {
 
     public static final String EQUALS = "equals";
     public static final String NOT_EQUALS = "not equals";

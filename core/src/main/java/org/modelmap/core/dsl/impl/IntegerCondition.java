@@ -15,20 +15,10 @@ import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.field.IntegerFieldInfo;
 import org.modelmap.core.dsl.meta.FieldMetadata;
 
-public class IntegerCondition extends AbstractStepCondition<IntegerFieldInfo, Integer> {
+public class IntegerCondition extends AbstractStepCondition {
 
     private IntegerCondition(FieldMetadata<IntegerFieldInfo, Integer> metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
-    }
-
-    @Override
-    public Predicate<FieldModel> predicate() {
-        return predicate;
-    }
-
-    @Override
-    public String readable() {
-        return metadata.readable();
     }
 
     public static IntegerCondition lesserThan(IntegerFieldInfo field, int value) {

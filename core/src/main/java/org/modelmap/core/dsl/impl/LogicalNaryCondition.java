@@ -14,24 +14,10 @@ import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.lang.StepCondition;
 import org.modelmap.core.dsl.meta.NaryMetadata;
 
-public class LogicalNaryCondition implements StepCondition {
-
-    private final NaryMetadata metadata;
-    private final Predicate<FieldModel> predicate;
+public class LogicalNaryCondition extends AbstractStepCondition {
 
     private LogicalNaryCondition(NaryMetadata metadata, Predicate<FieldModel> predicate) {
-        this.metadata = metadata;
-        this.predicate = predicate;
-    }
-
-    @Override
-    public Predicate<FieldModel> predicate() {
-        return predicate;
-    }
-
-    @Override
-    public String readable() {
-        return metadata.readable();
+        super(metadata, predicate);
     }
 
     public static LogicalNaryCondition matchAny(StepCondition... values) {

@@ -13,20 +13,10 @@ import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.field.BooleanFieldInfo;
 import org.modelmap.core.dsl.meta.FieldMetadata;
 
-public class BooleanCondition extends AbstractStepCondition<BooleanFieldInfo, Boolean> {
+public class BooleanCondition extends AbstractStepCondition {
 
     private BooleanCondition(FieldMetadata<BooleanFieldInfo, Boolean> metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
-    }
-
-    @Override
-    public Predicate<FieldModel> predicate() {
-        return predicate;
-    }
-
-    @Override
-    public String readable() {
-        return metadata.readable();
     }
 
     public static BooleanCondition isTrue(BooleanFieldInfo field, boolean value) {

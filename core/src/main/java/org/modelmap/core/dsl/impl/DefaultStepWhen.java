@@ -24,7 +24,7 @@ public class DefaultStepWhen implements StepWhen {
 
     @Override
     public ValidationRule validate() {
-        return new DefaultStepValidate(this);
+        return new DefaultValidationRule(this);
     }
 
     @Override

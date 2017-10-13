@@ -5,7 +5,7 @@ package org.modelmap.core.dsl.meta;
 
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class BinaryMetadata implements Readable {
+public class BinaryMetadata implements Metadata {
 
     public static final String AND = "and";
     public static final String OR = "or";

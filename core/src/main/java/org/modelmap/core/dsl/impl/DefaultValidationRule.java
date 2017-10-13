@@ -5,7 +5,7 @@ import static java.text.MessageFormat.format;
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.lang.*;
 
-public class DefaultStepValidate implements ValidationRule {
+public class DefaultValidationRule implements ValidationRule {
 
     private static final String READABLE_VALIDATE_WITH_EMPTY_MESSAGE = "{0}, validate with empty message";
     private static final String READABLE_VALIDATE_WITH_MESSAGE = "{0}, validate with message \"{1}\"";
@@ -13,18 +13,18 @@ public class DefaultStepValidate implements ValidationRule {
     private final StepWhen stepWhen;
     private final String message;
 
-    DefaultStepValidate(StepWhen stepWhen) {
+    DefaultValidationRule(StepWhen stepWhen) {
         this(stepWhen, null);
     }
 
-    DefaultStepValidate(StepWhen stepWhen, String message) {
+    DefaultValidationRule(StepWhen stepWhen, String message) {
         this.stepWhen = stepWhen;
         this.message = message;
     }
 
     @Override
     public ValidationRule withMessage(String message) {
-        return new DefaultStepValidate(stepWhen, message);
+        return new DefaultValidationRule(stepWhen, message);
     }
 
     @Override

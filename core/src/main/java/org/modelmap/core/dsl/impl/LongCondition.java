@@ -15,20 +15,10 @@ import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.field.LongFieldInfo;
 import org.modelmap.core.dsl.meta.FieldMetadata;
 
-public class LongCondition extends AbstractStepCondition<LongFieldInfo, Long> {
+public class LongCondition extends AbstractStepCondition {
 
     private LongCondition(FieldMetadata<LongFieldInfo, Long> metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
-    }
-
-    @Override
-    public Predicate<FieldModel> predicate() {
-        return predicate;
-    }
-
-    @Override
-    public String readable() {
-        return metadata.readable();
     }
 
     public static LongCondition lesserThan(LongFieldInfo field, long value) {

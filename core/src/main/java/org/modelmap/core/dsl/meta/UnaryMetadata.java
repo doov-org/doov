@@ -5,7 +5,7 @@ package org.modelmap.core.dsl.meta;
 
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class UnaryMetadata implements Readable {
+public class UnaryMetadata implements Metadata {
 
     public static final String NOT = "not";
 

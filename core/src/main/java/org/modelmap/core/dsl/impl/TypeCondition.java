@@ -13,20 +13,10 @@ import org.modelmap.core.FieldInfo;
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.meta.FieldMetadata;
 
-public class TypeCondition<T> extends AbstractStepCondition<FieldInfo, T> {
+public class TypeCondition<T> extends AbstractStepCondition {
 
     private TypeCondition(FieldMetadata<FieldInfo, T> metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
-    }
-
-    @Override
-    public Predicate<FieldModel> predicate() {
-        return predicate;
-    }
-
-    @Override
-    public String readable() {
-        return metadata.readable();
     }
 
     public static <T> TypeCondition<T> eq(FieldInfo field, T value) {

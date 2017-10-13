@@ -15,20 +15,10 @@ import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.field.StringFieldInfo;
 import org.modelmap.core.dsl.meta.FieldMetadata;
 
-public class StringCondition extends AbstractStepCondition<StringFieldInfo, String> {
+public class StringCondition extends AbstractStepCondition {
 
     private StringCondition(FieldMetadata<StringFieldInfo, String> metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
-    }
-
-    @Override
-    public Predicate<FieldModel> predicate() {
-        return predicate;
-    }
-
-    @Override
-    public String readable() {
-        return metadata.readable();
     }
 
     public static StringCondition contains(StringFieldInfo field, String value) {

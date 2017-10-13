@@ -12,24 +12,10 @@ import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.lang.StepCondition;
 import org.modelmap.core.dsl.meta.BinaryMetadata;
 
-public class LogicalBinaryCondition implements StepCondition {
-
-    private final BinaryMetadata metadata;
-    private final Predicate<FieldModel> predicate;
+public class LogicalBinaryCondition extends AbstractStepCondition {
 
     private LogicalBinaryCondition(BinaryMetadata metadata, Predicate<FieldModel> predicate) {
-        this.metadata = metadata;
-        this.predicate = predicate;
-    }
-
-    @Override
-    public Predicate<FieldModel> predicate() {
-        return predicate;
-    }
-
-    @Override
-    public String readable() {
-        return metadata.readable();
+        super(metadata, predicate);
     }
 
     public static LogicalBinaryCondition and(StepCondition left, StepCondition right) {

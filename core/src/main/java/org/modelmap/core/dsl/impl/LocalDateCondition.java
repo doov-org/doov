@@ -15,20 +15,10 @@ import org.modelmap.core.dsl.field.LocalDateFieldInfo;
 import org.modelmap.core.dsl.lang.StepCondition;
 import org.modelmap.core.dsl.meta.FieldMetadata;
 
-public class LocalDateCondition extends AbstractStepCondition<LocalDateFieldInfo, LocalDate> {
+public class LocalDateCondition extends AbstractStepCondition {
 
     private LocalDateCondition(FieldMetadata<LocalDateFieldInfo, LocalDate> metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
-    }
-
-    @Override
-    public Predicate<FieldModel> predicate() {
-        return predicate;
-    }
-
-    @Override
-    public String readable() {
-        return metadata.readable();
     }
 
     public static StepCondition before(LocalDateFieldInfo field, LocalDate value) {

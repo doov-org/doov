@@ -15,20 +15,10 @@ import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.field.DoubleFieldInfo;
 import org.modelmap.core.dsl.meta.FieldMetadata;
 
-public class DoubleCondition extends AbstractStepCondition<DoubleFieldInfo, Double> {
+public class DoubleCondition extends AbstractStepCondition {
 
     private DoubleCondition(FieldMetadata<DoubleFieldInfo, Double> metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
-    }
-
-    @Override
-    public Predicate<FieldModel> predicate() {
-        return predicate;
-    }
-
-    @Override
-    public String readable() {
-        return metadata.readable();
     }
 
     public static DoubleCondition lesserThan(DoubleFieldInfo field, double value) {
