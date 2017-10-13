@@ -7,31 +7,31 @@ import org.modelmap.sample.field.SamplePath;
 
 public class Account extends Identity {
 
-    @SamplePath(field = SampleFieldId.LOGIN)
+    @SamplePath(field = SampleFieldId.LOGIN, readable = "account login")
     private String login;
 
-    @SamplePath(field = SampleFieldId.PASSWD, readable = "password")
+    @SamplePath(field = SampleFieldId.PASSWD, readable = "account password")
     private String password;
 
-    @SamplePath(field = SampleFieldId.TIMEZONE)
+    @SamplePath(field = SampleFieldId.TIMEZONE, readable = "account timezone")
     private Timezone timezone;
 
-    @SamplePath(field = SampleFieldId.LANGUAGE)
+    @SamplePath(field = SampleFieldId.LANGUAGE, readable = "account language")
     private Language language;
 
-    @SamplePath(field = SampleFieldId.COUNTRY)
+    @SamplePath(field = SampleFieldId.COUNTRY, readable = "account country")
     private Country country;
 
-    @SamplePath(field = SampleFieldId.PHONE_NUMBER)
+    @SamplePath(field = SampleFieldId.PHONE_NUMBER, readable = "account phone number")
     private String phoneNumber;
 
-    @SamplePath(field = SampleFieldId.EMAIL)
+    @SamplePath(field = SampleFieldId.EMAIL, readable = "account email")
     private String email;
 
-    @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED)
+    @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED, readable = "account email accepted")
     private boolean acceptEmail;
 
-    @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "préférences mail")
+    @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "account préférences mail")
     private Collection<EmailType> emailTypes = new HashSet<>();
 
     private List<FavoriteWebsite> top3WebSite = new ArrayList<>();

@@ -5,9 +5,9 @@ package org.modelmap.example;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.modelmap.sample.field.SampleFieldIdInfo.accountId;
-import static org.modelmap.sample.field.SampleFieldIdInfo.birthdate;
-import static org.modelmap.sample.field.SampleFieldIdInfo.preferencesMail;
-import static org.modelmap.sample.field.SampleFieldIdInfo.timezone;
+import static org.modelmap.sample.field.SampleFieldIdInfo.accountPreferencesMail;
+import static org.modelmap.sample.field.SampleFieldIdInfo.accountTimezone;
+import static org.modelmap.sample.field.SampleFieldIdInfo.userBirthdate;
 import static org.modelmap.sample.model.EmailType.ADMINISTRATOR;
 import static org.modelmap.sample.model.EmailType.PRIVATE;
 import static org.modelmap.sample.model.Timezone.ETC_GMT;
@@ -51,7 +51,7 @@ public class DSLSandboxTest {
 
     @Test
     public void sample4() {
-        ValidationRule step = DSL.when(birthdate().eq(LocalDate.of(1980, 8, 1))).validate()
+        ValidationRule step = DSL.when(userBirthdate().eq(LocalDate.of(1980, 8, 1))).validate()
                         .withMessage("valid birthdate is August 1, 1980");
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isTrue();
@@ -60,7 +60,7 @@ public class DSLSandboxTest {
 
     @Test
     public void sample5() {
-        ValidationRule step = DSL.when(birthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31)))
+        ValidationRule step = DSL.when(userBirthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31)))
                         .validate().withMessage("valid birthdate is in year 1980");
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isTrue();
@@ -70,8 +70,8 @@ public class DSLSandboxTest {
     @Test
     public void sample6() {
         ValidationRule step = DSL
-                        .when(birthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31))
-                                        .and(accountId().notEq(9L)).or(timezone().eq(ETC_GMT)))
+                        .when(userBirthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31))
+                                        .and(accountId().notEq(9L)).or((accountTimezone()).eq(ETC_GMT)))
                         .validate()
                         .withMessage("valid birthdate is in year 1980, " +
                                         "valid ID is different than 9, and " +
@@ -83,7 +83,7 @@ public class DSLSandboxTest {
 
     @Test
     public void sample7() {
-        ValidationRule step = DSL.when(preferencesMail().eq(EnumSet.of(ADMINISTRATOR, PRIVATE))).validate();
+        ValidationRule step = DSL.when(accountPreferencesMail().eq(EnumSet.of(ADMINISTRATOR, PRIVATE))).validate();
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isTrue();
         assertThat(step.executeOn(model).getMessage()).isNull();

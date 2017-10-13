@@ -7,16 +7,16 @@ import org.modelmap.sample.field.SamplePath;
 
 public class User extends Identity {
 
-    @SamplePath(field = SampleFieldId.FIRST_NAME)
+    @SamplePath(field = SampleFieldId.FIRST_NAME, readable = "user first name")
     private String firstName;
 
-    @SamplePath(field = SampleFieldId.LAST_NAME)
+    @SamplePath(field = SampleFieldId.LAST_NAME, readable = "user last name")
     private String lastName;
 
-    @SamplePath(field = SampleFieldId.BIRTHDATE)
+    @SamplePath(field = SampleFieldId.BIRTHDATE, readable = "user birthdate")
     private LocalDate birthDate;
 
-    @SamplePath(field = SampleFieldId.FULLNAME)
+    @SamplePath(field = SampleFieldId.FULLNAME, readable = "user full name")
     public String getFullName() {
         return firstName != null && lastName != null ? firstName + " " + lastName : null;
     }

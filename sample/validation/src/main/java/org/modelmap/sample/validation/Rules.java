@@ -2,9 +2,9 @@ package org.modelmap.sample.validation;
 
 import static org.modelmap.core.dsl.DSL.matchAny;
 import static org.modelmap.sample.field.SampleFieldIdInfo.EMAIL;
-import static org.modelmap.sample.field.SampleFieldIdInfo.country;
-import static org.modelmap.sample.field.SampleFieldIdInfo.language;
-import static org.modelmap.sample.field.SampleFieldIdInfo.phoneNumber;
+import static org.modelmap.sample.field.SampleFieldIdInfo.accountCountry;
+import static org.modelmap.sample.field.SampleFieldIdInfo.accountLanguage;
+import static org.modelmap.sample.field.SampleFieldIdInfo.accountPhoneNumber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +25,12 @@ public class Rules {
                     .withMessage("email finishes with .com or .fr");
 
     public static final ValidationRule VALID_COUNTRY = DSL
-                    .when(matchAny(country().eq(Country.FR)
-                                                    .and(language().eq(Language.FR))
-                                                    .and(phoneNumber().startsWith("+33")),
-                                    country().eq(Country.UK)
-                                                    .and(language().eq(Language.EN))
-                                                    .and(phoneNumber().startsWith("+45"))))
+                    .when(matchAny(accountCountry().eq(Country.FR)
+                                                    .and(accountLanguage().eq(Language.FR))
+                                                    .and(accountPhoneNumber().startsWith("+33")),
+                                    accountCountry().eq(Country.UK)
+                                                    .and(accountLanguage().eq(Language.EN))
+                                                    .and(accountPhoneNumber().startsWith("+45"))))
                     .validate();
 
     static {
