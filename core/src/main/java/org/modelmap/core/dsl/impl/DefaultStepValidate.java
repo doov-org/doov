@@ -7,14 +7,17 @@ import org.modelmap.core.dsl.lang.*;
 
 public class DefaultStepValidate implements ValidationRule {
 
+    private static final String READABLE_VALIDATE_WITH_EMPTY_MESSAGE = "{0}, validate with empty message";
+    private static final String READABLE_VALIDATE_WITH_MESSAGE = "{0}, validate with message \"{1}\"";
+
     private final StepWhen stepWhen;
     private final String message;
 
-    public DefaultStepValidate(StepWhen stepWhen) {
+    DefaultStepValidate(StepWhen stepWhen) {
         this(stepWhen, null);
     }
 
-    public DefaultStepValidate(StepWhen stepWhen, String message) {
+    DefaultStepValidate(StepWhen stepWhen, String message) {
         this.stepWhen = stepWhen;
         this.message = message;
     }
@@ -26,8 +29,8 @@ public class DefaultStepValidate implements ValidationRule {
 
     @Override
     public String readable() {
-        String message = this.message == null ? "empty" : this.message;
-        return format("{0}, validate with message ''{1}''", stepWhen.readable(), message);
+        String pattern = message == null ? READABLE_VALIDATE_WITH_EMPTY_MESSAGE : READABLE_VALIDATE_WITH_MESSAGE;
+        return format(pattern, stepWhen.readable(), message);
     }
 
     @Override

@@ -9,6 +9,8 @@ import org.modelmap.core.dsl.lang.*;
 
 public class DefaultStepWhen implements StepWhen {
 
+    private static final String READABLE_WHEN_CONDITION = "When {0}";
+
     private final StepCondition stepCondition;
 
     public DefaultStepWhen(StepCondition stepCondition) {
@@ -27,7 +29,7 @@ public class DefaultStepWhen implements StepWhen {
 
     @Override
     public String readable() {
-        return format("When {0}", stepCondition.readable());
+        return format(READABLE_WHEN_CONDITION, stepCondition.readable());
     }
 
 }

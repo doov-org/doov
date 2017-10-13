@@ -7,7 +7,7 @@ public class DefaultResult implements Result {
     private final boolean validity;
     private final String message;
 
-    public DefaultResult(boolean validity, String message) {
+    DefaultResult(boolean validity, String message) {
         this.validity = validity;
         this.message = message;
     }
