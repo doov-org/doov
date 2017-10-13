@@ -19,6 +19,9 @@ public class Account extends Identity {
     @SamplePath(field = SampleFieldId.LANGUAGE)
     private Language language;
 
+    @SamplePath(field = SampleFieldId.COUNTRY)
+    private Country country;
+
     @SamplePath(field = SampleFieldId.PHONE_NUMBER)
     private String phoneNumber;
 
@@ -32,9 +35,6 @@ public class Account extends Identity {
     private Collection<EmailType> emailTypes = new HashSet<>();
 
     private List<FavoriteWebsite> top3WebSite = new ArrayList<>();
-
-    public Account() {
-    }
 
     public String getLogin() {
         return login;
@@ -66,6 +66,14 @@ public class Account extends Identity {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     public boolean getAcceptEmail() {

@@ -9,12 +9,12 @@ public class UnaryMetadata implements Readable {
 
     public static final String NOT = "not";
 
-    public final StepCondition value;
     public final String operator;
+    public final StepCondition value;
 
-    public UnaryMetadata(StepCondition value, String operator) {
-        this.value = value;
+    public UnaryMetadata(String operator, StepCondition value) {
         this.operator = operator;
+        this.value = value;
     }
 
     @Override

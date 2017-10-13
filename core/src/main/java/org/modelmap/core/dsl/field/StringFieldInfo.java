@@ -21,12 +21,12 @@ public class StringFieldInfo extends DefaultFieldInfo<String> {
         return StringCondition.matches(this, regex);
     }
 
-    public StepCondition startsWith(String regex) {
-        return StringCondition.startsWith(this, regex);
+    public StepCondition startsWith(String prefix) {
+        return StringCondition.startsWith(this, prefix);
     }
 
-    public StepCondition endsWith(String regex) {
-        return StringCondition.endsWith(this, regex);
+    public StepCondition endsWith(String suffix) {
+        return StringCondition.endsWith(this, suffix);
     }
 
 }

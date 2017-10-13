@@ -32,7 +32,7 @@ public class LogicalUnaryCondition implements StepCondition {
     }
 
     public static LogicalUnaryCondition negate(StepCondition value) {
-        return new LogicalUnaryCondition(new UnaryMetadata(value, NOT),
+        return new LogicalUnaryCondition(new UnaryMetadata(NOT, value),
                         fieldContext -> value.predicate().negate().test(fieldContext));
     }
 

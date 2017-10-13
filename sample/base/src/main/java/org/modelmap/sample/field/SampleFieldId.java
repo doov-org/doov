@@ -23,6 +23,7 @@ public enum SampleFieldId implements FieldId {
     EMAIL(ACCOUNT),
     LANGUAGE(ACCOUNT),
     TIMEZONE(ACCOUNT),
+    COUNTRY(ACCOUNT),
 
     PHONE_NUMBER(ACCOUNT),
     EMAIL_ACCEPTED(ACCOUNT),

@@ -24,9 +24,10 @@ public class SampleModels {
         account.setEmail("foo@bar.com");
         account.setEmailTypes(EnumSet.of(EmailType.ADMINISTRATOR, EmailType.PRIVATE));
         account.setLanguage(Language.EN);
+        account.setCountry(Country.UK);
         account.setLogin("foobar");
         account.setPassword("PqssW0rd");
-        account.setPhoneNumber("0102030409");
+        account.setPhoneNumber("+45102030409");
         account.setTimezone(Timezone.ETC_GMT);
         account.setTop3WebSite(Arrays.asList(
                         FavoriteWebsite.webSite("Google", "www.google.com"),
