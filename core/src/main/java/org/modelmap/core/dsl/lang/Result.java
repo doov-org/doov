@@ -6,6 +6,6 @@ public interface Result {
 
     boolean isInvalid();
 
-    String message();
+    String getMessage();
 
 }

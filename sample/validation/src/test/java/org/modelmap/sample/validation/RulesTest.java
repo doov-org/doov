@@ -2,6 +2,7 @@ package org.modelmap.sample.validation;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.modelmap.sample.validation.Rules.VALID_COUNTRY;
 import static org.modelmap.sample.validation.Rules.VALID_EMAIL;
 import static org.modelmap.sample.validation.Rules.rules;
 
@@ -35,15 +36,22 @@ public class RulesTest {
     }
 
     @Test
-    public void test_all_rules_invalid_messages() {
-        account.setEmail("test@test.gh");
+    public void test_valid_country() {
+        System.out.println(VALID_COUNTRY.readable());
+        assertThat(VALID_COUNTRY.executeOn(wrapper).isValid()).isTrue();
 
+        account.setPhoneNumber("+336123456789");
+        assertThat(VALID_COUNTRY.executeOn(wrapper).isValid()).isFalse();
+    }
+
+    @Test
+    public void test_all_rules_invalid_messages() {
         List<String> messages = rules.stream()
                         .map(rule -> rule.executeOn(wrapper))
                         .filter(Result::isInvalid)
-                        .map(Result::message)
+                        .map(Result::getMessage)
                         .collect(toList());
-        assertThat(messages).containsOnly("email finishes with .com or .fr");
+        assertThat(messages).isEmpty();
     }
 
 }

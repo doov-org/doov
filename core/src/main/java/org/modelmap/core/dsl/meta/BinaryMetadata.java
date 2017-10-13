@@ -5,7 +5,7 @@ package org.modelmap.core.dsl.meta;
 
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class BinaryMetadata implements Metadata {
+public class BinaryMetadata extends AbstractMetadata {
 
     public static final String AND = "and";
     public static final String OR = "or";
@@ -22,7 +22,7 @@ public class BinaryMetadata implements Metadata {
 
     @Override
     public String readable() {
-        return "(" + left.readable() + " " + operator + " " + right.readable() + ")";
+        return "(" + left.readable() + " " + operator + " " + right.readable() + (nodeFails() ? " FAILS" : "") + ")";
     }
 
 }

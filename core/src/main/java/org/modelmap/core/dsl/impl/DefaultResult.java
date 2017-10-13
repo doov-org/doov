@@ -23,7 +23,7 @@ public class DefaultResult implements Result {
     }
 
     @Override
-    public String message() {
+    public String getMessage() {
         return message;
     }
 

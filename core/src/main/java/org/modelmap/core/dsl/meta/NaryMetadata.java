@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class NaryMetadata implements Metadata {
+public class NaryMetadata extends AbstractMetadata {
 
     public static final String MATCH_ANY = "match any";
     public static final String MATCH_ALL = "match all";
@@ -26,7 +26,8 @@ public class NaryMetadata implements Metadata {
 
     @Override
     public String readable() {
-        return "(" + operator + " [" + values.stream().map(StepCondition::readable).collect(joining(", ")) + "])";
+        return "(" + operator + " [" + values.stream().map(StepCondition::readable).collect(joining(", ")) + "]"
+                        + (nodeFails() ? " FAILS" : "") + ")";
     }
 
 }

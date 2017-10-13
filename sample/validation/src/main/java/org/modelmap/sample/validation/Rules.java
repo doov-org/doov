@@ -31,8 +31,7 @@ public class Rules {
                                     country().eq(Country.UK)
                                                     .and(language().eq(Language.EN))
                                                     .and(phoneNumber().startsWith("+45"))))
-                    .validate()
-                    .withMessage("french account speaks french and has phone number in +33");
+                    .validate();
 
     static {
         rules.add(VALID_EMAIL);

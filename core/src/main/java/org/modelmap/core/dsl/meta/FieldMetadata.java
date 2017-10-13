@@ -5,7 +5,7 @@ package org.modelmap.core.dsl.meta;
 
 import org.modelmap.core.FieldInfo;
 
-public class FieldMetadata<F extends FieldInfo, V> implements Metadata {
+public class FieldMetadata<F extends FieldInfo, V> extends AbstractMetadata {
 
     public static final String EQUALS = "equals";
     public static final String NOT_EQUALS = "not equals";
@@ -38,7 +38,7 @@ public class FieldMetadata<F extends FieldInfo, V> implements Metadata {
 
     @Override
     public String readable() {
-        return field.readable() + " " + operator + " " + value;
+        return field.readable() + " " + operator + " " + value + (nodeFails() ? " FAILS" : "");
     }
 
 }

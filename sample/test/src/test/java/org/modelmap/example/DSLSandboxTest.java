@@ -30,7 +30,7 @@ public class DSLSandboxTest {
         ValidationRule step = DSL.when(accountId().eq(1L)).validate().withMessage("incorrect account id");
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isFalse();
-        assertThat(step.executeOn(model).message()).isEqualTo("incorrect account id");
+        assertThat(step.executeOn(model).getMessage()).isEqualTo("incorrect account id");
     }
 
     @Test
@@ -38,7 +38,7 @@ public class DSLSandboxTest {
         ValidationRule step = DSL.when(accountId().eq(1L)).validate();
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isFalse();
-        assertThat(step.executeOn(model).message()).isEqualTo("account id equals 1");
+        assertThat(step.executeOn(model).getMessage()).isEqualTo("account id equals 1 FAILS");
     }
 
     @Test
@@ -46,7 +46,7 @@ public class DSLSandboxTest {
         ValidationRule step = DSL.when(accountId().eq(1L).not()).validate().withMessage("incorrect account id");
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isTrue();
-        assertThat(step.executeOn(model).message()).isNull();
+        assertThat(step.executeOn(model).getMessage()).isNull();
     }
 
     @Test
@@ -55,7 +55,7 @@ public class DSLSandboxTest {
                         .withMessage("valid birthdate is August 1, 1980");
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isTrue();
-        assertThat(step.executeOn(model).message()).isNull();
+        assertThat(step.executeOn(model).getMessage()).isNull();
     }
 
     @Test
@@ -64,7 +64,7 @@ public class DSLSandboxTest {
                         .validate().withMessage("valid birthdate is in year 1980");
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isTrue();
-        assertThat(step.executeOn(model).message()).isNull();
+        assertThat(step.executeOn(model).getMessage()).isNull();
     }
 
     @Test
@@ -78,7 +78,7 @@ public class DSLSandboxTest {
                                         "valid timezone is ETC_GMT");
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isTrue();
-        assertThat(step.executeOn(model).message()).isNull();
+        assertThat(step.executeOn(model).getMessage()).isNull();
     }
 
     @Test
@@ -86,7 +86,7 @@ public class DSLSandboxTest {
         ValidationRule step = DSL.when(preferencesMail().eq(EnumSet.of(ADMINISTRATOR, PRIVATE))).validate();
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isTrue();
-        assertThat(step.executeOn(model).message()).isNull();
+        assertThat(step.executeOn(model).getMessage()).isNull();
     }
 
 }

@@ -2,7 +2,6 @@ package org.modelmap.core.dsl.impl;
 
 import java.util.function.Predicate;
 
-import org.modelmap.core.FieldInfo;
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.lang.StepCondition;
 import org.modelmap.core.dsl.meta.Metadata;
@@ -14,7 +13,7 @@ abstract class AbstractStepCondition implements StepCondition {
 
     AbstractStepCondition(Metadata metadata, Predicate<FieldModel> predicate) {
         this.metadata = metadata;
-        this.predicate = predicate;
+        this.predicate = capture(predicate);
     }
 
     @Override
@@ -25,6 +24,14 @@ abstract class AbstractStepCondition implements StepCondition {
     @Override
     public String readable() {
         return metadata.readable();
+    }
+
+    private Predicate<FieldModel> capture(Predicate<FieldModel> predicate) {
+        return fieldModel -> {
+            boolean result = predicate.test(fieldModel);
+            metadata.capturePredicateResult(result);
+            return result;
+        };
     }
 
 }

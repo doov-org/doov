@@ -5,7 +5,7 @@ package org.modelmap.core.dsl.meta;
 
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class UnaryMetadata implements Metadata {
+public class UnaryMetadata extends AbstractMetadata {
 
     public static final String NOT = "not";
 
@@ -19,7 +19,7 @@ public class UnaryMetadata implements Metadata {
 
     @Override
     public String readable() {
-        return "(" + operator + " " + value.readable() + ")";
+        return "(" + operator + " " + value.readable() + (nodeFails() ? " FAILS" : "") + ")";
     }
 
 }
