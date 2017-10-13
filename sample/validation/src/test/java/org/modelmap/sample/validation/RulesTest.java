@@ -42,6 +42,7 @@ public class RulesTest {
 
         account.setPhoneNumber("+336123456789");
         assertThat(VALID_COUNTRY.executeOn(wrapper).isValid()).isFalse();
+        System.out.println(VALID_COUNTRY.readable());
     }
 
     @Test

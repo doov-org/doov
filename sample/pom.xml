@@ -18,5 +18,6 @@
     <module>generated</module>
     <module>test</module>
     <module>validation</module>
+    <module>benchmark</module>
   </modules>
 </project>
