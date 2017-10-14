@@ -40,4 +40,10 @@ public class DefaultValidationRule implements ValidationRule {
         return new DefaultResult(valid, readable);
     }
 
+    @Override
+    public ValidationRule registerOn(RuleRegistry registry) {
+        registry.register(this);
+        return this;
+    }
+
 }
