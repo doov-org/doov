@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.modelmap.sample.validation.Rules.VALID_COUNTRY;
 import static org.modelmap.sample.validation.Rules.VALID_EMAIL;
-import static org.modelmap.sample.validation.Rules.rules;
 
 import java.util.List;
 
@@ -12,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.lang.Result;
+import org.modelmap.core.dsl.lang.ValidationRule;
 import org.modelmap.sample.model.*;
 
 public class RulesTest {
@@ -46,13 +46,20 @@ public class RulesTest {
     }
 
     @Test
-    public void test_all_rules_invalid_messages() {
-        List<String> messages = rules.stream()
+    public void test_all_account_rules_invalid_messages() {
+        List<String> messages = Registry.ACCOUNT.stream()
                         .map(rule -> rule.executeOn(wrapper))
                         .filter(Result::isInvalid)
                         .map(Result::getMessage)
                         .collect(toList());
         assertThat(messages).isEmpty();
+    }
+
+    @Test
+    public void print_all_account_rules() {
+        Registry.ACCOUNT.stream()
+                        .map(ValidationRule::readable)
+                        .forEach(System.out::println);
     }
 
 }

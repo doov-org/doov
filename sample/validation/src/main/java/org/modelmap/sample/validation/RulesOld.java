@@ -5,6 +5,9 @@ import org.modelmap.sample.model.*;
 public class RulesOld {
 
     public static boolean validateEmail(Account account) {
+        if (account == null) {
+            return true;
+        }
         if (account.getEmail() == null) {
             return true;
         }
@@ -18,6 +21,9 @@ public class RulesOld {
     }
 
     public static boolean validateCountry(Account account) {
+        if (account == null) {
+            return true;
+        }
         if (account.getCountry() == null) {
             return true;
         }

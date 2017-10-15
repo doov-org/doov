@@ -17,7 +17,7 @@ public class DefaultValidationRule implements ValidationRule {
         this(stepWhen, null);
     }
 
-    DefaultValidationRule(StepWhen stepWhen, String message) {
+    private DefaultValidationRule(StepWhen stepWhen, String message) {
         this.stepWhen = stepWhen;
         this.message = message;
     }

@@ -11,7 +11,7 @@ public interface ValidationRule extends Readable {
     ValidationRule withMessage(String message);
 
     Result executeOn(FieldModel model);
-    
+
     ValidationRule registerOn(RuleRegistry registry);
 
 }
