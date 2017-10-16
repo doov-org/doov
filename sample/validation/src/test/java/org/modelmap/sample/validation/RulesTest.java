@@ -5,6 +5,7 @@ import static java.util.stream.Stream.concat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.modelmap.sample.validation.AccountRulesId.VALID_COUNTRY;
 import static org.modelmap.sample.validation.AccountRulesId.VALID_EMAIL;
+import static org.modelmap.sample.validation.AccountRulesId.VALID_EMAIL_SIZE;
 import static org.modelmap.sample.validation.Rules.REGISTRY_ACCOUNT;
 import static org.modelmap.sample.validation.Rules.REGISTRY_USER;
 
@@ -35,6 +36,14 @@ public class RulesTest {
 
         account.setEmail("test@test.gh");
         assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isValid()).isFalse();
+    }
+
+    @Test
+    public void test_valid_email_size() {
+        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL_SIZE).isValid()).isTrue();
+
+        account.setMaxEmailSize(5);
+        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL_SIZE).isValid()).isFalse();
     }
 
     @Test

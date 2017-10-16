@@ -31,6 +31,9 @@ public class Account extends Identity {
     @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED, readable = "account email accepted")
     private boolean acceptEmail;
 
+    @SamplePath(field = SampleFieldId.EMAIL_MAX_SIZE, readable = "account max email size")
+    private int maxEmailSize;
+
     @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "account préférences mail")
     private Collection<EmailType> emailTypes = new HashSet<>();
 
@@ -82,6 +85,14 @@ public class Account extends Identity {
 
     public void setAcceptEmail(boolean acceptEmail) {
         this.acceptEmail = acceptEmail;
+    }
+
+    public int getMaxEmailSize() {
+        return maxEmailSize;
+    }
+
+    public void setMaxEmailSize(int maxEmailSize) {
+        this.maxEmailSize = maxEmailSize;
     }
 
     public Collection<EmailType> getEmailTypes() {

@@ -29,6 +29,7 @@ public class SampleModels {
         account.setPassword("PqssW0rd");
         account.setPhoneNumber("+45102030409");
         account.setTimezone(Timezone.ETC_GMT);
+        account.setMaxEmailSize(25);
         account.setTop3WebSite(Arrays.asList(
                         FavoriteWebsite.webSite("Google", "www.google.com"),
                         FavoriteWebsite.webSite("Bing", "www.bing.com"),

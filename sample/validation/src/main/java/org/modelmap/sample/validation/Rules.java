@@ -4,6 +4,7 @@ import static org.modelmap.core.dsl.DSL.matchAny;
 import static org.modelmap.sample.field.SampleFieldIdInfo.*;
 import static org.modelmap.sample.validation.AccountRulesId.VALID_COUNTRY;
 import static org.modelmap.sample.validation.AccountRulesId.VALID_EMAIL;
+import static org.modelmap.sample.validation.AccountRulesId.VALID_EMAIL_SIZE;
 
 import org.modelmap.core.dsl.DSL;
 import org.modelmap.core.dsl.impl.DefaultRuleRegistry;
@@ -17,9 +18,9 @@ public class Rules extends DefaultRuleRegistry {
     public static final RuleRegistry REGISTRY_USER = new DefaultRuleRegistry();
 
     static {
-        DSL.when(accountEmail().length().between(5, 200))
+        DSL.when(accountEmail().length().lesserOrEquals(accountMaxEmailSize()))
                         .validate()
-                        .registerOn(REGISTRY_ACCOUNT);
+                        .registerOn(REGISTRY_ACCOUNT, VALID_EMAIL_SIZE);
 
         DSL.when(accountEmail().matches("\\w+[@]\\w+\\.com")
                         .or(accountEmail().matches("\\w+[@]\\w+\\.fr")))

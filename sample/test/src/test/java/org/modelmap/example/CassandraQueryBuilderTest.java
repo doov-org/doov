@@ -31,18 +31,21 @@ import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
 public class CassandraQueryBuilderTest {
 
     private static DataType cqlType(FieldInfo info) {
-        if (String.class.equals(info.type()))
+        if (String.class.equals(info.type())) {
             return DataType.text();
-        else if (Boolean.class.equals(info.type()) || Boolean.TYPE.equals(info.type()))
+        } else if (Boolean.class.equals(info.type()) || Boolean.TYPE.equals(info.type())) {
             return DataType.cboolean();
-        else if (Long.class.equals(info.type()) || Long.TYPE.equals(info.type()))
+        } else if (Long.class.equals(info.type()) || Long.TYPE.equals(info.type())) {
             return DataType.cint();
-        else if (LocalDate.class.equals(info.type()))
+        } else if (Integer.class.equals(info.type()) || Integer.TYPE.equals(info.type())) {
+            return DataType.cint();
+        } else if (LocalDate.class.equals(info.type())) {
             return DataType.date();
-        else if (Enum.class.isAssignableFrom(info.type()))
+        } else if (Enum.class.isAssignableFrom(info.type())) {
             return DataType.set(DataType.text());
-        else if (Collection.class.isAssignableFrom(info.type()))
+        } else if (Collection.class.isAssignableFrom(info.type())) {
             return DataType.set(DataType.text());
+        }
         throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
     }
 
