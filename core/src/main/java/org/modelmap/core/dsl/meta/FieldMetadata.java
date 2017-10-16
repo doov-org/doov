@@ -18,8 +18,7 @@ public class FieldMetadata<F extends FieldInfo, V> extends AbstractMetadata {
     public static final String STARTS_WITH = "starts with";
     public static final String ENDS_WITH = "ends with";
 
-    public static final String IS_TRUE = "true";
-    public static final String IS_FALSE = "false";
+    public static final String IS = "is";
 
     public static final String LESSER_THAN = "lesser than";
     public static final String LESSER_OR_EQUALS = "lesser or equals";

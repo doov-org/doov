@@ -13,12 +13,12 @@ public class BooleanFieldInfo extends DefaultFieldInfo<Boolean> {
         super(fieldId, readable, type, new Class[] {}, siblings);
     }
 
-    public StepCondition isTrue(boolean value) {
-        return BooleanCondition.isTrue(this, value);
+    public StepCondition isTrue() {
+        return BooleanCondition.isTrue(this);
     }
 
-    public StepCondition isFalse(boolean value) {
-        return BooleanCondition.isFalse(this, value);
+    public StepCondition isFalse() {
+        return BooleanCondition.isFalse(this);
     }
 
 }

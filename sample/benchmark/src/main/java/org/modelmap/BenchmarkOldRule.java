@@ -10,17 +10,15 @@ import org.openjdk.jmh.logic.BlackHole;
 @Measurement(iterations = 10)
 public class BenchmarkOldRule {
 
-    @GenerateMicroBenchmark
-    public void valid_country(BlackHole blackhole) {
-        boolean valid = RulesOld.validateCountry(SampleModels.sample().getAccount());
+    public void valid_email(BlackHole blackhole) {
+        boolean valid = RulesOld.validateEmail(SampleModels.sample().getAccount());
         if (blackhole != null) {
             blackhole.consume(valid);
         }
     }
 
-    @GenerateMicroBenchmark
-    public void valid_email(BlackHole blackhole) {
-        boolean valid = RulesOld.validateEmail(SampleModels.sample().getAccount());
+    public void valid_country(BlackHole blackhole) {
+        boolean valid = RulesOld.validateCountry(SampleModels.sample().getAccount());
         if (blackhole != null) {
             blackhole.consume(valid);
         }

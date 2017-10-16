@@ -1,11 +1,9 @@
 package org.modelmap.sample.validation;
 
 import static org.modelmap.core.dsl.DSL.matchAny;
-import static org.modelmap.sample.field.SampleFieldIdInfo.accountCountry;
-import static org.modelmap.sample.field.SampleFieldIdInfo.accountEmail;
-import static org.modelmap.sample.field.SampleFieldIdInfo.accountLanguage;
-import static org.modelmap.sample.field.SampleFieldIdInfo.accountPhoneNumber;
+import static org.modelmap.sample.field.SampleFieldIdInfo.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -13,8 +11,7 @@ import java.util.stream.Stream;
 import org.modelmap.core.dsl.DSL;
 import org.modelmap.core.dsl.lang.RuleRegistry;
 import org.modelmap.core.dsl.lang.ValidationRule;
-import org.modelmap.sample.model.Country;
-import org.modelmap.sample.model.Language;
+import org.modelmap.sample.model.*;
 
 public enum Registry implements RuleRegistry {
 
@@ -22,6 +19,9 @@ public enum Registry implements RuleRegistry {
 
     public static final ValidationRule ACCOUNT_VALID_EMAIL;
     public static final ValidationRule ACCOUNT_VALID_COUNTRY;
+    public static final ValidationRule ACCOUNT_VALID_COUNTRY_1;
+    public static final ValidationRule ACCOUNT_VALID_COUNTRY_2;
+    public static final ValidationRule ACCOUNT_VALID_COUNTRY_3;
 
     static {
         ACCOUNT_VALID_EMAIL = DSL.when(accountEmail().matches("\\w+[@]\\w+\\.com")
@@ -36,6 +36,34 @@ public enum Registry implements RuleRegistry {
                         accountCountry().eq(Country.UK)
                                         .and(accountLanguage().eq(Language.EN))
                                         .and(accountPhoneNumber().startsWith("+45"))))
+                        .validate()
+                        .registerOn(ACCOUNT);
+
+        ACCOUNT_VALID_COUNTRY_1 = DSL.when(
+                        accountCountry().eq(Country.UK)
+                                        .and(accountLanguage().eq(Language.EN))
+                                        .and(accountPhoneNumber().startsWith("+45")))
+                        .validate()
+                        .registerOn(ACCOUNT);
+
+        ACCOUNT_VALID_COUNTRY_2 = DSL.when(
+                        accountCountry().eq(Country.UK)
+                                        .and(accountLanguage().eq(Language.EN))
+                                        .and(accountPhoneNumber().startsWith("+45"))
+                                        .and(accountTimezone().eq(Timezone.ETC_GMT))
+                                        .and(accountEmailAccepted().isTrue()))
+                        .validate()
+                        .registerOn(ACCOUNT);
+
+        ACCOUNT_VALID_COUNTRY_3 = DSL.when(
+                        accountCountry().eq(Country.UK)
+                                        .and(accountLanguage().eq(Language.EN))
+                                        .and(accountPhoneNumber().startsWith("+45"))
+                                        .and(accountTimezone().eq(Timezone.ETC_GMT))
+                                        .and(accountEmailAccepted().isTrue()
+                                                        .and(userFirstName().eq("Foo"))
+                                                        .and(userLastName().eq("Bar"))
+                                                        .and(userBirthdate().eq(LocalDate.of(1980, 8, 1)))))
                         .validate()
                         .registerOn(ACCOUNT);
     }
