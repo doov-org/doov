@@ -3,8 +3,6 @@
  */
 package org.modelmap.core.dsl.impl;
 
-import static org.modelmap.core.dsl.meta.FieldMetadata.IS;
-
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -14,17 +12,17 @@ import org.modelmap.core.dsl.meta.FieldMetadata;
 
 public class BooleanCondition extends AbstractStepCondition {
 
-    private BooleanCondition(FieldMetadata<BooleanFieldInfo, Boolean> metadata, Predicate<FieldModel> predicate) {
+    private BooleanCondition(FieldMetadata metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
     }
 
     public static BooleanCondition isTrue(BooleanFieldInfo field) {
-        return new BooleanCondition(new FieldMetadata<>(field, IS, true),
+        return new BooleanCondition(FieldMetadata.is(field, true),
                         fieldContext -> value(fieldContext, field).orElse(false));
     }
 
     public static BooleanCondition isFalse(BooleanFieldInfo field) {
-        return new BooleanCondition(new FieldMetadata<>(field, IS, false),
+        return new BooleanCondition(FieldMetadata.is(field, false),
                         fieldContext -> value(fieldContext, field).map(v -> !v).orElse(false));
     }
 

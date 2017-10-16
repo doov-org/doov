@@ -7,7 +7,7 @@ import org.modelmap.core.FieldId;
 import org.modelmap.core.dsl.impl.LongCondition;
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class LongFieldInfo extends DefaultFieldInfo<Long> {
+public class LongFieldInfo extends DefaultFieldInfo<Long> implements NumericFieldInfo<Long> {
 
     LongFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
         super(fieldId, readable, type, new Class[] {}, siblings);

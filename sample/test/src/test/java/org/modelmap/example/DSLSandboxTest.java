@@ -38,7 +38,7 @@ public class DSLSandboxTest {
         ValidationRule step = DSL.when(accountId().eq(1L)).validate();
         System.out.println(step.readable());
         assertThat(step.executeOn(model).isValid()).isFalse();
-        assertThat(step.executeOn(model).getMessage()).isEqualTo("account id equals 1");
+        assertThat(step.executeOn(model).getMessage()).isEqualTo("'account id' equals 1");
     }
 
     @Test

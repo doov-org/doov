@@ -14,12 +14,12 @@ import org.modelmap.core.dsl.meta.Metadata;
 public class IntegerCondition {
 
     private final IntegerFieldInfo field;
-    private final FieldMetadata<?, ?> metadata;
+    private final FieldMetadata metadata;
     private final Function<FieldModel, Optional<Integer>> value;
 
     public IntegerCondition(IntegerFieldInfo field) {
         this.field = field;
-        this.metadata = null;
+        this.metadata = FieldMetadata.empty();
         this.value = fieldModel -> Optional.ofNullable(fieldModel.<Integer> get(field.id()));
     }
 
@@ -30,32 +30,28 @@ public class IntegerCondition {
     }
 
     public IntegerStepCondition lesserThan(int value) {
-        return new IntegerStepCondition(getMetadata(FieldMetadata.lesserThan(field, value)),
+        return new IntegerStepCondition(metadata.merge(FieldMetadata.lesserThan(field, value)),
                         this.value, i -> i < value);
     }
 
     public IntegerStepCondition lesserOrEquals(int value) {
-        return new IntegerStepCondition(getMetadata(FieldMetadata.lesserOrEquals(field, value)),
+        return new IntegerStepCondition(metadata.merge(FieldMetadata.lesserOrEquals(field, value)),
                         this.value, i -> i <= value);
     }
 
     public IntegerStepCondition greaterThan(int value) {
-        return new IntegerStepCondition(getMetadata(FieldMetadata.greaterThan(field, value)),
+        return new IntegerStepCondition(metadata.merge(FieldMetadata.greaterThan(field, value)),
                         this.value, i -> i > value);
     }
 
     public IntegerStepCondition greaterOrEquals(int value) {
-        return new IntegerStepCondition(getMetadata(FieldMetadata.greaterOrEquals(field, value)),
+        return new IntegerStepCondition(metadata.merge(FieldMetadata.greaterOrEquals(field, value)),
                         this.value, i -> i >= value);
     }
 
     public IntegerStepCondition between(int minIncluded, int maxExcluded) {
-        return new IntegerStepCondition(getMetadata(FieldMetadata.between(field, minIncluded, maxExcluded)),
+        return new IntegerStepCondition(metadata.merge(FieldMetadata.between(field, minIncluded, maxExcluded)),
                         this.value, i -> i >= minIncluded && i < maxExcluded);
-    }
-
-    private Metadata getMetadata(FieldMetadata<?, ?> between) {
-        return metadata == null ? between : FieldMetadata.combine(metadata, between);
     }
 
     private static class IntegerStepCondition extends AbstractStepCondition {

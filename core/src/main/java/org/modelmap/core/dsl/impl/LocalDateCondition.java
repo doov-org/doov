@@ -3,9 +3,6 @@
  */
 package org.modelmap.core.dsl.impl;
 
-import static org.modelmap.core.dsl.meta.FieldMetadata.AFTER;
-import static org.modelmap.core.dsl.meta.FieldMetadata.BEFORE;
-
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -17,18 +14,18 @@ import org.modelmap.core.dsl.meta.FieldMetadata;
 
 public class LocalDateCondition extends AbstractStepCondition {
 
-    private LocalDateCondition(FieldMetadata<LocalDateFieldInfo, LocalDate> metadata, Predicate<FieldModel> predicate) {
+    private LocalDateCondition(FieldMetadata metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
     }
 
-    public static StepCondition before(LocalDateFieldInfo field, LocalDate value) {
-        return new LocalDateCondition(new FieldMetadata<>(field, BEFORE, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v.isBefore(value)).orElse(false));
+    public static StepCondition after(LocalDateFieldInfo field, LocalDate value) {
+        return new LocalDateCondition(FieldMetadata.after(field, value),
+                        fieldContext -> value(fieldContext, field).map(v -> v.isAfter(value)).orElse(false));
     }
 
-    public static StepCondition after(LocalDateFieldInfo field, LocalDate value) {
-        return new LocalDateCondition(new FieldMetadata<>(field, AFTER, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v.isAfter(value)).orElse(false));
+    public static StepCondition before(LocalDateFieldInfo field, LocalDate value) {
+        return new LocalDateCondition(FieldMetadata.before(field, value),
+                        fieldContext -> value(fieldContext, field).map(v -> v.isBefore(value)).orElse(false));
     }
 
     public static StepCondition beforeOrEq(LocalDateFieldInfo field, LocalDate value) {

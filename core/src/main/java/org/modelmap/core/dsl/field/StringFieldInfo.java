@@ -34,7 +34,7 @@ public class StringFieldInfo extends DefaultFieldInfo<String> {
     }
 
     public IntegerCondition length() {
-        return new IntegerCondition(FieldMetadata.length(this),
+        return new IntegerCondition(FieldMetadata.lengthIs(this),
                         fieldModel -> Optional.ofNullable(fieldModel.<String> get(this.id())).map(String::length));
     }
 

@@ -7,7 +7,7 @@ import org.modelmap.core.FieldId;
 import org.modelmap.core.dsl.impl.IntegerCondition;
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class IntegerFieldInfo extends DefaultFieldInfo<Integer> {
+public class IntegerFieldInfo extends DefaultFieldInfo<Integer> implements NumericFieldInfo<Integer> {
 
     IntegerFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
         super(fieldId, readable, type, new Class[] {}, siblings);

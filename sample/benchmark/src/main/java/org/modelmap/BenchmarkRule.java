@@ -4,15 +4,16 @@ import static org.modelmap.core.dsl.DSL.matchAll;
 import static org.modelmap.sample.field.SampleFieldIdInfo.accountCountry;
 import static org.modelmap.sample.field.SampleFieldIdInfo.accountLanguage;
 import static org.modelmap.sample.field.SampleFieldIdInfo.accountPhoneNumber;
+import static org.modelmap.sample.validation.AccountRulesId.VALID_EMAIL;
+import static org.modelmap.sample.validation.Rules.REGISTRY_ACCOUNT;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.modelmap.core.dsl.DSL;
-import org.modelmap.core.dsl.lang.StepCondition;
-import org.modelmap.core.dsl.lang.ValidationRule;
+import org.modelmap.core.dsl.lang.*;
 import org.modelmap.sample.model.*;
-import org.modelmap.sample.validation.Rules;
+import org.modelmap.sample.validation.AccountRulesId;
 import org.openjdk.jmh.annotations.GenerateMicroBenchmark;
 import org.openjdk.jmh.logic.BlackHole;
 
@@ -26,7 +27,7 @@ public class BenchmarkRule {
 
     @GenerateMicroBenchmark
     public void valid_email(BlackHole blackhole) {
-        boolean valid = Rules.ACCOUNT_VALID_EMAIL.executeOn(SampleModels.wrapper()).isValid();
+        boolean valid = executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isValid();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -34,7 +35,7 @@ public class BenchmarkRule {
 
     @GenerateMicroBenchmark
     public void valid_country(BlackHole blackhole) {
-        boolean valid = Rules.ACCOUNT_VALID_COUNTRY.executeOn(SampleModels.wrapper()).isValid();
+        boolean valid = executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isValid();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -82,6 +83,11 @@ public class BenchmarkRule {
                                         .and(accountPhoneNumber().startsWith("+33")))
                         .collect(Collectors.toList())
                         .toArray(new StepCondition[] {});
+    }
+
+    private Result executeOn(RuleRegistry registry, AccountRulesId id) {
+        return registry.get(id).map(rule -> rule.executeOn(SampleModels.wrapper()))
+                        .orElseThrow(IllegalArgumentException::new);
     }
 
 }

@@ -3,11 +3,6 @@
  */
 package org.modelmap.core.dsl.impl;
 
-import static org.modelmap.core.dsl.meta.FieldMetadata.CONTAINS;
-import static org.modelmap.core.dsl.meta.FieldMetadata.ENDS_WITH;
-import static org.modelmap.core.dsl.meta.FieldMetadata.MATCHES;
-import static org.modelmap.core.dsl.meta.FieldMetadata.STARTS_WITH;
-
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -17,27 +12,27 @@ import org.modelmap.core.dsl.meta.FieldMetadata;
 
 public class StringCondition extends AbstractStepCondition {
 
-    private StringCondition(FieldMetadata<StringFieldInfo, String> metadata, Predicate<FieldModel> predicate) {
+    private StringCondition(FieldMetadata metadata, Predicate<FieldModel> predicate) {
         super(metadata, predicate);
     }
 
     public static StringCondition contains(StringFieldInfo field, String value) {
-        return new StringCondition(new FieldMetadata<>(field, CONTAINS, value),
+        return new StringCondition(FieldMetadata.contains(field, value),
                         fieldContext -> value(fieldContext, field).map(v -> v.contains(value)).orElse(false));
     }
 
     public static StringCondition matches(StringFieldInfo field, String regex) {
-        return new StringCondition(new FieldMetadata<>(field, MATCHES, regex),
+        return new StringCondition(FieldMetadata.matches(field, regex),
                         fieldContext -> value(fieldContext, field).map(v -> v.matches(regex)).orElse(false));
     }
 
     public static StringCondition startsWith(StringFieldInfo field, String prefix) {
-        return new StringCondition(new FieldMetadata<>(field, STARTS_WITH, prefix),
+        return new StringCondition(FieldMetadata.startsWith(field, prefix),
                         fieldContext -> value(fieldContext, field).map(v -> v.startsWith(prefix)).orElse(false));
     }
 
     public static StringCondition endsWith(StringFieldInfo field, String suffix) {
-        return new StringCondition(new FieldMetadata<>(field, ENDS_WITH, suffix),
+        return new StringCondition(FieldMetadata.endsWith(field, suffix),
                         fieldContext -> value(fieldContext, field).map(v -> v.endsWith(suffix)).orElse(false));
     }
 

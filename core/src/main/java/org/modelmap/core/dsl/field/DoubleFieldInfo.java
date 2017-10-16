@@ -7,7 +7,7 @@ import org.modelmap.core.FieldId;
 import org.modelmap.core.dsl.impl.DoubleCondition;
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class DoubleFieldInfo extends DefaultFieldInfo<Double> {
+public class DoubleFieldInfo extends DefaultFieldInfo<Double> implements NumericFieldInfo<Double> {
 
     DoubleFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
         super(fieldId, readable, type, new Class[] {}, siblings);

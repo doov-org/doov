@@ -7,7 +7,7 @@ import org.modelmap.core.FieldId;
 import org.modelmap.core.dsl.impl.FloatCondition;
 import org.modelmap.core.dsl.lang.StepCondition;
 
-public class FloatFieldInfo extends DefaultFieldInfo<Float> {
+public class FloatFieldInfo extends DefaultFieldInfo<Float> implements NumericFieldInfo<Float> {
 
     FloatFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
         super(fieldId, readable, type, new Class[] {}, siblings);

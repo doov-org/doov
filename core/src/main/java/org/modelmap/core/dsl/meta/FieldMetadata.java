@@ -5,79 +5,121 @@ package org.modelmap.core.dsl.meta;
 
 import static java.util.stream.Collectors.joining;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.modelmap.core.FieldInfo;
-import org.modelmap.core.dsl.field.IntegerFieldInfo;
-import org.modelmap.core.dsl.field.StringFieldInfo;
+import org.modelmap.core.dsl.field.*;
 
-public class FieldMetadata<F extends FieldInfo, V> extends AbstractMetadata {
+public class FieldMetadata extends AbstractMetadata {
 
-    public static final String EQUALS = "equals";
-    public static final String NOT_EQUALS = "not equals";
-    public static final String IS_NULL = "is null";
-    public static final String IS_NOT_NULL = "is not null";
+    private static final FieldMetadata EMPTY = new FieldMetadata(null, null, null);
 
-    public static final String AFTER = "after";
-    public static final String BEFORE = "before";
+    private final String field;
+    private final String operator;
+    private final String value;
 
-    public static final String CONTAINS = "contains";
-    public static final String MATCHES = "matches";
-    public static final String STARTS_WITH = "starts with";
-    public static final String ENDS_WITH = "ends with";
-
-    public static final String IS = "is";
-
-    public static final String LESSER_THAN = "lesser than";
-    public static final String LESSER_OR_EQUALS = "lesser or equals";
-    public static final String GREATER_THAN = "greater than";
-    public static final String GREATER_OR_EQUALS = "greater or equals";
-    public static final String BETWEEN = "between";
-    public static final String LENGTH = "length";
-
-    public final F field;
-    public final String operator;
-    public final Object value;
-
-    public FieldMetadata(F field, String operator, V value) {
-        this.field = field;
+    private FieldMetadata(Object field, String operator, Object value) {
+        this.field = field == null ? null : field.toString();
         this.operator = operator;
-        this.value = value;
+        this.value = value == null ? null : value.toString();
     }
 
-    public static FieldMetadata<IntegerFieldInfo, Integer> lesserThan(IntegerFieldInfo field, int value) {
-        return new FieldMetadata<>(field, LESSER_THAN, value);
+    private FieldMetadata(Readable field, String operator, Object value) {
+        this.field = field == null ? null : field.readable();
+        this.operator = operator;
+        this.value = value == null ? null : value.toString();
     }
 
-    public static FieldMetadata<IntegerFieldInfo, Integer> lesserOrEquals(IntegerFieldInfo field, int value) {
-        return new FieldMetadata<>(field, LESSER_OR_EQUALS, value);
+    private FieldMetadata(Readable field, String operator, Readable value) {
+        this.field = field == null ? null : field.readable();
+        this.operator = operator;
+        this.value = value == null ? null : value.readable();
     }
 
-    public static FieldMetadata<IntegerFieldInfo, Integer> greaterThan(IntegerFieldInfo field, int value) {
-        return new FieldMetadata<>(field, GREATER_THAN, value);
+    public static FieldMetadata empty() {
+        return EMPTY;
     }
 
-    public static FieldMetadata<IntegerFieldInfo, Integer> greaterOrEquals(IntegerFieldInfo field, int value) {
-        return new FieldMetadata<>(field, GREATER_OR_EQUALS, value);
+    public static FieldMetadata equals(FieldInfo field, Object value) {
+        return new FieldMetadata(field, "equals", value);
     }
 
-    public static FieldMetadata<IntegerFieldInfo, ?> between(IntegerFieldInfo field, int min, int max) {
-        return new FieldMetadata<>(field, BETWEEN, min + " and " + max);
+    public static FieldMetadata notEquals(FieldInfo field, Object value) {
+        return new FieldMetadata(field, "not equals", value);
     }
 
-    public static FieldMetadata<StringFieldInfo, ?> length(StringFieldInfo field) {
-        return new FieldMetadata<>(field, LENGTH, null);
+    public static FieldMetadata isNull(FieldInfo field, Object value) {
+        return new FieldMetadata(field, "is null", value);
     }
 
-    public static <T extends FieldInfo> FieldMetadata<T, ?> combine(FieldMetadata<T, ?> metadata1,
-                    FieldMetadata<?, ?> metadata2) {
-        return new FieldMetadata<>(metadata1.field, metadata1.operator, metadata2.value);
+    public static FieldMetadata isNotNull(FieldInfo field, Object value) {
+        return new FieldMetadata(field, "is not null", value);
+    }
+
+    public static FieldMetadata after(LocalDateFieldInfo field, LocalDate value) {
+        return new FieldMetadata(field, "after", value);
+    }
+
+    public static FieldMetadata before(LocalDateFieldInfo field, LocalDate value) {
+        return new FieldMetadata(field, "before", value);
+    }
+
+    public static FieldMetadata matches(StringFieldInfo field, String value) {
+        return new FieldMetadata(field, "matches", value);
+    }
+
+    public static FieldMetadata contains(StringFieldInfo field, String value) {
+        return new FieldMetadata(field, "contains", value);
+    }
+
+    public static FieldMetadata startsWith(StringFieldInfo field, String value) {
+        return new FieldMetadata(field, "starts with", value);
+    }
+
+    public static FieldMetadata endsWith(StringFieldInfo field, String value) {
+        return new FieldMetadata(field, "ends with", value);
+    }
+
+    public static FieldMetadata is(BooleanFieldInfo field, boolean value) {
+        return new FieldMetadata(field, "is", value);
+    }
+
+    public static <T extends Number> FieldMetadata lesserThan(NumericFieldInfo<T> field, T value) {
+        return new FieldMetadata(field, "lesser than", value);
+    }
+
+    public static <T extends Number> FieldMetadata lesserOrEquals(NumericFieldInfo<T> field, T value) {
+        return new FieldMetadata(field, "lesser or equals", value);
+    }
+
+    public static <T extends Number> FieldMetadata greaterThan(NumericFieldInfo<T> field, T value) {
+        return new FieldMetadata(field, "greater than", value);
+    }
+
+    public static <T extends Number> FieldMetadata greaterOrEquals(NumericFieldInfo<T> field, T value) {
+        return new FieldMetadata(field, "greater or equals", value);
+    }
+
+    public static <T extends Number> FieldMetadata between(NumericFieldInfo<T> field, Number min, T max) {
+        return new FieldMetadata(field, "between", min + " and " + max);
+    }
+
+    public static FieldMetadata lengthIs(StringFieldInfo field) {
+        return new FieldMetadata(field, "length is", null);
+    }
+
+    public FieldMetadata merge(FieldMetadata metadata) {
+        if (this.equals(EMPTY)) {
+            return metadata;
+        }
+        return new FieldMetadata(this.field, this.operator + " " + metadata.operator, metadata.value);
     }
 
     @Override
     public String readable() {
-        return Stream.of(field.readable(), operator, value)
+        return Stream.of("'" + field + "'", operator, value)
                         .filter(Objects::nonNull)
                         .map(Objects::toString)
                         .collect(joining(" "));
