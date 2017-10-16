@@ -2,10 +2,11 @@ package org.modelmap.sample.validation;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.modelmap.sample.validation.Rules.VALID_COUNTRY;
-import static org.modelmap.sample.validation.Rules.VALID_EMAIL;
+import static org.modelmap.sample.validation.Registry.ACCOUNT_VALID_COUNTRY;
+import static org.modelmap.sample.validation.Registry.ACCOUNT_VALID_EMAIL;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,31 +29,31 @@ public class RulesTest {
 
     @Test
     public void test_valid_email() {
-        System.out.println(VALID_EMAIL.readable());
-        assertThat(VALID_EMAIL.executeOn(wrapper).isValid()).isTrue();
+        System.out.println(ACCOUNT_VALID_EMAIL.readable());
+        assertThat(ACCOUNT_VALID_EMAIL.executeOn(wrapper).isValid()).isTrue();
 
         account.setEmail("test@test.gh");
-        assertThat(VALID_EMAIL.executeOn(wrapper).isValid()).isFalse();
+        assertThat(ACCOUNT_VALID_EMAIL.executeOn(wrapper).isValid()).isFalse();
     }
 
     @Test
     public void test_valid_country() {
-        System.out.println(VALID_COUNTRY.readable());
-        assertThat(VALID_COUNTRY.executeOn(wrapper).isValid()).isTrue();
+        System.out.println(ACCOUNT_VALID_COUNTRY.readable());
+        assertThat(ACCOUNT_VALID_COUNTRY.executeOn(wrapper).isValid()).isTrue();
 
         account.setPhoneNumber("+336123456789");
-        assertThat(VALID_COUNTRY.executeOn(wrapper).isValid()).isFalse();
-        System.out.println(VALID_COUNTRY.readable());
+        assertThat(ACCOUNT_VALID_COUNTRY.executeOn(wrapper).isValid()).isFalse();
+        System.out.println(ACCOUNT_VALID_COUNTRY.readable());
     }
 
     @Test
     public void test_all_account_rules_invalid_messages() {
-        List<String> messages = Registry.ACCOUNT.stream()
+        List<Result> messages = Registry.ACCOUNT.stream()
                         .map(rule -> rule.executeOn(wrapper))
-                        .filter(Result::isInvalid)
-                        .map(Result::getMessage)
                         .collect(toList());
-        assertThat(messages).isEmpty();
+        assertThat(messages).isNotEmpty();
+        assertThat(messages).extracting(Result::isValid).allMatch(Boolean::booleanValue);
+        assertThat(messages).extracting(Result::getMessage).allMatch(Objects::isNull);
     }
 
     @Test
