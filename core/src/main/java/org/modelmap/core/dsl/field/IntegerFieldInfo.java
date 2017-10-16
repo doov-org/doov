@@ -14,19 +14,19 @@ public class IntegerFieldInfo extends DefaultFieldInfo<Integer> {
     }
 
     public StepCondition lesserThan(int value) {
-        return IntegerCondition.lesserThan(this, value);
+        return new IntegerCondition(this).lesserThan(value);
     }
 
     public StepCondition lesserOrEquals(int value) {
-        return IntegerCondition.lesserOrEquals(this, value);
+        return new IntegerCondition(this).lesserOrEquals(value);
     }
 
     public StepCondition greaterThan(int value) {
-        return IntegerCondition.greaterThan(this, value);
+        return new IntegerCondition(this).greaterThan(value);
     }
 
     public StepCondition greaterOrEquals(int value) {
-        return IntegerCondition.greaterOrEquals(this, value);
+        return new IntegerCondition(this).greaterOrEquals(value);
     }
 
 }

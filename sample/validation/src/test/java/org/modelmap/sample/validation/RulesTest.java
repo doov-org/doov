@@ -29,7 +29,6 @@ public class RulesTest {
 
     @Test
     public void test_valid_email() {
-        System.out.println(ACCOUNT_VALID_EMAIL.readable());
         assertThat(ACCOUNT_VALID_EMAIL.executeOn(wrapper).isValid()).isTrue();
 
         account.setEmail("test@test.gh");
@@ -37,8 +36,15 @@ public class RulesTest {
     }
 
     @Test
+    public void test_valid_email_size() {
+        assertThat(ACCOUNT_VALID_EMAIL.executeOn(wrapper).isValid()).isTrue();
+
+        account.setEmail("a@b.c");
+        assertThat(ACCOUNT_VALID_EMAIL.executeOn(wrapper).isValid()).isFalse();
+    }
+
+    @Test
     public void test_valid_country() {
-        System.out.println(ACCOUNT_VALID_COUNTRY.readable());
         assertThat(ACCOUNT_VALID_COUNTRY.executeOn(wrapper).isValid()).isTrue();
 
         account.setPhoneNumber("+336123456789");
