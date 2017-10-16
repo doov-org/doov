@@ -13,7 +13,7 @@ abstract class AbstractStepCondition implements StepCondition {
 
     AbstractStepCondition(Metadata metadata, Predicate<FieldModel> predicate) {
         this.metadata = metadata;
-        this.predicate = capture(predicate);
+        this.predicate = predicate;
     }
 
     @Override
@@ -24,14 +24,6 @@ abstract class AbstractStepCondition implements StepCondition {
     @Override
     public String readable() {
         return metadata.readable();
-    }
-
-    private Predicate<FieldModel> capture(Predicate<FieldModel> predicate) {
-        return fieldModel -> {
-            boolean result = predicate.test(fieldModel);
-            metadata.capturePredicateResult(result);
-            return result;
-        };
     }
 
 }

@@ -22,7 +22,7 @@ public class BinaryMetadata extends AbstractMetadata {
 
     @Override
     public String readable() {
-        return "(" + left.readable() + " " + operator + " " + right.readable() + (nodeFails() ? " FAILS" : "") + ")";
+        return "(" + (left.readable() + " " + operator + " " + right.readable()) + ")";
     }
 
 }

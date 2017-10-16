@@ -38,7 +38,7 @@ public class FieldMetadata<F extends FieldInfo, V> extends AbstractMetadata {
 
     @Override
     public String readable() {
-        return field.readable() + " " + operator + " " + value + (nodeFails() ? " FAILS" : "");
+        return field.readable() + " " + operator + " " + value;
     }
 
 }

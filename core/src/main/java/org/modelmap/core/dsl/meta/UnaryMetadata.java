@@ -19,7 +19,7 @@ public class UnaryMetadata extends AbstractMetadata {
 
     @Override
     public String readable() {
-        return "(" + operator + " " + value.readable() + (nodeFails() ? " FAILS" : "") + ")";
+        return "(" + operator + " " + value.readable() + ")";
     }
 
 }

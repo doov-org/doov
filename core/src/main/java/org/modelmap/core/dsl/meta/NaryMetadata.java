@@ -26,8 +26,8 @@ public class NaryMetadata extends AbstractMetadata {
 
     @Override
     public String readable() {
-        return "(" + operator + " [" + values.stream().map(StepCondition::readable).collect(joining(", ")) + "]"
-                        + (nodeFails() ? " FAILS" : "") + ")";
+        String readables = values.stream().map(StepCondition::readable).collect(joining(", "));
+        return "(" + operator + " [" + readables + "])";
     }
 
 }
