@@ -19,12 +19,12 @@ public class LocalDateCondition extends AbstractStepCondition {
     }
 
     public static StepCondition after(LocalDateFieldInfo field, LocalDate value) {
-        return new LocalDateCondition(FieldMetadata.after(field, value),
+        return new LocalDateCondition(FieldMetadata.afterMetadata(field, value),
                         fieldContext -> value(fieldContext, field).map(v -> v.isAfter(value)).orElse(false));
     }
 
     public static StepCondition before(LocalDateFieldInfo field, LocalDate value) {
-        return new LocalDateCondition(FieldMetadata.before(field, value),
+        return new LocalDateCondition(FieldMetadata.beforeMetadata(field, value),
                         fieldContext -> value(fieldContext, field).map(v -> v.isBefore(value)).orElse(false));
     }
 

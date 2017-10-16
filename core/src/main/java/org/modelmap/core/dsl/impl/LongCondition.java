@@ -4,40 +4,45 @@
 package org.modelmap.core.dsl.impl;
 
 import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.function.Function;
 
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.field.LongFieldInfo;
 import org.modelmap.core.dsl.meta.FieldMetadata;
 
-public class LongCondition extends AbstractStepCondition {
+public class LongCondition extends NumericCondition<LongFieldInfo, Long> {
 
-    private LongCondition(FieldMetadata metadata, Predicate<FieldModel> predicate) {
-        super(metadata, predicate);
+    public LongCondition(LongFieldInfo field) {
+        super(field);
     }
 
-    public static LongCondition lesserThan(LongFieldInfo field, long value) {
-        return new LongCondition(FieldMetadata.lesserThan(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v < value).orElse(false));
+    public LongCondition(FieldMetadata metadata, Function<FieldModel, Optional<Long>> value) {
+        super(metadata, value);
     }
 
-    public static LongCondition lesserOrEquals(LongFieldInfo field, long value) {
-        return new LongCondition(FieldMetadata.lesserOrEquals(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v <= value).orElse(false));
+    @Override
+    public Function<Long, Boolean> lesserThanFunction(Long value) {
+        return i -> i < value;
     }
 
-    public static LongCondition greaterThan(LongFieldInfo field, long value) {
-        return new LongCondition(FieldMetadata.greaterThan(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v > value).orElse(false));
+    @Override
+    public Function<Long, Boolean> lesserOrEqualsFunction(Long value) {
+        return i -> i <= value;
     }
 
-    public static LongCondition greaterOrEquals(LongFieldInfo field, long value) {
-        return new LongCondition(FieldMetadata.greaterOrEquals(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v >= value).orElse(false));
+    @Override
+    public Function<Long, Boolean> greaterThanFunction(Long value) {
+        return i -> i > value;
     }
 
-    public static Optional<Long> value(FieldModel fieldModel, LongFieldInfo field) {
-        return Optional.ofNullable(fieldModel.<Long> get(field.id()));
+    @Override
+    public Function<Long, Boolean> greaterOrEqualsFunction(Long value) {
+        return i -> i >= value;
+    }
+
+    @Override
+    public Function<Long, Boolean> betweenFunction(Long minIncluded, Long maxExcluded) {
+        return i -> i >= minIncluded && i < maxExcluded;
     }
 
 }

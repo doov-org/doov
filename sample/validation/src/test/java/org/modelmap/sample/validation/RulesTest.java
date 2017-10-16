@@ -38,14 +38,6 @@ public class RulesTest {
     }
 
     @Test
-    public void test_valid_email_size() {
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isValid()).isTrue();
-
-        account.setEmail("a@b.c");
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isValid()).isFalse();
-    }
-
-    @Test
     public void test_valid_country() {
         assertThat(executeOn(REGISTRY_ACCOUNT, VALID_COUNTRY).isValid()).isTrue();
 

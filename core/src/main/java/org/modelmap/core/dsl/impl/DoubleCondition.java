@@ -4,40 +4,45 @@
 package org.modelmap.core.dsl.impl;
 
 import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.function.Function;
 
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.field.DoubleFieldInfo;
 import org.modelmap.core.dsl.meta.FieldMetadata;
 
-public class DoubleCondition extends AbstractStepCondition {
+public class DoubleCondition extends NumericCondition<DoubleFieldInfo, Double> {
 
-    private DoubleCondition(FieldMetadata metadata, Predicate<FieldModel> predicate) {
-        super(metadata, predicate);
+    public DoubleCondition(DoubleFieldInfo field) {
+        super(field);
     }
 
-    public static DoubleCondition lesserThan(DoubleFieldInfo field, double value) {
-        return new DoubleCondition(FieldMetadata.lesserThan(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v < value).orElse(false));
+    public DoubleCondition(FieldMetadata metadata, Function<FieldModel, Optional<Double>> value) {
+        super(metadata, value);
     }
 
-    public static DoubleCondition lesserOrEquals(DoubleFieldInfo field, double value) {
-        return new DoubleCondition(FieldMetadata.lesserOrEquals(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v <= value).orElse(false));
+    @Override
+    public Function<Double, Boolean> lesserThanFunction(Double value) {
+        return i -> i < value;
     }
 
-    public static DoubleCondition greaterThan(DoubleFieldInfo field, double value) {
-        return new DoubleCondition(FieldMetadata.greaterThan(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v > value).orElse(false));
+    @Override
+    public Function<Double, Boolean> lesserOrEqualsFunction(Double value) {
+        return i -> i <= value;
     }
 
-    public static DoubleCondition greaterOrEquals(DoubleFieldInfo field, double value) {
-        return new DoubleCondition(FieldMetadata.greaterOrEquals(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v >= value).orElse(false));
+    @Override
+    public Function<Double, Boolean> greaterThanFunction(Double value) {
+        return i -> i > value;
     }
 
-    public static Optional<Double> value(FieldModel fieldModel, DoubleFieldInfo field) {
-        return Optional.ofNullable(fieldModel.<Double> get(field.id()));
+    @Override
+    public Function<Double, Boolean> greaterOrEqualsFunction(Double value) {
+        return i -> i >= value;
+    }
+
+    @Override
+    public Function<Double, Boolean> betweenFunction(Double minIncluded, Double maxExcluded) {
+        return i -> i >= minIncluded && i < maxExcluded;
     }
 
 }

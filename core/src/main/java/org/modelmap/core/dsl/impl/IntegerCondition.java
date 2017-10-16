@@ -9,59 +9,40 @@ import java.util.function.Function;
 import org.modelmap.core.FieldModel;
 import org.modelmap.core.dsl.field.IntegerFieldInfo;
 import org.modelmap.core.dsl.meta.FieldMetadata;
-import org.modelmap.core.dsl.meta.Metadata;
 
-public class IntegerCondition {
-
-    private final IntegerFieldInfo field;
-    private final FieldMetadata metadata;
-    private final Function<FieldModel, Optional<Integer>> value;
+public class IntegerCondition extends NumericCondition<IntegerFieldInfo, Integer> {
 
     public IntegerCondition(IntegerFieldInfo field) {
-        this.field = field;
-        this.metadata = FieldMetadata.empty();
-        this.value = fieldModel -> Optional.ofNullable(fieldModel.<Integer> get(field.id()));
+        super(field);
     }
 
     public IntegerCondition(FieldMetadata metadata, Function<FieldModel, Optional<Integer>> value) {
-        this.field = null;
-        this.metadata = metadata;
-        this.value = value;
+        super(metadata, value);
     }
 
-    public IntegerStepCondition lesserThan(int value) {
-        return new IntegerStepCondition(metadata.merge(FieldMetadata.lesserThan(field, value)),
-                        this.value, i -> i < value);
+    @Override
+    public Function<Integer, Boolean> lesserThanFunction(Integer value) {
+        return i -> i < value;
     }
 
-    public IntegerStepCondition lesserOrEquals(int value) {
-        return new IntegerStepCondition(metadata.merge(FieldMetadata.lesserOrEquals(field, value)),
-                        this.value, i -> i <= value);
+    @Override
+    public Function<Integer, Boolean> lesserOrEqualsFunction(Integer value) {
+        return i -> i <= value;
     }
 
-    public IntegerStepCondition greaterThan(int value) {
-        return new IntegerStepCondition(metadata.merge(FieldMetadata.greaterThan(field, value)),
-                        this.value, i -> i > value);
+    @Override
+    public Function<Integer, Boolean> greaterThanFunction(Integer value) {
+        return i -> i > value;
     }
 
-    public IntegerStepCondition greaterOrEquals(int value) {
-        return new IntegerStepCondition(metadata.merge(FieldMetadata.greaterOrEquals(field, value)),
-                        this.value, i -> i >= value);
+    @Override
+    public Function<Integer, Boolean> greaterOrEqualsFunction(Integer value) {
+        return i -> i >= value;
     }
 
-    public IntegerStepCondition between(int minIncluded, int maxExcluded) {
-        return new IntegerStepCondition(metadata.merge(FieldMetadata.between(field, minIncluded, maxExcluded)),
-                        this.value, i -> i >= minIncluded && i < maxExcluded);
-    }
-
-    private static class IntegerStepCondition extends AbstractStepCondition {
-
-        IntegerStepCondition(Metadata metadata,
-                        Function<FieldModel, Optional<Integer>> value,
-                        Function<Integer, Boolean> predicate) {
-            super(metadata, fieldModel -> value.apply(fieldModel).map(predicate).orElse(false));
-        }
-
+    @Override
+    public Function<Integer, Boolean> betweenFunction(Integer minIncluded, Integer maxExcluded) {
+        return i -> i >= minIncluded && i < maxExcluded;
     }
 
 }

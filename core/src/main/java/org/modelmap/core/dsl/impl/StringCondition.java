@@ -17,22 +17,22 @@ public class StringCondition extends AbstractStepCondition {
     }
 
     public static StringCondition contains(StringFieldInfo field, String value) {
-        return new StringCondition(FieldMetadata.contains(field, value),
+        return new StringCondition(FieldMetadata.containsMetadata(field, value),
                         fieldContext -> value(fieldContext, field).map(v -> v.contains(value)).orElse(false));
     }
 
     public static StringCondition matches(StringFieldInfo field, String regex) {
-        return new StringCondition(FieldMetadata.matches(field, regex),
+        return new StringCondition(FieldMetadata.matchesMetadata(field, regex),
                         fieldContext -> value(fieldContext, field).map(v -> v.matches(regex)).orElse(false));
     }
 
     public static StringCondition startsWith(StringFieldInfo field, String prefix) {
-        return new StringCondition(FieldMetadata.startsWith(field, prefix),
+        return new StringCondition(FieldMetadata.startsWithMetadata(field, prefix),
                         fieldContext -> value(fieldContext, field).map(v -> v.startsWith(prefix)).orElse(false));
     }
 
     public static StringCondition endsWith(StringFieldInfo field, String suffix) {
-        return new StringCondition(FieldMetadata.endsWith(field, suffix),
+        return new StringCondition(FieldMetadata.endsWithMetadata(field, suffix),
                         fieldContext -> value(fieldContext, field).map(v -> v.endsWith(suffix)).orElse(false));
     }
 

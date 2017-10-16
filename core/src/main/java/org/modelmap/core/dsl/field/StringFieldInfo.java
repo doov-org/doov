@@ -3,13 +3,14 @@
  */
 package org.modelmap.core.dsl.field;
 
+import static org.modelmap.core.dsl.meta.FieldMetadata.lengthIsMetadata;
+
 import java.util.Optional;
 
 import org.modelmap.core.FieldId;
 import org.modelmap.core.dsl.impl.IntegerCondition;
 import org.modelmap.core.dsl.impl.StringCondition;
 import org.modelmap.core.dsl.lang.StepCondition;
-import org.modelmap.core.dsl.meta.FieldMetadata;
 
 public class StringFieldInfo extends DefaultFieldInfo<String> {
 
@@ -34,7 +35,7 @@ public class StringFieldInfo extends DefaultFieldInfo<String> {
     }
 
     public IntegerCondition length() {
-        return new IntegerCondition(FieldMetadata.lengthIs(this),
+        return new IntegerCondition(lengthIsMetadata(this),
                         fieldModel -> Optional.ofNullable(fieldModel.<String> get(this.id())).map(String::length));
     }
 

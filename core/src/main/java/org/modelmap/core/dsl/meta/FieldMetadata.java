@@ -38,75 +38,100 @@ public class FieldMetadata extends AbstractMetadata {
         this.value = value == null ? null : value.readable();
     }
 
-    public static FieldMetadata empty() {
+    public static FieldMetadata emptyMetadata() {
         return EMPTY;
     }
 
-    public static FieldMetadata equals(FieldInfo field, Object value) {
+    public static FieldMetadata equalsMetadata(FieldInfo field, Object value) {
         return new FieldMetadata(field, "equals", value);
     }
 
-    public static FieldMetadata notEquals(FieldInfo field, Object value) {
+    public static FieldMetadata notEqualsMetadata(FieldInfo field, Object value) {
         return new FieldMetadata(field, "not equals", value);
     }
 
-    public static FieldMetadata isNull(FieldInfo field, Object value) {
+    public static FieldMetadata nullMetadata(FieldInfo field, Object value) {
         return new FieldMetadata(field, "is null", value);
     }
 
-    public static FieldMetadata isNotNull(FieldInfo field, Object value) {
+    public static FieldMetadata notNullMetadata(FieldInfo field, Object value) {
         return new FieldMetadata(field, "is not null", value);
     }
 
-    public static FieldMetadata after(LocalDateFieldInfo field, LocalDate value) {
+    public static FieldMetadata afterMetadata(LocalDateFieldInfo field, LocalDate value) {
         return new FieldMetadata(field, "after", value);
     }
 
-    public static FieldMetadata before(LocalDateFieldInfo field, LocalDate value) {
+    public static FieldMetadata beforeMetadata(LocalDateFieldInfo field, LocalDate value) {
         return new FieldMetadata(field, "before", value);
     }
 
-    public static FieldMetadata matches(StringFieldInfo field, String value) {
+    public static FieldMetadata matchesMetadata(StringFieldInfo field, String value) {
         return new FieldMetadata(field, "matches", value);
     }
 
-    public static FieldMetadata contains(StringFieldInfo field, String value) {
+    public static FieldMetadata containsMetadata(StringFieldInfo field, String value) {
         return new FieldMetadata(field, "contains", value);
     }
 
-    public static FieldMetadata startsWith(StringFieldInfo field, String value) {
+    public static FieldMetadata startsWithMetadata(StringFieldInfo field, String value) {
         return new FieldMetadata(field, "starts with", value);
     }
 
-    public static FieldMetadata endsWith(StringFieldInfo field, String value) {
+    public static FieldMetadata endsWithMetadata(StringFieldInfo field, String value) {
         return new FieldMetadata(field, "ends with", value);
     }
 
-    public static FieldMetadata is(BooleanFieldInfo field, boolean value) {
+    public static FieldMetadata isMetadata(BooleanFieldInfo field, boolean value) {
         return new FieldMetadata(field, "is", value);
     }
 
-    public static <T extends Number> FieldMetadata lesserThan(NumericFieldInfo<T> field, T value) {
+    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata lesserThanMetadata(
+                    F field, N value) {
         return new FieldMetadata(field, "lesser than", value);
     }
 
-    public static <T extends Number> FieldMetadata lesserOrEquals(NumericFieldInfo<T> field, T value) {
+    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata lesserThanMetadata(
+                    F field1, F field2) {
+        return new FieldMetadata(field1, "lesser than", field2);
+    }
+
+    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata lesserOrEqualsMetadata(
+                    F field, N value) {
         return new FieldMetadata(field, "lesser or equals", value);
     }
 
-    public static <T extends Number> FieldMetadata greaterThan(NumericFieldInfo<T> field, T value) {
+    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata lesserOrEqualsMetadata(
+                    F field1, F field2) {
+        return new FieldMetadata(field1, "lesser or equals", field2);
+    }
+
+    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata greaterThanMetadata(
+                    F field, N value) {
         return new FieldMetadata(field, "greater than", value);
     }
 
-    public static <T extends Number> FieldMetadata greaterOrEquals(NumericFieldInfo<T> field, T value) {
+    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata greaterThanMetadata(
+                    F field1, F field2) {
+        return new FieldMetadata(field1, "greater than", field2);
+    }
+
+    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata greaterOrEqualsMetadata(
+                    F field, N value) {
         return new FieldMetadata(field, "greater or equals", value);
     }
 
-    public static <T extends Number> FieldMetadata between(NumericFieldInfo<T> field, Number min, T max) {
+    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata greaterOrEqualsMetadata(
+                    F field1, F field2) {
+        return new FieldMetadata(field1, "greater or equals", field2);
+    }
+
+    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata betweenMetadata(
+                    F field, Number min, N max) {
         return new FieldMetadata(field, "between", min + " and " + max);
     }
 
-    public static FieldMetadata lengthIs(StringFieldInfo field) {
+    public static FieldMetadata lengthIsMetadata(StringFieldInfo field) {
         return new FieldMetadata(field, "length is", null);
     }
 

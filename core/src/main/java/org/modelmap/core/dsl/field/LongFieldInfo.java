@@ -14,19 +14,27 @@ public class LongFieldInfo extends DefaultFieldInfo<Long> implements NumericFiel
     }
 
     public StepCondition lesserThan(long value) {
-        return LongCondition.lesserThan(this, value);
+        return new LongCondition(this).lesserThan(value);
     }
 
     public StepCondition lesserOrEquals(long value) {
-        return LongCondition.lesserOrEquals(this, value);
+        return new LongCondition(this).lesserOrEquals(value);
     }
 
     public StepCondition greaterThan(long value) {
-        return LongCondition.greaterThan(this, value);
+        return new LongCondition(this).greaterThan(value);
     }
 
     public StepCondition greaterOrEquals(long value) {
-        return LongCondition.greaterOrEquals(this, value);
+        return new LongCondition(this).greaterOrEquals(value);
+    }
+
+    public StepCondition greaterOrEquals(LongFieldInfo field) {
+        return new LongCondition(this).greaterOrEquals(field);
+    }
+
+    public StepCondition between(long minIncluded, long maxExcluded) {
+        return new LongCondition(this).between(minIncluded, maxExcluded);
     }
 
 }

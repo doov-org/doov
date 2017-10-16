@@ -14,19 +14,23 @@ public class FloatFieldInfo extends DefaultFieldInfo<Float> implements NumericFi
     }
 
     public StepCondition lesserThan(float value) {
-        return FloatCondition.lesserThan(this, value);
+        return new FloatCondition(this).lesserThan(value);
     }
 
-    public StepCondition lessOrEquals(float value) {
-        return FloatCondition.lesserOrEquals(this, value);
+    public StepCondition lesserOrEquals(float value) {
+        return new FloatCondition(this).lesserOrEquals(value);
     }
 
     public StepCondition greaterThan(float value) {
-        return FloatCondition.greaterThan(this, value);
+        return new FloatCondition(this).greaterThan(value);
     }
 
     public StepCondition greaterOrEquals(float value) {
-        return FloatCondition.greaterOrEquals(this, value);
+        return new FloatCondition(this).greaterOrEquals(value);
+    }
+
+    public StepCondition between(float minIncluded, float maxExcluded) {
+        return new FloatCondition(this).between(minIncluded, maxExcluded);
     }
 
 }

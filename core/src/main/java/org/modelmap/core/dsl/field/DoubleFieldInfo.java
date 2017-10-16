@@ -14,19 +14,23 @@ public class DoubleFieldInfo extends DefaultFieldInfo<Double> implements Numeric
     }
 
     public StepCondition lesserThan(double value) {
-        return DoubleCondition.lesserThan(this, value);
+        return new DoubleCondition(this).lesserThan(value);
     }
 
     public StepCondition lesserOrEquals(double value) {
-        return DoubleCondition.lesserOrEquals(this, value);
+        return new DoubleCondition(this).lesserOrEquals(value);
     }
 
     public StepCondition greaterThan(double value) {
-        return DoubleCondition.greaterThan(this, value);
+        return new DoubleCondition(this).greaterThan(value);
     }
 
     public StepCondition greaterOrEquals(double value) {
-        return DoubleCondition.greaterOrEquals(this, value);
+        return new DoubleCondition(this).greaterOrEquals(value);
+    }
+
+    public StepCondition between(double minIncluded, double maxExcluded) {
+        return new DoubleCondition(this).between(minIncluded, maxExcluded);
     }
 
 }

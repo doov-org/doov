@@ -17,12 +17,12 @@ public class BooleanCondition extends AbstractStepCondition {
     }
 
     public static BooleanCondition isTrue(BooleanFieldInfo field) {
-        return new BooleanCondition(FieldMetadata.is(field, true),
+        return new BooleanCondition(FieldMetadata.isMetadata(field, true),
                         fieldContext -> value(fieldContext, field).orElse(false));
     }
 
     public static BooleanCondition isFalse(BooleanFieldInfo field) {
-        return new BooleanCondition(FieldMetadata.is(field, false),
+        return new BooleanCondition(FieldMetadata.isMetadata(field, false),
                         fieldContext -> value(fieldContext, field).map(v -> !v).orElse(false));
     }
 

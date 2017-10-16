@@ -29,4 +29,8 @@ public class IntegerFieldInfo extends DefaultFieldInfo<Integer> implements Numer
         return new IntegerCondition(this).greaterOrEquals(value);
     }
 
+    public StepCondition between(int minIncluded, int maxExcluded) {
+        return new IntegerCondition(this).between(minIncluded, maxExcluded);
+    }
+
 }

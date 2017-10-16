@@ -17,22 +17,22 @@ public class TypeCondition<T> extends AbstractStepCondition {
     }
 
     public static <T> TypeCondition<T> eq(FieldInfo field, T value) {
-        return new TypeCondition<>(FieldMetadata.equals(field, value),
+        return new TypeCondition<>(FieldMetadata.equalsMetadata(field, value),
                         fieldContext -> value(fieldContext, field).map(v -> v.equals(value)).orElse(false));
     }
 
     public static <T> TypeCondition<T> notEq(FieldInfo field, T value) {
-        return new TypeCondition<>(FieldMetadata.notEquals(field, value),
+        return new TypeCondition<>(FieldMetadata.notEqualsMetadata(field, value),
                         fieldContext -> value(fieldContext, field).map(v -> !v.equals(value)).orElse(false));
     }
 
     public static <T> TypeCondition<T> isNull(FieldInfo field) {
-        return new TypeCondition<>(FieldMetadata.isNull(field, null),
+        return new TypeCondition<>(FieldMetadata.nullMetadata(field, null),
                         fieldContext -> !value(fieldContext, field).isPresent());
     }
 
     public static <T> TypeCondition<T> isNotNull(FieldInfo field) {
-        return new TypeCondition<>(FieldMetadata.isNotNull(field, null),
+        return new TypeCondition<>(FieldMetadata.notNullMetadata(field, null),
                         fieldContext -> value(fieldContext, field).isPresent());
     }
 
