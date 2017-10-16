@@ -46,4 +46,10 @@ public class DefaultValidationRule implements ValidationRule {
         return this;
     }
 
+    @Override
+    public ValidationRule registerOn(RuleRegistry registry, RuleId id) {
+        registry.register(this, id);
+        return this;
+    }
+
 }

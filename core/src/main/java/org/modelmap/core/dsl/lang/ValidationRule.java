@@ -14,4 +14,6 @@ public interface ValidationRule extends Readable {
 
     ValidationRule registerOn(RuleRegistry registry);
 
+    ValidationRule registerOn(RuleRegistry registry, RuleId id);
+
 }

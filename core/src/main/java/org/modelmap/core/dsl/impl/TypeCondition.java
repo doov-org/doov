@@ -4,6 +4,8 @@
 package org.modelmap.core.dsl.impl;
 
 import static org.modelmap.core.dsl.meta.FieldMetadata.EQUALS;
+import static org.modelmap.core.dsl.meta.FieldMetadata.IS_NOT_NULL;
+import static org.modelmap.core.dsl.meta.FieldMetadata.IS_NULL;
 import static org.modelmap.core.dsl.meta.FieldMetadata.NOT_EQUALS;
 
 import java.util.Optional;
@@ -27,6 +29,16 @@ public class TypeCondition<T> extends AbstractStepCondition {
     public static <T> TypeCondition<T> notEq(FieldInfo field, T value) {
         return new TypeCondition<>(new FieldMetadata<>(field, NOT_EQUALS, value),
                         fieldContext -> value(fieldContext, field).map(v -> !v.equals(value)).orElse(false));
+    }
+
+    public static <T> TypeCondition<T> isNull(FieldInfo field) {
+        return new TypeCondition<>(new FieldMetadata<>(field, IS_NULL, null),
+                        fieldContext -> !value(fieldContext, field).isPresent());
+    }
+
+    public static <T> TypeCondition<T> isNotNull(FieldInfo field) {
+        return new TypeCondition<>(new FieldMetadata<>(field, IS_NOT_NULL, null),
+                        fieldContext -> value(fieldContext, field).isPresent());
     }
 
     public static <T> Optional<T> value(FieldModel fieldModel, FieldInfo field) {

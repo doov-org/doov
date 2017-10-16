@@ -1,9 +1,11 @@
 package org.modelmap.core;
 
+import org.modelmap.core.dsl.meta.Readable;
+
 /**
  * Properties of a {@code FieldId}, generated from the model java bean
  */
-public interface FieldInfo {
+public interface FieldInfo extends Readable {
 
     /**
      * @return the referenced {@code FieldId}
@@ -14,11 +16,6 @@ public interface FieldInfo {
      * @return the other {@code FieldId} mapped on the same property
      */
     FieldId[] siblings();
-
-    /**
-     * @return the human readable {@code FieldId}
-     */
-    String readable();
 
     /**
      * @return the {@code FieldId} type

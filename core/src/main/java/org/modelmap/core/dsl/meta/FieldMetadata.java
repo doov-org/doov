@@ -3,6 +3,11 @@
  */
 package org.modelmap.core.dsl.meta;
 
+import static java.util.stream.Collectors.joining;
+
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import org.modelmap.core.FieldInfo;
 import org.modelmap.core.dsl.field.IntegerFieldInfo;
 import org.modelmap.core.dsl.field.StringFieldInfo;
@@ -11,6 +16,8 @@ public class FieldMetadata<F extends FieldInfo, V> extends AbstractMetadata {
 
     public static final String EQUALS = "equals";
     public static final String NOT_EQUALS = "not equals";
+    public static final String IS_NULL = "is null";
+    public static final String IS_NOT_NULL = "is not null";
 
     public static final String AFTER = "after";
     public static final String BEFORE = "before";
@@ -70,7 +77,10 @@ public class FieldMetadata<F extends FieldInfo, V> extends AbstractMetadata {
 
     @Override
     public String readable() {
-        return field.readable() + " " + operator + " " + value;
+        return Stream.of(field.readable(), operator, value)
+                        .filter(Objects::nonNull)
+                        .map(Objects::toString)
+                        .collect(joining(" "));
     }
 
 }

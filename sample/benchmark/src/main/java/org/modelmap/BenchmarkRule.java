@@ -12,7 +12,7 @@ import org.modelmap.core.dsl.DSL;
 import org.modelmap.core.dsl.lang.StepCondition;
 import org.modelmap.core.dsl.lang.ValidationRule;
 import org.modelmap.sample.model.*;
-import org.modelmap.sample.validation.Registry;
+import org.modelmap.sample.validation.Rules;
 import org.openjdk.jmh.annotations.GenerateMicroBenchmark;
 import org.openjdk.jmh.logic.BlackHole;
 
@@ -26,7 +26,7 @@ public class BenchmarkRule {
 
     @GenerateMicroBenchmark
     public void valid_email(BlackHole blackhole) {
-        boolean valid = Registry.ACCOUNT_VALID_EMAIL.executeOn(SampleModels.wrapper()).isValid();
+        boolean valid = Rules.ACCOUNT_VALID_EMAIL.executeOn(SampleModels.wrapper()).isValid();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -34,7 +34,7 @@ public class BenchmarkRule {
 
     @GenerateMicroBenchmark
     public void valid_country(BlackHole blackhole) {
-        boolean valid = Registry.ACCOUNT_VALID_COUNTRY.executeOn(SampleModels.wrapper()).isValid();
+        boolean valid = Rules.ACCOUNT_VALID_COUNTRY.executeOn(SampleModels.wrapper()).isValid();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
