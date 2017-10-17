@@ -1,6 +1,6 @@
 package io.doov.core.dsl.lang;
 
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.LogicalBinaryCondition;
@@ -9,7 +9,7 @@ import io.doov.core.dsl.meta.Readable;
 
 public interface StepCondition extends Readable {
 
-    Predicate<FieldModel> predicate();
+    BiPredicate<FieldModel, Context> predicate();
 
     default StepCondition and(StepCondition condition) {
         return LogicalBinaryCondition.and(this, condition);

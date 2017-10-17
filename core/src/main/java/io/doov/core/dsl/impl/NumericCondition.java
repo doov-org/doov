@@ -97,7 +97,7 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
         NumericStepCondition(Metadata metadata,
                         Function<FieldModel, Optional<N>> value,
                         Function<FieldModel, Function<N, Boolean>> predicate) {
-            super(metadata, model -> value.apply(model).map(predicate.apply(model)).orElse(false));
+            super(metadata, (model, context) -> value.apply(model).map(predicate.apply(model)).orElse(false));
         }
 
     }

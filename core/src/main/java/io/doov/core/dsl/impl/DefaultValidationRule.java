@@ -2,8 +2,12 @@ package io.doov.core.dsl.impl;
 
 import static java.text.MessageFormat.format;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultValidationRule implements ValidationRule {
 
@@ -35,9 +39,10 @@ public class DefaultValidationRule implements ValidationRule {
 
     @Override
     public Result executeOn(FieldModel model) {
-        boolean valid = stepWhen.stepCondition().predicate().test(model);
+        List<Metadata> metadatas = new ArrayList<>();
+        boolean valid = stepWhen.stepCondition().predicate().test(model, metadatas::add);
         String readable = valid ? null : (message == null ? stepWhen.stepCondition().readable() : message);
-        return new DefaultResult(valid, readable);
+        return new DefaultResult(valid, readable, metadatas);
     }
 
     @Override

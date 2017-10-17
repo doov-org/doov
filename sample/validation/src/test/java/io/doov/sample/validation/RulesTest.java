@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.meta.Readable;
 import io.doov.sample.model.*;
 
 public class RulesTest {
@@ -36,7 +37,14 @@ public class RulesTest {
         assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isValid()).isTrue();
 
         account.setEmail("test@test.gh");
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isValid()).isFalse();
+        Result actual = executeOn(REGISTRY_ACCOUNT, VALID_EMAIL);
+        assertThat(actual.isValid()).isFalse();
+        assertThat(actual.getFailedNodes()).hasSize(3);
+        assertThat(actual.getFailedNodes().stream().map(Readable::readable).collect(toList()))
+                        .contains("account email matches '\\w+[@]\\w+\\.com'",
+                                        "account email matches '\\w+[@]\\w+\\.fr'",
+                                        "(account email matches '\\w+[@]\\w+\\.com' or " +
+                                                        "account email matches '\\w+[@]\\w+\\.fr')");
     }
 
     @Test

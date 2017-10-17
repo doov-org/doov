@@ -3,29 +3,33 @@
  */
 package io.doov.core.dsl.impl;
 
+import static io.doov.core.dsl.meta.FieldMetadata.afterMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.beforeMetadata;
+
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.LocalDateFieldInfo;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
 public class LocalDateCondition extends AbstractStepCondition {
 
-    private LocalDateCondition(FieldMetadata metadata, Predicate<FieldModel> predicate) {
+    private LocalDateCondition(FieldMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
         super(metadata, predicate);
     }
 
     public static StepCondition after(LocalDateFieldInfo field, LocalDate value) {
-        return new LocalDateCondition(FieldMetadata.afterMetadata(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v.isAfter(value)).orElse(false));
+        return new LocalDateCondition(afterMetadata(field, value),
+                        (model, context) -> value(model, field).map(v -> v.isAfter(value)).orElse(false));
     }
 
     public static StepCondition before(LocalDateFieldInfo field, LocalDate value) {
-        return new LocalDateCondition(FieldMetadata.beforeMetadata(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v.isBefore(value)).orElse(false));
+        return new LocalDateCondition(beforeMetadata(field, value),
+                        (model, context) -> value(model, field).map(v -> v.isBefore(value)).orElse(false));
     }
 
     public static StepCondition beforeOrEq(LocalDateFieldInfo field, LocalDate value) {
@@ -44,8 +48,8 @@ public class LocalDateCondition extends AbstractStepCondition {
         return LogicalUnaryCondition.negate(between(field, minValue, maxValue));
     }
 
-    public static Optional<LocalDate> value(FieldModel fieldModel, LocalDateFieldInfo field) {
-        return Optional.ofNullable(fieldModel.<LocalDate> get(field.id()));
+    public static Optional<LocalDate> value(FieldModel model, LocalDateFieldInfo field) {
+        return Optional.ofNullable(model.<LocalDate> get(field.id()));
     }
 
 }

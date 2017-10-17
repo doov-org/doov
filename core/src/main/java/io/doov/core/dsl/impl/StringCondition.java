@@ -3,37 +3,43 @@
  */
 package io.doov.core.dsl.impl;
 
+import static io.doov.core.dsl.meta.FieldMetadata.containsMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.endsWithMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.matchesMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.startsWithMetadata;
+
 import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.StringFieldInfo;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.FieldMetadata;
 
 public class StringCondition extends AbstractStepCondition {
 
-    private StringCondition(FieldMetadata metadata, Predicate<FieldModel> predicate) {
+    private StringCondition(FieldMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
         super(metadata, predicate);
     }
 
     public static StringCondition contains(StringFieldInfo field, String value) {
-        return new StringCondition(FieldMetadata.containsMetadata(field, value),
-                        fieldContext -> value(fieldContext, field).map(v -> v.contains(value)).orElse(false));
+        return new StringCondition(containsMetadata(field, value),
+                        (model, context) -> value(model, field).map(v -> v.contains(value)).orElse(false));
     }
 
     public static StringCondition matches(StringFieldInfo field, String regex) {
-        return new StringCondition(FieldMetadata.matchesMetadata(field, regex),
-                        fieldContext -> value(fieldContext, field).map(v -> v.matches(regex)).orElse(false));
+        return new StringCondition(matchesMetadata(field, regex),
+                        (model, context) -> value(model, field).map(v -> v.matches(regex)).orElse(false));
     }
 
     public static StringCondition startsWith(StringFieldInfo field, String prefix) {
-        return new StringCondition(FieldMetadata.startsWithMetadata(field, prefix),
-                        fieldContext -> value(fieldContext, field).map(v -> v.startsWith(prefix)).orElse(false));
+        return new StringCondition(startsWithMetadata(field, prefix),
+                        (model, context) -> value(model, field).map(v -> v.startsWith(prefix)).orElse(false));
     }
 
     public static StringCondition endsWith(StringFieldInfo field, String suffix) {
-        return new StringCondition(FieldMetadata.endsWithMetadata(field, suffix),
-                        fieldContext -> value(fieldContext, field).map(v -> v.endsWith(suffix)).orElse(false));
+        return new StringCondition(endsWithMetadata(field, suffix),
+                        (model, context) -> value(model, field).map(v -> v.endsWith(suffix)).orElse(false));
     }
 
     public static Optional<String> value(FieldModel fieldModel, StringFieldInfo field) {
