@@ -1,0 +1,165 @@
+package ${package.name};
+
+import java.util.Spliterator;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
+
+import javax.annotation.Generated;
+
+import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
+import io.doov.core.FieldModel;
+import io.doov.core.FieldModels;
+import ${target.field.info.package.name}.${target.field.info.class.name};
+
+@Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
+public final class ${target.class.name} implements FieldModel {
+
+    private final List<FieldInfo> fieldInfos;
+    private final ${target.model.class.name} model;
+    
+    public static Collector<Entry<FieldId, Object>, ?, ${target.class.name}> toFieldModel() {
+        return FieldModels.<${target.class.name}> toFieldModel(new ${target.class.name}());
+    }
+    
+    public static Collector<Entry<FieldId, Object>, ?, ${target.class.name}> toConcurrentFieldModel() {
+        return FieldModels.<${target.class.name}> toConcurrentFieldModel(new ${target.class.name}());
+    }
+
+    public ${target.class.name}() {
+        this(new ${target.model.class.name}());
+    }
+
+    public ${target.class.name}(${target.model.class.name} model) {
+        this.fieldInfos = ${target.field.info.class.name}.values();
+        this.model = model;
+    }
+
+    public ${target.model.class.name} getModel() {
+        return model;
+    }
+
+    @Override
+    public List<FieldInfo> getFieldInfos() {
+        return fieldInfos;
+    }
+    
+    @Override
+    public Iterator<Map.Entry<FieldId, Object>> iterator() {
+        return new Iterator<Map.Entry<FieldId, Object>>() {
+            int position = 0;
+
+            @Override
+            public boolean hasNext() {
+                return position < fieldInfos.size();
+            }
+
+            @Override
+            public Entry<FieldId, Object> next() {
+                try {
+                    return ${target.model.class.name}Property.values()[position].toEntry(model);
+                } finally {
+                    position++;
+                }
+            }
+        };
+    }
+
+    @Override
+    public Spliterator<Entry<FieldId, Object>> spliterator() {
+        final Entry<FieldId, Object>[] entries = ${target.model.class.name}Property.entries(model);
+        return Arrays.spliterator(entries, 0, entries.length);
+    }
+
+    @Override
+    public Stream<Entry<FieldId, Object>> stream() {
+        return Arrays.stream(${target.model.class.name}Property.values()).map(p -> p.toEntry(model));
+    }
+
+    @Override
+    public Stream<Entry<FieldId, Object>> parallelStream() {
+        return Arrays.stream(${target.model.class.name}Property.values()).parallel().map(p -> p.toEntry(model));
+    }
+
+    @Override
+    public <T> T get(FieldId fieldId) {
+${map.getter.if}        return null;
+    }
+
+${map.getter}
+
+    @Override
+    public <T> void set(FieldId fieldId, T value) {
+${map.setter.if}    }
+
+${map.setter}
+
+    @SuppressWarnings("unchecked")
+    private static enum ${target.model.class.name}Property {
+${map.properties}
+        ;
+
+        private final FieldId fieldId;
+
+        ${target.model.class.name}Property(FieldId fieldId) {
+            this.fieldId = fieldId;
+        }
+        
+        Map.Entry<FieldId, Object> toEntry(${target.model.class.name} model) {
+            return new SupplierEntry<>(fieldId, model, supplier());
+        }
+
+        public abstract <T> BiConsumer<${target.model.class.name}, T> consumer();
+
+        public abstract <T> Function<${target.model.class.name}, T> supplier();
+
+        public static Map.Entry<FieldId, Object>[] entries(${target.model.class.name} model){
+            ${target.model.class.name}Property[] values = ${target.model.class.name}Property.values();
+            Map.Entry<FieldId, Object>[] entries = new Map.Entry[values.length];
+            for(int i=0; i< values.length;i++) {
+                entries[i] = values[i].toEntry(model);
+            }
+            return entries;
+        }
+    }
+
+    private static class SupplierEntry<M, T> implements Map.Entry<FieldId, Object> {
+        final FieldId fieldId;
+        final M model;
+        final Function<M, T> supplier;
+
+        SupplierEntry(FieldId fieldId, M model, Function<M, T> supplier) {
+            super();
+            this.fieldId = fieldId;
+            this.model = model;
+            this.supplier = supplier;
+        }
+
+        @Override
+        public FieldId getKey() {
+            return fieldId;
+        }
+
+        @Override
+        public Object getValue() {
+            return supplier.apply(model);
+        }
+
+        @Override
+        public Object setValue(Object value) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String toString() {
+            return fieldId + ", " + String.valueOf(getValue());
+        }
+    }
+}

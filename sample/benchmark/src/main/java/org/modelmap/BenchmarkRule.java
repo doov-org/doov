@@ -1,21 +1,22 @@
 package org.modelmap;
 
-import static org.modelmap.core.dsl.DSL.matchAll;
-import static org.modelmap.sample.field.SampleFieldIdInfo.accountCountry;
-import static org.modelmap.sample.field.SampleFieldIdInfo.accountLanguage;
-import static org.modelmap.sample.field.SampleFieldIdInfo.accountPhoneNumber;
-import static org.modelmap.sample.validation.AccountRulesId.VALID_EMAIL;
-import static org.modelmap.sample.validation.Rules.REGISTRY_ACCOUNT;
+import static io.doov.core.dsl.DSL.matchAll;
+import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
+import static io.doov.sample.field.SampleFieldIdInfo.accountLanguage;
+import static io.doov.sample.field.SampleFieldIdInfo.accountPhoneNumber;
+import static io.doov.sample.validation.AccountRulesId.VALID_EMAIL;
+import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.modelmap.core.dsl.DSL;
-import org.modelmap.core.dsl.lang.*;
-import org.modelmap.sample.model.*;
-import org.modelmap.sample.validation.AccountRulesId;
 import org.openjdk.jmh.annotations.GenerateMicroBenchmark;
 import org.openjdk.jmh.logic.BlackHole;
+
+import io.doov.core.dsl.DSL;
+import io.doov.core.dsl.lang.*;
+import io.doov.sample.model.*;
+import io.doov.sample.validation.AccountRulesId;
 
 public class BenchmarkRule {
 

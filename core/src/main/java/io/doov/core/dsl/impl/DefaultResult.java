@@ -1,0 +1,30 @@
+package io.doov.core.dsl.impl;
+
+import io.doov.core.dsl.lang.Result;
+
+public class DefaultResult implements Result {
+
+    private final boolean validity;
+    private final String message;
+
+    DefaultResult(boolean validity, String message) {
+        this.validity = validity;
+        this.message = message;
+    }
+
+    @Override
+    public boolean isValid() {
+        return validity;
+    }
+
+    @Override
+    public boolean isInvalid() {
+        return !validity;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+}

@@ -3,23 +3,23 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.modelmap</groupId>
-    <artifactId>modelmap-sample</artifactId>
+    <groupId>io.doov</groupId>
+    <artifactId>doov-sample</artifactId>
     <version>1.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>modelmap-sample-validation</artifactId>
-  <name>ModelMap Sample Validation</name>
+  <artifactId>doov-sample-validation</artifactId>
+  <name>dOOv Sample Validation</name>
 
   <dependencies>
     <dependency>
-      <groupId>org.modelmap</groupId>
-      <artifactId>modelmap-core</artifactId>
+      <groupId>io.doov</groupId>
+      <artifactId>doov-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.modelmap</groupId>
-      <artifactId>modelmap-sample-generated</artifactId>
+      <groupId>io.doov</groupId>
+      <artifactId>doov-sample-generated</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

@@ -1,9 +1,10 @@
 package org.modelmap;
 
-import org.modelmap.sample.model.SampleModels;
-import org.modelmap.sample.validation.RulesOld;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.logic.BlackHole;
+
+import io.doov.sample.model.SampleModels;
+import io.doov.sample.validation.RulesOld;
 
 @Fork(value = 5)
 @Warmup(iterations = 10)

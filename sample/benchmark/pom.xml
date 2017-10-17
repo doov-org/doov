@@ -5,14 +5,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.modelmap</groupId>
-    <artifactId>modelmap-sample</artifactId>
+    <groupId>io.doov</groupId>
+    <artifactId>doov-sample</artifactId>
     <version>1.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>modelmap-sample-benchmark</artifactId>
-  <name>ModelMap Sample Benchmark</name>
+  <artifactId>doov-sample-benchmark</artifactId>
+  <name>dOOv Sample Benchmark</name>
 
   <dependencies>
     <dependency>
@@ -26,8 +26,8 @@
       <version>0.5</version>
     </dependency>
     <dependency>
-      <groupId>org.modelmap</groupId>
-      <artifactId>modelmap-sample-validation</artifactId>
+      <groupId>io.doov</groupId>
+      <artifactId>doov-sample-validation</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
