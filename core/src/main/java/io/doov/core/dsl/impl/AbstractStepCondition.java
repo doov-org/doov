@@ -9,8 +9,8 @@ import io.doov.core.dsl.meta.Metadata;
 
 abstract class AbstractStepCondition implements StepCondition {
 
-    final Metadata metadata;
-    final BiPredicate<FieldModel, Context> predicate;
+    private final Metadata metadata;
+    private final BiPredicate<FieldModel, Context> predicate;
 
     AbstractStepCondition(Metadata metadata, BiPredicate<FieldModel, Context> predicate) {
         this.metadata = metadata;
@@ -31,6 +31,10 @@ abstract class AbstractStepCondition implements StepCondition {
     @Override
     public String readable() {
         return metadata.readable();
+    }
+
+    public Metadata getMetadata() {
+        return metadata;
     }
 
 }
