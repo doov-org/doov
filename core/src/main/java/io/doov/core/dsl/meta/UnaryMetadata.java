@@ -7,14 +7,16 @@ import io.doov.core.dsl.lang.StepCondition;
 
 public class UnaryMetadata extends AbstractMetadata {
 
-    public static final String NOT = "not";
+    private final String operator;
+    private final StepCondition value;
 
-    public final String operator;
-    public final StepCondition value;
-
-    public UnaryMetadata(String operator, StepCondition value) {
+    private UnaryMetadata(String operator, StepCondition value) {
         this.operator = operator;
         this.value = value;
+    }
+
+    public static UnaryMetadata notMetadata(StepCondition value) {
+        return new UnaryMetadata("not", value);
     }
 
     @Override

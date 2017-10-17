@@ -3,7 +3,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.UnaryMetadata.NOT;
+import static io.doov.core.dsl.meta.UnaryMetadata.notMetadata;
 
 import java.util.function.Predicate;
 
@@ -17,9 +17,9 @@ public class LogicalUnaryCondition extends AbstractStepCondition {
         super(metadata, predicate);
     }
 
-    public static LogicalUnaryCondition negate(StepCondition value) {
-        return new LogicalUnaryCondition(new UnaryMetadata(NOT, value),
-                        fieldContext -> value.predicate().negate().test(fieldContext));
+    public static LogicalUnaryCondition negate(StepCondition step) {
+        return new LogicalUnaryCondition(notMetadata(step),
+                        fieldContext -> step.predicate().negate().test(fieldContext));
     }
 
 }

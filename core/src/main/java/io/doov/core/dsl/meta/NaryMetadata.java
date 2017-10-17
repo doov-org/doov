@@ -12,16 +12,24 @@ import io.doov.core.dsl.lang.StepCondition;
 
 public class NaryMetadata extends AbstractMetadata {
 
-    public static final String MATCH_ANY = "match any";
-    public static final String MATCH_ALL = "match all";
-    public static final String MATCH_NONE = "match none";
+    private final String operator;
+    private final List<StepCondition> values;
 
-    public final String operator;
-    public final List<StepCondition> values;
-
-    public NaryMetadata(String operator, StepCondition... values) {
+    private NaryMetadata(String operator, StepCondition... values) {
         this.operator = operator;
         this.values = asList(values);
+    }
+
+    public static NaryMetadata matchAnyMetadata(StepCondition... values) {
+        return new NaryMetadata("match any", values);
+    }
+
+    public static NaryMetadata matchAllMetadata(StepCondition... values) {
+        return new NaryMetadata("match all", values);
+    }
+
+    public static NaryMetadata matchNoneMetadata(StepCondition... values) {
+        return new NaryMetadata("match none", values);
     }
 
     @Override

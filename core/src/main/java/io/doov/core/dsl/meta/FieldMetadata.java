@@ -16,26 +16,20 @@ public class FieldMetadata extends AbstractMetadata {
 
     private static final FieldMetadata EMPTY = new FieldMetadata(null, null, null);
 
-    private final String field;
-    private final String operator;
-    private final String value;
-
-    private FieldMetadata(Object field, String operator, Object value) {
-        this.field = field == null ? null : field.toString();
-        this.operator = operator;
-        this.value = value == null ? null : value.toString();
-    }
+    private final Readable field;
+    private final Readable operator;
+    private final Readable value;
 
     private FieldMetadata(Readable field, String operator, Object value) {
-        this.field = field == null ? null : field.readable();
-        this.operator = operator;
-        this.value = value == null ? null : value.toString();
+        this.field = field;
+        this.operator = () -> operator;
+        this.value = () -> "'" + value + "'";
     }
 
     private FieldMetadata(Readable field, String operator, Readable value) {
-        this.field = field == null ? null : field.readable();
-        this.operator = operator;
-        this.value = value == null ? null : value.readable();
+        this.field = field;
+        this.operator = () -> operator;
+        this.value = value;
     }
 
     public static FieldMetadata emptyMetadata() {
@@ -139,13 +133,16 @@ public class FieldMetadata extends AbstractMetadata {
         if (this.equals(EMPTY)) {
             return metadata;
         }
-        return new FieldMetadata(this.field, this.operator + " " + metadata.operator, metadata.value);
+        return new FieldMetadata(this.field,
+                        this.operator.readable() + " " + metadata.operator.readable(),
+                        metadata.value);
     }
 
     @Override
     public String readable() {
-        return Stream.of("'" + field + "'", operator, value)
+        return Stream.of(field, operator, value)
                         .filter(Objects::nonNull)
+                        .map(Readable::readable)
                         .map(Objects::toString)
                         .collect(joining(" "));
     }

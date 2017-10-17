@@ -7,17 +7,22 @@ import io.doov.core.dsl.lang.StepCondition;
 
 public class BinaryMetadata extends AbstractMetadata {
 
-    public static final String AND = "and";
-    public static final String OR = "or";
+    private final StepCondition left;
+    private final String operator;
+    private final StepCondition right;
 
-    public final StepCondition left;
-    public final String operator;
-    public final StepCondition right;
-
-    public BinaryMetadata(StepCondition left, String operator, StepCondition right) {
+    private BinaryMetadata(StepCondition left, String operator, StepCondition right) {
         this.left = left;
         this.operator = operator;
         this.right = right;
+    }
+
+    public static BinaryMetadata andMetadata(StepCondition left, StepCondition right) {
+        return new BinaryMetadata(left, "and", right);
+    }
+
+    public static BinaryMetadata orMetadata(StepCondition left, StepCondition right) {
+        return new BinaryMetadata(left, "or", right);
     }
 
     @Override

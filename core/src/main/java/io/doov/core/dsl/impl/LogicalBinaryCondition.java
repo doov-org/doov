@@ -3,8 +3,8 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.BinaryMetadata.AND;
-import static io.doov.core.dsl.meta.BinaryMetadata.OR;
+import static io.doov.core.dsl.meta.BinaryMetadata.andMetadata;
+import static io.doov.core.dsl.meta.BinaryMetadata.orMetadata;
 
 import java.util.function.Predicate;
 
@@ -19,12 +19,12 @@ public class LogicalBinaryCondition extends AbstractStepCondition {
     }
 
     public static LogicalBinaryCondition and(StepCondition left, StepCondition right) {
-        return new LogicalBinaryCondition(new BinaryMetadata(left, AND, right),
+        return new LogicalBinaryCondition(andMetadata(left, right),
                         fieldContext -> left.predicate().and(right.predicate()).test(fieldContext));
     }
 
     public static LogicalBinaryCondition or(StepCondition left, StepCondition right) {
-        return new LogicalBinaryCondition(new BinaryMetadata(left, OR, right),
+        return new LogicalBinaryCondition(orMetadata(left, right),
                         fieldContext -> left.predicate().or(right.predicate()).test(fieldContext));
     }
 

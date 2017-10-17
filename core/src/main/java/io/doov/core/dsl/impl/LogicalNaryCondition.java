@@ -3,9 +3,9 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.NaryMetadata.MATCH_ALL;
-import static io.doov.core.dsl.meta.NaryMetadata.MATCH_ANY;
-import static io.doov.core.dsl.meta.NaryMetadata.MATCH_NONE;
+import static io.doov.core.dsl.meta.NaryMetadata.matchAllMetadata;
+import static io.doov.core.dsl.meta.NaryMetadata.matchAnyMetadata;
+import static io.doov.core.dsl.meta.NaryMetadata.matchNoneMetadata;
 import static java.util.Arrays.stream;
 
 import java.util.function.Predicate;
@@ -20,19 +20,19 @@ public class LogicalNaryCondition extends AbstractStepCondition {
         super(metadata, predicate);
     }
 
-    public static LogicalNaryCondition matchAny(StepCondition... values) {
-        return new LogicalNaryCondition(new NaryMetadata(MATCH_ANY, values),
-                        fieldContext -> stream(values).anyMatch(s -> s.predicate().test(fieldContext)));
+    public static LogicalNaryCondition matchAny(StepCondition... steps) {
+        return new LogicalNaryCondition(matchAnyMetadata(steps),
+                        fieldContext -> stream(steps).anyMatch(s -> s.predicate().test(fieldContext)));
     }
 
-    public static LogicalNaryCondition matchAll(StepCondition... values) {
-        return new LogicalNaryCondition(new NaryMetadata(MATCH_ALL, values),
-                        fieldContext -> stream(values).allMatch(s -> s.predicate().test(fieldContext)));
+    public static LogicalNaryCondition matchAll(StepCondition... steps) {
+        return new LogicalNaryCondition(matchAllMetadata(steps),
+                        fieldContext -> stream(steps).allMatch(s -> s.predicate().test(fieldContext)));
     }
 
-    public static LogicalNaryCondition matchNone(StepCondition... values) {
-        return new LogicalNaryCondition(new NaryMetadata(MATCH_NONE, values),
-                        fieldContext -> stream(values).noneMatch(s -> s.predicate().test(fieldContext)));
+    public static LogicalNaryCondition matchNone(StepCondition... steps) {
+        return new LogicalNaryCondition(matchNoneMetadata(steps),
+                        fieldContext -> stream(steps).noneMatch(s -> s.predicate().test(fieldContext)));
     }
 
 }
