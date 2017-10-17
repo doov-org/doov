@@ -29,48 +29,48 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
     }
 
     public final NumericStepCondition<N> lesserThan(N value) {
-        return getNumericStepCondition(lesserThanMetadata(field, value),
-                        lesserThanFunction(value));
-    }
-
-    public final NumericStepCondition<N> lesserThan(F field) {
-        return getNumericStepConditionField(lesserThanMetadata(this.field, field),
-                        fieldModel -> lesserThanFunction(fieldModel.<N> get(field.id())));
+        return condition(lesserThanMetadata(field, value), lesserThanFunction(value));
     }
 
     public final NumericStepCondition<N> lesserOrEquals(N value) {
-        return getNumericStepCondition(lesserOrEqualsMetadata(field, value),
-                        lesserOrEqualsFunction(value));
-    }
-
-    public final NumericStepCondition<N> lesserOrEquals(F field) {
-        return getNumericStepConditionField(lesserOrEqualsMetadata(this.field, field),
-                        fieldModel -> lesserOrEqualsFunction(fieldModel.<N> get(field.id())));
+        return condition(lesserOrEqualsMetadata(field, value), lesserOrEqualsFunction(value));
     }
 
     public final NumericStepCondition<N> greaterThan(N value) {
-        return getNumericStepCondition(greaterThanMetadata(field, value),
-                        greaterThanFunction(value));
-    }
-
-    public final NumericStepCondition<N> greaterThan(F field) {
-        return getNumericStepConditionField(greaterThanMetadata(this.field, field),
-                        fieldModel -> greaterThanFunction(fieldModel.<N> get(field.id())));
+        return condition(greaterThanMetadata(field, value), greaterThanFunction(value));
     }
 
     public final NumericStepCondition<N> greaterOrEquals(N value) {
-        return getNumericStepCondition(greaterOrEqualsMetadata(field, value),
-                        greaterOrEqualsFunction(value));
-    }
-
-    public final NumericStepCondition<N> greaterOrEquals(F field) {
-        return getNumericStepConditionField(greaterOrEqualsMetadata(this.field, field),
-                        fieldModel -> greaterOrEqualsFunction(fieldModel.<N> get(field.id())));
+        return condition(greaterOrEqualsMetadata(field, value), greaterOrEqualsFunction(value));
     }
 
     public final NumericStepCondition<N> between(N minIncluded, N maxExcluded) {
-        return getNumericStepCondition(betweenMetadata(field, minIncluded, maxExcluded),
-                        betweenFunction(minIncluded, maxExcluded));
+        return condition(betweenMetadata(field, minIncluded, maxExcluded), betweenFunction(minIncluded, maxExcluded));
+    }
+
+    public final NumericStepCondition<N> lesserThan(F field) {
+        return conditionField(lesserThanMetadata(this.field, field),
+                        model -> lesserThanFunction(model.<N> get(field.id())));
+    }
+
+    public final NumericStepCondition<N> lesserOrEquals(F field) {
+        return conditionField(lesserOrEqualsMetadata(this.field, field),
+                        model -> lesserOrEqualsFunction(model.<N> get(field.id())));
+    }
+
+    public final NumericStepCondition<N> greaterThan(F field) {
+        return conditionField(greaterThanMetadata(this.field, field),
+                        model -> greaterThanFunction(model.<N> get(field.id())));
+    }
+
+    public final NumericStepCondition<N> greaterOrEquals(F field) {
+        return conditionField(greaterOrEqualsMetadata(this.field, field),
+                        model -> greaterOrEqualsFunction(model.<N> get(field.id())));
+    }
+
+    public final NumericStepCondition<N> between(F minIncluded, F maxExcluded) {
+        return conditionField(greaterOrEqualsMetadata(this.field, field),
+                        model -> betweenFunction(model.<N> get(minIncluded.id()), model.<N> get(maxExcluded.id())));
     }
 
     public abstract Function<N, Boolean> lesserThanFunction(N value);
@@ -83,11 +83,11 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
 
     public abstract Function<N, Boolean> betweenFunction(N minIncluded, N maxExcluded);
 
-    private NumericStepCondition<N> getNumericStepCondition(FieldMetadata metadata, Function<N, Boolean> predicate) {
-        return getNumericStepConditionField(metadata, fieldModel -> predicate);
+    private NumericStepCondition<N> condition(FieldMetadata metadata, Function<N, Boolean> predicate) {
+        return conditionField(metadata, model -> predicate);
     }
 
-    private NumericStepCondition<N> getNumericStepConditionField(FieldMetadata metadata,
+    private NumericStepCondition<N> conditionField(FieldMetadata metadata,
                     Function<FieldModel, Function<N, Boolean>> predicate) {
         return new NumericStepCondition<>(this.metadata.merge(metadata), this.value, predicate);
     }
@@ -97,7 +97,7 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
         NumericStepCondition(Metadata metadata,
                         Function<FieldModel, Optional<N>> value,
                         Function<FieldModel, Function<N, Boolean>> predicate) {
-            super(metadata, fieldModel -> value.apply(fieldModel).map(predicate.apply(fieldModel)).orElse(false));
+            super(metadata, model -> value.apply(model).map(predicate.apply(model)).orElse(false));
         }
 
     }

@@ -18,7 +18,6 @@ import org.junit.Test;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.sample.model.*;
-import io.doov.sample.validation.AccountRulesId;
 
 public class RulesTest {
 
