@@ -5,10 +5,12 @@ import static io.doov.sample.validation.AccountRulesId.VALID_EMAIL;
 import static io.doov.sample.validation.AccountRulesId.VALID_EMAIL_SIZE;
 import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
 import static io.doov.sample.validation.Rules.REGISTRY_USER;
+import static io.doov.sample.validation.UserRulesId.VALID_ADULT;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,12 +26,14 @@ public class RulesTest {
 
     private FieldModel wrapper;
     private Account account;
+    private User user;
 
     @Before
     public void before() {
         SampleModel sample = SampleModels.sample();
         wrapper = new SampleModelWrapper(sample);
         account = sample.getAccount();
+        user = sample.getUser();
     }
 
     @Test
@@ -64,6 +68,14 @@ public class RulesTest {
     }
 
     @Test
+    public void test_valid_adult() {
+        assertThat(executeOn(REGISTRY_USER, VALID_ADULT).isValid()).isTrue();
+
+        user.setBirthDate(LocalDate.now());
+        assertThat(executeOn(REGISTRY_USER, VALID_ADULT).isValid()).isFalse();
+    }
+
+    @Test
     public void test_all_account_rules_invalid_messages() {
         List<Result> messages = REGISTRY_ACCOUNT.stream()
                         .map(rule -> rule.executeOn(wrapper))
@@ -80,7 +92,7 @@ public class RulesTest {
                         .forEach(System.out::println);
     }
 
-    private Result executeOn(RuleRegistry registry, AccountRulesId id) {
+    private Result executeOn(RuleRegistry registry, RuleId id) {
         return registry.get(id).map(rule -> rule.executeOn(wrapper)).orElseThrow(AssertionError::new);
     }
 

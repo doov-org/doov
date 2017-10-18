@@ -5,8 +5,9 @@ package io.doov.core.dsl.meta;
 
 import static java.util.stream.Collectors.joining;
 
-import java.time.LocalDate;
+import java.time.temporal.Temporal;
 import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import io.doov.core.FieldInfo;
@@ -52,12 +53,30 @@ public class FieldMetadata extends AbstractMetadata {
         return new FieldMetadata(field, "is not null", value);
     }
 
-    public static FieldMetadata afterMetadata(LocalDateFieldInfo field, LocalDate value) {
+    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata afterMetadata(F field, N value) {
         return new FieldMetadata(field, "after", value);
     }
 
-    public static FieldMetadata beforeMetadata(LocalDateFieldInfo field, LocalDate value) {
+    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata beforeMetadata(F field, N value) {
         return new FieldMetadata(field, "before", value);
+    }
+
+    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata afterMetadata(F field1, F field2) {
+        return new FieldMetadata(field1, "after", field2);
+    }
+
+    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata beforeMetadata(F field1, F field2) {
+        return new FieldMetadata(field1, "before", field2);
+    }
+
+    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata afterMetadata(
+                    F field, Supplier<N> value) {
+        return new FieldMetadata(field, "after", () -> value.get().toString());
+    }
+
+    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata beforeMetadata(
+                    F field, Supplier<N> value) {
+        return new FieldMetadata(field, "before", () -> value.get().toString());
     }
 
     public static FieldMetadata matchesMetadata(StringFieldInfo field, String value) {

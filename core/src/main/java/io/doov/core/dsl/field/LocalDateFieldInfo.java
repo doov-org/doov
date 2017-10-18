@@ -7,36 +7,18 @@ import java.time.LocalDate;
 
 import io.doov.core.FieldId;
 import io.doov.core.dsl.impl.LocalDateCondition;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.impl.TemporalCondition;
 
-public class LocalDateFieldInfo extends DefaultFieldInfo<LocalDate> {
+public class LocalDateFieldInfo extends DefaultFieldInfo<LocalDate>
+                implements TemporalFieldInfo<LocalDateFieldInfo, LocalDate> {
 
     LocalDateFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
         super(fieldId, readable, LocalDate.class, new Class[] {}, siblings);
     }
 
-    public StepCondition before(LocalDate value) {
-        return LocalDateCondition.before(this, value);
-    }
-
-    public StepCondition beforeOrEq(LocalDate value) {
-        return LocalDateCondition.beforeOrEq(this, value);
-    }
-
-    public StepCondition after(LocalDate value) {
-        return LocalDateCondition.after(this, value);
-    }
-
-    public StepCondition afterOrEq(LocalDate value) {
-        return LocalDateCondition.afterOrEq(this, value);
-    }
-
-    public StepCondition between(LocalDate minValue, LocalDate maxValue) {
-        return LocalDateCondition.between(this, minValue, maxValue);
-    }
-
-    public StepCondition notBetween(LocalDate minValue, LocalDate maxValue) {
-        return LocalDateCondition.notBetween(this, minValue, maxValue);
+    @Override
+    public TemporalCondition<LocalDateFieldInfo, LocalDate> getTemporalCondition() {
+        return new LocalDateCondition(this);
     }
 
 }

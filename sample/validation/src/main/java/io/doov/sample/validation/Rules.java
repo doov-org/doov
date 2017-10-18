@@ -1,10 +1,12 @@
 package io.doov.sample.validation;
 
 import static io.doov.core.dsl.DSL.matchAny;
+import static io.doov.core.dsl.LocalDateSuppliers.todayMinusYears;
 import static io.doov.sample.field.SampleFieldIdInfo.*;
 import static io.doov.sample.validation.AccountRulesId.VALID_COUNTRY;
 import static io.doov.sample.validation.AccountRulesId.VALID_EMAIL;
 import static io.doov.sample.validation.AccountRulesId.VALID_EMAIL_SIZE;
+import static io.doov.sample.validation.UserRulesId.VALID_ADULT;
 
 import io.doov.core.dsl.DSL;
 import io.doov.core.dsl.impl.DefaultRuleRegistry;
@@ -37,7 +39,16 @@ public class Rules extends DefaultRuleRegistry {
                         .validate()
                         .registerOn(REGISTRY_ACCOUNT, VALID_COUNTRY);
 
-        DSL.when(userId().isNotNull()).validate().registerOn(REGISTRY_USER);
+    }
+
+    static {
+        DSL.when(userId().isNotNull())
+                        .validate()
+                        .registerOn(REGISTRY_USER);
+
+        DSL.when(userBirthdate().before(todayMinusYears(18)))
+                        .validate()
+                        .registerOn(REGISTRY_USER, VALID_ADULT);
     }
 
 }
