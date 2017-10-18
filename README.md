@@ -49,3 +49,14 @@ REGISTRY_DEFAULT.stream()
     .collect(toList());
 ```
 
+The rules provides an AST that can be printed as a human readable format with
+
+```java
+DSL.when(userBirthdate().ageAt(today()).greaterOrEquals(18L)).validate().readable()
+> When user age at 'today' greater or equals '18', validate with empty message
+```
+
+## Licence
+
+[MIT License](LICENSE.txt)
+
