@@ -1,16 +1,13 @@
 package io.doov.sample.validation;
 
-import static io.doov.sample.validation.AccountRulesId.VALID_COUNTRY;
-import static io.doov.sample.validation.AccountRulesId.VALID_EMAIL;
-import static io.doov.sample.validation.AccountRulesId.VALID_EMAIL_SIZE;
 import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
 import static io.doov.sample.validation.Rules.REGISTRY_USER;
-import static io.doov.sample.validation.UserRulesId.VALID_ADULT;
+import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT;
+import static io.doov.sample.validation.id.AccountRulesId.VALID_EMAIL;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,27 +49,11 @@ public class RulesTest {
     }
 
     @Test
-    public void test_valid_email_size() {
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL_SIZE).isValid()).isTrue();
-
-        account.setMaxEmailSize(5);
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL_SIZE).isValid()).isFalse();
-    }
-
-    @Test
     public void test_valid_country() {
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_COUNTRY).isValid()).isTrue();
+        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT).isValid()).isTrue();
 
-        account.setPhoneNumber("+336123456789");
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_COUNTRY).isValid()).isFalse();
-    }
-
-    @Test
-    public void test_valid_adult() {
-        assertThat(executeOn(REGISTRY_USER, VALID_ADULT).isValid()).isTrue();
-
-        user.setBirthDate(LocalDate.now());
-        assertThat(executeOn(REGISTRY_USER, VALID_ADULT).isValid()).isFalse();
+        account.setPhoneNumber("+446123456789");
+        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT).isValid()).isFalse();
     }
 
     @Test

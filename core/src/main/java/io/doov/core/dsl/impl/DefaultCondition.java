@@ -29,6 +29,7 @@ class DefaultCondition<F extends DefaultFieldInfo<N>, N> {
     }
 
     N value(FieldModel model, F field) {
+        // TODO this can be null
         return model.get(field.id());
     }
 
@@ -37,7 +38,7 @@ class DefaultCondition<F extends DefaultFieldInfo<N>, N> {
         return new DefaultStepCondition<>(this.metadata.merge(metadata), this.value, predicate);
     }
 
-    static class DefaultStepCondition<N> extends AbstractStepCondition {
+    public static class DefaultStepCondition<N> extends AbstractStepCondition {
 
         DefaultStepCondition(Metadata metadata,
                         Function<FieldModel, Optional<N>> value,

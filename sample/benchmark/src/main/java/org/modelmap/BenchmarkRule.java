@@ -4,8 +4,8 @@ import static io.doov.core.dsl.DSL.matchAll;
 import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
 import static io.doov.sample.field.SampleFieldIdInfo.accountLanguage;
 import static io.doov.sample.field.SampleFieldIdInfo.accountPhoneNumber;
-import static io.doov.sample.validation.AccountRulesId.VALID_EMAIL;
 import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
+import static io.doov.sample.validation.id.AccountRulesId.VALID_EMAIL;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -16,7 +16,7 @@ import org.openjdk.jmh.logic.BlackHole;
 import io.doov.core.dsl.DSL;
 import io.doov.core.dsl.lang.*;
 import io.doov.sample.model.*;
-import io.doov.sample.validation.AccountRulesId;
+import io.doov.sample.validation.id.AccountRulesId;
 
 public class BenchmarkRule {
 

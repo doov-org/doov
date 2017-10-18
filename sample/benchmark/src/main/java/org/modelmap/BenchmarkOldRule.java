@@ -3,6 +3,7 @@ package org.modelmap;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.logic.BlackHole;
 
+import io.doov.sample.model.SampleModel;
 import io.doov.sample.model.SampleModels;
 import io.doov.sample.validation.RulesOld;
 
@@ -19,7 +20,8 @@ public class BenchmarkOldRule {
     }
 
     public void valid_country(BlackHole blackhole) {
-        boolean valid = RulesOld.validateCountry(SampleModels.sample().getAccount());
+        SampleModel sample = SampleModels.sample();
+        boolean valid = RulesOld.validateAccount(sample.getUser(), sample.getAccount(), sample.getConfiguration());
         if (blackhole != null) {
             blackhole.consume(valid);
         }

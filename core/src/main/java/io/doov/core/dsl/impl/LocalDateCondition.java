@@ -4,6 +4,7 @@
 package io.doov.core.dsl.impl;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.function.Function;
 
 import io.doov.core.dsl.field.LocalDateFieldInfo;
@@ -22,6 +23,11 @@ public class LocalDateCondition extends TemporalCondition<LocalDateFieldInfo, Lo
     @Override
     Function<LocalDate, Boolean> beforeFunction(LocalDate value) {
         return v -> v.isBefore(value);
+    }
+
+    @Override
+    Function<LocalDate, Long> betweenFunction(ChronoUnit unit, LocalDate value) {
+        return v -> unit.between(v, value);
     }
 
 }
