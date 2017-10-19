@@ -8,42 +8,63 @@ import static io.doov.core.dsl.meta.FieldMetadata.notEqualsMetadata;
 import static io.doov.core.dsl.meta.FieldMetadata.notNullMetadata;
 import static io.doov.core.dsl.meta.FieldMetadata.nullMetadata;
 
+import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
+import java.util.function.Function;
 
-import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.field.DefaultFieldInfo;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
-public class TypeCondition<T> extends AbstractStepCondition {
+public class TypeCondition<T> extends DefaultCondition<DefaultFieldInfo<T>, T> {
 
-    private TypeCondition(FieldMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
-        super(metadata, predicate);
+    public TypeCondition(DefaultFieldInfo<T> field) {
+        super(field);
     }
 
-    public static <T> TypeCondition<T> eq(FieldInfo field, T value) {
-        return new TypeCondition<>(equalsMetadata(field, value),
-                        (model, context) -> value(model, field).map(v -> v.equals(value)).orElse(false));
+    public TypeCondition(FieldMetadata metadata, Function<FieldModel, Optional<T>> value) {
+        super(metadata, value);
     }
 
-    public static <T> TypeCondition<T> notEq(FieldInfo field, T value) {
-        return new TypeCondition<>(notEqualsMetadata(field, value),
-                        (model, context) -> value(model, field).map(v -> !v.equals(value)).orElse(false));
+    // equals
+
+    public final StepCondition eq(T value) {
+        return step(equalsMetadata(field, value),
+                        model -> Optional.ofNullable(value),
+                        Object::equals);
     }
 
-    public static <T> TypeCondition<T> isNull(FieldInfo field) {
-        return new TypeCondition<>(nullMetadata(field, null),
-                        (model, context) -> !value(model, field).isPresent());
+    public final StepCondition eq(DefaultFieldInfo<T> value) {
+        return step(equalsMetadata(field, value),
+                        model -> value(model, value),
+                        Object::equals);
     }
 
-    public static <T> TypeCondition<T> isNotNull(FieldInfo field) {
-        return new TypeCondition<>(notNullMetadata(field, null),
-                        (model, context) -> value(model, field).isPresent());
+    // not equals
+
+    public final StepCondition notEq(T value) {
+        return step(notEqualsMetadata(field, value),
+                        model -> Optional.ofNullable(value),
+                        (v1, v2) -> !v1.equals(v2));
     }
 
-    public static <T> Optional<T> value(FieldModel fieldModel, FieldInfo field) {
-        return Optional.ofNullable(fieldModel.<T> get(field.id()));
+    public final StepCondition notEq(DefaultFieldInfo<T> value) {
+        return step(notEqualsMetadata(field, value),
+                        model -> value(model, value),
+                        (v1, v2) -> !v1.equals(v2));
+    }
+
+    // null
+
+    public final StepCondition isNull() {
+        return step(nullMetadata(field, value), Objects::isNull);
+    }
+
+    // not null
+
+    public final StepCondition isNotNull() {
+        return step(notNullMetadata(field, value), obj -> !Objects.isNull(obj));
     }
 
 }

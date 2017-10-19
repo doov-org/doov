@@ -14,11 +14,11 @@ public class BooleanFieldInfo extends DefaultFieldInfo<Boolean> {
     }
 
     public StepCondition isTrue() {
-        return BooleanCondition.isTrue(this);
+        return new BooleanCondition(this).isTrue();
     }
 
     public StepCondition isFalse() {
-        return BooleanCondition.isFalse(this);
+        return new BooleanCondition(this).isFalse();
     }
 
 }

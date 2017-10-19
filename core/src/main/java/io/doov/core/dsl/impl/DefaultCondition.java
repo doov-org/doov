@@ -35,12 +35,23 @@ class DefaultCondition<F extends DefaultFieldInfo<N>, N> {
     }
 
     StepCondition step(FieldMetadata metadata,
+                    Function<N, Boolean> predicate) {
+        return new DefaultStepCondition<>(this.metadata.merge(metadata), this.value, predicate);
+    }
+
+    StepCondition step(FieldMetadata metadata,
                     Function<FieldModel, Optional<N>> value,
                     BiFunction<N, N, Boolean> predicate) {
         return new DefaultStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
     }
 
     static class DefaultStepCondition<N> extends AbstractStepCondition {
+
+        DefaultStepCondition(Metadata metadata,
+                        Function<FieldModel, Optional<N>> value,
+                        Function<N, Boolean> predicate) {
+            super(metadata, (model, context) -> value.apply(model).map(predicate).orElse(false));
+        }
 
         DefaultStepCondition(Metadata metadata,
                         Function<FieldModel, Optional<N>> left,

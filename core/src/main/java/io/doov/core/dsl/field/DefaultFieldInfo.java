@@ -50,19 +50,27 @@ public class DefaultFieldInfo<T> implements FieldInfo {
     }
 
     public StepCondition eq(T value) {
-        return TypeCondition.eq(this, value);
+        return new TypeCondition<>(this).eq(value);
+    }
+
+    public StepCondition eq(DefaultFieldInfo<T> value) {
+        return new TypeCondition<>(this).eq(value);
     }
 
     public StepCondition notEq(T value) {
-        return TypeCondition.notEq(this, value);
+        return new TypeCondition<>(this).notEq(value);
+    }
+
+    public StepCondition notEq(DefaultFieldInfo<T> value) {
+        return new TypeCondition<>(this).notEq(value);
     }
 
     public StepCondition isNull() {
-        return TypeCondition.isNull(this);
+        return new TypeCondition<>(this).isNull();
     }
 
     public StepCondition isNotNull() {
-        return TypeCondition.isNotNull(this);
+        return new TypeCondition<>(this).isNotNull();
     }
 
 }

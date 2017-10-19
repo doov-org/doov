@@ -39,8 +39,6 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
                         (v1, v2) -> lesserThanFunction().apply(v1, v2));
     }
 
-    public abstract BiFunction<N, N, Boolean> lesserThanFunction();
-
     public final StepCondition lesserOrEquals(N value) {
         return step(lesserOrEqualsMetadata(field, value),
                         model -> Optional.ofNullable(value),
@@ -52,6 +50,8 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
                         model -> value(model, value),
                         (v1, v2) -> lesserOrEqualsFunction().apply(v1, v2));
     }
+
+    public abstract BiFunction<N, N, Boolean> lesserThanFunction();
 
     public abstract BiFunction<N, N, Boolean> lesserOrEqualsFunction();
 
@@ -69,21 +69,21 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
                         (v1, v2) -> greaterThanFunction().apply(v1, v2));
     }
 
-    public abstract BiFunction<N, N, Boolean> greaterThanFunction();
-
     public final StepCondition greaterOrEquals(N value) {
         return step(greaterOrEqualsMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         (v1, v2) -> greaterOrEqualsFunction().apply(v1, v2));
     }
 
-    public abstract BiFunction<N, N, Boolean> greaterOrEqualsFunction();
-
     public final StepCondition greaterOrEquals(F value) {
         return step(greaterOrEqualsMetadata(this.field, value),
                         model -> value(model, value),
                         (v1, v2) -> greaterOrEqualsFunction().apply(v1, v2));
     }
+
+    public abstract BiFunction<N, N, Boolean> greaterThanFunction();
+
+    public abstract BiFunction<N, N, Boolean> greaterOrEqualsFunction();
 
     // between
 

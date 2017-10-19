@@ -19,19 +19,19 @@ public class StringFieldInfo extends DefaultFieldInfo<String> {
     }
 
     public StepCondition contains(String regex) {
-        return StringCondition.contains(this, regex);
+        return new StringCondition(this).contains(regex);
     }
 
     public StepCondition matches(String regex) {
-        return StringCondition.matches(this, regex);
+        return new StringCondition(this).matches(regex);
     }
 
     public StepCondition startsWith(String prefix) {
-        return StringCondition.startsWith(this, prefix);
+        return new StringCondition(this).startsWith(prefix);
     }
 
     public StepCondition endsWith(String suffix) {
-        return StringCondition.endsWith(this, suffix);
+        return new StringCondition(this).endsWith(suffix);
     }
 
     public IntegerCondition length() {

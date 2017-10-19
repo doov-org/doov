@@ -4,33 +4,37 @@
 package io.doov.core.dsl.impl;
 
 import static io.doov.core.dsl.meta.FieldMetadata.isMetadata;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 import java.util.Optional;
-import java.util.function.BiPredicate;
+import java.util.function.Function;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.BooleanFieldInfo;
-import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
-public class BooleanCondition extends AbstractStepCondition {
+public class BooleanCondition extends DefaultCondition<BooleanFieldInfo, Boolean> {
 
-    private BooleanCondition(FieldMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
-        super(metadata, predicate);
+    public BooleanCondition(BooleanFieldInfo field) {
+        super(field);
     }
 
-    public static BooleanCondition isTrue(BooleanFieldInfo field) {
-        return new BooleanCondition(isMetadata(field, true),
-                        (model, context) -> value(model, field).orElse(false));
+    public BooleanCondition(FieldMetadata metadata, Function<FieldModel, Optional<Boolean>> value) {
+        super(metadata, value);
     }
 
-    public static BooleanCondition isFalse(BooleanFieldInfo field) {
-        return new BooleanCondition(isMetadata(field, false),
-                        (model, context) -> value(model, field).map(v -> !v).orElse(false));
+    public final StepCondition isTrue() {
+        return step(isMetadata(field, true),
+                        model -> Optional.of(TRUE),
+                        Boolean::equals);
     }
 
-    public static Optional<Boolean> value(FieldModel fieldModel, BooleanFieldInfo field) {
-        return Optional.ofNullable(fieldModel.<Boolean> get(field.id()));
+    public final StepCondition isFalse() {
+        return step(isMetadata(field, false),
+                        model -> Optional.of(FALSE),
+                        Boolean::equals);
     }
 
 }

@@ -9,41 +9,45 @@ import static io.doov.core.dsl.meta.FieldMetadata.matchesMetadata;
 import static io.doov.core.dsl.meta.FieldMetadata.startsWithMetadata;
 
 import java.util.Optional;
-import java.util.function.BiPredicate;
+import java.util.function.Function;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.StringFieldInfo;
-import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
-public class StringCondition extends AbstractStepCondition {
+public class StringCondition extends DefaultCondition<StringFieldInfo, String> {
 
-    private StringCondition(FieldMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
-        super(metadata, predicate);
+    public StringCondition(StringFieldInfo field) {
+        super(field);
     }
 
-    public static StringCondition contains(StringFieldInfo field, String value) {
-        return new StringCondition(containsMetadata(field, value),
-                        (model, context) -> value(model, field).map(v -> v.contains(value)).orElse(false));
+    public StringCondition(FieldMetadata metadata, Function<FieldModel, Optional<String>> value) {
+        super(metadata, value);
     }
 
-    public static StringCondition matches(StringFieldInfo field, String regex) {
-        return new StringCondition(matchesMetadata(field, regex),
-                        (model, context) -> value(model, field).map(v -> v.matches(regex)).orElse(false));
+    public final StepCondition contains(String regex) {
+        return step(containsMetadata(field, regex),
+                        model -> Optional.ofNullable(regex),
+                        String::contains);
     }
 
-    public static StringCondition startsWith(StringFieldInfo field, String prefix) {
-        return new StringCondition(startsWithMetadata(field, prefix),
-                        (model, context) -> value(model, field).map(v -> v.startsWith(prefix)).orElse(false));
+    public final StepCondition matches(String regex) {
+        return step(matchesMetadata(field, regex),
+                        model -> Optional.ofNullable(regex),
+                        String::matches);
     }
 
-    public static StringCondition endsWith(StringFieldInfo field, String suffix) {
-        return new StringCondition(endsWithMetadata(field, suffix),
-                        (model, context) -> value(model, field).map(v -> v.endsWith(suffix)).orElse(false));
+    public final StepCondition startsWith(String value) {
+        return step(startsWithMetadata(field, value),
+                        model -> Optional.ofNullable(value),
+                        String::startsWith);
     }
 
-    public static Optional<String> value(FieldModel fieldModel, StringFieldInfo field) {
-        return Optional.ofNullable(fieldModel.<String> get(field.id()));
+    public final StepCondition endsWith(String value) {
+        return step(endsWithMetadata(field, value),
+                        model -> Optional.ofNullable(value),
+                        String::endsWith);
     }
 
 }

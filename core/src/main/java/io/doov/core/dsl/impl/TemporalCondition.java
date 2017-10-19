@@ -48,7 +48,7 @@ public abstract class TemporalCondition<F extends DefaultFieldInfo<N>, N extends
     }
 
     public final StepCondition beforeOrEq(N value) {
-        return LogicalBinaryCondition.or(before(value), TypeCondition.eq(field, value));
+        return LogicalBinaryCondition.or(before(value), new TypeCondition<>(field).eq(value));
     }
 
     abstract BiFunction<N, N, Boolean> beforeFunction();
@@ -74,7 +74,7 @@ public abstract class TemporalCondition<F extends DefaultFieldInfo<N>, N extends
     }
 
     public final StepCondition afterOrEq(N value) {
-        return LogicalBinaryCondition.or(after(value), TypeCondition.eq(field, value));
+        return LogicalBinaryCondition.or(after(value), new TypeCondition<>(field).eq(value));
     }
 
     abstract BiFunction<N, N, Boolean> afterFunction();
