@@ -49,7 +49,7 @@ public class RulesTest {
     }
 
     @Test
-    public void test_valid_country() {
+    public void test_valid_account() {
         assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT).isValid()).isTrue();
 
         account.setPhoneNumber("+446123456789");
@@ -58,12 +58,12 @@ public class RulesTest {
 
     @Test
     public void test_all_account_rules_invalid_messages() {
-        List<Result> messages = REGISTRY_ACCOUNT.stream()
+        List<Result> results = REGISTRY_ACCOUNT.stream()
                         .map(rule -> rule.executeOn(wrapper))
                         .collect(toList());
-        assertThat(messages).isNotEmpty();
-        assertThat(messages).extracting(Result::isValid).allMatch(Boolean::booleanValue);
-        assertThat(messages).extracting(Result::getMessage).allMatch(Objects::isNull);
+        assertThat(results).isNotEmpty();
+        assertThat(results).extracting(Result::isValid).allMatch(Boolean::booleanValue);
+        assertThat(results).extracting(Result::getMessage).allMatch(Objects::isNull);
     }
 
     @Test

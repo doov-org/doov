@@ -4,6 +4,7 @@
 package io.doov.core.dsl.impl;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import io.doov.core.FieldModel;
@@ -21,28 +22,23 @@ public class FloatCondition extends NumericCondition<FloatFieldInfo, Float> {
     }
 
     @Override
-    public Function<Float, Boolean> lesserThanFunction(Float value) {
-        return i -> i < value;
+    public BiFunction<Float, Float, Boolean> lesserThanFunction() {
+        return (l, r) -> l < r;
     }
 
     @Override
-    public Function<Float, Boolean> lesserOrEqualsFunction(Float value) {
-        return i -> i <= value;
+    public BiFunction<Float, Float, Boolean> lesserOrEqualsFunction() {
+        return (l, r) -> l <= r;
     }
 
     @Override
-    public Function<Float, Boolean> greaterThanFunction(Float value) {
-        return i -> i > value;
+    public BiFunction<Float, Float, Boolean> greaterThanFunction() {
+        return (l, r) -> l > r;
     }
 
     @Override
-    public Function<Float, Boolean> greaterOrEqualsFunction(Float value) {
-        return i -> i >= value;
-    }
-
-    @Override
-    public Function<Float, Boolean> betweenFunction(Float minIncluded, Float maxExcluded) {
-        return i -> i >= minIncluded && i < maxExcluded;
+    public BiFunction<Float, Float, Boolean> greaterOrEqualsFunction() {
+        return (l, r) -> l >= r;
     }
 
 }

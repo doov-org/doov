@@ -2,7 +2,6 @@ package io.doov.sample.validation;
 
 import static io.doov.core.dsl.DSL.matchAll;
 import static io.doov.core.dsl.LocalDateSuppliers.today;
-import static io.doov.core.dsl.LocalDateSuppliers.todayMinusYears;
 import static io.doov.sample.field.SampleFieldIdInfo.*;
 import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT;
 import static io.doov.sample.validation.id.AccountRulesId.VALID_EMAIL;
@@ -43,8 +42,7 @@ public class Rules extends DefaultRuleRegistry {
                         .validate()
                         .registerOn(REGISTRY_USER);
 
-        DSL.when(userBirthdate().before(todayMinusYears(18)))
-                        .validate()
+        DSL.when(userBirthdate().ageAt(today()).greaterOrEquals(18L)).validate()
                         .registerOn(REGISTRY_USER);
     }
 

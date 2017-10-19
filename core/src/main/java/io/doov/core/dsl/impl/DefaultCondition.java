@@ -3,6 +3,7 @@ package io.doov.core.dsl.impl;
 import static io.doov.core.dsl.meta.FieldMetadata.emptyMetadata;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import io.doov.core.FieldModel;
@@ -28,22 +29,26 @@ class DefaultCondition<F extends DefaultFieldInfo<N>, N> {
         this.value = value;
     }
 
-    N value(FieldModel model, F field) {
-        // TODO this can be null
-        return model.get(field.id());
+    Optional<N> value(FieldModel model, F field) {
+        return Optional.ofNullable(model.<N> get(field.id()));
     }
 
     DefaultStepCondition<N> step(FieldMetadata metadata,
-                    Function<FieldModel, Function<N, Boolean>> predicate) {
-        return new DefaultStepCondition<>(this.metadata.merge(metadata), this.value, predicate);
+                    Function<FieldModel, Optional<N>> value,
+                    BiFunction<N, N, Boolean> predicate) {
+        return new DefaultStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
     }
 
     public static class DefaultStepCondition<N> extends AbstractStepCondition {
 
         DefaultStepCondition(Metadata metadata,
-                        Function<FieldModel, Optional<N>> value,
-                        Function<FieldModel, Function<N, Boolean>> predicate) {
-            super(metadata, (model, context) -> value.apply(model).map(predicate.apply(model)).orElse(false));
+                        Function<FieldModel, Optional<N>> left,
+                        Function<FieldModel, Optional<N>> right,
+                        BiFunction<N, N, Boolean> predicate) {
+            super(metadata, (model, context) -> left.apply(model)
+                            .flatMap(l -> right.apply(model).map(r -> predicate.apply(l, r)))
+                            .orElse(false));
+
         }
 
     }

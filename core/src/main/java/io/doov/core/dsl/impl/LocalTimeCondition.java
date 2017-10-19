@@ -5,7 +5,7 @@ package io.doov.core.dsl.impl;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import io.doov.core.dsl.field.LocalTimeFieldInfo;
 
@@ -16,18 +16,18 @@ public class LocalTimeCondition extends TemporalCondition<LocalTimeFieldInfo, Lo
     }
 
     @Override
-    Function<LocalTime, Boolean> afterFunction(LocalTime value) {
-        return v -> v.isAfter(value);
+    BiFunction<LocalTime, LocalTime, Boolean> afterFunction() {
+        return LocalTime::isAfter;
     }
 
     @Override
-    Function<LocalTime, Boolean> beforeFunction(LocalTime value) {
-        return v -> v.isBefore(value);
+    BiFunction<LocalTime, LocalTime, Boolean> beforeFunction() {
+        return LocalTime::isBefore;
     }
 
     @Override
-    Function<LocalTime, Long> betweenFunction(ChronoUnit unit, LocalTime value) {
-        return v -> unit.between(v, value);
+    BiFunction<LocalTime, LocalTime, Long> betweenFunction(ChronoUnit unit) {
+        return unit::between;
     }
 
 }

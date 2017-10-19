@@ -1,12 +1,17 @@
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static io.doov.core.dsl.meta.FieldMetadata.greaterOrEqualsMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.greaterThanMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.lesserOrEqualsMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.lesserThanMetadata;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.DefaultFieldInfo;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
 public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends Number>
@@ -20,64 +25,74 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
         super(metadata, value);
     }
 
+    // lesser than
+
     public final DefaultStepCondition<N> lesserThan(N value) {
         return step(lesserThanMetadata(field, value),
-                        model -> lesserThanFunction(value));
+                        model -> Optional.ofNullable(value),
+                        (v1, v2) -> lesserThanFunction().apply(v1, v2));
     }
+
+    public final DefaultStepCondition<N> lesserThan(F value) {
+        return step(lesserThanMetadata(this.field, value),
+                        model -> value(model, value),
+                        (v1, v2) -> lesserThanFunction().apply(v1, v2));
+    }
+
+    public abstract BiFunction<N, N, Boolean> lesserThanFunction();
 
     public final DefaultStepCondition<N> lesserOrEquals(N value) {
         return step(lesserOrEqualsMetadata(field, value),
-                        model -> lesserOrEqualsFunction(value));
+                        model -> Optional.ofNullable(value),
+                        (v1, v2) -> lesserOrEqualsFunction().apply(v1, v2));
     }
+
+    public final DefaultStepCondition<N> lesserOrEquals(F value) {
+        return step(lesserOrEqualsMetadata(this.field, value),
+                        model -> value(model, value),
+                        (v1, v2) -> lesserOrEqualsFunction().apply(v1, v2));
+    }
+
+    public abstract BiFunction<N, N, Boolean> lesserOrEqualsFunction();
+
+    // greater than
 
     public final DefaultStepCondition<N> greaterThan(N value) {
         return step(greaterThanMetadata(field, value),
-                        model -> greaterThanFunction(value));
+                        model -> Optional.ofNullable(value),
+                        (v1, v2) -> greaterThanFunction().apply(v1, v2));
     }
+
+    public final DefaultStepCondition<N> greaterThan(F value) {
+        return step(greaterThanMetadata(this.field, value),
+                        model -> value(model, value),
+                        (v1, v2) -> greaterThanFunction().apply(v1, v2));
+    }
+
+    public abstract BiFunction<N, N, Boolean> greaterThanFunction();
 
     public final DefaultStepCondition<N> greaterOrEquals(N value) {
         return step(greaterOrEqualsMetadata(field, value),
-                        model -> greaterOrEqualsFunction(value));
+                        model -> Optional.ofNullable(value),
+                        (v1, v2) -> greaterOrEqualsFunction().apply(v1, v2));
     }
 
-    public final DefaultStepCondition<N> between(N minIncluded, N maxExcluded) {
-        return step(betweenMetadata(field, minIncluded, maxExcluded),
-                        model -> betweenFunction(minIncluded, maxExcluded));
+    public abstract BiFunction<N, N, Boolean> greaterOrEqualsFunction();
+
+    public final DefaultStepCondition<N> greaterOrEquals(F value) {
+        return step(greaterOrEqualsMetadata(this.field, value),
+                        model -> value(model, value),
+                        (v1, v2) -> greaterOrEqualsFunction().apply(v1, v2));
     }
 
-    public final DefaultStepCondition<N> lesserThan(F field) {
-        return step(lesserThanMetadata(this.field, field),
-                        model -> lesserThanFunction(value(model, field)));
+    // between
+
+    public final StepCondition between(N minIncluded, N maxExcluded) {
+        return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
 
-    public final DefaultStepCondition<N> lesserOrEquals(F field) {
-        return step(lesserOrEqualsMetadata(this.field, field),
-                        model -> lesserOrEqualsFunction(value(model, field)));
+    public final StepCondition between(F minIncluded, F maxExcluded) {
+        return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
-
-    public final DefaultStepCondition<N> greaterThan(F field) {
-        return step(greaterThanMetadata(this.field, field),
-                        model -> greaterThanFunction(value(model, field)));
-    }
-
-    public final DefaultStepCondition<N> greaterOrEquals(F field) {
-        return step(greaterOrEqualsMetadata(this.field, field),
-                        model -> greaterOrEqualsFunction(value(model, field)));
-    }
-
-    public final DefaultStepCondition<N> between(F minIncluded, F maxExcluded) {
-        return step(greaterOrEqualsMetadata(this.field, field),
-                        model -> betweenFunction(value(model, minIncluded), value(model, maxExcluded)));
-    }
-
-    public abstract Function<N, Boolean> lesserThanFunction(N value);
-
-    public abstract Function<N, Boolean> lesserOrEqualsFunction(N value);
-
-    public abstract Function<N, Boolean> greaterThanFunction(N value);
-
-    public abstract Function<N, Boolean> greaterOrEqualsFunction(N value);
-
-    public abstract Function<N, Boolean> betweenFunction(N minIncluded, N maxExcluded);
 
 }

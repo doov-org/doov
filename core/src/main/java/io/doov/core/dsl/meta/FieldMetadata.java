@@ -91,7 +91,7 @@ public class FieldMetadata extends AbstractMetadata {
 
     public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata ageAtMetadata(
                     F field, Supplier<N> supplier) {
-        return new FieldMetadata(field, "age at", () -> supplier.get().toString());
+        return new FieldMetadata(field, "age at " + supplier.get().toString(), null);
     }
 
     public static FieldMetadata matchesMetadata(StringFieldInfo field, String value) {
