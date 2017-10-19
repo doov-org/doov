@@ -73,6 +73,4 @@ public interface TemporalFieldInfo<F extends DefaultFieldInfo<N>, N extends Temp
 
     TemporalCondition<F, N> getTemporalCondition();
 
-    NumericCondition<LongFieldInfo, Long> getAgeAtStepCondition(N value);
-
 }

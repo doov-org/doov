@@ -7,7 +7,7 @@ import io.doov.core.dsl.lang.*;
 
 public class DefaultRuleRegistry implements RuleRegistry {
 
-    public static final RuleRegistry REGISTRY = new DefaultRuleRegistry();
+    public static final RuleRegistry REGISTRY_DEFAULT = new DefaultRuleRegistry();
 
     private final Map<RuleId, ValidationRule> rules = new HashMap<>();
 

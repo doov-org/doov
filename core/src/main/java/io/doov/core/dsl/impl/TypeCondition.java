@@ -46,13 +46,13 @@ public class TypeCondition<T> extends DefaultCondition<DefaultFieldInfo<T>, T> {
     public final StepCondition notEq(T value) {
         return step(notEqualsMetadata(field, value),
                         model -> Optional.ofNullable(value),
-                        (v1, v2) -> !v1.equals(v2));
+                        (l, r) -> !l.equals(r));
     }
 
     public final StepCondition notEq(DefaultFieldInfo<T> value) {
         return step(notEqualsMetadata(field, value),
                         model -> value(model, value),
-                        (v1, v2) -> !v1.equals(v2));
+                        (l, r) -> !l.equals(r));
     }
 
     // null

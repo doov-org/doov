@@ -32,19 +32,19 @@ public abstract class TemporalCondition<F extends DefaultFieldInfo<N>, N extends
     public final StepCondition before(N value) {
         return step(beforeMetadata(field, value),
                         model -> Optional.ofNullable(value),
-                        (v1, v2) -> beforeFunction().apply(v1, v2));
+                        (l, r) -> beforeFunction().apply(l, r));
     }
 
     public final StepCondition before(F value) {
         return step(beforeMetadata(field, value),
                         model -> value(model, value),
-                        (v1, v2) -> beforeFunction().apply(v1, v2));
+                        (l, r) -> beforeFunction().apply(l, r));
     }
 
     public final StepCondition before(Supplier<N> value) {
         return step(beforeMetadata(field, value),
                         model -> Optional.ofNullable(value.get()),
-                        (v1, v2) -> beforeFunction().apply(v1, v2));
+                        (l, r) -> beforeFunction().apply(l, r));
     }
 
     public final StepCondition beforeOrEq(N value) {
@@ -58,19 +58,19 @@ public abstract class TemporalCondition<F extends DefaultFieldInfo<N>, N extends
     public final StepCondition after(N value) {
         return step(afterMetadata(field, value),
                         model -> Optional.ofNullable(value),
-                        (v1, v2) -> afterFunction().apply(v1, v2));
+                        (l, r) -> afterFunction().apply(l, r));
     }
 
     public final StepCondition after(F value) {
         return step(afterMetadata(field, value),
                         model -> value(model, value),
-                        (v1, v2) -> afterFunction().apply(v1, v2));
+                        (l, r) -> afterFunction().apply(l, r));
     }
 
     public final StepCondition after(Supplier<N> value) {
         return step(afterMetadata(field, value),
                         model -> Optional.ofNullable(value.get()),
-                        (v1, v2) -> afterFunction().apply(v1, v2));
+                        (l, r) -> afterFunction().apply(l, r));
     }
 
     public final StepCondition afterOrEq(N value) {

@@ -30,25 +30,25 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
     public final StepCondition lesserThan(N value) {
         return step(lesserThanMetadata(field, value),
                         model -> Optional.ofNullable(value),
-                        (v1, v2) -> lesserThanFunction().apply(v1, v2));
+                        (l, r) -> lesserThanFunction().apply(l, r));
     }
 
     public final StepCondition lesserThan(F value) {
         return step(lesserThanMetadata(this.field, value),
                         model -> value(model, value),
-                        (v1, v2) -> lesserThanFunction().apply(v1, v2));
+                        (l, r) -> lesserThanFunction().apply(l, r));
     }
 
     public final StepCondition lesserOrEquals(N value) {
         return step(lesserOrEqualsMetadata(field, value),
                         model -> Optional.ofNullable(value),
-                        (v1, v2) -> lesserOrEqualsFunction().apply(v1, v2));
+                        (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
     public final StepCondition lesserOrEquals(F value) {
         return step(lesserOrEqualsMetadata(this.field, value),
                         model -> value(model, value),
-                        (v1, v2) -> lesserOrEqualsFunction().apply(v1, v2));
+                        (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
     public abstract BiFunction<N, N, Boolean> lesserThanFunction();
@@ -60,25 +60,25 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
     public final StepCondition greaterThan(N value) {
         return step(greaterThanMetadata(field, value),
                         model -> Optional.ofNullable(value),
-                        (v1, v2) -> greaterThanFunction().apply(v1, v2));
+                        (l, r) -> greaterThanFunction().apply(l, r));
     }
 
     public final StepCondition greaterThan(F value) {
         return step(greaterThanMetadata(this.field, value),
                         model -> value(model, value),
-                        (v1, v2) -> greaterThanFunction().apply(v1, v2));
+                        (l, r) -> greaterThanFunction().apply(l, r));
     }
 
     public final StepCondition greaterOrEquals(N value) {
         return step(greaterOrEqualsMetadata(field, value),
                         model -> Optional.ofNullable(value),
-                        (v1, v2) -> greaterOrEqualsFunction().apply(v1, v2));
+                        (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
     public final StepCondition greaterOrEquals(F value) {
         return step(greaterOrEqualsMetadata(this.field, value),
                         model -> value(model, value),
-                        (v1, v2) -> greaterOrEqualsFunction().apply(v1, v2));
+                        (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
     public abstract BiFunction<N, N, Boolean> greaterThanFunction();
