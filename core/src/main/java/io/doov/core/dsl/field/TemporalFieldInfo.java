@@ -1,13 +1,23 @@
 package io.doov.core.dsl.field;
 
 import java.time.temporal.Temporal;
+import java.time.temporal.TemporalUnit;
 import java.util.function.Supplier;
 
-import io.doov.core.dsl.impl.NumericCondition;
-import io.doov.core.dsl.impl.TemporalCondition;
+import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.StepCondition;
 
 public interface TemporalFieldInfo<F extends DefaultFieldInfo<N>, N extends Temporal> {
+
+    // minus plus
+
+    default FunctionWithMetadata<N, N> minus(int value, TemporalUnit unit) {
+        return getTemporalCondition().minus(value, unit);
+    }
+
+    default FunctionWithMetadata<N, N> plus(int value, TemporalUnit unit) {
+        return getTemporalCondition().plus(value, unit);
+    }
 
     // before
 
@@ -20,6 +30,10 @@ public interface TemporalFieldInfo<F extends DefaultFieldInfo<N>, N extends Temp
     }
 
     default StepCondition before(Supplier<N> value) {
+        return getTemporalCondition().before(value);
+    }
+
+    default StepCondition before(FunctionWithMetadata<N, N> value) {
         return getTemporalCondition().before(value);
     }
 
@@ -38,6 +52,10 @@ public interface TemporalFieldInfo<F extends DefaultFieldInfo<N>, N extends Temp
     }
 
     default StepCondition after(Supplier<N> value) {
+        return getTemporalCondition().after(value);
+    }
+
+    default StepCondition after(FunctionWithMetadata<N, N> value) {
         return getTemporalCondition().after(value);
     }
 

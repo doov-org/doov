@@ -5,7 +5,9 @@ package io.doov.core.dsl.impl;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import io.doov.core.dsl.field.LocalDateTimeFieldInfo;
 
@@ -13,6 +15,16 @@ public class LocalDateTimeCondition extends TemporalCondition<LocalDateTimeField
 
     public LocalDateTimeCondition(LocalDateTimeFieldInfo field) {
         super(field);
+    }
+
+    @Override
+    Function<LocalDateTime, LocalDateTime> minusFunction(int value, TemporalUnit unit) {
+        return d -> d.minus(value, unit);
+    }
+
+    @Override
+    Function<LocalDateTime, LocalDateTime> plusFunction(int value, TemporalUnit unit) {
+        return d -> d.plus(value, unit);
     }
 
     @Override

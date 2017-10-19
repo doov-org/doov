@@ -26,13 +26,13 @@ public class BooleanCondition extends DefaultCondition<BooleanFieldInfo, Boolean
     }
 
     public final StepCondition isTrue() {
-        return step(isMetadata(field, true),
+        return predicate(isMetadata(field, true),
                         model -> Optional.of(TRUE),
                         Boolean::equals);
     }
 
     public final StepCondition isFalse() {
-        return step(isMetadata(field, false),
+        return predicate(isMetadata(field, false),
                         model -> Optional.of(FALSE),
                         Boolean::equals);
     }

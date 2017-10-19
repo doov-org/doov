@@ -28,25 +28,25 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
     // lesser than
 
     public final StepCondition lesserThan(N value) {
-        return step(lesserThanMetadata(field, value),
+        return predicate(lesserThanMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         (l, r) -> lesserThanFunction().apply(l, r));
     }
 
     public final StepCondition lesserThan(F value) {
-        return step(lesserThanMetadata(this.field, value),
+        return predicate(lesserThanMetadata(this.field, value),
                         model -> value(model, value),
                         (l, r) -> lesserThanFunction().apply(l, r));
     }
 
     public final StepCondition lesserOrEquals(N value) {
-        return step(lesserOrEqualsMetadata(field, value),
+        return predicate(lesserOrEqualsMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
     public final StepCondition lesserOrEquals(F value) {
-        return step(lesserOrEqualsMetadata(this.field, value),
+        return predicate(lesserOrEqualsMetadata(this.field, value),
                         model -> value(model, value),
                         (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
@@ -58,25 +58,25 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
     // greater than
 
     public final StepCondition greaterThan(N value) {
-        return step(greaterThanMetadata(field, value),
+        return predicate(greaterThanMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         (l, r) -> greaterThanFunction().apply(l, r));
     }
 
     public final StepCondition greaterThan(F value) {
-        return step(greaterThanMetadata(this.field, value),
+        return predicate(greaterThanMetadata(this.field, value),
                         model -> value(model, value),
                         (l, r) -> greaterThanFunction().apply(l, r));
     }
 
     public final StepCondition greaterOrEquals(N value) {
-        return step(greaterOrEqualsMetadata(field, value),
+        return predicate(greaterOrEqualsMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
     public final StepCondition greaterOrEquals(F value) {
-        return step(greaterOrEqualsMetadata(this.field, value),
+        return predicate(greaterOrEqualsMetadata(this.field, value),
                         model -> value(model, value),
                         (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }

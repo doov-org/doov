@@ -6,6 +6,7 @@ package io.doov.core.dsl.meta;
 import static java.util.stream.Collectors.joining;
 
 import java.time.temporal.Temporal;
+import java.time.temporal.TemporalUnit;
 import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -65,6 +66,16 @@ public class FieldMetadata extends AbstractMetadata {
         return new FieldMetadata(field, "is not", value);
     }
 
+    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata minusMetadata(
+                    F field, int value, TemporalUnit unit) {
+        return new FieldMetadata(field, "minus", value + " " + unit);
+    }
+
+    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata plusMetadata(
+                    F field, int value, TemporalUnit unit) {
+        return new FieldMetadata(field, "plus", value + " " + unit);
+    }
+
     public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata afterMetadata(F field, N value) {
         return new FieldMetadata(field, "after", value);
     }
@@ -86,9 +97,19 @@ public class FieldMetadata extends AbstractMetadata {
         return new FieldMetadata(field, "after", () -> value.get().toString());
     }
 
+    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata afterMetadata(
+                    F field, Readable value) {
+        return new FieldMetadata(field, "after", value);
+    }
+
     public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata beforeMetadata(
                     F field, Supplier<N> supplier) {
         return new FieldMetadata(field, "before", () -> supplier.get().toString());
+    }
+
+    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata beforeMetadata(
+                    F field, Readable value) {
+        return new FieldMetadata(field, "before", value);
     }
 
     public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata ageAtMetadata(

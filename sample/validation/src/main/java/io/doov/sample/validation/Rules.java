@@ -5,6 +5,7 @@ import static io.doov.core.dsl.LocalDateSuppliers.today;
 import static io.doov.sample.field.SampleFieldIdInfo.*;
 import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT;
 import static io.doov.sample.validation.id.AccountRulesId.VALID_EMAIL;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 import io.doov.core.dsl.DSL;
 import io.doov.core.dsl.impl.DefaultRuleRegistry;
@@ -43,6 +44,9 @@ public class Rules extends DefaultRuleRegistry {
                         .registerOn(REGISTRY_USER);
 
         DSL.when(userBirthdate().ageAt(today()).greaterOrEquals(18L)).validate()
+                        .registerOn(REGISTRY_USER);
+
+        DSL.when(userBirthdate().before(userBirthdate().minus(1, DAYS))).validate()
                         .registerOn(REGISTRY_USER);
     }
 

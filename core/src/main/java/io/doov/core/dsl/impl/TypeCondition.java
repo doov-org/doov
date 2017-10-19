@@ -30,13 +30,13 @@ public class TypeCondition<T> extends DefaultCondition<DefaultFieldInfo<T>, T> {
     // equals
 
     public final StepCondition eq(T value) {
-        return step(equalsMetadata(field, value),
+        return predicate(equalsMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         Object::equals);
     }
 
     public final StepCondition eq(DefaultFieldInfo<T> value) {
-        return step(equalsMetadata(field, value),
+        return predicate(equalsMetadata(field, value),
                         model -> value(model, value),
                         Object::equals);
     }
@@ -44,13 +44,13 @@ public class TypeCondition<T> extends DefaultCondition<DefaultFieldInfo<T>, T> {
     // not equals
 
     public final StepCondition notEq(T value) {
-        return step(notEqualsMetadata(field, value),
+        return predicate(notEqualsMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         (l, r) -> !l.equals(r));
     }
 
     public final StepCondition notEq(DefaultFieldInfo<T> value) {
-        return step(notEqualsMetadata(field, value),
+        return predicate(notEqualsMetadata(field, value),
                         model -> value(model, value),
                         (l, r) -> !l.equals(r));
     }
@@ -58,13 +58,13 @@ public class TypeCondition<T> extends DefaultCondition<DefaultFieldInfo<T>, T> {
     // null
 
     public final StepCondition isNull() {
-        return step(nullMetadata(field, null), Objects::isNull);
+        return predicate(nullMetadata(field, null), Objects::isNull);
     }
 
     // not null
 
     public final StepCondition isNotNull() {
-        return step(notNullMetadata(field, null), obj -> !Objects.isNull(obj));
+        return predicate(notNullMetadata(field, null), obj -> !Objects.isNull(obj));
     }
 
 }

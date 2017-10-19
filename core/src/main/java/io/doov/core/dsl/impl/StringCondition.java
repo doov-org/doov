@@ -27,25 +27,25 @@ public class StringCondition extends DefaultCondition<StringFieldInfo, String> {
     }
 
     public final StepCondition contains(String regex) {
-        return step(containsMetadata(field, regex),
+        return predicate(containsMetadata(field, regex),
                         model -> Optional.ofNullable(regex),
                         String::contains);
     }
 
     public final StepCondition matches(String regex) {
-        return step(matchesMetadata(field, regex),
+        return predicate(matchesMetadata(field, regex),
                         model -> Optional.ofNullable(regex),
                         String::matches);
     }
 
     public final StepCondition startsWith(String value) {
-        return step(startsWithMetadata(field, value),
+        return predicate(startsWithMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         String::startsWith);
     }
 
     public final StepCondition endsWith(String value) {
-        return step(endsWithMetadata(field, value),
+        return predicate(endsWithMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         String::endsWith);
     }

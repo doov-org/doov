@@ -10,7 +10,6 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.DefaultFieldInfo;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
-import io.doov.core.dsl.meta.Metadata;
 
 class DefaultCondition<F extends DefaultFieldInfo<N>, N> {
 
@@ -34,35 +33,18 @@ class DefaultCondition<F extends DefaultFieldInfo<N>, N> {
         return Optional.ofNullable(model.<N> get(field.id()));
     }
 
-    StepCondition step(FieldMetadata metadata,
-                    Function<N, Boolean> predicate) {
-        return new DefaultStepCondition<>(this.metadata.merge(metadata), this.value, predicate);
+    StepCondition predicate(FieldMetadata metadata, Function<N, Boolean> predicate) {
+        return new PredicateStepCondition<>(this.metadata.merge(metadata), this.value, predicate);
     }
 
-    StepCondition step(FieldMetadata metadata,
+    StepCondition predicate(FieldMetadata metadata,
                     Function<FieldModel, Optional<N>> value,
                     BiFunction<N, N, Boolean> predicate) {
-        return new DefaultStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
+        return new PredicateStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
     }
 
-    static class DefaultStepCondition<N> extends AbstractStepCondition {
-
-        DefaultStepCondition(Metadata metadata,
-                        Function<FieldModel, Optional<N>> value,
-                        Function<N, Boolean> predicate) {
-            super(metadata, (model, context) -> value.apply(model).map(predicate).orElse(false));
-        }
-
-        DefaultStepCondition(Metadata metadata,
-                        Function<FieldModel, Optional<N>> left,
-                        Function<FieldModel, Optional<N>> right,
-                        BiFunction<N, N, Boolean> predicate) {
-            super(metadata, (model, context) -> left.apply(model)
-                            .flatMap(l -> right.apply(model).map(r -> predicate.apply(l, r)))
-                            .orElse(false));
-
-        }
-
+    FunctionWithMetadata<N, N> function(FieldMetadata metadata, Function<N, N> function) {
+        return new FunctionWithMetadata<>(this.metadata.merge(metadata), function);
     }
 
 }
