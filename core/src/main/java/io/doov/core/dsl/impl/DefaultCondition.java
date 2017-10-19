@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.DefaultFieldInfo;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
@@ -33,13 +34,13 @@ class DefaultCondition<F extends DefaultFieldInfo<N>, N> {
         return Optional.ofNullable(model.<N> get(field.id()));
     }
 
-    DefaultStepCondition<N> step(FieldMetadata metadata,
+    StepCondition step(FieldMetadata metadata,
                     Function<FieldModel, Optional<N>> value,
                     BiFunction<N, N, Boolean> predicate) {
         return new DefaultStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
     }
 
-    public static class DefaultStepCondition<N> extends AbstractStepCondition {
+    static class DefaultStepCondition<N> extends AbstractStepCondition {
 
         DefaultStepCondition(Metadata metadata,
                         Function<FieldModel, Optional<N>> left,

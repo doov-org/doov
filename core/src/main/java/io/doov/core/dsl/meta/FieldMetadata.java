@@ -15,11 +15,17 @@ import io.doov.core.dsl.field.*;
 
 public class FieldMetadata extends AbstractMetadata {
 
-    private static final FieldMetadata EMPTY = new FieldMetadata(null, null, null);
+    private static final FieldMetadata EMPTY = new FieldMetadata();
 
     private final Readable field;
     private final Readable operator;
     private final Readable value;
+
+    public FieldMetadata() {
+        this.field = null;
+        this.operator = null;
+        this.value = null;
+    }
 
     private FieldMetadata(Readable field, String operator, Object value) {
         this.field = field;
@@ -30,6 +36,12 @@ public class FieldMetadata extends AbstractMetadata {
     private FieldMetadata(Readable field, String operator, Readable value) {
         this.field = field;
         this.operator = () -> operator;
+        this.value = value;
+    }
+
+    private FieldMetadata(Readable field, Readable operator, Readable value) {
+        this.field = field;
+        this.operator = operator;
         this.value = value;
     }
 
@@ -46,11 +58,11 @@ public class FieldMetadata extends AbstractMetadata {
     }
 
     public static FieldMetadata nullMetadata(FieldInfo field, Object value) {
-        return new FieldMetadata(field, "is null", value);
+        return new FieldMetadata(field, "is", value);
     }
 
     public static FieldMetadata notNullMetadata(FieldInfo field, Object value) {
-        return new FieldMetadata(field, "is not null", value);
+        return new FieldMetadata(field, "is not", value);
     }
 
     public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata afterMetadata(F field, N value) {
@@ -81,17 +93,17 @@ public class FieldMetadata extends AbstractMetadata {
 
     public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata ageAtMetadata(
                     F field, N value) {
-        return new FieldMetadata(field, "age at", value);
+        return new FieldMetadata(field, () -> "age at " + value, null);
     }
 
     public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata ageAtMetadata(
                     F field1, F field2) {
-        return new FieldMetadata(field1, "age at", field2);
+        return new FieldMetadata(field1, () -> "age at " + field2.readable(), null);
     }
 
     public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata ageAtMetadata(
                     F field, Supplier<N> supplier) {
-        return new FieldMetadata(field, "age at " + supplier.get().toString(), null);
+        return new FieldMetadata(field, () -> "age at " + supplier.get().toString(), null);
     }
 
     public static FieldMetadata matchesMetadata(StringFieldInfo field, String value) {
@@ -154,11 +166,6 @@ public class FieldMetadata extends AbstractMetadata {
         return new FieldMetadata(field1, "greater or equals", field2);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata betweenMetadata(
-                    F field, Number min, N max) {
-        return new FieldMetadata(field, "between", min + " and " + max);
-    }
-
     public static FieldMetadata lengthIsMetadata(StringFieldInfo field) {
         return new FieldMetadata(field, "length is", null);
     }
@@ -167,9 +174,7 @@ public class FieldMetadata extends AbstractMetadata {
         if (this.equals(EMPTY)) {
             return metadata;
         }
-        return new FieldMetadata(this.field,
-                        this.operator.readable() + " " + metadata.operator.readable(),
-                        metadata.value);
+        return new FieldMetadata(this.field, this.operator.readable(), metadata);
     }
 
     @Override

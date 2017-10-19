@@ -27,13 +27,13 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
 
     // lesser than
 
-    public final DefaultStepCondition<N> lesserThan(N value) {
+    public final StepCondition lesserThan(N value) {
         return step(lesserThanMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         (v1, v2) -> lesserThanFunction().apply(v1, v2));
     }
 
-    public final DefaultStepCondition<N> lesserThan(F value) {
+    public final StepCondition lesserThan(F value) {
         return step(lesserThanMetadata(this.field, value),
                         model -> value(model, value),
                         (v1, v2) -> lesserThanFunction().apply(v1, v2));
@@ -41,13 +41,13 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
 
     public abstract BiFunction<N, N, Boolean> lesserThanFunction();
 
-    public final DefaultStepCondition<N> lesserOrEquals(N value) {
+    public final StepCondition lesserOrEquals(N value) {
         return step(lesserOrEqualsMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         (v1, v2) -> lesserOrEqualsFunction().apply(v1, v2));
     }
 
-    public final DefaultStepCondition<N> lesserOrEquals(F value) {
+    public final StepCondition lesserOrEquals(F value) {
         return step(lesserOrEqualsMetadata(this.field, value),
                         model -> value(model, value),
                         (v1, v2) -> lesserOrEqualsFunction().apply(v1, v2));
@@ -57,13 +57,13 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
 
     // greater than
 
-    public final DefaultStepCondition<N> greaterThan(N value) {
+    public final StepCondition greaterThan(N value) {
         return step(greaterThanMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         (v1, v2) -> greaterThanFunction().apply(v1, v2));
     }
 
-    public final DefaultStepCondition<N> greaterThan(F value) {
+    public final StepCondition greaterThan(F value) {
         return step(greaterThanMetadata(this.field, value),
                         model -> value(model, value),
                         (v1, v2) -> greaterThanFunction().apply(v1, v2));
@@ -71,7 +71,7 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
 
     public abstract BiFunction<N, N, Boolean> greaterThanFunction();
 
-    public final DefaultStepCondition<N> greaterOrEquals(N value) {
+    public final StepCondition greaterOrEquals(N value) {
         return step(greaterOrEqualsMetadata(field, value),
                         model -> Optional.ofNullable(value),
                         (v1, v2) -> greaterOrEqualsFunction().apply(v1, v2));
@@ -79,7 +79,7 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
 
     public abstract BiFunction<N, N, Boolean> greaterOrEqualsFunction();
 
-    public final DefaultStepCondition<N> greaterOrEquals(F value) {
+    public final StepCondition greaterOrEquals(F value) {
         return step(greaterOrEqualsMetadata(this.field, value),
                         model -> value(model, value),
                         (v1, v2) -> greaterOrEqualsFunction().apply(v1, v2));
