@@ -58,13 +58,13 @@ public class TypeCondition<T> extends DefaultCondition<DefaultFieldInfo<T>, T> {
     // null
 
     public final StepCondition isNull() {
-        return step(nullMetadata(field, value), Objects::isNull);
+        return step(nullMetadata(field, null), Objects::isNull);
     }
 
     // not null
 
     public final StepCondition isNotNull() {
-        return step(notNullMetadata(field, value), obj -> !Objects.isNull(obj));
+        return step(notNullMetadata(field, null), obj -> !Objects.isNull(obj));
     }
 
 }
