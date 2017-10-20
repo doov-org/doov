@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
-import io.doov.sample2.model.Sample2Model;
 
 public class Sample2Models {
 
