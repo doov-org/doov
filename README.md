@@ -58,5 +58,5 @@ DSL.when(userBirthdate().ageAt(today()).greaterOrEquals(18L)).validate().readabl
 
 ## Licence
 
-[MIT License](LICENSE.txt)
+[Apache-2.0](LICENSE)
 
