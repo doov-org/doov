@@ -1,0 +1,28 @@
+@startuml
+digraph G {
+    NumericFIELD -> "eq (Numeric)"
+    "eq (Numeric)" -> "java.lang.Numeric"
+    "eq (Numeric)" -> NumericFIELD
+    NumericFIELD -> lesserThan
+    lesserThan -> NumericFIELD
+    lesserThan -> "java.lang.Numeric"
+    NumericFIELD -> lesserOrEquals
+    lesserOrEquals -> NumericFIELD
+    lesserOrEquals -> "java.lang.Numeric"
+    NumericFIELD -> greaterThan
+    greaterThan -> NumericFIELD
+    greaterThan -> "java.lang.Numeric"
+    NumericFIELD -> greaterOrEquals
+    greaterOrEquals -> NumericFIELD
+    greaterOrEquals -> "java.lang.Numeric"
+    NumericFIELD -> "between (Numeric)"
+    "between (Numeric)" -> NumericFIELD
+    "between (Numeric)" -> "java.lang.Numeric"
+    
+    TypeFIELD -> "eq (Type)"
+    "eq (Type)" -> "java.lang.Type"
+    "eq (Type)" -> TypeFIELD
+    TypeFIELD -> isNull
+    TypeFIELD -> isNotNull
+} 
+@enduml
