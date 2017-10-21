@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>dOOv (Parent)</name>
-  <url>http://github.com/jubaudry/model-map</url>
+  <url>https://www.dOOv.io</url>
 
   <modules>
     <module>core</module>
@@ -45,15 +45,15 @@
   </properties>
 
   <scm>
-    <url>http://github.com/lesfurets/model-map</url>
-    <connection>scm:git:git://github.com/lesfurets/model-map.git</connection>
-    <developerConnection>scm:git:ssh://github.com/lesfurets/model-map.git</developerConnection>
+    <url>https://github.com/lesfurets/dOOv</url>
+    <connection>scm:git:git://github.com/lesfurets/dOOv.git</connection>
+    <developerConnection>scm:git:ssh://github.com/lesfurets/dOOv.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>http://github.com/jubaudry/model-map/issues</url>
+    <url>https://github.com/lesfurets/dOOv/issues</url>
   </issueManagement>
 
   <dependencyManagement>
