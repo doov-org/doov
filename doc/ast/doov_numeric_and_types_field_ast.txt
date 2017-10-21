@@ -1,0 +1,50 @@
+@startuml
+digraph G {
+    BooleanFIELD -> notEq
+    BooleanFIELD -> "eq (Boolean)"
+    "eq (Boolean)" -> "java.lang.Boolean"
+    "eq (Boolean)" -> BooleanFIELD
+    notEq -> BooleanFIELD
+    notEq -> "java.lang.Boolean"
+    BooleanFIELD -> isTrue
+    BooleanFIELD -> isFalse
+    
+    NumericFIELD -> "eq (Numeric)"
+    "eq (Numeric)" -> "java.lang.Numeric"
+    "eq (Numeric)" -> NumericFIELD
+    NumericFIELD -> lesserThan
+    lesserThan -> NumericFIELD
+    lesserThan -> "java.lang.Numeric"
+    NumericFIELD -> lesserOrEquals
+    lesserOrEquals -> NumericFIELD
+    lesserOrEquals -> "java.lang.Numeric"
+    NumericFIELD -> greaterThan
+    greaterThan -> NumericFIELD
+    greaterThan -> "java.lang.Numeric"
+    NumericFIELD -> greaterOrEquals
+    greaterOrEquals -> NumericFIELD
+    greaterOrEquals -> "java.lang.Numeric"
+    NumericFIELD -> "between (Numeric)"
+    "between (Numeric)" -> NumericFIELD
+    "between (Numeric)" -> "java.lang.Numeric"
+
+    StringFIELD -> "eq (String)"
+    "eq (String)" -> "java.lang.String"
+    "eq (String)" -> StringFIELD
+    StringFIELD -> contains
+    contains -> "java.lang.String (Regex)"
+    StringFIELD -> matches
+    matches -> "java.lang.String (Regex)"
+    StringFIELD -> startsWith
+    startsWith -> "java.lang.String"
+    StringFIELD -> endsWith
+    endsWith -> "java.lang.String"
+
+    
+    TypeFIELD -> "eq (Type)"
+    "eq (Type)" -> "java.lang.Type"
+    "eq (Type)" -> TypeFIELD
+    TypeFIELD -> isNull
+    TypeFIELD -> isNotNull
+} 
+@enduml

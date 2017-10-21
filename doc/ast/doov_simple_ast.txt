@@ -1,0 +1,26 @@
+@startuml
+digraph G {
+    DSL -> when
+    
+    when -> matchAny
+    when -> matchAll
+    when -> matchOne
+    
+    when -> and
+    when -> or
+    
+    when -> negate
+    when -> FIELD
+    
+
+    FIELD -> eq
+    eq -> "java.lang.Object"
+    eq -> FIELD
+    
+    FIELD -> BooleanFIELD
+    FIELD -> NumericFIELD
+    FIELD -> StringFIELD
+    FIELD -> TemporalFIELD
+    FIELD -> TypeFIELD
+} 
+@enduml
