@@ -12,7 +12,7 @@ public class LiveCodeSoftshake {
     public void intro() {
         SampleModel model = new SampleModel();
         model.setAccount(new Account());
-        model.getAccount().setEmail("chtijug@gmail.com");
+        model.getAccount().setEmail("jussieu@yeah.com");
         System.out.println(model.getAccount().getEmail());
 
         FieldModel fieldModel = new SampleModelWrapper(model);

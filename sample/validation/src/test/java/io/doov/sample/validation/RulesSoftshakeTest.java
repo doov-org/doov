@@ -13,13 +13,14 @@ public class RulesSoftshakeTest {
     @Test
     public void test() {
         // Given
-        FieldModel model = SampleModels.wrapper();
+        FieldModel wrapper = SampleModels.wrapper();
 
         // When
-        Result result = RulesSoftshake.EXAMPLE.executeOn(model);
+        Result result = RulesSoftshake.EXAMPLE.executeOn(wrapper);
 
         // Then
         assertThat(result.isValid()).isTrue();
+        System.out.println(RulesSoftshake.EXAMPLE.readable());
     }
 
 }
