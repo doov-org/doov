@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.*;
 
-public class FieldMetadata extends AbstractMetadata {
+public class FieldMetadata implements Metadata {
 
     private static final FieldMetadata EMPTY = new FieldMetadata();
 

@@ -15,7 +15,7 @@
 */
 package io.doov.core.dsl.meta;
 
-public class BinaryMetadata extends AbstractMetadata {
+public class BinaryMetadata implements Metadata {
 
     private final Metadata left;
     private final String operator;

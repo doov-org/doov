@@ -29,31 +29,33 @@ import io.doov.core.dsl.meta.ast.*;
 public class RulesVisitorTest {
 
     @Test
-    public void tree() {
+    public void full() {
+        StringBuilder sb = new StringBuilder();
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
                         .flatMap(RuleRegistry::stream)
-                        .peek(rule -> System.out.println("\n\n" + "- " + rule.toString() + "\n\n"))
-                        .forEach(validationRule -> validationRule.accept(new SyntaxTreePrinter()));
+                        .peek(rule -> sb.append("--------------------------------").append("\n"))
+                        .forEach(rule -> rule.accept(new SyntaxTreeFullBuilder(sb)));
+        System.out.println(sb);
     }
 
     @Test
     public void text() {
-        StringBuilder text = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
                         .flatMap(RuleRegistry::stream)
-                        .peek(rule -> text.append("\n\n").append("- ").append(rule.toString()).append("\n\n"))
-                        .forEach(validationRule -> validationRule.accept(new SyntaxTreeTextBuilder(text)));
-        System.out.println(text);
+                        .peek(rule -> sb.append("--------------------------------").append("\n"))
+                        .forEach(rule -> rule.accept(new SyntaxTreeTextBuilder(sb)));
+        System.out.println(sb);
     }
 
     @Test
     public void markdown() {
-        StringBuilder markdown = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
                         .flatMap(RuleRegistry::stream)
-                        .peek(rule -> markdown.append("\n\n").append("# ").append(rule.toString()).append("\n\n"))
-                        .forEach(validationRule -> validationRule.accept(new SyntaxTreeMarkdownBuilder(markdown)));
-        System.out.println(markdown);
+                        .peek(rule -> sb.append("--------------------------------").append("\n"))
+                        .forEach(rule -> rule.accept(new SyntaxTreeMarkdownBuilder(sb)));
+        System.out.println(sb);
     }
 
 }

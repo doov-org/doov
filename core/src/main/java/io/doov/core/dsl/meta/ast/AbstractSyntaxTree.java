@@ -1,6 +1,11 @@
 package io.doov.core.dsl.meta.ast;
 
-import java.util.*;
+import static java.util.stream.Collectors.joining;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
@@ -8,95 +13,199 @@ import io.doov.core.dsl.meta.*;
 abstract class AbstractSyntaxTree implements MetadataVisitor {
 
     enum Element {
-        WHEN, RULE, UNARY, BINARY, NARY
+        RULE, WHEN, UNARY, BINARY, NARY
     }
 
     private final Deque<Element> stack = new ArrayDeque<>();
 
-    @Override
-    public void visit(Metadata metadata) {
+    private int newLineIndex = 0;
+
+    final StringBuilder sb;
+
+    AbstractSyntaxTree(StringBuilder stringBuilder) {
+        sb = stringBuilder;
     }
 
-    @Override
-    public void visit(FieldMetadata fieldMetadata) {
-    }
+    // Metadata
 
     @Override
-    public void visit(UnaryMetadata unaryMetadata) {
+    public final void visit(Metadata metadata) {
+        visitMetadata(metadata);
     }
 
+    protected void visitMetadata(Metadata metadata) {
+    }
+
+    // FieldMetadata
+
     @Override
-    public void start(BinaryMetadata binaryMetadata) {
+    public final void visit(FieldMetadata metadata) {
+        visitMetadata(metadata);
+    }
+
+    protected void visitMetadata(FieldMetadata metadata) {
+    }
+
+    // UnaryMetadata
+
+    @Override
+    public final void visit(UnaryMetadata metadata) {
+        visitMetadata(metadata);
+    }
+
+    protected void visitMetadata(UnaryMetadata metadata) {
+    }
+
+    // BinaryMetadata
+
+    @Override
+    public final void start(BinaryMetadata metadata) {
+        startMetadata(metadata);
         stack.push(Element.BINARY);
     }
 
-    @Override
-    public void visit(BinaryMetadata binaryMetadata) {
+    protected void startMetadata(BinaryMetadata metadata) {
     }
 
     @Override
-    public void end(BinaryMetadata binaryMetadata) {
+    public final void visit(BinaryMetadata metadata) {
+        visitMetadata(metadata);
+    }
+
+    protected void visitMetadata(BinaryMetadata metadata) {
+    }
+
+    @Override
+    public final void end(BinaryMetadata metadata) {
         stack.pop();
+        endMetadata(metadata);
     }
 
+    protected void endMetadata(BinaryMetadata metadata) {
+    }
+
+    // NaryMetadata
+
     @Override
-    public void start(NaryMetadata naryMetadata) {
+    public final void start(NaryMetadata metadata) {
+        startMetadata(metadata);
         stack.push(Element.NARY);
     }
 
-    @Override
-    public void visit(NaryMetadata naryMetadata) {
+    protected void startMetadata(NaryMetadata metadata) {
     }
 
     @Override
-    public void end(NaryMetadata naryMetadata) {
+    public final void visit(NaryMetadata metadata) {
+        visitMetadata(metadata);
+    }
+
+    protected void visitMetadata(NaryMetadata metadata) {
+    }
+
+    @Override
+    public final void end(NaryMetadata metadata) {
         stack.pop();
+        endMetadata(metadata);
     }
 
+    protected void endMetadata(NaryMetadata metadata) {
+    }
+
+    // ValidationRule
+
     @Override
-    public void start(ValidationRule validationRule) {
+    public final void start(ValidationRule metadata) {
+        startMetadata(metadata);
         stack.push(Element.RULE);
     }
 
-    @Override
-    public void visit(ValidationRule validationRule) {
+    protected void startMetadata(ValidationRule metadata) {
     }
 
     @Override
-    public void end(ValidationRule validationRule) {
+    public final void visit(ValidationRule metadata) {
+        visitMetadata(metadata);
+    }
+
+    protected void visitMetadata(ValidationRule metadata) {
+    }
+
+    @Override
+    public final void end(ValidationRule metadata) {
         stack.pop();
+        endMetadata(metadata);
     }
 
+    protected void endMetadata(ValidationRule metadata) {
+    }
+
+    // StepWhen
+
     @Override
-    public void start(StepWhen stepWhen) {
+    public final void start(StepWhen metadata) {
+        startMetadata(metadata);
         stack.push(Element.WHEN);
     }
 
-    @Override
-    public void visit(StepWhen stepWhen) {
+    protected void startMetadata(StepWhen metadata) {
     }
 
     @Override
-    public void end(StepWhen stepWhen) {
+    public final void visit(StepWhen metadata) {
+        visitMetadata(metadata);
+
+    }
+
+    protected void visitMetadata(StepWhen metadata) {
+    }
+
+    @Override
+    public final void end(StepWhen metadata) {
         stack.pop();
+        endMetadata(metadata);
     }
+
+    protected void endMetadata(StepWhen metadata) {
+    }
+
+    // StepCondition
 
     @Override
-    public void visit(StepCondition stepCondition) {
+    public final void visit(StepCondition metadata) {
+        visitMetadata(metadata);
     }
 
-    abstract int getIndentSize();
-
-    final int getCurrentIndentSize() {
-        return getStackSize() * getIndentSize();
+    protected void visitMetadata(StepCondition metadata) {
     }
 
-    final Element peek() {
+    // Implementation
+
+    protected abstract int getIndentSize();
+
+    protected int getNewLineIndex() {
+        return newLineIndex;
+    }
+
+    protected int getCurrentIndentSize() {
+        return stack.size() * getIndentSize();
+    }
+
+    protected String formatCurrentIndent() {
+        return IntStream.range(0, getCurrentIndentSize()).mapToObj(i -> " ").collect(joining(""));
+    }
+
+    protected String formatNewLine() {
+        newLineIndex = sb.length();
+        return "\n";
+    }
+
+    protected final Element stackPeek() {
         return stack.peek();
     }
 
-    private int getStackSize() {
-        return new HashSet<>(stack).size();
+    protected final Stream<Element> stackSteam() {
+        return stack.stream();
     }
 
 }

@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.List;
 
-public class NaryMetadata extends AbstractMetadata {
+public class NaryMetadata implements Metadata {
 
     private final String operator;
     private final List<Metadata> values;
