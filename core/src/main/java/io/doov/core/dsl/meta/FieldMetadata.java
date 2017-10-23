@@ -35,9 +35,9 @@ public class FieldMetadata extends AbstractMetadata {
     private final Readable value;
 
     public FieldMetadata() {
-        this.field = null;
-        this.operator = null;
-        this.value = null;
+        field = null;
+        operator = null;
+        value = null;
     }
 
     private FieldMetadata(Readable field, String operator, Object value) {
@@ -56,6 +56,18 @@ public class FieldMetadata extends AbstractMetadata {
         this.field = field;
         this.operator = operator;
         this.value = value;
+    }
+
+    public Readable getField() {
+        return field;
+    }
+
+    public Readable getOperator() {
+        return operator;
+    }
+
+    public Readable getValue() {
+        return value;
     }
 
     public static FieldMetadata emptyMetadata() {
@@ -204,10 +216,10 @@ public class FieldMetadata extends AbstractMetadata {
     }
 
     public FieldMetadata merge(FieldMetadata metadata) {
-        if (this.equals(EMPTY)) {
+        if (equals(EMPTY)) {
             return metadata;
         }
-        return new FieldMetadata(this.field, this.operator.readable(), metadata);
+        return new FieldMetadata(field, operator.readable(), metadata);
     }
 
     @Override
@@ -217,6 +229,11 @@ public class FieldMetadata extends AbstractMetadata {
                         .map(Readable::readable)
                         .map(Objects::toString)
                         .collect(joining(" "));
+    }
+
+    @Override
+    public void accept(MetadataVisitor visitor) {
+        visitor.visit(this);
     }
 
 }

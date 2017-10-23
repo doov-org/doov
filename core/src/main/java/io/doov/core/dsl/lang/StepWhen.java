@@ -16,8 +16,9 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.dsl.meta.Readable;
+import io.doov.core.dsl.meta.SyntaxTree;
 
-public interface StepWhen extends Readable {
+public interface StepWhen extends Readable, SyntaxTree {
 
     StepCondition stepCondition();
 

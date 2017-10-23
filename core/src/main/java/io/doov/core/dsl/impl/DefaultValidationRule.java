@@ -22,7 +22,7 @@ import java.util.List;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.*;
 
 public class DefaultValidationRule implements ValidationRule {
 
@@ -70,6 +70,17 @@ public class DefaultValidationRule implements ValidationRule {
     public ValidationRule registerOn(RuleRegistry registry, RuleId id) {
         registry.register(this, id);
         return this;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public void accept(MetadataVisitor visitor) {
+        stepWhen.accept(visitor);
+        visitor.visit(this);
     }
 
 }

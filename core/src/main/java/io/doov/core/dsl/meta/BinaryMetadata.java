@@ -15,31 +15,42 @@
 */
 package io.doov.core.dsl.meta;
 
-import io.doov.core.dsl.lang.StepCondition;
-
 public class BinaryMetadata extends AbstractMetadata {
 
-    private final StepCondition left;
+    private final Metadata left;
     private final String operator;
-    private final StepCondition right;
+    private final Metadata right;
 
-    private BinaryMetadata(StepCondition left, String operator, StepCondition right) {
+    private BinaryMetadata(Metadata left, String operator, Metadata right) {
         this.left = left;
         this.operator = operator;
         this.right = right;
     }
 
-    public static BinaryMetadata andMetadata(StepCondition left, StepCondition right) {
+    public static BinaryMetadata andMetadata(Metadata left, Metadata right) {
         return new BinaryMetadata(left, "and", right);
     }
 
-    public static BinaryMetadata orMetadata(StepCondition left, StepCondition right) {
+    public static BinaryMetadata orMetadata(Metadata left, Metadata right) {
         return new BinaryMetadata(left, "or", right);
     }
 
     @Override
     public String readable() {
         return "(" + (left.readable() + " " + operator + " " + right.readable()) + ")";
+    }
+
+    @Override
+    public void accept(MetadataVisitor visitor) {
+        visitor.start(this);
+        left.accept(visitor);
+        visitor.visit(this);
+        right.accept(visitor);
+        visitor.end(this);
+    }
+
+    public String getOperator() {
+        return operator;
     }
 
 }

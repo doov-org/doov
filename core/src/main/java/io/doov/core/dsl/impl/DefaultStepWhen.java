@@ -18,6 +18,7 @@ package io.doov.core.dsl.impl;
 import static java.text.MessageFormat.format;
 
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultStepWhen implements StepWhen {
 
@@ -42,6 +43,12 @@ public class DefaultStepWhen implements StepWhen {
     @Override
     public String readable() {
         return format(READABLE_WHEN_CONDITION, stepCondition.readable());
+    }
+
+    @Override
+    public void accept(MetadataVisitor visitor) {
+        visitor.visit(this);
+        stepCondition.accept(visitor);
     }
 
 }

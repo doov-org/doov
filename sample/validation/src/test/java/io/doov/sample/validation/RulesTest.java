@@ -17,7 +17,7 @@ package io.doov.sample.validation;
 
 import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
 import static io.doov.sample.validation.Rules.REGISTRY_USER;
-import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT;
+import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT_01;
 import static io.doov.sample.validation.id.AccountRulesId.VALID_EMAIL;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
@@ -65,10 +65,10 @@ public class RulesTest {
 
     @Test
     public void test_valid_account() {
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT).isValid()).isTrue();
+        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_01).isValid()).isTrue();
 
         account.setPhoneNumber("+446123456789");
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT).isValid()).isFalse();
+        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_01).isValid()).isFalse();
     }
 
     @Test

@@ -19,12 +19,15 @@ import static io.doov.core.dsl.meta.NaryMetadata.matchAllMetadata;
 import static io.doov.core.dsl.meta.NaryMetadata.matchAnyMetadata;
 import static io.doov.core.dsl.meta.NaryMetadata.matchNoneMetadata;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 
+import java.util.List;
 import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.NaryMetadata;
 
 public class LogicalNaryCondition extends AbstractStepCondition {
@@ -34,18 +37,22 @@ public class LogicalNaryCondition extends AbstractStepCondition {
     }
 
     public static LogicalNaryCondition matchAny(StepCondition... steps) {
-        return new LogicalNaryCondition(matchAnyMetadata(steps),
+        return new LogicalNaryCondition(matchAnyMetadata(getMetadatas(steps)),
                         (model, context) -> stream(steps).anyMatch(s -> s.predicate().test(model, context)));
     }
 
     public static LogicalNaryCondition matchAll(StepCondition... steps) {
-        return new LogicalNaryCondition(matchAllMetadata(steps),
+        return new LogicalNaryCondition(matchAllMetadata(getMetadatas(steps)),
                         (model, context) -> stream(steps).allMatch(s -> s.predicate().test(model, context)));
     }
 
     public static LogicalNaryCondition matchNone(StepCondition... steps) {
-        return new LogicalNaryCondition(matchNoneMetadata(steps),
+        return new LogicalNaryCondition(matchNoneMetadata(getMetadatas(steps)),
                         (model, context) -> stream(steps).noneMatch(s -> s.predicate().test(model, context)));
+    }
+
+    private static List<Metadata> getMetadatas(StepCondition[] steps) {
+        return stream(steps).map(StepCondition::getMetadata).collect(toList());
     }
 
 }

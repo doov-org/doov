@@ -31,7 +31,7 @@ public class LogicalUnaryCondition extends AbstractStepCondition {
     }
 
     public static LogicalUnaryCondition negate(StepCondition step) {
-        return new LogicalUnaryCondition(notMetadata(step),
+        return new LogicalUnaryCondition(notMetadata(step.getMetadata()),
                         (model, context) -> step.predicate().negate().test(model, context));
     }
 

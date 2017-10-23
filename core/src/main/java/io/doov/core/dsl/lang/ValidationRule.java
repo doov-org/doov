@@ -16,9 +16,10 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.Readable;
 
-public interface ValidationRule extends Readable {
+public interface ValidationRule extends Readable, SyntaxTree {
 
     ValidationRule withMessage(String message);
 
@@ -27,5 +28,7 @@ public interface ValidationRule extends Readable {
     ValidationRule registerOn(RuleRegistry registry);
 
     ValidationRule registerOn(RuleRegistry registry, RuleId id);
+
+    String getMessage();
 
 }

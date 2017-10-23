@@ -18,7 +18,8 @@ package io.doov.sample.validation;
 import static io.doov.core.dsl.DSL.matchAll;
 import static io.doov.core.dsl.LocalDateSuppliers.today;
 import static io.doov.sample.field.SampleFieldIdInfo.*;
-import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT;
+import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT_01;
+import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT_02;
 import static io.doov.sample.validation.id.AccountRulesId.VALID_EMAIL;
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -43,14 +44,14 @@ public class Rules extends DefaultRuleRegistry {
                         accountEmail().length().lesserOrEquals(configurationMaxEmailSize()),
                         accountCountry().eq(Country.FR).and(accountPhoneNumber().startsWith("+33"))))
                         .validate()
-                        .registerOn(REGISTRY_ACCOUNT, VALID_ACCOUNT);
+                        .registerOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_01);
 
         DSL.when(userBirthdate().ageAt(today()).greaterOrEquals(18L)
                         .and(accountEmail().length().lesserOrEquals(configurationMaxEmailSize()))
                         .and(accountCountry().eq(Country.FR))
                         .and(accountPhoneNumber().startsWith("+33")))
                         .validate()
-                        .registerOn(REGISTRY_ACCOUNT, VALID_ACCOUNT);
+                        .registerOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_02);
     }
 
     static {

@@ -15,6 +15,6 @@
 */
 package io.doov.core.dsl.meta;
 
-public interface Metadata extends Readable {
+public interface Metadata extends Readable, SyntaxTree {
 
 }

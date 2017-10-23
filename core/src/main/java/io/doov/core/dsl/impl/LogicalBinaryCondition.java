@@ -32,12 +32,12 @@ public class LogicalBinaryCondition extends AbstractStepCondition {
     }
 
     public static LogicalBinaryCondition and(StepCondition left, StepCondition right) {
-        return new LogicalBinaryCondition(andMetadata(left, right),
+        return new LogicalBinaryCondition(andMetadata(left.getMetadata(), right.getMetadata()),
                         (model, context) -> left.predicate().and(right.predicate()).test(model, context));
     }
 
     public static LogicalBinaryCondition or(StepCondition left, StepCondition right) {
-        return new LogicalBinaryCondition(orMetadata(left, right),
+        return new LogicalBinaryCondition(orMetadata(left.getMetadata(), right.getMetadata()),
                         (model, context) -> left.predicate().or(right.predicate()).test(model, context));
     }
 

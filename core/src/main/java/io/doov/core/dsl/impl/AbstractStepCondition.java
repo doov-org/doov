@@ -21,6 +21,7 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
 
 abstract class AbstractStepCondition implements StepCondition {
 
@@ -50,6 +51,12 @@ abstract class AbstractStepCondition implements StepCondition {
 
     public Metadata getMetadata() {
         return metadata;
+    }
+
+    @Override
+    public void accept(MetadataVisitor visitor) {
+        visitor.visit(this);
+        metadata.accept(visitor);
     }
 
 }

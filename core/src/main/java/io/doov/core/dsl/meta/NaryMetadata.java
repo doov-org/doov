@@ -15,39 +15,48 @@
 */
 package io.doov.core.dsl.meta;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
 
-import io.doov.core.dsl.lang.StepCondition;
-
 public class NaryMetadata extends AbstractMetadata {
 
     private final String operator;
-    private final List<StepCondition> values;
+    private final List<Metadata> values;
 
-    private NaryMetadata(String operator, StepCondition... values) {
+    private NaryMetadata(String operator, List<Metadata> values) {
         this.operator = operator;
-        this.values = asList(values);
+        this.values = values;
     }
 
-    public static NaryMetadata matchAnyMetadata(StepCondition... values) {
+    public static NaryMetadata matchAnyMetadata(List<Metadata> values) {
         return new NaryMetadata("match any", values);
     }
 
-    public static NaryMetadata matchAllMetadata(StepCondition... values) {
+    public static NaryMetadata matchAllMetadata(List<Metadata> values) {
         return new NaryMetadata("match all", values);
     }
 
-    public static NaryMetadata matchNoneMetadata(StepCondition... values) {
+    public static NaryMetadata matchNoneMetadata(List<Metadata> values) {
         return new NaryMetadata("match none", values);
     }
 
     @Override
     public String readable() {
-        String readables = values.stream().map(StepCondition::readable).collect(joining(", "));
+        String readables = values.stream().map(Readable::readable).collect(joining(", "));
         return "(" + operator + " [" + readables + "])";
+    }
+
+    @Override
+    public void accept(MetadataVisitor visitor) {
+        visitor.start(this);
+        visitor.visit(this);
+        values.forEach(v -> v.accept(visitor));
+        visitor.end(this);
+    }
+
+    public String getOperator() {
+        return operator;
     }
 
 }

@@ -15,25 +15,33 @@
 */
 package io.doov.core.dsl.meta;
 
-import io.doov.core.dsl.lang.StepCondition;
-
 public class UnaryMetadata extends AbstractMetadata {
 
     private final String operator;
-    private final StepCondition value;
+    private final Metadata value;
 
-    private UnaryMetadata(String operator, StepCondition value) {
+    private UnaryMetadata(String operator, Metadata value) {
         this.operator = operator;
         this.value = value;
     }
 
-    public static UnaryMetadata notMetadata(StepCondition value) {
+    public static UnaryMetadata notMetadata(Metadata value) {
         return new UnaryMetadata("not", value);
     }
 
     @Override
     public String readable() {
         return "(" + operator + " " + value.readable() + ")";
+    }
+
+    @Override
+    public void accept(MetadataVisitor visitor) {
+        visitor.visit(this);
+        visitor.visit(value);
+    }
+
+    public String getOperator() {
+        return operator;
     }
 
 }
