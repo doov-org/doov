@@ -4,7 +4,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.stream.IntStream;
 
-public class SyntaxTreeTextBuilder extends SyntaxTreeBuilder {
+public class SyntaxTreeTextBuilder extends AbstractSyntaxTreeBuilder {
 
     private static final int INDENT_SIZE = 4;
 

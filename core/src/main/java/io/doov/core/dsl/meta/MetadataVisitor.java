@@ -22,9 +22,17 @@ public interface MetadataVisitor {
 
     void end(NaryMetadata naryMetadata);
 
+    void start(ValidationRule validationRule);
+
     void visit(ValidationRule validationRule);
 
+    void end(ValidationRule validationRule);
+
+    void start(StepWhen stepWhen);
+
     void visit(StepWhen stepWhen);
+
+    void end(StepWhen stepWhen);
 
     void visit(StepCondition stepCondition);
 

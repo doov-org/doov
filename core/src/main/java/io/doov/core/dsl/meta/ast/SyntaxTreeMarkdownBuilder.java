@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 import io.doov.core.dsl.meta.Readable;
 
-public class SyntaxTreeMarkdownBuilder extends SyntaxTreeBuilder {
+public class SyntaxTreeMarkdownBuilder extends AbstractSyntaxTreeBuilder {
 
     private static final int INDENT_SIZE = 2;
 

@@ -22,7 +22,8 @@ import java.util.List;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultValidationRule implements ValidationRule {
 
@@ -79,8 +80,10 @@ public class DefaultValidationRule implements ValidationRule {
 
     @Override
     public void accept(MetadataVisitor visitor) {
+        visitor.start(this);
         stepWhen.accept(visitor);
         visitor.visit(this);
+        visitor.end(this);
     }
 
 }

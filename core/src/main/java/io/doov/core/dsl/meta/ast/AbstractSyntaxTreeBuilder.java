@@ -2,33 +2,20 @@ package io.doov.core.dsl.meta.ast;
 
 import static java.util.stream.Collectors.joining;
 
-import java.util.*;
 import java.util.stream.IntStream;
 
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.Readable;
 
-public abstract class SyntaxTreeBuilder implements MetadataVisitor {
+public abstract class AbstractSyntaxTreeBuilder extends AbstractSyntaxTree {
 
-    private static final int INDENT_SIZE = 2;
-
-    private enum Last {
-        UNARY, BINARY, NARY
-    }
-
-    final StringBuilder sb;
-
-    private final Deque<Last> stack = new ArrayDeque<>();
+    private final StringBuilder sb;
 
     private boolean fieldIndent = true;
 
-    SyntaxTreeBuilder(StringBuilder stringBuilder) {
+    AbstractSyntaxTreeBuilder(StringBuilder stringBuilder) {
         sb = stringBuilder;
-    }
-
-    private int getStackSize() {
-        return new HashSet<>(stack).size();
     }
 
     @Override
@@ -37,14 +24,18 @@ public abstract class SyntaxTreeBuilder implements MetadataVisitor {
 
     @Override
     public void visit(FieldMetadata fieldMetadata) {
-        if (Last.NARY.equals(stack.peek())) {
-            sb.append(formatIndent(getCurrentIndentSize()));
+        if (Element.WHEN.equals(peek())) {
+            sb.append(formatIndent());
         }
 
-        if (Last.BINARY.equals(stack.peek())) {
+        if (Element.BINARY.equals(peek())) {
             if (fieldIndent) {
-                sb.append(formatIndent(getCurrentIndentSize()));
+                sb.append(formatIndent());
             }
+        }
+
+        if (Element.NARY.equals(peek())) {
+            sb.append(formatIndent());
         }
 
         sb.append(formatField(fieldMetadata.getField()))
@@ -53,7 +44,7 @@ public abstract class SyntaxTreeBuilder implements MetadataVisitor {
                         .append(" ")
                         .append(formatValue(fieldMetadata.getValue()));
 
-        if (Last.NARY.equals(stack.peek())) {
+        if (Element.NARY.equals(peek())) {
             sb.append("\n");
         }
     }
@@ -65,11 +56,11 @@ public abstract class SyntaxTreeBuilder implements MetadataVisitor {
 
     @Override
     public void start(BinaryMetadata binaryMetadata) {
-        if (Last.NARY.equals(stack.peek())) {
-            sb.append(formatIndent(getCurrentIndentSize()));
+        if (Element.NARY.equals(peek())) {
+            sb.append(formatIndent());
             fieldIndent = false;
         }
-        stack.push(Last.BINARY);
+        super.start(binaryMetadata);
     }
 
     @Override
@@ -81,15 +72,16 @@ public abstract class SyntaxTreeBuilder implements MetadataVisitor {
 
     @Override
     public void end(BinaryMetadata binaryMetadata) {
-        stack.pop();
-        if (stack.isEmpty()) {
+        super.end(binaryMetadata);
+        if (Element.WHEN.equals(peek())) {
             sb.append("\n");
         }
     }
 
     @Override
     public void start(NaryMetadata naryMetadata) {
-        stack.push(Last.NARY);
+        sb.append(formatIndent());
+        super.start(naryMetadata);
     }
 
     @Override
@@ -100,17 +92,33 @@ public abstract class SyntaxTreeBuilder implements MetadataVisitor {
 
     @Override
     public void end(NaryMetadata naryMetadata) {
-        stack.pop();
-        if (stack.isEmpty()) {
+        super.end(naryMetadata);
+        if (Element.WHEN.equals(peek())) {
             sb.append("\n");
         }
     }
 
     @Override
+    public void start(ValidationRule validationRule) {
+        super.start(validationRule);
+    }
+
+    @Override
     public void visit(ValidationRule validationRule) {
         sb.append(formatValidateWithMessage());
-        sb.append(formatIndent(getCurrentIndentSize() + getIndentSize()));
+        sb.append(formatIndent());
         sb.append(formatValidationMessage(validationRule.getMessage()));
+    }
+
+    @Override
+    public void end(ValidationRule validationRule) {
+        sb.append("\n");
+        super.end(validationRule);
+    }
+
+    @Override
+    public void start(StepWhen stepWhen) {
+        super.start(stepWhen);
     }
 
     @Override
@@ -119,19 +127,21 @@ public abstract class SyntaxTreeBuilder implements MetadataVisitor {
     }
 
     @Override
+    public void end(StepWhen stepWhen) {
+        super.end(stepWhen);
+        sb.append("\n");
+    }
+
+    @Override
     public void visit(StepCondition stepCondition) {
-    }
-
-    public final int getCurrentIndentSize() {
-        return getStackSize() * getIndentSize();
-    }
-
-    public int getIndentSize() {
-        return INDENT_SIZE;
     }
 
     public String formatLogical(String binary) {
         return binary;
+    }
+
+    public String formatIndent() {
+        return formatIndent(getCurrentIndentSize());
     }
 
     public String formatIndent(int size) {
