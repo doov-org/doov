@@ -22,7 +22,7 @@ import java.util.function.Function;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.meta.Metadata;
 
-public class PredicateStepCondition<N> extends AbstractStepCondition {
+class PredicateStepCondition<N> extends AbstractStepCondition {
 
     PredicateStepCondition(Metadata metadata,
                     Function<FieldModel, Optional<N>> value,

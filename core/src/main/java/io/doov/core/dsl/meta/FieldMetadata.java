@@ -15,6 +15,9 @@
 */
 package io.doov.core.dsl.meta;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
+
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
 import java.util.Collection;
@@ -217,6 +220,13 @@ public class FieldMetadata implements Metadata {
     public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata containsMetadata(
                     F field, T value) {
         return new FieldMetadata(field, "contains", value);
+    }
+
+    @SafeVarargs
+    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata containsMetadata(
+                    F field, T... values) {
+        return new FieldMetadata(field, "contains",
+                        stream(values).map(Object::toString).collect(joining(", ", "[", "]")));
     }
 
     public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata isEmptyMetadata(F field) {
