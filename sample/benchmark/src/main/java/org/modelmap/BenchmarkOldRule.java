@@ -27,16 +27,19 @@ import io.doov.sample.validation.RulesOld;
 @Measurement(iterations = 10)
 public class BenchmarkOldRule {
 
+    private static final SampleModel MODEL = SampleModels.sample();
+
+    @GenerateMicroBenchmark
     public void valid_email(BlackHole blackhole) {
-        boolean valid = RulesOld.validateEmail(SampleModels.sample().getAccount());
+        boolean valid = RulesOld.validateEmail(MODEL.getAccount());
         if (blackhole != null) {
             blackhole.consume(valid);
         }
     }
 
+    @GenerateMicroBenchmark
     public void valid_country(BlackHole blackhole) {
-        SampleModel sample = SampleModels.sample();
-        boolean valid = RulesOld.validateAccount(sample.getUser(), sample.getAccount(), sample.getConfiguration());
+        boolean valid = RulesOld.validateAccount(MODEL.getUser(), MODEL.getAccount(), MODEL.getConfiguration());
         if (blackhole != null) {
             blackhole.consume(valid);
         }
