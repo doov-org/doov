@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
-abstract class AbstractSyntaxTree implements MetadataVisitor {
+abstract class AbstractAstVisitor implements MetadataVisitor {
 
     enum Element {
         RULE, WHEN, UNARY, BINARY, NARY
@@ -22,7 +22,7 @@ abstract class AbstractSyntaxTree implements MetadataVisitor {
 
     final StringBuilder sb;
 
-    AbstractSyntaxTree(StringBuilder stringBuilder) {
+    AbstractAstVisitor(StringBuilder stringBuilder) {
         sb = stringBuilder;
     }
 

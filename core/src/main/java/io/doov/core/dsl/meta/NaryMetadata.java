@@ -50,8 +50,10 @@ public class NaryMetadata implements Metadata {
     @Override
     public void accept(MetadataVisitor visitor) {
         visitor.start(this);
-        visitor.visit(this);
-        values.forEach(v -> v.accept(visitor));
+        values.forEach(v -> {
+            v.accept(visitor);
+            visitor.visit(this);
+        });
         visitor.end(this);
     }
 

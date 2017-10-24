@@ -5,11 +5,11 @@ import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.Readable;
 
-public class SyntaxTreeTextBuilder extends AbstractSyntaxTree {
+public class AstTextVisitor extends AbstractAstVisitor {
 
     private static final int INDENT_SIZE = 2;
 
-    public SyntaxTreeTextBuilder(StringBuilder stringBuilder) {
+    public AstTextVisitor(StringBuilder stringBuilder) {
         super(stringBuilder);
     }
 

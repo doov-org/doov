@@ -2,9 +2,9 @@ package io.doov.core.dsl.meta.ast;
 
 import io.doov.core.dsl.meta.Readable;
 
-public class SyntaxTreeMarkdownBuilder extends SyntaxTreeTextBuilder {
+public class AstMarkdownVisitor extends AstTextVisitor {
 
-    public SyntaxTreeMarkdownBuilder(StringBuilder stringBuilder) {
+    public AstMarkdownVisitor(StringBuilder stringBuilder) {
         super(stringBuilder);
     }
 

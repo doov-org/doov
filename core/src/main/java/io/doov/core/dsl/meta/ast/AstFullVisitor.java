@@ -3,123 +3,123 @@ package io.doov.core.dsl.meta.ast;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
-public class SyntaxTreeFullBuilder extends AbstractSyntaxTree {
+public class AstFullVisitor extends AbstractAstVisitor {
 
     private static final int INDENT_SIZE = 4;
 
-    public SyntaxTreeFullBuilder(StringBuilder stringBuilder) {
+    public AstFullVisitor(StringBuilder stringBuilder) {
         super(stringBuilder);
     }
 
     @Override
     public void visitMetadata(Metadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("visit Metadata " + metadata);
+        sb.append("visit Metadata ").append(metadata);
         sb.append("\n");
     }
 
     @Override
     public void visitMetadata(FieldMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("visit FieldMetadata " + metadata + " = " + metadata.readable());
+        sb.append("visit FieldMetadata ").append(metadata).append(" = ").append(metadata.readable());
         sb.append("\n");
     }
 
     @Override
     public void visitMetadata(UnaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("visit UnaryMetadata " + metadata + " = " + metadata.getOperator());
+        sb.append("visit UnaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
     }
 
     @Override
     public void startMetadata(BinaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("start BinaryMetadata " + metadata + " = " + "-");
+        sb.append("start BinaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("visit BinaryMetadata " + metadata + " = " + metadata.getOperator());
+        sb.append("visit BinaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
     }
 
     @Override
     public void endMetadata(BinaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("end BinaryMetadata " + metadata + " = " + "-");
+        sb.append("end BinaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
     public void startMetadata(NaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("start NaryMetadata " + metadata + " = " + metadata.getOperator());
+        sb.append("start NaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
     }
 
     @Override
     public void visitMetadata(NaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("visit NaryMetadata " + metadata + " = " + "-");
+        sb.append("visit NaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
     public void endMetadata(NaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("end NaryMetadata " + metadata + " = " + "-");
+        sb.append("end NaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
     public void startMetadata(ValidationRule metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("start ValidationRule " + metadata + " = " + "Rule");
+        sb.append("start ValidationRule ").append(metadata).append(" = ").append("rule");
         sb.append("\n");
     }
 
     @Override
     public void visitMetadata(ValidationRule metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("visit ValidationRule " + metadata + " = " + "validate with message");
+        sb.append("visit ValidationRule ").append(metadata).append(" = ").append("validate with message");
         sb.append("\n");
     }
 
     @Override
     public void endMetadata(ValidationRule metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("end ValidationRule " + metadata + " = " + metadata.getMessage());
+        sb.append("end ValidationRule ").append(metadata).append(" = ").append(metadata.getMessage());
         sb.append("\n");
     }
 
     @Override
     public void startMetadata(StepWhen metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("start StepWhen " + metadata + " = " + "when");
+        sb.append("start StepWhen ").append(metadata).append(" = ").append("when");
         sb.append("\n");
     }
 
     @Override
     public void visitMetadata(StepWhen metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("visit StepWhen " + metadata + " = " + "-");
+        sb.append("visit StepWhen ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
     public void endMetadata(StepWhen metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("end StepWhen " + metadata + " = " + "-");
+        sb.append("end StepWhen ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
     public void visitMetadata(StepCondition metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("visit StepCondition " + metadata + " = " + "-");
+        sb.append("visit StepCondition ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 

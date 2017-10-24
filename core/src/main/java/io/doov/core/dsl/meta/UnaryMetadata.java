@@ -37,7 +37,7 @@ public class UnaryMetadata implements Metadata {
     @Override
     public void accept(MetadataVisitor visitor) {
         visitor.visit(this);
-        visitor.visit(value);
+        value.accept(visitor);
     }
 
     public String getOperator() {

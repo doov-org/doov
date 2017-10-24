@@ -34,7 +34,17 @@ public class RulesVisitorTest {
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
                         .flatMap(RuleRegistry::stream)
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new SyntaxTreeFullBuilder(sb)));
+                        .forEach(rule -> rule.accept(new AstFullVisitor(sb)));
+        System.out.println(sb);
+    }
+
+    @Test
+    public void line() {
+        StringBuilder sb = new StringBuilder();
+        Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
+                        .flatMap(RuleRegistry::stream)
+                        .peek(rule -> sb.append("--------------------------------").append("\n"))
+                        .forEach(rule -> rule.accept(new AstLineVisitor(sb)));
         System.out.println(sb);
     }
 
@@ -44,7 +54,7 @@ public class RulesVisitorTest {
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
                         .flatMap(RuleRegistry::stream)
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new SyntaxTreeTextBuilder(sb)));
+                        .forEach(rule -> rule.accept(new AstTextVisitor(sb)));
         System.out.println(sb);
     }
 
@@ -54,7 +64,7 @@ public class RulesVisitorTest {
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
                         .flatMap(RuleRegistry::stream)
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new SyntaxTreeMarkdownBuilder(sb)));
+                        .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb)));
         System.out.println(sb);
     }
 
