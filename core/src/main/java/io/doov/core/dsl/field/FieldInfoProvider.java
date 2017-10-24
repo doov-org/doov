@@ -1,20 +1,18 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.doov.core.dsl.field;
 
+import java.util.Collection;
 import java.util.List;
 
 import io.doov.core.FieldId;
@@ -70,9 +68,12 @@ public class FieldInfoProvider {
         return new EnumFieldInfoBuilder<>();
     }
 
+    protected static <T, C extends Collection<T>> CollectionFieldInfoBuilder<T, C> collectionField() {
+        return new CollectionFieldInfoBuilder<>();
+    }
+
     @SuppressWarnings("unchecked")
-    protected static abstract class BaseFieldInfoBuilder<F extends DefaultFieldInfo<?>,
-                    B extends BaseFieldInfoBuilder<F, B>> {
+    protected static abstract class BaseFieldInfoBuilder<F extends DefaultFieldInfo<?>, B extends BaseFieldInfoBuilder<F, B>> {
 
         protected FieldId fieldId;
         protected String readable;
@@ -240,4 +241,14 @@ public class FieldInfoProvider {
         }
     }
 
+    protected static class CollectionFieldInfoBuilder<T, C extends Collection<T>>
+                    extends BaseFieldInfoBuilder<CollectionFieldInfo<T, C>, CollectionFieldInfoBuilder<T, C>> {
+        @Override
+        public CollectionFieldInfo<T, C> build(List<FieldInfo> allFields) {
+            CollectionFieldInfo<T, C> info = new CollectionFieldInfo<>(fieldId, readable, type, genericTypes, siblings);
+            allFields.add(info);
+            return info;
+        }
+
+    }
 }

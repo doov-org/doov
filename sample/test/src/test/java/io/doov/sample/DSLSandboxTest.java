@@ -102,4 +102,27 @@ public class DSLSandboxTest {
         assertThat(step.executeOn(model).getMessage()).isNull();
     }
 
+    @Test
+    public void sample8() {
+        ValidationRule step = DSL.when(accountPreferencesMail().contains(ADMINISTRATOR)).validate();
+        System.out.println(step.readable());
+        assertThat(step.executeOn(model).isValid()).isTrue();
+        assertThat(step.executeOn(model).getMessage()).isNull();
+    }
+    
+    @Test
+    public void sample9() {
+        ValidationRule step = DSL.when(accountPreferencesMail().isNotEmpty()).validate();
+        System.out.println(step.readable());
+        assertThat(step.executeOn(model).isValid()).isTrue();
+        assertThat(step.executeOn(model).getMessage()).isNull();
+    }
+    
+    @Test
+    public void sample10() {
+        ValidationRule step = DSL.when(accountPreferencesMail().hasNotSize(1)).validate();
+        System.out.println(step.readable());
+        assertThat(step.executeOn(model).isValid()).isTrue();
+        assertThat(step.executeOn(model).getMessage()).isNull();
+    }
 }
