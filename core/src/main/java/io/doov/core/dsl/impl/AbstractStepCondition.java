@@ -22,6 +22,7 @@ import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 abstract class AbstractStepCondition implements StepCondition {
 
@@ -31,6 +32,11 @@ abstract class AbstractStepCondition implements StepCondition {
     AbstractStepCondition(Metadata metadata, BiPredicate<FieldModel, Context> predicate) {
         this.metadata = metadata;
         this.predicate = predicate;
+    }
+
+    @Override
+    public Metadata getMetadata() {
+        return metadata;
     }
 
     @Override
@@ -46,11 +52,7 @@ abstract class AbstractStepCondition implements StepCondition {
 
     @Override
     public String readable() {
-        return metadata.readable();
-    }
-
-    public Metadata getMetadata() {
-        return metadata;
+        return AstVisitorUtils.astToString(this);
     }
 
     @Override

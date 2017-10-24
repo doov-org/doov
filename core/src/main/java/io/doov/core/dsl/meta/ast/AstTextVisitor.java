@@ -1,9 +1,8 @@
 package io.doov.core.dsl.meta.ast;
 
-import io.doov.core.dsl.lang.StepWhen;
-import io.doov.core.dsl.lang.ValidationRule;
+import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.Readable;
 
 public class AstTextVisitor extends AbstractAstVisitor {
 
@@ -83,15 +82,15 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     protected String formatField(Readable field) {
-        return field.readable();
+        return field == null ? "" : field.readable();
     }
 
     protected String formatOperator(Readable operator) {
-        return operator.readable();
+        return operator == null ? "" : operator.readable();
     }
 
     protected String formatValue(Readable value) {
-        return value.readable();
+        return value == null ? "" : value.readable();
     }
 
     protected String formatOperator(UnaryMetadata metadata) {

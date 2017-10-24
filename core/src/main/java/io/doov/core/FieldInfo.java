@@ -15,7 +15,7 @@
 */
 package io.doov.core;
 
-import io.doov.core.dsl.meta.Readable;
+import io.doov.core.dsl.lang.Readable;
 
 /**
  * Properties of a {@code FieldId}, generated from the model java bean

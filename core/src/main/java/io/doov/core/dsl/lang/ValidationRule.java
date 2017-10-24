@@ -16,8 +16,7 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.Readable;
+import io.doov.core.dsl.meta.SyntaxTree;
 
 public interface ValidationRule extends Readable, SyntaxTree {
 

@@ -20,8 +20,8 @@ import java.util.function.BiPredicate;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.LogicalBinaryCondition;
 import io.doov.core.dsl.impl.LogicalUnaryCondition;
-import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.Readable;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.SyntaxTree;
 
 public interface StepCondition extends Readable, SyntaxTree {
 

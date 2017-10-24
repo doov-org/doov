@@ -15,17 +15,15 @@
 */
 package io.doov.core.dsl.meta;
 
-import static java.util.stream.Collectors.joining;
-
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.*;
+import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class FieldMetadata implements Metadata {
 
@@ -216,26 +214,30 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(field, "length is", null);
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata containsMetadata(F field, T value) {
+    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata containsMetadata(
+                    F field, T value) {
         return new FieldMetadata(field, "contains", value);
     }
-    
+
     public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata isEmptyMetadata(F field) {
         return new FieldMetadata(field, "is empty", null);
     }
-    
-    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata isNotEmptyMetadata(F field) {
+
+    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata isNotEmptyMetadata(
+                    F field) {
         return new FieldMetadata(field, "is not empty", null);
     }
-    
-    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata hasSizeMetadata(F field, int size) {
+
+    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata hasSizeMetadata(
+                    F field, int size) {
         return new FieldMetadata(field, "has size", size);
     }
-    
-    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata hasNotSizeMetadata(F field, int size) {
+
+    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata hasNotSizeMetadata(
+                    F field, int size) {
         return new FieldMetadata(field, "has not size", size);
     }
-    
+
     public FieldMetadata merge(FieldMetadata metadata) {
         if (equals(EMPTY)) {
             return metadata;
@@ -245,11 +247,7 @@ public class FieldMetadata implements Metadata {
 
     @Override
     public String readable() {
-        return Stream.of(field, operator, value)
-                        .filter(Objects::nonNull)
-                        .map(Readable::readable)
-                        .map(Objects::toString)
-                        .collect(joining(" "));
+        return AstVisitorUtils.astToString(this);
     }
 
     @Override

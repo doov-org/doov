@@ -15,14 +15,11 @@
 */
 package io.doov.core.dsl.impl;
 
-import static java.text.MessageFormat.format;
-
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class DefaultStepWhen implements StepWhen {
-
-    private static final String READABLE_WHEN_CONDITION = "When {0}";
 
     private final StepCondition stepCondition;
 
@@ -42,7 +39,7 @@ public class DefaultStepWhen implements StepWhen {
 
     @Override
     public String readable() {
-        return format(READABLE_WHEN_CONDITION, stepCondition.readable());
+        return AstVisitorUtils.astToString(this);
     }
 
     @Override

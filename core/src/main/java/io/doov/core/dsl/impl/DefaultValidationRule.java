@@ -15,8 +15,6 @@
 */
 package io.doov.core.dsl.impl;
 
-import static java.text.MessageFormat.format;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +22,9 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class DefaultValidationRule implements ValidationRule {
-
-    private static final String READABLE_VALIDATE_WITH_EMPTY_MESSAGE = "{0}, validate with empty message";
-    private static final String READABLE_VALIDATE_WITH_MESSAGE = "{0}, validate with message \"{1}\"";
 
     private final StepWhen stepWhen;
     private final String message;
@@ -43,14 +39,13 @@ public class DefaultValidationRule implements ValidationRule {
     }
 
     @Override
-    public ValidationRule withMessage(String message) {
-        return new DefaultValidationRule(stepWhen, message);
+    public String getMessage() {
+        return message;
     }
 
     @Override
-    public String readable() {
-        String pattern = message == null ? READABLE_VALIDATE_WITH_EMPTY_MESSAGE : READABLE_VALIDATE_WITH_MESSAGE;
-        return format(pattern, stepWhen.readable(), message);
+    public ValidationRule withMessage(String message) {
+        return new DefaultValidationRule(stepWhen, message);
     }
 
     @Override
@@ -74,8 +69,8 @@ public class DefaultValidationRule implements ValidationRule {
     }
 
     @Override
-    public String getMessage() {
-        return message;
+    public String readable() {
+        return AstVisitorUtils.astToString(this);
     }
 
     @Override

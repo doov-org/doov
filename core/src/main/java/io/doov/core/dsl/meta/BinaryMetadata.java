@@ -15,6 +15,8 @@
 */
 package io.doov.core.dsl.meta;
 
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
+
 public class BinaryMetadata implements Metadata {
 
     private final Metadata left;
@@ -27,6 +29,10 @@ public class BinaryMetadata implements Metadata {
         this.right = right;
     }
 
+    public String getOperator() {
+        return operator;
+    }
+
     public static BinaryMetadata andMetadata(Metadata left, Metadata right) {
         return new BinaryMetadata(left, "and", right);
     }
@@ -37,7 +43,7 @@ public class BinaryMetadata implements Metadata {
 
     @Override
     public String readable() {
-        return "(" + (left.readable() + " " + operator + " " + right.readable()) + ")";
+        return AstVisitorUtils.astToString(this);
     }
 
     @Override
@@ -48,9 +54,4 @@ public class BinaryMetadata implements Metadata {
         right.accept(visitor);
         visitor.end(this);
     }
-
-    public String getOperator() {
-        return operator;
-    }
-
 }

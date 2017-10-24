@@ -15,6 +15,8 @@
 */
 package io.doov.core.dsl.meta;
 
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
+
 public class UnaryMetadata implements Metadata {
 
     private final String operator;
@@ -25,23 +27,23 @@ public class UnaryMetadata implements Metadata {
         this.value = value;
     }
 
+    public String getOperator() {
+        return operator;
+    }
+
     public static UnaryMetadata notMetadata(Metadata value) {
         return new UnaryMetadata("not", value);
     }
 
     @Override
     public String readable() {
-        return "(" + operator + " " + value.readable() + ")";
+        return AstVisitorUtils.astToString(this);
     }
 
     @Override
     public void accept(MetadataVisitor visitor) {
         visitor.visit(this);
         value.accept(visitor);
-    }
-
-    public String getOperator() {
-        return operator;
     }
 
 }

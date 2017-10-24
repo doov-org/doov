@@ -30,8 +30,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.Readable;
 import io.doov.sample.model.*;
 
 public class RulesTest {
@@ -57,10 +57,10 @@ public class RulesTest {
         assertThat(actual.isValid()).isFalse();
         assertThat(actual.getFailedNodes()).hasSize(3);
         assertThat(actual.getFailedNodes().stream().map(Readable::readable).collect(toList()))
-                        .contains("account email matches '\\w+[@]\\w+\\.com'",
-                                        "account email matches '\\w+[@]\\w+\\.fr'",
+                        .contains("account email matches '\\w+[@]\\w+\\.com' ",
+                                        "account email matches '\\w+[@]\\w+\\.fr' ",
                                         "(account email matches '\\w+[@]\\w+\\.com' or " +
-                                                        "account email matches '\\w+[@]\\w+\\.fr')");
+                                                        "account email matches '\\w+[@]\\w+\\.fr') ");
     }
 
     @Test

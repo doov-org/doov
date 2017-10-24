@@ -21,7 +21,12 @@ public class AstFullVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(FieldMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("visit FieldMetadata ").append(metadata).append(" = ").append(metadata.readable());
+        sb.append("visit FieldMetadata ").append(metadata).append(" = ")
+                        .append(metadata.getField().readable())
+                        .append(" ")
+                        .append(metadata.getOperator().readable())
+                        .append(" ")
+                        .append(metadata.getValue().readable());
         sb.append("\n");
     }
 

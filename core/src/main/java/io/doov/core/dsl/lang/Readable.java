@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package io.doov.core.dsl.meta;
+package io.doov.core.dsl.lang;
 
 public interface Readable {
 

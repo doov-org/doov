@@ -1,6 +1,6 @@
 package io.doov.core.dsl.meta.ast;
 
-import io.doov.core.dsl.meta.Readable;
+import io.doov.core.dsl.lang.Readable;
 
 public class AstMarkdownVisitor extends AstTextVisitor {
 

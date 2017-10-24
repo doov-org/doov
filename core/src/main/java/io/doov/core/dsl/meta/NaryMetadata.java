@@ -15,9 +15,9 @@
 */
 package io.doov.core.dsl.meta;
 
-import static java.util.stream.Collectors.joining;
-
 import java.util.List;
+
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class NaryMetadata implements Metadata {
 
@@ -27,6 +27,10 @@ public class NaryMetadata implements Metadata {
     private NaryMetadata(String operator, List<Metadata> values) {
         this.operator = operator;
         this.values = values;
+    }
+
+    public String getOperator() {
+        return operator;
     }
 
     public static NaryMetadata matchAnyMetadata(List<Metadata> values) {
@@ -43,8 +47,7 @@ public class NaryMetadata implements Metadata {
 
     @Override
     public String readable() {
-        String readables = values.stream().map(Readable::readable).collect(joining(", "));
-        return "(" + operator + " [" + readables + "])";
+        return AstVisitorUtils.astToString(this);
     }
 
     @Override
@@ -55,10 +58,6 @@ public class NaryMetadata implements Metadata {
             visitor.visit(this);
         });
         visitor.end(this);
-    }
-
-    public String getOperator() {
-        return operator;
     }
 
 }
