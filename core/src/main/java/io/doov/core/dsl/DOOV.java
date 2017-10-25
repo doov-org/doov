@@ -20,7 +20,7 @@ import io.doov.core.dsl.impl.LogicalNaryCondition;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.StepWhen;
 
-public class DSL {
+public class DOOV {
 
     public static StepWhen when(StepCondition condition) {
         return new DefaultStepWhen(condition);

@@ -15,7 +15,7 @@
 */
 package org.modelmap;
 
-import static io.doov.core.dsl.DSL.matchAll;
+import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
 import static io.doov.sample.field.SampleFieldIdInfo.accountLanguage;
 import static io.doov.sample.field.SampleFieldIdInfo.accountPhoneNumber;
@@ -29,7 +29,7 @@ import org.openjdk.jmh.annotations.GenerateMicroBenchmark;
 import org.openjdk.jmh.logic.BlackHole;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DSL;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.*;
 import io.doov.sample.model.*;
 import io.doov.sample.validation.id.AccountRulesId;
@@ -38,11 +38,11 @@ public class BenchmarkRule {
 
     private static final FieldModel MODEL = SampleModels.wrapper();
 
-    private static final ValidationRule ACCOUNT_VALID_COUNTRY_20 = DSL.when(matchAll(conditions(20))).validate();
-    private static final ValidationRule ACCOUNT_VALID_COUNTRY_40 = DSL.when(matchAll(conditions(40))).validate();
-    private static final ValidationRule ACCOUNT_VALID_COUNTRY_60 = DSL.when(matchAll(conditions(60))).validate();
-    private static final ValidationRule ACCOUNT_VALID_COUNTRY_80 = DSL.when(matchAll(conditions(80))).validate();
-    private static final ValidationRule ACCOUNT_VALID_COUNTRY_100 = DSL.when(matchAll(conditions(100))).validate();
+    private static final ValidationRule ACCOUNT_VALID_COUNTRY_20 = DOOV.when(matchAll(conditions(20))).validate();
+    private static final ValidationRule ACCOUNT_VALID_COUNTRY_40 = DOOV.when(matchAll(conditions(40))).validate();
+    private static final ValidationRule ACCOUNT_VALID_COUNTRY_60 = DOOV.when(matchAll(conditions(60))).validate();
+    private static final ValidationRule ACCOUNT_VALID_COUNTRY_80 = DOOV.when(matchAll(conditions(80))).validate();
+    private static final ValidationRule ACCOUNT_VALID_COUNTRY_100 = DOOV.when(matchAll(conditions(100))).validate();
 
     @GenerateMicroBenchmark
     public void valid_email(BlackHole blackhole) {
