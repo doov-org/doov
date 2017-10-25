@@ -29,14 +29,14 @@ public class AstLineVisitor extends AstTextVisitor {
     @Override
     public void visitMetadata(NaryMetadata metadata) {
         super.visitMetadata(metadata);
-        sb.deleteCharAt(sb.length() - 1);
+        sb.delete(sb.length() - 1, sb.length());
         sb.append(", ");
     }
 
     @Override
     protected void endMetadata(NaryMetadata metadata) {
         super.endMetadata(metadata);
-        sb.deleteCharAt(sb.length() - 1);
+        sb.delete(sb.length() - 2, sb.length());
         sb.append("] ");
     }
 
@@ -55,7 +55,7 @@ public class AstLineVisitor extends AstTextVisitor {
     @Override
     protected void endMetadata(BinaryMetadata metadata) {
         super.endMetadata(metadata);
-        sb.deleteCharAt(sb.length() - 1);
+        sb.delete(sb.length() - 1, sb.length());
         sb.append(") ");
     }
 

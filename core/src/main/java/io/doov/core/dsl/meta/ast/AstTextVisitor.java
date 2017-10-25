@@ -1,5 +1,9 @@
 package io.doov.core.dsl.meta.ast;
 
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
@@ -15,11 +19,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(FieldMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(formatField(metadata.getField()));
-        sb.append(" ");
-        sb.append(formatOperator(metadata.getOperator()));
-        sb.append(" ");
-        sb.append(formatValue(metadata.getValue()));
+        sb.append(formatFieldMetadata(metadata));
         sb.append(formatNewLine());
     }
 
@@ -81,16 +81,24 @@ public class AstTextVisitor extends AbstractAstVisitor {
         return super.getCurrentIndentSize();
     }
 
+    protected String formatFieldMetadata(FieldMetadata metadata) {
+        return Stream.of(formatField(metadata.getField()),
+                        formatOperator(metadata.getOperator()),
+                        formatValue(metadata.getValue()))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.joining(" "));
+    }
+
     protected String formatField(Readable field) {
-        return field == null ? "" : field.readable();
+        return field == null ? null : field.readable();
     }
 
     protected String formatOperator(Readable operator) {
-        return operator == null ? "" : operator.readable();
+        return operator == null ? null : operator.readable();
     }
 
     protected String formatValue(Readable value) {
-        return value == null ? "" : value.readable();
+        return value == null ? null : value.readable();
     }
 
     protected String formatOperator(UnaryMetadata metadata) {
