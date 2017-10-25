@@ -12,7 +12,6 @@
  */
 package io.doov.core.dsl.field;
 
-import java.util.Collection;
 import java.util.List;
 
 import io.doov.core.FieldId;
@@ -68,8 +67,8 @@ public class FieldInfoProvider {
         return new EnumFieldInfoBuilder<>();
     }
 
-    protected static <T, C extends Collection<T>> CollectionFieldInfoBuilder<T, C> collectionField() {
-        return new CollectionFieldInfoBuilder<>();
+    protected static <T, C extends Iterable<T>> IterableFieldInfoBuilder<T, C> iterableField() {
+        return new IterableFieldInfoBuilder<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -241,11 +240,11 @@ public class FieldInfoProvider {
         }
     }
 
-    protected static class CollectionFieldInfoBuilder<T, C extends Collection<T>>
-                    extends BaseFieldInfoBuilder<CollectionFieldInfo<T, C>, CollectionFieldInfoBuilder<T, C>> {
+    protected static class IterableFieldInfoBuilder<T, C extends Iterable<T>>
+                    extends BaseFieldInfoBuilder<IterableFieldInfo<T, C>, IterableFieldInfoBuilder<T, C>> {
         @Override
-        public CollectionFieldInfo<T, C> build(List<FieldInfo> allFields) {
-            CollectionFieldInfo<T, C> info = new CollectionFieldInfo<>(fieldId, readable, type, genericTypes, siblings);
+        public IterableFieldInfo<T, C> build(List<FieldInfo> allFields) {
+            IterableFieldInfo<T, C> info = new IterableFieldInfo<>(fieldId, readable, type, genericTypes, siblings);
             allFields.add(info);
             return info;
         }

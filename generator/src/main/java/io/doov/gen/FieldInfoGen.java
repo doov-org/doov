@@ -191,11 +191,11 @@ final class FieldInfoGen {
         if (Enum.class.isAssignableFrom(type)) {
             return EnumFieldInfo.class.getSimpleName() + "<" + rawType + ">";
         }
-        if (Collection.class.isAssignableFrom(type)) {
+        if (Iterable.class.isAssignableFrom(type)) {
             if (genericTypes.isEmpty())
-                return CollectionFieldInfo.class.getSimpleName() + "<?, " + rawType + ">";
+                return IterableFieldInfo.class.getSimpleName() + "<?, " + rawType + ">";
             else
-                return CollectionFieldInfo.class.getSimpleName() + "<" + genericTypes + ", " + rawType + "<"
+                return IterableFieldInfo.class.getSimpleName() + "<" + genericTypes + ", " + rawType + "<"
                                 + genericTypes + ">>";
         }
         return DefaultFieldInfo.class.getSimpleName() + "<" + rawType
@@ -236,12 +236,12 @@ final class FieldInfoGen {
         if (Enum.class.isAssignableFrom(type)) {
             return "FieldInfoProvider\n                    .<" + rawType + "> enumField()";
         }
-        if (Collection.class.isAssignableFrom(type)) {
+        if (Iterable.class.isAssignableFrom(type)) {
             if (genericTypes.isEmpty())
-                return "FieldInfoProvider\n                    .<?, " + rawType + "> collectionField()";
+                return "FieldInfoProvider\n                    .<?, " + rawType + "> iterableField()";
             else
                 return "FieldInfoProvider\n                    .<" + genericTypes + ", " + rawType + "<"
-                                + genericTypes + ">> collectionField()";
+                                + genericTypes + ">> iterableField()";
         }
         return "FieldInfoProvider\n                    .<" + rawType
                         + (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">")

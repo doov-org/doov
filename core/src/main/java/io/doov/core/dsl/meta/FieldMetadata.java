@@ -20,7 +20,6 @@ import static java.util.stream.Collectors.joining;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
-import java.util.Collection;
 import java.util.function.Supplier;
 
 import io.doov.core.FieldInfo;
@@ -217,33 +216,33 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(field, "length is", null);
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata containsMetadata(
+    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata containsMetadata(
                     F field, T value) {
         return new FieldMetadata(field, "contains", value);
     }
 
     @SafeVarargs
-    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata containsMetadata(
+    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata containsMetadata(
                     F field, T... values) {
         return new FieldMetadata(field, "contains",
                         stream(values).map(Object::toString).collect(joining(", ", "[", "]")));
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata isEmptyMetadata(F field) {
+    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata isEmptyMetadata(F field) {
         return new FieldMetadata(field, "is empty", null);
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata isNotEmptyMetadata(
+    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata isNotEmptyMetadata(
                     F field) {
         return new FieldMetadata(field, "is not empty", null);
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata hasSizeMetadata(
+    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata hasSizeMetadata(
                     F field, int size) {
         return new FieldMetadata(field, "has size", size);
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Collection<T>> FieldMetadata hasNotSizeMetadata(
+    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata hasNotSizeMetadata(
                     F field, int size) {
         return new FieldMetadata(field, "has not size", size);
     }
