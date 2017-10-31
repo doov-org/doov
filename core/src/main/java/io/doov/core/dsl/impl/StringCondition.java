@@ -21,44 +21,45 @@ import static io.doov.core.dsl.meta.FieldMetadata.matchesMetadata;
 import static io.doov.core.dsl.meta.FieldMetadata.startsWithMetadata;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
-import io.doov.core.FieldModel;
-import io.doov.core.dsl.field.StringFieldInfo;
+import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
-public class StringCondition extends DefaultCondition<StringFieldInfo, String> {
+public class StringCondition extends DefaultCondition<String> {
 
-    public StringCondition(StringFieldInfo field) {
+    public StringCondition(SimpleFieldId<String> field) {
         super(field);
     }
 
-    public StringCondition(FieldMetadata metadata, Function<FieldModel, Optional<String>> value) {
+    public StringCondition(FieldMetadata metadata, BiFunction<SimpleModel, Context, Optional<String>> value) {
         super(metadata, value);
     }
 
     public final StepCondition contains(String regex) {
         return predicate(containsMetadata(field, regex),
-                        model -> Optional.ofNullable(regex),
+                        (model, context) -> Optional.ofNullable(regex),
                         String::contains);
     }
 
     public final StepCondition matches(String regex) {
         return predicate(matchesMetadata(field, regex),
-                        model -> Optional.ofNullable(regex),
+                        (model, context) -> Optional.ofNullable(regex),
                         String::matches);
     }
 
     public final StepCondition startsWith(String value) {
         return predicate(startsWithMetadata(field, value),
-                        model -> Optional.ofNullable(value),
+                        (model, context) -> Optional.ofNullable(value),
                         String::startsWith);
     }
 
     public final StepCondition endsWith(String value) {
         return predicate(endsWithMetadata(field, value),
-                        model -> Optional.ofNullable(value),
+                        (model, context) -> Optional.ofNullable(value),
                         String::endsWith);
     }
 

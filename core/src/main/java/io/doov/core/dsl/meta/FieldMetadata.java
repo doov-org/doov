@@ -18,12 +18,9 @@ package io.doov.core.dsl.meta;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalUnit;
 import java.util.function.Supplier;
 
-import io.doov.core.FieldInfo;
-import io.doov.core.dsl.field.*;
+import io.doov.core.dsl.SimpleFieldId;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
@@ -75,183 +72,208 @@ public class FieldMetadata implements Metadata {
         return EMPTY;
     }
 
-    public static FieldMetadata equalsMetadata(FieldInfo field, Object value) {
+    public static FieldMetadata fieldOnlyMetadata(SimpleFieldId field) {
+        return new FieldMetadata(field, (String) null, null);
+    }
+
+    public static FieldMetadata trueMetadata() {
+        return new FieldMetadata(null, "always true", null);
+    }
+
+    public static FieldMetadata minMetadata(SimpleFieldId... values) {
+        return new FieldMetadata(null, "min", format(values));
+    }
+
+    public static FieldMetadata sumMetadata(SimpleFieldId... values) {
+        return new FieldMetadata(null, "sum", format(values));
+    }
+
+    public static FieldMetadata availableMetadata(SimpleFieldId field) {
+        return new FieldMetadata(field, "available", null);
+    }
+
+    public static FieldMetadata notAvailableMetadata(SimpleFieldId field) {
+        return new FieldMetadata(field, "not available", null);
+    }
+
+    public static FieldMetadata equalsMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "equals", value);
     }
 
-    public static FieldMetadata notEqualsMetadata(FieldInfo field, Object value) {
+    public static FieldMetadata notEqualsMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "not equals", value);
     }
 
-    public static FieldMetadata nullMetadata(FieldInfo field, Object value) {
+    public static FieldMetadata nullMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "is", value);
     }
 
-    public static FieldMetadata notNullMetadata(FieldInfo field, Object value) {
+    public static FieldMetadata notNullMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "is not", value);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata minusMetadata(
-                    F field, int value, TemporalUnit unit) {
+    public static FieldMetadata matchAnyMetadata(SimpleFieldId field, Object... values) {
+        return new FieldMetadata(field, "match any", format(values));
+    }
+
+    public static FieldMetadata matchAllMetadata(SimpleFieldId field, Object... values) {
+        return new FieldMetadata(field, "match all", format(values));
+    }
+
+    public static FieldMetadata matchNoneMetadata(SimpleFieldId field, Object... values) {
+        return new FieldMetadata(field, "match none", format(values));
+    }
+
+    public static FieldMetadata minusMetadata(SimpleFieldId field, int value, Object unit) {
         return new FieldMetadata(field, "minus", value + " " + unit);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata plusMetadata(
-                    F field, int value, TemporalUnit unit) {
+    public static FieldMetadata plusMetadata(SimpleFieldId field, int value, Object unit) {
         return new FieldMetadata(field, "plus", value + " " + unit);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata afterMetadata(F field, N value) {
+    public static FieldMetadata plusMetadata(SimpleFieldId field1, SimpleFieldId field2, Object unit) {
+        return new FieldMetadata(field1, "plus", field2.readable() + " " + unit);
+    }
+
+    public static FieldMetadata afterMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "after", value);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata beforeMetadata(F field, N value) {
+    public static FieldMetadata beforeMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "before", value);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata afterMetadata(F field1, F field2) {
+    public static FieldMetadata afterMetadata(SimpleFieldId field1, SimpleFieldId field2) {
         return new FieldMetadata(field1, "after", field2);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata beforeMetadata(F field1, F field2) {
+    public static FieldMetadata beforeMetadata(SimpleFieldId field1, SimpleFieldId field2) {
         return new FieldMetadata(field1, "before", field2);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata afterMetadata(
-                    F field, Supplier<N> value) {
+    public static FieldMetadata afterMetadata(SimpleFieldId field, Supplier<Object> value) {
         return new FieldMetadata(field, "after", () -> value.get().toString());
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata afterMetadata(
-                    F field, Readable value) {
+    public static FieldMetadata afterMetadata(SimpleFieldId field, Readable value) {
         return new FieldMetadata(field, "after", value);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata beforeMetadata(
-                    F field, Supplier<N> supplier) {
+    public static FieldMetadata beforeMetadata(SimpleFieldId field, Supplier<Object> supplier) {
         return new FieldMetadata(field, "before", () -> supplier.get().toString());
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata beforeMetadata(
-                    F field, Readable value) {
+    public static FieldMetadata beforeMetadata(SimpleFieldId field, Readable value) {
         return new FieldMetadata(field, "before", value);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata ageAtMetadata(
-                    F field, N value) {
+    public static FieldMetadata ageAtMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, () -> "age at " + value, null);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata ageAtMetadata(
-                    F field1, F field2) {
+    public static FieldMetadata ageAtMetadata(SimpleFieldId field1, SimpleFieldId field2) {
         return new FieldMetadata(field1, () -> "age at " + field2.readable(), null);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Temporal> FieldMetadata ageAtMetadata(
-                    F field, Supplier<N> supplier) {
+    public static FieldMetadata ageAtMetadata(SimpleFieldId field, Supplier<Object> supplier) {
         return new FieldMetadata(field, () -> "age at " + supplier.get().toString(), null);
     }
 
-    public static FieldMetadata matchesMetadata(StringFieldInfo field, String value) {
+    public static FieldMetadata matchesMetadata(SimpleFieldId field, String value) {
         return new FieldMetadata(field, "matches", value);
     }
 
-    public static FieldMetadata containsMetadata(StringFieldInfo field, String value) {
+    public static FieldMetadata containsMetadata(SimpleFieldId field, String value) {
         return new FieldMetadata(field, "contains", value);
     }
 
-    public static FieldMetadata startsWithMetadata(StringFieldInfo field, String value) {
+    public static FieldMetadata startsWithMetadata(SimpleFieldId field, String value) {
         return new FieldMetadata(field, "starts with", value);
     }
 
-    public static FieldMetadata endsWithMetadata(StringFieldInfo field, String value) {
+    public static FieldMetadata endsWithMetadata(SimpleFieldId field, String value) {
         return new FieldMetadata(field, "ends with", value);
     }
 
-    public static FieldMetadata isMetadata(BooleanFieldInfo field, boolean value) {
+    public static FieldMetadata isMetadata(SimpleFieldId field, boolean value) {
         return new FieldMetadata(field, "is", value);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata lesserThanMetadata(
-                    F field, N value) {
+    public static FieldMetadata lesserThanMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "lesser than", value);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata lesserThanMetadata(
-                    F field1, F field2) {
+    public static FieldMetadata lesserThanMetadata(SimpleFieldId field1, SimpleFieldId field2) {
         return new FieldMetadata(field1, "lesser than", field2);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata lesserOrEqualsMetadata(
-                    F field, N value) {
+    public static FieldMetadata lesserOrEqualsMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "lesser or equals", value);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata lesserOrEqualsMetadata(
-                    F field1, F field2) {
+    public static FieldMetadata lesserOrEqualsMetadata(SimpleFieldId field1, SimpleFieldId field2) {
         return new FieldMetadata(field1, "lesser or equals", field2);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata greaterThanMetadata(
-                    F field, N value) {
+    public static FieldMetadata greaterThanMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "greater than", value);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata greaterThanMetadata(
-                    F field1, F field2) {
+    public static FieldMetadata greaterThanMetadata(SimpleFieldId field1, SimpleFieldId field2) {
         return new FieldMetadata(field1, "greater than", field2);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata greaterOrEqualsMetadata(
-                    F field, N value) {
+    public static FieldMetadata greaterOrEqualsMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "greater or equals", value);
     }
 
-    public static <F extends DefaultFieldInfo<N>, N extends Number> FieldMetadata greaterOrEqualsMetadata(
-                    F field1, F field2) {
+    public static FieldMetadata greaterOrEqualsMetadata(SimpleFieldId field1, SimpleFieldId field2) {
         return new FieldMetadata(field1, "greater or equals", field2);
     }
 
-    public static FieldMetadata lengthIsMetadata(StringFieldInfo field) {
+    public static FieldMetadata lengthIsMetadata(SimpleFieldId field) {
         return new FieldMetadata(field, "length is", null);
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata containsMetadata(
-                    F field, T value) {
+    public static FieldMetadata containsMetadata(SimpleFieldId field, Object value) {
         return new FieldMetadata(field, "contains", value);
     }
 
-    @SafeVarargs
-    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata containsMetadata(
-                    F field, T... values) {
-        return new FieldMetadata(field, "contains",
-                        stream(values).map(Object::toString).collect(joining(", ", "[", "]")));
+    public static FieldMetadata containsMetadata(SimpleFieldId field, Object... values) {
+        return new FieldMetadata(field, "contains", format(values));
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata isEmptyMetadata(F field) {
+    public static FieldMetadata isEmptyMetadata(SimpleFieldId field) {
         return new FieldMetadata(field, "is empty", null);
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata isNotEmptyMetadata(
-                    F field) {
+    public static FieldMetadata isNotEmptyMetadata(SimpleFieldId field) {
         return new FieldMetadata(field, "is not empty", null);
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata hasSizeMetadata(
-                    F field, int size) {
+    public static FieldMetadata hasSizeMetadata(SimpleFieldId field, int size) {
         return new FieldMetadata(field, "has size", size);
     }
 
-    public static <F extends DefaultFieldInfo<C>, T, C extends Iterable<T>> FieldMetadata hasNotSizeMetadata(
-                    F field, int size) {
+    public static FieldMetadata hasNotSizeMetadata(SimpleFieldId field, int size) {
         return new FieldMetadata(field, "has not size", size);
     }
 
-    public FieldMetadata merge(FieldMetadata metadata) {
+    private static String format(Object... values) {
+        return stream(values).map(Object::toString).collect(joining(", ", "[", "]"));
+    }
+
+    private static String format(Readable... values) {
+        return stream(values).map(Readable::readable).collect(joining(", ", "[", "]"));
+    }
+
+    @Override
+    public Metadata merge(Metadata metadata) {
         if (equals(EMPTY)) {
             return metadata;
         }
-        return new FieldMetadata(field, operator.readable(), metadata);
+        return new FieldMetadata(field, operator == null ? null : operator.readable(), metadata);
     }
 
     @Override

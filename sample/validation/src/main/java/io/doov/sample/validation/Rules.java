@@ -40,13 +40,13 @@ public class Rules extends DefaultRuleRegistry {
                         .withMessage("email finishes with .com or .fr")
                         .registerOn(REGISTRY_ACCOUNT, VALID_EMAIL);
 
-        DOOV.when(matchAll(userBirthdate().ageAt(today()).greaterOrEquals(18L),
+        DOOV.when(matchAll(userBirthdate().ageAt(today()).greaterOrEquals(18),
                         accountEmail().length().lesserOrEquals(configurationMaxEmailSize()),
                         accountCountry().eq(Country.FR).and(accountPhoneNumber().startsWith("+33"))))
                         .validate()
                         .registerOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_01);
 
-        DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18L)
+        DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18)
                         .and(accountEmail().length().lesserOrEquals(configurationMaxEmailSize()))
                         .and(accountCountry().eq(Country.FR))
                         .and(accountPhoneNumber().startsWith("+33")))
@@ -59,7 +59,7 @@ public class Rules extends DefaultRuleRegistry {
                         .validate()
                         .registerOn(REGISTRY_USER);
 
-        DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18L)).validate()
+        DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18)).validate()
                         .registerOn(REGISTRY_USER);
 
         DOOV.when(userBirthdate().before(userBirthdate().minus(1, DAYS))).validate()

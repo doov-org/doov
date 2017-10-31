@@ -54,4 +54,10 @@ public class BinaryMetadata implements Metadata {
         right.accept(visitor);
         visitor.end(this);
     }
+
+    @Override
+    public Metadata merge(Metadata other) {
+        throw new UnsupportedOperationException();
+    }
+
 }

@@ -18,9 +18,9 @@ package io.doov.core.dsl.field;
 import io.doov.core.FieldId;
 import io.doov.core.dsl.impl.FloatCondition;
 
-public class FloatFieldInfo extends DefaultFieldInfo<Float> implements NumericFieldInfo<FloatFieldInfo, Float> {
+public class FloatFieldInfo extends DefaultFieldInfo<Float> implements NumericFieldInfo<Float> {
 
-    FloatFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
+    public FloatFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
         super(fieldId, readable, type, new Class[] {}, siblings);
     }
 

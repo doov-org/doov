@@ -22,21 +22,21 @@ import static io.doov.core.dsl.meta.FieldMetadata.lesserThanMetadata;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
-import io.doov.core.FieldModel;
-import io.doov.core.dsl.field.DefaultFieldInfo;
+import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.Metadata;
 
-public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends Number>
-                extends DefaultCondition<F, N> {
+public abstract class NumericCondition<N extends Number>
+                extends DefaultCondition<N> {
 
-    NumericCondition(F field) {
+    NumericCondition(SimpleFieldId<N> field) {
         super(field);
     }
 
-    NumericCondition(FieldMetadata metadata, Function<FieldModel, Optional<N>> value) {
+    NumericCondition(Metadata metadata, BiFunction<SimpleModel, Context, Optional<N>> value) {
         super(metadata, value);
     }
 
@@ -44,25 +44,25 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
 
     public final StepCondition lesserThan(N value) {
         return predicate(lesserThanMetadata(field, value),
-                        model -> Optional.ofNullable(value),
+                        (model, context) -> Optional.ofNullable(value),
                         (l, r) -> lesserThanFunction().apply(l, r));
     }
 
-    public final StepCondition lesserThan(F value) {
-        return predicate(lesserThanMetadata(this.field, value),
-                        model -> value(model, value),
+    public final StepCondition lesserThan(SimpleFieldId<N> value) {
+        return predicate(lesserThanMetadata(field, value),
+                        (model, context) -> value(model, value),
                         (l, r) -> lesserThanFunction().apply(l, r));
     }
 
     public final StepCondition lesserOrEquals(N value) {
         return predicate(lesserOrEqualsMetadata(field, value),
-                        model -> Optional.ofNullable(value),
+                        (model, context) -> Optional.ofNullable(value),
                         (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
-    public final StepCondition lesserOrEquals(F value) {
-        return predicate(lesserOrEqualsMetadata(this.field, value),
-                        model -> value(model, value),
+    public final StepCondition lesserOrEquals(SimpleFieldId<N> value) {
+        return predicate(lesserOrEqualsMetadata(field, value),
+                        (model, context) -> value(model, value),
                         (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
@@ -74,25 +74,25 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
 
     public final StepCondition greaterThan(N value) {
         return predicate(greaterThanMetadata(field, value),
-                        model -> Optional.ofNullable(value),
+                        (model, context) -> Optional.ofNullable(value),
                         (l, r) -> greaterThanFunction().apply(l, r));
     }
 
-    public final StepCondition greaterThan(F value) {
-        return predicate(greaterThanMetadata(this.field, value),
-                        model -> value(model, value),
+    public final StepCondition greaterThan(SimpleFieldId<N> value) {
+        return predicate(greaterThanMetadata(field, value),
+                        (model, context) -> value(model, value),
                         (l, r) -> greaterThanFunction().apply(l, r));
     }
 
     public final StepCondition greaterOrEquals(N value) {
         return predicate(greaterOrEqualsMetadata(field, value),
-                        model -> Optional.ofNullable(value),
+                        (model, context) -> Optional.ofNullable(value),
                         (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
-    public final StepCondition greaterOrEquals(F value) {
-        return predicate(greaterOrEqualsMetadata(this.field, value),
-                        model -> value(model, value),
+    public final StepCondition greaterOrEquals(SimpleFieldId<N> value) {
+        return predicate(greaterOrEqualsMetadata(field, value),
+                        (model, context) -> value(model, value),
                         (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
@@ -106,7 +106,7 @@ public abstract class NumericCondition<F extends DefaultFieldInfo<N>, N extends 
         return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
 
-    public final StepCondition between(F minIncluded, F maxExcluded) {
+    public final StepCondition between(SimpleFieldId<N> minIncluded, SimpleFieldId<N> maxExcluded) {
         return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
 

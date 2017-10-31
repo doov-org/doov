@@ -9,21 +9,22 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
-import io.doov.core.FieldModel;
-import io.doov.core.dsl.field.IterableFieldInfo;
+import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
 public class IterableCondition<T, C extends Iterable<T>>
-                extends DefaultCondition<IterableFieldInfo<T, C>, C> {
+                extends DefaultCondition<C> {
 
-    public IterableCondition(IterableFieldInfo<T, C> field) {
+    public IterableCondition(SimpleFieldId<C> field) {
         super(field);
     }
 
-    public IterableCondition(FieldMetadata metadata, Function<FieldModel, Optional<C>> value) {
+    public IterableCondition(FieldMetadata metadata, BiFunction<SimpleModel, Context, Optional<C>> value) {
         super(metadata, value);
     }
 
@@ -35,7 +36,7 @@ public class IterableCondition<T, C extends Iterable<T>>
 
     @SafeVarargs
     public final StepCondition containsAll(T... values) {
-        return predicate(containsMetadata(field, values),
+        return predicate(containsMetadata(field, (Object[]) values),
                         iterable -> stream(iterable.spliterator(), false)
                                         .collect(toSet()).containsAll(asList(values)));
     }

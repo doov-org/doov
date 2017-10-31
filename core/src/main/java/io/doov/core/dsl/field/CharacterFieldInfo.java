@@ -19,7 +19,7 @@ import io.doov.core.FieldId;
 
 public class CharacterFieldInfo extends DefaultFieldInfo<Character> {
 
-    CharacterFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
+    public CharacterFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
         super(fieldId, readable, type, new Class[] {}, siblings);
     }
 

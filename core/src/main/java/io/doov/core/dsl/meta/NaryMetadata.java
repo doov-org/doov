@@ -45,6 +45,10 @@ public class NaryMetadata implements Metadata {
         return new NaryMetadata("match none", values);
     }
 
+    public static NaryMetadata countMetadata(List<Metadata> values) {
+        return new NaryMetadata("count", values);
+    }
+
     @Override
     public String readable() {
         return AstVisitorUtils.astToString(this);
@@ -58,6 +62,11 @@ public class NaryMetadata implements Metadata {
             visitor.visit(this);
         });
         visitor.end(this);
+    }
+
+    @Override
+    public Metadata merge(Metadata other) {
+        throw new UnsupportedOperationException();
     }
 
 }

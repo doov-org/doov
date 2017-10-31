@@ -15,6 +15,7 @@
 */
 package io.doov.core.dsl.field;
 
+import static io.doov.core.dsl.meta.FieldMetadata.fieldOnlyMetadata;
 import static io.doov.core.dsl.meta.FieldMetadata.lengthIsMetadata;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ import io.doov.core.dsl.lang.StepCondition;
 
 public class StringFieldInfo extends DefaultFieldInfo<String> {
 
-    StringFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
+    public StringFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
         super(fieldId, readable, String.class, new Class[] {}, siblings);
     }
 
@@ -48,7 +49,14 @@ public class StringFieldInfo extends DefaultFieldInfo<String> {
 
     public IntegerCondition length() {
         return new IntegerCondition(lengthIsMetadata(this),
-                        fieldModel -> Optional.ofNullable(fieldModel.<String> get(this.id())).map(String::length));
+                        (model, context) -> Optional.ofNullable(model.<String> get(id()))
+                                        .map(String::length));
+    }
+
+    public IntegerCondition parseInt() {
+        return new IntegerCondition(fieldOnlyMetadata(this),
+                        (model, context) -> Optional.ofNullable(model.<String> get(id()))
+                                        .map(Integer::parseInt));
     }
 
 }

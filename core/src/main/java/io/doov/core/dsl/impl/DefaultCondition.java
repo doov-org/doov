@@ -21,39 +21,41 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.doov.core.FieldModel;
-import io.doov.core.dsl.field.DefaultFieldInfo;
+import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.Metadata;
 
-class DefaultCondition<F extends DefaultFieldInfo<N>, N> {
+class DefaultCondition<N> {
 
-    final F field;
-    final FieldMetadata metadata;
-    final Function<FieldModel, Optional<N>> value;
+    final SimpleFieldId<N> field;
+    final Metadata metadata;
+    final BiFunction<SimpleModel, Context, Optional<N>> value;
 
-    DefaultCondition(F field) {
+    DefaultCondition(SimpleFieldId<N> field) {
         this.field = field;
-        this.metadata = emptyMetadata();
-        this.value = fieldModel -> Optional.ofNullable(fieldModel.<N> get(field.id()));
+        metadata = emptyMetadata();
+        value = (model, context) -> Optional.ofNullable(model.<N> get(field.id()));
     }
 
-    DefaultCondition(FieldMetadata metadata, Function<FieldModel, Optional<N>> value) {
-        this.field = null;
+    DefaultCondition(Metadata metadata, BiFunction<SimpleModel, Context, Optional<N>> value) {
+        field = null;
         this.metadata = metadata;
         this.value = value;
     }
 
-    Optional<N> value(FieldModel model, F field) {
+    protected Optional<N> value(SimpleModel model, SimpleFieldId<N> field) {
         return Optional.ofNullable(model.<N> get(field.id()));
     }
 
     StepCondition predicate(FieldMetadata metadata, Function<N, Boolean> predicate) {
-        return new PredicateStepCondition<>(this.metadata.merge(metadata), this.value, predicate);
+        return new PredicateStepCondition<>(this.metadata.merge(metadata), value, predicate);
     }
 
     StepCondition predicate(FieldMetadata metadata,
-                    Function<FieldModel, Optional<N>> value,
+                    BiFunction<SimpleModel, Context, Optional<N>> value,
                     BiFunction<N, N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
     }

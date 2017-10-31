@@ -17,7 +17,7 @@ package io.doov.core.dsl.lang;
 
 import java.util.function.BiPredicate;
 
-import io.doov.core.FieldModel;
+import io.doov.core.dsl.SimpleModel;
 import io.doov.core.dsl.impl.LogicalBinaryCondition;
 import io.doov.core.dsl.impl.LogicalUnaryCondition;
 import io.doov.core.dsl.meta.Metadata;
@@ -25,7 +25,7 @@ import io.doov.core.dsl.meta.SyntaxTree;
 
 public interface StepCondition extends Readable, SyntaxTree {
 
-    BiPredicate<FieldModel, Context> predicate();
+    BiPredicate<SimpleModel, Context> predicate();
 
     Metadata getMetadata();
 

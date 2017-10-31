@@ -15,10 +15,11 @@
 */
 package io.doov.core.dsl.field;
 
+import io.doov.core.dsl.SimpleFieldId;
 import io.doov.core.dsl.impl.NumericCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
-public interface NumericFieldInfo<F extends DefaultFieldInfo<N>, N extends Number> {
+public interface NumericFieldInfo<N extends Number> {
 
     // lesser than
 
@@ -30,11 +31,11 @@ public interface NumericFieldInfo<F extends DefaultFieldInfo<N>, N extends Numbe
         return getNumericCondition().lesserOrEquals(value);
     }
 
-    default StepCondition lesserThan(F field) {
+    default StepCondition lesserThan(SimpleFieldId<N> field) {
         return getNumericCondition().lesserThan(field);
     }
 
-    default StepCondition lesserOrEquals(F field) {
+    default StepCondition lesserOrEquals(SimpleFieldId<N> field) {
         return getNumericCondition().lesserOrEquals(field);
     }
 
@@ -44,7 +45,7 @@ public interface NumericFieldInfo<F extends DefaultFieldInfo<N>, N extends Numbe
         return getNumericCondition().greaterThan(value);
     }
 
-    default StepCondition greaterThan(F field) {
+    default StepCondition greaterThan(SimpleFieldId<N> field) {
         return getNumericCondition().greaterThan(field);
     }
 
@@ -52,7 +53,7 @@ public interface NumericFieldInfo<F extends DefaultFieldInfo<N>, N extends Numbe
         return getNumericCondition().greaterOrEquals(value);
     }
 
-    default StepCondition greaterOrEquals(F field) {
+    default StepCondition greaterOrEquals(SimpleFieldId<N> field) {
         return getNumericCondition().greaterOrEquals(field);
     }
 
@@ -62,12 +63,12 @@ public interface NumericFieldInfo<F extends DefaultFieldInfo<N>, N extends Numbe
         return getNumericCondition().between(minIncluded, maxExcluded);
     }
 
-    default StepCondition between(F minIncluded, F maxExcluded) {
+    default StepCondition between(SimpleFieldId<N> minIncluded, SimpleFieldId<N> maxExcluded) {
         return getNumericCondition().between(minIncluded, maxExcluded);
     }
 
     // abstract
 
-    NumericCondition<F, N> getNumericCondition();
+    NumericCondition<N> getNumericCondition();
 
 }

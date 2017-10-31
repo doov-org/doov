@@ -17,6 +17,7 @@ import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
 import io.doov.core.FieldModels;
+import io.doov.core.dsl.SimpleId;
 import ${target.field.info.package.name}.${target.field.info.class.name};
 
 @Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
@@ -89,7 +90,7 @@ public final class ${target.class.name} implements FieldModel {
     }
 
     @Override
-    public <T> T get(FieldId fieldId) {
+    public <T> T get(SimpleId fieldId) {
 ${map.getter.if}        return null;
     }
 

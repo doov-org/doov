@@ -46,4 +46,9 @@ public class UnaryMetadata implements Metadata {
         value.accept(visitor);
     }
 
+    @Override
+    public Metadata merge(Metadata other) {
+        throw new UnsupportedOperationException();
+    }
+
 }

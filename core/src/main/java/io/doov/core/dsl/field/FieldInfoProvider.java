@@ -72,7 +72,8 @@ public class FieldInfoProvider {
     }
 
     @SuppressWarnings("unchecked")
-    protected static abstract class BaseFieldInfoBuilder<F extends DefaultFieldInfo<?>, B extends BaseFieldInfoBuilder<F, B>> {
+    protected static abstract class BaseFieldInfoBuilder<F extends DefaultFieldInfo<?>,
+                    B extends BaseFieldInfoBuilder<F, B>> {
 
         protected FieldId fieldId;
         protected String readable;
@@ -242,6 +243,7 @@ public class FieldInfoProvider {
 
     protected static class IterableFieldInfoBuilder<T, C extends Iterable<T>>
                     extends BaseFieldInfoBuilder<IterableFieldInfo<T, C>, IterableFieldInfoBuilder<T, C>> {
+
         @Override
         public IterableFieldInfo<T, C> build(List<FieldInfo> allFields) {
             IterableFieldInfo<T, C> info = new IterableFieldInfo<>(fieldId, readable, type, genericTypes, siblings);

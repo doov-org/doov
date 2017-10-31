@@ -15,12 +15,17 @@
 */
 package io.doov.core.dsl.field;
 
+import java.util.Collection;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.SimpleFieldId;
 import io.doov.core.dsl.impl.TypeCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
-public class DefaultFieldInfo<T> implements FieldInfo {
+public class DefaultFieldInfo<T> implements FieldInfo, SimpleFieldId<T> {
 
     private final FieldId fieldId;
     private final String readable;
@@ -28,7 +33,8 @@ public class DefaultFieldInfo<T> implements FieldInfo {
     private final Class<?>[] genericTypes;
     private final FieldId[] siblings;
 
-    DefaultFieldInfo(FieldId fieldId, String readable, Class<?> type, Class<?>[] genericTypes, FieldId... siblings) {
+    public DefaultFieldInfo(FieldId fieldId, String readable, Class<?> type, Class<?>[] genericTypes, FieldId...
+                    siblings) {
         this.fieldId = fieldId;
         this.readable = readable;
         this.type = type;
@@ -61,11 +67,27 @@ public class DefaultFieldInfo<T> implements FieldInfo {
         return genericTypes;
     }
 
+    // available
+
+    public StepCondition available() {
+        return new TypeCondition<>(this).available();
+    }
+
+    public StepCondition notAvailable() {
+        return new TypeCondition<>(this).notAvailable();
+    }
+
+    // eq
+
     public StepCondition eq(T value) {
         return new TypeCondition<>(this).eq(value);
     }
 
     public StepCondition eq(DefaultFieldInfo<T> value) {
+        return new TypeCondition<>(this).eq(value);
+    }
+
+    public StepCondition eq(Supplier<T> value) {
         return new TypeCondition<>(this).eq(value);
     }
 
@@ -77,12 +99,58 @@ public class DefaultFieldInfo<T> implements FieldInfo {
         return new TypeCondition<>(this).notEq(value);
     }
 
+    // null
+
     public StepCondition isNull() {
         return new TypeCondition<>(this).isNull();
     }
 
     public StepCondition isNotNull() {
         return new TypeCondition<>(this).isNotNull();
+    }
+
+    // match
+
+    @SafeVarargs
+    public final StepCondition anyMatch(T... values) {
+        return new TypeCondition<>(this).anyMatch(values);
+    }
+
+    @SafeVarargs
+    public final StepCondition anyMatch(Predicate<T>... values) {
+        return new TypeCondition<>(this).anyMatch(values);
+    }
+
+    public final StepCondition anyMatch(Collection<T> values) {
+        return new TypeCondition<>(this).anyMatch(values);
+    }
+
+    @SafeVarargs
+    public final StepCondition allMatch(T... values) {
+        return new TypeCondition<>(this).allMatch(values);
+    }
+
+    @SafeVarargs
+    public final StepCondition allMatch(Predicate<T>... values) {
+        return new TypeCondition<>(this).allMatch(values);
+    }
+
+    public final StepCondition allMatch(Collection<T> values) {
+        return new TypeCondition<>(this).allMatch(values);
+    }
+
+    @SafeVarargs
+    public final StepCondition noneMatch(T... values) {
+        return new TypeCondition<>(this).noneMatch(values);
+    }
+
+    @SafeVarargs
+    public final StepCondition noneMatch(Predicate<T>... values) {
+        return new TypeCondition<>(this).noneMatch(values);
+    }
+
+    public final StepCondition noneMatch(Collection<T> values) {
+        return new TypeCondition<>(this).noneMatch(values);
     }
 
 }

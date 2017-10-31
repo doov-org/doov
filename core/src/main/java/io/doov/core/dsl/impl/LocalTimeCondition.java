@@ -16,16 +16,15 @@
 package io.doov.core.dsl.impl;
 
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
+import java.time.temporal.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.doov.core.dsl.field.LocalTimeFieldInfo;
+import io.doov.core.dsl.SimpleFieldId;
 
-public class LocalTimeCondition extends TemporalCondition<LocalTimeFieldInfo, LocalTime> {
+public class LocalTimeCondition extends TemporalCondition<LocalTime> {
 
-    public LocalTimeCondition(LocalTimeFieldInfo field) {
+    public LocalTimeCondition(SimpleFieldId<LocalTime> field) {
         super(field);
     }
 
@@ -37,6 +36,11 @@ public class LocalTimeCondition extends TemporalCondition<LocalTimeFieldInfo, Lo
     @Override
     Function<LocalTime, LocalTime> plusFunction(int value, TemporalUnit unit) {
         return d -> d.plus(value, unit);
+    }
+
+    @Override
+    Function<LocalTime, LocalTime> withFunction(TemporalAdjuster ajuster) {
+        return d -> d.with(ajuster);
     }
 
     @Override

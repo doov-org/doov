@@ -18,9 +18,9 @@ package io.doov.core.dsl.field;
 import io.doov.core.FieldId;
 import io.doov.core.dsl.impl.LongCondition;
 
-public class LongFieldInfo extends DefaultFieldInfo<Long> implements NumericFieldInfo<LongFieldInfo, Long> {
+public class LongFieldInfo extends DefaultFieldInfo<Long> implements NumericFieldInfo<Long> {
 
-    LongFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
+    public LongFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
         super(fieldId, readable, type, new Class[] {}, siblings);
     }
 

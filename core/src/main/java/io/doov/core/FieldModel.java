@@ -20,20 +20,24 @@ import static java.util.stream.Collectors.toList;
 import java.util.*;
 import java.util.stream.Stream;
 
+import io.doov.core.dsl.SimpleId;
+import io.doov.core.dsl.SimpleModel;
+
 /**
  * An model that maps {@code FieldId} to values. Each {@code FieldId} can map to at most one value.
  */
-public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
+public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, SimpleModel {
 
     /**
      * @param fieldId the {@code FieldId} to read
      * @return the the {@code FieldId} value
      */
-    <T> T get(FieldId fieldId);
+    @Override
+    <T> T get(SimpleId fieldId);
 
     /**
      * @param fieldId the {@code FieldId} to update
-     * @param value the new {@code FieldId} value
+     * @param value   the new {@code FieldId} value
      */
     <T> void set(FieldId fieldId, T value);
 
@@ -45,6 +49,7 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
     /**
      * {@inheritDoc}
      */
+    @Override
     Spliterator<Map.Entry<FieldId, Object>> spliterator();
 
     /**
@@ -92,4 +97,5 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>> {
     default FieldInfo info(FieldId id) {
         return getFieldInfos().stream().filter(info -> info.id() == id).findFirst().orElse(null);
     }
+
 }

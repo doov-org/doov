@@ -15,10 +15,12 @@
 */
 package io.doov.core;
 
-
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
+
+import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.SimpleId;
 
 /**
  * {@code FieldModel} implementation based on {@code java.util.Map}
@@ -53,7 +55,7 @@ public class BaseFieldModel implements FieldModel {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T get(FieldId fieldId) {
+    public <T> T get(SimpleId fieldId) {
         return (T) values.get(fieldId);
     }
 
@@ -62,7 +64,6 @@ public class BaseFieldModel implements FieldModel {
         values.put(fieldId, value);
         Arrays.stream(siblingsOf(fieldId)).forEach(s -> values.put(s, value));
     }
-
 
     private static final FieldId[] NO_SIBLINGS = new FieldId[] {};
 
@@ -90,4 +91,5 @@ public class BaseFieldModel implements FieldModel {
     public Stream<Entry<FieldId, Object>> parallelStream() {
         return new HashSet<>(values.entrySet()).parallelStream();
     }
+
 }

@@ -20,32 +20,33 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
-import io.doov.core.FieldModel;
-import io.doov.core.dsl.field.BooleanFieldInfo;
+import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
-public class BooleanCondition extends DefaultCondition<BooleanFieldInfo, Boolean> {
+public class BooleanCondition extends DefaultCondition<Boolean> {
 
-    public BooleanCondition(BooleanFieldInfo field) {
+    public BooleanCondition(SimpleFieldId<Boolean> field) {
         super(field);
     }
 
-    public BooleanCondition(FieldMetadata metadata, Function<FieldModel, Optional<Boolean>> value) {
+    public BooleanCondition(FieldMetadata metadata, BiFunction<SimpleModel, Context, Optional<Boolean>> value) {
         super(metadata, value);
     }
 
     public final StepCondition isTrue() {
         return predicate(isMetadata(field, true),
-                        model -> Optional.of(TRUE),
+                        (model, context) -> Optional.of(TRUE),
                         Boolean::equals);
     }
 
     public final StepCondition isFalse() {
         return predicate(isMetadata(field, false),
-                        model -> Optional.of(FALSE),
+                        (model, context) -> Optional.of(FALSE),
                         Boolean::equals);
     }
 

@@ -17,10 +17,12 @@ package io.doov.core;
 
 import java.util.List;
 
+import io.doov.core.dsl.SimpleId;
+
 /**
  * Id representing a value of the  {@code FieldModel}
  */
-public interface FieldId {
+public interface FieldId extends SimpleId {
 
     /**
      * @return the field unique identifier
@@ -44,4 +46,5 @@ public interface FieldId {
     default boolean hasTag(TagId tag) {
         return tags().contains(tag);
     }
+
 }

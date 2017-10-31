@@ -17,19 +17,19 @@ package io.doov.core.dsl.impl;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
-import io.doov.core.FieldModel;
-import io.doov.core.dsl.field.IntegerFieldInfo;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.meta.Metadata;
 
-public class IntegerCondition extends NumericCondition<IntegerFieldInfo, Integer> {
+public class IntegerCondition extends NumericCondition<Integer> {
 
-    public IntegerCondition(IntegerFieldInfo field) {
+    public IntegerCondition(SimpleFieldId<Integer> field) {
         super(field);
     }
 
-    public IntegerCondition(FieldMetadata metadata, Function<FieldModel, Optional<Integer>> value) {
+    public IntegerCondition(Metadata metadata, BiFunction<SimpleModel, Context, Optional<Integer>> value) {
         super(metadata, value);
     }
 

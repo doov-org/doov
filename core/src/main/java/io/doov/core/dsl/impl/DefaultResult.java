@@ -29,7 +29,7 @@ public class DefaultResult implements Result {
     private final String message;
     private final List<Metadata> metadatas = new ArrayList<>();
 
-    DefaultResult(boolean validity, String message, List<Metadata> metadatas) {
+    protected DefaultResult(boolean validity, String message, List<Metadata> metadatas) {
         this.validity = validity;
         this.message = message;
         this.metadatas.addAll(metadatas);

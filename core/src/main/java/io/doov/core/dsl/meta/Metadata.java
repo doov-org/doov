@@ -19,4 +19,6 @@ import io.doov.core.dsl.lang.Readable;
 
 public interface Metadata extends Readable, SyntaxTree {
 
+    Metadata merge(Metadata other);
+
 }

@@ -18,9 +18,9 @@ package io.doov.core.dsl.field;
 import io.doov.core.FieldId;
 import io.doov.core.dsl.impl.DoubleCondition;
 
-public class DoubleFieldInfo extends DefaultFieldInfo<Double> implements NumericFieldInfo<DoubleFieldInfo, Double> {
+public class DoubleFieldInfo extends DefaultFieldInfo<Double> implements NumericFieldInfo<Double> {
 
-    DoubleFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
+    public DoubleFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
         super(fieldId, readable, type, new Class[] {}, siblings);
     }
 

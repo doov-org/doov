@@ -22,14 +22,14 @@ import io.doov.core.dsl.impl.LocalDateTimeCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 
 public class LocalDateTimeFieldInfo extends DefaultFieldInfo<LocalDateTime>
-                implements TemporalFieldInfo<LocalDateTimeFieldInfo, LocalDateTime> {
+                implements TemporalFieldInfo<LocalDateTime> {
 
-    LocalDateTimeFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
+    public LocalDateTimeFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
         super(fieldId, readable, LocalDateTime.class, new Class[] {}, siblings);
     }
 
     @Override
-    public TemporalCondition<LocalDateTimeFieldInfo, LocalDateTime> getTemporalCondition() {
+    public TemporalCondition<LocalDateTime> getTemporalCondition() {
         return new LocalDateTimeCondition(this);
     }
 

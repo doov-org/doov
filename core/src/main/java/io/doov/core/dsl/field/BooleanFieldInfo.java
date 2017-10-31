@@ -21,7 +21,7 @@ import io.doov.core.dsl.lang.StepCondition;
 
 public class BooleanFieldInfo extends DefaultFieldInfo<Boolean> {
 
-    BooleanFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
+    public BooleanFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
         super(fieldId, readable, type, new Class[] {}, siblings);
     }
 

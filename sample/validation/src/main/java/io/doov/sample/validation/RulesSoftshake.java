@@ -10,7 +10,7 @@ import io.doov.sample.model.Country;
 public class RulesSoftshake {
 
     public static final ValidationRule EXAMPLE = DOOV.when(
-                    userBirthdate().ageAt(today()).greaterOrEquals(18L)
+                    userBirthdate().ageAt(today()).greaterOrEquals(18)
                                     .and(accountEmail().length().lesserThan(configurationMaxEmailSize()))
                                     .and(accountCountry().eq(Country.FR))
                                     .and(accountPhoneNumber().startsWith("+33")))

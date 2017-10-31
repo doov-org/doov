@@ -18,7 +18,7 @@ package io.doov.core.dsl.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.doov.core.FieldModel;
+import io.doov.core.dsl.SimpleModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
@@ -29,11 +29,11 @@ public class DefaultValidationRule implements ValidationRule {
     private final StepWhen stepWhen;
     private final String message;
 
-    DefaultValidationRule(StepWhen stepWhen) {
+    protected DefaultValidationRule(StepWhen stepWhen) {
         this(stepWhen, null);
     }
 
-    private DefaultValidationRule(StepWhen stepWhen, String message) {
+    protected DefaultValidationRule(StepWhen stepWhen, String message) {
         this.stepWhen = stepWhen;
         this.message = message;
     }
@@ -48,8 +48,12 @@ public class DefaultValidationRule implements ValidationRule {
         return new DefaultValidationRule(stepWhen, message);
     }
 
+    protected StepWhen getStepWhen() {
+        return stepWhen;
+    }
+
     @Override
-    public Result executeOn(FieldModel model) {
+    public Result executeOn(SimpleModel model) {
         List<Metadata> metadatas = new ArrayList<>();
         boolean valid = stepWhen.stepCondition().predicate().test(model, metadatas::add);
         String readable = valid ? null : (message == null ? stepWhen.stepCondition().readable() : message);
