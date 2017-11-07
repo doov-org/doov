@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
@@ -34,7 +34,7 @@ import io.doov.core.dsl.meta.NaryMetadata;
 
 public class LogicalNaryCondition extends AbstractStepCondition {
 
-    private LogicalNaryCondition(NaryMetadata metadata, BiPredicate<SimpleModel, Context> predicate) {
+    private LogicalNaryCondition(NaryMetadata metadata, BiPredicate<BaseModel, Context> predicate) {
         super(metadata, predicate);
     }
 

@@ -11,8 +11,8 @@ import static java.util.stream.StreamSupport.stream;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.dsl.SimpleFieldId;
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
@@ -20,11 +20,11 @@ import io.doov.core.dsl.meta.FieldMetadata;
 public class IterableCondition<T, C extends Iterable<T>>
                 extends DefaultCondition<C> {
 
-    public IterableCondition(SimpleFieldId<C> field) {
+    public IterableCondition(BaseFieldId<C> field) {
         super(field);
     }
 
-    public IterableCondition(FieldMetadata metadata, BiFunction<SimpleModel, Context, Optional<C>> value) {
+    public IterableCondition(FieldMetadata metadata, BiFunction<BaseModel, Context, Optional<C>> value) {
         super(metadata, value);
     }
 

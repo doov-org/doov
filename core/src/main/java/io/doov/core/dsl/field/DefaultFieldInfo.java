@@ -17,10 +17,10 @@ package io.doov.core.dsl.field;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.BaseFieldId;
 import io.doov.core.dsl.impl.TypeCondition;
 
-public class DefaultFieldInfo<T> implements FieldInfo, SimpleFieldId<T>, BaseFieldInfo<T> {
+public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldId<T>, BaseFieldInfo<T> {
 
     private final FieldId fieldId;
     private final String readable;

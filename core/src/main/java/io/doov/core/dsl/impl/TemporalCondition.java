@@ -22,12 +22,12 @@ import java.time.temporal.*;
 import java.util.Optional;
 import java.util.function.*;
 
-import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.BaseFieldId;
 import io.doov.core.dsl.lang.StepCondition;
 
 public abstract class TemporalCondition<N extends Temporal> extends DefaultCondition<N> {
 
-    TemporalCondition(SimpleFieldId<N> field) {
+    TemporalCondition(BaseFieldId<N> field) {
         super(field);
     }
 
@@ -42,7 +42,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (v) -> minusFunction(value, unit).apply(v));
     }
 
-    public final StepFunction<N, Integer> minus(SimpleFieldId<Integer> value, TemporalUnit unit) {
+    public final StepFunction<N, Integer> minus(BaseFieldId<Integer> value, TemporalUnit unit) {
         return function(minusMetadata(field, value, unit),
                         (model, context) -> Optional.ofNullable(model.get(value.id())),
                         (l, r) -> minusFunction(r, unit).apply(l));
@@ -64,7 +64,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (v) -> plusFunction(value, unit).apply(v));
     }
 
-    public final StepFunction<N, Integer> plus(SimpleFieldId<Integer> value, TemporalUnit unit) {
+    public final StepFunction<N, Integer> plus(BaseFieldId<Integer> value, TemporalUnit unit) {
         return function(plusMetadata(field, value, unit),
                         (model, context) -> Optional.ofNullable(model.get(value.id())),
                         (l, r) -> plusFunction(r, unit).apply(l));
@@ -107,7 +107,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (l, r) -> beforeFunction().apply(l, r));
     }
 
-    public final StepCondition before(SimpleFieldId<N> value) {
+    public final StepCondition before(BaseFieldId<N> value) {
         return predicate(beforeMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> beforeFunction().apply(l, r));
@@ -147,7 +147,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (l, r) -> afterFunction().apply(l, r));
     }
 
-    public final StepCondition after(SimpleFieldId<N> value) {
+    public final StepCondition after(BaseFieldId<N> value) {
         return predicate(afterMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> afterFunction().apply(l, r));
@@ -205,7 +205,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                                         .map(Long::intValue));
     }
 
-    public final NumericCondition<Integer> ageAt(SimpleFieldId<N> value) {
+    public final NumericCondition<Integer> ageAt(BaseFieldId<N> value) {
         return new IntegerCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .flatMap(l -> value(model, value)
@@ -221,7 +221,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                                         .map(Long::intValue));
     }
 
-    public final NumericCondition<Integer> ageAt(SimpleFieldId<N> value, TemporalAdjuster ajuster) {
+    public final NumericCondition<Integer> ageAt(BaseFieldId<N> value, TemporalAdjuster ajuster) {
         return new IntegerCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .map(l -> withFunction(ajuster).apply(l))

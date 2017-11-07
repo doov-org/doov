@@ -20,7 +20,7 @@ import static java.time.temporal.ChronoUnit.YEARS;
 import java.time.temporal.*;
 import java.util.function.Supplier;
 
-import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.BaseFieldId;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.StepCondition;
 
@@ -32,7 +32,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().minus(value, unit);
     }
 
-    default StepFunction<N, Integer> minus(SimpleFieldId<Integer> value, TemporalUnit unit) {
+    default StepFunction<N, Integer> minus(BaseFieldId<Integer> value, TemporalUnit unit) {
         return getTemporalCondition().minus(value, unit);
     }
 
@@ -50,7 +50,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().plus(value, unit);
     }
 
-    default StepFunction<N, Integer> plus(SimpleFieldId<Integer> value, TemporalUnit unit) {
+    default StepFunction<N, Integer> plus(BaseFieldId<Integer> value, TemporalUnit unit) {
         return getTemporalCondition().plus(value, unit);
     }
 
@@ -68,7 +68,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().before(value);
     }
 
-    default StepCondition before(SimpleFieldId<N> value) {
+    default StepCondition before(BaseFieldId<N> value) {
         return getTemporalCondition().before(value);
     }
 
@@ -98,7 +98,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().after(value);
     }
 
-    default StepCondition after(SimpleFieldId<N> value) {
+    default StepCondition after(BaseFieldId<N> value) {
         return getTemporalCondition().after(value);
     }
 
@@ -142,7 +142,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().ageAt(value);
     }
 
-    default NumericCondition<Integer> ageAt(SimpleFieldId<N> value) {
+    default NumericCondition<Integer> ageAt(BaseFieldId<N> value) {
         return getTemporalCondition().ageAt(value);
     }
 
@@ -150,7 +150,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().ageAt(value);
     }
 
-    default NumericCondition<Integer> ageAt(SimpleFieldId<N> value, TemporalAdjuster ajuster) {
+    default NumericCondition<Integer> ageAt(BaseFieldId<N> value, TemporalAdjuster ajuster) {
         return getTemporalCondition().ageAt(value, ajuster);
     }
 

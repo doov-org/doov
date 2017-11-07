@@ -17,12 +17,12 @@ package io.doov.core;
 
 import java.util.List;
 
-import io.doov.core.dsl.SimpleId;
+import io.doov.core.dsl.BaseId;
 
 /**
  * Id representing a value of the  {@code FieldModel}
  */
-public interface FieldId extends SimpleId {
+public interface FieldId extends BaseId {
 
     /**
      * @return the field unique identifier

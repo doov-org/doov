@@ -18,18 +18,18 @@ package io.doov.core.dsl.impl;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.dsl.SimpleFieldId;
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
 public class IntegerCondition extends NumericCondition<Integer> {
 
-    public IntegerCondition(SimpleFieldId<Integer> field) {
+    public IntegerCondition(BaseFieldId<Integer> field) {
         super(field);
     }
 
-    public IntegerCondition(Metadata metadata, BiFunction<SimpleModel, Context, Optional<Integer>> value) {
+    public IntegerCondition(Metadata metadata, BiFunction<BaseModel, Context, Optional<Integer>> value) {
         super(metadata, value);
     }
 

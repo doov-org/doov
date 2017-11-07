@@ -22,19 +22,19 @@ import static java.lang.Boolean.TRUE;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.dsl.SimpleFieldId;
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
 public class BooleanCondition extends DefaultCondition<Boolean> {
 
-    public BooleanCondition(SimpleFieldId<Boolean> field) {
+    public BooleanCondition(BaseFieldId<Boolean> field) {
         super(field);
     }
 
-    public BooleanCondition(FieldMetadata metadata, BiFunction<SimpleModel, Context, Optional<Boolean>> value) {
+    public BooleanCondition(FieldMetadata metadata, BiFunction<BaseModel, Context, Optional<Boolean>> value) {
         super(metadata, value);
     }
 

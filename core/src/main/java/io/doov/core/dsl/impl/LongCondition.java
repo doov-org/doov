@@ -18,18 +18,18 @@ package io.doov.core.dsl.impl;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.dsl.SimpleFieldId;
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.FieldMetadata;
 
 public class LongCondition extends NumericCondition<Long> {
 
-    public LongCondition(SimpleFieldId<Long> field) {
+    public LongCondition(BaseFieldId<Long> field) {
         super(field);
     }
 
-    public LongCondition(FieldMetadata metadata, BiFunction<SimpleModel, Context, Optional<Long>> value) {
+    public LongCondition(FieldMetadata metadata, BiFunction<BaseModel, Context, Optional<Long>> value) {
         super(metadata, value);
     }
 

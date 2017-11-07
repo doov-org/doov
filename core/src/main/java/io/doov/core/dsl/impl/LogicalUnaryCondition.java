@@ -19,14 +19,14 @@ import static io.doov.core.dsl.meta.UnaryMetadata.notMetadata;
 
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.UnaryMetadata;
 
 public class LogicalUnaryCondition extends AbstractStepCondition {
 
-    private LogicalUnaryCondition(UnaryMetadata metadata, BiPredicate<SimpleModel, Context> predicate) {
+    private LogicalUnaryCondition(UnaryMetadata metadata, BiPredicate<BaseModel, Context> predicate) {
         super(metadata, predicate);
     }
 

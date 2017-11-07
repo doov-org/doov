@@ -18,18 +18,18 @@ package io.doov.core.dsl.impl;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.dsl.SimpleFieldId;
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.FieldMetadata;
 
 public class FloatCondition extends NumericCondition<Float> {
 
-    public FloatCondition(SimpleFieldId<Float> field) {
+    public FloatCondition(BaseFieldId<Float> field) {
         super(field);
     }
 
-    public FloatCondition(FieldMetadata metadata, BiFunction<SimpleModel, Context, Optional<Float>> value) {
+    public FloatCondition(FieldMetadata metadata, BiFunction<BaseModel, Context, Optional<Float>> value) {
         super(metadata, value);
     }
 

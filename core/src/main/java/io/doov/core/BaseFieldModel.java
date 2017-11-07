@@ -19,8 +19,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 
-import io.doov.core.dsl.SimpleFieldId;
-import io.doov.core.dsl.SimpleId;
+import io.doov.core.dsl.BaseId;
 
 /**
  * {@code FieldModel} implementation based on {@code java.util.Map}
@@ -55,7 +54,7 @@ public class BaseFieldModel implements FieldModel {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T get(SimpleId fieldId) {
+    public <T> T get(BaseId fieldId) {
         return (T) values.get(fieldId);
     }
 

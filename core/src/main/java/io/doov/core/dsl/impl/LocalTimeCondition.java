@@ -20,11 +20,11 @@ import java.time.temporal.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.doov.core.dsl.SimpleFieldId;
+import io.doov.core.dsl.BaseFieldId;
 
 public class LocalTimeCondition extends TemporalCondition<LocalTime> {
 
-    public LocalTimeCondition(SimpleFieldId<LocalTime> field) {
+    public LocalTimeCondition(BaseFieldId<LocalTime> field) {
         super(field);
     }
 

@@ -20,19 +20,19 @@ import static io.doov.core.dsl.meta.FieldMetadata.*;
 import java.util.*;
 import java.util.function.*;
 
-import io.doov.core.dsl.SimpleFieldId;
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
 public class TypeCondition<T> extends DefaultCondition<T> {
 
-    public TypeCondition(SimpleFieldId<T> field) {
+    public TypeCondition(BaseFieldId<T> field) {
         super(field);
     }
 
-    public TypeCondition(FieldMetadata metadata, BiFunction<SimpleModel, Context, Optional<T>> value) {
+    public TypeCondition(FieldMetadata metadata, BiFunction<BaseModel, Context, Optional<T>> value) {
         super(metadata, value);
     }
 
@@ -60,7 +60,7 @@ public class TypeCondition<T> extends DefaultCondition<T> {
                         Object::equals);
     }
 
-    public final StepCondition eq(SimpleFieldId<T> value) {
+    public final StepCondition eq(BaseFieldId<T> value) {
         return predicate(equalsMetadata(field, value),
                         (model, context) -> value(model, value),
                         Object::equals);
@@ -80,7 +80,7 @@ public class TypeCondition<T> extends DefaultCondition<T> {
                         (l, r) -> !l.equals(r));
     }
 
-    public final StepCondition notEq(SimpleFieldId<T> value) {
+    public final StepCondition notEq(BaseFieldId<T> value) {
         return predicate(notEqualsMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> !l.equals(r));

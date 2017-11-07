@@ -19,21 +19,21 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
 class PredicateStepCondition<N> extends AbstractStepCondition {
 
     PredicateStepCondition(Metadata metadata,
-                    BiFunction<SimpleModel, Context, Optional<N>> value,
+                    BiFunction<BaseModel, Context, Optional<N>> value,
                     Function<N, Boolean> predicate) {
         super(metadata, (model, context) -> value.apply(model, context).map(predicate).orElse(false));
     }
 
     PredicateStepCondition(Metadata metadata,
-                    BiFunction<SimpleModel, Context, Optional<N>> left,
-                    BiFunction<SimpleModel, Context, Optional<N>> right,
+                    BiFunction<BaseModel, Context, Optional<N>> left,
+                    BiFunction<BaseModel, Context, Optional<N>> right,
                     BiFunction<N, N, Boolean> predicate) {
         super(metadata, (model, context) ->
                         left.apply(model, context)

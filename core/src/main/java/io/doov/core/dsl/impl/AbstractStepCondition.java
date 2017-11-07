@@ -17,7 +17,7 @@ package io.doov.core.dsl.impl;
 
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
@@ -27,9 +27,9 @@ import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 abstract class AbstractStepCondition implements StepCondition {
 
     private final Metadata metadata;
-    private final BiPredicate<SimpleModel, Context> predicate;
+    private final BiPredicate<BaseModel, Context> predicate;
 
-    AbstractStepCondition(Metadata metadata, BiPredicate<SimpleModel, Context> predicate) {
+    AbstractStepCondition(Metadata metadata, BiPredicate<BaseModel, Context> predicate) {
         this.metadata = metadata;
         this.predicate = predicate;
     }
@@ -40,7 +40,7 @@ abstract class AbstractStepCondition implements StepCondition {
     }
 
     @Override
-    public BiPredicate<SimpleModel, Context> predicate() {
+    public BiPredicate<BaseModel, Context> predicate() {
         return (model, context) -> {
             boolean test = predicate.test(model, context);
             if (!test) {

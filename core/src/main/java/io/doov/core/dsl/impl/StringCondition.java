@@ -20,19 +20,19 @@ import static io.doov.core.dsl.meta.FieldMetadata.*;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.dsl.SimpleFieldId;
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
 
 public class StringCondition extends DefaultCondition<String> {
 
-    public StringCondition(SimpleFieldId<String> field) {
+    public StringCondition(BaseFieldId<String> field) {
         super(field);
     }
 
-    public StringCondition(FieldMetadata metadata, BiFunction<SimpleModel, Context, Optional<String>> value) {
+    public StringCondition(FieldMetadata metadata, BiFunction<BaseModel, Context, Optional<String>> value) {
         super(metadata, value);
     }
 

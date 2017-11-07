@@ -19,25 +19,25 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
 public class StepFunction<N, T> {
 
     final Metadata metadata;
-    final BiFunction<SimpleModel, Context, N> function;
+    final BiFunction<BaseModel, Context, N> function;
 
     StepFunction(Metadata metadata,
-                    BiFunction<SimpleModel, Context, Optional<N>> value,
+                    BiFunction<BaseModel, Context, Optional<N>> value,
                     Function<N, N> function) {
         this.metadata = metadata;
         this.function = (model, context) -> value.apply(model, context).map(function).orElse(null);
     }
 
     StepFunction(Metadata metadata,
-                    BiFunction<SimpleModel, Context, Optional<N>> left,
-                    BiFunction<SimpleModel, Context, Optional<T>> right,
+                    BiFunction<BaseModel, Context, Optional<N>> left,
+                    BiFunction<BaseModel, Context, Optional<T>> right,
                     BiFunction<N, T, N> function) {
         this.metadata = metadata;
         this.function = (model, context) ->

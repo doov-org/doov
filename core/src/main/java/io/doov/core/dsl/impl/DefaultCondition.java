@@ -21,8 +21,8 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.doov.core.dsl.SimpleFieldId;
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.BaseModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
@@ -30,23 +30,23 @@ import io.doov.core.dsl.meta.Metadata;
 
 class DefaultCondition<N> {
 
-    final SimpleFieldId<N> field;
+    final BaseFieldId<N> field;
     final Metadata metadata;
-    final BiFunction<SimpleModel, Context, Optional<N>> value;
+    final BiFunction<BaseModel, Context, Optional<N>> value;
 
-    DefaultCondition(SimpleFieldId<N> field) {
+    DefaultCondition(BaseFieldId<N> field) {
         this.field = field;
         metadata = emptyMetadata();
         value = (model, context) -> value(model, field);
     }
 
-    DefaultCondition(Metadata metadata, BiFunction<SimpleModel, Context, Optional<N>> value) {
+    DefaultCondition(Metadata metadata, BiFunction<BaseModel, Context, Optional<N>> value) {
         field = null;
         this.metadata = metadata;
         this.value = value;
     }
 
-    protected Optional<N> value(SimpleModel model, SimpleFieldId<N> field) {
+    protected Optional<N> value(BaseModel model, BaseFieldId<N> field) {
         return Optional.ofNullable(model.<N> get(field.id()));
     }
 
@@ -56,7 +56,7 @@ class DefaultCondition<N> {
     }
 
     StepCondition predicate(FieldMetadata metadata,
-                    BiFunction<SimpleModel, Context, Optional<N>> value,
+                    BiFunction<BaseModel, Context, Optional<N>> value,
                     BiFunction<N, N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
     }
@@ -67,7 +67,7 @@ class DefaultCondition<N> {
     }
 
     <T> StepFunction<N, T> function(FieldMetadata metadata,
-                    BiFunction<SimpleModel, Context, Optional<T>> value,
+                    BiFunction<BaseModel, Context, Optional<T>> value,
                     BiFunction<N, T, N> function) {
         return new StepFunction<>(this.metadata.merge(metadata), this.value, value, function);
     }

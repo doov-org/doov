@@ -20,20 +20,20 @@ import static java.util.stream.Collectors.toList;
 import java.util.*;
 import java.util.stream.Stream;
 
-import io.doov.core.dsl.SimpleId;
-import io.doov.core.dsl.SimpleModel;
+import io.doov.core.dsl.BaseId;
+import io.doov.core.dsl.BaseModel;
 
 /**
  * An model that maps {@code FieldId} to values. Each {@code FieldId} can map to at most one value.
  */
-public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, SimpleModel {
+public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, BaseModel {
 
     /**
      * @param fieldId the {@code FieldId} to read
      * @return the the {@code FieldId} value
      */
     @Override
-    <T> T get(SimpleId fieldId);
+    <T> T get(BaseId fieldId);
 
     /**
      * @param fieldId the {@code FieldId} to update
