@@ -61,15 +61,15 @@ class DefaultCondition<N> {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
     }
 
-    <T> FunctionStep<N, T> function(FieldMetadata metadata,
+    <T> StepFunction<N, T> function(FieldMetadata metadata,
                     Function<N, N> function) {
-        return new FunctionStep<>(this.metadata.merge(metadata), value, function);
+        return new StepFunction<>(this.metadata.merge(metadata), value, function);
     }
 
-    <T> FunctionStep<N, T> function(FieldMetadata metadata,
+    <T> StepFunction<N, T> function(FieldMetadata metadata,
                     BiFunction<SimpleModel, Context, Optional<T>> value,
                     BiFunction<N, T, N> function) {
-        return new FunctionStep<>(this.metadata.merge(metadata), this.value, value, function);
+        return new StepFunction<>(this.metadata.merge(metadata), this.value, value, function);
     }
 
 }

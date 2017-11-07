@@ -23,19 +23,19 @@ import io.doov.core.dsl.SimpleModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
-public class FunctionStep<N, T> {
+public class StepFunction<N, T> {
 
     final Metadata metadata;
     final BiFunction<SimpleModel, Context, N> function;
 
-    FunctionStep(Metadata metadata,
+    StepFunction(Metadata metadata,
                     BiFunction<SimpleModel, Context, Optional<N>> value,
                     Function<N, N> function) {
         this.metadata = metadata;
         this.function = (model, context) -> value.apply(model, context).map(function).orElse(null);
     }
 
-    FunctionStep(Metadata metadata,
+    StepFunction(Metadata metadata,
                     BiFunction<SimpleModel, Context, Optional<N>> left,
                     BiFunction<SimpleModel, Context, Optional<T>> right,
                     BiFunction<N, T, N> function) {

@@ -15,10 +15,7 @@
 */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.containsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.endsWithMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.matchesMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.startsWithMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.*;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -61,6 +58,18 @@ public class StringCondition extends DefaultCondition<String> {
         return predicate(endsWithMetadata(field, value),
                         (model, context) -> Optional.ofNullable(value),
                         String::endsWith);
+    }
+
+    public IntegerCondition length() {
+        return new IntegerCondition(
+                        lengthIsMetadata(field),
+                        (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(String::length));
+    }
+
+    public IntegerCondition parseInt() {
+        return new IntegerCondition(
+                        fieldOnlyMetadata(field),
+                        (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(Integer::parseInt));
     }
 
 }

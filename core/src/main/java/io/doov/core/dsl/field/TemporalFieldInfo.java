@@ -28,37 +28,37 @@ public interface TemporalFieldInfo<N extends Temporal> {
 
     // minus
 
-    default FunctionStep<N, Integer> minus(int value, TemporalUnit unit) {
+    default StepFunction<N, Integer> minus(int value, TemporalUnit unit) {
         return getTemporalCondition().minus(value, unit);
     }
 
-    default FunctionStep<N, Integer> minus(SimpleFieldId<Integer> value, TemporalUnit unit) {
+    default StepFunction<N, Integer> minus(SimpleFieldId<Integer> value, TemporalUnit unit) {
         return getTemporalCondition().minus(value, unit);
     }
 
-    default FunctionStep<N, Integer> minus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
+    default StepFunction<N, Integer> minus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
         return getTemporalCondition().minus(value, unit, ajuster);
     }
 
-    default FunctionStep<N, Integer> minusYears(int value) {
+    default StepFunction<N, Integer> minusYears(int value) {
         return getTemporalCondition().minus(value, YEARS);
     }
 
     // plus
 
-    default FunctionStep<N, Integer> plus(int value, TemporalUnit unit) {
+    default StepFunction<N, Integer> plus(int value, TemporalUnit unit) {
         return getTemporalCondition().plus(value, unit);
     }
 
-    default FunctionStep<N, Integer> plus(SimpleFieldId<Integer> value, TemporalUnit unit) {
+    default StepFunction<N, Integer> plus(SimpleFieldId<Integer> value, TemporalUnit unit) {
         return getTemporalCondition().plus(value, unit);
     }
 
-    default FunctionStep<N, Integer> plus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
+    default StepFunction<N, Integer> plus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
         return getTemporalCondition().plus(value, unit, ajuster);
     }
 
-    default FunctionStep<N, Integer> plusYears(int value) {
+    default StepFunction<N, Integer> plusYears(int value) {
         return getTemporalCondition().plus(value, YEARS);
     }
 
@@ -76,7 +76,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().before(value);
     }
 
-    default StepCondition before(FunctionStep<N, Integer> value) {
+    default StepCondition before(StepFunction<N, Integer> value) {
         return getTemporalCondition().before(value);
     }
 
@@ -88,7 +88,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().beforeOrEq(value);
     }
 
-    default StepCondition beforeOrEq(FunctionStep<N, Integer> value) {
+    default StepCondition beforeOrEq(StepFunction<N, Integer> value) {
         return getTemporalCondition().beforeOrEq(value);
     }
 
@@ -106,7 +106,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().after(value);
     }
 
-    default StepCondition after(FunctionStep<N, Integer> value) {
+    default StepCondition after(StepFunction<N, Integer> value) {
         return getTemporalCondition().after(value);
     }
 
@@ -118,7 +118,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().afterOrEq(value);
     }
 
-    default StepCondition afterOrEq(FunctionStep<N, Integer> value) {
+    default StepCondition afterOrEq(StepFunction<N, Integer> value) {
         return getTemporalCondition().afterOrEq(value);
     }
 
@@ -146,7 +146,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().ageAt(value);
     }
 
-    default NumericCondition<Integer> ageAt(FunctionStep<N, Integer> value) {
+    default NumericCondition<Integer> ageAt(StepFunction<N, Integer> value) {
         return getTemporalCondition().ageAt(value);
     }
 
@@ -154,7 +154,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().ageAt(value, ajuster);
     }
 
-    default NumericCondition<Integer> ageAt(FunctionStep<N, Integer> value, TemporalAdjuster ajuster) {
+    default NumericCondition<Integer> ageAt(StepFunction<N, Integer> value, TemporalAdjuster ajuster) {
         return getTemporalCondition().ageAt(value, ajuster);
     }
 
