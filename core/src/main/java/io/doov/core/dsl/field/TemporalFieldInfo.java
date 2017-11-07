@@ -26,29 +26,39 @@ import io.doov.core.dsl.lang.StepCondition;
 
 public interface TemporalFieldInfo<N extends Temporal> {
 
-    // minus plus
+    // minus
 
-    default FunctionWithMetadata<N, N> minus(int value, TemporalUnit unit) {
+    default FunctionStep<N, Integer> minus(int value, TemporalUnit unit) {
         return getTemporalCondition().minus(value, unit);
     }
 
-    default FunctionWithMetadata<N, N> minus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
+    default FunctionStep<N, Integer> minus(SimpleFieldId<Integer> value, TemporalUnit unit) {
+        return getTemporalCondition().minus(value, unit);
+    }
+
+    default FunctionStep<N, Integer> minus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
         return getTemporalCondition().minus(value, unit, ajuster);
     }
 
-    default FunctionWithMetadata<N, N> minusYears(int value) {
+    default FunctionStep<N, Integer> minusYears(int value) {
         return getTemporalCondition().minus(value, YEARS);
     }
 
-    default FunctionWithMetadata<N, N> plus(int value, TemporalUnit unit) {
+    // plus
+
+    default FunctionStep<N, Integer> plus(int value, TemporalUnit unit) {
         return getTemporalCondition().plus(value, unit);
     }
 
-    default FunctionWithMetadata<N, N> plus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
+    default FunctionStep<N, Integer> plus(SimpleFieldId<Integer> value, TemporalUnit unit) {
+        return getTemporalCondition().plus(value, unit);
+    }
+
+    default FunctionStep<N, Integer> plus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
         return getTemporalCondition().plus(value, unit, ajuster);
     }
 
-    default FunctionWithMetadata<N, N> plusYears(int value) {
+    default FunctionStep<N, Integer> plusYears(int value) {
         return getTemporalCondition().plus(value, YEARS);
     }
 
@@ -66,7 +76,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().before(value);
     }
 
-    default StepCondition before(FunctionWithMetadata<N, N> value) {
+    default StepCondition before(FunctionStep<N, Integer> value) {
         return getTemporalCondition().before(value);
     }
 
@@ -78,7 +88,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().beforeOrEq(value);
     }
 
-    default StepCondition beforeOrEq(FunctionWithMetadata<N, N> value) {
+    default StepCondition beforeOrEq(FunctionStep<N, Integer> value) {
         return getTemporalCondition().beforeOrEq(value);
     }
 
@@ -96,7 +106,7 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().after(value);
     }
 
-    default StepCondition after(FunctionWithMetadata<N, N> value) {
+    default StepCondition after(FunctionStep<N, Integer> value) {
         return getTemporalCondition().after(value);
     }
 
@@ -108,22 +118,22 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().afterOrEq(value);
     }
 
-    default StepCondition afterOrEq(FunctionWithMetadata<N, N> value) {
+    default StepCondition afterOrEq(FunctionStep<N, Integer> value) {
         return getTemporalCondition().afterOrEq(value);
     }
 
     // beetween
 
-    default StepCondition between(N minValue, N maxValue) {
-        return getTemporalCondition().between(minValue, maxValue);
+    default StepCondition between(N minValueInclusive, N maxValueExclusive) {
+        return getTemporalCondition().between(minValueInclusive, maxValueExclusive);
     }
 
-    default StepCondition between(Supplier<N> minValue, Supplier<N> maxValue) {
-        return getTemporalCondition().between(minValue, maxValue);
+    default StepCondition between(Supplier<N> minValueInclusive, Supplier<N> maxValueExclusive) {
+        return getTemporalCondition().between(minValueInclusive, maxValueExclusive);
     }
 
-    default StepCondition notBetween(N minValue, N maxValue) {
-        return getTemporalCondition().notBetween(minValue, maxValue);
+    default StepCondition notBetween(N minValueInclusive, N maxValueExclusive) {
+        return getTemporalCondition().notBetween(minValueInclusive, maxValueExclusive);
     }
 
     // age
@@ -136,7 +146,15 @@ public interface TemporalFieldInfo<N extends Temporal> {
         return getTemporalCondition().ageAt(value);
     }
 
+    default NumericCondition<Integer> ageAt(FunctionStep<N, Integer> value) {
+        return getTemporalCondition().ageAt(value);
+    }
+
     default NumericCondition<Integer> ageAt(SimpleFieldId<N> value, TemporalAdjuster ajuster) {
+        return getTemporalCondition().ageAt(value, ajuster);
+    }
+
+    default NumericCondition<Integer> ageAt(FunctionStep<N, Integer> value, TemporalAdjuster ajuster) {
         return getTemporalCondition().ageAt(value, ajuster);
     }
 

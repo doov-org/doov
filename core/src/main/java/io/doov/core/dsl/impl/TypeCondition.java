@@ -66,9 +66,9 @@ public class TypeCondition<T> extends DefaultCondition<T> {
                         Object::equals);
     }
 
-    public final StepCondition eq(FunctionWithMetadata<T, T> value) {
+    public final StepCondition eq(FunctionStep<T, T> value) {
         return predicate(equalsMetadata(field, value),
-                        (model, context) -> value(model, field).map(value.function),
+                        (model, context) -> Optional.ofNullable(value.function.apply(model, context)),
                         Object::equals);
     }
 

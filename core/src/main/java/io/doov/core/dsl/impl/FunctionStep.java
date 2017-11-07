@@ -23,22 +23,27 @@ import io.doov.core.dsl.SimpleModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
-class PredicateStepCondition<N> extends AbstractStepCondition {
+public class FunctionStep<N, T> {
 
-    PredicateStepCondition(Metadata metadata,
+    final Metadata metadata;
+    final BiFunction<SimpleModel, Context, N> function;
+
+    FunctionStep(Metadata metadata,
                     BiFunction<SimpleModel, Context, Optional<N>> value,
-                    Function<N, Boolean> predicate) {
-        super(metadata, (model, context) -> value.apply(model, context).map(predicate).orElse(false));
+                    Function<N, N> function) {
+        this.metadata = metadata;
+        this.function = (model, context) -> value.apply(model, context).map(function).orElse(null);
     }
 
-    PredicateStepCondition(Metadata metadata,
+    FunctionStep(Metadata metadata,
                     BiFunction<SimpleModel, Context, Optional<N>> left,
-                    BiFunction<SimpleModel, Context, Optional<N>> right,
-                    BiFunction<N, N, Boolean> predicate) {
-        super(metadata, (model, context) ->
+                    BiFunction<SimpleModel, Context, Optional<T>> right,
+                    BiFunction<N, T, N> function) {
+        this.metadata = metadata;
+        this.function = (model, context) ->
                         left.apply(model, context)
-                                        .flatMap(l -> right.apply(model, context).map(r -> predicate.apply(l, r)))
-                                        .orElse(false));
+                                        .flatMap(l -> right.apply(model, context).map(r -> function.apply(l, r)))
+                                        .orElse(null);
     }
 
 }

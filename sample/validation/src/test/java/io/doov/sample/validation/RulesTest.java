@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +74,7 @@ public class RulesTest {
 
     @Test
     public void test_all_account_rules_invalid_messages() {
-        List<Result> results = REGISTRY_ACCOUNT.stream()
+        List<Result> results = Stream.concat(REGISTRY_USER.stream(), REGISTRY_ACCOUNT.stream())
                         .map(rule -> rule.executeOn(wrapper))
                         .collect(toList());
         assertThat(results).isNotEmpty();

@@ -37,7 +37,7 @@ class DefaultCondition<N> {
     DefaultCondition(SimpleFieldId<N> field) {
         this.field = field;
         metadata = emptyMetadata();
-        value = (model, context) -> Optional.ofNullable(model.<N> get(field.id()));
+        value = (model, context) -> value(model, field);
     }
 
     DefaultCondition(Metadata metadata, BiFunction<SimpleModel, Context, Optional<N>> value) {
@@ -50,7 +50,8 @@ class DefaultCondition<N> {
         return Optional.ofNullable(model.<N> get(field.id()));
     }
 
-    StepCondition predicate(FieldMetadata metadata, Function<N, Boolean> predicate) {
+    StepCondition predicate(FieldMetadata metadata,
+                    Function<N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), value, predicate);
     }
 
@@ -60,8 +61,15 @@ class DefaultCondition<N> {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
     }
 
-    FunctionWithMetadata<N, N> function(FieldMetadata metadata, Function<N, N> function) {
-        return new FunctionWithMetadata<>(this.metadata.merge(metadata), function);
+    <T> FunctionStep<N, T> function(FieldMetadata metadata,
+                    Function<N, N> function) {
+        return new FunctionStep<>(this.metadata.merge(metadata), value, function);
+    }
+
+    <T> FunctionStep<N, T> function(FieldMetadata metadata,
+                    BiFunction<SimpleModel, Context, Optional<T>> value,
+                    BiFunction<N, T, N> function) {
+        return new FunctionStep<>(this.metadata.merge(metadata), this.value, value, function);
     }
 
 }

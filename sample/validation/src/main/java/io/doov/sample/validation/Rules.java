@@ -62,7 +62,7 @@ public class Rules extends DefaultRuleRegistry {
         DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18)).validate()
                         .registerOn(REGISTRY_USER);
 
-        DOOV.when(userBirthdate().before(userBirthdate().minus(1, DAYS))).validate()
+        DOOV.when(userBirthdate().after(userBirthdate().minus(1, DAYS))).validate()
                         .registerOn(REGISTRY_USER);
     }
 

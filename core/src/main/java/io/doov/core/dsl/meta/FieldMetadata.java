@@ -128,6 +128,10 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(field, "minus", value + " " + unit);
     }
 
+    public static FieldMetadata minusMetadata(SimpleFieldId field1, SimpleFieldId field2, Object unit) {
+        return new FieldMetadata(field1, "minus", field2.readable() + " " + unit);
+    }
+
     public static FieldMetadata plusMetadata(SimpleFieldId field, int value, Object unit) {
         return new FieldMetadata(field, "plus", value + " " + unit);
     }

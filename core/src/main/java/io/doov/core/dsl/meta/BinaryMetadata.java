@@ -57,7 +57,7 @@ public class BinaryMetadata implements Metadata {
 
     @Override
     public Metadata merge(Metadata other) {
-        throw new UnsupportedOperationException();
+        return new TextMetadata(readable() + " " + other.readable());
     }
 
 }
