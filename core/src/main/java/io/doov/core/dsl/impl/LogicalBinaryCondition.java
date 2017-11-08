@@ -20,14 +20,14 @@ import static io.doov.core.dsl.meta.BinaryMetadata.orMetadata;
 
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.BaseModel;
+import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.BinaryMetadata;
 
 public class LogicalBinaryCondition extends AbstractStepCondition {
 
-    private LogicalBinaryCondition(BinaryMetadata metadata, BiPredicate<BaseModel, Context> predicate) {
+    private LogicalBinaryCondition(BinaryMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         super(metadata, predicate);
     }
 

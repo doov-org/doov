@@ -1,4 +1,4 @@
 package io.doov.core.dsl;
 
-public interface BaseId {
+public interface DslId {
 }

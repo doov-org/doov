@@ -15,7 +15,7 @@
 */
 package io.doov.core.dsl.field;
 
-import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.NumericCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
@@ -31,11 +31,11 @@ public interface NumericFieldInfo<N extends Number> {
         return getNumericCondition().lesserOrEquals(value);
     }
 
-    default StepCondition lesserThan(BaseFieldId<N> field) {
+    default StepCondition lesserThan(DslField field) {
         return getNumericCondition().lesserThan(field);
     }
 
-    default StepCondition lesserOrEquals(BaseFieldId<N> field) {
+    default StepCondition lesserOrEquals(DslField field) {
         return getNumericCondition().lesserOrEquals(field);
     }
 
@@ -45,7 +45,7 @@ public interface NumericFieldInfo<N extends Number> {
         return getNumericCondition().greaterThan(value);
     }
 
-    default StepCondition greaterThan(BaseFieldId<N> field) {
+    default StepCondition greaterThan(DslField field) {
         return getNumericCondition().greaterThan(field);
     }
 
@@ -53,7 +53,7 @@ public interface NumericFieldInfo<N extends Number> {
         return getNumericCondition().greaterOrEquals(value);
     }
 
-    default StepCondition greaterOrEquals(BaseFieldId<N> field) {
+    default StepCondition greaterOrEquals(DslField field) {
         return getNumericCondition().greaterOrEquals(field);
     }
 
@@ -63,7 +63,7 @@ public interface NumericFieldInfo<N extends Number> {
         return getNumericCondition().between(minIncluded, maxExcluded);
     }
 
-    default StepCondition between(BaseFieldId<N> minIncluded, BaseFieldId<N> maxExcluded) {
+    default StepCondition between(DslField minIncluded, DslField maxExcluded) {
         return getNumericCondition().between(minIncluded, maxExcluded);
     }
 

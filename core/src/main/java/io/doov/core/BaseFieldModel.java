@@ -15,11 +15,18 @@
 */
 package io.doov.core;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Spliterator;
 import java.util.stream.Stream;
 
-import io.doov.core.dsl.BaseId;
+import io.doov.core.dsl.DslId;
 
 /**
  * {@code FieldModel} implementation based on {@code java.util.Map}
@@ -54,7 +61,7 @@ public class BaseFieldModel implements FieldModel {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T get(BaseId fieldId) {
+    public <T> T get(DslId fieldId) {
         return (T) values.get(fieldId);
     }
 

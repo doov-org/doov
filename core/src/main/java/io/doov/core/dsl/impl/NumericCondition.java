@@ -23,8 +23,8 @@ import static io.doov.core.dsl.meta.FieldMetadata.lesserThanMetadata;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.dsl.BaseFieldId;
-import io.doov.core.dsl.BaseModel;
+import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
@@ -32,11 +32,11 @@ import io.doov.core.dsl.meta.Metadata;
 public abstract class NumericCondition<N extends Number>
                 extends DefaultCondition<N> {
 
-    NumericCondition(BaseFieldId<N> field) {
+    NumericCondition(DslField field) {
         super(field);
     }
 
-    NumericCondition(Metadata metadata, BiFunction<BaseModel, Context, Optional<N>> value) {
+    NumericCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<N>> value) {
         super(metadata, value);
     }
 
@@ -48,7 +48,7 @@ public abstract class NumericCondition<N extends Number>
                         (l, r) -> lesserThanFunction().apply(l, r));
     }
 
-    public final StepCondition lesserThan(BaseFieldId<N> value) {
+    public final StepCondition lesserThan(DslField value) {
         return predicate(lesserThanMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> lesserThanFunction().apply(l, r));
@@ -60,7 +60,7 @@ public abstract class NumericCondition<N extends Number>
                         (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
-    public final StepCondition lesserOrEquals(BaseFieldId<N> value) {
+    public final StepCondition lesserOrEquals(DslField value) {
         return predicate(lesserOrEqualsMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> lesserOrEqualsFunction().apply(l, r));
@@ -78,7 +78,7 @@ public abstract class NumericCondition<N extends Number>
                         (l, r) -> greaterThanFunction().apply(l, r));
     }
 
-    public final StepCondition greaterThan(BaseFieldId<N> value) {
+    public final StepCondition greaterThan(DslField value) {
         return predicate(greaterThanMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> greaterThanFunction().apply(l, r));
@@ -90,7 +90,7 @@ public abstract class NumericCondition<N extends Number>
                         (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
-    public final StepCondition greaterOrEquals(BaseFieldId<N> value) {
+    public final StepCondition greaterOrEquals(DslField value) {
         return predicate(greaterOrEqualsMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> greaterOrEqualsFunction().apply(l, r));
@@ -106,7 +106,7 @@ public abstract class NumericCondition<N extends Number>
         return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
 
-    public final StepCondition between(BaseFieldId<N> minIncluded, BaseFieldId<N> maxExcluded) {
+    public final StepCondition between(DslField minIncluded, DslField maxExcluded) {
         return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
 

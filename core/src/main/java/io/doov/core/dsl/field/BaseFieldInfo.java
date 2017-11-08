@@ -4,10 +4,11 @@ import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.TypeCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
-public interface BaseFieldInfo<T> {
+public interface BaseFieldInfo<T> extends DslField {
 
     // available
 

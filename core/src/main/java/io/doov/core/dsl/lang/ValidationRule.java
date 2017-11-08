@@ -15,14 +15,14 @@
 */
 package io.doov.core.dsl.lang;
 
-import io.doov.core.dsl.BaseModel;
+import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.meta.SyntaxTree;
 
 public interface ValidationRule extends Readable, SyntaxTree {
 
     ValidationRule withMessage(String message);
 
-    Result executeOn(BaseModel model);
+    Result executeOn(DslModel model);
 
     ValidationRule registerOn(RuleRegistry registry);
 

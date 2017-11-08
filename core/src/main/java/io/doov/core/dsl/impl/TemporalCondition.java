@@ -1,33 +1,40 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static io.doov.core.dsl.meta.FieldMetadata.afterMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.ageAtMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.beforeMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.equalsMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.minusMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.plusMetadata;
 import static java.time.temporal.ChronoUnit.YEARS;
 
-import java.time.temporal.*;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalUnit;
 import java.util.Optional;
-import java.util.function.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.StepCondition;
 
 public abstract class TemporalCondition<N extends Temporal> extends DefaultCondition<N> {
 
-    TemporalCondition(BaseFieldId<N> field) {
+    TemporalCondition(DslField field) {
         super(field);
     }
 
@@ -42,7 +49,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (v) -> minusFunction(value, unit).apply(v));
     }
 
-    public final StepFunction<N, Integer> minus(BaseFieldId<Integer> value, TemporalUnit unit) {
+    public final StepFunction<N, Integer> minus(DslField value, TemporalUnit unit) {
         return function(minusMetadata(field, value, unit),
                         (model, context) -> Optional.ofNullable(model.get(value.id())),
                         (l, r) -> minusFunction(r, unit).apply(l));
@@ -64,7 +71,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (v) -> plusFunction(value, unit).apply(v));
     }
 
-    public final StepFunction<N, Integer> plus(BaseFieldId<Integer> value, TemporalUnit unit) {
+    public final StepFunction<N, Integer> plus(DslField value, TemporalUnit unit) {
         return function(plusMetadata(field, value, unit),
                         (model, context) -> Optional.ofNullable(model.get(value.id())),
                         (l, r) -> plusFunction(r, unit).apply(l));
@@ -107,7 +114,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (l, r) -> beforeFunction().apply(l, r));
     }
 
-    public final StepCondition before(BaseFieldId<N> value) {
+    public final StepCondition before(DslField value) {
         return predicate(beforeMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> beforeFunction().apply(l, r));
@@ -147,7 +154,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (l, r) -> afterFunction().apply(l, r));
     }
 
-    public final StepCondition after(BaseFieldId<N> value) {
+    public final StepCondition after(DslField value) {
         return predicate(afterMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> afterFunction().apply(l, r));
@@ -205,7 +212,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                                         .map(Long::intValue));
     }
 
-    public final NumericCondition<Integer> ageAt(BaseFieldId<N> value) {
+    public final NumericCondition<Integer> ageAt(DslField value) {
         return new IntegerCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .flatMap(l -> value(model, value)
@@ -221,7 +228,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                                         .map(Long::intValue));
     }
 
-    public final NumericCondition<Integer> ageAt(BaseFieldId<N> value, TemporalAdjuster ajuster) {
+    public final NumericCondition<Integer> ageAt(DslField value, TemporalAdjuster ajuster) {
         return new IntegerCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .map(l -> withFunction(ajuster).apply(l))
@@ -243,9 +250,8 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     public final NumericCondition<Integer> ageAt(Supplier<N> value) {
         return new IntegerCondition(ageAtMetadata(field, value),
-                        (model, context) -> value(model, field).
-                                        flatMap(l -> Optional.ofNullable(value.get())
-                                                        .map(r -> betweenFunction(YEARS).apply(l, r)))
+                        (model, context) -> value(model, field).flatMap(l -> Optional.ofNullable(value.get())
+                                        .map(r -> betweenFunction(YEARS).apply(l, r)))
                                         .map(Long::intValue));
     }
 

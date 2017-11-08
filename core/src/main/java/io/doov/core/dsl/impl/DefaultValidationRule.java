@@ -18,7 +18,7 @@ package io.doov.core.dsl.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.doov.core.dsl.BaseModel;
+import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
@@ -53,7 +53,7 @@ public class DefaultValidationRule implements ValidationRule {
     }
 
     @Override
-    public Result executeOn(BaseModel model) {
+    public Result executeOn(DslModel model) {
         List<Metadata> metadatas = new ArrayList<>();
         boolean valid = stepWhen.stepCondition().predicate().test(model, metadatas::add);
         String readable = valid ? null : (message == null ? stepWhen.stepCondition().readable() : message);

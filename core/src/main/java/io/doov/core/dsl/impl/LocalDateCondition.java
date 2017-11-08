@@ -16,15 +16,17 @@
 package io.doov.core.dsl.impl;
 
 import java.time.LocalDate;
-import java.time.temporal.*;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalUnit;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.doov.core.dsl.BaseFieldId;
+import io.doov.core.dsl.DslField;
 
 public class LocalDateCondition extends TemporalCondition<LocalDate> {
 
-    public LocalDateCondition(BaseFieldId<LocalDate> field) {
+    public LocalDateCondition(DslField field) {
         super(field);
     }
 

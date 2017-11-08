@@ -3,7 +3,11 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static io.doov.core.dsl.meta.FieldMetadata.containsMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.hasNotSizeMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.hasSizeMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.isEmptyMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.isNotEmptyMetadata;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
@@ -11,8 +15,8 @@ import static java.util.stream.StreamSupport.stream;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.dsl.BaseFieldId;
-import io.doov.core.dsl.BaseModel;
+import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
@@ -20,11 +24,11 @@ import io.doov.core.dsl.meta.FieldMetadata;
 public class IterableCondition<T, C extends Iterable<T>>
                 extends DefaultCondition<C> {
 
-    public IterableCondition(BaseFieldId<C> field) {
+    public IterableCondition(DslField field) {
         super(field);
     }
 
-    public IterableCondition(FieldMetadata metadata, BiFunction<BaseModel, Context, Optional<C>> value) {
+    public IterableCondition(FieldMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
         super(metadata, value);
     }
 
