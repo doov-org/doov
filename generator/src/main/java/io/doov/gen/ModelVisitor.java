@@ -73,12 +73,12 @@ final class ModelVisitor {
                             + " from " + clazz.getName());
             path.addLast(desc.getReadMethod());
             try {
-                final List<PathAnnotation> formParam = getFieldTarget(clazz, desc);
-                if (formParam.isEmpty()) {
+                final List<PathAnnotation> fieldTarget = getFieldTarget(clazz, desc);
+                if (fieldTarget.isEmpty()) {
                     continue;
                 }
-                log.debug(formParam.size() + " path(s) found from  " + desc);
-                visitor.visit(formParam, desc.getReadMethod(), desc.getWriteMethod(), path);
+                log.debug(fieldTarget.size() + " path(s) found from  " + desc);
+                visitor.visit(fieldTarget, desc.getReadMethod(), desc.getWriteMethod(), path);
             } finally {
                 path.removeLast();
             }
@@ -144,21 +144,23 @@ final class ModelVisitor {
         return pathAnnotations.stream()
                         .map(a -> asList(executable.getAnnotationsByType(a)))
                         .flatMap(Collection::stream)
-                        .map(a -> {
-                            try {
-                                log.debug("process annotation " + a.toString());
-                                Method fieldIdGetter = getMethodByClass(a.annotationType(), FieldId.class);
-                                Method constraintGetter = getMethodByClass(a.annotationType(), PathConstraint.class);
-                                Method readableGetter = getMethodByName(a.annotationType(), "readable");
-                                return new PathAnnotation((FieldId) fieldIdGetter.invoke(a),
-                                                (PathConstraint) constraintGetter.invoke(a),
-                                                readableGetter == null ? null : (String) readableGetter.invoke(a));
-                            } catch (IllegalAccessException | InvocationTargetException e) {
-                                return null;
-                            }
-                        })
+                        .map(this::asPathAnnotation)
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
+    }
+
+    private PathAnnotation asPathAnnotation(Annotation annotation) {
+        try {
+            log.debug("process annotation " + annotation.toString());
+            Method fieldIdGetter = getMethodByClass(annotation.annotationType(), FieldId.class);
+            Method constraintGetter = getMethodByClass(annotation.annotationType(), PathConstraint.class);
+            Method readableGetter = getMethodByName(annotation.annotationType(), "readable");
+            return new PathAnnotation((FieldId) fieldIdGetter.invoke(annotation),
+                            (PathConstraint) constraintGetter.invoke(annotation),
+                            readableGetter == null ? null : (String) readableGetter.invoke(annotation));
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            return null;
+        }
     }
 
     private Method getMethodByClass(Class<?> clazz, Class<?> interfaceType) {

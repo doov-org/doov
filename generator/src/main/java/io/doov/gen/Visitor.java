@@ -35,11 +35,11 @@ final class Visitor {
     }
 
     void visit(List<PathAnnotation> fieldTarget, Method getMethod, Method setMethod, List<Method> paths) {
-        fieldTarget.forEach(pathAnnotation -> {
-            if (!checkFieldTargetConstraint(paths, pathAnnotation.fieldId, pathAnnotation.constraint)) {
+        fieldTarget.forEach(annotation -> {
+            if (!checkFieldTargetConstraint(paths, annotation.fieldId, annotation.constraint)) {
                 return;
             }
-            final VisitorPath path = new VisitorPath(baseClass, paths, pathAnnotation.fieldId, pathAnnotation.readable,
+            final VisitorPath path = new VisitorPath(baseClass, paths, annotation.fieldId, annotation.readable,
                             getMethod, setMethod);
             if (contains(path)) {
                 return;
