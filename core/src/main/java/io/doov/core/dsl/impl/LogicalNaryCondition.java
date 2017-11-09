@@ -19,7 +19,6 @@ import static io.doov.core.dsl.meta.NaryMetadata.countMetadata;
 import static io.doov.core.dsl.meta.NaryMetadata.matchAllMetadata;
 import static io.doov.core.dsl.meta.NaryMetadata.matchAnyMetadata;
 import static io.doov.core.dsl.meta.NaryMetadata.matchNoneMetadata;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -38,34 +37,34 @@ public class LogicalNaryCondition extends AbstractStepCondition {
         super(metadata, predicate);
     }
 
-    public static IntegerCondition count(StepCondition... steps) {
+    public static IntegerCondition count(List<StepCondition> steps) {
         return new IntegerCondition(
                         countMetadata(getMetadatas(steps)),
-                        (model, context) -> Optional.of((int) stream(steps)
+                        (model, context) -> Optional.of((int) steps.stream()
                                         .filter(s -> s.predicate().test(model, context))
                                         .count()));
     }
 
-    public static LogicalNaryCondition matchAny(StepCondition... steps) {
+    public static LogicalNaryCondition matchAny(List<StepCondition> steps) {
         return new LogicalNaryCondition(
                         matchAnyMetadata(getMetadatas(steps)),
-                        (model, context) -> stream(steps).anyMatch(s -> s.predicate().test(model, context)));
+                        (model, context) -> steps.stream().anyMatch(s -> s.predicate().test(model, context)));
     }
 
-    public static LogicalNaryCondition matchAll(StepCondition... steps) {
+    public static LogicalNaryCondition matchAll(List<StepCondition> steps) {
         return new LogicalNaryCondition(
                         matchAllMetadata(getMetadatas(steps)),
-                        (model, context) -> stream(steps).allMatch(s -> s.predicate().test(model, context)));
+                        (model, context) -> steps.stream().allMatch(s -> s.predicate().test(model, context)));
     }
 
-    public static LogicalNaryCondition matchNone(StepCondition... steps) {
+    public static LogicalNaryCondition matchNone(List<StepCondition> steps) {
         return new LogicalNaryCondition(
                         matchNoneMetadata(getMetadatas(steps)),
-                        (model, context) -> stream(steps).noneMatch(s -> s.predicate().test(model, context)));
+                        (model, context) -> steps.stream().noneMatch(s -> s.predicate().test(model, context)));
     }
 
-    private static List<Metadata> getMetadatas(StepCondition[] steps) {
-        return stream(steps).map(StepCondition::getMetadata).collect(toList());
+    private static List<Metadata> getMetadatas(List<StepCondition> steps) {
+        return steps.stream().map(StepCondition::getMetadata).collect(toList());
     }
 
 }

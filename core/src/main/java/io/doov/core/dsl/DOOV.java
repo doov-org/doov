@@ -15,21 +15,22 @@
 */
 package io.doov.core.dsl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.minMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.sumMetadata;
-import static java.util.Comparator.naturalOrder;
-import static java.util.Objects.nonNull;
+import static java.util.Arrays.asList;
 
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.Objects;
 
-import io.doov.core.dsl.field.IntegerFieldInfo;
+import io.doov.core.dsl.field.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.meta.FieldMetadata;
 
 public class DOOV {
+
+    private DOOV() {
+        // static
+    }
 
     public static StepWhen when(StepCondition condition) {
         return new DefaultStepWhen(condition);
@@ -40,37 +41,39 @@ public class DOOV {
     }
 
     public static IntegerCondition count(StepCondition... steps) {
-        return LogicalNaryCondition.count(steps);
+        return LogicalNaryCondition.count(asList(steps));
     }
 
     public static StepCondition matchAny(StepCondition... steps) {
-        return LogicalNaryCondition.matchAny(steps);
+        return LogicalNaryCondition.matchAny(asList(steps));
     }
 
     public static StepCondition matchAll(StepCondition... steps) {
-        return LogicalNaryCondition.matchAll(steps);
+        return LogicalNaryCondition.matchAll(asList(steps));
     }
 
     public static StepCondition matchNone(StepCondition... steps) {
-        return LogicalNaryCondition.matchNone(steps);
+        return LogicalNaryCondition.matchNone(asList(steps));
     }
 
-    public static IntegerCondition min(IntegerFieldInfo... fields) {
-        return new IntegerCondition(
-                        minMetadata(fields),
-                        (model, context) -> Arrays.stream(fields)
-                                        .filter(f -> nonNull(model.<Integer> get(f.id())))
-                                        .map(f -> model.<Integer> get(f.id()))
-                                        .min(naturalOrder()));
+    @SafeVarargs
+    public static <N extends Number> NumericCondition<N> min(NumericFieldInfo<N>... fields) {
+        return Arrays.stream(fields)
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                        .map(NumericFieldInfo::getNumericCondition)
+                        .map(c -> c.min(Arrays.asList(fields)))
+                        .orElseThrow(IllegalArgumentException::new);
     }
 
-    public static IntegerCondition sum(IntegerFieldInfo... fields) {
-        return new IntegerCondition(
-                        sumMetadata(fields),
-                        (model, context) -> Optional.of(Arrays.stream(fields)
-                                        .filter(f -> nonNull(model.<Integer> get(f.id())))
-                                        .mapToInt(f -> model.<Integer> get(f.id()))
-                                        .sum()));
+    @SafeVarargs
+    public static <N extends Number> NumericCondition<N> sum(NumericFieldInfo<N>... fields) {
+        return Arrays.stream(fields)
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                        .map(NumericFieldInfo::getNumericCondition)
+                        .map(c -> c.sum(Arrays.asList(fields)))
+                        .orElseThrow(IllegalArgumentException::new);
     }
 
 }

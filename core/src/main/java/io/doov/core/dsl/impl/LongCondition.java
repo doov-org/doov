@@ -14,11 +14,12 @@ package io.doov.core.dsl.impl;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.Metadata;
 
 public class LongCondition extends NumericCondition<Long> {
 
@@ -26,8 +27,14 @@ public class LongCondition extends NumericCondition<Long> {
         super(field);
     }
 
-    public LongCondition(FieldMetadata metadata, BiFunction<DslModel, Context, Optional<Long>> value) {
+    public LongCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<Long>> value) {
         super(metadata, value);
+    }
+
+    @Override
+    NumericCondition<Long> numericCondition(Metadata metadata,
+                    BiFunction<DslModel, Context, Optional<Long>> value) {
+        return new LongCondition(metadata, value);
     }
 
     @Override
@@ -48,6 +55,21 @@ public class LongCondition extends NumericCondition<Long> {
     @Override
     public BiFunction<Long, Long, Boolean> greaterOrEqualsFunction() {
         return (l, r) -> l >= r;
+    }
+
+    @Override
+    BinaryOperator<Long> minFunction() {
+        return Long::min;
+    }
+
+    @Override
+    BinaryOperator<Long> sumFunction() {
+        return Long::sum;
+    }
+
+    @Override
+    Long identity() {
+        return 0L;
     }
 
 }

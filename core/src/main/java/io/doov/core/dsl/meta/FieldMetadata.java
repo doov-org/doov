@@ -18,6 +18,7 @@ package io.doov.core.dsl.meta;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import io.doov.core.dsl.DslField;
@@ -80,12 +81,12 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(null, "always true", null);
     }
 
-    public static FieldMetadata minMetadata(DslField... values) {
-        return new FieldMetadata(null, "min", format(values));
+    public static FieldMetadata minMetadata(List<DslField> values) {
+        return new FieldMetadata(null, "min", formatReadableList(values));
     }
 
-    public static FieldMetadata sumMetadata(DslField... values) {
-        return new FieldMetadata(null, "sum", format(values));
+    public static FieldMetadata sumMetadata(List<DslField> values) {
+        return new FieldMetadata(null, "sum", formatReadableList(values));
     }
 
     public static FieldMetadata availableMetadata(DslField field) {
@@ -262,6 +263,10 @@ public class FieldMetadata implements Metadata {
 
     public static FieldMetadata hasNotSizeMetadata(DslField field, int size) {
         return new FieldMetadata(field, "has not size", size);
+    }
+
+    private static String formatReadableList(List<? extends Readable> readables) {
+        return readables.stream().map(Object::toString).collect(joining(", ", "[", "]"));
     }
 
     private static String format(Object... values) {

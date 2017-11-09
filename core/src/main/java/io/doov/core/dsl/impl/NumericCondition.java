@@ -15,13 +15,11 @@
 */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.greaterOrEqualsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.greaterThanMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.lesserOrEqualsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.lesserThanMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.*;
 
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
@@ -39,6 +37,8 @@ public abstract class NumericCondition<N extends Number>
     NumericCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<N>> value) {
         super(metadata, value);
     }
+
+    abstract NumericCondition<N> numericCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<N>> value);
 
     // lesser than
 
@@ -109,5 +109,33 @@ public abstract class NumericCondition<N extends Number>
     public final StepCondition between(DslField minIncluded, DslField maxExcluded) {
         return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
+
+    // min
+
+    public final NumericCondition<N> min(List<DslField> fields) {
+        return numericCondition(minMetadata(fields),
+                        (model, context) -> fields.stream()
+                                        .filter(f -> Objects.nonNull(model.<N> get(f.id())))
+                                        .map(f -> model.<N> get(f.id()))
+                                        .reduce(minFunction()));
+    }
+
+    abstract BinaryOperator<N> minFunction();
+
+    // sum
+
+    public final NumericCondition<N> sum(List<DslField> fields) {
+        return numericCondition(sumMetadata(fields),
+                        (model, context) -> Optional.of(fields.stream()
+                                        .filter(f -> Objects.nonNull(model.<N> get(f.id())))
+                                        .map(f -> model.<N> get(f.id()))
+                                        .reduce(identity(), sumFunction())));
+    }
+
+    abstract BinaryOperator<N> sumFunction();
+
+    // identity
+
+    abstract N identity();
 
 }
