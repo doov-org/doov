@@ -68,6 +68,11 @@ public class LongCondition extends NumericCondition<Long> {
     }
 
     @Override
+    BiFunction<Long, Integer, Long> timesFunction() {
+        return (l, r) -> l * r;
+    }
+
+    @Override
     Long identity() {
         return 0L;
     }

@@ -68,6 +68,11 @@ public class FloatCondition extends NumericCondition<Float> {
     }
 
     @Override
+    BiFunction<Float, Integer, Float> timesFunction() {
+        return (l, r) -> l * r;
+    }
+
+    @Override
     Float identity() {
         return 0f;
     }

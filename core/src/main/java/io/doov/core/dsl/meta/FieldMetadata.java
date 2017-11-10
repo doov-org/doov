@@ -89,6 +89,10 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(null, "sum", formatReadableList(values));
     }
 
+    public static FieldMetadata timesMetadata(DslField field, int multiplier) {
+        return new FieldMetadata(field, "times", multiplier);
+    }
+
     public static FieldMetadata availableMetadata(DslField field) {
         return new FieldMetadata(field, "available", null);
     }

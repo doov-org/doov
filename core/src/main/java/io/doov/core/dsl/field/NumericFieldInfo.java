@@ -67,6 +67,13 @@ public interface NumericFieldInfo<N extends Number> extends DslField {
         return getNumericCondition().between(minIncluded, maxExcluded);
     }
 
+    // times
+
+    default NumericCondition<N> times(int multiplier) {
+        return getNumericCondition().times(multiplier);
+    }
+
+
     // abstract
 
     NumericCondition<N> getNumericCondition();

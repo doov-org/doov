@@ -68,8 +68,12 @@ public class DoubleCondition extends NumericCondition<Double> {
     }
 
     @Override
+    BiFunction<Double, Integer, Double> timesFunction() {
+        return (l, r) -> l * r;
+    }
+
+    @Override
     Double identity() {
         return 0d;
     }
-
 }

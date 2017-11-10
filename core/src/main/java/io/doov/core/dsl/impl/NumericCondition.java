@@ -134,6 +134,16 @@ public abstract class NumericCondition<N extends Number>
 
     abstract BinaryOperator<N> sumFunction();
 
+    // times
+
+    public final NumericCondition<N> times(int multiplier) {
+        return numericCondition(timesMetadata(field, multiplier),
+                        (model, context) -> value(model, field)
+                                        .map(v -> timesFunction().apply(v, multiplier)));
+    }
+
+    abstract BiFunction<N, Integer, N> timesFunction();
+
     // identity
 
     abstract N identity();

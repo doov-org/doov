@@ -68,6 +68,11 @@ public class IntegerCondition extends NumericCondition<Integer> {
     }
 
     @Override
+    BiFunction<Integer, Integer, Integer> timesFunction() {
+        return (l, r) -> l * r;
+    }
+
+    @Override
     Integer identity() {
         return 0;
     }
