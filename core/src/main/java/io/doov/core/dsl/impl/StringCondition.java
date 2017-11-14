@@ -12,12 +12,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.containsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.endsWithMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.fieldOnlyMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.lengthIsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.matchesMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.startsWithMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.*;
 
 import java.util.Optional;
 import java.util.function.BiFunction;

@@ -12,22 +12,12 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.afterMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.ageAtMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.beforeMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.equalsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.minusMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.plusMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.*;
 import static java.time.temporal.ChronoUnit.YEARS;
 
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAdjuster;
-import java.time.temporal.TemporalUnit;
+import java.time.temporal.*;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.StepCondition;
@@ -86,19 +76,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     abstract Function<N, N> plusFunction(int value, TemporalUnit unit);
 
-    // equals
-
-    public final StepCondition equals(N value) {
-        return predicate(equalsMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value),
-                        Object::equals);
-    }
-
-    public final StepCondition equals(Supplier<N> value) {
-        return predicate(equalsMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value.get()),
-                        Object::equals);
-    }
+    // eq
 
     public final StepCondition equals(StepFunction<N, Integer> value) {
         return predicate(equalsMetadata(field, value),
@@ -133,11 +111,11 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     }
 
     public final StepCondition beforeOrEq(N value) {
-        return LogicalBinaryCondition.or(before(value), equals(value));
+        return LogicalBinaryCondition.or(before(value), eq(value));
     }
 
     public final StepCondition beforeOrEq(Supplier<N> value) {
-        return LogicalBinaryCondition.or(before(value), equals(value));
+        return LogicalBinaryCondition.or(before(value), eq(value));
     }
 
     public final StepCondition beforeOrEq(StepFunction<N, Integer> value) {
@@ -173,11 +151,11 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     }
 
     public final StepCondition afterOrEq(N value) {
-        return LogicalBinaryCondition.or(after(value), equals(value));
+        return LogicalBinaryCondition.or(after(value), eq(value));
     }
 
     public final StepCondition afterOrEq(Supplier<N> value) {
-        return LogicalBinaryCondition.or(after(value), equals(value));
+        return LogicalBinaryCondition.or(after(value), eq(value));
     }
 
     public final StepCondition afterOrEq(StepFunction<N, Integer> value) {

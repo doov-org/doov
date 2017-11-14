@@ -27,8 +27,7 @@ import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 
-public abstract class NumericCondition<N extends Number>
-                extends DefaultCondition<N> {
+public abstract class NumericCondition<N extends Number> extends DefaultCondition<N> {
 
     NumericCondition(DslField field) {
         super(field);

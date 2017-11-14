@@ -29,7 +29,7 @@ abstract class AbstractStepCondition implements StepCondition {
     private final Metadata metadata;
     private final BiPredicate<DslModel, Context> predicate;
 
-    AbstractStepCondition(Metadata metadata, BiPredicate<DslModel, Context> predicate) {
+    protected AbstractStepCondition(Metadata metadata, BiPredicate<DslModel, Context> predicate) {
         this.metadata = metadata;
         this.predicate = predicate;
     }
