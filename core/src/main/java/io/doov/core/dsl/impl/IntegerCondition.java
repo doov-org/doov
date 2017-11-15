@@ -32,7 +32,7 @@ public class IntegerCondition extends NumericCondition<Integer> {
     }
 
     public IntegerCondition(NumericCondition<Long> condition) {
-        super(condition.metadata, (model, context) -> condition.value.apply(model, context).map(Long::intValue));
+        super(condition.metadata, (model, context) -> condition.function.apply(model, context).map(Long::intValue));
     }
 
     @Override

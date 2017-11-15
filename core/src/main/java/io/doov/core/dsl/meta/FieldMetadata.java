@@ -136,8 +136,8 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(field, "match none", format(values));
     }
 
-    public static FieldMetadata withMetadata(Readable field, Object ajuster) {
-        return new FieldMetadata(field, "with", ajuster);
+    public static FieldMetadata withMetadata(Readable field, Object adjuster) {
+        return new FieldMetadata(field, "with", adjuster);
     }
 
     public static FieldMetadata minusMetadata(Readable field, int value, Object unit) {

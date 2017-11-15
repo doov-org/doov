@@ -17,50 +17,51 @@ import static java.time.temporal.ChronoUnit.YEARS;
 import java.time.temporal.*;
 import java.util.function.Supplier;
 
-import io.doov.core.dsl.impl.*;
+import io.doov.core.dsl.impl.NumericCondition;
+import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
 public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> {
 
     // with
 
-    default StepFunction<N> with(TemporalAdjuster ajuster) {
+    default TemporalCondition<N> with(TemporalAdjuster ajuster) {
         return getTemporalCondition().with(ajuster);
     }
 
     // minus
 
-    default StepFunction<N> minus(int value, TemporalUnit unit) {
+    default TemporalCondition<N> minus(int value, TemporalUnit unit) {
         return getTemporalCondition().minus(value, unit);
     }
 
-    default StepFunction<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
+    default TemporalCondition<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
         return getTemporalCondition().minus(value, unit);
     }
 
-    default StepFunction<N> minus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
+    default TemporalCondition<N> minus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
         return getTemporalCondition().minus(value, unit, ajuster);
     }
 
-    default StepFunction<N> minusYears(int value) {
+    default TemporalCondition<N> minusYears(int value) {
         return getTemporalCondition().minus(value, YEARS);
     }
 
     // plus
 
-    default StepFunction<N> plus(int value, TemporalUnit unit) {
+    default TemporalCondition<N> plus(int value, TemporalUnit unit) {
         return getTemporalCondition().plus(value, unit);
     }
 
-    default StepFunction<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
+    default TemporalCondition<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
         return getTemporalCondition().plus(value, unit);
     }
 
-    default StepFunction<N> plus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
+    default TemporalCondition<N> plus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
         return getTemporalCondition().plus(value, unit, ajuster);
     }
 
-    default StepFunction<N> plusYears(int value) {
+    default TemporalCondition<N> plusYears(int value) {
         return getTemporalCondition().plus(value, YEARS);
     }
 
@@ -78,7 +79,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().before(value);
     }
 
-    default StepCondition before(StepFunction<N> value) {
+    default StepCondition before(TemporalCondition<N> value) {
         return getTemporalCondition().before(value);
     }
 
@@ -90,7 +91,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().beforeOrEq(value);
     }
 
-    default StepCondition beforeOrEq(StepFunction<N> value) {
+    default StepCondition beforeOrEq(TemporalCondition<N> value) {
         return getTemporalCondition().beforeOrEq(value);
     }
 
@@ -108,7 +109,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().after(value);
     }
 
-    default StepCondition after(StepFunction<N> value) {
+    default StepCondition after(TemporalCondition<N> value) {
         return getTemporalCondition().after(value);
     }
 
@@ -120,7 +121,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().afterOrEq(value);
     }
 
-    default StepCondition afterOrEq(StepFunction<N> value) {
+    default StepCondition afterOrEq(TemporalCondition<N> value) {
         return getTemporalCondition().afterOrEq(value);
     }
 
@@ -148,7 +149,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().ageAt(value);
     }
 
-    default NumericCondition<Integer> ageAt(StepFunction<N> value) {
+    default NumericCondition<Integer> ageAt(TemporalCondition<N> value) {
         return getTemporalCondition().ageAt(value);
     }
 
@@ -156,7 +157,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().ageAt(value, ajuster);
     }
 
-    default NumericCondition<Integer> ageAt(StepFunction<N> value, TemporalAdjuster ajuster) {
+    default NumericCondition<Integer> ageAt(TemporalCondition<N> value, TemporalAdjuster ajuster) {
         return getTemporalCondition().ageAt(value, ajuster);
     }
 
@@ -178,7 +179,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().timeBetween(unit, value);
     }
 
-    default NumericCondition<Long> timeBetween(ChronoUnit unit, StepFunction<N> value) {
+    default NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalCondition<N> value) {
         return getTemporalCondition().timeBetween(unit, value);
     }
 
@@ -186,7 +187,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().timeBetween(unit, value, ajuster);
     }
 
-    default NumericCondition<Long> timeBetween(ChronoUnit unit, StepFunction<N> value, TemporalAdjuster ajuster) {
+    default NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalCondition<N> value, TemporalAdjuster ajuster) {
         return getTemporalCondition().timeBetween(unit, value, ajuster);
     }
 

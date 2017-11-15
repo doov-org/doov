@@ -29,18 +29,18 @@ abstract class AbstractCondition<N> implements Readable {
 
     protected final DslField field;
     protected final Metadata metadata;
-    protected final BiFunction<DslModel, Context, Optional<N>> value;
+    protected final BiFunction<DslModel, Context, Optional<N>> function;
 
     protected AbstractCondition(DslField field) {
         this.field = field;
-        metadata = emptyMetadata();
-        value = (model, context) -> value(model, field);
+        this.metadata = emptyMetadata();
+        this.function = (model, context) -> value(model, field);
     }
 
-    protected AbstractCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<N>> value) {
-        field = null;
+    protected AbstractCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<N>> function) {
+        this.field = null;
         this.metadata = metadata;
-        this.value = value;
+        this.function = function;
     }
 
     protected Optional<N> value(DslModel model, DslField field) {
@@ -49,24 +49,13 @@ abstract class AbstractCondition<N> implements Readable {
 
     protected StepCondition predicate(FieldMetadata metadata,
                     Function<N, Boolean> predicate) {
-        return new PredicateStepCondition<>(this.metadata.merge(metadata), value, predicate);
+        return new PredicateStepCondition<>(this.metadata.merge(metadata), function, predicate);
     }
 
     protected StepCondition predicate(FieldMetadata metadata,
                     BiFunction<DslModel, Context, Optional<N>> value,
                     BiFunction<N, N, Boolean> predicate) {
-        return new PredicateStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
-    }
-
-    protected <T> StepFunction<N> function(FieldMetadata metadata,
-                    Function<N, N> function) {
-        return new StepFunction<>(this.metadata.merge(metadata), value, function);
-    }
-
-    protected <T> StepFunction<N> function(FieldMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<T>> value,
-                    BiFunction<N, T, N> function) {
-        return new StepFunction<>(this.metadata.merge(metadata), this.value, value, function);
+        return new PredicateStepCondition<>(this.metadata.merge(metadata), this.function, value, predicate);
     }
 
     @Override

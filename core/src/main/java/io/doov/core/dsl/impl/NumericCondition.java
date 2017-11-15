@@ -137,7 +137,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     public final NumericCondition<N> sumConditions(List<NumericCondition<N>> conditions) {
         return numericCondition(sumMetadata(conditions),
                         (model, context) -> Optional.of(conditions.stream()
-                                        .map(c -> c.value.apply(model, context))
+                                        .map(c -> c.function.apply(model, context))
                                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
                                         .reduce(identity(), sumFunction())));
     }

@@ -13,18 +13,30 @@
 package io.doov.core.dsl.impl;
 
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjuster;
-import java.time.temporal.TemporalUnit;
+import java.time.temporal.*;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.meta.Metadata;
 
 public class LocalTimeCondition extends TemporalCondition<LocalTime> {
 
     public LocalTimeCondition(DslField field) {
         super(field);
+    }
+
+    public LocalTimeCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<LocalTime>> value) {
+        super(metadata, value);
+    }
+
+    @Override
+    TemporalCondition<LocalTime> temporalCondition(Metadata metadata,
+                    BiFunction<DslModel, Context, Optional<LocalTime>> value) {
+        return new LocalTimeCondition(metadata, value);
     }
 
     @Override

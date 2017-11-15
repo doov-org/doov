@@ -20,9 +20,12 @@ import java.util.Optional;
 import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.NumericFieldInfo;
 import io.doov.core.dsl.field.TemporalFieldInfo;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.meta.Metadata;
 
 public abstract class TemporalCondition<N extends Temporal> extends DefaultCondition<N> {
 
@@ -30,64 +33,78 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         super(field);
     }
 
-    // with
-
-    public final StepFunction<N> with(TemporalAdjuster adjuster) {
-        return function(withMetadata(field, adjuster),
-                        (v) -> withFunction(adjuster).apply(v));
+    TemporalCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<N>> value) {
+        super(metadata, value);
     }
 
-    abstract Function<N, N> withFunction(TemporalAdjuster ajuster);
+    abstract TemporalCondition<N> temporalCondition(Metadata metadata,
+                    BiFunction<DslModel, Context, Optional<N>> value);
+
+    // with
+
+    public final TemporalCondition<N> with(TemporalAdjuster adjuster) {
+        return temporalCondition(withMetadata(field, adjuster),
+                        (model, context) -> value(model, field)
+                                        .map(v -> withFunction(adjuster).apply(v)));
+    }
+
+    abstract Function<N, N> withFunction(TemporalAdjuster adjuster);
 
     // minus
 
-    public final StepFunction<N> minus(int value, TemporalUnit unit) {
-        return function(minusMetadata(field, value, unit),
-                        (v) -> minusFunction(value, unit).apply(v));
+    public final TemporalCondition<N> minus(int value, TemporalUnit unit) {
+        return temporalCondition(minusMetadata(field, value, unit),
+                        (model, context) -> value(model, field)
+                                        .map(v -> minusFunction(value, unit).apply(v)));
     }
 
-    public final StepFunction<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
-        return this.<Integer> function(minusMetadata(field, value, unit),
-                        (model, context) -> Optional.ofNullable(model.get(value.id())),
-                        (l, r) -> minusFunction(r, unit).apply(l));
+    public final TemporalCondition<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
+        return temporalCondition(minusMetadata(field, value, unit),
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
+                                                        .map(r -> minusFunction(r, unit).apply(l))));
     }
 
-    public final StepFunction<N> minus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
-        return function(minusMetadata(field, value, unit),
-                        (v) -> minusFunction(value, unit)
-                                        .andThen(after -> withFunction(ajuster).apply(after))
-                                        .apply(v));
+    public final TemporalCondition<N> minus(int value, TemporalUnit unit, TemporalAdjuster adjuster) {
+        return temporalCondition(minusMetadata(field, value, unit),
+                        (model, context) -> value(model, field)
+                                        .map(v -> minusFunction(value, unit)
+                                                        .andThen(after -> withFunction(adjuster).apply(after))
+                                                        .apply(v)));
     }
 
     abstract Function<N, N> minusFunction(int value, TemporalUnit unit);
 
     // plus
 
-    public final StepFunction<N> plus(int value, TemporalUnit unit) {
-        return function(plusMetadata(field, value, unit),
-                        (v) -> plusFunction(value, unit).apply(v));
+    public final TemporalCondition<N> plus(int value, TemporalUnit unit) {
+        return temporalCondition(plusMetadata(field, value, unit),
+                        (model, context) -> value(model, field)
+                                        .map(v -> plusFunction(value, unit).apply(v)));
     }
 
-    public final StepFunction<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
-        return this.<Integer> function(plusMetadata(field, value, unit),
-                        (model, context) -> Optional.ofNullable(model.get(value.id())),
-                        (l, r) -> plusFunction(r, unit).apply(l));
+    public final TemporalCondition<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
+        return temporalCondition(plusMetadata(field, value, unit),
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
+                                                        .map(r -> plusFunction(r, unit).apply(l))));
     }
 
-    public final StepFunction<N> plus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
-        return function(plusMetadata(field, value, unit),
-                        (v) -> plusFunction(value, unit)
-                                        .andThen(after -> withFunction(ajuster).apply(after))
-                                        .apply(v));
+    public final TemporalCondition<N> plus(int value, TemporalUnit unit, TemporalAdjuster adjuster) {
+        return temporalCondition(plusMetadata(field, value, unit),
+                        (model, context) -> value(model, field)
+                                        .map(v -> plusFunction(value, unit)
+                                                        .andThen(after -> withFunction(adjuster).apply(after))
+                                                        .apply(v)));
     }
 
     abstract Function<N, N> plusFunction(int value, TemporalUnit unit);
 
     // eq
 
-    public final StepCondition equals(StepFunction<N> value) {
+    public final StepCondition eq(TemporalCondition<N> value) {
         return predicate(equalsMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value.function.apply(model, context)),
+                        value.function,
                         Object::equals);
     }
 
@@ -111,9 +128,9 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (l, r) -> beforeFunction().apply(l, r));
     }
 
-    public final StepCondition before(StepFunction<N> value) {
+    public final StepCondition before(TemporalCondition<N> value) {
         return predicate(beforeMetadata(field, value.metadata),
-                        (model, context) -> Optional.ofNullable(value.function.apply(model, context)),
+                        value.function,
                         (l, r) -> beforeFunction().apply(l, r));
     }
 
@@ -125,8 +142,8 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         return LogicalBinaryCondition.or(before(value), eq(value));
     }
 
-    public final StepCondition beforeOrEq(StepFunction<N> value) {
-        return LogicalBinaryCondition.or(before(value), equals(value));
+    public final StepCondition beforeOrEq(TemporalCondition<N> value) {
+        return LogicalBinaryCondition.or(before(value), eq(value));
     }
 
     abstract BiFunction<N, N, Boolean> beforeFunction();
@@ -151,9 +168,9 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (l, r) -> afterFunction().apply(l, r));
     }
 
-    public final StepCondition after(StepFunction<N> value) {
+    public final StepCondition after(TemporalCondition<N> value) {
         return predicate(afterMetadata(field, value.metadata),
-                        (model, context) -> Optional.ofNullable(value.function.apply(model, context)),
+                        value.function,
                         (l, r) -> afterFunction().apply(l, r));
     }
 
@@ -165,8 +182,8 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         return LogicalBinaryCondition.or(after(value), eq(value));
     }
 
-    public final StepCondition afterOrEq(StepFunction<N> value) {
-        return LogicalBinaryCondition.or(after(value), equals(value));
+    public final StepCondition afterOrEq(TemporalCondition<N> value) {
+        return LogicalBinaryCondition.or(after(value), eq(value));
     }
 
     abstract BiFunction<N, N, Boolean> afterFunction();
@@ -195,24 +212,24 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         return new IntegerCondition(timeBetween(YEARS, value));
     }
 
-    public final NumericCondition<Integer> ageAt(StepFunction<N> value) {
+    public final NumericCondition<Integer> ageAt(TemporalCondition<N> value) {
         return new IntegerCondition(timeBetween(YEARS, value));
     }
 
-    public final NumericCondition<Integer> ageAt(TemporalFieldInfo<N> value, TemporalAdjuster ajuster) {
-        return new IntegerCondition(timeBetween(YEARS, value, ajuster));
+    public final NumericCondition<Integer> ageAt(TemporalFieldInfo<N> value, TemporalAdjuster adjuster) {
+        return new IntegerCondition(timeBetween(YEARS, value, adjuster));
     }
 
-    public final NumericCondition<Integer> ageAt(StepFunction<N> value, TemporalAdjuster ajuster) {
-        return new IntegerCondition(timeBetween(YEARS, value, ajuster));
+    public final NumericCondition<Integer> ageAt(TemporalCondition<N> value, TemporalAdjuster adjuster) {
+        return new IntegerCondition(timeBetween(YEARS, value, adjuster));
     }
 
     public final NumericCondition<Integer> ageAt(Supplier<N> value) {
         return new IntegerCondition(timeBetween(YEARS, value));
     }
 
-    public final NumericCondition<Integer> ageAt(Supplier<N> value, TemporalAdjuster ajuster) {
-        return new IntegerCondition(timeBetween(YEARS, value, ajuster));
+    public final NumericCondition<Integer> ageAt(Supplier<N> value, TemporalAdjuster adjuster) {
+        return new IntegerCondition(timeBetween(YEARS, value, adjuster));
     }
 
     // time between
@@ -231,29 +248,30 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Long> timeBetween(ChronoUnit unit, StepFunction<N> value) {
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalCondition<N> value) {
         return new LongCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
-                                        .flatMap(l -> Optional.ofNullable(value.function.apply(model, context))
+                                        .flatMap(l -> value.function.apply(model, context)
                                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalFieldInfo<N> value, TemporalAdjuster
-                    ajuster) {
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalFieldInfo<N> value,
+                    TemporalAdjuster adjuster) {
         return new LongCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
-                                        .map(l -> withFunction(ajuster).apply(l))
+                                        .map(l -> withFunction(adjuster).apply(l))
                                         .flatMap(l -> value(model, value)
-                                                        .map(r -> withFunction(ajuster).apply(r))
+                                                        .map(r -> withFunction(adjuster).apply(r))
                                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Long> timeBetween(ChronoUnit unit, StepFunction<N> value, TemporalAdjuster ajuster) {
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalCondition<N> value,
+                    TemporalAdjuster adjuster) {
         return new LongCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
-                                        .map(l -> withFunction(ajuster).apply(l))
-                                        .flatMap(l -> Optional.ofNullable(value.function.apply(model, context))
-                                                        .map(r -> withFunction(ajuster).apply(r))
+                                        .map(l -> withFunction(adjuster).apply(l))
+                                        .flatMap(l -> value.function.apply(model, context)
+                                                        .map(r -> withFunction(adjuster).apply(r))
                                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
@@ -263,12 +281,12 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Long> timeBetween(ChronoUnit unit, Supplier<N> value, TemporalAdjuster ajuster) {
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, Supplier<N> value, TemporalAdjuster adjuster) {
         return new LongCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
-                                        .map(l -> withFunction(ajuster).apply(l))
+                                        .map(l -> withFunction(adjuster).apply(l))
                                         .flatMap(l -> Optional.ofNullable(value.get())
-                                                        .map(r -> withFunction(ajuster).apply(r))
+                                                        .map(r -> withFunction(adjuster).apply(r))
                                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
