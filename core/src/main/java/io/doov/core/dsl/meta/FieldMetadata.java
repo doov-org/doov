@@ -200,6 +200,34 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(field, "ends with", value);
     }
 
+    public static FieldMetadata notMetadata(Readable field) {
+        return new FieldMetadata(field, "not", null);
+    }
+
+    public static FieldMetadata andMetadata(Readable field, boolean value) {
+        return new FieldMetadata(field, "and", value);
+    }
+
+    public static FieldMetadata andMetadata(Readable field, Readable value) {
+        return new FieldMetadata(field, "and", value);
+    }
+
+    public static FieldMetadata orMetadata(Readable field, boolean value) {
+        return new FieldMetadata(field, "or", value);
+    }
+
+    public static FieldMetadata orMetadata(Readable field, Readable value) {
+        return new FieldMetadata(field, "or", value);
+    }
+
+    public static FieldMetadata xorMetadata(Readable field, boolean value) {
+        return new FieldMetadata(field, "xor", value);
+    }
+
+    public static FieldMetadata xorMetadata(Readable field, Readable value) {
+        return new FieldMetadata(field, "xor", value);
+    }
+
     public static FieldMetadata isMetadata(Readable field, boolean value) {
         return new FieldMetadata(field, "is", value);
     }

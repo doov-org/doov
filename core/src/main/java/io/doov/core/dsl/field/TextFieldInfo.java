@@ -4,7 +4,7 @@ import io.doov.core.dsl.impl.IntegerCondition;
 import io.doov.core.dsl.impl.StringCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
-public interface TextFieldInfo {
+public interface TextFieldInfo extends BaseFieldInfo<String> {
 
     default StepCondition contains(String regex) {
         return getStringCondition().contains(regex);

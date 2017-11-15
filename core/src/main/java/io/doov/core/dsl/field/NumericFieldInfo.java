@@ -19,7 +19,7 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.NumericCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
-public interface NumericFieldInfo<N extends Number> extends DslField {
+public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
 
     // lesser than
 

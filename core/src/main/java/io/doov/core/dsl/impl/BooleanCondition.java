@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.isMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
@@ -21,6 +21,7 @@ import java.util.function.BiFunction;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.field.LogicalFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.FieldMetadata;
@@ -35,11 +36,63 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
         super(metadata, value);
     }
 
+    // not
+
+    public final StepCondition not() {
+        return predicate(notMetadata(field), value -> !value);
+    }
+
+    // and
+
+    public final StepCondition and(boolean value) {
+        return predicate(andMetadata(field, value),
+                        (model, context) -> Optional.of(value),
+                        Boolean::logicalAnd);
+    }
+
+    public final StepCondition and(LogicalFieldInfo value) {
+        return predicate(andMetadata(field, value),
+                        (model, context) -> value(model, value),
+                        Boolean::logicalAnd);
+    }
+
+    // or
+
+    public final StepCondition or(boolean value) {
+        return predicate(orMetadata(field, value),
+                        (model, context) -> Optional.of(value),
+                        Boolean::logicalOr);
+    }
+
+    public final StepCondition or(LogicalFieldInfo value) {
+        return predicate(orMetadata(field, value),
+                        (model, context) -> value(model, value),
+                        Boolean::logicalOr);
+    }
+
+    // xor
+
+    public final StepCondition xor(boolean value) {
+        return predicate(xorMetadata(field, value),
+                        (model, context) -> Optional.of(value),
+                        Boolean::logicalXor);
+    }
+
+    public final StepCondition xor(LogicalFieldInfo value) {
+        return predicate(xorMetadata(field, value),
+                        (model, context) -> value(model, value),
+                        Boolean::logicalXor);
+    }
+
+    // true
+
     public final StepCondition isTrue() {
         return predicate(isMetadata(field, true),
                         (model, context) -> Optional.of(TRUE),
                         Boolean::equals);
     }
+
+    // false
 
     public final StepCondition isFalse() {
         return predicate(isMetadata(field, false),

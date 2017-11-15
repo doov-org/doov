@@ -21,7 +21,7 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.StepCondition;
 
-public interface TemporalFieldInfo<N extends Temporal> {
+public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> {
 
     // with
 
