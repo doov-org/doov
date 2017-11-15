@@ -23,7 +23,7 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
-public class StepFunction<N, T> {
+public class StepFunction<N> {
 
     final Metadata metadata;
     final BiFunction<DslModel, Context, N> function;
@@ -35,7 +35,7 @@ public class StepFunction<N, T> {
         this.function = (model, context) -> value.apply(model, context).map(function).orElse(null);
     }
 
-    StepFunction(Metadata metadata,
+    <T> StepFunction(Metadata metadata,
                     BiFunction<DslModel, Context, Optional<N>> left,
                     BiFunction<DslModel, Context, Optional<T>> right,
                     BiFunction<N, T, N> function) {

@@ -66,7 +66,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
                         Object::equals);
     }
 
-    public final StepCondition eq(StepFunction<T, T> value) {
+    public final StepCondition eq(StepFunction<T> value) {
         return predicate(equalsMetadata(field, value),
                         (model, context) -> Optional.ofNullable(value.function.apply(model, context)),
                         Object::equals);

@@ -58,12 +58,12 @@ abstract class AbstractCondition<N> {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), this.value, value, predicate);
     }
 
-    protected <T> StepFunction<N, T> function(FieldMetadata metadata,
+    protected <T> StepFunction<N> function(FieldMetadata metadata,
                     Function<N, N> function) {
         return new StepFunction<>(this.metadata.merge(metadata), value, function);
     }
 
-    protected <T> StepFunction<N, T> function(FieldMetadata metadata,
+    protected <T> StepFunction<N> function(FieldMetadata metadata,
                     BiFunction<DslModel, Context, Optional<T>> value,
                     BiFunction<N, T, N> function) {
         return new StepFunction<>(this.metadata.merge(metadata), this.value, value, function);

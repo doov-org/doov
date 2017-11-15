@@ -34,18 +34,18 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     // minus
 
-    public final StepFunction<N, Integer> minus(int value, TemporalUnit unit) {
+    public final StepFunction<N> minus(int value, TemporalUnit unit) {
         return function(minusMetadata(field, value, unit),
                         (v) -> minusFunction(value, unit).apply(v));
     }
 
-    public final StepFunction<N, Integer> minus(DslField value, TemporalUnit unit) {
-        return function(minusMetadata(field, value, unit),
+    public final StepFunction<N> minus(DslField value, TemporalUnit unit) {
+        return this.<Integer> function(minusMetadata(field, value, unit),
                         (model, context) -> Optional.ofNullable(model.get(value.id())),
                         (l, r) -> minusFunction(r, unit).apply(l));
     }
 
-    public final StepFunction<N, Integer> minus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
+    public final StepFunction<N> minus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
         return function(minusMetadata(field, value, unit),
                         (v) -> minusFunction(value, unit)
                                         .andThen(after -> withFunction(ajuster).apply(after))
@@ -56,18 +56,18 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     // plus
 
-    public final StepFunction<N, Integer> plus(int value, TemporalUnit unit) {
+    public final StepFunction<N> plus(int value, TemporalUnit unit) {
         return function(plusMetadata(field, value, unit),
                         (v) -> plusFunction(value, unit).apply(v));
     }
 
-    public final StepFunction<N, Integer> plus(DslField value, TemporalUnit unit) {
-        return function(plusMetadata(field, value, unit),
+    public final StepFunction<N> plus(DslField value, TemporalUnit unit) {
+        return this.<Integer> function(plusMetadata(field, value, unit),
                         (model, context) -> Optional.ofNullable(model.get(value.id())),
                         (l, r) -> plusFunction(r, unit).apply(l));
     }
 
-    public final StepFunction<N, Integer> plus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
+    public final StepFunction<N> plus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
         return function(plusMetadata(field, value, unit),
                         (v) -> plusFunction(value, unit)
                                         .andThen(after -> withFunction(ajuster).apply(after))
@@ -78,7 +78,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     // eq
 
-    public final StepCondition equals(StepFunction<N, Integer> value) {
+    public final StepCondition equals(StepFunction<N> value) {
         return predicate(equalsMetadata(field, value),
                         (model, context) -> Optional.ofNullable(value.function.apply(model, context)),
                         Object::equals);
@@ -104,7 +104,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (l, r) -> beforeFunction().apply(l, r));
     }
 
-    public final StepCondition before(StepFunction<N, Integer> value) {
+    public final StepCondition before(StepFunction<N> value) {
         return predicate(beforeMetadata(field, value.metadata),
                         (model, context) -> Optional.ofNullable(value.function.apply(model, context)),
                         (l, r) -> beforeFunction().apply(l, r));
@@ -118,7 +118,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         return LogicalBinaryCondition.or(before(value), eq(value));
     }
 
-    public final StepCondition beforeOrEq(StepFunction<N, Integer> value) {
+    public final StepCondition beforeOrEq(StepFunction<N> value) {
         return LogicalBinaryCondition.or(before(value), equals(value));
     }
 
@@ -144,7 +144,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (l, r) -> afterFunction().apply(l, r));
     }
 
-    public final StepCondition after(StepFunction<N, Integer> value) {
+    public final StepCondition after(StepFunction<N> value) {
         return predicate(afterMetadata(field, value.metadata),
                         (model, context) -> Optional.ofNullable(value.function.apply(model, context)),
                         (l, r) -> afterFunction().apply(l, r));
@@ -158,7 +158,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         return LogicalBinaryCondition.or(after(value), eq(value));
     }
 
-    public final StepCondition afterOrEq(StepFunction<N, Integer> value) {
+    public final StepCondition afterOrEq(StepFunction<N> value) {
         return LogicalBinaryCondition.or(after(value), equals(value));
     }
 
@@ -198,7 +198,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                                         .map(Long::intValue));
     }
 
-    public final NumericCondition<Integer> ageAt(StepFunction<N, Integer> value) {
+    public final NumericCondition<Integer> ageAt(StepFunction<N> value) {
         return new IntegerCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .flatMap(l -> Optional.ofNullable(value.function.apply(model, context))
@@ -216,7 +216,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                                         .map(Long::intValue));
     }
 
-    public final NumericCondition<Integer> ageAt(StepFunction<N, Integer> value, TemporalAdjuster ajuster) {
+    public final NumericCondition<Integer> ageAt(StepFunction<N> value, TemporalAdjuster ajuster) {
         return new IntegerCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .map(l -> withFunction(ajuster).apply(l))
