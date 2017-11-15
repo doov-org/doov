@@ -22,6 +22,7 @@ import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
@@ -60,7 +61,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
                         Object::equals);
     }
 
-    public final StepCondition eq(DslField value) {
+    public final StepCondition eq(BaseFieldInfo<T> value) {
         return predicate(equalsMetadata(field, value),
                         (model, context) -> value(model, value),
                         Object::equals);
@@ -80,7 +81,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
                         (l, r) -> !l.equals(r));
     }
 
-    public final StepCondition notEq(DslField value) {
+    public final StepCondition notEq(BaseFieldInfo<T> value) {
         return predicate(notEqualsMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> !l.equals(r));

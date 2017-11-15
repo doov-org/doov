@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.*;
 import io.doov.core.dsl.lang.StepCondition;
 
 public abstract class TemporalCondition<N extends Temporal> extends DefaultCondition<N> {
@@ -44,7 +45,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (v) -> minusFunction(value, unit).apply(v));
     }
 
-    public final StepFunction<N> minus(DslField value, TemporalUnit unit) {
+    public final StepFunction<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
         return this.<Integer> function(minusMetadata(field, value, unit),
                         (model, context) -> Optional.ofNullable(model.get(value.id())),
                         (l, r) -> minusFunction(r, unit).apply(l));
@@ -66,7 +67,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (v) -> plusFunction(value, unit).apply(v));
     }
 
-    public final StepFunction<N> plus(DslField value, TemporalUnit unit) {
+    public final StepFunction<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
         return this.<Integer> function(plusMetadata(field, value, unit),
                         (model, context) -> Optional.ofNullable(model.get(value.id())),
                         (l, r) -> plusFunction(r, unit).apply(l));
@@ -97,7 +98,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (l, r) -> beforeFunction().apply(l, r));
     }
 
-    public final StepCondition before(DslField value) {
+    public final StepCondition before(TemporalFieldInfo<N> value) {
         return predicate(beforeMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> beforeFunction().apply(l, r));
@@ -137,7 +138,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                         (l, r) -> afterFunction().apply(l, r));
     }
 
-    public final StepCondition after(DslField value) {
+    public final StepCondition after(TemporalFieldInfo<N> value) {
         return predicate(afterMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> afterFunction().apply(l, r));
@@ -189,7 +190,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         return new IntegerCondition(timeBetween(YEARS, value));
     }
 
-    public final NumericCondition<Integer> ageAt(DslField value) {
+    public final NumericCondition<Integer> ageAt(TemporalFieldInfo<N> value) {
         return new IntegerCondition(timeBetween(YEARS, value));
     }
 
@@ -197,7 +198,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         return new IntegerCondition(timeBetween(YEARS, value));
     }
 
-    public final NumericCondition<Integer> ageAt(DslField value, TemporalAdjuster ajuster) {
+    public final NumericCondition<Integer> ageAt(TemporalFieldInfo<N> value, TemporalAdjuster ajuster) {
         return new IntegerCondition(timeBetween(YEARS, value, ajuster));
     }
 
@@ -222,7 +223,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Long> timeBetween(ChronoUnit unit, DslField value) {
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalFieldInfo<N> value) {
         return new LongCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .flatMap(l -> value(model, value)
@@ -236,7 +237,8 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
                                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Long> timeBetween(ChronoUnit unit, DslField value, TemporalAdjuster ajuster) {
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalFieldInfo<N> value, TemporalAdjuster
+                    ajuster) {
         return new LongCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .map(l -> withFunction(ajuster).apply(l))

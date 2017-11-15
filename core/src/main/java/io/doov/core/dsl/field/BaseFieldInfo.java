@@ -26,7 +26,7 @@ public interface BaseFieldInfo<T> extends DslField {
         return getDefaultCondition().eq(value);
     }
 
-    default StepCondition eq(DslField value) {
+    default StepCondition eq(BaseFieldInfo<T> value) {
         return getDefaultCondition().eq(value);
     }
 
@@ -38,7 +38,7 @@ public interface BaseFieldInfo<T> extends DslField {
         return getDefaultCondition().notEq(value);
     }
 
-    default StepCondition notEq(DslField value) {
+    default StepCondition notEq(BaseFieldInfo<T> value) {
         return getDefaultCondition().notEq(value);
     }
 
