@@ -80,6 +80,10 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(null, "always true", null);
     }
 
+    public static FieldMetadata falseMetadata() {
+        return new FieldMetadata(null, "always false", null);
+    }
+
     public static FieldMetadata minMetadata(List<? extends Readable> values) {
         return new FieldMetadata(null, "min", formatReadableList(values));
     }
@@ -90,6 +94,10 @@ public class FieldMetadata implements Metadata {
 
     public static FieldMetadata timesMetadata(Readable field, int multiplier) {
         return new FieldMetadata(field, "times", multiplier);
+    }
+
+    public static FieldMetadata whenMetadata(Readable field, Readable condition) {
+        return new FieldMetadata(field, "when", condition);
     }
 
     public static FieldMetadata availableMetadata(Readable field) {

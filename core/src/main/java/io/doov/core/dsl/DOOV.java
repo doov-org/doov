@@ -15,6 +15,8 @@
 */
 package io.doov.core.dsl;
 
+import static io.doov.core.dsl.meta.FieldMetadata.falseMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.trueMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.Arrays;
@@ -24,7 +26,6 @@ import io.doov.core.dsl.field.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.StepWhen;
-import io.doov.core.dsl.meta.FieldMetadata;
 
 public class DOOV {
 
@@ -32,17 +33,29 @@ public class DOOV {
         // static
     }
 
+    // when
+
     public static StepWhen when(StepCondition condition) {
         return new DefaultStepWhen(condition);
     }
 
+    // always
+
     public static StepCondition alwaysTrue() {
-        return new DefaultStepCondition(FieldMetadata.trueMetadata(), (model, context) -> true);
+        return new DefaultStepCondition(trueMetadata(), (model, context) -> true);
     }
+
+    public static StepCondition alwaysFalse() {
+        return new DefaultStepCondition(falseMetadata(), (model, context) -> false);
+    }
+
+    // count
 
     public static IntegerCondition count(StepCondition... steps) {
         return LogicalNaryCondition.count(asList(steps));
     }
+
+    // match
 
     public static StepCondition matchAny(StepCondition... steps) {
         return LogicalNaryCondition.matchAny(asList(steps));
@@ -56,6 +69,8 @@ public class DOOV {
         return LogicalNaryCondition.matchNone(asList(steps));
     }
 
+    // min
+
     @SafeVarargs
     public static <N extends Number> NumericCondition<N> min(NumericFieldInfo<N>... fields) {
         return Arrays.stream(fields)
@@ -65,6 +80,8 @@ public class DOOV {
                         .map(c -> c.min(Arrays.asList(fields)))
                         .orElseThrow(IllegalArgumentException::new);
     }
+
+    // sum
 
     @SafeVarargs
     public static <N extends Number> NumericCondition<N> sum(NumericFieldInfo<N>... fields) {

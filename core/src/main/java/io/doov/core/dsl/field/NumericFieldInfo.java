@@ -72,16 +72,11 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
         return getNumericCondition().times(multiplier);
     }
 
-    // if
+    // when
 
     default NumericCondition<N> when(StepCondition condition) {
-        // TODO
-        return null;
+        return getNumericCondition().when(condition);
     }
-
-    //    public StepIntegerCondition when(StepCondition condition) {
-    //        return new StepIntegerCondition(c -> condition.predicate().test(c) ? c.<Integer> get(id()) : null);
-    //    }
 
     // abstract
 

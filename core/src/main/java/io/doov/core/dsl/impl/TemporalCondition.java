@@ -20,7 +20,8 @@ import java.util.Optional;
 import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.field.*;
+import io.doov.core.dsl.field.NumericFieldInfo;
+import io.doov.core.dsl.field.TemporalFieldInfo;
 import io.doov.core.dsl.lang.StepCondition;
 
 public abstract class TemporalCondition<N extends Temporal> extends DefaultCondition<N> {
