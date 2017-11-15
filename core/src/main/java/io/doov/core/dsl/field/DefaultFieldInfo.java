@@ -59,7 +59,7 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T> {
     }
 
     @Override
-    public DefaultCondition<T> getTypeCondition() {
+    public DefaultCondition<T> getDefaultCondition() {
         return new DefaultCondition<>(this);
     }
 
