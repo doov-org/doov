@@ -30,9 +30,9 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     // with
 
-    public final StepFunction<N> with(TemporalAdjuster ajuste) {
-        return function(withMetadata(field, ajuste),
-                        (v) -> withFunction(ajuste).apply(v));
+    public final StepFunction<N> with(TemporalAdjuster adjuster) {
+        return function(withMetadata(field, adjuster),
+                        (v) -> withFunction(adjuster).apply(v));
     }
 
     abstract Function<N, N> withFunction(TemporalAdjuster ajuster);

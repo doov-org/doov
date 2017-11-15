@@ -20,12 +20,12 @@ import java.util.function.Function;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.FieldMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-abstract class AbstractCondition<N> {
+abstract class AbstractCondition<N> implements Readable {
 
     protected final DslField field;
     protected final Metadata metadata;
@@ -67,6 +67,11 @@ abstract class AbstractCondition<N> {
                     BiFunction<DslModel, Context, Optional<T>> value,
                     BiFunction<N, T, N> function) {
         return new StepFunction<>(this.metadata.merge(metadata), this.value, value, function);
+    }
+
+    @Override
+    public String readable() {
+        return metadata.readable();
     }
 
 }

@@ -21,7 +21,6 @@ import static java.util.stream.Collectors.joining;
 import java.util.List;
 import java.util.function.Supplier;
 
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
@@ -73,7 +72,7 @@ public class FieldMetadata implements Metadata {
         return EMPTY;
     }
 
-    public static FieldMetadata fieldOnlyMetadata(DslField field) {
+    public static FieldMetadata fieldOnlyMetadata(Readable field) {
         return new FieldMetadata(field, (String) null, null);
     }
 
@@ -81,195 +80,187 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(null, "always true", null);
     }
 
-    public static FieldMetadata minMetadata(List<DslField> values) {
+    public static FieldMetadata minMetadata(List<? extends Readable> values) {
         return new FieldMetadata(null, "min", formatReadableList(values));
     }
 
-    public static FieldMetadata sumMetadata(List<DslField> values) {
+    public static FieldMetadata sumMetadata(List<? extends Readable> values) {
         return new FieldMetadata(null, "sum", formatReadableList(values));
     }
 
-    public static FieldMetadata timesMetadata(DslField field, int multiplier) {
+    public static FieldMetadata timesMetadata(Readable field, int multiplier) {
         return new FieldMetadata(field, "times", multiplier);
     }
 
-    public static FieldMetadata availableMetadata(DslField field) {
+    public static FieldMetadata availableMetadata(Readable field) {
         return new FieldMetadata(field, "available", null);
     }
 
-    public static FieldMetadata notAvailableMetadata(DslField field) {
+    public static FieldMetadata notAvailableMetadata(Readable field) {
         return new FieldMetadata(field, "not available", null);
     }
 
-    public static FieldMetadata equalsMetadata(DslField field, Object value) {
+    public static FieldMetadata equalsMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "equals", value);
     }
 
-    public static FieldMetadata notEqualsMetadata(DslField field, Object value) {
+    public static FieldMetadata notEqualsMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "not equals", value);
     }
 
-    public static FieldMetadata nullMetadata(DslField field, Object value) {
+    public static FieldMetadata nullMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "is", value);
     }
 
-    public static FieldMetadata notNullMetadata(DslField field, Object value) {
+    public static FieldMetadata notNullMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "is not", value);
     }
 
-    public static FieldMetadata matchAnyMetadata(DslField field, Object... values) {
+    public static FieldMetadata matchAnyMetadata(Readable field, Object... values) {
         return new FieldMetadata(field, "match any", format(values));
     }
 
-    public static FieldMetadata matchAllMetadata(DslField field, Object... values) {
+    public static FieldMetadata matchAllMetadata(Readable field, Object... values) {
         return new FieldMetadata(field, "match all", format(values));
     }
 
-    public static FieldMetadata matchNoneMetadata(DslField field, Object... values) {
+    public static FieldMetadata matchNoneMetadata(Readable field, Object... values) {
         return new FieldMetadata(field, "match none", format(values));
     }
 
-    public static FieldMetadata withMetadata(DslField field, Object ajuster) {
+    public static FieldMetadata withMetadata(Readable field, Object ajuster) {
         return new FieldMetadata(field, "with", ajuster);
     }
 
-    public static FieldMetadata minusMetadata(DslField field, int value, Object unit) {
+    public static FieldMetadata minusMetadata(Readable field, int value, Object unit) {
         return new FieldMetadata(field, "minus", value + " " + unit);
     }
 
-    public static FieldMetadata minusMetadata(DslField field1, DslField field2, Object unit) {
+    public static FieldMetadata minusMetadata(Readable field1, Readable field2, Object unit) {
         return new FieldMetadata(field1, "minus", field2.readable() + " " + unit);
     }
 
-    public static FieldMetadata plusMetadata(DslField field, int value, Object unit) {
+    public static FieldMetadata plusMetadata(Readable field, int value, Object unit) {
         return new FieldMetadata(field, "plus", value + " " + unit);
     }
 
-    public static FieldMetadata plusMetadata(DslField field1, DslField field2, Object unit) {
+    public static FieldMetadata plusMetadata(Readable field1, Readable field2, Object unit) {
         return new FieldMetadata(field1, "plus", field2.readable() + " " + unit);
     }
 
-    public static FieldMetadata afterMetadata(DslField field, Object value) {
+    public static FieldMetadata afterMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "after", value);
     }
 
-    public static FieldMetadata beforeMetadata(DslField field, Object value) {
+    public static FieldMetadata beforeMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "before", value);
     }
 
-    public static FieldMetadata afterMetadata(DslField field1, DslField field2) {
+    public static FieldMetadata afterMetadata(Readable field1, Readable field2) {
         return new FieldMetadata(field1, "after", field2);
     }
 
-    public static FieldMetadata beforeMetadata(DslField field1, DslField field2) {
+    public static FieldMetadata beforeMetadata(Readable field1, Readable field2) {
         return new FieldMetadata(field1, "before", field2);
     }
 
-    public static FieldMetadata afterMetadata(DslField field, Supplier<Object> value) {
+    public static FieldMetadata afterMetadata(Readable field, Supplier<Object> value) {
         return new FieldMetadata(field, "after", () -> value.get().toString());
     }
 
-    public static FieldMetadata afterMetadata(DslField field, Readable value) {
-        return new FieldMetadata(field, "after", value);
-    }
-
-    public static FieldMetadata beforeMetadata(DslField field, Supplier<Object> supplier) {
+    public static FieldMetadata beforeMetadata(Readable field, Supplier<Object> supplier) {
         return new FieldMetadata(field, "before", () -> supplier.get().toString());
     }
 
-    public static FieldMetadata beforeMetadata(DslField field, Readable value) {
-        return new FieldMetadata(field, "before", value);
-    }
-
-    public static FieldMetadata ageAtMetadata(DslField field, Object value) {
+    public static FieldMetadata ageAtMetadata(Readable field, Object value) {
         return new FieldMetadata(field, () -> "age at " + value, null);
     }
 
-    public static FieldMetadata ageAtMetadata(DslField field1, DslField field2) {
+    public static FieldMetadata ageAtMetadata(Readable field1, Readable field2) {
         return new FieldMetadata(field1, () -> "age at " + field2.readable(), null);
     }
 
-    public static FieldMetadata ageAtMetadata(DslField field, Supplier<Object> supplier) {
+    public static FieldMetadata ageAtMetadata(Readable field, Supplier<Object> supplier) {
         return new FieldMetadata(field, () -> "age at " + supplier.get().toString(), null);
     }
 
-    public static FieldMetadata matchesMetadata(DslField field, String value) {
+    public static FieldMetadata matchesMetadata(Readable field, String value) {
         return new FieldMetadata(field, "matches", value);
     }
 
-    public static FieldMetadata containsMetadata(DslField field, String value) {
+    public static FieldMetadata containsMetadata(Readable field, String value) {
         return new FieldMetadata(field, "contains", value);
     }
 
-    public static FieldMetadata startsWithMetadata(DslField field, String value) {
+    public static FieldMetadata startsWithMetadata(Readable field, String value) {
         return new FieldMetadata(field, "starts with", value);
     }
 
-    public static FieldMetadata endsWithMetadata(DslField field, String value) {
+    public static FieldMetadata endsWithMetadata(Readable field, String value) {
         return new FieldMetadata(field, "ends with", value);
     }
 
-    public static FieldMetadata isMetadata(DslField field, boolean value) {
+    public static FieldMetadata isMetadata(Readable field, boolean value) {
         return new FieldMetadata(field, "is", value);
     }
 
-    public static FieldMetadata lesserThanMetadata(DslField field, Object value) {
+    public static FieldMetadata lesserThanMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "lesser than", value);
     }
 
-    public static FieldMetadata lesserThanMetadata(DslField field1, DslField field2) {
+    public static FieldMetadata lesserThanMetadata(Readable field1, Readable field2) {
         return new FieldMetadata(field1, "lesser than", field2);
     }
 
-    public static FieldMetadata lesserOrEqualsMetadata(DslField field, Object value) {
+    public static FieldMetadata lesserOrEqualsMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "lesser or equals", value);
     }
 
-    public static FieldMetadata lesserOrEqualsMetadata(DslField field1, DslField field2) {
+    public static FieldMetadata lesserOrEqualsMetadata(Readable field1, Readable field2) {
         return new FieldMetadata(field1, "lesser or equals", field2);
     }
 
-    public static FieldMetadata greaterThanMetadata(DslField field, Object value) {
+    public static FieldMetadata greaterThanMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "greater than", value);
     }
 
-    public static FieldMetadata greaterThanMetadata(DslField field1, DslField field2) {
+    public static FieldMetadata greaterThanMetadata(Readable field1, Readable field2) {
         return new FieldMetadata(field1, "greater than", field2);
     }
 
-    public static FieldMetadata greaterOrEqualsMetadata(DslField field, Object value) {
+    public static FieldMetadata greaterOrEqualsMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "greater or equals", value);
     }
 
-    public static FieldMetadata greaterOrEqualsMetadata(DslField field1, DslField field2) {
+    public static FieldMetadata greaterOrEqualsMetadata(Readable field1, Readable field2) {
         return new FieldMetadata(field1, "greater or equals", field2);
     }
 
-    public static FieldMetadata lengthIsMetadata(DslField field) {
+    public static FieldMetadata lengthIsMetadata(Readable field) {
         return new FieldMetadata(field, "length is", null);
     }
 
-    public static FieldMetadata containsMetadata(DslField field, Object value) {
+    public static FieldMetadata containsMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "contains", value);
     }
 
-    public static FieldMetadata containsMetadata(DslField field, Object... values) {
+    public static FieldMetadata containsMetadata(Readable field, Object... values) {
         return new FieldMetadata(field, "contains", format(values));
     }
 
-    public static FieldMetadata isEmptyMetadata(DslField field) {
+    public static FieldMetadata isEmptyMetadata(Readable field) {
         return new FieldMetadata(field, "is empty", null);
     }
 
-    public static FieldMetadata isNotEmptyMetadata(DslField field) {
+    public static FieldMetadata isNotEmptyMetadata(Readable field) {
         return new FieldMetadata(field, "is not empty", null);
     }
 
-    public static FieldMetadata hasSizeMetadata(DslField field, int size) {
+    public static FieldMetadata hasSizeMetadata(Readable field, int size) {
         return new FieldMetadata(field, "has size", size);
     }
 
-    public static FieldMetadata hasNotSizeMetadata(DslField field, int size) {
+    public static FieldMetadata hasNotSizeMetadata(Readable field, int size) {
         return new FieldMetadata(field, "has not size", size);
     }
 

@@ -17,9 +17,11 @@ package io.doov.core.dsl.impl;
 
 import static io.doov.core.dsl.meta.FieldMetadata.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
@@ -114,8 +116,8 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     public final NumericCondition<N> min(List<DslField> fields) {
         return numericCondition(minMetadata(fields),
                         (model, context) -> fields.stream()
-                                        .filter(f -> Objects.nonNull(model.<N> get(f.id())))
-                                        .map(f -> model.<N> get(f.id()))
+                                        .map(f -> Optional.ofNullable(model.<N> get(f.id())))
+                                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
                                         .reduce(minFunction()));
     }
 
@@ -126,8 +128,16 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     public final NumericCondition<N> sum(List<DslField> fields) {
         return numericCondition(sumMetadata(fields),
                         (model, context) -> Optional.of(fields.stream()
-                                        .filter(f -> Objects.nonNull(model.<N> get(f.id())))
-                                        .map(f -> model.<N> get(f.id()))
+                                        .map(f -> Optional.ofNullable(model.<N> get(f.id())))
+                                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+                                        .reduce(identity(), sumFunction())));
+    }
+
+    public final NumericCondition<N> sumConditions(List<NumericCondition<N>> conditions) {
+        return numericCondition(sumMetadata(conditions),
+                        (model, context) -> Optional.of(conditions.stream()
+                                        .map(c -> c.value.apply(model, context))
+                                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
                                         .reduce(identity(), sumFunction())));
     }
 

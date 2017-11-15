@@ -76,4 +76,13 @@ public class DOOV {
                         .orElseThrow(IllegalArgumentException::new);
     }
 
+    @SafeVarargs
+    public static <N extends Number> NumericCondition<N> sum(NumericCondition<N>... conditions) {
+        return Arrays.stream(conditions)
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                        .map(c -> c.sumConditions(Arrays.asList(conditions)))
+                        .orElseThrow(IllegalArgumentException::new);
+    }
+
 }
