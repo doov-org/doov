@@ -15,6 +15,8 @@
 */
 package io.doov.core.dsl;
 
+import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
@@ -23,6 +25,7 @@ import java.util.function.Supplier;
 public class LocalDateSuppliers {
 
     private LocalDateSuppliers() {
+        // static
     }
 
     public static Supplier<LocalDate> today() {
@@ -55,6 +58,10 @@ public class LocalDateSuppliers {
 
     public static Supplier<LocalDate> date(int year, int month, int dayOfMonth) {
         return () -> LocalDate.of(year, month, dayOfMonth);
+    }
+
+    public static Supplier<LocalDate> firstDayOfThisYear() {
+        return () -> LocalDate.now().with(firstDayOfYear());
     }
 
 }

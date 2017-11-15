@@ -39,10 +39,6 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().minus(value, unit);
     }
 
-    default TemporalCondition<N> minus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
-        return getTemporalCondition().minus(value, unit, ajuster);
-    }
-
     default TemporalCondition<N> minusYears(int value) {
         return getTemporalCondition().minus(value, YEARS);
     }
@@ -55,10 +51,6 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
 
     default TemporalCondition<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
         return getTemporalCondition().plus(value, unit);
-    }
-
-    default TemporalCondition<N> plus(int value, TemporalUnit unit, TemporalAdjuster ajuster) {
-        return getTemporalCondition().plus(value, unit, ajuster);
     }
 
     default TemporalCondition<N> plusYears(int value) {
@@ -140,6 +132,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
     }
 
     // age
+    // TODO rename to yearBetween
 
     default NumericCondition<Integer> ageAt(N value) {
         return getTemporalCondition().ageAt(value);
@@ -153,23 +146,12 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().ageAt(value);
     }
 
-    default NumericCondition<Integer> ageAt(TemporalFieldInfo<N> value, TemporalAdjuster ajuster) {
-        return getTemporalCondition().ageAt(value, ajuster);
-    }
-
-    default NumericCondition<Integer> ageAt(TemporalCondition<N> value, TemporalAdjuster ajuster) {
-        return getTemporalCondition().ageAt(value, ajuster);
-    }
-
     default NumericCondition<Integer> ageAt(Supplier<N> value) {
         return getTemporalCondition().ageAt(value);
     }
 
-    default NumericCondition<Integer> ageAt(Supplier<N> value, TemporalAdjuster ajuster) {
-        return getTemporalCondition().ageAt(value, ajuster);
-    }
-
     // time between
+    // TODO make private
 
     default NumericCondition<Long> timeBetween(ChronoUnit unit, N value) {
         return getTemporalCondition().timeBetween(unit, value);
@@ -183,20 +165,8 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().timeBetween(unit, value);
     }
 
-    default NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalFieldInfo<N> value, TemporalAdjuster ajuster) {
-        return getTemporalCondition().timeBetween(unit, value, ajuster);
-    }
-
-    default NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalCondition<N> value, TemporalAdjuster ajuster) {
-        return getTemporalCondition().timeBetween(unit, value, ajuster);
-    }
-
     default NumericCondition<Long> timeBetween(ChronoUnit unit, Supplier<N> value) {
         return getTemporalCondition().timeBetween(unit, value);
-    }
-
-    default NumericCondition<Long> timeBetween(ChronoUnit unit, Supplier<N> value, TemporalAdjuster ajuster) {
-        return getTemporalCondition().timeBetween(unit, value, ajuster);
     }
 
     // abstract
