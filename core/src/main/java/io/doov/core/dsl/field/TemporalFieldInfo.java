@@ -23,6 +23,12 @@ import io.doov.core.dsl.lang.StepCondition;
 
 public interface TemporalFieldInfo<N extends Temporal> {
 
+    // with
+
+    default StepFunction<N> with(TemporalAdjuster ajuster) {
+        return getTemporalCondition().with(ajuster);
+    }
+
     // minus
 
     default StepFunction<N> minus(int value, TemporalUnit unit) {
@@ -161,6 +167,36 @@ public interface TemporalFieldInfo<N extends Temporal> {
 
     default NumericCondition<Integer> ageAt(Supplier<N> value, TemporalAdjuster ajuster) {
         return getTemporalCondition().ageAt(value, ajuster);
+    }
+
+    // time between
+
+    default NumericCondition<Long> timeBetween(ChronoUnit unit, N value) {
+        return getTemporalCondition().timeBetween(unit, value);
+    }
+
+    default NumericCondition<Long> timeBetween(ChronoUnit unit, DslField value) {
+        return getTemporalCondition().timeBetween(unit, value);
+    }
+
+    default NumericCondition<Long> timeBetween(ChronoUnit unit, StepFunction<N> value) {
+        return getTemporalCondition().timeBetween(unit, value);
+    }
+
+    default NumericCondition<Long> timeBetween(ChronoUnit unit, DslField value, TemporalAdjuster ajuster) {
+        return getTemporalCondition().timeBetween(unit, value, ajuster);
+    }
+
+    default NumericCondition<Long> timeBetween(ChronoUnit unit, StepFunction<N> value, TemporalAdjuster ajuster) {
+        return getTemporalCondition().timeBetween(unit, value, ajuster);
+    }
+
+    default NumericCondition<Long> timeBetween(ChronoUnit unit, Supplier<N> value) {
+        return getTemporalCondition().timeBetween(unit, value);
+    }
+
+    default NumericCondition<Long> timeBetween(ChronoUnit unit, Supplier<N> value, TemporalAdjuster ajuster) {
+        return getTemporalCondition().timeBetween(unit, value, ajuster);
     }
 
     // abstract

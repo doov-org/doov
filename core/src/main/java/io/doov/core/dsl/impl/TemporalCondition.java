@@ -30,6 +30,11 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     // with
 
+    public final StepFunction<N> with(TemporalAdjuster ajuste) {
+        return function(withMetadata(field, ajuste),
+                        (v) -> withFunction(ajuste).apply(v));
+    }
+
     abstract Function<N, N> withFunction(TemporalAdjuster ajuster);
 
     // minus
@@ -178,69 +183,92 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         return LogicalUnaryCondition.negate(between(minValueInclusive, maxValueExclusive));
     }
 
-    abstract BiFunction<N, N, Long> betweenFunction(ChronoUnit unit);
-
     // age
 
     public final NumericCondition<Integer> ageAt(N value) {
-        return new IntegerCondition(ageAtMetadata(field, value),
-                        (model, context) -> value(model, field)
-                                        .flatMap(l -> Optional.ofNullable(value)
-                                                        .map(r -> betweenFunction(YEARS).apply(l, r)))
-                                        .map(Long::intValue));
+        return new IntegerCondition(timeBetween(YEARS, value));
     }
 
     public final NumericCondition<Integer> ageAt(DslField value) {
-        return new IntegerCondition(ageAtMetadata(field, value),
-                        (model, context) -> value(model, field)
-                                        .flatMap(l -> value(model, value)
-                                                        .map(r -> betweenFunction(YEARS).apply(l, r)))
-                                        .map(Long::intValue));
+        return new IntegerCondition(timeBetween(YEARS, value));
     }
 
     public final NumericCondition<Integer> ageAt(StepFunction<N> value) {
-        return new IntegerCondition(ageAtMetadata(field, value),
-                        (model, context) -> value(model, field)
-                                        .flatMap(l -> Optional.ofNullable(value.function.apply(model, context))
-                                                        .map(r -> betweenFunction(YEARS).apply(l, r)))
-                                        .map(Long::intValue));
+        return new IntegerCondition(timeBetween(YEARS, value));
     }
 
     public final NumericCondition<Integer> ageAt(DslField value, TemporalAdjuster ajuster) {
-        return new IntegerCondition(ageAtMetadata(field, value),
+        return new IntegerCondition(timeBetween(YEARS, value, ajuster));
+    }
+
+    public final NumericCondition<Integer> ageAt(StepFunction<N> value, TemporalAdjuster ajuster) {
+        return new IntegerCondition(timeBetween(YEARS, value, ajuster));
+    }
+
+    public final NumericCondition<Integer> ageAt(Supplier<N> value) {
+        return new IntegerCondition(timeBetween(YEARS, value));
+    }
+
+    public final NumericCondition<Integer> ageAt(Supplier<N> value, TemporalAdjuster ajuster) {
+        return new IntegerCondition(timeBetween(YEARS, value, ajuster));
+    }
+
+    // time between
+
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, N value) {
+        return new LongCondition(ageAtMetadata(field, value),
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> Optional.ofNullable(value)
+                                                        .map(r -> betweenFunction(unit).apply(l, r))));
+    }
+
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, DslField value) {
+        return new LongCondition(ageAtMetadata(field, value),
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> value(model, value)
+                                                        .map(r -> betweenFunction(unit).apply(l, r))));
+    }
+
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, StepFunction<N> value) {
+        return new LongCondition(ageAtMetadata(field, value),
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> Optional.ofNullable(value.function.apply(model, context))
+                                                        .map(r -> betweenFunction(unit).apply(l, r))));
+    }
+
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, DslField value, TemporalAdjuster ajuster) {
+        return new LongCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .map(l -> withFunction(ajuster).apply(l))
                                         .flatMap(l -> value(model, value)
                                                         .map(r -> withFunction(ajuster).apply(r))
-                                                        .map(r -> betweenFunction(YEARS).apply(l, r)))
-                                        .map(Long::intValue));
+                                                        .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Integer> ageAt(StepFunction<N> value, TemporalAdjuster ajuster) {
-        return new IntegerCondition(ageAtMetadata(field, value),
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, StepFunction<N> value, TemporalAdjuster ajuster) {
+        return new LongCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .map(l -> withFunction(ajuster).apply(l))
                                         .flatMap(l -> Optional.ofNullable(value.function.apply(model, context))
                                                         .map(r -> withFunction(ajuster).apply(r))
-                                                        .map(r -> betweenFunction(YEARS).apply(l, r)))
-                                        .map(Long::intValue));
+                                                        .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Integer> ageAt(Supplier<N> value) {
-        return new IntegerCondition(ageAtMetadata(field, value),
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, Supplier<N> value) {
+        return new LongCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field).flatMap(l -> Optional.ofNullable(value.get())
-                                        .map(r -> betweenFunction(YEARS).apply(l, r)))
-                                        .map(Long::intValue));
+                                        .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Integer> ageAt(Supplier<N> value, TemporalAdjuster ajuster) {
-        return new IntegerCondition(ageAtMetadata(field, value),
+    public final NumericCondition<Long> timeBetween(ChronoUnit unit, Supplier<N> value, TemporalAdjuster ajuster) {
+        return new LongCondition(ageAtMetadata(field, value),
                         (model, context) -> value(model, field)
                                         .map(l -> withFunction(ajuster).apply(l))
                                         .flatMap(l -> Optional.ofNullable(value.get())
                                                         .map(r -> withFunction(ajuster).apply(r))
-                                                        .map(r -> betweenFunction(YEARS).apply(l, r)))
-                                        .map(Long::intValue));
+                                                        .map(r -> betweenFunction(unit).apply(l, r))));
     }
+
+    abstract BiFunction<N, N, Long> betweenFunction(ChronoUnit unit);
 
 }

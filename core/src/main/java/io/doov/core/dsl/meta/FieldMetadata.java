@@ -129,6 +129,10 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(field, "match none", format(values));
     }
 
+    public static FieldMetadata withMetadata(DslField field, Object ajuster) {
+        return new FieldMetadata(field, "with", ajuster);
+    }
+
     public static FieldMetadata minusMetadata(DslField field, int value, Object unit) {
         return new FieldMetadata(field, "minus", value + " " + unit);
     }
