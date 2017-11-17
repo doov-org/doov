@@ -48,7 +48,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
     }
 
     public final StepCondition notAvailable() {
-        return predicate(notAvailableMetadata(field), value -> false);
+        return available().not();
     }
 
     // equals

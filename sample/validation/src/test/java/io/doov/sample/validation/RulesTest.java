@@ -15,6 +15,7 @@
 */
 package io.doov.sample.validation;
 
+import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;
 import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
 import static io.doov.sample.validation.Rules.REGISTRY_USER;
 import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT_01;
@@ -31,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.*;
 import io.doov.sample.model.*;
@@ -80,6 +82,15 @@ public class RulesTest {
         assertThat(results).isNotEmpty();
         assertThat(results).extracting(Result::isValid).allMatch(Boolean::booleanValue);
         assertThat(results).extracting(Result::getMessage).allMatch(Objects::isNull);
+    }
+
+    @Test
+    public void test_available() {
+        assertThat(DOOV.when(userFirstName().available()).validate().executeOn(wrapper).isValid()).isTrue();
+        assertThat(DOOV.when(userFirstName().notAvailable()).validate().executeOn(wrapper).isValid()).isFalse();
+        user.setFirstName(null);
+        assertThat(DOOV.when(userFirstName().available()).validate().executeOn(wrapper).isValid()).isFalse();
+        assertThat(DOOV.when(userFirstName().notAvailable()).validate().executeOn(wrapper).isValid()).isTrue();
     }
 
     @Test

@@ -69,7 +69,7 @@ abstract class AbstractCondition<N> implements Readable {
     protected StepCondition predicate(FieldMetadata metadata,
                     BiFunction<DslModel, Context, Optional<N>> value,
                     BiFunction<N, N, Boolean> predicate) {
-        return new PredicateStepCondition<>(this.metadata.merge(metadata), this.function, value, predicate);
+        return new PredicateStepCondition<>(this.metadata.merge(metadata), function, value, predicate);
     }
 
     @Override
