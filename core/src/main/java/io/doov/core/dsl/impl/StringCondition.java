@@ -29,8 +29,9 @@ public class StringCondition extends DefaultCondition<String> {
         super(field);
     }
 
-    public StringCondition(FieldMetadata metadata, BiFunction<DslModel, Context, Optional<String>> value) {
-        super(metadata, value);
+    public StringCondition(DslField field, FieldMetadata metadata,
+                    BiFunction<DslModel, Context, Optional<String>> value) {
+        super(field, metadata, value);
     }
 
     public final StepCondition contains(String regex) {
@@ -59,12 +60,14 @@ public class StringCondition extends DefaultCondition<String> {
 
     public IntegerCondition length() {
         return new IntegerCondition(
+                        field,
                         lengthIsMetadata(field),
                         (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(String::length));
     }
 
     public IntegerCondition parseInt() {
         return new IntegerCondition(
+                        field,
                         fieldOnlyMetadata(field),
                         (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(Integer::parseInt));
     }

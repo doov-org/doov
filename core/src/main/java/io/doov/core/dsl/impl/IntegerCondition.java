@@ -27,18 +27,19 @@ public class IntegerCondition extends NumericCondition<Integer> {
         super(field);
     }
 
-    public IntegerCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<Integer>> value) {
-        super(metadata, value);
+    public IntegerCondition(DslField field, Metadata metadata, BiFunction<DslModel, Context, Optional<Integer>> value) {
+        super(field, metadata, value);
     }
 
     public IntegerCondition(NumericCondition<Long> condition) {
-        super(condition.metadata, (model, context) -> condition.function.apply(model, context).map(Long::intValue));
+        super(condition.field, condition.metadata,
+                        (model, context) -> condition.function.apply(model, context).map(Long::intValue));
     }
 
     @Override
-    NumericCondition<Integer> numericCondition(Metadata metadata,
+    NumericCondition<Integer> numericCondition(DslField field, Metadata metadata,
                     BiFunction<DslModel, Context, Optional<Integer>> value) {
-        return new IntegerCondition(metadata, value);
+        return new IntegerCondition(field, metadata, value);
     }
 
     @Override

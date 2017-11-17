@@ -27,14 +27,14 @@ public class LongCondition extends NumericCondition<Long> {
         super(field);
     }
 
-    public LongCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<Long>> value) {
-        super(metadata, value);
+    public LongCondition(DslField field, Metadata metadata, BiFunction<DslModel, Context, Optional<Long>> value) {
+        super(field, metadata, value);
     }
 
     @Override
-    NumericCondition<Long> numericCondition(Metadata metadata,
+    NumericCondition<Long> numericCondition(DslField field, Metadata metadata,
                     BiFunction<DslModel, Context, Optional<Long>> value) {
-        return new LongCondition(metadata, value);
+        return new LongCondition(field, metadata, value);
     }
 
     @Override

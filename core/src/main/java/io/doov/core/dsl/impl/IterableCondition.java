@@ -23,8 +23,8 @@ public class IterableCondition<T, C extends Iterable<T>> extends DefaultConditio
         super(field);
     }
 
-    public IterableCondition(FieldMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
-        super(metadata, value);
+    public IterableCondition(DslField field, FieldMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
+        super(field, metadata, value);
     }
 
     public StepCondition contains(T value) {

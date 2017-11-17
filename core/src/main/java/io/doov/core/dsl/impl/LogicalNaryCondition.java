@@ -39,6 +39,7 @@ public class LogicalNaryCondition extends AbstractStepCondition {
 
     public static IntegerCondition count(List<StepCondition> steps) {
         return new IntegerCondition(
+                        null,
                         countMetadata(getMetadatas(steps)),
                         (model, context) -> Optional.of((int) steps.stream()
                                         .filter(s -> s.predicate().test(model, context))

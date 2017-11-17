@@ -32,43 +32,55 @@ public class LocalDateCondition extends TemporalCondition<LocalDate> {
         super(field);
     }
 
-    public LocalDateCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<LocalDate>> value) {
+    public LocalDateCondition(Metadata metadata,
+                    BiFunction<DslModel, Context, Optional<LocalDate>> value) {
         super(metadata, value);
     }
 
+    public LocalDateCondition(DslField field, Metadata metadata,
+                    BiFunction<DslModel, Context, Optional<LocalDate>> value) {
+        super(field, metadata, value);
+    }
+
     @Override
-    TemporalCondition<LocalDate> temporalCondition(Metadata metadata,
+    protected TemporalCondition<LocalDate> temporalCondition(Metadata metadata,
                     BiFunction<DslModel, Context, Optional<LocalDate>> value) {
         return new LocalDateCondition(metadata, value);
     }
 
     @Override
-    Function<LocalDate, LocalDate> minusFunction(int value, TemporalUnit unit) {
+    protected TemporalCondition<LocalDate> temporalCondition(DslField field, Metadata metadata,
+                    BiFunction<DslModel, Context, Optional<LocalDate>> value) {
+        return new LocalDateCondition(field, metadata, value);
+    }
+
+    @Override
+    protected Function<LocalDate, LocalDate> minusFunction(int value, TemporalUnit unit) {
         return d -> d.minus(value, unit);
     }
 
     @Override
-    Function<LocalDate, LocalDate> plusFunction(int value, TemporalUnit unit) {
+    protected Function<LocalDate, LocalDate> plusFunction(int value, TemporalUnit unit) {
         return d -> d.plus(value, unit);
     }
 
     @Override
-    Function<LocalDate, LocalDate> withFunction(TemporalAdjuster ajuster) {
+    protected Function<LocalDate, LocalDate> withFunction(TemporalAdjuster ajuster) {
         return d -> d.with(ajuster);
     }
 
     @Override
-    BiFunction<LocalDate, LocalDate, Boolean> afterFunction() {
+    protected BiFunction<LocalDate, LocalDate, Boolean> afterFunction() {
         return LocalDate::isAfter;
     }
 
     @Override
-    BiFunction<LocalDate, LocalDate, Boolean> beforeFunction() {
+    protected BiFunction<LocalDate, LocalDate, Boolean> beforeFunction() {
         return LocalDate::isBefore;
     }
 
     @Override
-    BiFunction<LocalDate, LocalDate, Long> betweenFunction(ChronoUnit unit) {
+    protected BiFunction<LocalDate, LocalDate, Long> betweenFunction(ChronoUnit unit) {
         return unit::between;
     }
 

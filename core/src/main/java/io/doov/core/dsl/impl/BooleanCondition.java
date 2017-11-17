@@ -32,8 +32,9 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
         super(field);
     }
 
-    public BooleanCondition(FieldMetadata metadata, BiFunction<DslModel, Context, Optional<Boolean>> value) {
-        super(metadata, value);
+    public BooleanCondition(DslField field, FieldMetadata metadata,
+                    BiFunction<DslModel, Context, Optional<Boolean>> value) {
+        super(field, metadata, value);
     }
 
     // not

@@ -29,29 +29,43 @@ abstract class AbstractCondition<N> implements Readable {
 
     protected final DslField field;
     protected final Metadata metadata;
+    protected final BiFunction<DslModel, DslField, Optional<N>> value;
     protected final BiFunction<DslModel, Context, Optional<N>> function;
 
     protected AbstractCondition(DslField field) {
         this.field = field;
         this.metadata = emptyMetadata();
+        this.value = null;
         this.function = (model, context) -> value(model, field);
     }
 
-    protected AbstractCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<N>> function) {
+    protected AbstractCondition(Metadata metadata,
+                    BiFunction<DslModel, Context, Optional<N>> function) {
         this.field = null;
         this.metadata = metadata;
+        this.value = (model, field) -> function.apply(model, null);
+        this.function = function;
+    }
+
+    protected AbstractCondition(DslField field, Metadata metadata,
+                    BiFunction<DslModel, Context, Optional<N>> function) {
+        this.field = field;
+        this.metadata = metadata;
+        this.value = null;
         this.function = function;
     }
 
     protected Optional<N> value(DslModel model, DslField field) {
-        return Optional.ofNullable(model.<N> get(field.id()));
+        return value == null ? Optional.ofNullable(model.<N> get(field.id())) : value.apply(model, field);
     }
 
+    // TODO move to builder
     protected StepCondition predicate(FieldMetadata metadata,
                     Function<N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, predicate);
     }
 
+    // TODO move to builder
     protected StepCondition predicate(FieldMetadata metadata,
                     BiFunction<DslModel, Context, Optional<N>> value,
                     BiFunction<N, N, Boolean> predicate) {

@@ -27,14 +27,14 @@ public class FloatCondition extends NumericCondition<Float> {
         super(field);
     }
 
-    public FloatCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<Float>> value) {
-        super(metadata, value);
+    public FloatCondition(DslField field, Metadata metadata, BiFunction<DslModel, Context, Optional<Float>> value) {
+        super(field, metadata, value);
     }
 
     @Override
-    NumericCondition<Float> numericCondition(Metadata metadata,
+    NumericCondition<Float> numericCondition(DslField field, Metadata metadata,
                     BiFunction<DslModel, Context, Optional<Float>> value) {
-        return new FloatCondition(metadata, value);
+        return new FloatCondition(field, metadata, value);
     }
 
     @Override

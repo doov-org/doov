@@ -33,8 +33,12 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
         super(field);
     }
 
-    public DefaultCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<T>> value) {
-        super(metadata, value);
+    public DefaultCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<T>> function) {
+        super(metadata, function);
+    }
+
+    public DefaultCondition(DslField field, Metadata metadata, BiFunction<DslModel, Context, Optional<T>> value) {
+        super(field, metadata, value);
     }
 
     // available

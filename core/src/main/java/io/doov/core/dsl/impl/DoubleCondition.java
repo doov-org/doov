@@ -27,14 +27,14 @@ public class DoubleCondition extends NumericCondition<Double> {
         super(field);
     }
 
-    public DoubleCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<Double>> value) {
-        super(metadata, value);
+    public DoubleCondition(DslField field, Metadata metadata, BiFunction<DslModel, Context, Optional<Double>> value) {
+        super(field, metadata, value);
     }
 
     @Override
-    NumericCondition<Double> numericCondition(Metadata metadata,
+    NumericCondition<Double> numericCondition(DslField field, Metadata metadata,
                     BiFunction<DslModel, Context, Optional<Double>> value) {
-        return new DoubleCondition(metadata, value);
+        return new DoubleCondition(field, metadata, value);
     }
 
     @Override

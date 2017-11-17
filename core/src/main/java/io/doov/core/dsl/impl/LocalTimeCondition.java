@@ -29,43 +29,54 @@ public class LocalTimeCondition extends TemporalCondition<LocalTime> {
         super(field);
     }
 
-    public LocalTimeCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<LocalTime>> value) {
-        super(metadata, value);
+    public LocalTimeCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<LocalTime>> function) {
+        super(metadata, function);
     }
 
-    @Override
-    TemporalCondition<LocalTime> temporalCondition(Metadata metadata,
+    public LocalTimeCondition(DslField field, Metadata metadata,
                     BiFunction<DslModel, Context, Optional<LocalTime>> value) {
-        return new LocalTimeCondition(metadata, value);
+        super(field, metadata, value);
     }
 
     @Override
-    Function<LocalTime, LocalTime> minusFunction(int value, TemporalUnit unit) {
+    protected TemporalCondition<LocalTime> temporalCondition(Metadata metadata,
+                    BiFunction<DslModel, Context, Optional<LocalTime>> value) {
+        return new LocalTimeCondition(field, metadata, value);
+    }
+
+    @Override
+    protected TemporalCondition<LocalTime> temporalCondition(DslField field, Metadata metadata,
+                    BiFunction<DslModel, Context, Optional<LocalTime>> value) {
+        return new LocalTimeCondition(field, metadata, value);
+    }
+
+    @Override
+    protected Function<LocalTime, LocalTime> minusFunction(int value, TemporalUnit unit) {
         return d -> d.minus(value, unit);
     }
 
     @Override
-    Function<LocalTime, LocalTime> plusFunction(int value, TemporalUnit unit) {
+    protected Function<LocalTime, LocalTime> plusFunction(int value, TemporalUnit unit) {
         return d -> d.plus(value, unit);
     }
 
     @Override
-    Function<LocalTime, LocalTime> withFunction(TemporalAdjuster ajuster) {
+    protected Function<LocalTime, LocalTime> withFunction(TemporalAdjuster ajuster) {
         return d -> d.with(ajuster);
     }
 
     @Override
-    BiFunction<LocalTime, LocalTime, Boolean> afterFunction() {
+    protected BiFunction<LocalTime, LocalTime, Boolean> afterFunction() {
         return LocalTime::isAfter;
     }
 
     @Override
-    BiFunction<LocalTime, LocalTime, Boolean> beforeFunction() {
+    protected BiFunction<LocalTime, LocalTime, Boolean> beforeFunction() {
         return LocalTime::isBefore;
     }
 
     @Override
-    BiFunction<LocalTime, LocalTime, Long> betweenFunction(ChronoUnit unit) {
+    protected BiFunction<LocalTime, LocalTime, Long> betweenFunction(ChronoUnit unit) {
         return unit::between;
     }
 
