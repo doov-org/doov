@@ -12,7 +12,14 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     public ResultAssert isValid() {
         if (!actual.isValid()) {
-            failWithMessage("Expected result to be to be valid");
+            failWithMessage("Expected result to be valid");
+        }
+        return this;
+    }
+
+    public ResultAssert isInvalid() {
+        if (!actual.isInvalid()) {
+            failWithMessage("Expected result to be invalid");
         }
         return this;
     }
