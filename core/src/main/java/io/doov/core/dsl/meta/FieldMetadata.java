@@ -116,12 +116,12 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(field, "not equals", value);
     }
 
-    public static FieldMetadata nullMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "is", value);
+    public static FieldMetadata nullMetadata(Readable field) {
+        return new FieldMetadata(field, "is null", null);
     }
 
-    public static FieldMetadata notNullMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "is not", value);
+    public static FieldMetadata notNullMetadata(Readable field) {
+        return new FieldMetadata(field, "is not null", null);
     }
 
     public static FieldMetadata matchAnyMetadata(Readable field, Object... values) {
@@ -134,6 +134,10 @@ public class FieldMetadata implements Metadata {
 
     public static FieldMetadata matchNoneMetadata(Readable field, Object... values) {
         return new FieldMetadata(field, "match none", format(values));
+    }
+
+    public static FieldMetadata mapToIntMetadata(Readable field) {
+        return new FieldMetadata(field, "map to int", null);
     }
 
     public static FieldMetadata withMetadata(Readable field, Object adjuster) {

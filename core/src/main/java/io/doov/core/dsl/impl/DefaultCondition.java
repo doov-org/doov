@@ -41,14 +41,18 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
         super(field, metadata, value);
     }
 
-    // available
+    // null
 
-    public final StepCondition available() {
-        return predicate(availableMetadata(field), value -> true);
+    public final StepCondition isNull() {
+        return new PredicateStepCondition<>(this.metadata.merge(nullMetadata(field)),
+                        (model, context) -> Optional.of(function.apply(model, context)),
+                        optional -> !optional.isPresent());
     }
 
-    public final StepCondition notAvailable() {
-        return available().not();
+    public final StepCondition isNotNull() {
+        return new PredicateStepCondition<>(this.metadata.merge(notNullMetadata(field)),
+                        (model, context) -> Optional.of(function.apply(model, context)),
+                        Optional::isPresent);
     }
 
     // equals
@@ -83,18 +87,6 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
         return predicate(notEqualsMetadata(field, value),
                         (model, context) -> value(model, value),
                         (l, r) -> !l.equals(r));
-    }
-
-    // null
-
-    public final StepCondition isNull() {
-        return predicate(nullMetadata(field, null), Objects::isNull);
-    }
-
-    // not null
-
-    public final StepCondition isNotNull() {
-        return predicate(notNullMetadata(field, null), obj -> !Objects.isNull(obj));
     }
 
     // match
@@ -148,6 +140,13 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
     public final StepCondition noneMatch(Collection<T> values) {
         return predicate(matchNoneMetadata(field, values),
                         value -> values.stream().noneMatch(value::equals));
+    }
+
+    // map
+
+    public final IntegerCondition mapToInt(Function<T, Integer> mapper) {
+        return new IntegerCondition(field, mapToIntMetadata(field),
+                        (model, context) -> value(model, field).flatMap(l -> Optional.of(mapper.apply(l))));
     }
 
 }

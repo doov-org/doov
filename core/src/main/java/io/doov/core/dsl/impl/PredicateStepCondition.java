@@ -25,20 +25,19 @@ import io.doov.core.dsl.meta.Metadata;
 
 class PredicateStepCondition<N> extends AbstractStepCondition {
 
-    PredicateStepCondition(Metadata metadata,
+    protected PredicateStepCondition(Metadata metadata,
                     BiFunction<DslModel, Context, Optional<N>> value,
                     Function<N, Boolean> predicate) {
         super(metadata, (model, context) -> value.apply(model, context).map(predicate).orElse(false));
     }
 
-    PredicateStepCondition(Metadata metadata,
+    protected PredicateStepCondition(Metadata metadata,
                     BiFunction<DslModel, Context, Optional<N>> left,
                     BiFunction<DslModel, Context, Optional<N>> right,
                     BiFunction<N, N, Boolean> predicate) {
-        super(metadata, (model, context) ->
-                        left.apply(model, context)
-                                        .flatMap(l -> right.apply(model, context).map(r -> predicate.apply(l, r)))
-                                        .orElse(false));
+        super(metadata, (model, context) -> left.apply(model, context)
+                        .flatMap(l -> right.apply(model, context).map(r -> predicate.apply(l, r)))
+                        .orElse(false));
     }
 
 }

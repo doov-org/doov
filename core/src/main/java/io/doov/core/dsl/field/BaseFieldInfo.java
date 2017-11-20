@@ -1,23 +1,23 @@
 package io.doov.core.dsl.field;
 
 import java.util.Collection;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.IntegerCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
 public interface BaseFieldInfo<T> extends DslField {
 
-    // available
+    // null
 
-    default StepCondition available() {
-        return getDefaultCondition().available();
+    default StepCondition isNull() {
+        return getDefaultCondition().isNull();
     }
 
-    default StepCondition notAvailable() {
-        return getDefaultCondition().notAvailable();
+    default StepCondition isNotNull() {
+        return getDefaultCondition().isNotNull();
     }
 
     // eq
@@ -40,16 +40,6 @@ public interface BaseFieldInfo<T> extends DslField {
 
     default StepCondition notEq(BaseFieldInfo<T> value) {
         return getDefaultCondition().notEq(value);
-    }
-
-    // null
-
-    default StepCondition isNull() {
-        return getDefaultCondition().isNull();
-    }
-
-    default StepCondition isNotNull() {
-        return getDefaultCondition().isNotNull();
     }
 
     // match
@@ -109,6 +99,12 @@ public interface BaseFieldInfo<T> extends DslField {
 
     default StepCondition noneMatch(Collection<T> values) {
         return getDefaultCondition().noneMatch(values);
+    }
+
+    // map
+
+    default IntegerCondition mapToInt(Function<T, Integer> mapper) {
+        return getDefaultCondition().mapToInt(mapper);
     }
 
     // implementation

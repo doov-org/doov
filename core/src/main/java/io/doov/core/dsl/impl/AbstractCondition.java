@@ -59,13 +59,11 @@ abstract class AbstractCondition<N> implements Readable {
         return value == null ? Optional.ofNullable(model.<N> get(field.id())) : value.apply(model, field);
     }
 
-    // TODO move to builder
     protected StepCondition predicate(FieldMetadata metadata,
                     Function<N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, predicate);
     }
 
-    // TODO move to builder
     protected StepCondition predicate(FieldMetadata metadata,
                     BiFunction<DslModel, Context, Optional<N>> value,
                     BiFunction<N, N, Boolean> predicate) {

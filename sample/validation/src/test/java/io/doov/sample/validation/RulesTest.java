@@ -85,12 +85,12 @@ public class RulesTest {
     }
 
     @Test
-    public void test_available() {
-        assertThat(DOOV.when(userFirstName().available()).validate().executeOn(wrapper).isValid()).isTrue();
-        assertThat(DOOV.when(userFirstName().notAvailable()).validate().executeOn(wrapper).isValid()).isFalse();
+    public void test_null() {
+        assertThat(DOOV.when(userFirstName().isNull()).validate().executeOn(wrapper).isValid()).isFalse();
+        assertThat(DOOV.when(userFirstName().isNotNull()).validate().executeOn(wrapper).isValid()).isTrue();
         user.setFirstName(null);
-        assertThat(DOOV.when(userFirstName().available()).validate().executeOn(wrapper).isValid()).isFalse();
-        assertThat(DOOV.when(userFirstName().notAvailable()).validate().executeOn(wrapper).isValid()).isTrue();
+        assertThat(DOOV.when(userFirstName().isNull()).validate().executeOn(wrapper).isValid()).isTrue();
+        assertThat(DOOV.when(userFirstName().isNotNull()).validate().executeOn(wrapper).isValid()).isFalse();
     }
 
     @Test
