@@ -26,7 +26,7 @@ public class AstFullVisitor extends AbstractAstVisitor {
                         .append(" ")
                         .append(metadata.getOperator().readable())
                         .append(" ")
-                        .append(metadata.getValue().readable());
+                        .append(metadata.getValue() == null ? "" : metadata.getValue().readable());
         sb.append("\n");
     }
 
