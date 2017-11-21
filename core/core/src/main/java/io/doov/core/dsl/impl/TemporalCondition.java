@@ -13,6 +13,8 @@
 package io.doov.core.dsl.impl;
 
 import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
 import java.time.temporal.*;
@@ -189,46 +191,100 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     // age
 
     public final NumericCondition<Integer> ageAt(N value) {
-        return new IntegerCondition(timeBetween(YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), YEARS, value));
     }
 
     public final NumericCondition<Integer> ageAt(TemporalFieldInfo<N> value) {
-        return new IntegerCondition(timeBetween(YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), YEARS, value));
     }
 
     public final NumericCondition<Integer> ageAt(TemporalCondition<N> value) {
-        return new IntegerCondition(timeBetween(YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), YEARS, value));
     }
 
     public final NumericCondition<Integer> ageAt(Supplier<N> value) {
-        return new IntegerCondition(timeBetween(YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), YEARS, value));
+    }
+
+    // days between
+
+    public final NumericCondition<Integer> daysBetween(N value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), DAYS, value));
+    }
+
+    public final NumericCondition<Integer> daysBetween(TemporalFieldInfo<N> value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), DAYS, value));
+    }
+
+    public final NumericCondition<Integer> daysBetween(TemporalCondition<N> value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), DAYS, value));
+    }
+
+    public final NumericCondition<Integer> daysBetween(Supplier<N> value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), DAYS, value));
+    }
+
+    // months between
+
+    public final NumericCondition<Integer> monthsBetween(N value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), MONTHS, value));
+    }
+
+    public final NumericCondition<Integer> monthsBetween(TemporalFieldInfo<N> value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), MONTHS, value));
+    }
+
+    public final NumericCondition<Integer> monthsBetween(TemporalCondition<N> value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), MONTHS, value));
+    }
+
+    public final NumericCondition<Integer> monthsBetween(Supplier<N> value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), MONTHS, value));
+    }
+
+    // years between
+
+    public final NumericCondition<Integer> yearsBetween(N value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), YEARS, value));
+    }
+
+    public final NumericCondition<Integer> yearsBetween(TemporalFieldInfo<N> value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), YEARS, value));
+    }
+
+    public final NumericCondition<Integer> yearsBetween(TemporalCondition<N> value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), YEARS, value));
+    }
+
+    public final NumericCondition<Integer> yearsBetween(Supplier<N> value) {
+        return new IntegerCondition(timeBetween(ageAtMetadata(field, value), YEARS, value));
     }
 
     // time between
 
-    public final NumericCondition<Long> timeBetween(ChronoUnit unit, N value) {
-        return new LongCondition(field, ageAtMetadata(field, value),
+    protected final NumericCondition<Long> timeBetween(Metadata metadata, ChronoUnit unit, N value) {
+        return new LongCondition(field, metadata,
                         (model, context) -> value(model, field)
                                         .flatMap(l -> Optional.ofNullable(value)
                                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalFieldInfo<N> value) {
-        return new LongCondition(field, ageAtMetadata(field, value),
+    protected final NumericCondition<Long> timeBetween(Metadata metadata, ChronoUnit unit, TemporalFieldInfo<N> value) {
+        return new LongCondition(field, metadata,
                         (model, context) -> value(model, field)
                                         .flatMap(l -> valueModel(model, value)
                                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalCondition<N> value) {
-        return new LongCondition(field, ageAtMetadata(field, value),
+    protected final NumericCondition<Long> timeBetween(Metadata metadata, ChronoUnit unit, TemporalCondition<N> value) {
+        return new LongCondition(field, metadata,
                         (model, context) -> value(model, field)
                                         .flatMap(l -> value.function.apply(model, context)
                                                         .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    public final NumericCondition<Long> timeBetween(ChronoUnit unit, Supplier<N> value) {
-        return new LongCondition(field, ageAtMetadata(field, value),
+    protected final NumericCondition<Long> timeBetween(Metadata metadata, ChronoUnit unit, Supplier<N> value) {
+        return new LongCondition(field, metadata,
                         (model, context) -> value(model, field)
                                         .flatMap(l -> Optional.ofNullable(value.get())
                                                         .map(r -> betweenFunction(unit).apply(l, r))));

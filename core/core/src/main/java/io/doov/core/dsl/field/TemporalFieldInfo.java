@@ -132,7 +132,6 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
     }
 
     // age
-    // TODO rename to yearBetween
 
     default NumericCondition<Integer> ageAt(N value) {
         return getTemporalCondition().ageAt(value);
@@ -150,23 +149,58 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
         return getTemporalCondition().ageAt(value);
     }
 
-    // time between
-    // TODO make private
+    // days between
 
-    default NumericCondition<Long> timeBetween(ChronoUnit unit, N value) {
-        return getTemporalCondition().timeBetween(unit, value);
+    default NumericCondition<Integer> daysBetween(N value) {
+        return getTemporalCondition().daysBetween(value);
     }
 
-    default NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalFieldInfo<N> value) {
-        return getTemporalCondition().timeBetween(unit, value);
+    default NumericCondition<Integer> daysBetween(TemporalFieldInfo<N> value) {
+        return getTemporalCondition().daysBetween(value);
     }
 
-    default NumericCondition<Long> timeBetween(ChronoUnit unit, TemporalCondition<N> value) {
-        return getTemporalCondition().timeBetween(unit, value);
+    default NumericCondition<Integer> daysBetween(TemporalCondition<N> value) {
+        return getTemporalCondition().daysBetween(value);
     }
 
-    default NumericCondition<Long> timeBetween(ChronoUnit unit, Supplier<N> value) {
-        return getTemporalCondition().timeBetween(unit, value);
+    default NumericCondition<Integer> daysBetween(Supplier<N> value) {
+        return getTemporalCondition().daysBetween(value);
+    }
+
+    // month between
+
+    default NumericCondition<Integer> monthsBetween(N value) {
+        return getTemporalCondition().monthsBetween(value);
+    }
+
+    default NumericCondition<Integer> monthsBetween(TemporalFieldInfo<N> value) {
+        return getTemporalCondition().monthsBetween(value);
+    }
+
+    default NumericCondition<Integer> monthsBetween(TemporalCondition<N> value) {
+        return getTemporalCondition().monthsBetween(value);
+    }
+
+    default NumericCondition<Integer> monthsBetween(Supplier<N> value) {
+        return getTemporalCondition().monthsBetween(value);
+    }
+
+    // year between
+
+    default NumericCondition<Integer> yearsBetween(N value) {
+        return getTemporalCondition().yearsBetween(value);
+    }
+
+    default NumericCondition<Integer> yearsBetween(TemporalFieldInfo<N> value) {
+        return getTemporalCondition().yearsBetween(value);
+    }
+
+    default NumericCondition<Integer> yearsBetween(TemporalCondition<N> value) {
+        return getTemporalCondition().yearsBetween(value);
+    }
+
+    default NumericCondition<Integer> yearsBetween(Supplier<N> value) {
+        return getTemporalCondition().yearsBetween(value);
     }
 
     // abstract
