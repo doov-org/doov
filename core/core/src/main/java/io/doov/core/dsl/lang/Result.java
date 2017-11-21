@@ -21,9 +21,9 @@ import io.doov.core.dsl.meta.Metadata;
 
 public interface Result {
 
-    boolean isValid();
+    boolean isTrue();
 
-    boolean isInvalid();
+    boolean isFalse();
 
     String getMessage();
 

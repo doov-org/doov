@@ -15,6 +15,7 @@
 */
 package io.doov.sample.validation;
 
+import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;
 import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
 import static io.doov.sample.validation.Rules.REGISTRY_USER;
@@ -53,11 +54,11 @@ public class RulesTest {
 
     @Test
     public void test_valid_email() {
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isValid()).isTrue();
+        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isTrue()).isTrue();
 
         account.setEmail("test@test.gh");
         Result actual = executeOn(REGISTRY_ACCOUNT, VALID_EMAIL);
-        assertThat(actual.isValid()).isFalse();
+        assertThat(actual.isTrue()).isFalse();
         assertThat(actual.getFailedNodes()).hasSize(3);
         assertThat(actual.getFailedNodes().stream().map(Readable::readable).collect(toList()))
                         .contains("account email matches '\\w+[@]\\w+\\.com' ",
@@ -68,10 +69,10 @@ public class RulesTest {
 
     @Test
     public void test_valid_account() {
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_01).isValid()).isTrue();
+        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_01).isTrue()).isTrue();
 
         account.setPhoneNumber("+446123456789");
-        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_01).isValid()).isFalse();
+        assertThat(executeOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_01).isTrue()).isFalse();
     }
 
     @Test
@@ -80,17 +81,17 @@ public class RulesTest {
                         .map(rule -> rule.executeOn(wrapper))
                         .collect(toList());
         assertThat(results).isNotEmpty();
-        assertThat(results).extracting(Result::isValid).allMatch(Boolean::booleanValue);
+        assertThat(results).extracting(Result::isTrue).allMatch(Boolean::booleanValue);
         assertThat(results).extracting(Result::getMessage).allMatch(Objects::isNull);
     }
 
     @Test
     public void test_null() {
-        assertThat(DOOV.when(userFirstName().isNull()).validate().executeOn(wrapper).isValid()).isFalse();
-        assertThat(DOOV.when(userFirstName().isNotNull()).validate().executeOn(wrapper).isValid()).isTrue();
+        assertThat(DOOV.when(userFirstName().isNull()).validate().executeOn(wrapper)).isFalse();
+        assertThat(DOOV.when(userFirstName().isNotNull()).validate().executeOn(wrapper)).isTrue();
         user.setFirstName(null);
-        assertThat(DOOV.when(userFirstName().isNull()).validate().executeOn(wrapper).isValid()).isTrue();
-        assertThat(DOOV.when(userFirstName().isNotNull()).validate().executeOn(wrapper).isValid()).isFalse();
+        assertThat(DOOV.when(userFirstName().isNull()).validate().executeOn(wrapper)).isTrue();
+        assertThat(DOOV.when(userFirstName().isNotNull()).validate().executeOn(wrapper)).isFalse();
     }
 
     @Test

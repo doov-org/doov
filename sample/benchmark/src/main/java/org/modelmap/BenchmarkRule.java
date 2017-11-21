@@ -46,7 +46,7 @@ public class BenchmarkRule {
 
     @GenerateMicroBenchmark
     public void valid_email(BlackHole blackhole) {
-        boolean valid = executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isValid();
+        boolean valid = executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -54,7 +54,7 @@ public class BenchmarkRule {
 
     @GenerateMicroBenchmark
     public void valid_country(BlackHole blackhole) {
-        boolean valid = executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isValid();
+        boolean valid = executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -62,7 +62,7 @@ public class BenchmarkRule {
 
     @SuppressWarnings("unused")
     public void valid_country_20(BlackHole blackhole) {
-        boolean valid = ACCOUNT_VALID_COUNTRY_20.executeOn(MODEL).isValid();
+        boolean valid = ACCOUNT_VALID_COUNTRY_20.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -70,7 +70,7 @@ public class BenchmarkRule {
 
     @SuppressWarnings("unused")
     public void valid_country_40(BlackHole blackhole) {
-        boolean valid = ACCOUNT_VALID_COUNTRY_40.executeOn(MODEL).isValid();
+        boolean valid = ACCOUNT_VALID_COUNTRY_40.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -78,7 +78,7 @@ public class BenchmarkRule {
 
     @SuppressWarnings("unused")
     public void valid_country_60(BlackHole blackhole) {
-        boolean valid = ACCOUNT_VALID_COUNTRY_60.executeOn(MODEL).isValid();
+        boolean valid = ACCOUNT_VALID_COUNTRY_60.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -86,7 +86,7 @@ public class BenchmarkRule {
 
     @SuppressWarnings("unused")
     public void valid_country_80(BlackHole blackhole) {
-        boolean valid = ACCOUNT_VALID_COUNTRY_80.executeOn(MODEL).isValid();
+        boolean valid = ACCOUNT_VALID_COUNTRY_80.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -94,7 +94,7 @@ public class BenchmarkRule {
 
     @SuppressWarnings("unused")
     public void valid_country_100(BlackHole blackhole) {
-        boolean valid = ACCOUNT_VALID_COUNTRY_100.executeOn(MODEL).isValid();
+        boolean valid = ACCOUNT_VALID_COUNTRY_100.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }

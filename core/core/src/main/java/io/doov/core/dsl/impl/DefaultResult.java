@@ -36,12 +36,12 @@ public class DefaultResult implements Result {
     }
 
     @Override
-    public boolean isValid() {
+    public boolean isTrue() {
         return validity;
     }
 
     @Override
-    public boolean isInvalid() {
+    public boolean isFalse() {
         return !validity;
     }
 

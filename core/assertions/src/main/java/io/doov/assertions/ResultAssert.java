@@ -10,16 +10,16 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
         super(actual, selfType);
     }
 
-    public ResultAssert isValid() {
-        if (!actual.isValid()) {
-            failWithMessage("Expected result to be valid");
+    public ResultAssert isTrue() {
+        if (!actual.isTrue()) {
+            failWithMessage("Expected result to be true");
         }
         return this;
     }
 
-    public ResultAssert isInvalid() {
-        if (!actual.isInvalid()) {
-            failWithMessage("Expected result to be invalid");
+    public ResultAssert isFalse() {
+        if (!actual.isFalse()) {
+            failWithMessage("Expected result to be false");
         }
         return this;
     }

@@ -19,7 +19,7 @@ public class RulesSoftshakeTest {
         Result result = RulesSoftshake.EXAMPLE.executeOn(wrapper);
 
         // Then
-        assertThat(result.isValid()).isTrue();
+        assertThat(result.isTrue()).isTrue();
         System.out.println(RulesSoftshake.EXAMPLE.readable());
     }
 

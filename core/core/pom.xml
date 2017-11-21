@@ -11,5 +11,6 @@
 
   <artifactId>doov-core</artifactId>
   <name>dOOv Core</name>
+  <!--<version>1.14</version>-->
 
 </project>

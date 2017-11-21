@@ -31,5 +31,10 @@
       <artifactId>assertj-core</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.doov</groupId>
+      <artifactId>doov-assertions</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
