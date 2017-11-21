@@ -15,6 +15,7 @@
 */
 package io.doov.sample.model;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import io.doov.sample.field.SampleFieldId;
@@ -45,6 +46,9 @@ public class Account extends Identity {
 
     @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED, readable = "account email accepted")
     private boolean acceptEmail;
+
+    @SamplePath(field = SampleFieldId.CREATION_DATE, readable = "account creation date")
+    private LocalDate creationDate;
 
     @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "account préférences mail")
     private Collection<EmailType> emailTypes = new HashSet<>();
@@ -97,6 +101,18 @@ public class Account extends Identity {
 
     public void setAcceptEmail(boolean acceptEmail) {
         this.acceptEmail = acceptEmail;
+    }
+
+    public boolean isAcceptEmail() {
+        return acceptEmail;
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Collection<EmailType> getEmailTypes() {
