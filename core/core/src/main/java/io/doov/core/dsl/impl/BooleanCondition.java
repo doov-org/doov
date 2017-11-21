@@ -53,7 +53,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
 
     public final StepCondition and(LogicalFieldInfo value) {
         return predicate(andMetadata(field, value),
-                        (model, context) -> value(model, value),
+                        (model, context) -> valueModel(model, value),
                         Boolean::logicalAnd);
     }
 
@@ -67,7 +67,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
 
     public final StepCondition or(LogicalFieldInfo value) {
         return predicate(orMetadata(field, value),
-                        (model, context) -> value(model, value),
+                        (model, context) -> valueModel(model, value),
                         Boolean::logicalOr);
     }
 
@@ -81,7 +81,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
 
     public final StepCondition xor(LogicalFieldInfo value) {
         return predicate(xorMetadata(field, value),
-                        (model, context) -> value(model, value),
+                        (model, context) -> valueModel(model, value),
                         Boolean::logicalXor);
     }
 

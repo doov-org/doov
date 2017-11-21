@@ -53,7 +53,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     public final StepCondition lesserThan(NumericFieldInfo<N> value) {
         return predicate(lesserThanMetadata(field, value),
-                        (model, context) -> value(model, value),
+                        (model, context) -> valueModel(model, value),
                         (l, r) -> lesserThanFunction().apply(l, r));
     }
 
@@ -65,7 +65,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     public final StepCondition lesserOrEquals(NumericFieldInfo<N> value) {
         return predicate(lesserOrEqualsMetadata(field, value),
-                        (model, context) -> value(model, value),
+                        (model, context) -> valueModel(model, value),
                         (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
@@ -83,7 +83,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     public final StepCondition greaterThan(NumericFieldInfo<N> value) {
         return predicate(greaterThanMetadata(field, value),
-                        (model, context) -> value(model, value),
+                        (model, context) -> valueModel(model, value),
                         (l, r) -> greaterThanFunction().apply(l, r));
     }
 
@@ -95,7 +95,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     public final StepCondition greaterOrEquals(NumericFieldInfo<N> value) {
         return predicate(greaterOrEqualsMetadata(field, value),
-                        (model, context) -> value(model, value),
+                        (model, context) -> valueModel(model, value),
                         (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
@@ -157,7 +157,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
         return numericCondition(
                         field,
                         timesMetadata(field, multiplier),
-                        (model, context) -> value(model, field)
+                        (model, context) -> valueModel(model, field)
                                         .map(v -> timesFunction().apply(v, multiplier)));
     }
 
@@ -170,7 +170,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
                         field,
                         whenMetadata(field, condition),
                         (model, context) -> condition.predicate().test(model, context)
-                                        ? value(model, field) : Optional.empty());
+                                        ? valueModel(model, field) : Optional.empty());
     }
 
     // identity

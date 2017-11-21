@@ -35,36 +35,32 @@ abstract class AbstractCondition<N> implements Readable {
     protected AbstractCondition(DslField field) {
         this.field = field;
         this.metadata = emptyMetadata();
-        this.value = null;
-        this.function = (model, context) -> value(model, field);
-    }
-
-    protected AbstractCondition(Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<N>> function) {
-        this.field = null;
-        this.metadata = metadata;
-        this.value = (model, field) -> function.apply(model, null);
-        this.function = function;
+        this.value = (model, context) -> valueModel(model, field);
+        this.function = (model, context) -> valueModel(model, field);
     }
 
     protected AbstractCondition(DslField field, Metadata metadata,
                     BiFunction<DslModel, Context, Optional<N>> function) {
         this.field = field;
         this.metadata = metadata;
-        this.value = null;
+        this.value = (model, f) -> function.apply(model, null);
         this.function = function;
     }
 
-    protected Optional<N> value(DslModel model, DslField field) {
-        return value == null ? Optional.ofNullable(model.<N> get(field.id())) : value.apply(model, field);
+    protected Optional<N> valueModel(DslModel model, DslField field) {
+        return Optional.ofNullable(model.<N> get(field.id()));
     }
 
-    protected StepCondition predicate(FieldMetadata metadata,
+    protected final Optional<N> value(DslModel model, DslField field) {
+        return value.apply(model, field);
+    }
+
+    protected final StepCondition predicate(FieldMetadata metadata,
                     Function<N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, predicate);
     }
 
-    protected StepCondition predicate(FieldMetadata metadata,
+    protected final StepCondition predicate(FieldMetadata metadata,
                     BiFunction<DslModel, Context, Optional<N>> value,
                     BiFunction<N, N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, value, predicate);

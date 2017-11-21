@@ -33,10 +33,6 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
         super(field);
     }
 
-    public DefaultCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<T>> function) {
-        super(metadata, function);
-    }
-
     public DefaultCondition(DslField field, Metadata metadata, BiFunction<DslModel, Context, Optional<T>> value) {
         super(field, metadata, value);
     }
@@ -71,7 +67,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
 
     public final StepCondition eq(BaseFieldInfo<T> value) {
         return predicate(equalsMetadata(field, value),
-                        (model, context) -> value(model, value),
+                        (model, context) -> valueModel(model, value),
                         Object::equals);
     }
 
@@ -85,7 +81,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
 
     public final StepCondition notEq(BaseFieldInfo<T> value) {
         return predicate(notEqualsMetadata(field, value),
-                        (model, context) -> value(model, value),
+                        (model, context) -> valueModel(model, value),
                         (l, r) -> !l.equals(r));
     }
 
@@ -146,7 +142,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
 
     public final IntegerCondition mapToInt(Function<T, Integer> mapper) {
         return new IntegerCondition(field, mapToIntMetadata(field),
-                        (model, context) -> value(model, field).flatMap(l -> Optional.of(mapper.apply(l))));
+                        (model, context) -> valueModel(model, field).flatMap(l -> Optional.of(mapper.apply(l))));
     }
 
 }

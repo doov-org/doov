@@ -29,19 +29,9 @@ public class LocalDateTimeCondition extends TemporalCondition<LocalDateTime> {
         super(field);
     }
 
-    public LocalDateTimeCondition(Metadata metadata, BiFunction<DslModel, Context, Optional<LocalDateTime>> function) {
-        super(metadata, function);
-    }
-
     public LocalDateTimeCondition(DslField field, Metadata metadata,
                     BiFunction<DslModel, Context, Optional<LocalDateTime>> value) {
         super(field, metadata, value);
-    }
-
-    @Override
-    protected TemporalCondition<LocalDateTime> temporalCondition(Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<LocalDateTime>> value) {
-        return new LocalDateTimeCondition(metadata, value);
     }
 
     @Override
