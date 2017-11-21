@@ -32,6 +32,7 @@ public class SampleModels {
 
         Account account = new Account();
         account.setId(9);
+        account.setCreationDate(LocalDate.of(2017, 1, 1));
         account.setAcceptEmail(true);
         account.setEmail("foo@bar.com");
         account.setEmailTypes(EnumSet.of(EmailType.ADMINISTRATOR, EmailType.PRIVATE));
@@ -48,6 +49,7 @@ public class SampleModels {
 
         Configuration configuration = new Configuration();
         configuration.setMaxEmailSize(25);
+        configuration.setMinAge(18);
 
         SampleModel model = new SampleModel();
         model.setUser(user);

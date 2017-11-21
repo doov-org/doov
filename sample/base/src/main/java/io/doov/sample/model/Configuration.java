@@ -23,12 +23,23 @@ public class Configuration {
     @SamplePath(field = SampleFieldId.EMAIL_MAX_SIZE, readable = "configuration max email size")
     private int maxEmailSize;
 
+    @SamplePath(field = SampleFieldId.USER_MIN_AGE, readable = "configuration min user age")
+    private int minAge;
+
     public int getMaxEmailSize() {
         return maxEmailSize;
     }
 
     public void setMaxEmailSize(int maxEmailSize) {
         this.maxEmailSize = maxEmailSize;
+    }
+
+    public int getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(int minAge) {
+        this.minAge = minAge;
     }
 
 }
