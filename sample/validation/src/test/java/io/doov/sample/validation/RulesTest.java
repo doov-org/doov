@@ -87,11 +87,11 @@ public class RulesTest {
 
     @Test
     public void test_null() {
-        assertThat(DOOV.when(userFirstName().isNull()).validate().executeOn(wrapper)).isFalse();
-        assertThat(DOOV.when(userFirstName().isNotNull()).validate().executeOn(wrapper)).isTrue();
+        assertThat(DOOV.when(userFirstName().isNull()).validate()).doesNotValidate(wrapper);
+        assertThat(DOOV.when(userFirstName().isNotNull()).validate()).validates(wrapper);
         user.setFirstName(null);
-        assertThat(DOOV.when(userFirstName().isNull()).validate().executeOn(wrapper)).isTrue();
-        assertThat(DOOV.when(userFirstName().isNotNull()).validate().executeOn(wrapper)).isFalse();
+        assertThat(DOOV.when(userFirstName().isNull()).validate()).validates(wrapper);
+        assertThat(DOOV.when(userFirstName().isNotNull()).validate()).doesNotValidate(wrapper);
     }
 
     @Test
