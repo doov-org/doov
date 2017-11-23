@@ -51,6 +51,14 @@ public class FieldInfoProvider {
         return new FloatFieldInfoBuilder();
     }
 
+    protected static DateIsoFieldInfoBuilder dateIsoField() {
+        return new DateIsoFieldInfoBuilder();
+    }
+
+    protected static TimeIsoFieldInfoBuilder timeIsoField() {
+        return new TimeIsoFieldInfoBuilder();
+    }
+
     protected static LocalDateFieldInfoBuilder localDateField() {
         return new LocalDateFieldInfoBuilder();
     }
@@ -107,6 +115,7 @@ public class FieldInfoProvider {
         }
 
         public abstract F build(List<FieldInfo> allFields);
+
     }
 
     protected static class DefaultFieldInfoBuilder<T>
@@ -118,6 +127,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class BooleanFieldInfoBuilder
@@ -129,6 +139,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class StringFieldInfoBuilder
@@ -140,6 +151,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class CharacterFieldInfoBuilder
@@ -151,6 +163,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class DoubleFieldInfoBuilder
@@ -162,6 +175,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class FloatFieldInfoBuilder
@@ -173,6 +187,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class IntegerFieldInfoBuilder
@@ -184,6 +199,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class LongFieldInfoBuilder
@@ -195,6 +211,31 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
+    }
+
+    protected static class DateIsoFieldInfoBuilder
+                    extends BaseFieldInfoBuilder<DateIsoFieldInfo, DateIsoFieldInfoBuilder> {
+
+        @Override
+        public DateIsoFieldInfo build(List<FieldInfo> allFields) {
+            DateIsoFieldInfo info = new DateIsoFieldInfo(fieldId, readable, siblings);
+            allFields.add(info);
+            return info;
+        }
+
+    }
+
+    protected static class TimeIsoFieldInfoBuilder
+                    extends BaseFieldInfoBuilder<TimeIsoFieldInfo, TimeIsoFieldInfoBuilder> {
+
+        @Override
+        public TimeIsoFieldInfo build(List<FieldInfo> allFields) {
+            TimeIsoFieldInfo info = new TimeIsoFieldInfo(fieldId, readable, siblings);
+            allFields.add(info);
+            return info;
+        }
+
     }
 
     protected static class LocalDateFieldInfoBuilder
@@ -206,6 +247,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class LocalDateTimeFieldInfoBuilder
@@ -217,6 +259,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class LocalTimeFieldInfoBuilder
@@ -228,6 +271,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class EnumFieldInfoBuilder<T extends Enum<T>>
@@ -239,6 +283,7 @@ public class FieldInfoProvider {
             allFields.add(info);
             return info;
         }
+
     }
 
     protected static class IterableFieldInfoBuilder<T, C extends Iterable<T>>
