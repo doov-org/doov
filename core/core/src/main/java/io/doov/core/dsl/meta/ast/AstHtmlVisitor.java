@@ -32,7 +32,7 @@ public class AstHtmlVisitor extends AstTextVisitor{
 
     @Override
     public void visitMetadata(StepWhen metadata) {
-        sb.append("when");
+        sb.append(formatWhen());
         sb.append(END_LI);
         sb.append(formatNewLine());
     }
@@ -103,7 +103,7 @@ public class AstHtmlVisitor extends AstTextVisitor{
 
     @Override
     public void startMetadata(ValidationRule metadata) {
-        sb.append("<div class='VALIDATIONRULE' id='PLACEHOLDER'>");
+        sb.append("<div class='VALIDATIONRULE' id=''>");
         sb.append(formatNewLine());
         sb.append(BEG_UL);
         sb.append(formatNewLine());
@@ -140,12 +140,12 @@ public class AstHtmlVisitor extends AstTextVisitor{
 
     @Override
     protected String formatField(Readable field) {
-        return "<span class='FIELD' id='PLACEHOLDER'>" + field.readable() + "</span>";
+        return "<span class='FIELD' id=''>" + field.readable() + "</span>";
     }
 
     @Override
     protected String formatOperator(Readable operator) {
-        return "<span class='OPERATOR' id='PLACEHOLDER'>" + operator.readable() + "</span>";
+        return "<span class='OPERATOR' id=''>" + operator.readable() + "</span>";
     }
 
 }
