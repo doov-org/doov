@@ -68,4 +68,13 @@ public class RulesVisitorTest {
         System.out.println(sb);
     }
 
+    @Test
+    public void html() {
+        StringBuilder sb = new StringBuilder();
+        Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
+                        .flatMap(RuleRegistry::stream)
+                        .peek(rule -> sb.append("--------------------------------").append("\n"))
+                        .forEach(rule -> rule.accept(new AstHtmlVisitor(sb)));
+        System.out.println(sb);
+    }
 }

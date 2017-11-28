@@ -1,5 +1,7 @@
 package io.doov.core.dsl.meta;
 
+import java.lang.reflect.Field;
+
 import io.doov.core.dsl.lang.*;
 
 public interface MetadataVisitor {
@@ -10,7 +12,11 @@ public interface MetadataVisitor {
 
     // FieldMetadata
 
+    void start(FieldMetadata fieldMetadata);
+
     void visit(FieldMetadata fieldMetadata);
+
+    void end(FieldMetadata fieldMetadata);
 
     // UnaryMetadata
 

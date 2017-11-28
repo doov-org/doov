@@ -331,7 +331,9 @@ public class FieldMetadata implements Metadata {
 
     @Override
     public void accept(MetadataVisitor visitor) {
+        visitor.start(this);
         visitor.visit(this);
+        visitor.end(this);
     }
 
 }

@@ -38,6 +38,16 @@ abstract class AbstractAstVisitor implements MetadataVisitor {
 
     // FieldMetadata
 
+
+    @Override
+    public final void start(FieldMetadata metadata) {
+        startMetadata(metadata);
+    }
+
+    protected void startMetadata(FieldMetadata metadata) {
+    }
+
+
     @Override
     public final void visit(FieldMetadata metadata) {
         visitMetadata(metadata);
@@ -45,6 +55,15 @@ abstract class AbstractAstVisitor implements MetadataVisitor {
 
     protected void visitMetadata(FieldMetadata metadata) {
     }
+
+    @Override
+    public final void end(FieldMetadata metadata) {
+        endMetadata(metadata);
+    }
+
+    protected void endMetadata(FieldMetadata metadata) {
+    }
+
 
     // UnaryMetadata
 
