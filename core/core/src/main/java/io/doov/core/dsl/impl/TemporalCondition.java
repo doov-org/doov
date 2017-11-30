@@ -176,16 +176,30 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     // between
 
-    public final StepCondition between(N minValueInclusive, N maxValueExclusive) {
-        return LogicalBinaryCondition.and(beforeOrEq(maxValueExclusive), afterOrEq(minValueInclusive));
+    public final StepCondition between(N minInclusive, N maxExclusive) {
+        return LogicalBinaryCondition.and(beforeOrEq(maxExclusive), afterOrEq(minInclusive));
     }
 
-    public final StepCondition between(Supplier<N> minValueInclusive, Supplier<N> maxValueExclusive) {
-        return LogicalBinaryCondition.and(beforeOrEq(maxValueExclusive), afterOrEq(minValueInclusive));
+    public final StepCondition between(Supplier<N> minInclusive, Supplier<N> maxExclusive) {
+        return LogicalBinaryCondition.and(beforeOrEq(maxExclusive), afterOrEq(minInclusive));
     }
 
-    public final StepCondition notBetween(N minValueInclusive, N maxValueExclusive) {
-        return LogicalUnaryCondition.negate(between(minValueInclusive, maxValueExclusive));
+    public final StepCondition between(TemporalCondition<N> minInclusive, TemporalCondition<N> maxExclusive) {
+        return LogicalBinaryCondition.and(beforeOrEq(maxExclusive), afterOrEq(minInclusive));
+    }
+
+    // not between
+
+    public final StepCondition notBetween(N minInclusive, N maxExclusive) {
+        return LogicalUnaryCondition.negate(between(minInclusive, maxExclusive));
+    }
+
+    public final StepCondition notBetween(Supplier<N> minInclusive, Supplier<N> maxExclusive) {
+        return LogicalUnaryCondition.negate(between(minInclusive, maxExclusive));
+    }
+
+    public final StepCondition notBetween(TemporalCondition<N> minInclusive, TemporalCondition<N> maxExclusive) {
+        return LogicalUnaryCondition.negate(between(minInclusive, maxExclusive));
     }
 
     // age

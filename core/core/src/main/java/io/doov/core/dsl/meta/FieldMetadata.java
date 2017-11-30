@@ -112,6 +112,10 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata(field, "equals", value);
     }
 
+    public static FieldMetadata equalsMetadata(Readable field, Readable value) {
+        return new FieldMetadata(field, "equals", value);
+    }
+
     public static FieldMetadata notEqualsMetadata(Readable field, Object value) {
         return new FieldMetadata(field, "not equals", value);
     }

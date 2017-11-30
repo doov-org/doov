@@ -71,6 +71,12 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
                         Object::equals);
     }
 
+    public final StepCondition eq(DefaultCondition<T> value) {
+        return predicate(equalsMetadata(field, value),
+                        value.function,
+                        Object::equals);
+    }
+
     // not equals
 
     public final StepCondition notEq(T value) {
@@ -79,9 +85,21 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
                         (l, r) -> !l.equals(r));
     }
 
+    public final StepCondition notEq(Supplier<T> value) {
+        return predicate(notEqualsMetadata(field, value),
+                        (model, context) -> Optional.ofNullable(value.get()),
+                        (l, r) -> !l.equals(r));
+    }
+
     public final StepCondition notEq(BaseFieldInfo<T> value) {
         return predicate(notEqualsMetadata(field, value),
                         (model, context) -> valueModel(model, value),
+                        (l, r) -> !l.equals(r));
+    }
+
+    public final StepCondition notEq(DefaultCondition<T> value) {
+        return predicate(notEqualsMetadata(field, value),
+                        value.function,
                         (l, r) -> !l.equals(r));
     }
 
