@@ -16,14 +16,23 @@
 package io.doov.sample.validation;
 
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
+import static io.doov.core.dsl.impl.LogicalNaryCondition.count;
+import static io.doov.core.dsl.impl.LogicalNaryCondition.matchAny;
+import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;
 import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
 import static io.doov.sample.validation.Rules.REGISTRY_USER;
+import static java.util.Arrays.asList;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.junit.Test;
 
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.RuleRegistry;
+import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.*;
 
 public class RulesVisitorTest {
@@ -75,6 +84,43 @@ public class RulesVisitorTest {
                         .flatMap(RuleRegistry::stream)
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
                         .forEach(rule -> rule.accept(new AstHtmlVisitor(sb)));
+
+        System.out.println(sb);
+
+        String[] split = sb.toString().split("--------------------------------");
+        String path = System.getProperty("user.home") + "/Desktop/testHTML";
+        int i = 0;
+        for (int i1 = 1; i1 < split.length; i1++) {
+            String s = split[i1];
+            try {
+                FileWriter fileWriter = new FileWriter(path + "/test" + i);
+                fileWriter.write("<html><body>");
+                fileWriter.write(s);
+                fileWriter.write("</body></html>");
+                fileWriter.close();
+                i++;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    @Test
+    public void oneHtml() {
+        StringBuilder sb = new StringBuilder();
+        ValidationRule vr = DOOV
+                        .when(DOOV.count(
+                                        userFirstName().isNotNull(),
+                                        userFirstName().isNotNull(),
+                                        userFirstName().isNotNull()).greaterOrEquals(3))
+                        .validate();
+
+        ValidationRule vr1 = DOOV
+                        .when(userFirstName().isNotNull().and(userFirstName().isNotNull().or(userFirstName().isNotNull().and(userFirstName().isNotNull()))).and(userFirstName().isNotNull()))
+                        .validate();
+
+        vr.accept(new AstHtmlVisitor(sb));
         System.out.println(sb);
     }
 }

@@ -3,11 +3,16 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import java.text.MessageFormat;
+import java.util.Arrays;
+
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.*;
 
-public class AstHtmlVisitor extends AstTextVisitor{
+public class AstHtmlVisitor extends AstTextVisitor {
+
+    private int binaryDeep = 0;
 
     private static final String BEG_LI = "<li>";
     private static final String BEG_UL = "<ul>";
@@ -18,8 +23,7 @@ public class AstHtmlVisitor extends AstTextVisitor{
         super(stringBuilder);
     }
 
-
-//    StepWhen
+    //    StepWhen
 
     @Override
     public void startMetadata(StepWhen metadata) {
@@ -35,16 +39,19 @@ public class AstHtmlVisitor extends AstTextVisitor{
         sb.append(formatWhen());
         sb.append(END_LI);
         sb.append(formatNewLine());
+        sb.append(formatCurrentIndent());
+        sb.append(BEG_UL);
+        sb.append(formatNewLine());
     }
 
-//    @Override
-//    public void endMetadata(StepWhen metadata) {
-//        sb.append(formatCurrentIndent());
-//        sb.append(formatNewLine());
-//    }
+    @Override
+    public void endMetadata(StepWhen metadata) {
+        sb.append(formatCurrentIndent());
+        sb.append(END_UL);
+        sb.append(formatNewLine());
+    }
 
-
-//    FIELDMETA
+    //    FIELDMETA
 
     @Override
     public void startMetadata(FieldMetadata metadata) {
@@ -63,17 +70,39 @@ public class AstHtmlVisitor extends AstTextVisitor{
         sb.append(formatNewLine());
     }
 
-
     // Unary
 
-
     // Binary
+
+    @Override
+    public void startMetadata(BinaryMetadata metadata) {
+
+        String[] split = sb.toString().split("\n");
+
+        // int hardcoder en fonction de l'utilisation de formatnewline
+        if (split[split.length - 1].contains("and") || split[split.length - 1].contains("or")) {
+            binaryDeep++;
+            sb.append(formatCurrentIndent());
+            sb.append(BEG_UL);
+            sb.append(formatNewLine());
+        }
+    }
 
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
         sb.append(formatCurrentIndent());
         sb.append(formatOperator(metadata));
         sb.append(formatNewLine());
+    }
+
+    @Override
+    public void endMetadata(BinaryMetadata metadata) {
+        if (binaryDeep > 0) {
+            sb.append(formatNewLine());
+            sb.append(formatCurrentIndent());
+            sb.append(END_UL);
+            binaryDeep--;
+        }
     }
 
     // nary
@@ -133,19 +162,23 @@ public class AstHtmlVisitor extends AstTextVisitor{
         sb.append(formatNewLine());
     }
 
+    // Metadata
 
-    //    Binary
-
-
+    @Override
+    public void visitMetadata(Metadata metadata) {
+        sb.append(formatOperator(metadata));
+    }
 
     @Override
     protected String formatField(Readable field) {
-        return "<span class='FIELD' id=''>" + field.readable() + "</span>";
+        return (null == field) ? null : MessageFormat
+                        .format("<span class=''{0}'' id=''{1}''>{2}</span>", "PLACEHOLDER", "", field.readable());
     }
 
     @Override
     protected String formatOperator(Readable operator) {
         return "<span class='OPERATOR' id=''>" + operator.readable() + "</span>";
     }
+
 
 }
