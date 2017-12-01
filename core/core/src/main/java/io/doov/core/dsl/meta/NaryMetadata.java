@@ -66,7 +66,7 @@ public class NaryMetadata implements Metadata {
 
     @Override
     public Metadata merge(FieldMetadata other) {
-        return new NaryMetadata(operator + " " + other.readable() + " for", values);
+        return new FieldMetadata().operator(this).elements(other);
     }
 
 }

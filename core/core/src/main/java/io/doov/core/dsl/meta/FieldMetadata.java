@@ -48,9 +48,18 @@ public class FieldMetadata implements Metadata {
         return elements.stream();
     }
 
+    // elements
+
+    FieldMetadata elements(FieldMetadata readable) {
+        if (readable != null) {
+            elements.addAll(readable.elements);
+        }
+        return this;
+    }
+
     // field
 
-    public FieldMetadata field(Readable readable) {
+    private FieldMetadata field(Readable readable) {
         if (readable != null) {
             elements.add(new Element(readable, field));
         }
@@ -59,14 +68,14 @@ public class FieldMetadata implements Metadata {
 
     // operator
 
-    public FieldMetadata operator(Readable readable) {
+    FieldMetadata operator(Readable readable) {
         if (readable != null) {
             elements.add(new Element(readable, operator));
         }
         return this;
     }
 
-    public FieldMetadata operator(String readable) {
+    private FieldMetadata operator(String readable) {
         if (readable != null) {
             elements.add(new Element(() -> readable, operator));
         }
@@ -75,42 +84,42 @@ public class FieldMetadata implements Metadata {
 
     // value
 
-    public FieldMetadata valueListReadable(Collection<? extends Readable> readables) {
+    private FieldMetadata valueListReadable(Collection<? extends Readable> readables) {
         if (readables != null && !readables.isEmpty()) {
             elements.add(new Element(() -> formatListReadable(readables), value));
         }
         return this;
     }
 
-    public FieldMetadata valueListObject(Collection<?> readables) {
+    private FieldMetadata valueListObject(Collection<?> readables) {
         if (readables != null && !readables.isEmpty()) {
             elements.add(new Element(() -> formatListObject(readables), value));
         }
         return this;
     }
 
-    public FieldMetadata valueObject(Object readable) {
+    private FieldMetadata valueObject(Object readable) {
         if (readable != null) {
             elements.add(new Element(() -> String.valueOf(readable), value));
         }
         return this;
     }
 
-    public FieldMetadata valueString(String readable) {
+    private FieldMetadata valueString(String readable) {
         if (readable != null) {
             elements.add(new Element(() -> readable, value));
         }
         return this;
     }
 
-    public FieldMetadata valueReadable(Readable readable) {
+    private FieldMetadata valueReadable(Readable readable) {
         if (readable != null) {
             elements.add(new Element(readable, value));
         }
         return this;
     }
 
-    public FieldMetadata valueSupplier(Supplier<Object> readable) {
+    private FieldMetadata valueSupplier(Supplier<Object> readable) {
         if (readable != null) {
             elements.add(new Element(() -> String.valueOf(readable.get()), value));
         }

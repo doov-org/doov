@@ -15,6 +15,7 @@
 */
 package io.doov.sample.validation;
 
+import static io.doov.core.dsl.DOOV.count;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.LocalDateSuppliers.today;
 import static io.doov.sample.field.SampleFieldIdInfo.*;
@@ -52,6 +53,18 @@ public class Rules extends DefaultRuleRegistry {
                         .and(accountPhoneNumber().startsWith("+33")))
                         .validate()
                         .registerOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_02);
+
+        DOOV.when(count(userFirstName().isNotNull(),
+                        userLastName().isNotNull().and(userLastName().matches("[A-Z]+")))
+                        .greaterOrEquals(0))
+                        .validate()
+                        .registerOn(REGISTRY_USER);
+
+        DOOV.when(userLastName().isNotNull().and(userLastName().matches("[A-Z]+")
+                        .and(count(accountPhoneNumber().isNotNull(), accountEmail().isNotNull())
+                                        .greaterThan(0))))
+                        .validate()
+                        .registerOn(REGISTRY_USER);
     }
 
     static {

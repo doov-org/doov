@@ -27,7 +27,7 @@ public class SampleModels {
         User user = new User();
         user.setId(1);
         user.setFirstName("Foo");
-        user.setLastName("Bar");
+        user.setLastName("BAR");
         user.setBirthDate(LocalDate.of(1980, 8, 1));
 
         Account account = new Account();

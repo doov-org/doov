@@ -86,30 +86,7 @@ public class RulesVisitorTest {
                         .flatMap(RuleRegistry::stream)
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
                         .forEach(rule -> rule.accept(new AstHtmlVisitor(sb)));
-
         System.out.println(sb);
-
-        String[] split = sb.toString().split("--------------------------------");
-        String path = System.getProperty("user.home") + "/Desktop/testHTML";
-        for (int i = 1; i < split.length; i++) {
-            String s = split[i];
-            try {
-                FileWriter fileWriter = new FileWriter(path + "/test" + i);
-                fileWriter.write("<html><body>");
-                fileWriter.write("<head>\n" +
-                                "        <meta charset=\"utf-8\" />\n" +
-                                "<link href=\"https://fonts.googleapis.com/css?family=Source+Code+Pro\" " +
-                                "rel=\"stylesheet\">" +
-                                "        <link rel=\"stylesheet\" href=\"style.css\" />\n" +
-                                "    </head>\n");
-                fileWriter.write(s);
-                fileWriter.write("</body></html>");
-                fileWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
     }
 
     @Test
