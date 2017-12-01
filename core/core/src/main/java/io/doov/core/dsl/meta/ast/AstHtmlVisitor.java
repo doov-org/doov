@@ -3,12 +3,17 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.core.dsl.meta.ast.AbstractAstVisitor.Element.BINARY;
+
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.FieldMetadata.Type;
 
 public class AstHtmlVisitor extends AstTextVisitor {
 
@@ -61,7 +66,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void visitMetadata(FieldMetadata metadata) {
-        sb.append(formatFieldMetadata(metadata));
+        sb.append(formatFieldClass(metadata, "fieldmeta"));
     }
 
     @Override
@@ -76,22 +81,31 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void startMetadata(BinaryMetadata metadata) {
-
+        //        Element element = stackPeek();
+        //        if (element == BINARY) {
+        //            if (binaryDeep > 0) {
+        //                sb.append(formatCurrentIndent());
+        //                sb.append(BEG_UL);
+        //                sb.append(formatNewLine());
+        //            }
+        //            binaryDeep++;
+        //        }
         String[] split = sb.toString().split("\n");
-
-        // int hardcoder en fonction de l'utilisation de formatnewline
-        if (split[split.length - 1].contains("and") || split[split.length - 1].contains("or")) {
-            binaryDeep++;
+        if (split[split.length - 1].contains(">and<") || split[split.length - 1].contains(">or<")) {
             sb.append(formatCurrentIndent());
             sb.append(BEG_UL);
             sb.append(formatNewLine());
+            binaryDeep++;
         }
+
     }
 
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(formatOperator(metadata));
+        sb.append("<li type='circle'>");
+        sb.append(formatOperatorClass(metadata.getOperator(), "binary"));
+        sb.append("</li>");
         sb.append(formatNewLine());
     }
 
@@ -101,6 +115,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
             sb.append(formatNewLine());
             sb.append(formatCurrentIndent());
             sb.append(END_UL);
+
             binaryDeep--;
         }
     }
@@ -113,7 +128,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(BEG_LI);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
-        sb.append(formatOperator(metadata));
+        sb.append(formatOperatorClass(metadata.getOperator(), "nary"));
         sb.append(BEG_UL);
         sb.append(formatNewLine());
     }
@@ -169,16 +184,32 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(formatOperator(metadata));
     }
 
-    @Override
-    protected String formatField(Readable field) {
-        return (null == field) ? null : MessageFormat
-                        .format("<span class=''{0}'' id=''{1}''>{2}</span>", "PLACEHOLDER", "", field.readable());
+    private String formatFieldClass(FieldMetadata field, String classs) {
+
+        StringBuilder sbb = new StringBuilder();
+        field.stream().forEach(el -> {
+
+//            if(el.getType() !=  Type.field  || !sbb.toString().contains(el.getReadable().readable())){
+                sbb.append("<span class='" + el.getType() + "'> " + el.getReadable().readable()
+                                + " </span>");
+//            }
+
+        });
+
+        return sbb.toString();
+    }
+
+    private String formatOperatorClass(String operator, String classs) {
+        return MessageFormat.format("<span class=''{0}'' id=''{1}''>{2}</span>", classs, "", operator);
     }
 
     @Override
-    protected String formatOperator(Readable operator) {
-        return "<span class='OPERATOR' id=''>" + operator.readable() + "</span>";
+    protected String formatWhen() {
+        return "<span class='when'> When </span>";
     }
 
-
+    @Override
+    protected String formatRule() {
+        return "<span class='rule'> Rule </span>";
+    }
 }

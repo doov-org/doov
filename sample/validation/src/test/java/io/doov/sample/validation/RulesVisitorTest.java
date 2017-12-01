@@ -16,18 +16,23 @@
 package io.doov.sample.validation;
 
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
+import static io.doov.sample.field.SampleFieldIdInfo.userBirthdate;
 import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;
 import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
 import static io.doov.sample.validation.Rules.REGISTRY_USER;
+import static java.util.Arrays.asList;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
 import io.doov.core.dsl.DOOV;
+import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.RuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.*;
@@ -86,16 +91,20 @@ public class RulesVisitorTest {
 
         String[] split = sb.toString().split("--------------------------------");
         String path = System.getProperty("user.home") + "/Desktop/testHTML";
-        int i = 0;
-        for (int i1 = 1; i1 < split.length; i1++) {
-            String s = split[i1];
+        for (int i = 1; i < split.length; i++) {
+            String s = split[i];
             try {
                 FileWriter fileWriter = new FileWriter(path + "/test" + i);
                 fileWriter.write("<html><body>");
+                fileWriter.write("<head>\n" +
+                                "        <meta charset=\"utf-8\" />\n" +
+                                "<link href=\"https://fonts.googleapis.com/css?family=Source+Code+Pro\" " +
+                                "rel=\"stylesheet\">" +
+                                "        <link rel=\"stylesheet\" href=\"style.css\" />\n" +
+                                "    </head>\n");
                 fileWriter.write(s);
                 fileWriter.write("</body></html>");
                 fileWriter.close();
-                i++;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -115,12 +124,14 @@ public class RulesVisitorTest {
                         .validate();
 
         ValidationRule vr1 = DOOV
-                        .when(userFirstName().isNotNull().and(userFirstName().isNotNull().or(userFirstName()
-                                        .isNotNull().and(userFirstName().isNotNull()))).and(userFirstName().isNotNull
-                                        ()))
+                        .when(userFirstName().isNotNull().and(userFirstName().isNotNull()
+                                        .or(userFirstName().isNotNull().and(userFirstName().isNotNull())))
+                                        .and(userFirstName().isNotNull()))
                         .validate();
 
-        vr.accept(new AstHtmlVisitor(sb));
+        ValidationRule vr2 = DOOV.when(userBirthdate().after(LocalDate::now)).validate();
+
+        vr2.accept(new AstHtmlVisitor(sb));
         System.out.println(sb);
     }
 }
