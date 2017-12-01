@@ -46,9 +46,4 @@ public class UnaryMetadata implements Metadata {
         value.accept(visitor);
     }
 
-    @Override
-    public Metadata merge(Metadata other) {
-        return new TextMetadata(readable() + " " + other.readable());
-    }
-
 }

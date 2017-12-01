@@ -103,57 +103,40 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
                         (l, r) -> !l.equals(r));
     }
 
-    // match
-
-    @SafeVarargs
-    public final StepCondition anyMatch(T... values) {
-        return predicate(matchAnyMetadata(field, (Object[]) values),
-                        value -> Arrays.stream(values).anyMatch(value::equals));
-    }
-
-    @SafeVarargs
-    public final StepCondition anyMatch(Predicate<T>... values) {
-        return predicate(matchAnyMetadata(field, (Object[]) values),
-                        value -> Arrays.stream(values).anyMatch(v -> v.test(value)));
-    }
+    // any match
 
     public final StepCondition anyMatch(Collection<T> values) {
         return predicate(matchAnyMetadata(field, values),
                         value -> values.stream().anyMatch(value::equals));
     }
 
-    @SafeVarargs
-    public final StepCondition allMatch(T... values) {
-        return predicate(matchAllMetadata(field, (Object[]) values),
-                        value -> Arrays.stream(values).allMatch(value::equals));
+    public final StepCondition anyMatch(List<Predicate<T>> values) {
+        return predicate(matchAnyMetadata(field, values),
+                        value -> values.stream().anyMatch(v -> v.test(value)));
     }
 
-    @SafeVarargs
-    public final StepCondition allMatch(Predicate<T>... values) {
-        return predicate(matchAllMetadata(field, (Object[]) values),
-                        value -> Arrays.stream(values).allMatch(v -> v.test(value)));
-    }
+    // all match
 
     public final StepCondition allMatch(Collection<T> values) {
         return predicate(matchAllMetadata(field, values),
                         value -> values.stream().allMatch(value::equals));
     }
 
-    @SafeVarargs
-    public final StepCondition noneMatch(T... values) {
-        return predicate(matchNoneMetadata(field, (Object[]) values),
-                        value -> Arrays.stream(values).noneMatch(value::equals));
+    public final StepCondition allMatch(List<Predicate<T>> values) {
+        return predicate(matchAllMetadata(field, values),
+                        value -> values.stream().allMatch(v -> v.test(value)));
     }
 
-    @SafeVarargs
-    public final StepCondition noneMatch(Predicate<T>... values) {
-        return predicate(matchNoneMetadata(field, (Object[]) values),
-                        value -> Arrays.stream(values).noneMatch(v -> v.test(value)));
-    }
+    // none match
 
     public final StepCondition noneMatch(Collection<T> values) {
         return predicate(matchNoneMetadata(field, values),
                         value -> values.stream().noneMatch(value::equals));
+    }
+
+    public final StepCondition noneMatch(List<Predicate<T>> values) {
+        return predicate(matchNoneMetadata(field, values),
+                        value -> values.stream().noneMatch(v -> v.test(value)));
     }
 
     // map

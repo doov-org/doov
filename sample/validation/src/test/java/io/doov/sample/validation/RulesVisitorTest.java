@@ -16,18 +16,15 @@
 package io.doov.sample.validation;
 
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
-import static io.doov.core.dsl.impl.LogicalNaryCondition.count;
-import static io.doov.core.dsl.impl.LogicalNaryCondition.matchAny;
 import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;
 import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
 import static io.doov.sample.validation.Rules.REGISTRY_USER;
-import static java.util.Arrays.asList;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.stream.Stream;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.doov.core.dsl.DOOV;
@@ -107,6 +104,7 @@ public class RulesVisitorTest {
     }
 
     @Test
+    @Ignore
     public void oneHtml() {
         StringBuilder sb = new StringBuilder();
         ValidationRule vr = DOOV
@@ -117,7 +115,9 @@ public class RulesVisitorTest {
                         .validate();
 
         ValidationRule vr1 = DOOV
-                        .when(userFirstName().isNotNull().and(userFirstName().isNotNull().or(userFirstName().isNotNull().and(userFirstName().isNotNull()))).and(userFirstName().isNotNull()))
+                        .when(userFirstName().isNotNull().and(userFirstName().isNotNull().or(userFirstName()
+                                        .isNotNull().and(userFirstName().isNotNull()))).and(userFirstName().isNotNull
+                                        ()))
                         .validate();
 
         vr.accept(new AstHtmlVisitor(sb));

@@ -15,317 +15,115 @@
 */
 package io.doov.core.dsl.meta;
 
-import static java.util.Arrays.stream;
+import static io.doov.core.dsl.meta.FieldMetadata.Type.field;
+import static io.doov.core.dsl.meta.FieldMetadata.Type.operator;
+import static io.doov.core.dsl.meta.FieldMetadata.Type.value;
 import static java.util.stream.Collectors.joining;
 
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class FieldMetadata implements Metadata {
 
+    private static final Collector<CharSequence, ?, String> COLLECTOR_LIST = joining(", ", "[", "]");
+
     private static final FieldMetadata EMPTY = new FieldMetadata();
 
-    private final Readable field;
-    private final Readable operator;
-    private final Readable value;
+    private final List<Element> elements;
 
     public FieldMetadata() {
-        field = null;
-        operator = null;
-        value = null;
+        elements = new ArrayList<>();
     }
 
-    private FieldMetadata(Readable field, String operator, Object value) {
-        this.field = field;
-        this.operator = () -> operator;
-        this.value = () -> "'" + value + "'";
+    public FieldMetadata(FieldMetadata metadata) {
+        elements = new ArrayList<>(metadata.elements);
     }
 
-    private FieldMetadata(Readable field, String operator, Readable value) {
-        this.field = field;
-        this.operator = () -> operator;
-        this.value = value;
+    public Stream<Element> stream() {
+        return elements.stream();
     }
 
-    private FieldMetadata(Readable field, Readable operator, Readable value) {
-        this.field = field;
-        this.operator = operator;
-        this.value = value;
-    }
-
-    public Readable getField() {
-        return field;
-    }
-
-    public Readable getOperator() {
-        return operator;
-    }
-
-    public Readable getValue() {
-        return value;
-    }
-
-    public static FieldMetadata emptyMetadata() {
-        return EMPTY;
-    }
-
-    public static FieldMetadata fieldOnlyMetadata(Readable field) {
-        return new FieldMetadata(field, (String) null, null);
-    }
-
-    public static FieldMetadata trueMetadata() {
-        return new FieldMetadata(null, "always true", null);
-    }
-
-    public static FieldMetadata falseMetadata() {
-        return new FieldMetadata(null, "always false", null);
-    }
-
-    public static FieldMetadata minMetadata(List<? extends Readable> values) {
-        return new FieldMetadata(null, "min", formatReadableList(values));
-    }
-
-    public static FieldMetadata sumMetadata(List<? extends Readable> values) {
-        return new FieldMetadata(null, "sum", formatReadableList(values));
-    }
-
-    public static FieldMetadata timesMetadata(Readable field, int multiplier) {
-        return new FieldMetadata(field, "times", multiplier);
-    }
-
-    public static FieldMetadata whenMetadata(Readable field, Readable condition) {
-        return new FieldMetadata(field, "when", condition);
-    }
-
-    public static FieldMetadata availableMetadata(Readable field) {
-        return new FieldMetadata(field, "available", null);
-    }
-
-    public static FieldMetadata notAvailableMetadata(Readable field) {
-        return new FieldMetadata(field, "not available", null);
-    }
-
-    public static FieldMetadata equalsMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "equals", value);
-    }
-
-    public static FieldMetadata equalsMetadata(Readable field, Readable value) {
-        return new FieldMetadata(field, "equals", value);
-    }
-
-    public static FieldMetadata notEqualsMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "not equals", value);
-    }
-
-    public static FieldMetadata nullMetadata(Readable field) {
-        return new FieldMetadata(field, "is null", null);
-    }
-
-    public static FieldMetadata notNullMetadata(Readable field) {
-        return new FieldMetadata(field, "is not null", null);
-    }
-
-    public static FieldMetadata matchAnyMetadata(Readable field, Object... values) {
-        return new FieldMetadata(field, "match any", format(values));
-    }
-
-    public static FieldMetadata matchAllMetadata(Readable field, Object... values) {
-        return new FieldMetadata(field, "match all", format(values));
-    }
-
-    public static FieldMetadata matchNoneMetadata(Readable field, Object... values) {
-        return new FieldMetadata(field, "match none", format(values));
-    }
-
-    public static FieldMetadata mapToIntMetadata(Readable field) {
-        return new FieldMetadata(field, "map to int", null);
-    }
-
-    public static FieldMetadata withMetadata(Readable field, Object adjuster) {
-        return new FieldMetadata(field, "with", adjuster);
-    }
-
-    public static FieldMetadata minusMetadata(Readable field, int value, Object unit) {
-        return new FieldMetadata(field, "minus", value + " " + unit);
-    }
-
-    public static FieldMetadata minusMetadata(Readable field1, Readable field2, Object unit) {
-        return new FieldMetadata(field1, "minus", field2.readable() + " " + unit);
-    }
-
-    public static FieldMetadata plusMetadata(Readable field, int value, Object unit) {
-        return new FieldMetadata(field, "plus", value + " " + unit);
-    }
-
-    public static FieldMetadata plusMetadata(Readable field1, Readable field2, Object unit) {
-        return new FieldMetadata(field1, "plus", field2.readable() + " " + unit);
-    }
-
-    public static FieldMetadata afterMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "after", value);
-    }
-
-    public static FieldMetadata beforeMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "before", value);
-    }
-
-    public static FieldMetadata afterMetadata(Readable field1, Readable field2) {
-        return new FieldMetadata(field1, "after", field2);
-    }
-
-    public static FieldMetadata beforeMetadata(Readable field1, Readable field2) {
-        return new FieldMetadata(field1, "before", field2);
-    }
-
-    public static FieldMetadata afterMetadata(Readable field, Supplier<Object> value) {
-        return new FieldMetadata(field, "after", () -> value.get().toString());
-    }
-
-    public static FieldMetadata beforeMetadata(Readable field, Supplier<Object> supplier) {
-        return new FieldMetadata(field, "before", () -> supplier.get().toString());
-    }
-
-    public static FieldMetadata ageAtMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, () -> "age at " + value, null);
-    }
-
-    public static FieldMetadata ageAtMetadata(Readable field1, Readable field2) {
-        return new FieldMetadata(field1, () -> "age at " + field2.readable(), null);
-    }
-
-    public static FieldMetadata ageAtMetadata(Readable field, Supplier<Object> supplier) {
-        return new FieldMetadata(field, () -> "age at " + supplier.get().toString(), null);
-    }
-
-    public static FieldMetadata matchesMetadata(Readable field, String value) {
-        return new FieldMetadata(field, "matches", value);
-    }
-
-    public static FieldMetadata containsMetadata(Readable field, String value) {
-        return new FieldMetadata(field, "contains", value);
-    }
-
-    public static FieldMetadata startsWithMetadata(Readable field, String value) {
-        return new FieldMetadata(field, "starts with", value);
-    }
-
-    public static FieldMetadata endsWithMetadata(Readable field, String value) {
-        return new FieldMetadata(field, "ends with", value);
-    }
-
-    public static FieldMetadata notMetadata(Readable field) {
-        return new FieldMetadata(field, "not", null);
-    }
-
-    public static FieldMetadata andMetadata(Readable field, boolean value) {
-        return new FieldMetadata(field, "and", value);
-    }
-
-    public static FieldMetadata andMetadata(Readable field, Readable value) {
-        return new FieldMetadata(field, "and", value);
-    }
-
-    public static FieldMetadata orMetadata(Readable field, boolean value) {
-        return new FieldMetadata(field, "or", value);
-    }
-
-    public static FieldMetadata orMetadata(Readable field, Readable value) {
-        return new FieldMetadata(field, "or", value);
-    }
-
-    public static FieldMetadata xorMetadata(Readable field, boolean value) {
-        return new FieldMetadata(field, "xor", value);
-    }
-
-    public static FieldMetadata xorMetadata(Readable field, Readable value) {
-        return new FieldMetadata(field, "xor", value);
-    }
-
-    public static FieldMetadata isMetadata(Readable field, boolean value) {
-        return new FieldMetadata(field, "is", value);
-    }
-
-    public static FieldMetadata lesserThanMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "lesser than", value);
-    }
-
-    public static FieldMetadata lesserThanMetadata(Readable field1, Readable field2) {
-        return new FieldMetadata(field1, "lesser than", field2);
-    }
-
-    public static FieldMetadata lesserOrEqualsMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "lesser or equals", value);
-    }
-
-    public static FieldMetadata lesserOrEqualsMetadata(Readable field1, Readable field2) {
-        return new FieldMetadata(field1, "lesser or equals", field2);
-    }
+    // field
 
-    public static FieldMetadata greaterThanMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "greater than", value);
+    public FieldMetadata field(Readable readable) {
+        if (readable != null) {
+            elements.add(new Element(readable, field));
+        }
+        return this;
     }
 
-    public static FieldMetadata greaterThanMetadata(Readable field1, Readable field2) {
-        return new FieldMetadata(field1, "greater than", field2);
-    }
-
-    public static FieldMetadata greaterOrEqualsMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "greater or equals", value);
-    }
+    // operator
 
-    public static FieldMetadata greaterOrEqualsMetadata(Readable field1, Readable field2) {
-        return new FieldMetadata(field1, "greater or equals", field2);
+    public FieldMetadata operator(Readable readable) {
+        if (readable != null) {
+            elements.add(new Element(readable, operator));
+        }
+        return this;
     }
 
-    public static FieldMetadata lengthIsMetadata(Readable field) {
-        return new FieldMetadata(field, "length is", null);
+    public FieldMetadata operator(String readable) {
+        if (readable != null) {
+            elements.add(new Element(() -> readable, operator));
+        }
+        return this;
     }
 
-    public static FieldMetadata containsMetadata(Readable field, Object value) {
-        return new FieldMetadata(field, "contains", value);
-    }
-
-    public static FieldMetadata containsMetadata(Readable field, Object... values) {
-        return new FieldMetadata(field, "contains", format(values));
-    }
+    // value
 
-    public static FieldMetadata isEmptyMetadata(Readable field) {
-        return new FieldMetadata(field, "is empty", null);
+    public FieldMetadata valueListReadable(Collection<? extends Readable> readables) {
+        if (readables != null && !readables.isEmpty()) {
+            elements.add(new Element(() -> formatListReadable(readables), value));
+        }
+        return this;
     }
 
-    public static FieldMetadata isNotEmptyMetadata(Readable field) {
-        return new FieldMetadata(field, "is not empty", null);
+    public FieldMetadata valueListObject(Collection<?> readables) {
+        if (readables != null && !readables.isEmpty()) {
+            elements.add(new Element(() -> formatListObject(readables), value));
+        }
+        return this;
     }
 
-    public static FieldMetadata hasSizeMetadata(Readable field, int size) {
-        return new FieldMetadata(field, "has size", size);
+    public FieldMetadata valueObject(Object readable) {
+        if (readable != null) {
+            elements.add(new Element(() -> String.valueOf(readable), value));
+        }
+        return this;
     }
 
-    public static FieldMetadata hasNotSizeMetadata(Readable field, int size) {
-        return new FieldMetadata(field, "has not size", size);
+    public FieldMetadata valueString(String readable) {
+        if (readable != null) {
+            elements.add(new Element(() -> readable, value));
+        }
+        return this;
     }
 
-    private static String formatReadableList(List<? extends Readable> readables) {
-        return readables.stream().map(Object::toString).collect(joining(", ", "[", "]"));
+    public FieldMetadata valueReadable(Readable readable) {
+        if (readable != null) {
+            elements.add(new Element(readable, value));
+        }
+        return this;
     }
 
-    private static String format(Object... values) {
-        return stream(values).map(Object::toString).collect(joining(", ", "[", "]"));
+    public FieldMetadata valueSupplier(Supplier<Object> readable) {
+        if (readable != null) {
+            elements.add(new Element(() -> String.valueOf(readable.get()), value));
+        }
+        return this;
     }
 
-    private static String format(Readable... values) {
-        return stream(values).map(Readable::readable).collect(joining(", ", "[", "]"));
-    }
+    // implementation
 
     @Override
-    public Metadata merge(Metadata metadata) {
-        if (equals(EMPTY)) {
-            return metadata;
-        }
-        return new FieldMetadata(field, operator == null ? null : operator.readable(), metadata);
+    public Metadata merge(FieldMetadata other) {
+        FieldMetadata fieldMetadata = new FieldMetadata(this);
+        fieldMetadata.elements.addAll(other.elements);
+        return fieldMetadata;
     }
 
     @Override
@@ -338,6 +136,326 @@ public class FieldMetadata implements Metadata {
         visitor.start(this);
         visitor.visit(this);
         visitor.end(this);
+    }
+
+    // static
+
+    public static FieldMetadata emptyMetadata() {
+        return EMPTY;
+    }
+
+    public static FieldMetadata fieldMetadata(Readable field) {
+        return new FieldMetadata().field(field);
+    }
+
+    // boolean
+
+    public static FieldMetadata trueMetadata() {
+        return new FieldMetadata().operator("always true");
+    }
+
+    public static FieldMetadata falseMetadata() {
+        return new FieldMetadata().operator("always false");
+    }
+
+    // min
+
+    public static FieldMetadata minMetadata(Collection<? extends Readable> values) {
+        return new FieldMetadata().operator("min").valueListReadable(values);
+    }
+
+    // sum
+
+    public static FieldMetadata sumMetadata(Collection<? extends Readable> values) {
+        return new FieldMetadata().operator("sum").valueListReadable(values);
+    }
+
+    // times
+
+    public static FieldMetadata timesMetadata(Readable field, int multiplier) {
+        return new FieldMetadata().field(field).operator("times").valueObject(multiplier);
+    }
+
+    // when
+
+    public static FieldMetadata whenMetadata(Readable field, Readable condition) {
+        return new FieldMetadata().field(field).operator("when").valueReadable(condition);
+    }
+
+    // equals
+
+    public static FieldMetadata equalsMetadata(Readable field, Object value) {
+        return new FieldMetadata().field(field).operator("equals").valueObject(value);
+    }
+
+    public static FieldMetadata equalsMetadata(Readable field, Readable value) {
+        return new FieldMetadata().field(field).operator("equals").valueReadable(value);
+    }
+
+    public static FieldMetadata notEqualsMetadata(Readable field, Object value) {
+        return new FieldMetadata().field(field).operator("not equals").valueObject(value);
+    }
+
+    // null
+
+    public static FieldMetadata nullMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("is null");
+    }
+
+    public static FieldMetadata notNullMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("is not null");
+    }
+
+    // match
+
+    public static FieldMetadata matchAnyMetadata(Readable field, Collection<?> values) {
+        return new FieldMetadata().field(field).operator("match any").valueListObject(values);
+    }
+
+    public static FieldMetadata matchAllMetadata(Readable field, Collection<?> values) {
+        return new FieldMetadata().field(field).operator("match all").valueListObject(values);
+    }
+
+    public static FieldMetadata matchNoneMetadata(Readable field, Collection<?> values) {
+        return new FieldMetadata().field(field).operator("match none").valueListObject(values);
+    }
+
+    // map
+
+    public static FieldMetadata mapToIntMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("map to int");
+    }
+
+    // with
+
+    public static FieldMetadata withMetadata(Readable field, Object adjuster) {
+        return new FieldMetadata().field(field).operator("with").valueObject(adjuster);
+    }
+
+    // minus
+
+    public static FieldMetadata minusMetadata(Readable field, int value, Object unit) {
+        return new FieldMetadata().field(field).operator("minus").valueString(value + " " + unit);
+    }
+
+    public static FieldMetadata minusMetadata(Readable field1, Readable field2, Object unit) {
+        return new FieldMetadata().field(field1).operator("minus").valueString(field2 + " " + unit);
+    }
+
+    // plus
+
+    public static FieldMetadata plusMetadata(Readable field, int value, Object unit) {
+        return new FieldMetadata().field(field).operator("plus").valueString(value + " " + unit);
+    }
+
+    public static FieldMetadata plusMetadata(Readable field1, Readable field2, Object unit) {
+        return new FieldMetadata().field(field1).operator("plus").valueString(field2 + " " + unit);
+    }
+
+    // after
+
+    public static FieldMetadata afterMetadata(Readable field, Object value) {
+        return new FieldMetadata().field(field).operator("after").valueObject(value);
+    }
+
+    public static FieldMetadata afterMetadata(Readable field1, Readable field2) {
+        return new FieldMetadata().field(field1).operator("after").valueReadable(field2);
+    }
+
+    public static FieldMetadata afterMetadata(Readable field, Supplier<Object> value) {
+        return new FieldMetadata().field(field).operator("after").valueSupplier(value);
+    }
+
+    // before
+
+    public static FieldMetadata beforeMetadata(Readable field, Object value) {
+        return new FieldMetadata().field(field).operator("before").valueObject(value);
+    }
+
+    public static FieldMetadata beforeMetadata(Readable field1, Readable field2) {
+        return new FieldMetadata().field(field1).operator("before").valueObject(field2);
+    }
+
+    public static FieldMetadata beforeMetadata(Readable field, Supplier<Object> value) {
+        return new FieldMetadata().field(field).operator("before").valueSupplier(value);
+    }
+
+    // age at
+
+    public static FieldMetadata ageAtMetadata(Readable field, Object value) {
+        return new FieldMetadata().field(field).operator("age at").valueObject(value);
+    }
+
+    public static FieldMetadata ageAtMetadata(Readable field1, Readable field2) {
+        return new FieldMetadata().field(field1).operator("age at").valueReadable(field2);
+    }
+
+    public static FieldMetadata ageAtMetadata(Readable field, Supplier<Object> supplier) {
+        return new FieldMetadata().field(field).operator("age at").valueSupplier(supplier);
+    }
+
+    // string
+
+    public static FieldMetadata matchesMetadata(Readable field, String value) {
+        return new FieldMetadata().field(field).operator("matches").valueString(value);
+    }
+
+    public static FieldMetadata containsMetadata(Readable field, String value) {
+        return new FieldMetadata().field(field).operator("contains").valueString(value);
+    }
+
+    public static FieldMetadata startsWithMetadata(Readable field, String value) {
+        return new FieldMetadata().field(field).operator("starts with").valueString(value);
+    }
+
+    public static FieldMetadata endsWithMetadata(Readable field, String value) {
+        return new FieldMetadata().field(field).operator("ends with").valueString(value);
+    }
+
+    // boolean
+
+    public static FieldMetadata notMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("not");
+    }
+
+    public static FieldMetadata andMetadata(Readable field, boolean value) {
+        return new FieldMetadata().field(field).operator("and").valueObject(value);
+    }
+
+    public static FieldMetadata andMetadata(Readable field, Readable value) {
+        return new FieldMetadata().field(field).operator("and").valueReadable(value);
+    }
+
+    public static FieldMetadata orMetadata(Readable field, boolean value) {
+        return new FieldMetadata().field(field).operator("or").valueObject(value);
+    }
+
+    public static FieldMetadata orMetadata(Readable field, Readable value) {
+        return new FieldMetadata().field(field).operator("or").valueReadable(value);
+    }
+
+    public static FieldMetadata xorMetadata(Readable field, boolean value) {
+        return new FieldMetadata().field(field).operator("xor").valueObject(value);
+    }
+
+    public static FieldMetadata xorMetadata(Readable field, Readable value) {
+        return new FieldMetadata().field(field).operator("xor").valueReadable(value);
+    }
+
+    // is
+
+    public static FieldMetadata isMetadata(Readable field, boolean value) {
+        return new FieldMetadata().field(field).operator("is").valueObject(value);
+    }
+
+    // lesser
+
+    public static FieldMetadata lesserThanMetadata(Readable field, Object value) {
+        return new FieldMetadata().field(field).operator("lesser than").valueObject(value);
+    }
+
+    public static FieldMetadata lesserThanMetadata(Readable field1, Readable field2) {
+        return new FieldMetadata().field(field1).operator("lesser than").valueReadable(field2);
+    }
+
+    public static FieldMetadata lesserOrEqualsMetadata(Readable field, Object value) {
+        return new FieldMetadata().field(field).operator("lesser or equals").valueObject(value);
+    }
+
+    public static FieldMetadata lesserOrEqualsMetadata(Readable field1, Readable field2) {
+        return new FieldMetadata().field(field1).operator("lesser or equals").valueReadable(field2);
+    }
+
+    // lesser
+
+    public static FieldMetadata greaterThanMetadata(Readable field, Object value) {
+        return new FieldMetadata().field(field).operator("greater than").valueObject(value);
+    }
+
+    public static FieldMetadata greaterThanMetadata(Readable field1, Readable field2) {
+        return new FieldMetadata().field(field1).operator("greater than").valueReadable(field2);
+    }
+
+    public static FieldMetadata greaterOrEqualsMetadata(Readable field, Object value) {
+        return new FieldMetadata().field(field).operator("greater or equals").valueObject(value);
+    }
+
+    public static FieldMetadata greaterOrEqualsMetadata(Readable field1, Readable field2) {
+        return new FieldMetadata().field(field1).operator("greater or equals").valueReadable(field2);
+    }
+
+    // length is
+
+    public static FieldMetadata lengthIsMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("length is");
+    }
+
+    // length is
+
+    public static FieldMetadata containsMetadata(Readable field, Object value) {
+        return new FieldMetadata().field(field).operator("contains").valueObject(value);
+    }
+
+    public static FieldMetadata containsMetadata(Readable field, Collection<Object> values) {
+        return new FieldMetadata().field(field).operator("contains").valueListObject(values);
+    }
+
+    // empty
+
+    public static FieldMetadata isEmptyMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("is empty");
+    }
+
+    public static FieldMetadata isNotEmptyMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("is not empty");
+    }
+
+    // size
+
+    public static FieldMetadata hasSizeMetadata(Readable field, int size) {
+        return new FieldMetadata().field(field).operator("has size").valueObject(size);
+    }
+
+    public static FieldMetadata hasNotSizeMetadata(Readable field, int size) {
+        return new FieldMetadata().field(field).operator("has not size").valueObject(size);
+    }
+
+    // utils
+
+    private static String formatListReadable(Collection<? extends Readable> readables) {
+        return readables.stream().map(Readable::readable).collect(COLLECTOR_LIST);
+    }
+
+    private static String formatListObject(Collection<?> readables) {
+        return readables.stream().map(Object::toString).collect(COLLECTOR_LIST);
+    }
+
+    // classes
+
+    public static class Element {
+
+        private final Readable readable;
+        private final Type type;
+
+        private Element(Readable readable, Type type) {
+            this.readable = readable;
+            this.type = type;
+        }
+
+        public Readable getReadable() {
+            return readable;
+        }
+
+        public Type getType() {
+            return type;
+        }
+
+    }
+
+    public enum Type {
+
+        field, operator, value
+
     }
 
 }

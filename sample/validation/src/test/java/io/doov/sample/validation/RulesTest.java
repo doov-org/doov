@@ -61,10 +61,10 @@ public class RulesTest {
         assertThat(actual.isTrue()).isFalse();
         assertThat(actual.getFailedNodes()).hasSize(3);
         assertThat(actual.getFailedNodes().stream().map(Readable::readable).collect(toList()))
-                        .contains("account email matches '\\w+[@]\\w+\\.com' ",
-                                        "account email matches '\\w+[@]\\w+\\.fr' ",
-                                        "(account email matches '\\w+[@]\\w+\\.com' or " +
-                                                        "account email matches '\\w+[@]\\w+\\.fr') ");
+                        .contains("account email matches \\w+[@]\\w+\\.com ",
+                                        "account email matches \\w+[@]\\w+\\.fr ",
+                                        "(account email matches \\w+[@]\\w+\\.com or " +
+                                                        "account email matches \\w+[@]\\w+\\.fr) ");
     }
 
     @Test

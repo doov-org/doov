@@ -1,8 +1,6 @@
 package io.doov.core.dsl.meta.ast;
 
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import static java.util.stream.Collectors.joining;
 
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.*;
@@ -75,18 +73,18 @@ public class AstTextVisitor extends AbstractAstVisitor {
 
     @Override
     protected int getCurrentIndentSize() {
-        if (Element.BINARY.equals(stackPeek())) {
-            return (int) stackSteam().filter(e -> !Element.BINARY.equals(e)).count() * getIndentSize();
+        if (AbstractAstVisitor.Element.BINARY.equals(stackPeek())) {
+            return (int) stackSteam().filter(e -> !AbstractAstVisitor.Element.BINARY.equals(e)).count() *
+                            getIndentSize();
         }
         return super.getCurrentIndentSize();
     }
 
     protected String formatFieldMetadata(FieldMetadata metadata) {
-        return Stream.of(formatField(metadata.getField()),
-                        formatOperator(metadata.getOperator()),
-                        formatValue(metadata.getValue()))
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.joining(" "));
+        return metadata.stream()
+                        .map(FieldMetadata.Element::getReadable)
+                        .map(Readable::readable)
+                        .collect(joining(" "));
     }
 
     protected String formatField(Readable field) {

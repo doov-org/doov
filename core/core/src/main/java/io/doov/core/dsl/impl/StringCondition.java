@@ -68,7 +68,7 @@ public class StringCondition extends DefaultCondition<String> {
     public IntegerCondition parseInt() {
         return new IntegerCondition(
                         field,
-                        fieldOnlyMetadata(field),
+                        fieldMetadata(field),
                         (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(Integer::parseInt));
     }
 

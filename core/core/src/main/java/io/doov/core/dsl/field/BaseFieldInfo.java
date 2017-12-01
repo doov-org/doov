@@ -1,5 +1,8 @@
 package io.doov.core.dsl.field;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 import java.util.Collection;
 import java.util.function.*;
 
@@ -42,59 +45,63 @@ public interface BaseFieldInfo<T> extends DslField {
         return getDefaultCondition().notEq(value);
     }
 
-    // match
-
-    @SuppressWarnings("unchecked")
-    default StepCondition anyMatch(T... values) {
-        return getDefaultCondition().anyMatch(values);
-    }
+    // any match
 
     @SuppressWarnings("unchecked")
     default StepCondition anyMatch(Predicate<T> value) {
-        return getDefaultCondition().anyMatch(value);
+        return getDefaultCondition().anyMatch(singletonList(value));
     }
 
     @SuppressWarnings("unchecked")
     default StepCondition anyMatch(Predicate<T>... values) {
-        return getDefaultCondition().anyMatch(values);
+        return getDefaultCondition().anyMatch(asList(values));
+    }
+
+    @SuppressWarnings("unchecked")
+    default StepCondition anyMatch(T... values) {
+        return getDefaultCondition().anyMatch(asList(values));
     }
 
     default StepCondition anyMatch(Collection<T> values) {
         return getDefaultCondition().anyMatch(values);
     }
 
-    @SuppressWarnings("unchecked")
-    default StepCondition allMatch(T... values) {
-        return getDefaultCondition().allMatch(values);
-    }
+    // all match
 
     @SuppressWarnings("unchecked")
     default StepCondition allMatch(Predicate<T> value) {
-        return getDefaultCondition().allMatch(value);
+        return getDefaultCondition().allMatch(singletonList(value));
     }
 
     @SuppressWarnings("unchecked")
     default StepCondition allMatch(Predicate<T>... values) {
-        return getDefaultCondition().allMatch(values);
+        return getDefaultCondition().allMatch(asList(values));
+    }
+
+    @SuppressWarnings("unchecked")
+    default StepCondition allMatch(T... values) {
+        return getDefaultCondition().allMatch(asList(values));
     }
 
     default StepCondition allMatch(Collection<T> values) {
         return getDefaultCondition().allMatch(values);
     }
 
-    @SuppressWarnings("unchecked")
-    default StepCondition noneMatch(T... values) {
-        return getDefaultCondition().noneMatch(values);
-    }
+    // none match
 
     @SuppressWarnings("unchecked")
     default StepCondition noneMatch(Predicate<T> value) {
-        return getDefaultCondition().noneMatch(value);
+        return getDefaultCondition().noneMatch(singletonList(value));
     }
 
     @SuppressWarnings("unchecked")
     default StepCondition noneMatch(Predicate<T>... values) {
-        return getDefaultCondition().noneMatch(values);
+        return getDefaultCondition().noneMatch(asList(values));
+    }
+
+    @SuppressWarnings("unchecked")
+    default StepCondition noneMatch(T... values) {
+        return getDefaultCondition().noneMatch(asList(values));
     }
 
     default StepCondition noneMatch(Collection<T> values) {

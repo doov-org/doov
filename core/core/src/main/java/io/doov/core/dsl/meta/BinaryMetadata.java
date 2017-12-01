@@ -55,10 +55,4 @@ public class BinaryMetadata implements Metadata {
         visitor.end(this);
     }
 
-
-    @Override
-    public Metadata merge(Metadata other) {
-        return new TextMetadata(readable() + " " + other.readable());
-    }
-
 }

@@ -18,9 +18,4 @@ public class TextMetadata implements Metadata {
         visitor.visit(this);
     }
 
-    @Override
-    public Metadata merge(Metadata other) {
-        return new TextMetadata(readable() + " " + other.readable());
-    }
-
 }
