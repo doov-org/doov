@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package io.doov.core.dsl;
+package io.doov.core.dsl.time;
 
+import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
+import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -66,23 +68,33 @@ public class LocalDateSuppliers {
         return todayMinus(yearsToSubstract, ChronoUnit.YEARS);
     }
 
-    // date
-
-    public static TemporalCondition<LocalDate> date(int year, int month, int dayOfMonth) {
-        return new LocalDateCondition(null, new TextMetadata(LocalDate.of(year, month, dayOfMonth).toString()),
-                        (model, context) -> Optional.of(LocalDate.of(year, month, dayOfMonth)));
-    }
-
     // adjusters
 
-    public static TemporalCondition<LocalDate> lastDayOfThisMonth() {
+    public static TemporalCondition<LocalDate> firstDayOfThisMonth() {
         return new LocalDateCondition(null, new TextMetadata("first day of this month"),
-                        (model, context) -> Optional.of(LocalDate.now().with(lastDayOfMonth())));
+                        (model, context) -> Optional.of(LocalDate.now().with(firstDayOfMonth())));
     }
 
     public static TemporalCondition<LocalDate> firstDayOfThisYear() {
         return new LocalDateCondition(null, new TextMetadata("first day of this year"),
                         (model, context) -> Optional.of(LocalDate.now().with(firstDayOfYear())));
+    }
+
+    public static TemporalCondition<LocalDate> lastDayOfThisMonth() {
+        return new LocalDateCondition(null, new TextMetadata("last day of this month"),
+                        (model, context) -> Optional.of(LocalDate.now().with(lastDayOfMonth())));
+    }
+
+    public static TemporalCondition<LocalDate> lastDayOfThisYear() {
+        return new LocalDateCondition(null, new TextMetadata("last day of this year"),
+                        (model, context) -> Optional.of(LocalDate.now().with(lastDayOfYear())));
+    }
+
+    // date
+
+    public static TemporalCondition<LocalDate> date(int year, int month, int dayOfMonth) {
+        return new LocalDateCondition(null, new TextMetadata(LocalDate.of(year, month, dayOfMonth).toString()),
+                        (model, context) -> Optional.of(LocalDate.of(year, month, dayOfMonth)));
     }
 
 }

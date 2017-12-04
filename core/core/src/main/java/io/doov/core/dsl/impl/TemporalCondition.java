@@ -28,6 +28,7 @@ import io.doov.core.dsl.field.TemporalFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.time.TemporalAdjuster;
 
 public abstract class TemporalCondition<N extends Temporal> extends DefaultCondition<N> {
 
@@ -45,12 +46,12 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     // with
 
     public final TemporalCondition<N> with(TemporalAdjuster adjuster) {
-        return temporalCondition(field, withMetadata(field, adjuster),
+        return temporalCondition(field, withMetadata(field, adjuster.getMetadata()),
                         (model, context) -> value(model, field)
-                                        .map(v -> withFunction(adjuster).apply(v)));
+                                        .map(v -> withFunction(adjuster.getAdjuster()).apply(v)));
     }
 
-    protected abstract Function<N, N> withFunction(TemporalAdjuster adjuster);
+    protected abstract Function<N, N> withFunction(java.time.temporal.TemporalAdjuster adjuster);
 
     // minus
 

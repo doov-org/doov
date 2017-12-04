@@ -17,7 +17,9 @@ package io.doov.sample.validation;
 
 import static io.doov.core.dsl.DOOV.count;
 import static io.doov.core.dsl.DOOV.matchAll;
-import static io.doov.core.dsl.LocalDateSuppliers.today;
+import static io.doov.core.dsl.time.LocalDateSuppliers.firstDayOfThisYear;
+import static io.doov.core.dsl.time.LocalDateSuppliers.today;
+import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
 import static io.doov.sample.field.SampleFieldIdInfo.*;
 import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT_01;
 import static io.doov.sample.validation.id.AccountRulesId.VALID_ACCOUNT_02;
@@ -67,6 +69,18 @@ public class Rules extends DefaultRuleRegistry {
                         .registerOn(REGISTRY_USER);
 
         DOOV.when(userBirthdate().ageAt(accountCreationDate()).greaterOrEquals(18))
+                        .validate()
+                        .registerOn(REGISTRY_ACCOUNT);
+
+        DOOV.when(userBirthdate().ageAt(accountCreationDate().with(firstDayOfYear())).greaterOrEquals(18))
+                        .validate()
+                        .registerOn(REGISTRY_ACCOUNT);
+
+        DOOV.when(userBirthdate().ageAt(firstDayOfThisYear()).greaterOrEquals(18))
+                        .validate()
+                        .registerOn(REGISTRY_ACCOUNT);
+
+        DOOV.when(matchAll(userFirstName().mapToInt(name -> 1).eq(1)))
                         .validate()
                         .registerOn(REGISTRY_ACCOUNT);
     }

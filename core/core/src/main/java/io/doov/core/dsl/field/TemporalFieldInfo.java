@@ -14,12 +14,14 @@ package io.doov.core.dsl.field;
 
 import static java.time.temporal.ChronoUnit.YEARS;
 
-import java.time.temporal.*;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalUnit;
 import java.util.function.Supplier;
 
 import io.doov.core.dsl.impl.NumericCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.time.TemporalAdjuster;
 
 public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> {
 

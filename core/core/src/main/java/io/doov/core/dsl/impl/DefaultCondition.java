@@ -16,6 +16,7 @@
 package io.doov.core.dsl.impl;
 
 import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static java.util.Arrays.asList;
 
 import java.util.*;
 import java.util.function.*;
@@ -105,6 +106,12 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
 
     // any match
 
+    @SafeVarargs
+    public final StepCondition anyMatch(T... values) {
+        return predicate(matchAnyMetadata(field, asList(values)),
+                        value -> Arrays.stream(values).anyMatch(value::equals));
+    }
+
     public final StepCondition anyMatch(Collection<T> values) {
         return predicate(matchAnyMetadata(field, values),
                         value -> values.stream().anyMatch(value::equals));
@@ -117,6 +124,12 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
 
     // all match
 
+    @SafeVarargs
+    public final StepCondition allMatch(T... values) {
+        return predicate(matchAllMetadata(field, asList(values)),
+                        value -> Arrays.stream(values).allMatch(value::equals));
+    }
+
     public final StepCondition allMatch(Collection<T> values) {
         return predicate(matchAllMetadata(field, values),
                         value -> values.stream().allMatch(value::equals));
@@ -128,6 +141,12 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
     }
 
     // none match
+
+    @SafeVarargs
+    public final StepCondition noneMatch(T... values) {
+        return predicate(matchNoneMetadata(field, asList(values)),
+                        value -> Arrays.stream(values).noneMatch(value::equals));
+    }
 
     public final StepCondition noneMatch(Collection<T> values) {
         return predicate(matchNoneMetadata(field, values),
