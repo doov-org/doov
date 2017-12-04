@@ -34,14 +34,14 @@ public class FieldMetadata implements Metadata {
 
     private static final FieldMetadata EMPTY = new FieldMetadata();
 
-    private final List<Element> elements;
+    private final Deque<Element> elements;
 
     public FieldMetadata() {
-        elements = new ArrayList<>();
+        elements = new LinkedList<>();
     }
 
     public FieldMetadata(FieldMetadata metadata) {
-        elements = new ArrayList<>(metadata.elements);
+        elements = new LinkedList<>(metadata.elements);
     }
 
     public Stream<Element> stream() {
@@ -130,9 +130,19 @@ public class FieldMetadata implements Metadata {
 
     @Override
     public Metadata merge(FieldMetadata other) {
+        removeDuplicateField(other);
         FieldMetadata fieldMetadata = new FieldMetadata(this);
         fieldMetadata.elements.addAll(other.elements);
         return fieldMetadata;
+    }
+
+    private void removeDuplicateField(FieldMetadata other) {
+        if (this.elements.isEmpty() || other.elements.isEmpty()) {
+            return;
+        }
+        if (this.elements.peek().type.equals(Type.field) && other.elements.peek().type.equals(Type.field)) {
+            other.elements.pop();
+        }
     }
 
     @Override

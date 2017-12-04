@@ -65,6 +65,10 @@ public class Rules extends DefaultRuleRegistry {
                                         .greaterThan(0))))
                         .validate()
                         .registerOn(REGISTRY_USER);
+
+        DOOV.when(userBirthdate().ageAt(accountCreationDate()).greaterOrEquals(18))
+                        .validate()
+                        .registerOn(REGISTRY_ACCOUNT);
     }
 
     static {
