@@ -278,21 +278,25 @@ public class FieldMetadata implements Metadata {
     // minus
 
     public static FieldMetadata minusMetadata(Readable field, int value, Object unit) {
-        return new FieldMetadata().field(field).operator("minus").valueString(value + " " + unit);
+        return new FieldMetadata().field(field).operator("minus")
+                        .valueString(value + " " + unit.toString().toLowerCase());
     }
 
     public static FieldMetadata minusMetadata(Readable field1, Readable field2, Object unit) {
-        return new FieldMetadata().field(field1).operator("minus").valueString(field2 + " " + unit);
+        return new FieldMetadata().field(field1).operator("minus").field(field2)
+                        .valueObject(unit.toString().toLowerCase());
     }
 
     // plus
 
     public static FieldMetadata plusMetadata(Readable field, int value, Object unit) {
-        return new FieldMetadata().field(field).operator("plus").valueString(value + " " + unit);
+        return new FieldMetadata().field(field).operator("plus")
+                        .valueString(value + " " + unit.toString().toLowerCase());
     }
 
     public static FieldMetadata plusMetadata(Readable field1, Readable field2, Object unit) {
-        return new FieldMetadata().field(field1).operator("plus").valueString(field2 + " " + unit);
+        return new FieldMetadata().field(field1).operator("plus").field(field2)
+                        .valueObject(unit.toString().toLowerCase());
     }
 
     // after
