@@ -19,8 +19,8 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.function.UnaryOperator;
 
+import io.doov.core.dsl.meta.FieldMetadata;
 import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.TextMetadata;
 
 public class TemporalAdjuster {
 
@@ -43,39 +43,39 @@ public class TemporalAdjuster {
     // adjusters
 
     public static TemporalAdjuster firstDayOfMonth() {
-        return new TemporalAdjuster(new TextMetadata("first day of month"),
+        return new TemporalAdjuster(new FieldMetadata().valueString("first day of month"),
                         TemporalAdjusters.firstDayOfMonth());
     }
 
     public static TemporalAdjuster firstDayOfNextMonth() {
-        return new TemporalAdjuster(new TextMetadata("first day of next month"),
+        return new TemporalAdjuster(new FieldMetadata().valueString("first day of next month"),
                         TemporalAdjusters.firstDayOfNextMonth());
     }
 
     public static TemporalAdjuster firstDayOfYear() {
-        return new TemporalAdjuster(new TextMetadata("first day of year"),
+        return new TemporalAdjuster(new FieldMetadata().valueString("first day of year"),
                         TemporalAdjusters.firstDayOfYear());
     }
 
     public static TemporalAdjuster firstDayOfNextYear() {
-        return new TemporalAdjuster(new TextMetadata("first day of next year"),
+        return new TemporalAdjuster(new FieldMetadata().valueString("first day of next year"),
                         TemporalAdjusters.firstDayOfNextYear());
     }
 
     public static TemporalAdjuster lastDayOfMonth() {
-        return new TemporalAdjuster(new TextMetadata("last day of month"),
+        return new TemporalAdjuster(new FieldMetadata().valueString("last day of month"),
                         TemporalAdjusters.lastDayOfMonth());
     }
 
     public static TemporalAdjuster lastDayOfYear() {
-        return new TemporalAdjuster(new TextMetadata("last day of year"),
+        return new TemporalAdjuster(new FieldMetadata().valueString("last day of year"),
                         TemporalAdjusters.lastDayOfYear());
     }
 
     // date
 
     public static TemporalAdjuster ofDateAdjuster(UnaryOperator<LocalDate> dateBasedAdjuster) {
-        return new TemporalAdjuster(new TextMetadata("unknown date adjuster"),
+        return new TemporalAdjuster(new FieldMetadata().valueUnknown("date adjuster"),
                         TemporalAdjusters.ofDateAdjuster(dateBasedAdjuster));
     }
 

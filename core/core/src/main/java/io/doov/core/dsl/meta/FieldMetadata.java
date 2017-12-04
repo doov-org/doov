@@ -17,6 +17,7 @@ package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.FieldMetadata.Type.field;
 import static io.doov.core.dsl.meta.FieldMetadata.Type.operator;
+import static io.doov.core.dsl.meta.FieldMetadata.Type.unknown;
 import static io.doov.core.dsl.meta.FieldMetadata.Type.value;
 import static java.util.stream.Collectors.joining;
 
@@ -122,6 +123,13 @@ public class FieldMetadata implements Metadata {
     public FieldMetadata valueSupplier(Supplier<?> readable) {
         if (readable != null) {
             elements.add(new Element(() -> String.valueOf(readable.get()), value));
+        }
+        return this;
+    }
+
+    public FieldMetadata valueUnknown(String readable) {
+        if (readable != null) {
+            elements.add(new Element(() -> "UNKNOWN " + readable, unknown));
         }
         return this;
     }
@@ -477,7 +485,7 @@ public class FieldMetadata implements Metadata {
 
     public enum Type {
 
-        field, operator, value
+        field, operator, value, unknown
 
     }
 
