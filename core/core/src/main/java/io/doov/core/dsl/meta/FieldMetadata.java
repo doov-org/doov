@@ -215,6 +215,10 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata().field(field).operator("not equals").valueObject(value);
     }
 
+    public static FieldMetadata notEqualsMetadata(Readable field, Readable value) {
+        return new FieldMetadata().field(field).operator("not equals").valueReadable(value);
+    }
+
     // null
 
     public static FieldMetadata nullMetadata(Readable field) {
