@@ -239,12 +239,24 @@ public class FieldMetadata implements Metadata {
 
     // match
 
+    public static FieldMetadata matchAnyMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("match any").valueUnknown("lambda");
+    }
+
     public static FieldMetadata matchAnyMetadata(Readable field, Collection<?> values) {
         return new FieldMetadata().field(field).operator("match any").valueListObject(values);
     }
 
+    public static FieldMetadata matchAllMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("match all").valueUnknown("lambda");
+    }
+
     public static FieldMetadata matchAllMetadata(Readable field, Collection<?> values) {
         return new FieldMetadata().field(field).operator("match all").valueListObject(values);
+    }
+
+    public static FieldMetadata matchNoneMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("match none").valueUnknown("lamdba");
     }
 
     public static FieldMetadata matchNoneMetadata(Readable field, Collection<?> values) {
