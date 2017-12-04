@@ -292,7 +292,7 @@ public class FieldMetadata implements Metadata {
     }
 
     public static FieldMetadata beforeMetadata(Readable field1, Readable field2) {
-        return new FieldMetadata().field(field1).operator("before").valueObject(field2);
+        return new FieldMetadata().field(field1).operator("before").valueReadable(field2);
     }
 
     public static FieldMetadata beforeMetadata(Readable field, Supplier<Object> value) {
