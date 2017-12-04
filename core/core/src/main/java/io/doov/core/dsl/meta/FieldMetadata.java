@@ -140,7 +140,7 @@ public class FieldMetadata implements Metadata {
         if (this.elements.isEmpty() || other.elements.isEmpty()) {
             return;
         }
-        if (this.elements.peek().type.equals(other.elements.peek().type)) {
+        if (this.elements.peek().type.equals(Type.field) && other.elements.peek().type.equals(Type.field)) {
             other.elements.pop();
         }
     }
