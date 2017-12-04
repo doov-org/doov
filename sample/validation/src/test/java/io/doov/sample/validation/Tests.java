@@ -1,17 +1,18 @@
 package io.doov.sample.validation;
 
+import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfMonth;
+import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfNextYear;
+import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
+import static io.doov.core.dsl.time.TemporalAdjuster.ofDateAdjuster;
 import static io.doov.sample.field.SampleFieldIdInfo.accountCreationDate;
 import static io.doov.sample.field.SampleFieldIdInfo.configurationMinUserAge;
 import static io.doov.sample.field.SampleFieldIdInfo.userBirthdate;
 import static java.time.LocalDate.now;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.YEARS;
-import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
-import static java.time.temporal.TemporalAdjusters.firstDayOfNextYear;
-import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
-import static java.time.temporal.TemporalAdjusters.ofDateAdjuster;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,9 +49,10 @@ public class Tests {
 
     @Test
     public void should_temporal_same_as_local_date_operation_with() {
-        assertThat(userBirthdate().with(firstDayOfMonth()).eq(now().with(firstDayOfMonth()))).validates(wrapper);
-        assertThat(userBirthdate().with(firstDayOfMonth()).notEq(now().with(firstDayOfMonth()))).doesNotValidate
-                        (wrapper);
+        assertThat(userBirthdate().with(firstDayOfMonth()).eq(now().with(TemporalAdjusters.firstDayOfMonth())))
+                        .validates(wrapper);
+        assertThat(userBirthdate().with(firstDayOfMonth()).notEq(now().with(TemporalAdjusters.firstDayOfMonth())))
+                        .doesNotValidate(wrapper);
     }
 
     @Test
@@ -96,10 +98,13 @@ public class Tests {
         LocalDate birthDate = now().minus(18, YEARS);
         user.setBirthDate(birthDate);
 
-        assertThat(userBirthdate().with(firstDayOfYear()).yearsBetween(now().with(firstDayOfYear())).eq(18))
+        assertThat(userBirthdate().with(firstDayOfYear())
+                        .yearsBetween(now().with(TemporalAdjusters.firstDayOfYear()))
+                        .eq(18))
                         .validates(wrapper);
         assertThat(userBirthdate().with(firstDayOfNextYear()).with(ofDateAdjuster(d -> d.withDayOfMonth(15)))
-                        .yearsBetween(now().with(firstDayOfNextYear()).with(ofDateAdjuster(d -> d.withDayOfMonth(15))))
+                        .yearsBetween(now().with(TemporalAdjusters.firstDayOfNextYear())
+                                        .with(TemporalAdjusters.ofDateAdjuster(d -> d.withDayOfMonth(15))))
                         .eq(18)).validates(wrapper);
     }
 

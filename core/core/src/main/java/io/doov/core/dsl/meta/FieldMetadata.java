@@ -247,8 +247,8 @@ public class FieldMetadata implements Metadata {
 
     // with
 
-    public static FieldMetadata withMetadata(Readable field, Object adjuster) {
-        return new FieldMetadata().field(field).operator("with").valueObject(adjuster);
+    public static FieldMetadata withMetadata(Readable field, Readable adjuster) {
+        return new FieldMetadata().field(field).operator("with").valueReadable(adjuster);
     }
 
     // minus

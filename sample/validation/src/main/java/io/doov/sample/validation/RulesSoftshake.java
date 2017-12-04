@@ -1,6 +1,6 @@
 package io.doov.sample.validation;
 
-import static io.doov.core.dsl.LocalDateSuppliers.today;
+import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.sample.field.SampleFieldIdInfo.*;
 
 import io.doov.core.dsl.DOOV;
