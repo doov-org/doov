@@ -119,7 +119,7 @@ public class FieldMetadata implements Metadata {
         return this;
     }
 
-    public FieldMetadata valueSupplier(Supplier<Object> readable) {
+    public FieldMetadata valueSupplier(Supplier<?> readable) {
         if (readable != null) {
             elements.add(new Element(() -> String.valueOf(readable.get()), value));
         }
@@ -285,7 +285,7 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata().field(field1).operator("after").valueReadable(field2);
     }
 
-    public static FieldMetadata afterMetadata(Readable field, Supplier<Object> value) {
+    public static FieldMetadata afterMetadata(Readable field, Supplier<?> value) {
         return new FieldMetadata().field(field).operator("after").valueSupplier(value);
     }
 
@@ -299,7 +299,7 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata().field(field1).operator("before").valueReadable(field2);
     }
 
-    public static FieldMetadata beforeMetadata(Readable field, Supplier<Object> value) {
+    public static FieldMetadata beforeMetadata(Readable field, Supplier<?> value) {
         return new FieldMetadata().field(field).operator("before").valueSupplier(value);
     }
 
@@ -313,7 +313,7 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata().field(field1).operator("age at").valueReadable(field2);
     }
 
-    public static FieldMetadata ageAtMetadata(Readable field, Supplier<Object> supplier) {
+    public static FieldMetadata ageAtMetadata(Readable field, Supplier<?> supplier) {
         return new FieldMetadata().field(field).operator("age at").valueSupplier(supplier);
     }
 
