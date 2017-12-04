@@ -16,23 +16,20 @@
 package io.doov.sample.validation;
 
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
+import static io.doov.sample.field.SampleFieldIdInfo.accountCreationDate;
 import static io.doov.sample.field.SampleFieldIdInfo.userBirthdate;
 import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;
 import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
 import static io.doov.sample.validation.Rules.REGISTRY_USER;
-import static java.util.Arrays.asList;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.time.temporal.TemporalAdjusters;
 import java.util.stream.Stream;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.RuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.*;
@@ -108,7 +105,10 @@ public class RulesVisitorTest {
 
         ValidationRule vr2 = DOOV.when(userBirthdate().after(LocalDate::now)).validate();
 
-        vr2.accept(new AstHtmlVisitor(sb));
+        ValidationRule vr3 = DOOV.when(userBirthdate().with(TemporalAdjusters.firstDayOfYear()).ageAt
+                        (accountCreationDate()).greaterOrEquals(18)).validate();
+
+        vr3.accept(new AstHtmlVisitor(sb));
         System.out.println(sb);
     }
 }

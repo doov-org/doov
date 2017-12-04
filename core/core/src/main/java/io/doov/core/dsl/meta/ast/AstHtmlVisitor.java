@@ -81,15 +81,6 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void startMetadata(BinaryMetadata metadata) {
-        //        Element element = stackPeek();
-        //        if (element == BINARY) {
-        //            if (binaryDeep > 0) {
-        //                sb.append(formatCurrentIndent());
-        //                sb.append(BEG_UL);
-        //                sb.append(formatNewLine());
-        //            }
-        //            binaryDeep++;
-        //        }
         String[] split = sb.toString().split("\n");
         if (split[split.length - 1].contains(">and<") || split[split.length - 1].contains(">or<")) {
             sb.append(formatCurrentIndent());
