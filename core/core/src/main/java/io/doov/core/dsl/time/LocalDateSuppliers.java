@@ -12,9 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl.time;
 
+import static io.doov.core.dsl.meta.FieldMetadata.*;
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
@@ -27,7 +28,6 @@ import java.util.Optional;
 
 import io.doov.core.dsl.impl.LocalDateCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
-import io.doov.core.dsl.meta.FieldMetadata;
 
 public class LocalDateSuppliers {
 
@@ -38,14 +38,12 @@ public class LocalDateSuppliers {
     // today
 
     public static TemporalCondition<LocalDate> today() {
-        return new LocalDateCondition(null,
-                        new FieldMetadata().valueString("today"),
+        return new LocalDateCondition(null, todayMetadata(),
                         (model, context) -> Optional.of(LocalDate.now()));
     }
 
     public static TemporalCondition<LocalDate> todayPlus(int amountToAdd, TemporalUnit unit) {
-        return new LocalDateCondition(null,
-                        new FieldMetadata().valueString("today plus " + amountToAdd + " " + unit),
+        return new LocalDateCondition(null, todayPlusMetadata(amountToAdd, unit),
                         (model, context) -> Optional.of(LocalDate.now().plus(amountToAdd, unit)));
     }
 
@@ -58,8 +56,7 @@ public class LocalDateSuppliers {
     }
 
     public static TemporalCondition<LocalDate> todayMinus(int amountToSubstract, TemporalUnit unit) {
-        return new LocalDateCondition(null,
-                        new FieldMetadata().valueString("today minus " + amountToSubstract + " " + unit),
+        return new LocalDateCondition(null, todayMinusMetadata(amountToSubstract, unit),
                         (model, context) -> Optional.of(LocalDate.now().minus(amountToSubstract, unit)));
     }
 
@@ -74,34 +71,29 @@ public class LocalDateSuppliers {
     // adjusters
 
     public static TemporalCondition<LocalDate> firstDayOfThisMonth() {
-        return new LocalDateCondition(null,
-                        new FieldMetadata().valueString("first day of this month"),
+        return new LocalDateCondition(null, firstDayOfThisMonthMetadata(),
                         (model, context) -> Optional.of(LocalDate.now().with(firstDayOfMonth())));
     }
 
     public static TemporalCondition<LocalDate> firstDayOfThisYear() {
-        return new LocalDateCondition(null,
-                        new FieldMetadata().valueString("first day of this year"),
+        return new LocalDateCondition(null, firstDayOfThisYearMetadata(),
                         (model, context) -> Optional.of(LocalDate.now().with(firstDayOfYear())));
     }
 
     public static TemporalCondition<LocalDate> lastDayOfThisMonth() {
-        return new LocalDateCondition(null,
-                        new FieldMetadata().valueString("last day of this month"),
+        return new LocalDateCondition(null, lastDayOfThisMonthMetadata(),
                         (model, context) -> Optional.of(LocalDate.now().with(lastDayOfMonth())));
     }
 
     public static TemporalCondition<LocalDate> lastDayOfThisYear() {
-        return new LocalDateCondition(null,
-                        new FieldMetadata().valueString("last day of this year"),
+        return new LocalDateCondition(null, lastDayOfThisYearMetadata(),
                         (model, context) -> Optional.of(LocalDate.now().with(lastDayOfYear())));
     }
 
     // date
 
     public static TemporalCondition<LocalDate> date(int year, int month, int dayOfMonth) {
-        return new LocalDateCondition(null,
-                        new FieldMetadata().valueString(LocalDate.of(year, month, dayOfMonth).toString()),
+        return new LocalDateCondition(null, dateMetadata(LocalDate.of(year, month, dayOfMonth)),
                         (model, context) -> Optional.of(LocalDate.of(year, month, dayOfMonth)));
     }
 
