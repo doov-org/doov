@@ -17,6 +17,7 @@ package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.FieldMetadata.Type.field;
 import static io.doov.core.dsl.meta.FieldMetadata.Type.operator;
+import static io.doov.core.dsl.meta.FieldMetadata.Type.unknown;
 import static io.doov.core.dsl.meta.FieldMetadata.Type.value;
 import static java.util.stream.Collectors.joining;
 
@@ -119,9 +120,16 @@ public class FieldMetadata implements Metadata {
         return this;
     }
 
-    public FieldMetadata valueSupplier(Supplier<Object> readable) {
+    public FieldMetadata valueSupplier(Supplier<?> readable) {
         if (readable != null) {
             elements.add(new Element(() -> String.valueOf(readable.get()), value));
+        }
+        return this;
+    }
+
+    public FieldMetadata valueUnknown(String readable) {
+        if (readable != null) {
+            elements.add(new Element(() -> "UNKNOWN " + readable, unknown));
         }
         return this;
     }
@@ -215,6 +223,10 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata().field(field).operator("not equals").valueObject(value);
     }
 
+    public static FieldMetadata notEqualsMetadata(Readable field, Readable value) {
+        return new FieldMetadata().field(field).operator("not equals").valueReadable(value);
+    }
+
     // null
 
     public static FieldMetadata nullMetadata(Readable field) {
@@ -227,12 +239,24 @@ public class FieldMetadata implements Metadata {
 
     // match
 
+    public static FieldMetadata matchAnyMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("match any").valueUnknown("lambda");
+    }
+
     public static FieldMetadata matchAnyMetadata(Readable field, Collection<?> values) {
         return new FieldMetadata().field(field).operator("match any").valueListObject(values);
     }
 
+    public static FieldMetadata matchAllMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("match all").valueUnknown("lambda");
+    }
+
     public static FieldMetadata matchAllMetadata(Readable field, Collection<?> values) {
         return new FieldMetadata().field(field).operator("match all").valueListObject(values);
+    }
+
+    public static FieldMetadata matchNoneMetadata(Readable field) {
+        return new FieldMetadata().field(field).operator("match none").valueUnknown("lamdba");
     }
 
     public static FieldMetadata matchNoneMetadata(Readable field, Collection<?> values) {
@@ -254,21 +278,25 @@ public class FieldMetadata implements Metadata {
     // minus
 
     public static FieldMetadata minusMetadata(Readable field, int value, Object unit) {
-        return new FieldMetadata().field(field).operator("minus").valueString(value + " " + unit);
+        return new FieldMetadata().field(field).operator("minus")
+                        .valueString(value + " " + unit.toString().toLowerCase());
     }
 
     public static FieldMetadata minusMetadata(Readable field1, Readable field2, Object unit) {
-        return new FieldMetadata().field(field1).operator("minus").valueString(field2 + " " + unit);
+        return new FieldMetadata().field(field1).operator("minus").field(field2)
+                        .valueObject(unit.toString().toLowerCase());
     }
 
     // plus
 
     public static FieldMetadata plusMetadata(Readable field, int value, Object unit) {
-        return new FieldMetadata().field(field).operator("plus").valueString(value + " " + unit);
+        return new FieldMetadata().field(field).operator("plus")
+                        .valueString(value + " " + unit.toString().toLowerCase());
     }
 
     public static FieldMetadata plusMetadata(Readable field1, Readable field2, Object unit) {
-        return new FieldMetadata().field(field1).operator("plus").valueString(field2 + " " + unit);
+        return new FieldMetadata().field(field1).operator("plus").field(field2)
+                        .valueObject(unit.toString().toLowerCase());
     }
 
     // after
@@ -281,7 +309,7 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata().field(field1).operator("after").valueReadable(field2);
     }
 
-    public static FieldMetadata afterMetadata(Readable field, Supplier<Object> value) {
+    public static FieldMetadata afterMetadata(Readable field, Supplier<?> value) {
         return new FieldMetadata().field(field).operator("after").valueSupplier(value);
     }
 
@@ -292,10 +320,10 @@ public class FieldMetadata implements Metadata {
     }
 
     public static FieldMetadata beforeMetadata(Readable field1, Readable field2) {
-        return new FieldMetadata().field(field1).operator("before").valueObject(field2);
+        return new FieldMetadata().field(field1).operator("before").valueReadable(field2);
     }
 
-    public static FieldMetadata beforeMetadata(Readable field, Supplier<Object> value) {
+    public static FieldMetadata beforeMetadata(Readable field, Supplier<?> value) {
         return new FieldMetadata().field(field).operator("before").valueSupplier(value);
     }
 
@@ -309,7 +337,7 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata().field(field1).operator("age at").valueReadable(field2);
     }
 
-    public static FieldMetadata ageAtMetadata(Readable field, Supplier<Object> supplier) {
+    public static FieldMetadata ageAtMetadata(Readable field, Supplier<?> supplier) {
         return new FieldMetadata().field(field).operator("age at").valueSupplier(supplier);
     }
 
@@ -473,7 +501,7 @@ public class FieldMetadata implements Metadata {
 
     public enum Type {
 
-        field, operator, value
+        field, operator, value, unknown
 
     }
 

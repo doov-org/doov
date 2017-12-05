@@ -118,7 +118,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
     }
 
     public final StepCondition anyMatch(List<Predicate<T>> values) {
-        return predicate(matchAnyMetadata(field, values),
+        return predicate(matchAnyMetadata(field),
                         value -> values.stream().anyMatch(v -> v.test(value)));
     }
 
@@ -136,7 +136,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
     }
 
     public final StepCondition allMatch(List<Predicate<T>> values) {
-        return predicate(matchAllMetadata(field, values),
+        return predicate(matchAllMetadata(field),
                         value -> values.stream().allMatch(v -> v.test(value)));
     }
 
@@ -154,7 +154,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
     }
 
     public final StepCondition noneMatch(List<Predicate<T>> values) {
-        return predicate(matchNoneMetadata(field, values),
+        return predicate(matchNoneMetadata(field),
                         value -> values.stream().noneMatch(v -> v.test(value)));
     }
 
