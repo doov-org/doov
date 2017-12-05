@@ -12,6 +12,8 @@
  */
 package io.doov.core.dsl.impl;
 
+import static io.doov.core.dsl.meta.FieldMetadata.fieldMetadata;
+
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -32,7 +34,7 @@ abstract class AbstractCondition<N> implements Readable {
 
     protected AbstractCondition(DslField field) {
         this.field = field;
-        this.metadata = new FieldMetadata().field(field);
+        this.metadata = fieldMetadata(field);
         this.value = (model, context) -> valueModel(model, field);
         this.function = (model, context) -> valueModel(model, field);
     }

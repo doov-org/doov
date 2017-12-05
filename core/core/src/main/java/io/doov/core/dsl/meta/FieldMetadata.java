@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.FieldMetadata.Type.field;
@@ -21,6 +21,8 @@ import static io.doov.core.dsl.meta.FieldMetadata.Type.unknown;
 import static io.doov.core.dsl.meta.FieldMetadata.Type.value;
 import static java.util.stream.Collectors.joining;
 
+import java.time.LocalDate;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
@@ -51,87 +53,66 @@ public class FieldMetadata implements Metadata {
 
     // elements
 
-    public FieldMetadata elements(FieldMetadata readable) {
+    protected FieldMetadata elements(FieldMetadata readable) {
         if (readable != null) {
             elements.addAll(readable.elements);
         }
         return this;
     }
 
-    // field
-
-    public FieldMetadata field(Readable readable) {
-        if (readable != null) {
-            elements.add(new Element(readable, field));
+    private FieldMetadata add(Element element) {
+        if (element != null) {
+            elements.add(element);
         }
         return this;
+    }
+
+    // field
+
+    protected FieldMetadata field(Readable readable) {
+        return add(readable == null ? null : new Element(readable, field));
     }
 
     // operator
 
-    public FieldMetadata operator(Readable readable) {
-        if (readable != null) {
-            elements.add(new Element(readable, operator));
-        }
-        return this;
+    protected FieldMetadata operator(Readable readable) {
+        return add(readable == null ? null : new Element(readable, operator));
     }
 
-    public FieldMetadata operator(String readable) {
-        if (readable != null) {
-            elements.add(new Element(() -> readable, operator));
-        }
-        return this;
+    private FieldMetadata operator(String readable) {
+        return add(readable == null ? null : new Element(() -> readable, operator));
     }
 
     // value
 
-    public FieldMetadata valueListReadable(Collection<? extends Readable> readables) {
-        if (readables != null && !readables.isEmpty()) {
-            elements.add(new Element(() -> formatListReadable(readables), value));
-        }
-        return this;
+    private FieldMetadata valueObject(Object readable) {
+        return add(readable == null ? null : new Element(() -> String.valueOf(readable), value));
     }
 
-    public FieldMetadata valueListObject(Collection<?> readables) {
-        if (readables != null && !readables.isEmpty()) {
-            elements.add(new Element(() -> formatListObject(readables), value));
-        }
-        return this;
+    private FieldMetadata valueString(String readable) {
+        return add(readable == null ? null : new Element(() -> readable, value));
     }
 
-    public FieldMetadata valueObject(Object readable) {
-        if (readable != null) {
-            elements.add(new Element(() -> String.valueOf(readable), value));
-        }
-        return this;
+    private FieldMetadata valueReadable(Readable readable) {
+        return add(readable == null ? null : new Element(readable, value));
     }
 
-    public FieldMetadata valueString(String readable) {
-        if (readable != null) {
-            elements.add(new Element(() -> readable, value));
-        }
-        return this;
+    private FieldMetadata valueSupplier(Supplier<?> readable) {
+        return add(readable == null ? null : new Element(() -> String.valueOf(readable.get()), value));
     }
 
-    public FieldMetadata valueReadable(Readable readable) {
-        if (readable != null) {
-            elements.add(new Element(readable, value));
-        }
-        return this;
+    private FieldMetadata valueUnknown(String readable) {
+        return add(readable == null ? null : new Element(() -> "UNKNOWN " + readable, unknown));
     }
 
-    public FieldMetadata valueSupplier(Supplier<?> readable) {
-        if (readable != null) {
-            elements.add(new Element(() -> String.valueOf(readable.get()), value));
-        }
-        return this;
+    private FieldMetadata valueListReadable(Collection<? extends Readable> readables) {
+        return add(readables == null || readables.isEmpty() ? null
+                        : new Element(() -> formatListReadable(readables), value));
     }
 
-    public FieldMetadata valueUnknown(String readable) {
-        if (readable != null) {
-            elements.add(new Element(() -> "UNKNOWN " + readable, unknown));
-        }
-        return this;
+    private FieldMetadata valueListObject(Collection<?> readables) {
+        return add(readables == null || readables.isEmpty() ? null
+                        : new Element(() -> formatListObject(readables), value));
     }
 
     // implementation
@@ -167,12 +148,12 @@ public class FieldMetadata implements Metadata {
 
     // static
 
-    public static FieldMetadata emptyMetadata() {
-        return EMPTY;
-    }
-
     public static FieldMetadata fieldMetadata(Readable field) {
         return new FieldMetadata().field(field);
+    }
+
+    public static FieldMetadata unknownMetadata(String value) {
+        return new FieldMetadata().valueUnknown(value);
     }
 
     // boolean
@@ -277,26 +258,22 @@ public class FieldMetadata implements Metadata {
 
     // minus
 
-    public static FieldMetadata minusMetadata(Readable field, int value, Object unit) {
-        return new FieldMetadata().field(field).operator("minus")
-                        .valueString(value + " " + unit.toString().toLowerCase());
+    public static FieldMetadata minusMetadata(Readable field, int value, TemporalUnit unit) {
+        return new FieldMetadata().field(field).operator("minus").valueString(value + " " + formatUnit(unit));
     }
 
-    public static FieldMetadata minusMetadata(Readable field1, Readable field2, Object unit) {
-        return new FieldMetadata().field(field1).operator("minus").field(field2)
-                        .valueObject(unit.toString().toLowerCase());
+    public static FieldMetadata minusMetadata(Readable field1, Readable field2, TemporalUnit unit) {
+        return new FieldMetadata().field(field1).operator("minus").field(field2).valueObject(formatUnit(unit));
     }
 
     // plus
 
-    public static FieldMetadata plusMetadata(Readable field, int value, Object unit) {
-        return new FieldMetadata().field(field).operator("plus")
-                        .valueString(value + " " + unit.toString().toLowerCase());
+    public static FieldMetadata plusMetadata(Readable field, int value, TemporalUnit unit) {
+        return new FieldMetadata().field(field).operator("plus").valueString(value + " " + formatUnit(unit));
     }
 
-    public static FieldMetadata plusMetadata(Readable field1, Readable field2, Object unit) {
-        return new FieldMetadata().field(field1).operator("plus").field(field2)
-                        .valueObject(unit.toString().toLowerCase());
+    public static FieldMetadata plusMetadata(Readable field1, Readable field2, TemporalUnit unit) {
+        return new FieldMetadata().field(field1).operator("plus").field(field2).valueObject(formatUnit(unit));
     }
 
     // after
@@ -467,7 +444,71 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata().field(field).operator("has not size").valueObject(size);
     }
 
+    // local date suppliers
+
+    public static FieldMetadata todayMetadata() {
+        return new FieldMetadata().valueString("today");
+    }
+
+    public static FieldMetadata todayPlusMetadata(int value, TemporalUnit unit) {
+        return new FieldMetadata().valueString("today plus " + value + " " + formatUnit(unit));
+    }
+
+    public static FieldMetadata todayMinusMetadata(int value, TemporalUnit unit) {
+        return new FieldMetadata().valueString("today minus " + value + " " + formatUnit(unit));
+    }
+
+    public static FieldMetadata firstDayOfThisMonthMetadata() {
+        return new FieldMetadata().valueString("first day of this month");
+    }
+
+    public static FieldMetadata firstDayOfThisYearMetadata() {
+        return new FieldMetadata().valueString("first day of this year");
+    }
+
+    public static FieldMetadata lastDayOfThisMonthMetadata() {
+        return new FieldMetadata().valueString("last day of this month");
+    }
+
+    public static FieldMetadata lastDayOfThisYearMetadata() {
+        return new FieldMetadata().valueString("last day of this year");
+    }
+
+    public static FieldMetadata dateMetadata(LocalDate date) {
+        return new FieldMetadata().valueString(date.toString());
+    }
+
+    // temporal adjusters
+
+    public static FieldMetadata firstDayOfMonthMetadata() {
+        return new FieldMetadata().valueString("first day of month");
+    }
+
+    public static FieldMetadata firstDayOfNextMonthMetadata() {
+        return new FieldMetadata().valueString("first day of next month");
+    }
+
+    public static FieldMetadata firstDayOfYearMetadata() {
+        return new FieldMetadata().valueString("first day of year");
+    }
+
+    public static FieldMetadata firstDayOfNextYearMetadata() {
+        return new FieldMetadata().valueString("first day of next year");
+    }
+
+    public static FieldMetadata lastDayOfMonthMetadata() {
+        return new FieldMetadata().valueString("last day of month");
+    }
+
+    public static FieldMetadata lastDayOfYearMetadata() {
+        return new FieldMetadata().valueString("last day of year");
+    }
+
     // utils
+
+    private static String formatUnit(TemporalUnit unit) {
+        return unit.toString().toLowerCase();
+    }
 
     private static String formatListReadable(Collection<? extends Readable> readables) {
         return readables.stream().map(Readable::readable).collect(COLLECTOR_LIST);
