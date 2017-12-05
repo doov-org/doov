@@ -35,8 +35,6 @@ public class FieldMetadata implements Metadata {
 
     private static final Collector<CharSequence, ?, String> COLLECTOR_LIST = joining(", ", "[", "]");
 
-    private static final FieldMetadata EMPTY = new FieldMetadata();
-
     private final Deque<Element> elements;
 
     public FieldMetadata() {
@@ -69,48 +67,48 @@ public class FieldMetadata implements Metadata {
 
     // field
 
-    protected FieldMetadata field(Readable readable) {
+    public FieldMetadata field(Readable readable) {
         return add(readable == null ? null : new Element(readable, field));
     }
 
     // operator
 
-    protected FieldMetadata operator(Readable readable) {
+    public FieldMetadata operator(Readable readable) {
         return add(readable == null ? null : new Element(readable, operator));
     }
 
-    private FieldMetadata operator(String readable) {
+    public FieldMetadata operator(String readable) {
         return add(readable == null ? null : new Element(() -> readable, operator));
     }
 
     // value
 
-    private FieldMetadata valueObject(Object readable) {
+    public FieldMetadata valueObject(Object readable) {
         return add(readable == null ? null : new Element(() -> String.valueOf(readable), value));
     }
 
-    private FieldMetadata valueString(String readable) {
+    public FieldMetadata valueString(String readable) {
         return add(readable == null ? null : new Element(() -> readable, value));
     }
 
-    private FieldMetadata valueReadable(Readable readable) {
+    public FieldMetadata valueReadable(Readable readable) {
         return add(readable == null ? null : new Element(readable, value));
     }
 
-    private FieldMetadata valueSupplier(Supplier<?> readable) {
+    public FieldMetadata valueSupplier(Supplier<?> readable) {
         return add(readable == null ? null : new Element(() -> String.valueOf(readable.get()), value));
     }
 
-    private FieldMetadata valueUnknown(String readable) {
+    public FieldMetadata valueUnknown(String readable) {
         return add(readable == null ? null : new Element(() -> "UNKNOWN " + readable, unknown));
     }
 
-    private FieldMetadata valueListReadable(Collection<? extends Readable> readables) {
+    public FieldMetadata valueListReadable(Collection<? extends Readable> readables) {
         return add(readables == null || readables.isEmpty() ? null
                         : new Element(() -> formatListReadable(readables), value));
     }
 
-    private FieldMetadata valueListObject(Collection<?> readables) {
+    public FieldMetadata valueListObject(Collection<?> readables) {
         return add(readables == null || readables.isEmpty() ? null
                         : new Element(() -> formatListObject(readables), value));
     }

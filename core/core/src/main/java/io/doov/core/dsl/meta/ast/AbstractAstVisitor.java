@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
-abstract class AbstractAstVisitor implements MetadataVisitor {
+public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     enum Element {
         RULE, WHEN, UNARY, BINARY, NARY
