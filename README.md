@@ -49,15 +49,13 @@ You can then execute the rule on an instantiated model
 ```java
 User user = new User();
 user.setFirstName("first name");
-user.setLastName("last name");
 
-# SampleModel is a generated class
+// SampleModel is a generated class
 SampleModel sampleModel = new SampleModel();
 sampleModel.setUser(user);
 
+// Execute the DSL on the model
 DslModel model = new SampleModelWrapper(sampleModel);
-
-# Execute the DSL on the model
 Result result = rule.executeOn(model);
 if (result.isFalse()) {
   ...
