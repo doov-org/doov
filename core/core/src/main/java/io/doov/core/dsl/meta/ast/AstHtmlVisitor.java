@@ -3,32 +3,38 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.ast.AbstractAstVisitor.Element.BINARY;
+import static java.util.stream.Collectors.joining;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.StepWhen;
+import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.FieldMetadata.Type;
 
 public class AstHtmlVisitor extends AstTextVisitor {
 
-    private int binaryDeep = 0;
+    private static final String CSS_CLASS_VALIDATION_MESSAGE = "dsl-validation-message";
+    private static final String CSS_CLASS_VALIDATION_RULE = "dsl-validation-rule";
+    private static final String CSS_CLASS_BINARY = "dsl-token-binary";
+    private static final String CSS_CLASS_NARY = "dsl-token-nary";
+    private static final String CSS_CLASS_RULE = "dsl-token-rule";
+    private static final String CSS_CLASS_WHEN = "dsl-token-when";
+
+    private static final String END_DIV = "</div>";
 
     private static final String BEG_LI = "<li>";
-    private static final String BEG_UL = "<ul>";
     private static final String END_LI = "</li>";
+
+    private static final String BEG_UL = "<ul>";
     private static final String END_UL = "</ul>";
+
+    private int binaryDeep = 0;
 
     public AstHtmlVisitor(StringBuilder stringBuilder) {
         super(stringBuilder);
     }
 
-    //    StepWhen
+    // step when
 
     @Override
     public void startMetadata(StepWhen metadata) {
@@ -41,7 +47,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void visitMetadata(StepWhen metadata) {
-        sb.append(formatWhen());
+        sb.append(formatSpan(CSS_CLASS_WHEN, formatWhen()));
         sb.append(END_LI);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
@@ -56,7 +62,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(formatNewLine());
     }
 
-    //    FIELDMETA
+    // field metadata
 
     @Override
     public void startMetadata(FieldMetadata metadata) {
@@ -66,7 +72,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void visitMetadata(FieldMetadata metadata) {
-        sb.append(formatFieldClass(metadata, "fieldmeta"));
+        sb.append(formatFieldClass(metadata));
     }
 
     @Override
@@ -75,9 +81,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(formatNewLine());
     }
 
-    // Unary
-
-    // Binary
+    // binary metadata
 
     @Override
     public void startMetadata(BinaryMetadata metadata) {
@@ -88,15 +92,14 @@ public class AstHtmlVisitor extends AstTextVisitor {
             sb.append(formatNewLine());
             binaryDeep++;
         }
-
     }
 
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append("<li type='circle'>");
-        sb.append(formatOperatorClass(metadata.getOperator(), "binary"));
-        sb.append("</li>");
+        sb.append(BEG_LI);
+        sb.append(formatSpan(CSS_CLASS_BINARY, metadata.getOperator()));
+        sb.append(END_LI);
         sb.append(formatNewLine());
     }
 
@@ -106,12 +109,11 @@ public class AstHtmlVisitor extends AstTextVisitor {
             sb.append(formatNewLine());
             sb.append(formatCurrentIndent());
             sb.append(END_UL);
-
             binaryDeep--;
         }
     }
 
-    // nary
+    // nary metadata
 
     @Override
     public void startMetadata(NaryMetadata metadata) {
@@ -119,7 +121,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(BEG_LI);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
-        sb.append(formatOperatorClass(metadata.getOperator(), "nary"));
+        sb.append(formatSpan(CSS_CLASS_NARY, metadata.getOperator()));
         sb.append(BEG_UL);
         sb.append(formatNewLine());
     }
@@ -134,17 +136,17 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(formatNewLine());
     }
 
-    // Validation Rule
+    // validation rule
 
     @Override
     public void startMetadata(ValidationRule metadata) {
-        sb.append("<div class='VALIDATIONRULE' id=''>");
+        sb.append(formatDivStart(CSS_CLASS_VALIDATION_RULE));
         sb.append(formatNewLine());
         sb.append(BEG_UL);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
         sb.append(BEG_LI);
-        sb.append(formatRule());
+        sb.append(formatSpan(CSS_CLASS_RULE, formatRule()));
         sb.append(formatNewLine());
     }
 
@@ -153,7 +155,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(BEG_LI);
         sb.append(formatValidateWithMessage());
         sb.append(" ");
-        sb.append(formatMessage(metadata));
+        sb.append(formatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata)));
         sb.append(END_LI);
         sb.append(END_UL);
         sb.append(formatNewLine());
@@ -164,43 +166,59 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(formatCurrentIndent());
         sb.append(END_UL);
         sb.append(formatNewLine());
-        sb.append("</div>");
+        sb.append(END_DIV);
         sb.append(formatNewLine());
     }
 
-    // Metadata
+    // metadata
 
     @Override
     public void visitMetadata(Metadata metadata) {
         sb.append(formatOperator(metadata));
     }
 
-    private String formatFieldClass(FieldMetadata field, String classs) {
-
-        StringBuilder sbb = new StringBuilder();
-        field.stream().forEach(el -> {
-
-//            if(el.getType() !=  Type.field  || !sbb.toString().contains(el.getReadable().readable())){
-                sbb.append("<span class='" + el.getType() + "'> " + el.getReadable().readable()
-                                + " </span>");
-//            }
-
-        });
-
-        return sbb.toString();
-    }
-
-    private String formatOperatorClass(String operator, String classs) {
-        return MessageFormat.format("<span class=''{0}'' id=''{1}''>{2}</span>", classs, "", operator);
-    }
+    // implementation
 
     @Override
     protected String formatWhen() {
-        return "<span class='when'> When </span>";
+        return "When";
     }
 
     @Override
-    protected String formatRule() {
-        return "<span class='rule'> Rule </span>";
+    protected String formatMessage(ValidationRule metadata) {
+        return metadata.getMessage() == null ? "empty" : metadata.getMessage();
     }
+
+    // format
+
+    private String formatFieldClass(FieldMetadata field) {
+        return field.stream()
+                        .map(element -> MessageFormat.format("<span class=''{0}''>{1}</span>",
+                                        getCssClass(element), element.getReadable().readable()))
+                        .collect(joining());
+    }
+
+    private String getCssClass(FieldMetadata.Element element) {
+        switch (element.getType()) {
+            case field:
+                return "dsl-token-field";
+            case operator:
+                return "dsl-token-operator";
+            case value:
+                return "dsl-token-value";
+            case unknown:
+                return "dsl-token-unknown";
+            default:
+                throw new IllegalArgumentException("Unknown css class for element " + element);
+        }
+    }
+
+    private String formatSpan(String cssClass, String content) {
+        return MessageFormat.format("<span class=''{0}''>{1}</span>", cssClass, content);
+    }
+
+    private String formatDivStart(String cssClass) {
+        return MessageFormat.format("<div class=''{0}''>", cssClass);
+    }
+
 }
