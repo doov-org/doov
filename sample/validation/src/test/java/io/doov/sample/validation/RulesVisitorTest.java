@@ -105,10 +105,7 @@ public class RulesVisitorTest {
 
         ValidationRule vr2 = DOOV.when(userBirthdate().after(LocalDate::now)).validate();
 
-        ValidationRule vr3 = DOOV.when(userBirthdate().with(TemporalAdjusters.firstDayOfYear()).ageAt
-                        (accountCreationDate()).greaterOrEquals(18)).validate();
-
-        vr3.accept(new AstHtmlVisitor(sb));
+        vr.accept(new AstHtmlVisitor(sb));
         System.out.println(sb);
     }
 }
