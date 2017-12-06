@@ -193,9 +193,8 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     private String formatFieldClass(FieldMetadata field) {
         return field.stream()
-                        .map(element -> MessageFormat.format("<span class=''{0}''>{1}</span>",
-                                        getCssClass(element), element.getReadable().readable()))
-                        .collect(joining());
+                        .map(element -> formatSpan(getCssClass(element), element.getReadable().readable()))
+                        .collect(joining(" "));
     }
 
     private String getCssClass(FieldMetadata.Element element) {
