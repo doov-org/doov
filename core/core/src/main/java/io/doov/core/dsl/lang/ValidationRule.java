@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl.lang;
 
 import io.doov.core.dsl.DslModel;
@@ -21,6 +21,8 @@ import io.doov.core.dsl.meta.SyntaxTree;
 public interface ValidationRule extends Readable, SyntaxTree {
 
     ValidationRule withMessage(String message);
+
+    ValidationRule withShortCircuit(boolean shortCircuit);
 
     Result executeOn(DslModel model);
 

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample.validation;
 
 import static io.doov.core.dsl.DOOV.count;
@@ -60,6 +60,7 @@ public class Rules extends DefaultRuleRegistry {
                         userLastName().isNotNull().and(userLastName().matches("[A-Z]+")))
                         .greaterOrEquals(0))
                         .validate()
+                        .withShortCircuit(false)
                         .registerOn(REGISTRY_USER);
 
         DOOV.when(userLastName().isNotNull().and(userLastName().matches("[A-Z]+")

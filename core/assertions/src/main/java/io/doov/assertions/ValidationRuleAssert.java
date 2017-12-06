@@ -12,16 +12,18 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
         super(actual, selfType);
     }
 
-    public void validates(DslModel model) {
+    public ResultAssert validates(DslModel model) {
         Result result = actual.executeOn(model);
         ResultAssert resultAssert = new ResultAssert(result, ResultAssert.class);
         resultAssert.isTrue();
+        return resultAssert;
     }
 
-    public void doesNotValidate(DslModel model) {
+    public ResultAssert doesNotValidate(DslModel model) {
         Result result = actual.executeOn(model);
         ResultAssert resultAssert = new ResultAssert(result, ResultAssert.class);
         resultAssert.isFalse();
+        return resultAssert;
     }
 
     // TODO move to LesFurets

@@ -12,15 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl.impl;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
@@ -28,14 +24,24 @@ public class DefaultValidationRule implements ValidationRule {
 
     private final StepWhen stepWhen;
     private final String message;
+    private final boolean shortCircuit;
 
     protected DefaultValidationRule(StepWhen stepWhen) {
-        this(stepWhen, null);
+        this(stepWhen, null, true);
     }
 
     protected DefaultValidationRule(StepWhen stepWhen, String message) {
+        this(stepWhen, message, true);
+    }
+
+    public DefaultValidationRule(StepWhen stepWhen, String message, boolean shortCircuit) {
         this.stepWhen = stepWhen;
         this.message = message;
+        this.shortCircuit = shortCircuit;
+    }
+
+    protected StepWhen getStepWhen() {
+        return stepWhen;
     }
 
     @Override
@@ -48,16 +54,17 @@ public class DefaultValidationRule implements ValidationRule {
         return new DefaultValidationRule(stepWhen, message);
     }
 
-    protected StepWhen getStepWhen() {
-        return stepWhen;
+    @Override
+    public ValidationRule withShortCircuit(boolean shortCircuit) {
+        return new DefaultValidationRule(stepWhen, message, shortCircuit);
     }
 
     @Override
     public Result executeOn(DslModel model) {
-        List<Metadata> metadatas = new ArrayList<>();
-        boolean valid = stepWhen.stepCondition().predicate().test(model, metadatas::add);
+        DefaultContext context = new DefaultContext(shortCircuit);
+        boolean valid = stepWhen.stepCondition().predicate().test(model, context);
         String readable = valid ? null : (message == null ? stepWhen.stepCondition().readable() : message);
-        return new DefaultResult(valid, readable, metadatas);
+        return new DefaultResult(valid, readable, context.getFailed());
     }
 
     @Override

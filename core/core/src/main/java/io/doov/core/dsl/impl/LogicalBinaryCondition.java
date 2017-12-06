@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl.impl;
 
 import static io.doov.core.dsl.meta.BinaryMetadata.andMetadata;
@@ -31,14 +31,42 @@ public class LogicalBinaryCondition extends AbstractStepCondition {
         super(metadata, predicate);
     }
 
+    // and
+
     public static LogicalBinaryCondition and(StepCondition left, StepCondition right) {
         return new LogicalBinaryCondition(andMetadata(left.getMetadata(), right.getMetadata()),
-                        (model, context) -> left.predicate().and(right.predicate()).test(model, context));
+                        (model, context) -> context.isShortCircuit()
+                                        ? andShortCircuit(left, right, model, context)
+                                        : and(left, right, model, context));
     }
+
+    private static boolean and(StepCondition left, StepCondition right, DslModel model, Context context) {
+        boolean leftResult = left.predicate().test(model, context);
+        boolean rightResult = right.predicate().test(model, context);
+        return leftResult && rightResult;
+    }
+
+    private static boolean andShortCircuit(StepCondition left, StepCondition right, DslModel model, Context context) {
+        return left.predicate().and(right.predicate()).test(model, context);
+    }
+
+    // or
 
     public static LogicalBinaryCondition or(StepCondition left, StepCondition right) {
         return new LogicalBinaryCondition(orMetadata(left.getMetadata(), right.getMetadata()),
-                        (model, context) -> left.predicate().or(right.predicate()).test(model, context));
+                        (model, context) -> context.isShortCircuit()
+                                        ? orShortCircuit(left, right, model, context)
+                                        : or(left, right, model, context));
+    }
+
+    private static boolean or(StepCondition left, StepCondition right, DslModel model, Context context) {
+        boolean leftResult = left.predicate().test(model, context);
+        boolean rightResult = right.predicate().test(model, context);
+        return leftResult || rightResult;
+    }
+
+    private static boolean orShortCircuit(StepCondition left, StepCondition right, DslModel model, Context context) {
+        return left.predicate().or(right.predicate()).test(model, context);
     }
 
 }
