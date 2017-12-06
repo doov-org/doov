@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
-abstract class AbstractAstVisitor implements MetadataVisitor {
+public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     enum Element {
         RULE, WHEN, UNARY, BINARY, NARY
@@ -22,7 +22,7 @@ abstract class AbstractAstVisitor implements MetadataVisitor {
 
     final StringBuilder sb;
 
-    AbstractAstVisitor(StringBuilder stringBuilder) {
+    public AbstractAstVisitor(StringBuilder stringBuilder) {
         sb = stringBuilder;
     }
 
@@ -38,7 +38,6 @@ abstract class AbstractAstVisitor implements MetadataVisitor {
 
     // FieldMetadata
 
-
     @Override
     public final void start(FieldMetadata metadata) {
         startMetadata(metadata);
@@ -46,7 +45,6 @@ abstract class AbstractAstVisitor implements MetadataVisitor {
 
     protected void startMetadata(FieldMetadata metadata) {
     }
-
 
     @Override
     public final void visit(FieldMetadata metadata) {
@@ -63,7 +61,6 @@ abstract class AbstractAstVisitor implements MetadataVisitor {
 
     protected void endMetadata(FieldMetadata metadata) {
     }
-
 
     // UnaryMetadata
 
@@ -200,7 +197,9 @@ abstract class AbstractAstVisitor implements MetadataVisitor {
 
     // Implementation
 
-    protected abstract int getIndentSize();
+    protected int getIndentSize() {
+        return 0;
+    }
 
     protected int getNewLineIndex() {
         return newLineIndex;
