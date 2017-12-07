@@ -137,18 +137,19 @@ public class LiveCode {
     }
 
     private static DataType cqlType(FieldInfo info) {
-        if (String.class.equals(info.type()))
+        if (String.class.equals(info.type())) {
             return text();
-        else if (Boolean.class.equals(info.type()) || Boolean.TYPE.equals(info.type()))
+        } else if (Boolean.class.equals(info.type()) || Boolean.TYPE.equals(info.type())) {
             return DataType.cboolean();
-        else if (Long.class.equals(info.type()) || Long.TYPE.equals(info.type()))
+        } else if (Long.class.equals(info.type()) || Long.TYPE.equals(info.type())) {
             return DataType.cint();
-        else if (LocalDate.class.equals(info.type()))
+        } else if (LocalDate.class.equals(info.type())) {
             return DataType.date();
-        else if (Enum.class.isAssignableFrom(info.type()))
+        } else if (Enum.class.isAssignableFrom(info.type())) {
             return DataType.set(text());
-        else if (Collection.class.isAssignableFrom(info.type()))
+        } else if (Collection.class.isAssignableFrom(info.type())) {
             return DataType.set(text());
+        }
         throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
     }
 
