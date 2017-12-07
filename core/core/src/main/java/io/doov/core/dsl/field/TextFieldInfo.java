@@ -21,8 +21,8 @@ import io.doov.core.dsl.lang.StepCondition;
 
 public interface TextFieldInfo extends BaseFieldInfo<String> {
 
-    default StepCondition contains(String regex) {
-        return getStringCondition().contains(regex);
+    default StepCondition contains(String string) {
+        return getStringCondition().contains(string);
     }
 
     default StepCondition matches(String regex) {

@@ -34,15 +34,15 @@ public class StringCondition extends DefaultCondition<String> {
         super(field, metadata, value);
     }
 
-    public final StepCondition contains(String regex) {
-        return predicate(containsMetadata(field, regex),
-                (model, context) -> Optional.ofNullable(regex),
+    public final StepCondition contains(String value) {
+        return predicate(containsMetadata(field, value),
+                (model, context) -> Optional.ofNullable(value),
                 String::contains);
     }
 
-    public final StepCondition matches(String regex) {
-        return predicate(matchesMetadata(field, regex),
-                (model, context) -> Optional.ofNullable(regex),
+    public final StepCondition matches(String value) {
+        return predicate(matchesMetadata(field, value),
+                (model, context) -> Optional.ofNullable(value),
                 String::matches);
     }
 
@@ -59,16 +59,12 @@ public class StringCondition extends DefaultCondition<String> {
     }
 
     public IntegerCondition length() {
-        return new IntegerCondition(
-                field,
-                lengthIsMetadata(field),
+        return new IntegerCondition(field, lengthIsMetadata(field),
                 (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(String::length));
     }
 
     public IntegerCondition parseInt() {
-        return new IntegerCondition(
-                field,
-                fieldMetadata(field),
+        return new IntegerCondition(field, fieldMetadata(field),
                 (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(Integer::parseInt));
     }
 
