@@ -35,12 +35,12 @@ public class ModelManipulationTest {
     @Test
     public void mixingWithMap() {
         SampleModel sample = SampleModels.sample();
-        System.out.println(sample.getUser().getFullName());
+        print(sample.getUser().getFullName());
 
         Map<FieldId, Object> aMap = new SampleModelWrapper(sample).stream()
                 .collect(toMap(Entry::getKey, Entry::getValue));
         SampleModelWrapper clone = aMap.entrySet().stream().collect(SampleModelWrapper.toFieldModel());
-        System.out.println(clone.getModel().getUser().getFullName());
+        print(clone.getModel().getUser().getFullName());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class ModelManipulationTest {
         String csv = new SampleModelWrapper(sample).parallelStream()
                 .map(e -> e.getKey() + ";" + String.valueOf(e.getValue()) + "\n").reduce("", String::concat);
 
-        System.out.println(csv);
+        print(csv);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ModelManipulationTest {
                 .reduce("", String::concat);
         String json = "{\n" + jsonValues + "\n}";
 
-        System.out.println(json);
+        print(json);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class ModelManipulationTest {
                 .values().stream().filter(isNotSame)
 
                 /* print keys with differents values */
-                .forEach(System.out::println);
+                .forEach(element -> print(element.toString()));
     }
 
     private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) ->
@@ -101,5 +101,11 @@ public class ModelManipulationTest {
         Object right = t2.getRight() != null ? t2.getRight() : t1.getRight();
         return Triple.of(left, t1.getMiddle(), right);
     };
+
+    private static void print(String string) {
+        if (System.getProperty("activateSystemOut") != null) {
+            System.out.println(string);
+        }
+    }
 
 }

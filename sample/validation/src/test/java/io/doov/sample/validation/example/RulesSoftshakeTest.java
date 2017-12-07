@@ -13,17 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.impl;
+package io.doov.sample.validation.example;
 
-import io.doov.core.dsl.lang.RuleId;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public enum DefaultRuleId implements RuleId {
+import org.junit.jupiter.api.Test;
 
-    DEFAULT;
+import io.doov.core.FieldModel;
+import io.doov.core.dsl.lang.Result;
+import io.doov.sample.model.SampleModels;
 
-    @Override
-    public String getCode() {
-        return this.name();
+public class RulesSoftshakeTest {
+
+    @Test
+    public void test() {
+        // Given
+        FieldModel wrapper = SampleModels.wrapper();
+
+        // When
+        Result result = RulesSoftshake.EXAMPLE.executeOn(wrapper);
+
+        // Then
+        assertThat(result.isTrue()).isTrue();
     }
 
 }

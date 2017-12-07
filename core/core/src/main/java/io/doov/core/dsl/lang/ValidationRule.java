@@ -28,8 +28,6 @@ public interface ValidationRule extends Readable, SyntaxTree {
 
     ValidationRule registerOn(RuleRegistry registry);
 
-    ValidationRule registerOn(RuleRegistry registry, RuleId id);
-
     String getMessage();
 
 }

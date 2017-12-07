@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.sample.validation;
+package io.doov.sample.validation.impl;
 
 import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;

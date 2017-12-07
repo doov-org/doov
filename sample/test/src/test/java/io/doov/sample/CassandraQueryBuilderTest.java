@@ -81,7 +81,7 @@ public class CassandraQueryBuilderTest {
                 .forEach(info -> createRequest.addColumn(info.id().name(), cqlType(info)));
 
         Options createRequestWithOptions = createRequest.withOptions().clusteringOrder(LOGIN.name(), DESC);
-        System.out.println(createRequestWithOptions.getQueryString());
+        print(createRequestWithOptions.getQueryString());
     }
 
     @Test
@@ -92,6 +92,13 @@ public class CassandraQueryBuilderTest {
         insertRequest.values(
                 model.stream().map(e -> e.getKey().name()).collect(toList()),
                 model.stream().map(Entry::getValue).collect(toList()));
-        System.out.println(insertRequest.getQueryString(codecRegistry()));
+        print(insertRequest.getQueryString(codecRegistry()));
     }
+
+    private static void print(String string) {
+        if (System.getProperty("activateSystemOut") != null) {
+            System.out.println(string);
+        }
+    }
+
 }

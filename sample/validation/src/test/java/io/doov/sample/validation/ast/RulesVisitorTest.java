@@ -13,69 +13,72 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.sample.validation;
+package io.doov.sample.validation.ast;
 
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
-import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
-import static io.doov.sample.validation.Rules.REGISTRY_USER;
 
-import java.util.stream.Stream;
-
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.lang.RuleRegistry;
 import io.doov.core.dsl.meta.ast.*;
+import io.doov.sample.validation.Rules;
 
 public class RulesVisitorTest {
+    
+    @BeforeAll
+    public static void beforeAll() {
+        Rules.init();
+    }
 
     @Test
-    public void full() {
+    public void print_full_syntax_tree() {
         StringBuilder sb = new StringBuilder();
-        Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
-                .flatMap(RuleRegistry::stream)
+        REGISTRY_DEFAULT.stream()
                 .peek(rule -> sb.append("--------------------------------").append("\n"))
                 .forEach(rule -> rule.accept(new AstFullVisitor(sb)));
-        System.out.println(sb);
+        print(sb.toString());
     }
 
     @Test
-    public void line() {
+    public void print_line_syntax_tree() {
         StringBuilder sb = new StringBuilder();
-        Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
-                .flatMap(RuleRegistry::stream)
+        REGISTRY_DEFAULT.stream()
                 .peek(rule -> sb.append("--------------------------------").append("\n"))
                 .forEach(rule -> rule.accept(new AstLineVisitor(sb)));
-        System.out.println(sb);
+        print(sb.toString());
     }
 
     @Test
-    public void text() {
+    public void print_text_syntax_tree() {
         StringBuilder sb = new StringBuilder();
-        Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
-                .flatMap(RuleRegistry::stream)
+        REGISTRY_DEFAULT.stream()
                 .peek(rule -> sb.append("--------------------------------").append("\n"))
                 .forEach(rule -> rule.accept(new AstTextVisitor(sb)));
-        System.out.println(sb);
+        print(sb.toString());
     }
 
     @Test
-    public void markdown() {
+    public void print_markdown_syntax_tree() {
         StringBuilder sb = new StringBuilder();
-        Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
-                .flatMap(RuleRegistry::stream)
+        REGISTRY_DEFAULT.stream()
                 .peek(rule -> sb.append("--------------------------------").append("\n"))
                 .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb)));
-        System.out.println(sb);
+        print(sb.toString());
     }
 
     @Test
-    public void html() {
+    public void print_html_syntax_tree() {
         StringBuilder sb = new StringBuilder();
-        Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
-                .flatMap(RuleRegistry::stream)
+        REGISTRY_DEFAULT.stream()
                 .peek(rule -> sb.append("--------------------------------").append("\n"))
                 .forEach(rule -> rule.accept(new AstHtmlVisitor(sb)));
-        System.out.println(sb);
+        print(sb.toString());
+    }
+
+    private static void print(String string) {
+        if (System.getProperty("activateSystemOut") != null) {
+            System.out.println(string);
+        }
     }
 
 }

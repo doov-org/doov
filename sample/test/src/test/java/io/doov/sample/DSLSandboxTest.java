@@ -41,7 +41,7 @@ public class DSLSandboxTest {
     @Test
     public void sample1() {
         ValidationRule rule = DOOV.when(accountId().eq(1L)).validate().withMessage("incorrect account id");
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isFalse();
         assertThat(rule.executeOn(model).getMessage()).isEqualTo("incorrect account id");
     }
@@ -49,7 +49,7 @@ public class DSLSandboxTest {
     @Test
     public void sample2() {
         ValidationRule rule = DOOV.when(accountId().eq(1L)).validate();
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isFalse();
         assertThat(rule.executeOn(model).getMessage()).isEqualTo("account id equals 1 ");
     }
@@ -57,7 +57,7 @@ public class DSLSandboxTest {
     @Test
     public void sample3() {
         ValidationRule rule = DOOV.when(accountId().eq(1L).not()).validate().withMessage("incorrect account id");
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
     }
@@ -66,7 +66,7 @@ public class DSLSandboxTest {
     public void sample4() {
         ValidationRule rule = DOOV.when(userBirthdate().eq(LocalDate.of(1980, 8, 1))).validate()
                 .withMessage("valid birthdate is August 1, 1980");
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
     }
@@ -75,7 +75,7 @@ public class DSLSandboxTest {
     public void sample5() {
         ValidationRule rule = DOOV.when(userBirthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31)))
                 .validate().withMessage("valid birthdate is in year 1980");
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
     }
@@ -89,7 +89,7 @@ public class DSLSandboxTest {
                 .withMessage("valid birthdate is in year 1980, " +
                         "valid ID is different than 9, and " +
                         "valid timezone is ETC_GMT");
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
     }
@@ -97,7 +97,7 @@ public class DSLSandboxTest {
     @Test
     public void sample7() {
         ValidationRule rule = DOOV.when(accountPreferencesMail().eq(EnumSet.of(ADMINISTRATOR, PRIVATE))).validate();
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
     }
@@ -107,12 +107,12 @@ public class DSLSandboxTest {
         ValidationRule rule;
 
         rule = DOOV.when(accountPreferencesMail().contains(ADMINISTRATOR)).validate();
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
 
         rule = DOOV.when(accountPreferencesMail().containsAll(ADMINISTRATOR, PRIVATE)).validate();
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
     }
@@ -120,7 +120,7 @@ public class DSLSandboxTest {
     @Test
     public void sample9() {
         ValidationRule rule = DOOV.when(accountPreferencesMail().isNotEmpty()).validate();
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
     }
@@ -128,9 +128,15 @@ public class DSLSandboxTest {
     @Test
     public void sample10() {
         ValidationRule rule = DOOV.when(accountPreferencesMail().hasNotSize(1)).validate();
-        System.out.println(rule.readable());
+        print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
+    }
+
+    private static void print(String string) {
+        if (System.getProperty("activateSystemOut") != null) {
+            System.out.println(string);
+        }
     }
 
 }

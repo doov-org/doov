@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.sample.validation;
+package io.doov.sample.validation.example;
 
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.sample.field.SampleFieldIdInfo.*;

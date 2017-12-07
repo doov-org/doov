@@ -16,11 +16,8 @@
 package org.modelmap;
 
 import static io.doov.core.dsl.DOOV.matchAll;
-import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
-import static io.doov.sample.field.SampleFieldIdInfo.accountLanguage;
-import static io.doov.sample.field.SampleFieldIdInfo.accountPhoneNumber;
-import static io.doov.sample.validation.Rules.REGISTRY_ACCOUNT;
-import static io.doov.sample.validation.id.AccountRulesId.VALID_EMAIL;
+import static io.doov.core.dsl.time.LocalDateSuppliers.today;
+import static io.doov.sample.field.SampleFieldIdInfo.*;
 import static java.util.stream.Collectors.toList;
 
 import java.util.stream.IntStream;
@@ -30,13 +27,25 @@ import org.openjdk.jmh.logic.BlackHole;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.sample.model.*;
-import io.doov.sample.validation.id.AccountRulesId;
 
 public class BenchmarkRule {
 
     private static final FieldModel MODEL = SampleModels.wrapper();
+
+    private static final ValidationRule EMAIL = DOOV
+            .when(accountEmail().matches("\\w+[@]\\w+\\.com")
+                    .or(accountEmail().matches("\\w+[@]\\w+\\.fr")))
+            .validate();
+
+    private static final ValidationRule COUNTY = DOOV
+            .when(userBirthdate().ageAt(today()).greaterOrEquals(18)
+                    .and(accountEmail().length().lesserOrEquals(configurationMaxEmailSize()))
+                    .and(accountCountry().eq(Country.FR))
+                    .and(accountPhoneNumber().startsWith("+33")))
+            .validate();
 
     private static final ValidationRule ACCOUNT_VALID_COUNTRY_20 = DOOV.when(matchAll(conditions(20))).validate();
     private static final ValidationRule ACCOUNT_VALID_COUNTRY_40 = DOOV.when(matchAll(conditions(40))).validate();
@@ -46,7 +55,7 @@ public class BenchmarkRule {
 
     @GenerateMicroBenchmark
     public void valid_email(BlackHole blackhole) {
-        boolean valid = executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isTrue();
+        boolean valid = EMAIL.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -54,7 +63,7 @@ public class BenchmarkRule {
 
     @GenerateMicroBenchmark
     public void valid_country(BlackHole blackhole) {
-        boolean valid = executeOn(REGISTRY_ACCOUNT, VALID_EMAIL).isTrue();
+        boolean valid = COUNTY.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -107,11 +116,6 @@ public class BenchmarkRule {
                         .and(accountPhoneNumber().startsWith("+33")))
                 .collect(toList())
                 .toArray(new StepCondition[] {});
-    }
-
-    private Result executeOn(RuleRegistry registry, AccountRulesId id) {
-        return registry.get(id).map(rule -> rule.executeOn(MODEL))
-                .orElseThrow(IllegalArgumentException::new);
     }
 
 }

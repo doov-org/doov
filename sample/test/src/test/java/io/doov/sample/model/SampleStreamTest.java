@@ -22,14 +22,12 @@ public class SampleStreamTest {
 
     @Test
     public void stream_parallel_apply_wait() {
-        long count = new SampleModelWrapper(SampleModels.sample()).parallelStream().peek(e -> doSomeStuff()).count();
-        System.out.println(count);
+        new SampleModelWrapper(SampleModels.sample()).parallelStream().peek(e -> doSomeStuff()).count();
     }
 
     @RepeatedTest(1)
     public void stream_sequential_apply_wait() {
-        long count = new SampleModelWrapper(SampleModels.sample()).stream().peek(e -> doSomeStuff()).count();
-        System.out.println(count);
+        new SampleModelWrapper(SampleModels.sample()).stream().peek(e -> doSomeStuff()).count();
     }
 
     private static void doSomeStuff() {

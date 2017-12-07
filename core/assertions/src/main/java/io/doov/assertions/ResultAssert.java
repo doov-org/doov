@@ -52,6 +52,13 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
         return this;
     }
 
+    public ResultAssert hasMessageNull() {
+        if (actual.getMessage() != null) {
+            failWithMessage("Expected result to null message but was " + actual.getMessage());
+        }
+        return this;
+    }
+
     public ResultAssert hasFailedNode(Metadata metadata) {
         if (!actual.getFailedNodes().contains(metadata)) {
             failWithMessage("Expected result to have failed nodes + " + metadata.readable()

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.sample.validation;
+package io.doov.sample.validation.impl;
 
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfMonth;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfNextYear;
@@ -39,7 +39,7 @@ import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.sample.model.*;
 
-public class Tests {
+public class TemporalTest {
 
     private FieldModel wrapper;
     private Account account;

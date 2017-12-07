@@ -74,12 +74,6 @@ public class DefaultValidationRule implements ValidationRule {
     }
 
     @Override
-    public ValidationRule registerOn(RuleRegistry registry, RuleId id) {
-        registry.register(this, id);
-        return this;
-    }
-
-    @Override
     public String readable() {
         return AstVisitorUtils.astToString(this);
     }

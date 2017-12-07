@@ -15,35 +15,27 @@
  */
 package io.doov.core.dsl.impl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.RuleRegistry;
+import io.doov.core.dsl.lang.ValidationRule;
 
 public class DefaultRuleRegistry implements RuleRegistry {
 
     public static final RuleRegistry REGISTRY_DEFAULT = new DefaultRuleRegistry();
 
-    private final Map<RuleId, ValidationRule> rules = new HashMap<>();
+    private final List<ValidationRule> rules = new ArrayList<>();
 
     @Override
     public void register(ValidationRule rule) {
-        register(rule, () -> Integer.toHexString(rule.hashCode()));
-    }
-
-    @Override
-    public void register(ValidationRule rule, RuleId id) {
-        rules.put(id, rule);
-    }
-
-    @Override
-    public Optional<ValidationRule> get(RuleId id) {
-        return Optional.ofNullable(rules.get(id));
+        rules.add(rule);
     }
 
     @Override
     public Stream<ValidationRule> stream() {
-        return rules.values().stream();
+        return rules.stream();
     }
 
 }
