@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample.model;
 
 import static java.util.Collections.newSetFromMap;
@@ -24,8 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;import org.junit.jupiter.api.BeforeEach;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldModel;
@@ -36,7 +35,7 @@ public class SampleModelStreamTest {
     private SampleModel sample = SampleModels.sample();
     private FieldModel source = new SampleModelWrapper(sample);
 
-    @Before
+    @BeforeEach
     public void before() {
         sample = SampleModels.sample();
         source = new SampleModelWrapper(sample);

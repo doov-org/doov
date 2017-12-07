@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample;
 
 import static com.datastax.driver.core.DataType.text;
@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.DataType;

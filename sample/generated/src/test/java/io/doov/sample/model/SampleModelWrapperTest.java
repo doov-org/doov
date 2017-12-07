@@ -12,58 +12,59 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample.model;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import io.doov.core.FieldInfo;
 import io.doov.sample.field.SampleFieldIdInfo;
 import io.doov.sample.field.SampleTag;
-import io.doov.sample.model.SampleModelWrapper;
 
-@RunWith(Parameterized.class)
 public class SampleModelWrapperTest {
 
-    @Parameterized.Parameters(name = "{0}")
-    public static Collection<Object[]> data() {
-        return SampleFieldIdInfo.values().stream().map(f -> new Object[] { f.id().name(), f }).collect(Collectors.toList());
+    private static Collection<Object[]> data() {
+        return SampleFieldIdInfo.values().stream()
+                        .map(f -> new Object[] { f.id().name(), f })
+                        .collect(toList());
     }
 
-    private final SampleModelWrapper wrapper;
-    private final FieldInfo field;
+    private SampleModelWrapper wrapper;
 
-    public SampleModelWrapperTest(String name, FieldInfo field) {
-        this.wrapper = new SampleModelWrapper();
-        this.field = field;
+    @BeforeEach
+    public void before() {
+        wrapper = new SampleModelWrapper();
     }
 
-    @Test
-    public void should_contains_all_field_info() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void should_contains_all_field_info(String name, FieldInfo field) {
         assertThat(wrapper.getFieldInfos()).contains(field);
         assertThat(wrapper.getFieldIds()).contains(field.id());
     }
 
-    @Test
-    public void should_be_null_when_clear_all() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void should_be_null_when_clear_all(String name, FieldInfo field) {
         if (field.type().isPrimitive()) {
             return;
         }
         wrapper.clear();
-        assertValueNull();
+        assertValueNull(field);
     }
 
-    @Test
-    public void should_be_null_when_clear_tag() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void should_be_null_when_clear_tag(String name, FieldInfo field) {
         if (field.type().isPrimitive()) {
             return;
         }
@@ -71,16 +72,18 @@ public class SampleModelWrapperTest {
             return;
         }
         wrapper.clear(field.id().tags().get(0));
-        assertValueNull();
+        assertValueNull(field);
     }
 
-    @Test
-    public void should_not_throw_NPE_when_null_value_set() throws Exception {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void should_not_throw_NPE_when_null_value_set(String name, FieldInfo field) {
         wrapper.set(field.id(), null);
     }
 
-    @Test
-    public <T> void should_return_same_value_when_updated() throws Exception {
+    @ParameterizedTest
+    @MethodSource("data")
+    public <T> void should_return_same_value_when_updated(String name, FieldInfo field) throws Exception {
         Object value = value(field);
         wrapper.set(field.id(), value);
 
@@ -91,7 +94,7 @@ public class SampleModelWrapperTest {
         }
     }
 
-    private void assertValueNull() {
+    private void assertValueNull(FieldInfo field) {
         Object value = wrapper.get(field.id());
         if (Number.class.isAssignableFrom(field.type())) {
             assertThat(((Number) value).longValue()).isEqualTo(0);
@@ -124,4 +127,5 @@ public class SampleModelWrapperTest {
         }
         return field.type().newInstance();
     }
+
 }

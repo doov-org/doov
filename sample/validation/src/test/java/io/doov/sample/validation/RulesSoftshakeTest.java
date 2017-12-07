@@ -2,7 +2,7 @@ package io.doov.sample.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.Result;

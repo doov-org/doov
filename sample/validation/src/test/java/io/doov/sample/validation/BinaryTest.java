@@ -4,8 +4,8 @@ import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;
 import static io.doov.sample.field.SampleFieldIdInfo.userLastName;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.StepCondition;
@@ -16,7 +16,7 @@ public class BinaryTest {
 
     private SampleModelWrapper model;
 
-    @Before
+    @BeforeEach
     public void before() {
         User user = new User();
         user.setFirstName("first name");

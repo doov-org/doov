@@ -12,62 +12,57 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample2.model;
 
-import static io.doov.util.LoopingRule.doSomeStuff;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
+import org.junit.jupiter.api.RepeatedTest;
 
 import io.doov.core.FieldModels;
-import io.doov.sample2.model.Sample2ModelWrapper;
-import io.doov.sample2.model.Sample2Models;
-import io.doov.util.LoopingRule;
 
 public class Sample2StreamTest {
 
-    @Rule
-    public final TestRule looping = new LoopingRule(1);
-
-    @Test
+    @RepeatedTest(1)
     public void stream_parallel_apply_count() {
-        new Sample2ModelWrapper(Sample2Models.sample()).parallelStream().map(e -> {
-            doSomeStuff();
-            return e;
-        }).count();
+        long count = new Sample2ModelWrapper(Sample2Models.sample()).parallelStream().peek(e -> doSomeStuff()).count();
+        System.out.println(count);
     }
 
-    @Test
+    @RepeatedTest(1)
     public void stream_sequential_apply_count() {
-        new Sample2ModelWrapper(Sample2Models.sample()).stream().map(e -> {
-            doSomeStuff();
-            return e;
-        }).count();
+        long count = new Sample2ModelWrapper(Sample2Models.sample()).stream().peek(e -> doSomeStuff()).count();
+        System.out.println(count);
     }
 
-    @Test
+    @RepeatedTest(1)
     public void stream_parallel_apply_wait_collect_map() {
-        new Sample2ModelWrapper(Sample2Models.sample()).parallelStream().map(e -> {
-            doSomeStuff();
-            return e;
-        }).collect(FieldModels.toConcurrentFieldModel(new Sample2ModelWrapper()));
+        Sample2ModelWrapper collect = new Sample2ModelWrapper(Sample2Models.sample()).parallelStream()
+                        .peek(e -> doSomeStuff())
+                        .collect(FieldModels.toConcurrentFieldModel(new Sample2ModelWrapper()));
+        System.out.println(collect);
     }
 
-    @Test
+    @RepeatedTest(1)
     public void stream_parallel_apply_wait_collect_concurrent() {
-        new Sample2ModelWrapper(Sample2Models.sample()).parallelStream().map(e -> {
-            doSomeStuff();
-            return e;
-        }).collect(FieldModels.toConcurrentFieldModel(new Sample2ModelWrapper()));
+        Sample2ModelWrapper collect = new Sample2ModelWrapper(Sample2Models.sample()).parallelStream()
+                        .peek(e -> doSomeStuff())
+                        .collect(FieldModels.toConcurrentFieldModel(new Sample2ModelWrapper()));
+        System.out.println(collect);
     }
 
-    @Test
+    @RepeatedTest(1)
     public void stream_sequential_apply_wait_collect() {
-        new Sample2ModelWrapper(Sample2Models.sample()).stream().map(e -> {
-            doSomeStuff();
-            return e;
-        }).collect(FieldModels.toFieldModel(new Sample2ModelWrapper()));
+        Sample2ModelWrapper collect = new Sample2ModelWrapper(Sample2Models.sample()).stream()
+                        .peek(e -> doSomeStuff())
+                        .collect(FieldModels.toFieldModel(new Sample2ModelWrapper()));
+        System.out.println(collect);
     }
+
+    private static void doSomeStuff() {
+        try {
+            Thread.sleep(2);
+        } catch (Exception ex) {
+            // ignored
+        }
+    }
+
 }

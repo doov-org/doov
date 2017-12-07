@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample.model;
 
 import static io.doov.sample.model.SampleModelWrapper.toConcurrentFieldModel;
@@ -20,8 +20,8 @@ import static io.doov.sample.model.SampleModelWrapper.toFieldModel;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
 import io.doov.sample.field.SampleFieldId;
@@ -32,7 +32,7 @@ public class SampleModelCollectorTest {
     private SampleModel sample = SampleModels.sample();
     private FieldModel source = new SampleModelWrapper(sample);
 
-    @Before
+    @BeforeEach
     public void before() {
         sample = SampleModels.sample();
         source = new SampleModelWrapper(sample);
@@ -51,7 +51,7 @@ public class SampleModelCollectorTest {
     }
 
     @Test
-    public void shoudl() {
+    public void should_setter_and_getter_work() {
         final SampleModelWrapper wrapper = new SampleModelWrapper();
         wrapper.set(SampleFieldId.FAVORITE_SITE_URL_3, "foo");
         Assertions.assertThat(wrapper.<String> get(SampleFieldId.FAVORITE_SITE_URL_3)).isEqualTo("foo");

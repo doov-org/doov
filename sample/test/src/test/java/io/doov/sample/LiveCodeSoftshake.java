@@ -1,6 +1,6 @@
 package io.doov.sample;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
 import io.doov.sample.field.SampleFieldId;

@@ -12,37 +12,32 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample.model;
 
-import static io.doov.util.LoopingRule.doSomeStuff;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-
-import io.doov.sample.model.SampleModelWrapper;
-import io.doov.sample.model.SampleModels;
-import io.doov.util.LoopingRule;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 
 public class SampleStreamTest {
-    @Rule
-    public final TestRule looping = new LoopingRule(10);
 
     @Test
     public void stream_parallel_apply_wait() {
-        new SampleModelWrapper(SampleModels.sample()).parallelStream().map(e -> {
-            doSomeStuff();
-            return e;
-        }).count();
+        long count = new SampleModelWrapper(SampleModels.sample()).parallelStream().peek(e -> doSomeStuff()).count();
+        System.out.println(count);
     }
 
-
-    @Test
+    @RepeatedTest(1)
     public void stream_sequential_apply_wait() {
-        new SampleModelWrapper(SampleModels.sample()).stream().map(e -> {
-            doSomeStuff();
-            return e;
-        }).count();
+        long count = new SampleModelWrapper(SampleModels.sample()).stream().peek(e -> doSomeStuff()).count();
+        System.out.println(count);
     }
+
+    private static void doSomeStuff() {
+        try {
+            Thread.sleep(2);
+        } catch (Exception ex) {
+            // ignored
+        }
+    }
+
 }

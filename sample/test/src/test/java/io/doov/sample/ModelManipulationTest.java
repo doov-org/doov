@@ -12,22 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample;
 
 import static java.util.stream.Collectors.toMap;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Triple;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldModel;
@@ -105,4 +101,5 @@ public class ModelManipulationTest {
         Object right = t2.getRight() != null ? t2.getRight() : t1.getRight();
         return Triple.of(left, t1.getMiddle(), right);
     };
+
 }

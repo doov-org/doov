@@ -21,7 +21,7 @@ import static io.doov.sample.validation.Rules.REGISTRY_USER;
 
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.lang.RuleRegistry;
 import io.doov.core.dsl.meta.ast.*;

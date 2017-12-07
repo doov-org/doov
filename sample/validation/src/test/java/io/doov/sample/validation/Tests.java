@@ -14,8 +14,8 @@ import static java.time.temporal.ChronoUnit.YEARS;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.assertions.Assertions;
 import io.doov.assertions.ValidationRuleAssert;
@@ -30,7 +30,7 @@ public class Tests {
     private Account account;
     private User user;
 
-    @Before
+    @BeforeEach
     public void before() {
         SampleModel sample = SampleModels.sample();
         wrapper = new SampleModelWrapper(sample);

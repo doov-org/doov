@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
@@ -44,7 +44,7 @@ public class RulesTest {
     private Account account;
     private User user;
 
-    @Before
+    @BeforeEach
     public void before() {
         SampleModel sample = SampleModels.sample();
         wrapper = new SampleModelWrapper(sample);

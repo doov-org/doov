@@ -12,26 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldModel;
 
 public class SampleModelIteratorTest {
+
     private SampleModel sample = SampleModels.sample();
     private FieldModel source = new SampleModelWrapper(sample);
 
-    @Before
+    @BeforeEach
     public void before() {
         sample = SampleModels.sample();
         source = new SampleModelWrapper(sample);
@@ -39,15 +40,18 @@ public class SampleModelIteratorTest {
 
     @Test
     public void iterator_test() {
-        for (Entry<FieldId, Object> entry : source)
-            assertEquals(entry.getValue(), source.get(entry.getKey()));
+        for (Entry<FieldId, Object> entry : source) {
+            assertThat(entry.getValue()).isEqualTo(source.get(entry.getKey()));
+        }
     }
 
     @Test
     public void iterator_contains_all_fields() {
         List<FieldId> ids = new ArrayList<>(source.getFieldIds());
-        for (Entry<FieldId, Object> entry : source)
+        for (Entry<FieldId, Object> entry : source) {
             ids.remove(entry.getKey());
-        assertEquals(0, ids.size());
+        }
+        assertThat(ids).hasSize(0);
     }
+
 }
