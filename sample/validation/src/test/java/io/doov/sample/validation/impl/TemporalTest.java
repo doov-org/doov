@@ -20,7 +20,7 @@ import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfNextYear;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
 import static io.doov.core.dsl.time.TemporalAdjuster.ofDateAdjuster;
 import static io.doov.sample.field.SampleFieldIdInfo.accountCreationDate;
-import static io.doov.sample.field.SampleFieldIdInfo.configurationMinUserAge;
+import static io.doov.sample.field.SampleFieldIdInfo.configurationMinAge;
 import static io.doov.sample.field.SampleFieldIdInfo.userBirthdate;
 import static java.time.LocalDate.now;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -78,9 +78,9 @@ public class TemporalTest {
         assertThat(userBirthdate().eq(birthDate)).validates(wrapper);
         assertThat(userBirthdate().minus(1, DAYS).eq(birthDate.minus(1, DAYS))).validates(wrapper);
         assertThat(userBirthdate().plus(1, DAYS).eq(birthDate.plus(1, DAYS))).validates(wrapper);
-        assertThat(userBirthdate().minus(configurationMinUserAge(), YEARS).eq(birthDate.minus(18, YEARS)))
+        assertThat(userBirthdate().minus(configurationMinAge(), YEARS).eq(birthDate.minus(18, YEARS)))
                 .validates(wrapper);
-        assertThat(userBirthdate().plus(configurationMinUserAge(), YEARS).eq(birthDate.plus(18, YEARS)))
+        assertThat(userBirthdate().plus(configurationMinAge(), YEARS).eq(birthDate.plus(18, YEARS)))
                 .validates(wrapper);
     }
 

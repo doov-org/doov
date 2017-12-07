@@ -20,11 +20,14 @@ import io.doov.sample.field.SamplePath;
 
 public class Configuration {
 
-    @SamplePath(field = SampleFieldId.EMAIL_MAX_SIZE, readable = "configuration max email size")
+    @SamplePath(field = SampleFieldId.CONFIGURATION_EMAIL_MAX_SIZE, readable = "configuration max email size")
     private int maxEmailSize;
 
-    @SamplePath(field = SampleFieldId.USER_MIN_AGE, readable = "configuration min user age")
+    @SamplePath(field = SampleFieldId.CONFIGURATION_MIN_AGE, readable = "configuration min age")
     private int minAge;
+
+    @SamplePath(field = SampleFieldId.CONFIGURATION_MAILING_CAMPAIGN, readable = "configuration mailing campaign")
+    private boolean mailingCampaign;
 
     public int getMaxEmailSize() {
         return maxEmailSize;
@@ -40,6 +43,14 @@ public class Configuration {
 
     public void setMinAge(int minAge) {
         this.minAge = minAge;
+    }
+
+    public boolean isMailingCampaign() {
+        return mailingCampaign;
+    }
+
+    public void setMailingCampaign(boolean mailingCampaign) {
+        this.mailingCampaign = mailingCampaign;
     }
 
 }
