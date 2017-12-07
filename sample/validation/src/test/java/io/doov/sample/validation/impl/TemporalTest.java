@@ -15,6 +15,7 @@
  */
 package io.doov.sample.validation.impl;
 
+import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfMonth;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfNextYear;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
@@ -32,11 +33,7 @@ import java.time.temporal.TemporalAdjusters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.assertions.Assertions;
-import io.doov.assertions.ValidationRuleAssert;
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.lang.StepCondition;
 import io.doov.sample.model.*;
 
 public class TemporalTest {
@@ -121,10 +118,6 @@ public class TemporalTest {
                 .yearsBetween(now().with(TemporalAdjusters.firstDayOfNextYear())
                         .with(TemporalAdjusters.ofDateAdjuster(d -> d.withDayOfMonth(15))))
                 .eq(18)).validates(wrapper);
-    }
-
-    private ValidationRuleAssert assertThat(StepCondition condition) {
-        return Assertions.assertThat(DOOV.when(condition).validate());
     }
 
 }
