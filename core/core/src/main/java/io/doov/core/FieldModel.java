@@ -14,9 +14,7 @@ package io.doov.core;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Spliterator;
+import java.util.*;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslId;
@@ -36,7 +34,7 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslMod
 
     /**
      * @param fieldId the {@code FieldId} to update
-     * @param value the new {@code FieldId} value
+     * @param value   the new {@code FieldId} value
      */
     <T> void set(FieldId fieldId, T value);
 
@@ -75,7 +73,7 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslMod
      */
     default void setAll(FieldModel source) {
         getFieldInfos().stream().filter(info -> source.get(info.id()) != null)
-                        .forEach(info -> set(info.id(), source.get(info.id())));
+                .forEach(info -> set(info.id(), source.get(info.id())));
     }
 
     /**
@@ -90,7 +88,7 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslMod
      */
     default void clear(TagId tag) {
         getFieldInfos().stream().filter(info -> info.id().hasTag(tag) && get(info.id()) != null)
-                        .forEach(info -> set(info.id(), null));
+                .forEach(info -> set(info.id(), null));
     }
 
     default FieldInfo info(FieldId id) {

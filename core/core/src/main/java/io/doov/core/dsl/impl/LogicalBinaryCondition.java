@@ -35,9 +35,9 @@ public class LogicalBinaryCondition extends AbstractStepCondition {
 
     public static LogicalBinaryCondition and(StepCondition left, StepCondition right) {
         return new LogicalBinaryCondition(andMetadata(left.getMetadata(), right.getMetadata()),
-                        (model, context) -> context.isShortCircuit()
-                                        ? andShortCircuit(left, right, model, context)
-                                        : and(left, right, model, context));
+                (model, context) -> context.isShortCircuit()
+                        ? andShortCircuit(left, right, model, context)
+                        : and(left, right, model, context));
     }
 
     private static boolean and(StepCondition left, StepCondition right, DslModel model, Context context) {
@@ -54,9 +54,9 @@ public class LogicalBinaryCondition extends AbstractStepCondition {
 
     public static LogicalBinaryCondition or(StepCondition left, StepCondition right) {
         return new LogicalBinaryCondition(orMetadata(left.getMetadata(), right.getMetadata()),
-                        (model, context) -> context.isShortCircuit()
-                                        ? orShortCircuit(left, right, model, context)
-                                        : or(left, right, model, context));
+                (model, context) -> context.isShortCircuit()
+                        ? orShortCircuit(left, right, model, context)
+                        : or(left, right, model, context));
     }
 
     private static boolean or(StepCondition left, StepCondition right, DslModel model, Context context) {

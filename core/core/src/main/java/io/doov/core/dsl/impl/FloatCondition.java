@@ -33,7 +33,7 @@ public class FloatCondition extends NumericCondition<Float> {
 
     @Override
     NumericCondition<Float> numericCondition(DslField field, Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<Float>> value) {
+            BiFunction<DslModel, Context, Optional<Float>> value) {
         return new FloatCondition(field, metadata, value);
     }
 

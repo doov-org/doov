@@ -33,7 +33,7 @@ public class LongCondition extends NumericCondition<Long> {
 
     @Override
     NumericCondition<Long> numericCondition(DslField field, Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<Long>> value) {
+            BiFunction<DslModel, Context, Optional<Long>> value) {
         return new LongCondition(field, metadata, value);
     }
 

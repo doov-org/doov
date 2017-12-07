@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl.impl;
 
 import static io.doov.core.dsl.meta.UnaryMetadata.notMetadata;
@@ -32,7 +32,7 @@ public class LogicalUnaryCondition extends AbstractStepCondition {
 
     public static LogicalUnaryCondition negate(StepCondition step) {
         return new LogicalUnaryCondition(notMetadata(step.getMetadata()),
-                        (model, context) -> step.predicate().negate().test(model, context));
+                (model, context) -> step.predicate().negate().test(model, context));
     }
 
 }

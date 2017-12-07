@@ -38,7 +38,7 @@ public class ModelManipulationTest {
         System.out.println(sample.getUser().getFullName());
 
         Map<FieldId, Object> aMap = new SampleModelWrapper(sample).stream()
-                        .collect(toMap(Entry::getKey, Entry::getValue));
+                .collect(toMap(Entry::getKey, Entry::getValue));
         SampleModelWrapper clone = aMap.entrySet().stream().collect(SampleModelWrapper.toFieldModel());
         System.out.println(clone.getModel().getUser().getFullName());
     }
@@ -47,7 +47,7 @@ public class ModelManipulationTest {
     public void csv() {
         SampleModel sample = SampleModels.sample();
         String csv = new SampleModelWrapper(sample).parallelStream()
-                        .map(e -> e.getKey() + ";" + String.valueOf(e.getValue()) + "\n").reduce("", String::concat);
+                .map(e -> e.getKey() + ";" + String.valueOf(e.getValue()) + "\n").reduce("", String::concat);
 
         System.out.println(csv);
     }
@@ -56,8 +56,8 @@ public class ModelManipulationTest {
     public void json() {
         SampleModel sample = SampleModels.sample();
         String jsonValues = new SampleModelWrapper(sample).parallelStream()
-                        .map(e -> "  \"" + e.getKey() + "=" + String.valueOf(e.getValue()) + "\"\n")
-                        .reduce("", String::concat);
+                .map(e -> "  \"" + e.getKey() + "=" + String.valueOf(e.getValue()) + "\"\n")
+                .reduce("", String::concat);
         String json = "{\n" + jsonValues + "\n}";
 
         System.out.println(json);
@@ -77,24 +77,24 @@ public class ModelManipulationTest {
         /* stream all key-values pair from both models */
         Stream.concat(sample_1.stream().map(buildRight), sample_2.stream().map(buildLeft))
 
-                        /* merging key-value pair in a map */
-                        .collect(toMap(Triple::getMiddle, Function.identity(), merge))
+                /* merging key-value pair in a map */
+                .collect(toMap(Triple::getMiddle, Function.identity(), merge))
 
-                        /* filter to keep only key with 2 differents values */
-                        .values().stream().filter(isNotSame)
+                /* filter to keep only key with 2 differents values */
+                .values().stream().filter(isNotSame)
 
-                        /* print keys with differents values */
-                        .forEach(System.out::println);
+                /* print keys with differents values */
+                .forEach(System.out::println);
     }
 
     private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) ->
-                    Triple.of(entry.getValue(), entry.getKey(), null);
+            Triple.of(entry.getValue(), entry.getKey(), null);
 
     private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) ->
-                    Triple.of(null, entry.getKey(), entry.getValue());
+            Triple.of(null, entry.getKey(), entry.getValue());
 
     private static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) ->
-                    !Objects.equals(triple.getLeft(), triple.getRight());
+            !Objects.equals(triple.getLeft(), triple.getRight());
 
     private static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
         Object left = t1.getLeft() != null ? t1.getLeft() : t2.getLeft();

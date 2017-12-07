@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl.impl;
 
 import java.time.LocalDate;
@@ -33,13 +33,13 @@ public class LocalDateCondition extends TemporalCondition<LocalDate> {
     }
 
     public LocalDateCondition(DslField field, Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<LocalDate>> value) {
+            BiFunction<DslModel, Context, Optional<LocalDate>> value) {
         super(field, metadata, value);
     }
 
     @Override
     protected TemporalCondition<LocalDate> temporalCondition(DslField field, Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<LocalDate>> value) {
+            BiFunction<DslModel, Context, Optional<LocalDate>> value) {
         return new LocalDateCondition(field, metadata, value);
     }
 

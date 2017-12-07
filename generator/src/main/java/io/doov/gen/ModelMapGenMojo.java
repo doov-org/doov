@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.gen;
 
 import static io.doov.gen.FieldInfoGen.constants;
@@ -104,7 +104,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             for (int i = 0; i < sourceClasses.size(); i++) {
                 @SuppressWarnings("unchecked")
                 final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>) Class
-                                .forName(fieldClasses.get(i), true, classLoader);
+                        .forName(fieldClasses.get(i), true, classLoader);
                 final Class<?> modelClazz = Class.forName(sourceClasses.get(i), true, classLoader);
                 generationInput.put(fieldClazz, modelClazz);
             }
@@ -159,7 +159,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             final String targetClassName = fieldInfoClassName(clazz);
             final String targetPackage = clazz.getPackage().getName();
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
-                            targetClassName + ".java");
+                    targetClassName + ".java");
             final String classTemplate = template("FieldInfo.template");
             createDirectories(targetFile.getParentFile().toPath());
             final Map<String, String> conf = new HashMap<>();
@@ -180,16 +180,16 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
     private static String fieldInfoClassName(Class<?> clazz) {
         return clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1)
-                        : clazz.getSimpleName() + "Info";
+                : clazz.getSimpleName() + "Info";
     }
 
     private void generateWrapper(Map<FieldId, VisitorPath> fieldPaths, Class<?> modelClass, Class<?> fieldClass)
-                    throws RuntimeException {
+            throws RuntimeException {
         try {
             final String targetClassName = modelClass.getSimpleName() + "Wrapper";
             final String targetPackage = modelClass.getPackage().getName();
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
-                            targetClassName + ".java");
+                    targetClassName + ".java");
             final String classTemplate = template("WrapperClass.template");
 
             createDirectories(targetFile.getParentFile().toPath());

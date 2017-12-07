@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package org.modelmap;
 
 import static io.doov.core.dsl.DOOV.matchAll;
@@ -102,16 +102,16 @@ public class BenchmarkRule {
 
     private static StepCondition[] conditions(int count) {
         return IntStream.range(0, count)
-                        .mapToObj(operand -> accountCountry().eq(Country.FR)
-                                        .and(accountLanguage().eq(Language.FR))
-                                        .and(accountPhoneNumber().startsWith("+33")))
-                        .collect(toList())
-                        .toArray(new StepCondition[] {});
+                .mapToObj(operand -> accountCountry().eq(Country.FR)
+                        .and(accountLanguage().eq(Language.FR))
+                        .and(accountPhoneNumber().startsWith("+33")))
+                .collect(toList())
+                .toArray(new StepCondition[] {});
     }
 
     private Result executeOn(RuleRegistry registry, AccountRulesId id) {
         return registry.get(id).map(rule -> rule.executeOn(MODEL))
-                        .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(IllegalArgumentException::new);
     }
 
 }

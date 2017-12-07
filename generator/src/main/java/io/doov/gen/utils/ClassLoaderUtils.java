@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.gen.utils;
 
 import static java.lang.Thread.currentThread;
@@ -37,14 +37,14 @@ public class ClassLoaderUtils {
 
             // collect project dependencies
             files.addAll(project.getDependencyArtifacts().stream()
-                            .map(a -> DependencyUtils.resolve(a, project))
-                            .filter(Objects::nonNull)
-                            .collect(toList()));
+                    .map(a -> DependencyUtils.resolve(a, project))
+                    .filter(Objects::nonNull)
+                    .collect(toList()));
 
             final List<URL> urls = files.stream()
-                            .filter(f -> f != null && f.exists())
-                            .map(new FileToUrl())
-                            .collect(toList());
+                    .filter(f -> f != null && f.exists())
+                    .map(new FileToUrl())
+                    .collect(toList());
 
             return new URLClassLoader(urls.toArray(new URL[urls.size()]), currentThread().getContextClassLoader());
         } catch (DependencyResolutionRequiredException e) {

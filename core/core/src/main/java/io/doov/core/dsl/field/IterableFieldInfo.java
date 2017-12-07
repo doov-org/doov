@@ -10,7 +10,7 @@ import io.doov.core.dsl.lang.StepCondition;
 public class IterableFieldInfo<T, C extends Iterable<T>> extends DefaultFieldInfo<C> {
 
     public IterableFieldInfo(FieldId fieldId, String readable, Class<?> type, Class<?>[] genericTypes, FieldId[]
-                    siblings) {
+            siblings) {
         super(fieldId, readable, type, genericTypes, siblings);
     }
 

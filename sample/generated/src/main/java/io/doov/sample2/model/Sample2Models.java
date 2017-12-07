@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample2.model;
 
 import static io.doov.sample2.field.Sample2Tag.EMAIL;
@@ -31,23 +31,23 @@ public class Sample2Models {
         final Sample2ModelWrapper wrapper = new Sample2ModelWrapper();
         final AtomicLong i = new AtomicLong(0);
         wrapper.getFieldInfos().stream().map(FieldInfo::id)
-                        .filter(id -> id.hasTag(EMAIL))
-                        .forEach(id -> wrapper.set(id, "account" + i.incrementAndGet() + "@some.name"));
+                .filter(id -> id.hasTag(EMAIL))
+                .forEach(id -> wrapper.set(id, "account" + i.incrementAndGet() + "@some.name"));
 
         i.set(0);
         wrapper.getFieldInfos().stream().map(FieldInfo::id)
-                        .filter(id -> id.hasTag(ID))
-                        .forEach(id -> wrapper.set(id, i.incrementAndGet()));
+                .filter(id -> id.hasTag(ID))
+                .forEach(id -> wrapper.set(id, i.incrementAndGet()));
 
         i.set(0);
         wrapper.getFieldInfos().stream().map(FieldInfo::id)
-                        .filter(id -> id.hasTag(PASSWORD))
-                        .forEach(id -> wrapper.set(id, "password_" + i.incrementAndGet()));
+                .filter(id -> id.hasTag(PASSWORD))
+                .forEach(id -> wrapper.set(id, "password_" + i.incrementAndGet()));
 
         i.set(0);
         wrapper.getFieldInfos().stream().map(FieldInfo::id)
-                        .filter(id -> id.hasTag(LOGIN))
-                        .forEach(id -> wrapper.set(id, "login_" + i.incrementAndGet()));
+                .filter(id -> id.hasTag(LOGIN))
+                .forEach(id -> wrapper.set(id, "login_" + i.incrementAndGet()));
 
         return wrapper.getModel();
     }

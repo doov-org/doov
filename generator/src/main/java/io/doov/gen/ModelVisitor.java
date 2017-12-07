@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.gen;
 
 import static java.util.Arrays.asList;
@@ -41,14 +41,14 @@ final class ModelVisitor {
     }
 
     public void visitModel(Class<?> clazz, Visitor visitor, String packageFilter)
-                    throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
-                    InvocationTargetException {
+            throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
+            InvocationTargetException {
         log.debug("starting visiting class " + clazz.getName());
         visitModel(clazz, visitor, new LinkedList<>(), packageFilter, 0);
     }
 
     private void visitModel(Class<?> clazz, Visitor visitor, LinkedList<Method> path, String packageFilter, int deep)
-                    throws IntrospectionException, IllegalArgumentException {
+            throws IntrospectionException, IllegalArgumentException {
         if (clazz == null) {
             return;
         }
@@ -70,7 +70,7 @@ final class ModelVisitor {
         final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor desc : propertyDescriptors) {
             log.debug("property " + desc.getName() + " : " + desc.getPropertyType().getSimpleName()
-                            + " from " + clazz.getName());
+                    + " from " + clazz.getName());
             path.addLast(desc.getReadMethod());
             try {
                 final List<PathAnnotation> fieldTarget = getFieldTarget(clazz, desc);
@@ -121,9 +121,9 @@ final class ModelVisitor {
 
         // retrive declared path annotations type
         Set<Class<? extends Annotation>> pathAnnotations = stream(annotations)
-                        .filter(a -> a.annotationType().getAnnotation(Path.class) != null)
-                        .map(Annotation::annotationType)
-                        .collect(toSet());
+                .filter(a -> a.annotationType().getAnnotation(Path.class) != null)
+                .map(Annotation::annotationType)
+                .collect(toSet());
 
         // add those from repeatable annotations
         stream(annotations).forEach(a -> {
@@ -142,11 +142,11 @@ final class ModelVisitor {
 
         log.debug(pathAnnotations.size() + " paths annotations to process from " + executable.toString());
         return pathAnnotations.stream()
-                        .map(a -> asList(executable.getAnnotationsByType(a)))
-                        .flatMap(Collection::stream)
-                        .map(this::asPathAnnotation)
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
+                .map(a -> asList(executable.getAnnotationsByType(a)))
+                .flatMap(Collection::stream)
+                .map(this::asPathAnnotation)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     private PathAnnotation asPathAnnotation(Annotation annotation) {
@@ -156,8 +156,8 @@ final class ModelVisitor {
             Method constraintGetter = getMethodByClass(annotation.annotationType(), PathConstraint.class);
             Method readableGetter = getMethodByName(annotation.annotationType(), "readable");
             return new PathAnnotation((FieldId) fieldIdGetter.invoke(annotation),
-                            (PathConstraint) constraintGetter.invoke(annotation),
-                            readableGetter == null ? null : (String) readableGetter.invoke(annotation));
+                    (PathConstraint) constraintGetter.invoke(annotation),
+                    readableGetter == null ? null : (String) readableGetter.invoke(annotation));
         } catch (IllegalAccessException | InvocationTargetException e) {
             return null;
         }
@@ -166,23 +166,23 @@ final class ModelVisitor {
     private Method getMethodByClass(Class<?> clazz, Class<?> interfaceType) {
         log.debug("process annotation type " + clazz.getName());
         return stream(clazz.getMethods())
-                        .filter(f -> {
-                            log.debug("process annotation field " + f.toString());
-                            return asList(f.getReturnType().getInterfaces()).contains(interfaceType);
-                        })
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException(clazz + " needs method with " + interfaceType));
+                .filter(f -> {
+                    log.debug("process annotation field " + f.toString());
+                    return asList(f.getReturnType().getInterfaces()).contains(interfaceType);
+                })
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(clazz + " needs method with " + interfaceType));
     }
 
     private Method getMethodByName(Class<?> clazz, String name) {
         log.debug("process annotation type " + clazz.getName());
         return stream(clazz.getMethods())
-                        .filter(f -> {
-                            log.debug("process annotation field " + f.toString());
-                            return f.getName().equals(name);
-                        })
-                        .findFirst()
-                        .orElse(null);
+                .filter(f -> {
+                    log.debug("process annotation field " + f.toString());
+                    return f.getName().equals(name);
+                })
+                .findFirst()
+                .orElse(null);
     }
 
     private Collection<Method> methods(Class<?> clazz, String packageFilter) {
@@ -200,15 +200,15 @@ final class ModelVisitor {
 
     private Collection<Method> filter(Method[] methods, String packageFilter) {
         final List<Method> filtered = stream(methods)
-                        .filter(m -> !Modifier.isStatic(m.getModifiers()))
-                        .filter(m -> !Modifier.isNative(m.getModifiers()))
-                        .filter(m -> Modifier.isPublic(m.getModifiers()))
-                        .filter(m -> m.getReturnType() != null)
-                        .filter(m -> !m.getReturnType().equals(Void.TYPE))
-                        .filter(m -> m.getParameterTypes().length == 0)
-                        .filter(m -> m.getDeclaringClass().getPackage().getName().startsWith(packageFilter))
-                        .filter(m -> !m.getName().toLowerCase().contains("clone"))
-                        .collect(toList());
+                .filter(m -> !Modifier.isStatic(m.getModifiers()))
+                .filter(m -> !Modifier.isNative(m.getModifiers()))
+                .filter(m -> Modifier.isPublic(m.getModifiers()))
+                .filter(m -> m.getReturnType() != null)
+                .filter(m -> !m.getReturnType().equals(Void.TYPE))
+                .filter(m -> m.getParameterTypes().length == 0)
+                .filter(m -> m.getDeclaringClass().getPackage().getName().startsWith(packageFilter))
+                .filter(m -> !m.getName().toLowerCase().contains("clone"))
+                .collect(toList());
 
         final List<Method> overrided = new ArrayList<>();
         for (Method method : filtered) {
@@ -239,7 +239,7 @@ final class ModelVisitor {
             return (Class<?>) method.getGenericReturnType();
         }
         if (List.class.isAssignableFrom(method.getReturnType())
-                        && method.getGenericReturnType() instanceof ParameterizedType) {
+                && method.getGenericReturnType() instanceof ParameterizedType) {
             final ParameterizedType returnType = (ParameterizedType) method.getGenericReturnType();
             if (returnType == null) {
                 return null;

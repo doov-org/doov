@@ -40,7 +40,7 @@ abstract class AbstractCondition<N> implements Readable {
     }
 
     protected AbstractCondition(DslField field, Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<N>> function) {
+            BiFunction<DslModel, Context, Optional<N>> function) {
         this.field = field;
         this.metadata = metadata;
         this.value = (model, f) -> function.apply(model, null);
@@ -56,13 +56,13 @@ abstract class AbstractCondition<N> implements Readable {
     }
 
     protected final StepCondition predicate(FieldMetadata metadata,
-                    Function<N, Boolean> predicate) {
+            Function<N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, predicate);
     }
 
     protected final StepCondition predicate(FieldMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<N>> value,
-                    BiFunction<N, N, Boolean> predicate) {
+            BiFunction<DslModel, Context, Optional<N>> value,
+            BiFunction<N, N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, value, predicate);
     }
 

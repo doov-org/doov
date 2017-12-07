@@ -105,12 +105,12 @@ public class FieldMetadata implements Metadata {
 
     public FieldMetadata valueListReadable(Collection<? extends Readable> readables) {
         return add(readables == null || readables.isEmpty() ? null
-                        : new Element(() -> formatListReadable(readables), value));
+                : new Element(() -> formatListReadable(readables), value));
     }
 
     public FieldMetadata valueListObject(Collection<?> readables) {
         return add(readables == null || readables.isEmpty() ? null
-                        : new Element(() -> formatListObject(readables), value));
+                : new Element(() -> formatListObject(readables), value));
     }
 
     // implementation

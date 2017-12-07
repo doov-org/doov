@@ -61,10 +61,10 @@ public class RulesTest {
         assertThat(actual.isTrue()).isFalse();
         assertThat(actual.getFailedNodes()).hasSize(3);
         assertThat(actual.getFailedNodes().stream().map(Readable::readable).collect(toList()))
-                        .contains("account email matches \\w+[@]\\w+\\.com ",
-                                        "account email matches \\w+[@]\\w+\\.fr ",
-                                        "(account email matches \\w+[@]\\w+\\.com or " +
-                                                        "account email matches \\w+[@]\\w+\\.fr) ");
+                .contains("account email matches \\w+[@]\\w+\\.com ",
+                        "account email matches \\w+[@]\\w+\\.fr ",
+                        "(account email matches \\w+[@]\\w+\\.com or " +
+                                "account email matches \\w+[@]\\w+\\.fr) ");
     }
 
     @Test
@@ -78,8 +78,8 @@ public class RulesTest {
     @Test
     public void test_all_account_rules_invalid_messages() {
         List<Result> results = Stream.concat(REGISTRY_USER.stream(), REGISTRY_ACCOUNT.stream())
-                        .map(rule -> rule.executeOn(wrapper))
-                        .collect(toList());
+                .map(rule -> rule.executeOn(wrapper))
+                .collect(toList());
         assertThat(results).isNotEmpty();
         assertThat(results).extracting(Result::isTrue).allMatch(Boolean::booleanValue);
         assertThat(results).extracting(Result::getMessage).allMatch(Objects::isNull);
@@ -97,8 +97,8 @@ public class RulesTest {
     @Test
     public void print_all_account_rules() {
         concat(REGISTRY_USER.stream(), REGISTRY_ACCOUNT.stream())
-                        .map(ValidationRule::readable)
-                        .forEach(System.out::println);
+                .map(ValidationRule::readable)
+                .forEach(System.out::println);
     }
 
     private Result executeOn(RuleRegistry registry, RuleId id) {

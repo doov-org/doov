@@ -50,9 +50,9 @@ public class Tests {
     @Test
     public void should_temporal_same_as_local_date_operation_with() {
         assertThat(userBirthdate().with(firstDayOfMonth()).eq(now().with(TemporalAdjusters.firstDayOfMonth())))
-                        .validates(wrapper);
+                .validates(wrapper);
         assertThat(userBirthdate().with(firstDayOfMonth()).notEq(now().with(TemporalAdjusters.firstDayOfMonth())))
-                        .doesNotValidate(wrapper);
+                .doesNotValidate(wrapper);
     }
 
     @Test
@@ -64,9 +64,9 @@ public class Tests {
         assertThat(userBirthdate().minus(1, DAYS).eq(birthDate.minus(1, DAYS))).validates(wrapper);
         assertThat(userBirthdate().plus(1, DAYS).eq(birthDate.plus(1, DAYS))).validates(wrapper);
         assertThat(userBirthdate().minus(configurationMinUserAge(), YEARS).eq(birthDate.minus(18, YEARS)))
-                        .validates(wrapper);
+                .validates(wrapper);
         assertThat(userBirthdate().plus(configurationMinUserAge(), YEARS).eq(birthDate.plus(18, YEARS)))
-                        .validates(wrapper);
+                .validates(wrapper);
     }
 
     @Test
@@ -99,13 +99,13 @@ public class Tests {
         user.setBirthDate(birthDate);
 
         assertThat(userBirthdate().with(firstDayOfYear())
-                        .yearsBetween(now().with(TemporalAdjusters.firstDayOfYear()))
-                        .eq(18))
-                        .validates(wrapper);
+                .yearsBetween(now().with(TemporalAdjusters.firstDayOfYear()))
+                .eq(18))
+                .validates(wrapper);
         assertThat(userBirthdate().with(firstDayOfNextYear()).with(ofDateAdjuster(d -> d.withDayOfMonth(15)))
-                        .yearsBetween(now().with(TemporalAdjusters.firstDayOfNextYear())
-                                        .with(TemporalAdjusters.ofDateAdjuster(d -> d.withDayOfMonth(15))))
-                        .eq(18)).validates(wrapper);
+                .yearsBetween(now().with(TemporalAdjusters.firstDayOfNextYear())
+                        .with(TemporalAdjusters.ofDateAdjuster(d -> d.withDayOfMonth(15))))
+                .eq(18)).validates(wrapper);
     }
 
     private ValidationRuleAssert assertThat(StepCondition condition) {

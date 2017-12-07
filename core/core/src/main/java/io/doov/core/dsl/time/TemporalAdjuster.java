@@ -71,7 +71,7 @@ public class TemporalAdjuster {
 
     public static TemporalAdjuster ofDateAdjuster(UnaryOperator<LocalDate> dateBasedAdjuster) {
         return new TemporalAdjuster(unknownMetadata("of date adjuster"),
-                        TemporalAdjusters.ofDateAdjuster(dateBasedAdjuster));
+                TemporalAdjusters.ofDateAdjuster(dateBasedAdjuster));
     }
 
 }

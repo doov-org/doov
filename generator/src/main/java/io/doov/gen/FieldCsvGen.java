@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.gen;
 
 import static java.util.Collections.addAll;
@@ -43,8 +43,8 @@ class FieldCsvGen {
 
     private static String toCsv(VisitorPath path) {
         return path.getBaseClass().getSimpleName().toLowerCase() + "." + path.displayPath() + ';'
-                        + path.getFieldId() + ';'
-                        + path.getGetMethod().getReturnType().getSimpleName() + '\n';
+                + path.getFieldId() + ';'
+                + path.getGetMethod().getReturnType().getSimpleName() + '\n';
     }
 
     private static Collection<FieldId> fieldsWithoutPath(Collection<VisitorPath> collected) {

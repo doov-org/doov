@@ -41,18 +41,18 @@ public class LogicalNaryCondition extends AbstractStepCondition {
 
     public static IntegerCondition count(List<StepCondition> steps) {
         return new IntegerCondition(null, countMetadata(getMetadatas(steps)),
-                        (model, context) -> Optional.of((int) steps.stream()
-                                        .filter(s -> s.predicate().test(model, context))
-                                        .count()));
+                (model, context) -> Optional.of((int) steps.stream()
+                        .filter(s -> s.predicate().test(model, context))
+                        .count()));
     }
 
     // match any
 
     public static LogicalNaryCondition matchAny(List<StepCondition> steps) {
         return new LogicalNaryCondition(matchAnyMetadata(getMetadatas(steps)),
-                        (model, context) -> context.isShortCircuit()
-                                        ? matchAnyShortCircuit(steps, model, context)
-                                        : matchAny(steps, model, context));
+                (model, context) -> context.isShortCircuit()
+                        ? matchAnyShortCircuit(steps, model, context)
+                        : matchAny(steps, model, context));
     }
 
     private static boolean matchAnyShortCircuit(List<StepCondition> steps, DslModel model, Context context) {
@@ -68,9 +68,9 @@ public class LogicalNaryCondition extends AbstractStepCondition {
 
     public static LogicalNaryCondition matchAll(List<StepCondition> steps) {
         return new LogicalNaryCondition(matchAllMetadata(getMetadatas(steps)),
-                        (model, context) -> context.isShortCircuit()
-                                        ? matchAllShortCircuit(steps, model, context)
-                                        : matchAll(steps, model, context));
+                (model, context) -> context.isShortCircuit()
+                        ? matchAllShortCircuit(steps, model, context)
+                        : matchAll(steps, model, context));
     }
 
     private static boolean matchAllShortCircuit(List<StepCondition> steps, DslModel model, Context context) {
@@ -86,9 +86,9 @@ public class LogicalNaryCondition extends AbstractStepCondition {
 
     public static LogicalNaryCondition matchNone(List<StepCondition> steps) {
         return new LogicalNaryCondition(matchNoneMetadata(getMetadatas(steps)),
-                        (model, context) -> context.isShortCircuit()
-                                        ? matchNoneShortCircuit(steps, model, context)
-                                        : matchNone(steps, model, context));
+                (model, context) -> context.isShortCircuit()
+                        ? matchNoneShortCircuit(steps, model, context)
+                        : matchNone(steps, model, context));
     }
 
     private static boolean matchNoneShortCircuit(List<StepCondition> steps, DslModel model, Context context) {

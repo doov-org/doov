@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.sample;
 
 import static com.datastax.driver.core.DataType.text;
@@ -22,14 +22,9 @@ import static io.doov.sample.field.SampleFieldId.*;
 import static java.util.stream.Collectors.toMap;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,9 +83,9 @@ public class LiveCode {
 
         Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
         SampleModelWrapper newModel = map.entrySet().stream()
-                        .filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
-                        // .filter(e -> e.getKey().hasTag(SampleTag.USER))
-                        .collect(SampleModelWrapper.toFieldModel());
+                .filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
+                // .filter(e -> e.getKey().hasTag(SampleTag.USER))
+                .collect(SampleModelWrapper.toFieldModel());
 
         newModel.stream().forEach(System.out::println);
     }
@@ -98,10 +93,10 @@ public class LiveCode {
     private static void cqlBuilders() {
         FieldModel model = SampleModels.wrapper();
         Create create = SchemaBuilder.createTable("Field").addClusteringColumn(LOGIN.name(), text())
-                        .addPartitionKey("snapshot_id", timeuuid());
+                .addPartitionKey("snapshot_id", timeuuid());
 
         model.getFieldInfos().stream().filter(f -> f.id() != LOGIN)
-                        .forEach(f -> create.addColumn(f.id().name(), cqlType(f)));
+                .forEach(f -> create.addColumn(f.id().name(), cqlType(f)));
 
         Create.Options createWithOptions = create.withOptions().clusteringOrder(LOGIN.name(), DESC);
         System.out.println(createWithOptions);
@@ -125,14 +120,14 @@ public class LiveCode {
         /* stream all key-values pair from both models */
         Stream.concat(sample_1.stream().map(buildRight), sample_2.stream().map(buildLeft))
 
-                        /* merging key-value pair in a map */
-                        .collect(Collectors.toMap(Triple::getMiddle, Function.identity(), merge))
+                /* merging key-value pair in a map */
+                .collect(Collectors.toMap(Triple::getMiddle, Function.identity(), merge))
 
-                        /* filter to keep only key with 2 differents values */
-                        .values().stream().filter(isNotSame)
+                /* filter to keep only key with 2 differents values */
+                .values().stream().filter(isNotSame)
 
-                        /* print keys with differents values */
-                        .forEach(System.out::println);
+                /* print keys with differents values */
+                .forEach(System.out::println);
     }
 
     private static CodecRegistry codecRegistry() {
@@ -158,13 +153,13 @@ public class LiveCode {
     }
 
     private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) ->
-                    Triple.of(entry.getValue(), entry.getKey(), null);
+            Triple.of(entry.getValue(), entry.getKey(), null);
 
     private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) ->
-                    Triple.of(null, entry.getKey(), entry.getValue());
+            Triple.of(null, entry.getKey(), entry.getValue());
 
     private static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) ->
-                    !Objects.equals(triple.getLeft(), triple.getRight());
+            !Objects.equals(triple.getLeft(), triple.getRight());
 
     private static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
         Object left = t1.getLeft() != null ? t1.getLeft() : t2.getLeft();

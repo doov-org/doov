@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl;
 
 import static io.doov.core.dsl.meta.FieldMetadata.falseMetadata;
@@ -74,11 +74,11 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericCondition<N> min(NumericFieldInfo<N>... fields) {
         return Arrays.stream(fields)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                        .map(NumericFieldInfo::getNumericCondition)
-                        .map(c -> c.min(Arrays.asList(fields)))
-                        .orElseThrow(IllegalArgumentException::new);
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(NumericFieldInfo::getNumericCondition)
+                .map(c -> c.min(Arrays.asList(fields)))
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     // sum
@@ -86,20 +86,20 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericCondition<N> sum(NumericFieldInfo<N>... fields) {
         return Arrays.stream(fields)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                        .map(NumericFieldInfo::getNumericCondition)
-                        .map(c -> c.sum(Arrays.asList(fields)))
-                        .orElseThrow(IllegalArgumentException::new);
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(NumericFieldInfo::getNumericCondition)
+                .map(c -> c.sum(Arrays.asList(fields)))
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     @SafeVarargs
     public static <N extends Number> NumericCondition<N> sum(NumericCondition<N>... conditions) {
         return Arrays.stream(conditions)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                        .map(c -> c.sumConditions(Arrays.asList(conditions)))
-                        .orElseThrow(IllegalArgumentException::new);
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(c -> c.sumConditions(Arrays.asList(conditions)))
+                .orElseThrow(IllegalArgumentException::new);
     }
 
 }

@@ -32,9 +32,9 @@ public class RulesVisitorTest {
     public void full() {
         StringBuilder sb = new StringBuilder();
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
-                        .flatMap(RuleRegistry::stream)
-                        .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstFullVisitor(sb)));
+                .flatMap(RuleRegistry::stream)
+                .peek(rule -> sb.append("--------------------------------").append("\n"))
+                .forEach(rule -> rule.accept(new AstFullVisitor(sb)));
         System.out.println(sb);
     }
 
@@ -42,9 +42,9 @@ public class RulesVisitorTest {
     public void line() {
         StringBuilder sb = new StringBuilder();
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
-                        .flatMap(RuleRegistry::stream)
-                        .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstLineVisitor(sb)));
+                .flatMap(RuleRegistry::stream)
+                .peek(rule -> sb.append("--------------------------------").append("\n"))
+                .forEach(rule -> rule.accept(new AstLineVisitor(sb)));
         System.out.println(sb);
     }
 
@@ -52,9 +52,9 @@ public class RulesVisitorTest {
     public void text() {
         StringBuilder sb = new StringBuilder();
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
-                        .flatMap(RuleRegistry::stream)
-                        .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstTextVisitor(sb)));
+                .flatMap(RuleRegistry::stream)
+                .peek(rule -> sb.append("--------------------------------").append("\n"))
+                .forEach(rule -> rule.accept(new AstTextVisitor(sb)));
         System.out.println(sb);
     }
 
@@ -62,9 +62,9 @@ public class RulesVisitorTest {
     public void markdown() {
         StringBuilder sb = new StringBuilder();
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
-                        .flatMap(RuleRegistry::stream)
-                        .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb)));
+                .flatMap(RuleRegistry::stream)
+                .peek(rule -> sb.append("--------------------------------").append("\n"))
+                .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb)));
         System.out.println(sb);
     }
 
@@ -72,9 +72,9 @@ public class RulesVisitorTest {
     public void html() {
         StringBuilder sb = new StringBuilder();
         Stream.of(REGISTRY_ACCOUNT, REGISTRY_USER, REGISTRY_DEFAULT)
-                        .flatMap(RuleRegistry::stream)
-                        .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstHtmlVisitor(sb)));
+                .flatMap(RuleRegistry::stream)
+                .peek(rule -> sb.append("--------------------------------").append("\n"))
+                .forEach(rule -> rule.accept(new AstHtmlVisitor(sb)));
         System.out.println(sb);
     }
 

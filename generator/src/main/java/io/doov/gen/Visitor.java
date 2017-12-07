@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.gen;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -40,7 +40,7 @@ final class Visitor {
                 return;
             }
             final VisitorPath path = new VisitorPath(baseClass, paths, annotation.fieldId, annotation.readable,
-                            getMethod, setMethod);
+                    getMethod, setMethod);
             if (contains(path)) {
                 return;
             }
@@ -50,7 +50,7 @@ final class Visitor {
 
     private static boolean checkFieldTargetConstraint(List<Method> paths, FieldId FieldId, PathConstraint constraint) {
         return isNullOrEmpty(constraint.includePath())
-                        || VisitorPath.getterPath(paths, FieldId.position()).contains(constraint.includePath());
+                || VisitorPath.getterPath(paths, FieldId.position()).contains(constraint.includePath());
     }
 
     private boolean contains(VisitorPath vPath) {

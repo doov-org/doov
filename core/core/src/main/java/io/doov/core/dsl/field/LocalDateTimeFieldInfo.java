@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl.field;
 
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ import io.doov.core.dsl.impl.LocalDateTimeCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 
 public class LocalDateTimeFieldInfo extends DefaultFieldInfo<LocalDateTime>
-                implements TemporalFieldInfo<LocalDateTime> {
+        implements TemporalFieldInfo<LocalDateTime> {
 
     public LocalDateTimeFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
         super(fieldId, readable, LocalDateTime.class, new Class[] {}, siblings);

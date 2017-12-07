@@ -36,7 +36,7 @@ public class SampleFieldIdInfoTest {
     public void should_have_field_info() {
         Arrays.stream(SampleFieldId.values()).forEach(id -> assertThat(fieldInfo(id)).isPresent());
         Arrays.stream(SampleFieldId.values()).forEach(id -> fieldInfo(id).map(info ->
-                        assertThat(info.type()).isNotNull()));
+                assertThat(info.type()).isNotNull()));
     }
 
 }

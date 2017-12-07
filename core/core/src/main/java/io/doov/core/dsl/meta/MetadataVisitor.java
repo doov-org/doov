@@ -1,7 +1,5 @@
 package io.doov.core.dsl.meta;
 
-import java.lang.reflect.Field;
-
 import io.doov.core.dsl.lang.*;
 
 public interface MetadataVisitor {

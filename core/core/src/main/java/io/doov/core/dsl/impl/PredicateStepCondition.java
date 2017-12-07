@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl.impl;
 
 import java.util.Optional;
@@ -26,18 +26,18 @@ import io.doov.core.dsl.meta.Metadata;
 class PredicateStepCondition<N> extends AbstractStepCondition {
 
     protected PredicateStepCondition(Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<N>> value,
-                    Function<N, Boolean> predicate) {
+            BiFunction<DslModel, Context, Optional<N>> value,
+            Function<N, Boolean> predicate) {
         super(metadata, (model, context) -> value.apply(model, context).map(predicate).orElse(false));
     }
 
     protected PredicateStepCondition(Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<N>> left,
-                    BiFunction<DslModel, Context, Optional<N>> right,
-                    BiFunction<N, N, Boolean> predicate) {
+            BiFunction<DslModel, Context, Optional<N>> left,
+            BiFunction<DslModel, Context, Optional<N>> right,
+            BiFunction<N, N, Boolean> predicate) {
         super(metadata, (model, context) -> left.apply(model, context)
-                        .flatMap(l -> right.apply(model, context).map(r -> predicate.apply(l, r)))
-                        .orElse(false));
+                .flatMap(l -> right.apply(model, context).map(r -> predicate.apply(l, r)))
+                .orElse(false));
     }
 
 }

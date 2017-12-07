@@ -34,8 +34,8 @@ public class SampleModelWrapperTest {
 
     private static Collection<Object[]> data() {
         return SampleFieldIdInfo.values().stream()
-                        .map(f -> new Object[] { f.id().name(), f })
-                        .collect(toList());
+                .map(f -> new Object[] { f.id().name(), f })
+                .collect(toList());
     }
 
     private SampleModelWrapper wrapper;

@@ -75,16 +75,16 @@ public class AstTextVisitor extends AbstractAstVisitor {
     protected int getCurrentIndentSize() {
         if (AbstractAstVisitor.Element.BINARY.equals(stackPeek())) {
             return (int) stackSteam().filter(e -> !AbstractAstVisitor.Element.BINARY.equals(e)).count() *
-                            getIndentSize();
+                    getIndentSize();
         }
         return super.getCurrentIndentSize();
     }
 
     protected String formatFieldMetadata(FieldMetadata metadata) {
         return metadata.stream()
-                        .map(FieldMetadata.Element::getReadable)
-                        .map(Readable::readable)
-                        .collect(joining(" "));
+                .map(FieldMetadata.Element::getReadable)
+                .map(Readable::readable)
+                .collect(joining(" "));
     }
 
     protected String formatField(Readable field) {

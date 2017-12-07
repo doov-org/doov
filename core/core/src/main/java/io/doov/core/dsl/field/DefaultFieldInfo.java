@@ -25,7 +25,7 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T> {
     private final FieldId[] siblings;
 
     public DefaultFieldInfo(FieldId fieldId, String readable, Class<?> type, Class<?>[] genericTypes,
-                    FieldId... siblings) {
+            FieldId... siblings) {
         this.fieldId = fieldId;
         this.readable = readable;
         this.type = type;

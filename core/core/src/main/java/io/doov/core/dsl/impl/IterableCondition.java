@@ -29,15 +29,15 @@ public class IterableCondition<T, C extends Iterable<T>> extends DefaultConditio
 
     public StepCondition contains(T value) {
         return predicate(containsMetadata(field, value),
-                        collection -> stream(collection.spliterator(), false)
-                                        .anyMatch(value::equals));
+                collection -> stream(collection.spliterator(), false)
+                        .anyMatch(value::equals));
     }
 
     @SafeVarargs
     public final StepCondition containsAll(T... values) {
         return predicate(containsMetadata(field, (Object[]) values),
-                        iterable -> stream(iterable.spliterator(), false)
-                                        .collect(toSet()).containsAll(asList(values)));
+                iterable -> stream(iterable.spliterator(), false)
+                        .collect(toSet()).containsAll(asList(values)));
     }
 
     public StepCondition isEmpty() {
@@ -50,12 +50,12 @@ public class IterableCondition<T, C extends Iterable<T>> extends DefaultConditio
 
     public StepCondition hasSize(int size) {
         return predicate(hasSizeMetadata(field, size),
-                        iterable -> stream(iterable.spliterator(), false).count() == size);
+                iterable -> stream(iterable.spliterator(), false).count() == size);
     }
 
     public StepCondition hasNotSize(int size) {
         return predicate(hasNotSizeMetadata(field, size),
-                        iterable -> stream(iterable.spliterator(), false).count() != size);
+                iterable -> stream(iterable.spliterator(), false).count() != size);
     }
 
 }

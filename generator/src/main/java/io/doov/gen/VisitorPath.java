@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.gen;
 
 import java.lang.reflect.Method;
@@ -30,7 +30,7 @@ final class VisitorPath {
     private final Method setMethod;
 
     public VisitorPath(Class<?> baseClass, List<Method> getPath, FieldId fieldId, String readable,
-                    Method getMethod, Method setMethod) {
+            Method getMethod, Method setMethod) {
         this.baseClass = baseClass;
         this.path = new ArrayList<>(getPath);
         this.fieldId = fieldId;

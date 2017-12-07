@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.gen.processor;
 
 import java.text.MessageFormat;
@@ -27,12 +27,12 @@ public class MacroProcessor {
     private static final String REF_PREFIX = "${";
     private static final String REF_SUFFIX = "}";
     private static final String STR_MORE_THAN_0_LEVEL_TO_EXPAND_1 =
-                    "There is more than {0} level to expand the property : ''{1}'')";
+            "There is more than {0} level to expand the property : ''{1}'')";
     private static final String STR_SYNTAX_ERROR_IN_0 = "Syntax error in property: ''{0}''";
     private static final MessageFormat MORE_THAN_0_LEVEL_TO_EXPAND_1 =
-                    new MessageFormat(STR_MORE_THAN_0_LEVEL_TO_EXPAND_1);
+            new MessageFormat(STR_MORE_THAN_0_LEVEL_TO_EXPAND_1);
 
-    private  static String eval(Map<String, Object> conf, String key) {
+    private static String eval(Map<String, Object> conf, String key) {
         final String replacement = MacroProcessor.REF_PREFIX + key + MacroProcessor.REF_SUFFIX;
         if (conf == null) {
             return replacement;
@@ -47,27 +47,27 @@ public class MacroProcessor {
     @SuppressWarnings("unchecked")
     public static String replaceProperties(String value, Map<String, ?> conf) {
         return replacePropertiesRec(value,
-                        (Map<String, Object>) conf,
-                        new ArrayList<>(),
-                        new ArrayList<>(),
-                        0);
+                (Map<String, Object>) conf,
+                new ArrayList<>(),
+                new ArrayList<>(),
+                0);
     }
 
     /**
      * Macro-expand parameter references <code>${xx}</code>.<br> If a reference is not found, the value of {@code param}
      * is used if it is not null - otherwise referenc is not replaced.
      *
-     * @param value              input string
-     * @param conf               map containing all known parameters
-     * @param depth              recursivity index, limited to {@value MacroProcessor#MAX_DEPTH}.
+     * @param value input string
+     * @param conf  map containing all known parameters
+     * @param depth recursivity index, limited to {@value MacroProcessor#MAX_DEPTH}.
      * @return macro-expanded value.
      * @throws PropertyParsingException if recursivity goes beyond {@value MacroProcessor#MAX_DEPTH} limit.
      */
-    private  static String replacePropertiesRec(String value,
-                    Map<String, Object> conf,
-                    List<String> fragments,
-                    List<String> propertyRefs,
-                    int depth) {
+    private static String replacePropertiesRec(String value,
+            Map<String, Object> conf,
+            List<String> fragments,
+            List<String> propertyRefs,
+            int depth) {
         parsePropertyString(value, fragments, propertyRefs);
         final StringBuilder unkownParam = new StringBuilder();
         final StringBuilder sb = new StringBuilder();
@@ -94,7 +94,7 @@ public class MacroProcessor {
             return replacePropertiesRec(expandedValue, conf, fragments, propertyRefs, depth + 1);
         } else if (containProperty && depth > MAX_DEPTH) {
             throw new PropertyParsingException(MORE_THAN_0_LEVEL_TO_EXPAND_1
-                            .format(new Object[] { MAX_DEPTH, expandedValue }));
+                    .format(new Object[] { MAX_DEPTH, expandedValue }));
         } else {
             return expandedValue;
         }
@@ -111,7 +111,7 @@ public class MacroProcessor {
      * @param propertyRefs List to add property names to. Must not be <code>null</code>.
      * @throws PropertyParsingException if the string contains an opening <code>${</code> without closing <code>}</code>
      */
-    private  static void parsePropertyString(String textToParse, List<String> fragments, List<String> propertyRefs) {
+    private static void parsePropertyString(String textToParse, List<String> fragments, List<String> propertyRefs) {
         final MessageFormat SYNTAX_ERROR_IN_0 = new MessageFormat(STR_SYNTAX_ERROR_IN_0);
         int prev = 0;
         int pos;

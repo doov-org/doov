@@ -73,12 +73,12 @@ public class CassandraQueryBuilderTest {
         FieldModel model = SampleModels.wrapper();
 
         Create createRequest = SchemaBuilder.createTable("fields_model")
-                        .addClusteringColumn(LOGIN.name(), text())
-                        .addPartitionKey("snapshot_id", timeuuid());
+                .addClusteringColumn(LOGIN.name(), text())
+                .addPartitionKey("snapshot_id", timeuuid());
 
         model.getFieldInfos().stream()
-                        .filter(info -> info.id() != LOGIN)
-                        .forEach(info -> createRequest.addColumn(info.id().name(), cqlType(info)));
+                .filter(info -> info.id() != LOGIN)
+                .forEach(info -> createRequest.addColumn(info.id().name(), cqlType(info)));
 
         Options createRequestWithOptions = createRequest.withOptions().clusteringOrder(LOGIN.name(), DESC);
         System.out.println(createRequestWithOptions.getQueryString());
@@ -90,8 +90,8 @@ public class CassandraQueryBuilderTest {
         Insert insertRequest = QueryBuilder.insertInto("fields_model");
         insertRequest.value("snapshot_id", UUID.randomUUID());
         insertRequest.values(
-                        model.stream().map(e -> e.getKey().name()).collect(toList()),
-                        model.stream().map(Entry::getValue).collect(toList()));
+                model.stream().map(e -> e.getKey().name()).collect(toList()),
+                model.stream().map(Entry::getValue).collect(toList()));
         System.out.println(insertRequest.getQueryString(codecRegistry()));
     }
 }

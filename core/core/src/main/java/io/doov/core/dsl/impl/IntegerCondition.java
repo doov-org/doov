@@ -33,12 +33,12 @@ public class IntegerCondition extends NumericCondition<Integer> {
 
     public IntegerCondition(NumericCondition<Long> condition) {
         super(condition.field, condition.metadata,
-                        (model, context) -> condition.function.apply(model, context).map(Long::intValue));
+                (model, context) -> condition.function.apply(model, context).map(Long::intValue));
     }
 
     @Override
     NumericCondition<Integer> numericCondition(DslField field, Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<Integer>> value) {
+            BiFunction<DslModel, Context, Optional<Integer>> value) {
         return new IntegerCondition(field, metadata, value);
     }
 

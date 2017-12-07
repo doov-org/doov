@@ -33,7 +33,7 @@ public class DoubleCondition extends NumericCondition<Double> {
 
     @Override
     NumericCondition<Double> numericCondition(DslField field, Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<Double>> value) {
+            BiFunction<DslModel, Context, Optional<Double>> value) {
         return new DoubleCondition(field, metadata, value);
     }
 

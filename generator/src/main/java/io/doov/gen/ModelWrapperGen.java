@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.gen;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -35,13 +35,13 @@ final class ModelWrapperGen {
         final StringBuilder buffer = new StringBuilder();
         final String template = template(templateFileName);
         collected.keySet().stream()
-                        .map((Object::getClass)).distinct()
-                        .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
-                        .forEach(fieldType -> {
-                            final Map<String, String> conf = new HashMap<>();
-                            conf.put("field.id.type", fieldType.getName());
-                            buffer.append(MacroProcessor.replaceProperties(template, conf));
-                        });
+                .map((Object::getClass)).distinct()
+                .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                .forEach(fieldType -> {
+                    final Map<String, String> conf = new HashMap<>();
+                    conf.put("field.id.type", fieldType.getName());
+                    buffer.append(MacroProcessor.replaceProperties(template, conf));
+                });
         return buffer.toString();
     }
 
@@ -49,9 +49,9 @@ final class ModelWrapperGen {
         Map<FieldId, List<VisitorPath>> pathByFieldId = pathByFieldId(collected);
 
         List<FieldId> invalidFieldId = pathByFieldId.entrySet().stream()
-                        .filter(e -> e.getValue().size() > 1)
-                        .map(Map.Entry::getKey)
-                        .collect(Collectors.toList());
+                .filter(e -> e.getValue().size() > 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
         if (!invalidFieldId.isEmpty()) {
             throw new IllegalStateException("some field ids have more than one path : " + invalidFieldId.toString());
         }
@@ -130,9 +130,9 @@ final class ModelWrapperGen {
 
     private static List<Class<?>> fieldTypes(Map<FieldId, VisitorPath> collected) {
         return collected.keySet().stream()
-                            .map(Object::getClass).distinct()
-                            .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
-                            .collect(toList());
+                .map(Object::getClass).distinct()
+                .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                .collect(toList());
     }
 
     private static String nullCheck(VisitorPath path) {
@@ -245,8 +245,8 @@ final class ModelWrapperGen {
 
     private static Map<FieldId, VisitorPath> filterByFieldType(Map<FieldId, VisitorPath> paths, Class<?> type) {
         return paths.keySet().stream()
-                        .filter(f -> type.isAssignableFrom(f.getClass()))
-                        .collect(Collectors.toMap(f -> f, paths::get));
+                .filter(f -> type.isAssignableFrom(f.getClass()))
+                .collect(Collectors.toMap(f -> f, paths::get));
     }
 
     private static String setterSwitchContent(Map<FieldId, VisitorPath> paths) {
@@ -274,7 +274,7 @@ final class ModelWrapperGen {
     private static String setterBoxingChecker(VisitorPath path) {
         final Class<?> type = path.getGetMethod().getReturnType();
         if (Integer.TYPE.equals(type) || Double.TYPE.equals(type) || //
-                        Float.TYPE.equals(type) || Long.TYPE.equals(type) || Short.TYPE.equals(type)) {
+                Float.TYPE.equals(type) || Long.TYPE.equals(type) || Short.TYPE.equals(type)) {
             return "value != null ? value : 0";
         }
         if (Boolean.TYPE.equals(type)) {
@@ -289,13 +289,14 @@ final class ModelWrapperGen {
             final ParameterizedType parameterizedType = (ParameterizedType) genericReturnType;
             final Type typeArg = parameterizedType.getActualTypeArguments()[0];
             final String genericTypeName = typeName(typeArg);
-            if (position != -1)
+            if (position != -1) {
                 return "value";
+            }
             return "value != null ? value : new java.util.ArrayList<" + genericTypeName + ">()";
         }
         return "value";
     }
-    
+
     static Class<?> getterType(VisitorPath path) {
         return path.getPath().get(path.getPath().size() - 1).getReturnType();
     }

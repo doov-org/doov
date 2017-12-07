@@ -36,24 +36,24 @@ public class Sample2StreamTest {
     @RepeatedTest(1)
     public void stream_parallel_apply_wait_collect_map() {
         Sample2ModelWrapper collect = new Sample2ModelWrapper(Sample2Models.sample()).parallelStream()
-                        .peek(e -> doSomeStuff())
-                        .collect(FieldModels.toConcurrentFieldModel(new Sample2ModelWrapper()));
+                .peek(e -> doSomeStuff())
+                .collect(FieldModels.toConcurrentFieldModel(new Sample2ModelWrapper()));
         System.out.println(collect);
     }
 
     @RepeatedTest(1)
     public void stream_parallel_apply_wait_collect_concurrent() {
         Sample2ModelWrapper collect = new Sample2ModelWrapper(Sample2Models.sample()).parallelStream()
-                        .peek(e -> doSomeStuff())
-                        .collect(FieldModels.toConcurrentFieldModel(new Sample2ModelWrapper()));
+                .peek(e -> doSomeStuff())
+                .collect(FieldModels.toConcurrentFieldModel(new Sample2ModelWrapper()));
         System.out.println(collect);
     }
 
     @RepeatedTest(1)
     public void stream_sequential_apply_wait_collect() {
         Sample2ModelWrapper collect = new Sample2ModelWrapper(Sample2Models.sample()).stream()
-                        .peek(e -> doSomeStuff())
-                        .collect(FieldModels.toFieldModel(new Sample2ModelWrapper()));
+                .peek(e -> doSomeStuff())
+                .collect(FieldModels.toFieldModel(new Sample2ModelWrapper()));
         System.out.println(collect);
     }
 

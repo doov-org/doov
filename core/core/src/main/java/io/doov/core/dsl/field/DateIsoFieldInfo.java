@@ -39,13 +39,13 @@ public class DateIsoFieldInfo extends DefaultFieldInfo<LocalDate> implements Tem
         }
 
         private DateIsoCondition(DslField field, Metadata metadata,
-                        BiFunction<DslModel, Context, Optional<LocalDate>> value) {
+                BiFunction<DslModel, Context, Optional<LocalDate>> value) {
             super(field, metadata, value);
         }
 
         @Override
         protected TemporalCondition<LocalDate> temporalCondition(DslField field, Metadata metadata,
-                        BiFunction<DslModel, Context, Optional<LocalDate>> value) {
+                BiFunction<DslModel, Context, Optional<LocalDate>> value) {
             return new DateIsoCondition(field, metadata, value);
         }
 

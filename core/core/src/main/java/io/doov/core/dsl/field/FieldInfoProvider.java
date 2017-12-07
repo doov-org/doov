@@ -81,7 +81,7 @@ public class FieldInfoProvider {
 
     @SuppressWarnings("unchecked")
     protected static abstract class BaseFieldInfoBuilder<F extends DefaultFieldInfo<?>,
-                    B extends BaseFieldInfoBuilder<F, B>> {
+            B extends BaseFieldInfoBuilder<F, B>> {
 
         protected FieldId fieldId;
         protected String readable;
@@ -119,7 +119,7 @@ public class FieldInfoProvider {
     }
 
     protected static class DefaultFieldInfoBuilder<T>
-                    extends BaseFieldInfoBuilder<DefaultFieldInfo<T>, DefaultFieldInfoBuilder<T>> {
+            extends BaseFieldInfoBuilder<DefaultFieldInfo<T>, DefaultFieldInfoBuilder<T>> {
 
         @Override
         public DefaultFieldInfo<T> build(List<FieldInfo> allFields) {
@@ -131,7 +131,7 @@ public class FieldInfoProvider {
     }
 
     protected static class BooleanFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<BooleanFieldInfo, BooleanFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<BooleanFieldInfo, BooleanFieldInfoBuilder> {
 
         @Override
         public BooleanFieldInfo build(List<FieldInfo> allFields) {
@@ -143,7 +143,7 @@ public class FieldInfoProvider {
     }
 
     protected static class StringFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<StringFieldInfo, StringFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<StringFieldInfo, StringFieldInfoBuilder> {
 
         @Override
         public StringFieldInfo build(List<FieldInfo> allFields) {
@@ -155,7 +155,7 @@ public class FieldInfoProvider {
     }
 
     protected static class CharacterFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<CharacterFieldInfo, CharacterFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<CharacterFieldInfo, CharacterFieldInfoBuilder> {
 
         @Override
         public CharacterFieldInfo build(List<FieldInfo> allFields) {
@@ -167,7 +167,7 @@ public class FieldInfoProvider {
     }
 
     protected static class DoubleFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<DoubleFieldInfo, DoubleFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<DoubleFieldInfo, DoubleFieldInfoBuilder> {
 
         @Override
         public DoubleFieldInfo build(List<FieldInfo> allFields) {
@@ -179,7 +179,7 @@ public class FieldInfoProvider {
     }
 
     protected static class FloatFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<FloatFieldInfo, FloatFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<FloatFieldInfo, FloatFieldInfoBuilder> {
 
         @Override
         public FloatFieldInfo build(List<FieldInfo> allFields) {
@@ -191,7 +191,7 @@ public class FieldInfoProvider {
     }
 
     protected static class IntegerFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<IntegerFieldInfo, IntegerFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<IntegerFieldInfo, IntegerFieldInfoBuilder> {
 
         @Override
         public IntegerFieldInfo build(List<FieldInfo> allFields) {
@@ -203,7 +203,7 @@ public class FieldInfoProvider {
     }
 
     protected static class LongFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<LongFieldInfo, LongFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<LongFieldInfo, LongFieldInfoBuilder> {
 
         @Override
         public LongFieldInfo build(List<FieldInfo> allFields) {
@@ -215,7 +215,7 @@ public class FieldInfoProvider {
     }
 
     protected static class DateIsoFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<DateIsoFieldInfo, DateIsoFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<DateIsoFieldInfo, DateIsoFieldInfoBuilder> {
 
         @Override
         public DateIsoFieldInfo build(List<FieldInfo> allFields) {
@@ -227,7 +227,7 @@ public class FieldInfoProvider {
     }
 
     protected static class TimeIsoFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<TimeIsoFieldInfo, TimeIsoFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<TimeIsoFieldInfo, TimeIsoFieldInfoBuilder> {
 
         @Override
         public TimeIsoFieldInfo build(List<FieldInfo> allFields) {
@@ -239,7 +239,7 @@ public class FieldInfoProvider {
     }
 
     protected static class LocalDateFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<LocalDateFieldInfo, LocalDateFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<LocalDateFieldInfo, LocalDateFieldInfoBuilder> {
 
         @Override
         public LocalDateFieldInfo build(List<FieldInfo> allFields) {
@@ -251,7 +251,7 @@ public class FieldInfoProvider {
     }
 
     protected static class LocalDateTimeFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<LocalDateTimeFieldInfo, LocalDateTimeFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<LocalDateTimeFieldInfo, LocalDateTimeFieldInfoBuilder> {
 
         @Override
         public LocalDateTimeFieldInfo build(List<FieldInfo> allFields) {
@@ -263,7 +263,7 @@ public class FieldInfoProvider {
     }
 
     protected static class LocalTimeFieldInfoBuilder
-                    extends BaseFieldInfoBuilder<LocalTimeFieldInfo, LocalTimeFieldInfoBuilder> {
+            extends BaseFieldInfoBuilder<LocalTimeFieldInfo, LocalTimeFieldInfoBuilder> {
 
         @Override
         public LocalTimeFieldInfo build(List<FieldInfo> allFields) {
@@ -275,7 +275,7 @@ public class FieldInfoProvider {
     }
 
     protected static class EnumFieldInfoBuilder<T extends Enum<T>>
-                    extends BaseFieldInfoBuilder<EnumFieldInfo<T>, EnumFieldInfoBuilder<T>> {
+            extends BaseFieldInfoBuilder<EnumFieldInfo<T>, EnumFieldInfoBuilder<T>> {
 
         @Override
         public EnumFieldInfo<T> build(List<FieldInfo> allFields) {
@@ -287,7 +287,7 @@ public class FieldInfoProvider {
     }
 
     protected static class IterableFieldInfoBuilder<T, C extends Iterable<T>>
-                    extends BaseFieldInfoBuilder<IterableFieldInfo<T, C>, IterableFieldInfoBuilder<T, C>> {
+            extends BaseFieldInfoBuilder<IterableFieldInfo<T, C>, IterableFieldInfoBuilder<T, C>> {
 
         @Override
         public IterableFieldInfo<T, C> build(List<FieldInfo> allFields) {

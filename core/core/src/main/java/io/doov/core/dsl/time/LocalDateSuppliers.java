@@ -39,12 +39,12 @@ public class LocalDateSuppliers {
 
     public static TemporalCondition<LocalDate> today() {
         return new LocalDateCondition(null, todayMetadata(),
-                        (model, context) -> Optional.of(LocalDate.now()));
+                (model, context) -> Optional.of(LocalDate.now()));
     }
 
     public static TemporalCondition<LocalDate> todayPlus(int amountToAdd, TemporalUnit unit) {
         return new LocalDateCondition(null, todayPlusMetadata(amountToAdd, unit),
-                        (model, context) -> Optional.of(LocalDate.now().plus(amountToAdd, unit)));
+                (model, context) -> Optional.of(LocalDate.now().plus(amountToAdd, unit)));
     }
 
     public static TemporalCondition<LocalDate> todayPlusDays(int daysToAdd) {
@@ -57,7 +57,7 @@ public class LocalDateSuppliers {
 
     public static TemporalCondition<LocalDate> todayMinus(int amountToSubstract, TemporalUnit unit) {
         return new LocalDateCondition(null, todayMinusMetadata(amountToSubstract, unit),
-                        (model, context) -> Optional.of(LocalDate.now().minus(amountToSubstract, unit)));
+                (model, context) -> Optional.of(LocalDate.now().minus(amountToSubstract, unit)));
     }
 
     public static TemporalCondition<LocalDate> todayMinusDays(int daysToSubstract) {
@@ -72,29 +72,29 @@ public class LocalDateSuppliers {
 
     public static TemporalCondition<LocalDate> firstDayOfThisMonth() {
         return new LocalDateCondition(null, firstDayOfThisMonthMetadata(),
-                        (model, context) -> Optional.of(LocalDate.now().with(firstDayOfMonth())));
+                (model, context) -> Optional.of(LocalDate.now().with(firstDayOfMonth())));
     }
 
     public static TemporalCondition<LocalDate> firstDayOfThisYear() {
         return new LocalDateCondition(null, firstDayOfThisYearMetadata(),
-                        (model, context) -> Optional.of(LocalDate.now().with(firstDayOfYear())));
+                (model, context) -> Optional.of(LocalDate.now().with(firstDayOfYear())));
     }
 
     public static TemporalCondition<LocalDate> lastDayOfThisMonth() {
         return new LocalDateCondition(null, lastDayOfThisMonthMetadata(),
-                        (model, context) -> Optional.of(LocalDate.now().with(lastDayOfMonth())));
+                (model, context) -> Optional.of(LocalDate.now().with(lastDayOfMonth())));
     }
 
     public static TemporalCondition<LocalDate> lastDayOfThisYear() {
         return new LocalDateCondition(null, lastDayOfThisYearMetadata(),
-                        (model, context) -> Optional.of(LocalDate.now().with(lastDayOfYear())));
+                (model, context) -> Optional.of(LocalDate.now().with(lastDayOfYear())));
     }
 
     // date
 
     public static TemporalCondition<LocalDate> date(int year, int month, int dayOfMonth) {
         return new LocalDateCondition(null, dateMetadata(LocalDate.of(year, month, dayOfMonth)),
-                        (model, context) -> Optional.of(LocalDate.of(year, month, dayOfMonth)));
+                (model, context) -> Optional.of(LocalDate.of(year, month, dayOfMonth)));
     }
 
 }

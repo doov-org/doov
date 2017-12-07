@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core.dsl.impl;
 
 import static io.doov.core.dsl.meta.FieldMetadata.*;
@@ -41,32 +41,32 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     }
 
     abstract NumericCondition<N> numericCondition(DslField field, Metadata metadata,
-                    BiFunction<DslModel, Context, Optional<N>> value);
+            BiFunction<DslModel, Context, Optional<N>> value);
 
     // lesser than
 
     public final StepCondition lesserThan(N value) {
         return predicate(lesserThanMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value),
-                        (l, r) -> lesserThanFunction().apply(l, r));
+                (model, context) -> Optional.ofNullable(value),
+                (l, r) -> lesserThanFunction().apply(l, r));
     }
 
     public final StepCondition lesserThan(NumericFieldInfo<N> value) {
         return predicate(lesserThanMetadata(field, value),
-                        (model, context) -> valueModel(model, value),
-                        (l, r) -> lesserThanFunction().apply(l, r));
+                (model, context) -> valueModel(model, value),
+                (l, r) -> lesserThanFunction().apply(l, r));
     }
 
     public final StepCondition lesserOrEquals(N value) {
         return predicate(lesserOrEqualsMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value),
-                        (l, r) -> lesserOrEqualsFunction().apply(l, r));
+                (model, context) -> Optional.ofNullable(value),
+                (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
     public final StepCondition lesserOrEquals(NumericFieldInfo<N> value) {
         return predicate(lesserOrEqualsMetadata(field, value),
-                        (model, context) -> valueModel(model, value),
-                        (l, r) -> lesserOrEqualsFunction().apply(l, r));
+                (model, context) -> valueModel(model, value),
+                (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
     public abstract BiFunction<N, N, Boolean> lesserThanFunction();
@@ -77,26 +77,26 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     public final StepCondition greaterThan(N value) {
         return predicate(greaterThanMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value),
-                        (l, r) -> greaterThanFunction().apply(l, r));
+                (model, context) -> Optional.ofNullable(value),
+                (l, r) -> greaterThanFunction().apply(l, r));
     }
 
     public final StepCondition greaterThan(NumericFieldInfo<N> value) {
         return predicate(greaterThanMetadata(field, value),
-                        (model, context) -> valueModel(model, value),
-                        (l, r) -> greaterThanFunction().apply(l, r));
+                (model, context) -> valueModel(model, value),
+                (l, r) -> greaterThanFunction().apply(l, r));
     }
 
     public final StepCondition greaterOrEquals(N value) {
         return predicate(greaterOrEqualsMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value),
-                        (l, r) -> greaterOrEqualsFunction().apply(l, r));
+                (model, context) -> Optional.ofNullable(value),
+                (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
     public final StepCondition greaterOrEquals(NumericFieldInfo<N> value) {
         return predicate(greaterOrEqualsMetadata(field, value),
-                        (model, context) -> valueModel(model, value),
-                        (l, r) -> greaterOrEqualsFunction().apply(l, r));
+                (model, context) -> valueModel(model, value),
+                (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
     public abstract BiFunction<N, N, Boolean> greaterThanFunction();
@@ -117,10 +117,10 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     public final NumericCondition<N> min(List<NumericFieldInfo<N>> fields) {
         return numericCondition(field, minMetadata(fields),
-                        (model, context) -> fields.stream()
-                                        .map(f -> Optional.ofNullable(model.<N> get(f.id())))
-                                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
-                                        .reduce(minFunction()));
+                (model, context) -> fields.stream()
+                        .map(f -> Optional.ofNullable(model.<N> get(f.id())))
+                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+                        .reduce(minFunction()));
     }
 
     abstract BinaryOperator<N> minFunction();
@@ -129,18 +129,18 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     public final NumericCondition<N> sum(List<NumericFieldInfo<N>> fields) {
         return numericCondition(field, sumMetadata(fields),
-                        (model, context) -> Optional.of(fields.stream()
-                                        .map(f -> Optional.ofNullable(model.<N> get(f.id())))
-                                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
-                                        .reduce(identity(), sumFunction())));
+                (model, context) -> Optional.of(fields.stream()
+                        .map(f -> Optional.ofNullable(model.<N> get(f.id())))
+                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+                        .reduce(identity(), sumFunction())));
     }
 
     public final NumericCondition<N> sumConditions(List<NumericCondition<N>> conditions) {
         return numericCondition(field, sumMetadata(conditions),
-                        (model, context) -> Optional.of(conditions.stream()
-                                        .map(c -> c.function.apply(model, context))
-                                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
-                                        .reduce(identity(), sumFunction())));
+                (model, context) -> Optional.of(conditions.stream()
+                        .map(c -> c.function.apply(model, context))
+                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+                        .reduce(identity(), sumFunction())));
     }
 
     abstract BinaryOperator<N> sumFunction();
@@ -149,8 +149,8 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     public final NumericCondition<N> times(int multiplier) {
         return numericCondition(field, timesMetadata(field, multiplier),
-                        (model, context) -> valueModel(model, field)
-                                        .map(v -> timesFunction().apply(v, multiplier)));
+                (model, context) -> valueModel(model, field)
+                        .map(v -> timesFunction().apply(v, multiplier)));
     }
 
     abstract BiFunction<N, Integer, N> timesFunction();
@@ -159,8 +159,8 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     public final NumericCondition<N> when(StepCondition condition) {
         return numericCondition(field, whenMetadata(field, condition),
-                        (model, context) -> condition.predicate().test(model, context)
-                                        ? valueModel(model, field) : Optional.empty());
+                (model, context) -> condition.predicate().test(model, context)
+                        ? valueModel(model, field) : Optional.empty());
     }
 
     // identity

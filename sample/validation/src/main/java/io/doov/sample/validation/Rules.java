@@ -38,64 +38,64 @@ public class Rules extends DefaultRuleRegistry {
 
     static {
         DOOV.when(accountEmail().matches("\\w+[@]\\w+\\.com")
-                        .or(accountEmail().matches("\\w+[@]\\w+\\.fr")))
-                        .validate()
-                        .withMessage("email finishes with .com or .fr")
-                        .registerOn(REGISTRY_ACCOUNT, VALID_EMAIL);
+                .or(accountEmail().matches("\\w+[@]\\w+\\.fr")))
+                .validate()
+                .withMessage("email finishes with .com or .fr")
+                .registerOn(REGISTRY_ACCOUNT, VALID_EMAIL);
 
         DOOV.when(matchAll(userBirthdate().ageAt(today()).greaterOrEquals(18),
-                        accountEmail().length().lesserOrEquals(configurationMaxEmailSize()),
-                        accountCountry().eq(Country.FR).and(accountPhoneNumber().startsWith("+33"))))
-                        .validate()
-                        .registerOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_01);
+                accountEmail().length().lesserOrEquals(configurationMaxEmailSize()),
+                accountCountry().eq(Country.FR).and(accountPhoneNumber().startsWith("+33"))))
+                .validate()
+                .registerOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_01);
 
         DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18)
-                        .and(accountEmail().length().lesserOrEquals(configurationMaxEmailSize()))
-                        .and(accountCountry().eq(Country.FR))
-                        .and(accountPhoneNumber().startsWith("+33")))
-                        .validate()
-                        .registerOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_02);
+                .and(accountEmail().length().lesserOrEquals(configurationMaxEmailSize()))
+                .and(accountCountry().eq(Country.FR))
+                .and(accountPhoneNumber().startsWith("+33")))
+                .validate()
+                .registerOn(REGISTRY_ACCOUNT, VALID_ACCOUNT_02);
 
         DOOV.when(count(userFirstName().isNotNull(),
-                        userLastName().isNotNull().and(userLastName().matches("[A-Z]+")))
-                        .greaterOrEquals(0))
-                        .validate()
-                        .withShortCircuit(false)
-                        .registerOn(REGISTRY_USER);
+                userLastName().isNotNull().and(userLastName().matches("[A-Z]+")))
+                .greaterOrEquals(0))
+                .validate()
+                .withShortCircuit(false)
+                .registerOn(REGISTRY_USER);
 
         DOOV.when(userLastName().isNotNull().and(userLastName().matches("[A-Z]+")
-                        .and(count(accountPhoneNumber().isNotNull(), accountEmail().isNotNull())
-                                        .greaterThan(0))))
-                        .validate()
-                        .registerOn(REGISTRY_USER);
+                .and(count(accountPhoneNumber().isNotNull(), accountEmail().isNotNull())
+                        .greaterThan(0))))
+                .validate()
+                .registerOn(REGISTRY_USER);
 
         DOOV.when(userBirthdate().ageAt(accountCreationDate()).greaterOrEquals(18))
-                        .validate()
-                        .registerOn(REGISTRY_ACCOUNT);
+                .validate()
+                .registerOn(REGISTRY_ACCOUNT);
 
         DOOV.when(userBirthdate().ageAt(accountCreationDate().with(firstDayOfYear())).greaterOrEquals(18))
-                        .validate()
-                        .registerOn(REGISTRY_ACCOUNT);
+                .validate()
+                .registerOn(REGISTRY_ACCOUNT);
 
         DOOV.when(userBirthdate().ageAt(firstDayOfThisYear()).greaterOrEquals(18))
-                        .validate()
-                        .registerOn(REGISTRY_ACCOUNT);
+                .validate()
+                .registerOn(REGISTRY_ACCOUNT);
 
         DOOV.when(matchAll(userFirstName().mapToInt(name -> 1).eq(1)))
-                        .validate()
-                        .registerOn(REGISTRY_ACCOUNT);
+                .validate()
+                .registerOn(REGISTRY_ACCOUNT);
     }
 
     static {
         DOOV.when(userId().isNotNull())
-                        .validate()
-                        .registerOn(REGISTRY_USER);
+                .validate()
+                .registerOn(REGISTRY_USER);
 
         DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18)).validate()
-                        .registerOn(REGISTRY_USER);
+                .registerOn(REGISTRY_USER);
 
         DOOV.when(userBirthdate().after(userBirthdate().minus(1, DAYS))).validate()
-                        .registerOn(REGISTRY_USER);
+                .registerOn(REGISTRY_USER);
     }
 
 }

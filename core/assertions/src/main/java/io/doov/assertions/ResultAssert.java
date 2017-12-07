@@ -40,7 +40,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
     public ResultAssert hasFailedNode(Metadata metadata) {
         if (!actual.getFailedNodes().contains(metadata)) {
             failWithMessage("Expected result to have failed nodes + " + metadata.readable()
-                            + " but was " + getFailedNodes());
+                    + " but was " + getFailedNodes());
         }
         return this;
     }

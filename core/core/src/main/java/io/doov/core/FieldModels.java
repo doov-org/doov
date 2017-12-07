@@ -12,17 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 package io.doov.core;
 
 import java.util.EnumSet;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collector;
 
 /**
@@ -34,18 +31,18 @@ public class FieldModels {
      * Returns a {@code Collector} that accumulates the input elements into a unique {@code FieldModel}.
      */
     public static <Fm extends FieldModel> Collector<Entry<FieldId, Object>, ?, Fm> toFieldModel(Fm model) {
-        return new FieldModelCollector<Fm>(model);
+        return new FieldModelCollector<>(model);
     }
 
     /**
      * Returns a concurrent {@code Collector} that accumulates the input elements into a unique {@code FieldModel}.
      */
     public static <Fm extends FieldModel> Collector<Entry<FieldId, Object>, ?, Fm> toConcurrentFieldModel(Fm model) {
-        return new ConcurrentFieldModelCollector<Fm>(model);
+        return new ConcurrentFieldModelCollector<>(model);
     }
 
     private static final class FieldModelCollector<Fm extends FieldModel>
-                    implements Collector<Entry<FieldId, Object>, Fm, Fm> {
+            implements Collector<Entry<FieldId, Object>, Fm, Fm> {
 
         private final Fm model;
 
@@ -85,7 +82,7 @@ public class FieldModels {
     }
 
     private static final class ConcurrentFieldModelCollector<Fm extends FieldModel>
-                    implements Collector<Entry<FieldId, Object>, Fm, Fm> {
+            implements Collector<Entry<FieldId, Object>, Fm, Fm> {
 
         private final Fm model;
         private final ReentrantLock lock;

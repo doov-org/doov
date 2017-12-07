@@ -56,7 +56,7 @@ final class FieldInfoGen {
 
             return imports.stream();
         }).filter(clazz -> clazz.contains(".")) // excluding java.lang.* types
-                        .distinct().sorted().map(clazz -> "import " + clazz + ";").collect(joining("\n"));
+                .distinct().sorted().map(clazz -> "import " + clazz + ";").collect(joining("\n"));
     }
 
     static String constants(Map<FieldId, VisitorPath> fieldPaths) {
@@ -77,10 +77,10 @@ final class FieldInfoGen {
                 rawType = simpleName(boxingType.substring(0, boxingType.indexOf('<')));
                 Type methodType = currentPath.getGetMethod().getGenericReturnType();
                 genericTypes = typeParameters(methodType).stream().map(t -> simpleName(t))
-                                .collect(joining(", "));
+                        .collect(joining(", "));
                 genericTypesAsClass = typeParameters(methodType).stream()
-                                .map(t -> simpleName(t) + ".class")
-                                .collect(joining(", "));
+                        .map(t -> simpleName(t) + ".class")
+                        .collect(joining(", "));
             } else {
                 rawType = simpleName(boxingType);
                 genericTypesAsClass = "";
@@ -148,8 +148,8 @@ final class FieldInfoGen {
 
     private static String formatReadable(FieldId fieldId, VisitorPath currentPath) {
         return isNullOrEmpty(currentPath.getReadable())
-                        ? stream(UNDER.split(fieldId.name())).map(String::toLowerCase).collect(joining(" "))
-                        : currentPath.getReadable();
+                ? stream(UNDER.split(fieldId.name())).map(String::toLowerCase).collect(joining(" "))
+                : currentPath.getReadable();
     }
 
     private static String simpleName(String className) {
@@ -192,14 +192,15 @@ final class FieldInfoGen {
             return EnumFieldInfo.class.getSimpleName() + "<" + rawType + ">";
         }
         if (Iterable.class.isAssignableFrom(type)) {
-            if (genericTypes.isEmpty())
+            if (genericTypes.isEmpty()) {
                 return IterableFieldInfo.class.getSimpleName() + "<?, " + rawType + ">";
-            else
+            } else {
                 return IterableFieldInfo.class.getSimpleName() + "<" + genericTypes + ", " + rawType + "<"
-                                + genericTypes + ">>";
+                        + genericTypes + ">>";
+            }
         }
         return DefaultFieldInfo.class.getSimpleName() + "<" + rawType
-                        + (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">") + ">";
+                + (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">") + ">";
     }
 
     private static String fieldFactoryMethod(Class<?> type, String rawType, String genericTypes) {
@@ -237,15 +238,16 @@ final class FieldInfoGen {
             return "FieldInfoProvider\n                    .<" + rawType + "> enumField()";
         }
         if (Iterable.class.isAssignableFrom(type)) {
-            if (genericTypes.isEmpty())
+            if (genericTypes.isEmpty()) {
                 return "FieldInfoProvider\n                    .<?, " + rawType + "> iterableField()";
-            else
+            } else {
                 return "FieldInfoProvider\n                    .<" + genericTypes + ", " + rawType + "<"
-                                + genericTypes + ">> iterableField()";
+                        + genericTypes + ">> iterableField()";
+            }
         }
         return "FieldInfoProvider\n                    .<" + rawType
-                        + (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">")
-                        + "> defaultField()";
+                + (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">")
+                + "> defaultField()";
     }
 
     private static String formatSiblings(Set<FieldId> siblings) {

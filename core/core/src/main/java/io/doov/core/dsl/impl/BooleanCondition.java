@@ -33,7 +33,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
     }
 
     public BooleanCondition(DslField field, FieldMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<Boolean>> value) {
+            BiFunction<DslModel, Context, Optional<Boolean>> value) {
         super(field, metadata, value);
     }
 
@@ -47,58 +47,58 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
 
     public final StepCondition and(boolean value) {
         return predicate(andMetadata(field, value),
-                        (model, context) -> Optional.of(value),
-                        Boolean::logicalAnd);
+                (model, context) -> Optional.of(value),
+                Boolean::logicalAnd);
     }
 
     public final StepCondition and(LogicalFieldInfo value) {
         return predicate(andMetadata(field, value),
-                        (model, context) -> valueModel(model, value),
-                        Boolean::logicalAnd);
+                (model, context) -> valueModel(model, value),
+                Boolean::logicalAnd);
     }
 
     // or
 
     public final StepCondition or(boolean value) {
         return predicate(orMetadata(field, value),
-                        (model, context) -> Optional.of(value),
-                        Boolean::logicalOr);
+                (model, context) -> Optional.of(value),
+                Boolean::logicalOr);
     }
 
     public final StepCondition or(LogicalFieldInfo value) {
         return predicate(orMetadata(field, value),
-                        (model, context) -> valueModel(model, value),
-                        Boolean::logicalOr);
+                (model, context) -> valueModel(model, value),
+                Boolean::logicalOr);
     }
 
     // xor
 
     public final StepCondition xor(boolean value) {
         return predicate(xorMetadata(field, value),
-                        (model, context) -> Optional.of(value),
-                        Boolean::logicalXor);
+                (model, context) -> Optional.of(value),
+                Boolean::logicalXor);
     }
 
     public final StepCondition xor(LogicalFieldInfo value) {
         return predicate(xorMetadata(field, value),
-                        (model, context) -> valueModel(model, value),
-                        Boolean::logicalXor);
+                (model, context) -> valueModel(model, value),
+                Boolean::logicalXor);
     }
 
     // true
 
     public final StepCondition isTrue() {
         return predicate(isMetadata(field, true),
-                        (model, context) -> Optional.of(TRUE),
-                        Boolean::equals);
+                (model, context) -> Optional.of(TRUE),
+                Boolean::equals);
     }
 
     // false
 
     public final StepCondition isFalse() {
         return predicate(isMetadata(field, false),
-                        (model, context) -> Optional.of(FALSE),
-                        Boolean::equals);
+                (model, context) -> Optional.of(FALSE),
+                Boolean::equals);
     }
 
 }

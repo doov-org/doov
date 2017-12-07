@@ -65,7 +65,7 @@ public class DSLSandboxTest {
     @Test
     public void sample4() {
         ValidationRule rule = DOOV.when(userBirthdate().eq(LocalDate.of(1980, 8, 1))).validate()
-                        .withMessage("valid birthdate is August 1, 1980");
+                .withMessage("valid birthdate is August 1, 1980");
         System.out.println(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
@@ -74,7 +74,7 @@ public class DSLSandboxTest {
     @Test
     public void sample5() {
         ValidationRule rule = DOOV.when(userBirthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31)))
-                        .validate().withMessage("valid birthdate is in year 1980");
+                .validate().withMessage("valid birthdate is in year 1980");
         System.out.println(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();
@@ -83,12 +83,12 @@ public class DSLSandboxTest {
     @Test
     public void sample6() {
         ValidationRule rule = DOOV
-                        .when(userBirthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31))
-                                        .and(accountId().notEq(9L)).or((accountTimezone()).eq(ETC_GMT)))
-                        .validate()
-                        .withMessage("valid birthdate is in year 1980, " +
-                                        "valid ID is different than 9, and " +
-                                        "valid timezone is ETC_GMT");
+                .when(userBirthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31))
+                        .and(accountId().notEq(9L)).or((accountTimezone()).eq(ETC_GMT)))
+                .validate()
+                .withMessage("valid birthdate is in year 1980, " +
+                        "valid ID is different than 9, and " +
+                        "valid timezone is ETC_GMT");
         System.out.println(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
         assertThat(rule.executeOn(model).getMessage()).isNull();

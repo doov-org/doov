@@ -30,46 +30,46 @@ public class StringCondition extends DefaultCondition<String> {
     }
 
     public StringCondition(DslField field, FieldMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<String>> value) {
+            BiFunction<DslModel, Context, Optional<String>> value) {
         super(field, metadata, value);
     }
 
     public final StepCondition contains(String regex) {
         return predicate(containsMetadata(field, regex),
-                        (model, context) -> Optional.ofNullable(regex),
-                        String::contains);
+                (model, context) -> Optional.ofNullable(regex),
+                String::contains);
     }
 
     public final StepCondition matches(String regex) {
         return predicate(matchesMetadata(field, regex),
-                        (model, context) -> Optional.ofNullable(regex),
-                        String::matches);
+                (model, context) -> Optional.ofNullable(regex),
+                String::matches);
     }
 
     public final StepCondition startsWith(String value) {
         return predicate(startsWithMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value),
-                        String::startsWith);
+                (model, context) -> Optional.ofNullable(value),
+                String::startsWith);
     }
 
     public final StepCondition endsWith(String value) {
         return predicate(endsWithMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value),
-                        String::endsWith);
+                (model, context) -> Optional.ofNullable(value),
+                String::endsWith);
     }
 
     public IntegerCondition length() {
         return new IntegerCondition(
-                        field,
-                        lengthIsMetadata(field),
-                        (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(String::length));
+                field,
+                lengthIsMetadata(field),
+                (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(String::length));
     }
 
     public IntegerCondition parseInt() {
         return new IntegerCondition(
-                        field,
-                        fieldMetadata(field),
-                        (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(Integer::parseInt));
+                field,
+                fieldMetadata(field),
+                (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(Integer::parseInt));
     }
 
 }
