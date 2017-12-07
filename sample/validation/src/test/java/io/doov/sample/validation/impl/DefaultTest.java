@@ -26,10 +26,13 @@ public class DefaultTest {
     }
 
     @Test
-    public void should_equality_works_like_java() {
+    public void should_null_works_like_java() {
         assertThat(accountLogin().isNull()).validates(model);
         assertThat(accountLogin().isNotNull()).doesNotValidate(model);
+    }
 
+    @Test
+    public void should_equality_works_like_java() {
         account.setLogin("toto");
         assertThat(accountLogin().eq("toto")).validates(model);
         assertThat(accountLogin().eq(() -> "toto")).validates(model);
@@ -44,6 +47,11 @@ public class DefaultTest {
 
         account.setCountry(Country.FR);
         assertThat(accountCountry().eq(Country.FR)).validates(model);
+    }
+
+    @Test
+    public void should_match() {
+        // TODO test matching
     }
 
 }
