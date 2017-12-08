@@ -50,6 +50,10 @@ public class CassandraQueryBuilderTest {
             return DataType.cboolean();
         } else if (Long.class.equals(info.type()) || Long.TYPE.equals(info.type())) {
             return DataType.cint();
+        } else if (Double.class.equals(info.type()) || Double.TYPE.equals(info.type())) {
+            return DataType.cint();
+        } else if (Float.class.equals(info.type()) || Float.TYPE.equals(info.type())) {
+            return DataType.cint();
         } else if (Integer.class.equals(info.type()) || Integer.TYPE.equals(info.type())) {
             return DataType.cint();
         } else if (LocalDate.class.equals(info.type())) {

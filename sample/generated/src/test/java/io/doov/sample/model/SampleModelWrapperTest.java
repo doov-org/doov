@@ -112,6 +112,8 @@ public class SampleModelWrapperTest {
             return Short.MAX_VALUE;
         } else if (field.type().equals(Double.class) || field.type().equals(Double.TYPE)) {
             return Double.MAX_VALUE;
+        } else if (field.type().equals(Float.class) || field.type().equals(Float.TYPE)) {
+            return Float.MAX_VALUE;
         } else if (field.type().equals(Byte.class) || field.type().equals(Byte.TYPE)) {
             return Byte.MAX_VALUE;
         } else if (field.type().equals(Boolean.class) || field.type().equals(Boolean.TYPE)) {
