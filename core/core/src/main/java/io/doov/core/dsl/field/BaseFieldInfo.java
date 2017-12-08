@@ -62,14 +62,8 @@ public interface BaseFieldInfo<T> extends DslField {
 
     // any match
 
-    @SuppressWarnings("unchecked")
     default StepCondition anyMatch(Predicate<T> value) {
         return getDefaultCondition().anyMatch(singletonList(value));
-    }
-
-    @SuppressWarnings("unchecked")
-    default StepCondition anyMatch(Predicate<T>... values) {
-        return getDefaultCondition().anyMatch(asList(values));
     }
 
     @SuppressWarnings("unchecked")
@@ -83,14 +77,8 @@ public interface BaseFieldInfo<T> extends DslField {
 
     // all match
 
-    @SuppressWarnings("unchecked")
     default StepCondition allMatch(Predicate<T> value) {
         return getDefaultCondition().allMatch(singletonList(value));
-    }
-
-    @SuppressWarnings("unchecked")
-    default StepCondition allMatch(Predicate<T>... values) {
-        return getDefaultCondition().allMatch(asList(values));
     }
 
     @SuppressWarnings("unchecked")
@@ -104,14 +92,8 @@ public interface BaseFieldInfo<T> extends DslField {
 
     // none match
 
-    @SuppressWarnings("unchecked")
     default StepCondition noneMatch(Predicate<T> value) {
         return getDefaultCondition().noneMatch(singletonList(value));
-    }
-
-    @SuppressWarnings("unchecked")
-    default StepCondition noneMatch(Predicate<T>... values) {
-        return getDefaultCondition().noneMatch(asList(values));
     }
 
     @SuppressWarnings("unchecked")

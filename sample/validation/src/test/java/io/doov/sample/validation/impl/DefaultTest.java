@@ -5,6 +5,8 @@ import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
 import static io.doov.sample.field.SampleFieldIdInfo.accountLogin;
 import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;
 
+import java.util.EnumSet;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -50,8 +52,55 @@ public class DefaultTest {
     }
 
     @Test
-    public void should_match() {
-        // TODO test matching
+    public void should_any_match_works_like_java() {
+        assertThat(accountLogin().anyMatch("toto")).doesNotValidate(model);
+
+        account.setLogin("toto");
+        assertThat(accountLogin().anyMatch("toto")).validates(model);
+
+        account.setLogin("titi");
+        assertThat(accountLogin().anyMatch("toto", "titi")).validates(model);
+
+        account.setCountry(Country.FR);
+        assertThat(accountCountry().anyMatch(EnumSet.of(Country.CAN, Country.UK))).doesNotValidate(model);
+        assertThat(accountCountry().anyMatch(EnumSet.of(Country.CAN, Country.UK, Country.FR))).validates(model);
+
+        assertThat(accountCountry().anyMatch(country -> country.name().equals("FR"))).validates(model);
+    }
+
+    @Test
+    public void should_all_match_works_like_java() {
+        assertThat(accountLogin().allMatch("toto")).doesNotValidate(model);
+
+        account.setLogin("toto");
+        assertThat(accountLogin().allMatch("toto")).validates(model);
+
+        account.setLogin("titi");
+        assertThat(accountLogin().allMatch("toto", "titi")).doesNotValidate(model);
+
+        account.setCountry(Country.FR);
+        assertThat(accountCountry().allMatch(EnumSet.of(Country.CAN, Country.FR))).doesNotValidate(model);
+        assertThat(accountCountry().allMatch(EnumSet.of(Country.FR))).validates(model);
+
+        assertThat(accountCountry().allMatch(country -> country.name().equals("FR"))).validates(model);
+    }
+
+    @Test
+    public void should_none_match_works_like_java() {
+        assertThat(accountLogin().noneMatch("toto")).doesNotValidate(model);
+
+        account.setLogin("toto");
+        assertThat(accountLogin().noneMatch("toto")).doesNotValidate(model);
+
+        account.setLogin("titi");
+        assertThat(accountLogin().noneMatch("toto", "titi")).doesNotValidate(model);
+        assertThat(accountLogin().noneMatch("toto", "tutu")).validates(model);
+
+        account.setCountry(Country.FR);
+        assertThat(accountCountry().noneMatch(EnumSet.of(Country.CAN, Country.FR))).doesNotValidate(model);
+        assertThat(accountCountry().noneMatch(EnumSet.of(Country.CAN, Country.US))).validates(model);
+
+        assertThat(accountCountry().noneMatch(country -> country.name().equals("CAN"))).validates(model);
     }
 
 }
