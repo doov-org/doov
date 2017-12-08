@@ -18,6 +18,10 @@ dOOv is a fluent API for typesafe domain model validation. It uses annotations, 
 </dependency>
 ```
 
+## Documentation
+
+See [lastest javadoc](http://doov.io/site/apidocs).
+
 ## Usage
 
 Annotate your model with @Path annotations on field, qualifying them with field ids.
@@ -125,6 +129,18 @@ Assertions are available in the `doov-assertions` jar. It depends on AssertJ, so
 ```java
 ValidationRule rule = DOOV.when(userFirstName().isNotNull().or(userLastName().isNull())).validate();
 assertThat(rule).validates(model).hasFailedNodeEmpty();
+```
+
+## Releasing
+
+TODO
+
+## Generating documentation
+
+We use maven site and commit the changes directly in the "docs" folder (which is served by github pages).
+
+```bash
+mvn -pl core/core clean site
 ```
 
 ## Licence

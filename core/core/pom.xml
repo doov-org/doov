@@ -12,4 +12,54 @@
   <artifactId>doov-core</artifactId>
   <name>dOOv Core</name>
 
+  <!--<build>-->
+  <!--<plugins>-->
+  <!--<plugin>-->
+  <!--<groupId>org.apache.maven.plugins</groupId>-->
+  <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+  <!--<version>${maven.javadoc.plugin.version}</version>-->
+  <!--<configuration>-->
+  <!--<classifier>public</classifier>-->
+  <!--<outputDirectory>${session.executionRootDirectory}/docs/apidocs</outputDirectory>-->
+  <!--</configuration>-->
+  <!--<executions>-->
+  <!--<execution>-->
+  <!--<id>generate-javadoc</id>-->
+  <!--<phase>generate-resources</phase>-->
+  <!--<goals>-->
+  <!--<goal>javadoc</goal>-->
+  <!--</goals>-->
+  <!--</execution>-->
+  <!--</executions>-->
+  <!--</plugin>-->
+  <!--</plugins>-->
+  <!--</build>-->
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <generateProjectInfo>false</generateProjectInfo>
+          <outputDirectory>${session.executionRootDirectory}/docs/site</outputDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <show>public</show>
+          <reportOutputDirectory>${session.executionRootDirectory}/docs/apidocs</reportOutputDirectory>
+          <javadocDirectory>${session.executionRootDirectory}/docs/javadoc</javadocDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
 </project>

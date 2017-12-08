@@ -1,0 +1,8 @@
+io.doov.core
+io.doov.core.dsl
+io.doov.core.dsl.field
+io.doov.core.dsl.impl
+io.doov.core.dsl.lang
+io.doov.core.dsl.meta
+io.doov.core.dsl.meta.ast
+io.doov.core.dsl.time

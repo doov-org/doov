@@ -17,4 +17,5 @@
     <module>core</module>
     <module>assertions</module>
   </modules>
+
 </project>
