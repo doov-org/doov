@@ -12,29 +12,6 @@
   <artifactId>doov-core</artifactId>
   <name>dOOv Core</name>
 
-  <!--<build>-->
-  <!--<plugins>-->
-  <!--<plugin>-->
-  <!--<groupId>org.apache.maven.plugins</groupId>-->
-  <!--<artifactId>maven-javadoc-plugin</artifactId>-->
-  <!--<version>${maven.javadoc.plugin.version}</version>-->
-  <!--<configuration>-->
-  <!--<classifier>public</classifier>-->
-  <!--<outputDirectory>${session.executionRootDirectory}/docs/apidocs</outputDirectory>-->
-  <!--</configuration>-->
-  <!--<executions>-->
-  <!--<execution>-->
-  <!--<id>generate-javadoc</id>-->
-  <!--<phase>generate-resources</phase>-->
-  <!--<goals>-->
-  <!--<goal>javadoc</goal>-->
-  <!--</goals>-->
-  <!--</execution>-->
-  <!--</executions>-->
-  <!--</plugin>-->
-  <!--</plugins>-->
-  <!--</build>-->
-
   <build>
     <plugins>
       <plugin>
