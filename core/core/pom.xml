@@ -55,8 +55,6 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <show>public</show>
-          <reportOutputDirectory>${session.executionRootDirectory}/docs/apidocs</reportOutputDirectory>
-          <javadocDirectory>${session.executionRootDirectory}/docs/javadoc</javadocDirectory>
         </configuration>
       </plugin>
     </plugins>
