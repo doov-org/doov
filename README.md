@@ -41,11 +41,40 @@ public class User {
 }
 ```
 
-Use `mvn install` to generate code, then write your rules with entry point `DOOV#when` and terminal operation `ValidationRule#validate`
+Use `mvn install` to generate code, it will generate a companion class named `SampleFieldIdInfo` with all your keys.
+
+```bash
+@Generated(value = "io.doov.gen.ModelMapGenMojo", 
+           comments = "generated from io.doov.sample.field.SampleFieldId")
+public final class SampleFieldIdInfo extends FieldInfoProvider {
+
+    public static final LocalDateFieldInfo BIRTHDATE = localDateField()
+                    .fieldId(SampleFieldId.BIRTHDATE)
+                    .readable("user birthdate")
+                    .type(LocalDate.class)
+                    .build(ALL);
+
+    public static LocalDateFieldInfo userBirthdate() {
+        return BIRTHDATE;
+    }
+
+```
+
+There is a field for each annotated element, and a method named from the `readable` attribute in the model annotation, on which you can use a static import.
+
+Then write your rules with entry point `DOOV#when` and terminal operation `ValidationRule#validate`. You can see the `userBirthdate` method that is imported from the `SampleFieldIdInfo` class, and `today` that is imported from `LocalDateSuppliers`.
 
 ```java
 ValidationRule rule = DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18))
                           .validate();
+```
+
+You can create more complex rules by chaining `and` and `or` or by using matching methods from the `DOOV` class like `matchAny`, etc.
+
+```java
+DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18)
+     .and(userFullName().isNotNull()))
+    .validate()
 ```
 
 You can then execute the rule on an instantiated model
