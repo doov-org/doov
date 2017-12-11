@@ -1,10 +1,9 @@
 package io.doov.sample.validation.impl;
 
 import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.sample.field.SampleFieldIdInfo.configurationMaxDouble;
-import static io.doov.sample.field.SampleFieldIdInfo.configurationMaxFloat;
-import static io.doov.sample.field.SampleFieldIdInfo.configurationMaxLong;
-import static io.doov.sample.field.SampleFieldIdInfo.configurationMinAge;
+import static io.doov.core.dsl.DOOV.min;
+import static io.doov.core.dsl.DOOV.sum;
+import static io.doov.sample.field.SampleFieldIdInfo.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,11 +14,13 @@ import io.doov.sample.model.*;
 public class NumericTest {
 
     private DslModel model;
+    private User user;
     private Configuration configuration;
 
     @BeforeEach
     public void before() {
         SampleModel sampleModel = new SampleModel();
+        sampleModel.setUser(user = new User());
         sampleModel.setConfiguration(configuration = new Configuration());
         model = new SampleModelWrapper(sampleModel);
     }
@@ -84,17 +85,61 @@ public class NumericTest {
 
     @Test
     public void should_between_works_like_java() {
-        // TODO
+        assertThat(configurationMinAge().between(0, 1)).validates(model);
+
+        configuration.setMinAge(18);
+        assertThat(configurationMinAge().between(18, 19)).validates(model);
+        assertThat(configurationMinAge().between(18, 18)).doesNotValidate(model);
+        assertThat(configurationMinAge().between(18, 17)).doesNotValidate(model);
+        assertThat(configurationMinAge().between(17, 18)).doesNotValidate(model);
+        assertThat(configurationMinAge().between(17, 19)).validates(model);
     }
 
     @Test
     public void should_times_works_like_java() {
-        // TODO
+        assertThat(configurationMinAge().times(0).eq(0)).validates(model);
+        assertThat(configurationMinAge().times(5).eq(0)).validates(model);
+
+        configuration.setMinAge(18);
+        assertThat(configurationMinAge().times(-1).eq(-18)).validates(model);
+        assertThat(configurationMinAge().times(0).eq(0)).validates(model);
+        assertThat(configurationMinAge().times(1).eq(18)).validates(model);
+        assertThat(configurationMinAge().times(5).eq(90)).validates(model);
     }
 
     @Test
     public void should_when_works_like_java() {
-        // TODO
+        assertThat(configurationMinAge().when(userFullName().isNull()).eq(0)).validates(model);
+
+        configuration.setMinAge(18);
+        user.setLastName("Toto");
+        assertThat(configurationMinAge().when(userLastName().isNotNull()).eq(18)).validates(model);
+        assertThat(configurationMinAge().when(userLastName().eq("Toto")).eq(18)).validates(model);
+        assertThat(configurationMinAge().when(userLastName().eq("Titi")).eq(18)).doesNotValidate(model);
+    }
+
+    @Test
+    public void should_sum_works_like_java() {
+        assertThat(sum(configurationMinAge(), configurationMaxEmailSize()).eq(0)).validates(model);
+
+        configuration.setMinAge(18);
+        configuration.setMaxEmailSize(1000);
+        assertThat(sum(configurationMinAge()).eq(18)).validates(model);
+        assertThat(sum(configurationMinAge(), configurationMaxEmailSize()).eq(1018)).validates(model);
+
+        assertThat(sum(configurationMinAge().times(1)).eq(18)).validates(model);
+        assertThat(sum(configurationMinAge().times(1), configurationMaxEmailSize().times(1)).eq(1018)).validates(model);
+        assertThat(sum(configurationMinAge().times(1), configurationMaxEmailSize().times(2)).eq(2018)).validates(model);
+    }
+
+    @Test
+    public void should_min_works_like_java() {
+        assertThat(min(configurationMinAge(), configurationMaxEmailSize()).eq(0)).validates(model);
+
+        configuration.setMinAge(18);
+        configuration.setMaxEmailSize(1000);
+        assertThat(min(configurationMinAge()).eq(18)).validates(model);
+        assertThat(min(configurationMinAge(), configurationMaxEmailSize()).eq(18)).validates(model);
     }
 
 }
