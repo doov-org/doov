@@ -16,19 +16,24 @@
 
   <dependencies>
     <dependency>
+      <groupId>io.doov</groupId>
+      <artifactId>doov-sample-base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.doov</groupId>
+      <artifactId>doov-sample-generated</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.doov</groupId>
+      <artifactId>doov-sample-example</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-core</artifactId>
-      <version>0.5</version>
     </dependency>
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-generator-annprocess</artifactId>
-      <version>0.5</version>
-    </dependency>
-    <dependency>
-      <groupId>io.doov</groupId>
-      <artifactId>doov-sample-validation</artifactId>
-      <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 

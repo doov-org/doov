@@ -16,7 +16,7 @@
   <modules>
     <module>base</module>
     <module>generated</module>
-    <module>test</module>
+    <module>example</module>
     <module>validation</module>
     <module>benchmark</module>
   </modules>

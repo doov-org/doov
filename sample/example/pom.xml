@@ -9,8 +9,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>doov-sample-test</artifactId>
-  <name>dOOv Sample Test</name>
+  <artifactId>doov-sample-example</artifactId>
+  <name>dOOv Sample Example</name>
 
   <dependencies>
     <dependency>

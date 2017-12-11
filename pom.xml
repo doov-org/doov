@@ -49,6 +49,9 @@
     <mockito.version>2.1.0</mockito.version>
     <maven.surefire.plugin.version>2.19</maven.surefire.plugin.version>
     <junit.platform.surefire.provider.version>1.0.2</junit.platform.surefire.provider.version>
+
+    <!-- Benchmark Dependencies -->
+    <openjdk.jmh.version>0.5</openjdk.jmh.version>
   </properties>
 
   <scm>
@@ -111,6 +114,11 @@
       <dependency>
         <groupId>io.doov</groupId>
         <artifactId>doov-sample-generated</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.doov</groupId>
+        <artifactId>doov-sample-example</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -182,6 +190,16 @@
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
         <version>${mockito.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-core</artifactId>
+        <version>${openjdk.jmh.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-generator-annprocess</artifactId>
+        <version>${openjdk.jmh.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
