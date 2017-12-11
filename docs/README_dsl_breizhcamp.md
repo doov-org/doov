@@ -1,6 +1,6 @@
-# DSL.using(java).toGoBeyond(BeanValidation).at(Breizhcamp);
+# DSL.using(java).toGoBeyond(BeanValidation).at(Breizhcamp.eq(Rennes));
 
-Fluent, stream-like API's are great for writing type checked code, taking advantage of Java 8 functions and lambdas. But what about creating your own DSL to manipulate and validate your model? We created an open-source framework called dOOv (http://doov.io) that generates a validation DSL from a domain model. This presentation will demonstrate the efficiency and expressiveness of dOOv to define validation constraints and to generate a human readable and comprehensive rules catalog. The validation rules are represented as an abstract syntax tree and built-in visitors make it easy to print the rules in a tree-like fashion. We will compare our solution to industry standards like Bean Validation. During the session, we will live code legacy business rule migration to dOOv.
+Les API "fluent", comme les stream de Java 8, sont très pratiques parce qu'ils sont clairs, concis, fortement typés et prennent maintenant avantage des lambda. Et si on créait notre propre API fluent pour manipuler et valider notre domaine métier ? Nous avons créé un framework open-source appelé dOOv, pour "Domain Object Oriented Validation" (http://doov.io), qui génère un DSL de validation à partir d'un domaine métier. Cette présentation va démontrer l'efficacité et l'expressivité de dOOv pour définir des contraintes de validation. Les règles de validation sont représentées par un arbre de syntaxe abstraite, ce qui permet de parcourir l'arbre et de l'afficher en texte, en markdown, ou en HTML. Nous allons comparer notre solution avec les standards de l'industrie comme Bean Validation. Pendant la session, nous allons faire en live code une migration de règle métier vers dOOv.
 
 ## Private message for committee
 
@@ -15,5 +15,5 @@ Quelques conférences récentes :
 
 ## Status
 
-TO SEND
+SUBMITTED
 
