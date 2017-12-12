@@ -21,8 +21,6 @@ import static io.doov.core.dsl.meta.FieldMetadata.Type.unknown;
 import static io.doov.core.dsl.meta.FieldMetadata.Type.value;
 import static java.util.stream.Collectors.joining;
 
-import java.time.LocalDate;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
@@ -256,21 +254,21 @@ public class FieldMetadata implements Metadata {
 
     // minus
 
-    public static FieldMetadata minusMetadata(Readable field, int value, TemporalUnit unit) {
+    public static FieldMetadata minusMetadata(Readable field, int value, Object unit) {
         return new FieldMetadata().field(field).operator("minus").valueString(value + " " + formatUnit(unit));
     }
 
-    public static FieldMetadata minusMetadata(Readable field1, Readable field2, TemporalUnit unit) {
+    public static FieldMetadata minusMetadata(Readable field1, Readable field2, Object unit) {
         return new FieldMetadata().field(field1).operator("minus").field(field2).valueObject(formatUnit(unit));
     }
 
     // plus
 
-    public static FieldMetadata plusMetadata(Readable field, int value, TemporalUnit unit) {
+    public static FieldMetadata plusMetadata(Readable field, int value, Object unit) {
         return new FieldMetadata().field(field).operator("plus").valueString(value + " " + formatUnit(unit));
     }
 
-    public static FieldMetadata plusMetadata(Readable field1, Readable field2, TemporalUnit unit) {
+    public static FieldMetadata plusMetadata(Readable field1, Readable field2, Object unit) {
         return new FieldMetadata().field(field1).operator("plus").field(field2).valueObject(formatUnit(unit));
     }
 
@@ -448,11 +446,11 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata().valueString("today");
     }
 
-    public static FieldMetadata todayPlusMetadata(int value, TemporalUnit unit) {
+    public static FieldMetadata todayPlusMetadata(int value, Object unit) {
         return new FieldMetadata().valueString("today plus " + value + " " + formatUnit(unit));
     }
 
-    public static FieldMetadata todayMinusMetadata(int value, TemporalUnit unit) {
+    public static FieldMetadata todayMinusMetadata(int value, Object unit) {
         return new FieldMetadata().valueString("today minus " + value + " " + formatUnit(unit));
     }
 
@@ -472,7 +470,7 @@ public class FieldMetadata implements Metadata {
         return new FieldMetadata().valueString("last day of this year");
     }
 
-    public static FieldMetadata dateMetadata(LocalDate date) {
+    public static FieldMetadata dateMetadata(Object date) {
         return new FieldMetadata().valueString(date.toString());
     }
 
@@ -504,7 +502,7 @@ public class FieldMetadata implements Metadata {
 
     // utils
 
-    private static String formatUnit(TemporalUnit unit) {
+    private static String formatUnit(Object unit) {
         return unit.toString().toLowerCase();
     }
 
