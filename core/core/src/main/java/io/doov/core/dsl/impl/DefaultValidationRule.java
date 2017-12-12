@@ -63,12 +63,7 @@ public class DefaultValidationRule implements ValidationRule {
     public Result executeOn(DslModel model) {
         DefaultContext context = new DefaultContext(shortCircuit);
         boolean valid = stepWhen.stepCondition().predicate().test(model, context);
-        String readable;
-        if (!context.getFailed().isEmpty()) {
-            readable = context.getFailed().get(0).readable();
-        }else {
-            readable = message == null ? stepWhen.stepCondition().readable() : message;
-        }
+        String readable = valid ? null : (message == null ? stepWhen.stepCondition().readable() : message);
         return new DefaultResult(valid, readable, context.getFailed());
     }
 
