@@ -16,6 +16,9 @@
 package io.doov.core.dsl.impl;
 
 import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static io.doov.core.dsl.meta.NaryMetadata.minMetadata;
+import static io.doov.core.dsl.meta.NaryMetadata.sumMetadata;
+import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.Optional;
@@ -116,7 +119,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     // min
 
     public final NumericCondition<N> min(List<NumericFieldInfo<N>> fields) {
-        return numericCondition(field, minMetadata(fields),
+        return numericCondition(field, minMetadata(getMetadataForFields(fields)),
                 (model, context) -> fields.stream()
                         .map(f -> Optional.ofNullable(model.<N> get(f.id())))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
@@ -128,7 +131,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     // sum
 
     public final NumericCondition<N> sum(List<NumericFieldInfo<N>> fields) {
-        return numericCondition(field, sumMetadata(fields),
+        return numericCondition(field, sumMetadata(getMetadataForFields(fields)),
                 (model, context) -> Optional.of(fields.stream()
                         .map(f -> Optional.ofNullable(model.<N> get(f.id())))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
@@ -136,7 +139,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     }
 
     public final NumericCondition<N> sumConditions(List<NumericCondition<N>> conditions) {
-        return numericCondition(field, sumMetadata(conditions),
+        return numericCondition(field, sumMetadata(getMetadataForConditions(conditions)),
                 (model, context) -> Optional.of(conditions.stream()
                         .map(c -> c.function.apply(model, context))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
@@ -166,5 +169,15 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     // identity
 
     abstract N identity();
+
+    // static
+
+    private static <N extends Number> List<Metadata> getMetadataForFields(List<NumericFieldInfo<N>> fields) {
+        return fields.stream().map(field -> field.getNumericCondition().metadata).collect(toList());
+    }
+
+    private static <N extends Number> List<Metadata> getMetadataForConditions(List<NumericCondition<N>> conditions) {
+        return conditions.stream().map(condition -> condition.metadata).collect(toList());
+    }
 
 }

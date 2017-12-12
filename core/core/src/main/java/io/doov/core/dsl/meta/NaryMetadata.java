@@ -49,6 +49,14 @@ public class NaryMetadata implements Metadata {
         return new NaryMetadata("count", values);
     }
 
+    public static NaryMetadata sumMetadata(List<Metadata> values) {
+        return new NaryMetadata("sum", values);
+    }
+
+    public static NaryMetadata minMetadata(List<Metadata> values) {
+        return new NaryMetadata("min", values);
+    }
+
     @Override
     public String readable() {
         return AstVisitorUtils.astToString(this);
