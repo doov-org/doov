@@ -11,7 +11,7 @@
 
   <artifactId>doov-assertions</artifactId>
   <name>dOOv Assertions</name>
-  <version>1.22</version>
+  <!-- version -->
 
   <dependencies>
     <dependency>
