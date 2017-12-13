@@ -161,11 +161,24 @@ assertThat(rule).validates(model).hasFailedNodeEmpty();
 
 ## Releasing
 
-TODO
+We use a custom release script that will
 
-## Generating documentation
+- change the version to VERSION (in pom.xml, core/pom.xml, assertions/pom.xml, generator/pom.xml)
+- release the parent pom
+- release core, assertions, generator
+- commit the changes in git and tag the commit to VERSION
+- revert changes to VERSION
+- push commit and tags
 
-We use maven site and commit the changes directly in the "docs" folder (which is served by github pages).
+```bash
+bin/release.sh VERSION REPOSITORY_ID REPOSITORY_URL
+```
+
+## Generating documentation (maven site)
+
+It is automatically generated and commited by the release script (so the available documentation is the latest released version).
+
+It can also be generated for a snapshot version with the following command, the output is in target/apidocs.
 
 ```bash
 mvn -pl core/core clean site

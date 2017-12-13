@@ -305,19 +305,40 @@
           </execution>
         </executions>
       </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>publish-site</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <configuration>
+              <generateProjectInfo>false</generateProjectInfo>
+              <outputDirectory>${session.executionRootDirectory}/docs/site</outputDirectory>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <reporting>
+    <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-surefire-provider</artifactId>
-            <version>${junit.platform.surefire.provider.version}</version>
-          </dependency>
-        </dependencies>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <show>public</show>
+        </configuration>
       </plugin>
     </plugins>
-
-  </build>
+  </reporting>
 
 </project>

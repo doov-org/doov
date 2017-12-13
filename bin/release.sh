@@ -46,6 +46,14 @@ mvn -f generator -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSIT
 
 echo ""
 echo "====================================="
+echo "Releasing maven site                 "
+echo "====================================="
+echo ""
+
+mvn -pl core/core -P publish-site clean site
+
+echo ""
+echo "====================================="
 echo "Commiting and tagging versions in git"
 echo "====================================="
 echo ""
