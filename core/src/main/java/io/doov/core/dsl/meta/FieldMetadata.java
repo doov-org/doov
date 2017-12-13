@@ -243,7 +243,7 @@ public class FieldMetadata implements Metadata {
     // map
 
     public static FieldMetadata mapToIntMetadata(Readable field) {
-        return new FieldMetadata().field(field).operator("map to int");
+        return new FieldMetadata().field(field).operator("as a number");
     }
 
     // with
