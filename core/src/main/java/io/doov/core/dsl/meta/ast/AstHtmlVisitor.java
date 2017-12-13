@@ -15,6 +15,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     private static final String CSS_CLASS_VALIDATION_MESSAGE = "dsl-validation-message";
     private static final String CSS_CLASS_VALIDATION_RULE = "dsl-validation-rule";
+    private static final String CSS_CLASS_VALIDATE = "dsl-token-validate";
     private static final String CSS_CLASS_BINARY = "dsl-token-binary";
     private static final String CSS_CLASS_UNARY = "dsl-token-unary";
     private static final String CSS_CLASS_NARY = "dsl-token-nary";
@@ -171,7 +172,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
     @Override
     public void visitMetadata(ValidationRule metadata) {
         sb.append(BEG_LI);
-        sb.append(formatValidateWithMessage());
+        sb.append(formatSpan(CSS_CLASS_VALIDATE, formatValidateWithMessage()));
         sb.append(" ");
         sb.append(formatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata)));
         sb.append(END_LI);
@@ -196,6 +197,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
     }
 
     // implementation
+
 
     @Override
     protected String formatWhen() {
