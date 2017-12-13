@@ -46,14 +46,6 @@ mvn -f generator -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSIT
 
 echo ""
 echo "====================================="
-echo "Releasing maven site                 "
-echo "====================================="
-echo ""
-
-mvn -pl core/core -P publish-site clean site
-
-echo ""
-echo "====================================="
 echo "Commiting and tagging versions in git"
 echo "====================================="
 echo ""
@@ -61,7 +53,22 @@ echo ""
 git commit -a -m "Release version ${VERSION}"
 git tag ${VERSION}
 
-git revert --no-commit HEAD
+echo ""
+echo "====================================="
+echo "Releasing maven site                 "
+echo "====================================="
+echo ""
+
+mvn -pl core -P publish-site clean site
+git commit -a -m "Release maven site ${VERSION}"
+
+echo ""
+echo "====================================="
+echo "Reverting versions to SNAPSHOT       "
+echo "====================================="
+echo ""
+
+git revert --no-commit HEAD~1
 git commit -a -m "Revert versions to SNAPSHOT"
 
 echo ""
