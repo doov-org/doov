@@ -6,13 +6,10 @@
     <groupId>io.doov</groupId>
     <artifactId>doov-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>doov-core</artifactId>
   <name>dOOv Core</name>
-  <!-- Version placeholder, do not remove, check /bin/release.sh -->
-  <!-- version -->
 
   <build>
     <plugins>

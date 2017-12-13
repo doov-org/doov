@@ -6,14 +6,11 @@
     <groupId>io.doov</groupId>
     <artifactId>doov-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>doov-generator</artifactId>
   <name>dOOv Generator</name>
   <packaging>maven-plugin</packaging>
-  <!-- Version placeholder, do not remove, check /bin/release.sh -->
-  <!-- version -->
 
   <dependencies>
     <dependency>

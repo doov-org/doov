@@ -20,71 +20,29 @@ echo "Changing pom.xml versions to ${VERSION}"
 echo "====================================="
 echo ""
 
-sed -i "s/\(<\!-- version -->\)/<version>${VERSION}<\/version>/" core/pom.xml
-sed -i "s/\(<\!-- version -->\)/<version>${VERSION}<\/version>/" assertions/pom.xml
-sed -i "s/\(<\!-- version -->\)/<version>${VERSION}<\/version>/" generator/pom.xml
+sed -i "s/\(<version>1.0-SNAPSHOT<\/version>\)/<version>${VERSION}<\/version>/" pom.xml
+sed -i "s/\(<version>1.0-SNAPSHOT<\/version>\)/<version>${VERSION}<\/version>/" core/pom.xml
+sed -i "s/\(<version>1.0-SNAPSHOT<\/version>\)/<version>${VERSION}<\/version>/" assertions/pom.xml
+sed -i "s/\(<version>1.0-SNAPSHOT<\/version>\)/<version>${VERSION}<\/version>/" generator/pom.xml
+echo "Version changed to ${VERSION} in pom.xml, core/pom.xml, assertions/pom.xml, generator/pom.xml"
 
 echo ""
 echo "====================================="
-echo "Installing core and assertions jars  "
+echo "Deploying parent pom                 "
 echo "====================================="
 echo ""
 
-mvn -f core clean install
-mvn -f assertions clean install
-mvn -f generator clean install
+mvn -N -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
 
 echo ""
 echo "====================================="
-echo "Deploying core and assertions jars   "
+echo "Deploying core, assertions, generator"
 echo "====================================="
 echo ""
 
-mvn -N deploy:deploy-file -DgroupId=io.doov \
-  -DartifactId=doov-core \
-  -Dversion=${VERSION} \
-  -Dpackaging=jar \
-  -Dfile=core/target/doov-core-${VERSION}.jar \
-  -DrepositoryId=${REPOSITORY_ID} \
-  -Durl=${REPOSITORY_URL} &&
-mvn -N deploy:deploy-file -DgroupId=io.doov \
-  -DartifactId=doov-core \
-  -Dversion=${VERSION} \
-  -Dclassifier=sources \
-  -Dpackaging=jar \
-  -Dfile=core/target/doov-core-${VERSION}-sources.jar \
-  -DrepositoryId=${REPOSITORY_ID} \
-  -Durl=${REPOSITORY_URL} &&
-mvn -N deploy:deploy-file -DgroupId=io.doov \
-  -DartifactId=doov-assertions \
-  -Dversion=${VERSION} \
-  -Dpackaging=jar \
-  -Dfile=assertions/target/doov-assertions-${VERSION}.jar \
-  -DrepositoryId=${REPOSITORY_ID} \
-  -Durl=${REPOSITORY_URL} &&
-mvn -N deploy:deploy-file -DgroupId=io.doov \
-  -DartifactId=doov-assertions \
-  -Dversion=${VERSION} \
-  -Dclassifier=sources \
-  -Dpackaging=jar \
-  -Dfile=assertions/target/doov-assertions-${VERSION}-sources.jar \
-  -DrepositoryId=${REPOSITORY_ID} \
-  -Durl=${REPOSITORY_URL} &&
-mvn -N deploy:deploy-file -DgroupId=io.doov \
-  -DartifactId=doov-generator \
-  -Dversion=${VERSION} \
-  -Dpackaging=jar \
-  -Dfile=generator/target/doov-generator-${VERSION}.jar \
-  -DrepositoryId=${REPOSITORY_ID} \
-  -Durl=${REPOSITORY_URL} &&
-mvn -N deploy:deploy-file -DgroupId=io.doov \
-  -DartifactId=doov-generator \
-  -Dversion=${VERSION} \
-  -Dclassifier=sources \
-  -Dpackaging=jar \
-  -Dfile=generator/target/doov-generator-${VERSION}-sources.jar \
-  -DrepositoryId=${REPOSITORY_ID} \
-  -Durl=${REPOSITORY_URL}
+mvn -f core -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+mvn -f assertions -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+mvn -f generator -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
 
 echo ""
 echo "====================================="
