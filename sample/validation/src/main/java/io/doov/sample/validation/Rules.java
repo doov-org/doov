@@ -17,6 +17,8 @@ package io.doov.sample.validation;
 
 import static io.doov.core.dsl.DOOV.count;
 import static io.doov.core.dsl.DOOV.matchAll;
+import static io.doov.core.dsl.DOOV.min;
+import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
 import static io.doov.sample.field.SampleFieldIdInfo.*;
@@ -94,11 +96,23 @@ public class Rules extends DefaultRuleRegistry {
             .registerOn(REGISTRY_DEFAULT);
 
     private static final ValidationRule RULE_AGE = DOOV
-            .when(userBirthdate().ageAt(today()).greaterOrEquals(18)).validate()
+            .when(userBirthdate().ageAt(today()).greaterOrEquals(18))
+            .validate()
             .registerOn(REGISTRY_DEFAULT);
 
     private static final ValidationRule RULE_AGE_2 = DOOV
-            .when(userBirthdate().after(userBirthdate().minus(1, DAYS))).validate()
+            .when(userBirthdate().after(userBirthdate().minus(1, DAYS)))
+            .validate()
+            .registerOn(REGISTRY_DEFAULT);
+
+    private static final ValidationRule RULE_SUM = DOOV
+            .when(sum(configurationMinAge().times(0), configurationMaxEmailSize().times(1)).greaterOrEquals(0))
+            .validate()
+            .registerOn(REGISTRY_DEFAULT);
+
+    private static final ValidationRule RULE_MIN = DOOV
+            .when(min(configurationMinAge(), configurationMaxEmailSize()).greaterOrEquals(0))
+            .validate()
             .registerOn(REGISTRY_DEFAULT);
 
 }
