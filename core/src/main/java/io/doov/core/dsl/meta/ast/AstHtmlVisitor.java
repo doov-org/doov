@@ -26,12 +26,18 @@ public class AstHtmlVisitor extends AstTextVisitor {
     private static final String BEG_LI = "<li>";
     private static final String END_LI = "</li>";
 
+    private static final String BEG_OL = "<ol>";
+    private static final String END_OL = "</ol>";
+
     private static final String BEG_UL = "<ul>";
     private static final String END_UL = "</ul>";
 
     private int binaryDeep = 0;
+    private boolean closeFieldLI;
 
-    public AstHtmlVisitor(StringBuilder stringBuilder) { super(stringBuilder); }
+    public AstHtmlVisitor(StringBuilder stringBuilder) {
+        super(stringBuilder);
+    }
 
     // step when
 
@@ -66,7 +72,12 @@ public class AstHtmlVisitor extends AstTextVisitor {
     @Override
     public void startMetadata(FieldMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(BEG_LI);
+        String[] split = sb.toString().split("\n");
+        System.out.println();
+        if (!split[split.length - 2].contains(">and<") && !split[split.length - 2].contains(">or<")) {
+            sb.append(BEG_LI);
+            closeFieldLI = true;
+        }
     }
 
     @Override
@@ -76,7 +87,10 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void endMetadata(FieldMetadata metadata) {
-        sb.append(END_LI);
+        if(closeFieldLI) {
+            sb.append(END_LI);
+            closeFieldLI = false;
+        }
         sb.append(formatNewLine());
     }
 
@@ -96,9 +110,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(BEG_LI);
         sb.append(formatSpan(CSS_CLASS_BINARY, metadata.getOperator()));
-        sb.append(END_LI);
         sb.append(formatNewLine());
     }
 
@@ -121,14 +133,14 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
         sb.append(formatSpan(CSS_CLASS_NARY, metadata.getOperator()));
-        sb.append(BEG_UL);
+        sb.append(BEG_OL);
         sb.append(formatNewLine());
     }
 
     @Override
     public void endMetadata(NaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(END_UL);
+        sb.append(END_OL);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
         sb.append(END_LI);
@@ -192,7 +204,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     protected String formatMessage(ValidationRule metadata) {
-        return metadata.getMessage() == null ? "empty" : metadata.getMessage();
+        return MessageFormat.format("\"{0}\"", metadata.getMessage() == null ? "empty" : metadata.getMessage());
     }
 
     // format
