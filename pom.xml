@@ -12,6 +12,7 @@
 
   <modules>
     <module>core</module>
+    <module>assertions</module>
     <module>generator</module>
     <module>sample</module>
   </modules>

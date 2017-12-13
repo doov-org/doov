@@ -20,8 +20,8 @@ echo "Changing pom.xml versions to ${VERSION}"
 echo "====================================="
 echo ""
 
-sed -i "s/\(<\!-- version -->\)/<version>${VERSION}<\/version>/" core/core/pom.xml
-sed -i "s/\(<\!-- version -->\)/<version>${VERSION}<\/version>/" core/assertions/pom.xml
+sed -i "s/\(<\!-- version -->\)/<version>${VERSION}<\/version>/" core/pom.xml
+sed -i "s/\(<\!-- version -->\)/<version>${VERSION}<\/version>/" assertions/pom.xml
 
 echo ""
 echo "====================================="
@@ -29,8 +29,8 @@ echo "Installing core and assertions jars  "
 echo "====================================="
 echo ""
 
-mvn -f core/core clean install
-mvn -f core/assertions clean install
+mvn -f core clean install
+mvn -f assertions clean install
 
 echo ""
 echo "====================================="
@@ -42,7 +42,7 @@ mvn -N deploy:deploy-file -DgroupId=io.doov \
   -DartifactId=doov-core \
   -Dversion=${VERSION} \
   -Dpackaging=jar \
-  -Dfile=core/core/target/doov-core-${VERSION}.jar \
+  -Dfile=core/target/doov-core-${VERSION}.jar \
   -DrepositoryId=${REPOSITORY_ID} \
   -Durl=${REPOSITORY_URL} &&
 mvn -N deploy:deploy-file -DgroupId=io.doov \
@@ -50,14 +50,14 @@ mvn -N deploy:deploy-file -DgroupId=io.doov \
   -Dversion=${VERSION} \
   -Dclassifier=sources \
   -Dpackaging=jar \
-  -Dfile=core/core/target/doov-core-${VERSION}-sources.jar \
+  -Dfile=core/target/doov-core-${VERSION}-sources.jar \
   -DrepositoryId=${REPOSITORY_ID} \
   -Durl=${REPOSITORY_URL} &&
 mvn -N deploy:deploy-file -DgroupId=io.doov \
   -DartifactId=doov-assertions \
   -Dversion=${VERSION} \
   -Dpackaging=jar \
-  -Dfile=core/assertions/target/doov-assertions-${VERSION}.jar \
+  -Dfile=assertions/target/doov-assertions-${VERSION}.jar \
   -DrepositoryId=${REPOSITORY_ID} \
   -Durl=${REPOSITORY_URL} &&
 mvn -N deploy:deploy-file -DgroupId=io.doov \
@@ -65,7 +65,7 @@ mvn -N deploy:deploy-file -DgroupId=io.doov \
   -Dversion=${VERSION} \
   -Dclassifier=sources \
   -Dpackaging=jar \
-  -Dfile=core/assertions/target/doov-assertions-${VERSION}-sources.jar \
+  -Dfile=assertions/target/doov-assertions-${VERSION}-sources.jar \
   -DrepositoryId=${REPOSITORY_ID} \
   -Durl=${REPOSITORY_URL}
 

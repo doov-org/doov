@@ -9,13 +9,34 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>doov-core-parent</artifactId>
-  <name>dOOv Core (Parent)</name>
-  <packaging>pom</packaging>
+  <artifactId>doov-core</artifactId>
+  <name>dOOv Core</name>
+  <!-- Version placeholder, do not remove, check /bin/release.sh -->
+  <!-- version -->
 
-  <modules>
-    <module>core</module>
-    <module>assertions</module>
-  </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <generateProjectInfo>false</generateProjectInfo>
+          <outputDirectory>${session.executionRootDirectory}/docs/site</outputDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <show>public</show>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 
 </project>

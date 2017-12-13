@@ -4,13 +4,14 @@
 
   <parent>
     <groupId>io.doov</groupId>
-    <artifactId>doov-core-parent</artifactId>
+    <artifactId>doov-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>doov-assertions</artifactId>
   <name>dOOv Assertions</name>
+  <!-- Version placeholder, do not remove, check /bin/release.sh -->
   <!-- version -->
 
   <dependencies>
