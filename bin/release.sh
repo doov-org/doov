@@ -22,6 +22,7 @@ echo ""
 
 sed -i "s/\(<\!-- version -->\)/<version>${VERSION}<\/version>/" core/pom.xml
 sed -i "s/\(<\!-- version -->\)/<version>${VERSION}<\/version>/" assertions/pom.xml
+sed -i "s/\(<\!-- version -->\)/<version>${VERSION}<\/version>/" generator/pom.xml
 
 echo ""
 echo "====================================="
@@ -31,6 +32,7 @@ echo ""
 
 mvn -f core clean install
 mvn -f assertions clean install
+mvn -f generator clean install
 
 echo ""
 echo "====================================="
@@ -66,6 +68,21 @@ mvn -N deploy:deploy-file -DgroupId=io.doov \
   -Dclassifier=sources \
   -Dpackaging=jar \
   -Dfile=assertions/target/doov-assertions-${VERSION}-sources.jar \
+  -DrepositoryId=${REPOSITORY_ID} \
+  -Durl=${REPOSITORY_URL} &&
+mvn -N deploy:deploy-file -DgroupId=io.doov \
+  -DartifactId=doov-generator \
+  -Dversion=${VERSION} \
+  -Dpackaging=jar \
+  -Dfile=generator/target/doov-generator-${VERSION}.jar \
+  -DrepositoryId=${REPOSITORY_ID} \
+  -Durl=${REPOSITORY_URL} &&
+mvn -N deploy:deploy-file -DgroupId=io.doov \
+  -DartifactId=doov-generator \
+  -Dversion=${VERSION} \
+  -Dclassifier=sources \
+  -Dpackaging=jar \
+  -Dfile=generator/target/doov-generator-${VERSION}-sources.jar \
   -DrepositoryId=${REPOSITORY_ID} \
   -Durl=${REPOSITORY_URL}
 

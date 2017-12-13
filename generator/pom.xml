@@ -12,12 +12,10 @@
   <artifactId>doov-generator</artifactId>
   <name>dOOv Generator</name>
   <packaging>maven-plugin</packaging>
+  <!-- Version placeholder, do not remove, check /bin/release.sh -->
+  <!-- version -->
 
   <dependencies>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-    </dependency>
     <dependency>
       <groupId>io.doov</groupId>
       <artifactId>doov-core</artifactId>

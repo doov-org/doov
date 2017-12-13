@@ -7,8 +7,44 @@
   <artifactId>doov-parent</artifactId>
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>dOOv (Parent)</name>
+
+  <name>dOOv Parent</name>
+  <description>dOOv, a fluent API for type-safe domain model validation</description>
   <url>https://www.dOOv.io</url>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Alexandre Dubreuil</name>
+      <email>alexandre.dubreuil@lesfurets.com</email>
+      <organization>LesFurets.com</organization>
+      <organizationUrl>https://www.lesfurets.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Gilles DiGuglielmo</name>
+      <email>gilles.diguglielmo@lesfurets.com</email>
+      <organization>LesFurets.com</organization>
+      <organizationUrl>https://www.lesfurets.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Yohann Fouquer</name>
+      <email>yohann.fouquer@lesfurets.com</email>
+      <organization>LesFurets.com</organization>
+      <organizationUrl>https://www.lesfurets.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Ozan Gunalp</name>
+      <email>ozan.gunalp@lesfurets.com</email>
+      <organization>LesFurets.com</organization>
+      <organizationUrl>https://www.lesfurets.com</organizationUrl>
+    </developer>
+  </developers>
 
   <modules>
     <module>core</module>
@@ -67,31 +103,10 @@
     <url>https://github.com/lesfurets/dOOv/issues</url>
   </issueManagement>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
   <dependencyManagement>
     <dependencies>
+      <!-- dOOv dependencies -->
+
       <dependency>
         <groupId>io.doov</groupId>
         <artifactId>doov-core</artifactId>
@@ -122,36 +137,9 @@
         <artifactId>doov-sample-example</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>${guava.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>${commons.lang3.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.datastax.cassandra</groupId>
-        <artifactId>cassandra-driver-core</artifactId>
-        <version>${cassandra-driver}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.datastax.cassandra</groupId>
-        <artifactId>cassandra-driver-extras</artifactId>
-        <version>${cassandra-driver}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>${slf4j}</version>
-      </dependency>
+
+      <!-- Maven dependencies -->
+
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-core</artifactId>
@@ -167,6 +155,9 @@
         <artifactId>maven-plugin-api</artifactId>
         <version>${maven.plugin.api.version}</version>
       </dependency>
+
+      <!-- Test dependencies -->
+
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
@@ -192,6 +183,9 @@
         <artifactId>mockito-core</artifactId>
         <version>${mockito.version}</version>
       </dependency>
+
+      <!-- Benchmark dependencies -->
+
       <dependency>
         <groupId>org.openjdk.jmh</groupId>
         <artifactId>jmh-core</artifactId>
@@ -201,6 +195,39 @@
         <groupId>org.openjdk.jmh</groupId>
         <artifactId>jmh-generator-annprocess</artifactId>
         <version>${openjdk.jmh.version}</version>
+      </dependency>
+
+      <!-- Other dependencies -->
+
+      <dependency>
+        <groupId>com.datastax.cassandra</groupId>
+        <artifactId>cassandra-driver-core</artifactId>
+        <version>${cassandra-driver}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.datastax.cassandra</groupId>
+        <artifactId>cassandra-driver-extras</artifactId>
+        <version>${cassandra-driver}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commons.lang3.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4j}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
