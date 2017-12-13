@@ -31,7 +31,7 @@ import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class FieldMetadata implements Metadata {
 
-    private static final Collector<CharSequence, ?, String> COLLECTOR_LIST = joining(", ", "[", "]");
+    private static final Collector<CharSequence, ?, String> COLLECTOR_LIST = joining(", ", " : ","");
 
     private final Deque<Element> elements;
 
