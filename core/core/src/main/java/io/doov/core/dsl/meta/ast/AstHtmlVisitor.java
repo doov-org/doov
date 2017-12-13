@@ -16,6 +16,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
     private static final String CSS_CLASS_VALIDATION_MESSAGE = "dsl-validation-message";
     private static final String CSS_CLASS_VALIDATION_RULE = "dsl-validation-rule";
     private static final String CSS_CLASS_BINARY = "dsl-token-binary";
+    private static final String CSS_CLASS_UNARY = "dsl-token-unary";
     private static final String CSS_CLASS_NARY = "dsl-token-nary";
     private static final String CSS_CLASS_RULE = "dsl-token-rule";
     private static final String CSS_CLASS_WHEN = "dsl-token-when";
@@ -30,9 +31,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     private int binaryDeep = 0;
 
-    public AstHtmlVisitor(StringBuilder stringBuilder) {
-        super(stringBuilder);
-    }
+    public AstHtmlVisitor(StringBuilder stringBuilder) { super(stringBuilder); }
 
     // step when
 
@@ -134,6 +133,13 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(formatCurrentIndent());
         sb.append(END_LI);
         sb.append(formatNewLine());
+    }
+
+    // nary metadata
+
+    @Override
+    public void visitMetadata(UnaryMetadata metadata) {
+        sb.append(formatSpan(CSS_CLASS_UNARY, metadata.getOperator()));
     }
 
     // validation rule
