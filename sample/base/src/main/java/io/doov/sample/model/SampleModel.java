@@ -20,6 +20,7 @@ public class SampleModel {
     private User user = new User();
     private Account account = new Account();
     private Configuration configuration = new Configuration();
+    private Driver driver = new Driver();
 
     public User getUser() {
         return user;
@@ -43,6 +44,14 @@ public class SampleModel {
 
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
     }
 
 }

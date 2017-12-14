@@ -60,6 +60,10 @@ public enum SampleFieldId implements FieldId {
     CONFIGURATION_MAX_FLOAT(),
     CONFIGURATION_MAX_LONG(),
 
+    NAME(),
+    AGE(),
+    DRIVING_LICENSE(),
+
     LOGIN(ACCOUNT),
     PASSWD(ACCOUNT);
 

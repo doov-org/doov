@@ -16,7 +16,7 @@
 package org.modelmap;
 
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.logic.BlackHole;
+import org.openjdk.jmh.infra.Blackhole;
 
 import io.doov.sample.model.SampleModel;
 import io.doov.sample.model.SampleModels;
@@ -29,16 +29,16 @@ public class BenchmarkOldRule {
 
     private static final SampleModel MODEL = SampleModels.sample();
 
-    @GenerateMicroBenchmark
-    public void valid_email(BlackHole blackhole) {
+    @Benchmark
+    public void valid_email(Blackhole blackhole) {
         boolean valid = RulesOld.validateEmail(MODEL.getAccount());
         if (blackhole != null) {
             blackhole.consume(valid);
         }
     }
 
-    @GenerateMicroBenchmark
-    public void valid_country(BlackHole blackhole) {
+    @Benchmark
+    public void valid_country(Blackhole blackhole) {
         boolean valid = RulesOld.validateAccount(MODEL.getUser(), MODEL.getAccount(), MODEL.getConfiguration());
         if (blackhole != null) {
             blackhole.consume(valid);

@@ -102,7 +102,7 @@
     <junit.platform.surefire.provider.version>1.0.2</junit.platform.surefire.provider.version>
 
     <!-- Benchmark Dependencies -->
-    <openjdk.jmh.version>0.5</openjdk.jmh.version>
+    <openjdk.jmh.version>1.19</openjdk.jmh.version>
   </properties>
 
   <scm>
