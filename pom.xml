@@ -138,6 +138,16 @@
         <artifactId>doov-sample-example</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.doov</groupId>
+        <artifactId>doov-sample-base-without-annotations</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.doov</groupId>
+        <artifactId>doov-sample-generated-without-annotations</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <!-- Maven dependencies -->
 
