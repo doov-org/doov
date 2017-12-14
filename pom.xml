@@ -338,6 +338,9 @@
             </executions>
             <configuration>
               <useAgent>true</useAgent>
+              <gpgArguments>
+                <gpgArgument>--batch</gpgArgument>
+              </gpgArguments>
             </configuration>
           </plugin>
         </plugins>
