@@ -40,9 +40,9 @@ echo "Deploying core, assertions, generator"
 echo "====================================="
 echo ""
 
-mvn -f core -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
-mvn -f assertions -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
-mvn -f generator -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+mvn -f core -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+mvn -f assertions -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+mvn -f generator -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
 
 echo ""
 echo "====================================="
