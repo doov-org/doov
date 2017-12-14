@@ -53,7 +53,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void visitMetadata(StepWhen metadata) {
-        sb.append(formatSpan(CSS_CLASS_WHEN, formatWhen()));
+        HtmlFormatSpan(CSS_CLASS_WHEN, formatWhen(),sb);
         sb.append(END_LI);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
@@ -74,7 +74,6 @@ public class AstHtmlVisitor extends AstTextVisitor {
     public void startMetadata(FieldMetadata metadata) {
         sb.append(formatCurrentIndent());
         String[] split = sb.toString().split("\n");
-        System.out.println();
         if (!split[split.length - 2].contains(">and<") && !split[split.length - 2].contains(">or<")) {
             sb.append(BEG_LI);
             closeFieldLI = true;
@@ -83,7 +82,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void visitMetadata(FieldMetadata metadata) {
-        sb.append(formatFieldClass(metadata));
+        formatFieldClass(metadata,sb);
     }
 
     @Override
@@ -111,7 +110,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(formatSpan(CSS_CLASS_BINARY, metadata.getOperator()));
+        HtmlFormatSpan(CSS_CLASS_BINARY, metadata.getOperator(),sb);
         sb.append(formatNewLine());
     }
 
@@ -133,7 +132,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(BEG_LI);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
-        sb.append(formatSpan(CSS_CLASS_NARY, metadata.getOperator()));
+        HtmlFormatSpan(CSS_CLASS_NARY, metadata.getOperator(),sb);
         sb.append(BEG_OL);
         sb.append(formatNewLine());
     }
@@ -152,29 +151,32 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void visitMetadata(UnaryMetadata metadata) {
-        sb.append(formatSpan(CSS_CLASS_UNARY, metadata.getOperator()));
+        sb.append(BEG_LI);
+        HtmlFormatSpan(CSS_CLASS_UNARY, metadata.getOperator(),sb);
+        sb.append(END_LI);
+        sb.append(BEG_UL);
     }
 
     // validation rule
 
     @Override
     public void startMetadata(ValidationRule metadata) {
-        sb.append(formatDivStart(CSS_CLASS_VALIDATION_RULE));
+        formatDivStart(CSS_CLASS_VALIDATION_RULE,sb);
         sb.append(formatNewLine());
         sb.append(BEG_UL);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
         sb.append(BEG_LI);
-        sb.append(formatSpan(CSS_CLASS_RULE, formatRule()));
+        HtmlFormatSpan(CSS_CLASS_RULE, formatRule(),sb);
         sb.append(formatNewLine());
     }
 
     @Override
     public void visitMetadata(ValidationRule metadata) {
         sb.append(BEG_LI);
-        sb.append(formatSpan(CSS_CLASS_VALIDATE, formatValidateWithMessage()));
+        HtmlFormatSpan(CSS_CLASS_VALIDATE, formatValidateWithMessage(),sb);
         sb.append(" ");
-        sb.append(formatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata)));
+        HtmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata),sb);
         sb.append(END_LI);
         sb.append(END_UL);
         sb.append(formatNewLine());
@@ -198,7 +200,6 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     // implementation
 
-
     @Override
     protected String formatWhen() {
         return "When";
@@ -211,10 +212,8 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     // format
 
-    private String formatFieldClass(FieldMetadata field) {
-        return field.stream()
-                .map(element -> formatSpan(getCssClass(element), element.getReadable().readable()))
-                .collect(joining(" "));
+    private void formatFieldClass(FieldMetadata field, StringBuilder sb) {
+        field.stream().forEach(element -> HtmlFormatSpan(getCssClass(element), element.getReadable().readable(),sb));
     }
 
     private String getCssClass(FieldMetadata.Element element) {
@@ -232,12 +231,13 @@ public class AstHtmlVisitor extends AstTextVisitor {
         }
     }
 
-    private String formatSpan(String cssClass, String content) {
-        return MessageFormat.format("<span class=''{0}''>{1}</span>", cssClass, content);
+    private void HtmlFormatSpan(String cssClass, String content, StringBuilder sb) {
+        sb.append("<span class=\"").append(cssClass).append("\">");
+        sb.append(content).append("</span>");
     }
 
-    private String formatDivStart(String cssClass) {
-        return MessageFormat.format("<div class=''{0}''>", cssClass);
+    private void formatDivStart(String cssClass, StringBuilder sb) {
+        sb.append("<div class=\"").append(cssClass).append("\">");
     }
 
 }
