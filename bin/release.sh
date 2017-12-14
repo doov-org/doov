@@ -5,9 +5,11 @@ set -e
 VERSION="$1"
 REPOSITORY_ID="$2"
 REPOSITORY_URL="$3"
+GPG_KEYNAME="$4"
+GPG_PASSPHRASE="$5"
 
-if [ -z "${VERSION}" ] || [  -z "${REPOSITORY_ID}" ] || [ -z "${REPOSITORY_URL}" ]; then
-    echo "Usage: release.sh VERSION REPOSITORY_ID REPOSITORY_URL"
+if [ -z "${VERSION}" ] || [  -z "${REPOSITORY_ID}" ] || [ -z "${REPOSITORY_URL}" ] || [ -z "${GPG_KEYNAME}" ] || [ -z "${GPG_PASSPHRASE}" ] ; then
+    echo "Usage: release.sh VERSION REPOSITORY_ID REPOSITORY_URL GPG_KEYNAME GPG_PASSPHRASE"
     exit 1
 fi
 echo ""
@@ -32,7 +34,7 @@ echo "Deploying parent pom                 "
 echo "====================================="
 echo ""
 
-mvn -N -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+mvn -D gpg.keyname="${GPG_KEYNAME}" -D gpg.passphrase="${GPG_PASSPHRASE}" -N -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
 
 echo ""
 echo "====================================="
@@ -40,9 +42,9 @@ echo "Deploying core, assertions, generator"
 echo "====================================="
 echo ""
 
-mvn -f core -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
-mvn -f assertions -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
-mvn -f generator -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+mvn -D gpg.keyname="${GPG_KEYNAME}" -D gpg.passphrase="${GPG_PASSPHRASE}" -f core -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+mvn -D gpg.keyname="${GPG_KEYNAME}" -D gpg.passphrase="${GPG_PASSPHRASE}" -f assertions -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+mvn -D gpg.keyname="${GPG_KEYNAME}" -D gpg.passphrase="${GPG_PASSPHRASE}" -f generator -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
 
 echo ""
 echo "====================================="

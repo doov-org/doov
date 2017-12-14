@@ -319,7 +319,7 @@
 
   <profiles>
     <profile>
-      <id>ossrh</id>
+      <id>release</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
