@@ -37,20 +37,25 @@
         <version>${project.version}</version>
         <executions>
           <execution>
-            <id>doov-map-gen</id>
+            <id>doov-map-gen-sample</id>
             <goals>
               <goal>generate</goal>
             </goals>
             <configuration>
-              <packageFilter>io.doov</packageFilter>
-              <sourceClasses>
-                <sourceClass>io.doov.sample.model.SampleModel</sourceClass>
-                <sourceClass>io.doov.sample2.model.Sample2Model</sourceClass>
-              </sourceClasses>
-              <fieldClasses>
-                <fieldClass>io.doov.sample.field.SampleFieldId</fieldClass>
-                <fieldClass>io.doov.sample2.field.Sample2FieldId</fieldClass>
-              </fieldClasses>
+              <packageFilter>io.doov.sample</packageFilter>
+              <sourceClass>io.doov.sample.model.SampleModel</sourceClass>
+              <fieldClass>io.doov.sample.field.SampleFieldId</fieldClass>
+            </configuration>
+          </execution>
+          <execution>
+            <id>doov-map-gen-sample2</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <packageFilter>io.doov.sample2</packageFilter>
+              <fieldClass>io.doov.sample2.field.Sample2FieldId</fieldClass>
+              <sourceClass>io.doov.sample2.model.Sample2Model</sourceClass>
             </configuration>
           </execution>
         </executions>

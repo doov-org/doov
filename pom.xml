@@ -68,6 +68,7 @@
     <guava.version>19.0</guava.version>
     <cassandra-driver>3.1.0</cassandra-driver>
     <slf4j>1.7.21</slf4j>
+    <cglib.version>3.2.5</cglib.version>
 
     <!-- Maven Dependencies -->
     <maven.core.version>3.0.5</maven.core.version>
@@ -228,6 +229,11 @@
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
         <version>${slf4j}</version>
+      </dependency>
+      <dependency>
+        <groupId>cglib</groupId>
+        <artifactId>cglib</artifactId>
+        <version>${cglib.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
