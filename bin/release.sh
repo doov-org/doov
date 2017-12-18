@@ -5,9 +5,10 @@ set -e
 VERSION="$1"
 REPOSITORY_ID="$2"
 REPOSITORY_URL="$3"
+GPG_KEYNAME="$4"
 
-if [ -z "${VERSION}" ] || [  -z "${REPOSITORY_ID}" ] || [ -z "${REPOSITORY_URL}" ]; then
-    echo "Usage: release.sh VERSION REPOSITORY_ID REPOSITORY_URL"
+if [ -z "${VERSION}" ] || [  -z "${REPOSITORY_ID}" ] || [ -z "${REPOSITORY_URL}" ] ; then
+    echo "Usage: release.sh VERSION REPOSITORY_ID REPOSITORY_URL [GPG_KEYNAME]"
     exit 1
 fi
 echo ""
@@ -32,7 +33,11 @@ echo "Deploying parent pom                 "
 echo "====================================="
 echo ""
 
-mvn -N -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+if [ -z "${GPG_KEYNAME}" ] ; then
+  mvn -N -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+else
+  mvn -D gpg.keyname="${GPG_KEYNAME}" -N -P release -P sign -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+fi
 
 echo ""
 echo "====================================="
@@ -40,9 +45,15 @@ echo "Deploying core, assertions, generator"
 echo "====================================="
 echo ""
 
-mvn -f core -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
-mvn -f assertions -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
-mvn -f generator -DaltDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+if [ -z "${GPG_KEYNAME}" ] ; then
+  mvn -f core -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+  mvn -f assertions -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+  mvn -f generator -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+else
+  mvn -D gpg.keyname="${GPG_KEYNAME}" -f core -P release -P sign -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+  mvn -D gpg.keyname="${GPG_KEYNAME}" -f assertions -P release -P sign -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+  mvn -D gpg.keyname="${GPG_KEYNAME}" -f generator -P release -P sign -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+fi
 
 echo ""
 echo "====================================="
@@ -60,7 +71,8 @@ echo "====================================="
 echo ""
 
 mvn -pl core -P publish-site clean site
-git commit -a -m "Release maven site ${VERSION}"
+git add .
+git commit -m "Release maven site ${VERSION}"
 
 echo ""
 echo "====================================="

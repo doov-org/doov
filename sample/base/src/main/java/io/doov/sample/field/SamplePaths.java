@@ -22,5 +22,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface SamplePaths {
 
     SamplePath[] value();
+
 }
 

@@ -104,7 +104,7 @@ public class Rules extends DefaultRuleRegistry {
             .when(userBirthdate().after(userBirthdate().minus(1, DAYS)))
             .validate()
             .registerOn(REGISTRY_DEFAULT);
-
+    
     private static final ValidationRule RULE_SUM = DOOV
             .when(sum(configurationMinAge().times(0), configurationMaxEmailSize().times(1)).greaterOrEquals(0))
             .validate()

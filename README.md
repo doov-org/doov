@@ -4,12 +4,24 @@ dOOv is a fluent API for typesafe domain model validation. It uses annotations, 
 
 ## Installation
 
+See [latest version in maven central](https://repo1.maven.org/maven2/io/doov).
+
 ```xml
+<!-- Annotations, field info, step conditions, DSL, etc. -->
 <dependency>
   <groupId>io.doov</groupId>
   <artifactId>doov-core</artifactId>
   <version>LATEST</version>
 </dependency>
+
+<!-- Code generator -->
+<dependency>
+  <groupId>io.doov</groupId>
+  <artifactId>doov-generator</artifactId>
+  <version>LATEST</version>
+</dependency>
+
+<!-- Assertj assertions -->
 <dependency>
   <groupId>io.doov</groupId>
   <artifactId>doov-assertions</artifactId>
@@ -164,14 +176,14 @@ assertThat(rule).validates(model).hasFailedNodeEmpty();
 We use a custom release script that will
 
 - change the version to VERSION (in pom.xml, core/pom.xml, assertions/pom.xml, generator/pom.xml)
-- release the parent pom
-- release core, assertions, generator
+- release the parent pom (signed with GPG)
+- release core, assertions, generator (signed with GPG)
 - commit the changes in git and tag the commit to VERSION
 - revert changes to VERSION
 - push commit and tags
 
 ```bash
-bin/release.sh VERSION REPOSITORY_ID REPOSITORY_URL
+bin/release.sh VERSION REPOSITORY_ID REPOSITORY_URL GPG_KEYNAME
 ```
 
 ## Generating documentation (maven site)

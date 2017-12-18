@@ -17,10 +17,6 @@
   <dependencies>
     <dependency>
       <groupId>io.doov</groupId>
-      <artifactId>doov-sample-base</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.doov</groupId>
       <artifactId>doov-sample-generated</artifactId>
     </dependency>
     <dependency>
@@ -35,19 +31,14 @@
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-generator-annprocess</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.0</version>
-        <configuration>
-          <compilerVersion>1.8</compilerVersion>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <version>2.0</version>

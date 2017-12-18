@@ -119,7 +119,7 @@ final class ModelVisitor {
         final Annotation[] annotations = executable.getAnnotations();
         log.debug(annotations.length + " annotations to process from " + executable.toString());
 
-        // retrive declared path annotations type
+        // retrieve declared path annotations type
         Set<Class<? extends Annotation>> pathAnnotations = stream(annotations)
                 .filter(a -> a.annotationType().getAnnotation(Path.class) != null)
                 .map(Annotation::annotationType)

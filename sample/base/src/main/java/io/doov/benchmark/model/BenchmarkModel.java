@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.sample.field;
+package io.doov.benchmark.model;
 
-import io.doov.core.PathConstraint;
+public class BenchmarkModel {
 
-public enum SampleConstraint implements PathConstraint {
+    private Driver driver;
 
-    NONE(""), //
-    USER("getUser()"), //
-    ACCOUNT("getAccount()"), //
-    ;
-
-    private final String includePath;
-
-    SampleConstraint(String includePath) {
-        this.includePath = includePath;
+    public Driver getDriver() {
+        return driver;
     }
 
-    @Override
-    public String includePath() {
-        return includePath;
+    public void setDriver(Driver driver) {
+        this.driver = driver;
     }
+
 }

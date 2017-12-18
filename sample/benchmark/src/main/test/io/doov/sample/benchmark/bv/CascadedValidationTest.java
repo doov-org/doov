@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.sample.field;
+package io.doov.sample.benchmark.bv;
 
-import io.doov.core.PathConstraint;
+import org.junit.jupiter.api.Test;
+import org.openjdk.jmh.infra.Blackhole;
 
-public enum SampleConstraint implements PathConstraint {
+import io.doov.sample.benchmark.bv.CascadedValidation.CascadedValidationState;
 
-    NONE(""), //
-    USER("getUser()"), //
-    ACCOUNT("getAccount()"), //
-    ;
+public class CascadedValidationTest {
 
-    private final String includePath;
-
-    SampleConstraint(String includePath) {
-        this.includePath = includePath;
+    @Test
+    public void test() {
+        CascadedValidation bench = new CascadedValidation();
+        bench.testCascadedValidation(
+                new CascadedValidationState(),
+                new Blackhole("Today's password is swordfish. " +
+                        "I understand instantiating Blackholes directly is dangerous."));
     }
 
-    @Override
-    public String includePath() {
-        return includePath;
-    }
 }

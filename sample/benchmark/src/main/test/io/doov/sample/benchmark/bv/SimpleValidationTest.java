@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.sample.field;
+package io.doov.sample.benchmark.bv;
 
-import io.doov.core.PathConstraint;
+import org.junit.jupiter.api.Test;
+import org.openjdk.jmh.infra.Blackhole;
 
-public enum SampleConstraint implements PathConstraint {
+public class SimpleValidationTest {
 
-    NONE(""), //
-    USER("getUser()"), //
-    ACCOUNT("getAccount()"), //
-    ;
-
-    private final String includePath;
-
-    SampleConstraint(String includePath) {
-        this.includePath = includePath;
+    @Test
+    public void test() {
+        SimpleValidation bench = new SimpleValidation();
+        bench.testSimpleBeanValidation(
+                new SimpleValidation.ValidationState(),
+                new Blackhole("Today's password is swordfish. " +
+                        "I understand instantiating Blackholes directly is dangerous."));
     }
 
-    @Override
-    public String includePath() {
-        return includePath;
-    }
 }

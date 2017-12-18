@@ -21,9 +21,10 @@ import io.doov.core.dsl.meta.*;
 public class AstFullVisitor extends AbstractAstVisitor {
 
     private static final int INDENT_SIZE = 4;
+    private final StringBuilder sb;
 
-    public AstFullVisitor(StringBuilder stringBuilder) {
-        super(stringBuilder);
+    public AstFullVisitor(StringBuilder sb) {
+        this.sb = sb;
     }
 
     @Override

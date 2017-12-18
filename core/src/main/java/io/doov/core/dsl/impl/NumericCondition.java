@@ -119,7 +119,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     // min
 
     public final NumericCondition<N> min(List<NumericFieldInfo<N>> fields) {
-        return numericCondition(field, minMetadata(getMetadataForFields(fields)),
+        return numericCondition(null, minMetadata(getMetadataForFields(fields)),
                 (model, context) -> fields.stream()
                         .map(f -> Optional.ofNullable(model.<N> get(f.id())))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
@@ -131,7 +131,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     // sum
 
     public final NumericCondition<N> sum(List<NumericFieldInfo<N>> fields) {
-        return numericCondition(field, sumMetadata(getMetadataForFields(fields)),
+        return numericCondition(null, sumMetadata(getMetadataForFields(fields)),
                 (model, context) -> Optional.of(fields.stream()
                         .map(f -> Optional.ofNullable(model.<N> get(f.id())))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
@@ -139,7 +139,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
     }
 
     public final NumericCondition<N> sumConditions(List<NumericCondition<N>> conditions) {
-        return numericCondition(field, sumMetadata(getMetadataForConditions(conditions)),
+        return numericCondition(null, sumMetadata(getMetadataForConditions(conditions)),
                 (model, context) -> Optional.of(conditions.stream()
                         .map(c -> c.function.apply(model, context))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))

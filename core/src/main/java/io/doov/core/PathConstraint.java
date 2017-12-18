@@ -23,6 +23,8 @@ public interface PathConstraint {
     /**
      * @return the path contraint value
      */
-    String includePath();
+    default String includePath() {
+        return "";
+    }
 
 }

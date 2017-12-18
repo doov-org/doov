@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.modelmap;
+package io.doov.sample.benchmark;
 
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
@@ -22,8 +22,8 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.stream.IntStream;
 
-import org.openjdk.jmh.annotations.GenerateMicroBenchmark;
-import org.openjdk.jmh.logic.BlackHole;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.infra.Blackhole;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
@@ -53,16 +53,16 @@ public class BenchmarkRule {
     private static final ValidationRule ACCOUNT_VALID_COUNTRY_80 = DOOV.when(matchAll(conditions(80))).validate();
     private static final ValidationRule ACCOUNT_VALID_COUNTRY_100 = DOOV.when(matchAll(conditions(100))).validate();
 
-    @GenerateMicroBenchmark
-    public void valid_email(BlackHole blackhole) {
+    @Benchmark
+    public void valid_email(Blackhole blackhole) {
         boolean valid = EMAIL.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
     }
 
-    @GenerateMicroBenchmark
-    public void valid_country(BlackHole blackhole) {
+    @Benchmark
+    public void valid_country(Blackhole blackhole) {
         boolean valid = COUNTY.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
@@ -70,7 +70,7 @@ public class BenchmarkRule {
     }
 
     @SuppressWarnings("unused")
-    public void valid_country_20(BlackHole blackhole) {
+    public void valid_country_20(Blackhole blackhole) {
         boolean valid = ACCOUNT_VALID_COUNTRY_20.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
@@ -78,7 +78,7 @@ public class BenchmarkRule {
     }
 
     @SuppressWarnings("unused")
-    public void valid_country_40(BlackHole blackhole) {
+    public void valid_country_40(Blackhole blackhole) {
         boolean valid = ACCOUNT_VALID_COUNTRY_40.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
@@ -86,7 +86,7 @@ public class BenchmarkRule {
     }
 
     @SuppressWarnings("unused")
-    public void valid_country_60(BlackHole blackhole) {
+    public void valid_country_60(Blackhole blackhole) {
         boolean valid = ACCOUNT_VALID_COUNTRY_60.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
@@ -94,7 +94,7 @@ public class BenchmarkRule {
     }
 
     @SuppressWarnings("unused")
-    public void valid_country_80(BlackHole blackhole) {
+    public void valid_country_80(Blackhole blackhole) {
         boolean valid = ACCOUNT_VALID_COUNTRY_80.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
@@ -102,7 +102,7 @@ public class BenchmarkRule {
     }
 
     @SuppressWarnings("unused")
-    public void valid_country_100(BlackHole blackhole) {
+    public void valid_country_100(Blackhole blackhole) {
         boolean valid = ACCOUNT_VALID_COUNTRY_100.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);

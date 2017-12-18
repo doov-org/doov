@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.core.dsl.meta.ast;
 
@@ -22,8 +19,15 @@ import java.util.Deque;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.StepWhen;
+import io.doov.core.dsl.lang.ValidationRule;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.UnaryMetadata;
 
 public abstract class AbstractAstVisitor implements MetadataVisitor {
 
@@ -32,14 +36,6 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     private final Deque<Element> stack = new ArrayDeque<>();
-
-    private int newLineIndex = 0;
-
-    final StringBuilder sb;
-
-    public AbstractAstVisitor(StringBuilder stringBuilder) {
-        sb = stringBuilder;
-    }
 
     // Metadata
 
@@ -216,10 +212,6 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
         return 0;
     }
 
-    protected int getNewLineIndex() {
-        return newLineIndex;
-    }
-
     protected int getCurrentIndentSize() {
         return stack.size() * getIndentSize();
     }
@@ -229,7 +221,6 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     protected String formatNewLine() {
-        newLineIndex = sb.length();
         return "\n";
     }
 

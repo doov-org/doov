@@ -16,6 +16,7 @@
 package io.doov.sample.validation.impl;
 
 import static io.doov.assertions.Assertions.assertThat;
+import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfMonth;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfNextYear;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
@@ -33,6 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.time.LocalDateSuppliers;
 import io.doov.sample.model.*;
 
 public class TemporalTest {
@@ -126,4 +128,21 @@ public class TemporalTest {
                 .eq(18)).validates(model);
     }
 
+    @Test
+    void should_temporal_date_suppliers_set_clock_not_validates() {
+        user.setBirthDate(LocalDate.of(1980, 1, 1));
+
+        LocalDateSuppliers.setClock(LocalDateSuppliers.createClockFrom(LocalDate.of(1990, 1, 1)));
+        assertThat(userBirthdate().ageAt(today()).greaterOrEquals(18)).doesNotValidate(model);
+        LocalDateSuppliers.setDefaultClock();
+    }
+
+    @Test
+    void should_temporal_date_suppliers_set_clock_validate() {
+        user.setBirthDate(LocalDate.of(1980, 1, 1));
+
+        LocalDateSuppliers.setClock(LocalDateSuppliers.createClockFrom(LocalDate.of(2017, 1, 1)));
+        assertThat(userBirthdate().ageAt(today()).greaterOrEquals(18)).validates(model);
+        LocalDateSuppliers.setDefaultClock();
+    }
 }
