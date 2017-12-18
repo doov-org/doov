@@ -4,12 +4,24 @@ dOOv is a fluent API for typesafe domain model validation. It uses annotations, 
 
 ## Installation
 
+See [latest version in maven central](https://repo1.maven.org/maven2/io/doov).
+
 ```xml
+<!-- Annotations, field info, step conditions, DSL, etc. -->
 <dependency>
   <groupId>io.doov</groupId>
   <artifactId>doov-core</artifactId>
   <version>LATEST</version>
 </dependency>
+
+<!-- Code generator -->
+<dependency>
+  <groupId>io.doov</groupId>
+  <artifactId>doov-generator</artifactId>
+  <version>LATEST</version>
+</dependency>
+
+<!-- Assertj assertions -->
 <dependency>
   <groupId>io.doov</groupId>
   <artifactId>doov-assertions</artifactId>
