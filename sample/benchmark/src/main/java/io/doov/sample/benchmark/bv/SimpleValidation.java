@@ -4,7 +4,7 @@
  * License: Apache License, Version 2.0
  * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
  */
-package org.modelmap;
+package io.doov.sample.benchmark.bv;
 
 import static io.doov.sample.field.SampleFieldIdInfo.age;
 import static io.doov.sample.field.SampleFieldIdInfo.drivingLicense;
@@ -23,6 +23,9 @@ import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.sample.model.*;
 
+/*
+ * http://in.relation.to/2017/10/31/bean-validation-benchmark-revisited/
+ */
 public class SimpleValidation {
 
     private static final String[] names = {

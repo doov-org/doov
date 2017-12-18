@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.modelmap;
+package io.doov.sample.benchmark;
 
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
