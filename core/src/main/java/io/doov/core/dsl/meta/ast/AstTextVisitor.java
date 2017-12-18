@@ -115,15 +115,15 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     protected String formatOperator(UnaryMetadata metadata) {
-        return metadata.getOperator();
+        return metadata.getOperator().readable();
     }
 
     protected String formatOperator(BinaryMetadata metadata) {
-        return metadata.getOperator();
+        return metadata.getOperator().readable();
     }
 
     protected String formatOperator(NaryMetadata metadata) {
-        return metadata.getOperator();
+        return metadata.getOperator().readable();
     }
 
     protected String formatRule() {

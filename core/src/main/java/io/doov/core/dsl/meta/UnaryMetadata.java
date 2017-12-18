@@ -19,20 +19,20 @@ import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class UnaryMetadata implements Metadata {
 
-    private final String operator;
+    private final Operator operator;
     private final Metadata value;
 
-    private UnaryMetadata(String operator, Metadata value) {
+    private UnaryMetadata(Operator operator, Metadata value) {
         this.operator = operator;
         this.value = value;
     }
 
-    public String getOperator() {
+    public Operator getOperator() {
         return operator;
     }
 
     public static UnaryMetadata notMetadata(Metadata value) {
-        return new UnaryMetadata("not", value);
+        return new UnaryMetadata(DefaultOperator.not, value);
     }
 
     @Override

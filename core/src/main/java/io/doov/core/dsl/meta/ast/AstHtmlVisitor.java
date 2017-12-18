@@ -3,8 +3,6 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static java.util.stream.Collectors.joining;
-
 import java.text.MessageFormat;
 
 import io.doov.core.dsl.lang.StepWhen;
@@ -53,7 +51,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void visitMetadata(StepWhen metadata) {
-        HtmlFormatSpan(CSS_CLASS_WHEN, formatWhen(),sb);
+        HtmlFormatSpan(CSS_CLASS_WHEN, formatWhen(), sb);
         sb.append(END_LI);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
@@ -82,12 +80,12 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void visitMetadata(FieldMetadata metadata) {
-        formatFieldClass(metadata,sb);
+        formatFieldClass(metadata, sb);
     }
 
     @Override
     public void endMetadata(FieldMetadata metadata) {
-        if(closeFieldLI) {
+        if (closeFieldLI) {
             sb.append(END_LI);
             closeFieldLI = false;
         }
@@ -110,7 +108,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        HtmlFormatSpan(CSS_CLASS_BINARY, metadata.getOperator(),sb);
+        HtmlFormatSpan(CSS_CLASS_BINARY, metadata.getOperator().readable(), sb);
         sb.append(formatNewLine());
     }
 
@@ -132,7 +130,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
         sb.append(BEG_LI);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
-        HtmlFormatSpan(CSS_CLASS_NARY, metadata.getOperator(),sb);
+        HtmlFormatSpan(CSS_CLASS_NARY, metadata.getOperator().readable(), sb);
         sb.append(BEG_OL);
         sb.append(formatNewLine());
     }
@@ -152,7 +150,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
     @Override
     public void visitMetadata(UnaryMetadata metadata) {
         sb.append(BEG_LI);
-        HtmlFormatSpan(CSS_CLASS_UNARY, metadata.getOperator(),sb);
+        HtmlFormatSpan(CSS_CLASS_UNARY, metadata.getOperator().readable(), sb);
         sb.append(END_LI);
         sb.append(BEG_UL);
     }
@@ -161,22 +159,22 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     @Override
     public void startMetadata(ValidationRule metadata) {
-        formatDivStart(CSS_CLASS_VALIDATION_RULE,sb);
+        formatDivStart(CSS_CLASS_VALIDATION_RULE, sb);
         sb.append(formatNewLine());
         sb.append(BEG_UL);
         sb.append(formatNewLine());
         sb.append(formatCurrentIndent());
         sb.append(BEG_LI);
-        HtmlFormatSpan(CSS_CLASS_RULE, formatRule(),sb);
+        HtmlFormatSpan(CSS_CLASS_RULE, formatRule(), sb);
         sb.append(formatNewLine());
     }
 
     @Override
     public void visitMetadata(ValidationRule metadata) {
         sb.append(BEG_LI);
-        HtmlFormatSpan(CSS_CLASS_VALIDATE, formatValidateWithMessage(),sb);
+        HtmlFormatSpan(CSS_CLASS_VALIDATE, formatValidateWithMessage(), sb);
         sb.append(" ");
-        HtmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata),sb);
+        HtmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata), sb);
         sb.append(END_LI);
         sb.append(END_UL);
         sb.append(formatNewLine());
@@ -213,7 +211,7 @@ public class AstHtmlVisitor extends AstTextVisitor {
     // format
 
     private void formatFieldClass(FieldMetadata field, StringBuilder sb) {
-        field.stream().forEach(element -> HtmlFormatSpan(getCssClass(element), element.getReadable().readable(),sb));
+        field.stream().forEach(element -> HtmlFormatSpan(getCssClass(element), element.getReadable().readable(), sb));
     }
 
     private String getCssClass(FieldMetadata.Element element) {
