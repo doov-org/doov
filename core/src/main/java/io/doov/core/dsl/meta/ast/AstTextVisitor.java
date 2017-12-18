@@ -1,32 +1,45 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.core.dsl.meta.ast;
 
 import static java.util.stream.Collectors.joining;
 
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.lang.StepWhen;
+import io.doov.core.dsl.lang.ValidationRule;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.UnaryMetadata;
 
 public class AstTextVisitor extends AbstractAstVisitor {
 
     private static final int INDENT_SIZE = 2;
 
-    public AstTextVisitor(StringBuilder stringBuilder) {
-        super(stringBuilder);
+    protected final StringBuilder sb;
+    protected int newLineIndex = 0;
+
+    public AstTextVisitor(StringBuilder sb) {
+        this.sb = sb;
+    }
+
+    protected int getNewLineIndex() {
+        return newLineIndex;
+    }
+
+    protected String formatNewLine() {
+        newLineIndex = sb.length();
+        return "\n";
     }
 
     @Override
@@ -90,16 +103,16 @@ public class AstTextVisitor extends AbstractAstVisitor {
     protected int getCurrentIndentSize() {
         if (AbstractAstVisitor.Element.BINARY.equals(stackPeek())) {
             return (int) stackSteam().filter(e -> !AbstractAstVisitor.Element.BINARY.equals(e)).count() *
-                    getIndentSize();
+                            getIndentSize();
         }
         return super.getCurrentIndentSize();
     }
 
     protected String formatFieldMetadata(FieldMetadata metadata) {
         return metadata.stream()
-                .map(FieldMetadata.Element::getReadable)
-                .map(Readable::readable)
-                .collect(joining(" "));
+                        .map(FieldMetadata.Element::getReadable)
+                        .map(Readable::readable)
+                        .collect(joining(" "));
     }
 
     protected String formatField(Readable field) {

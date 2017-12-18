@@ -3,13 +3,19 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.MessageFormat;
 
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.UnaryMetadata;
 
-public class AstHtmlVisitor extends AstTextVisitor {
+public class AstHtmlVisitor extends AbstractAstVisitor {
 
     private static final String CSS_CLASS_VALIDATION_MESSAGE = "dsl-validation-message";
     private static final String CSS_CLASS_VALIDATION_RULE = "dsl-validation-rule";
@@ -17,7 +23,6 @@ public class AstHtmlVisitor extends AstTextVisitor {
     private static final String CSS_CLASS_BINARY = "dsl-token-binary";
     private static final String CSS_CLASS_UNARY = "dsl-token-unary";
     private static final String CSS_CLASS_NARY = "dsl-token-nary";
-    private static final String CSS_CLASS_RULE = "dsl-token-rule";
     private static final String CSS_CLASS_WHEN = "dsl-token-when";
 
     private static final String END_DIV = "</div>";
@@ -33,185 +38,172 @@ public class AstHtmlVisitor extends AstTextVisitor {
 
     private int binaryDeep = 0;
     private boolean closeFieldLI;
+    private final String[] lastLines = new String[3];
+    private final OutputStream ops;
 
-    public AstHtmlVisitor(StringBuilder stringBuilder) {
-        super(stringBuilder);
+    public AstHtmlVisitor(OutputStream ops) {
+        this.ops = ops;
     }
 
     // step when
 
     @Override
     public void startMetadata(StepWhen metadata) {
-        sb.append(formatCurrentIndent());
-        sb.append(BEG_UL);
-        sb.append(formatNewLine());
-        sb.append(formatCurrentIndent());
-        sb.append(BEG_LI);
+        writeWithBuffer(formatCurrentIndent());
+        writeWithBuffer(formatCurrentIndent());
+        writeWithBuffer(BEG_UL);
+        writeWithBuffer(formatNewLine());
+        writeWithBuffer(formatCurrentIndent());
+        writeWithBuffer(BEG_LI);
     }
 
     @Override
     public void visitMetadata(StepWhen metadata) {
-        HtmlFormatSpan(CSS_CLASS_WHEN, formatWhen(), sb);
-        sb.append(END_LI);
-        sb.append(formatNewLine());
-        sb.append(formatCurrentIndent());
-        sb.append(BEG_UL);
-        sb.append(formatNewLine());
+        htmlFormatSpan(CSS_CLASS_WHEN, formatWhen());
+        writeWithBuffer(END_LI);
+        writeWithBuffer(formatNewLine());
+        writeWithBuffer(formatCurrentIndent());
+        writeWithBuffer(BEG_UL);
+        writeWithBuffer(formatNewLine());
     }
 
     @Override
     public void endMetadata(StepWhen metadata) {
-        sb.append(formatCurrentIndent());
-        sb.append(END_UL);
-        sb.append(formatNewLine());
+        writeWithBuffer(formatCurrentIndent());
+        writeWithBuffer(END_UL);
+        writeWithBuffer(formatNewLine());
     }
 
     // field metadata
-
     @Override
     public void startMetadata(FieldMetadata metadata) {
-        sb.append(formatCurrentIndent());
-        String[] split = sb.toString().split("\n");
-        if (!split[split.length - 2].contains(">and<") && !split[split.length - 2].contains(">or<")) {
-            sb.append(BEG_LI);
+        writeWithBuffer(formatCurrentIndent());
+        if (!lastLines[0].contains(">and<") && !lastLines[0].contains(">or<")) {
+            writeWithBuffer(BEG_LI);
             closeFieldLI = true;
         }
     }
 
     @Override
     public void visitMetadata(FieldMetadata metadata) {
-        formatFieldClass(metadata, sb);
+        // writeWithBuffer("<a href=\"/maintenance/exclusion-filters?module=auto&field=\""+getFieldId(metadata),ops);
+        formatFieldClass(metadata);
+        // writeWithBuffer(">",ops);
     }
 
     @Override
     public void endMetadata(FieldMetadata metadata) {
         if (closeFieldLI) {
-            sb.append(END_LI);
+            writeWithBuffer(END_LI);
             closeFieldLI = false;
         }
-        sb.append(formatNewLine());
+        writeWithBuffer(formatNewLine());
     }
 
     // binary metadata
-
     @Override
     public void startMetadata(BinaryMetadata metadata) {
-        String[] split = sb.toString().split("\n");
-        if (split[split.length - 1].contains(">and<") || split[split.length - 1].contains(">or<")) {
-            sb.append(formatCurrentIndent());
-            sb.append(BEG_UL);
-            sb.append(formatNewLine());
+        if (lastLines[1].contains(">and<") || lastLines[1].contains(">or<")) {
+            writeWithBuffer(formatCurrentIndent());
+            writeWithBuffer(BEG_UL);
+            writeWithBuffer(formatNewLine());
             binaryDeep++;
         }
     }
 
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
-        sb.append(formatCurrentIndent());
-        HtmlFormatSpan(CSS_CLASS_BINARY, metadata.getOperator().readable(), sb);
-        sb.append(formatNewLine());
+        writeWithBuffer(formatCurrentIndent());
+        htmlFormatSpan(CSS_CLASS_BINARY, metadata.getOperator().readable());
+        writeWithBuffer(formatNewLine());
     }
 
     @Override
     public void endMetadata(BinaryMetadata metadata) {
         if (binaryDeep > 0) {
-            sb.append(formatNewLine());
-            sb.append(formatCurrentIndent());
-            sb.append(END_UL);
+            writeWithBuffer(formatNewLine());
+            writeWithBuffer(formatCurrentIndent());
+            writeWithBuffer(END_UL);
             binaryDeep--;
         }
     }
 
     // nary metadata
-
     @Override
     public void startMetadata(NaryMetadata metadata) {
-        sb.append(formatCurrentIndent());
-        sb.append(BEG_LI);
-        sb.append(formatNewLine());
-        sb.append(formatCurrentIndent());
-        HtmlFormatSpan(CSS_CLASS_NARY, metadata.getOperator().readable(), sb);
-        sb.append(BEG_OL);
-        sb.append(formatNewLine());
+        writeWithBuffer(formatCurrentIndent());
+        writeWithBuffer(BEG_LI);
+        writeWithBuffer(formatNewLine());
+        writeWithBuffer(formatCurrentIndent());
+        htmlFormatSpan(CSS_CLASS_NARY, metadata.getOperator().readable());
+        writeWithBuffer(BEG_OL);
+        writeWithBuffer(formatNewLine());
     }
 
     @Override
     public void endMetadata(NaryMetadata metadata) {
-        sb.append(formatCurrentIndent());
-        sb.append(END_OL);
-        sb.append(formatNewLine());
-        sb.append(formatCurrentIndent());
-        sb.append(END_LI);
-        sb.append(formatNewLine());
+        writeWithBuffer(formatCurrentIndent());
+        writeWithBuffer(END_OL);
+        writeWithBuffer(formatNewLine());
+        writeWithBuffer(formatCurrentIndent());
+        writeWithBuffer(END_LI);
+        writeWithBuffer(formatNewLine());
     }
 
     // nary metadata
-
     @Override
     public void visitMetadata(UnaryMetadata metadata) {
-        sb.append(BEG_LI);
-        HtmlFormatSpan(CSS_CLASS_UNARY, metadata.getOperator().readable(), sb);
-        sb.append(END_LI);
-        sb.append(BEG_UL);
+        writeWithBuffer(BEG_LI);
+        htmlFormatSpan(CSS_CLASS_UNARY, metadata.getOperator().readable());
+        writeWithBuffer(END_LI);
+        writeWithBuffer(BEG_UL);
     }
 
     // validation rule
-
     @Override
     public void startMetadata(ValidationRule metadata) {
-        formatDivStart(CSS_CLASS_VALIDATION_RULE, sb);
-        sb.append(formatNewLine());
-        sb.append(BEG_UL);
-        sb.append(formatNewLine());
-        sb.append(formatCurrentIndent());
-        sb.append(BEG_LI);
-        HtmlFormatSpan(CSS_CLASS_RULE, formatRule(), sb);
-        sb.append(formatNewLine());
+        formatDivStart(CSS_CLASS_VALIDATION_RULE);
+        writeWithBuffer(formatNewLine());
+        writeWithBuffer(formatCurrentIndent());
     }
 
     @Override
     public void visitMetadata(ValidationRule metadata) {
-        sb.append(BEG_LI);
-        HtmlFormatSpan(CSS_CLASS_VALIDATE, formatValidateWithMessage(), sb);
-        sb.append(" ");
-        HtmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata), sb);
-        sb.append(END_LI);
-        sb.append(END_UL);
-        sb.append(formatNewLine());
+        writeWithBuffer(BEG_LI);
+        htmlFormatSpan(CSS_CLASS_VALIDATE, "validate with message");
+        writeWithBuffer(" ");
+        htmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata));
+        writeWithBuffer(END_LI);
+        writeWithBuffer(END_UL);
+        writeWithBuffer(formatNewLine());
     }
 
     @Override
     public void endMetadata(ValidationRule metadata) {
-        sb.append(formatCurrentIndent());
-        sb.append(END_UL);
-        sb.append(formatNewLine());
-        sb.append(END_DIV);
-        sb.append(formatNewLine());
+        writeWithBuffer(formatCurrentIndent());
+        writeWithBuffer(formatNewLine());
+        writeWithBuffer(END_DIV);
+        writeWithBuffer(formatNewLine());
     }
 
     // metadata
-
     @Override
     public void visitMetadata(Metadata metadata) {
-        sb.append(formatOperator(metadata));
+        writeWithBuffer(metadata.readable());
     }
 
     // implementation
-
-    @Override
     protected String formatWhen() {
         return "When";
     }
 
-    @Override
     protected String formatMessage(ValidationRule metadata) {
         return MessageFormat.format("\"{0}\"", metadata.getMessage() == null ? "empty" : metadata.getMessage());
     }
 
     // format
-
-    private void formatFieldClass(FieldMetadata field, StringBuilder sb) {
-        field.stream().forEach(element -> HtmlFormatSpan(getCssClass(element), element.getReadable().readable(), sb));
+    private void formatFieldClass(FieldMetadata field) {
+        field.stream().forEach(element -> htmlFormatSpan(getCssClass(element), element.getReadable().readable()));
     }
 
     private String getCssClass(FieldMetadata.Element element) {
@@ -229,13 +221,22 @@ public class AstHtmlVisitor extends AstTextVisitor {
         }
     }
 
-    private void HtmlFormatSpan(String cssClass, String content, StringBuilder sb) {
-        sb.append("<span class=\"").append(cssClass).append("\">");
-        sb.append(content).append("</span>");
+    private void htmlFormatSpan(String cssClass, String content) {
+        writeWithBuffer("<span class=\"" + cssClass + "\">" + content + "</span> ");
     }
 
-    private void formatDivStart(String cssClass, StringBuilder sb) {
-        sb.append("<div class=\"").append(cssClass).append("\">");
+    private void formatDivStart(String cssClass) {
+        writeWithBuffer("<div class=\"" + cssClass + "\">");
     }
 
+    private void writeWithBuffer(String s) {
+        lastLines[0] = lastLines[1];
+        lastLines[1] = lastLines[2];
+        lastLines[2] = s;
+        try {
+            ops.write(s.getBytes("UTF-8"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
