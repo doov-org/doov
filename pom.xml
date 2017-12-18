@@ -335,7 +335,7 @@
 
   <profiles>
     <profile>
-      <id>release</id>
+      <id>sign</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
