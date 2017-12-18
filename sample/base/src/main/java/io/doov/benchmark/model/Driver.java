@@ -1,18 +1,24 @@
-package io.doov.sample.model;
+package io.doov.benchmark.model;
 
-import io.doov.sample.field.SampleFieldId;
-import io.doov.sample.field.SamplePath;
+import static io.doov.benchmark.model.BenchmarkFieldId.AGE;
+import static io.doov.benchmark.model.BenchmarkFieldId.DRIVING_LICENSE;
+import static io.doov.benchmark.model.BenchmarkFieldId.NAME;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Driver {
 
-    @SamplePath(field = SampleFieldId.NAME)
+    @BenchmarkPath(field = NAME)
     private String name;
 
-    @SamplePath(field = SampleFieldId.AGE)
+    @BenchmarkPath(field = AGE)
     private int age;
 
-    @SamplePath(field = SampleFieldId.DRIVING_LICENSE)
+    @BenchmarkPath(field = DRIVING_LICENSE)
     private boolean hasDrivingLicense;
+
+    private List<Friend> friends = new ArrayList<>();
 
     public Driver() {
     }
@@ -45,6 +51,19 @@ public class Driver {
 
     public void setHasDrivingLicense(boolean hasDrivingLicense) {
         this.hasDrivingLicense = hasDrivingLicense;
+    }
+
+    public Driver addFriend(Friend driver) {
+        this.friends.add(driver);
+        return this;
+    }
+
+    public List<Friend> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<Friend> friends) {
+        this.friends = friends;
     }
 
     @Override

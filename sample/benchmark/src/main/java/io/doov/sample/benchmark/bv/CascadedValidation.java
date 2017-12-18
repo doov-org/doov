@@ -1,41 +1,37 @@
 package io.doov.sample.benchmark.bv;
 
-import static io.doov.sample.field.SampleFieldIdInfo.name;
+import static io.doov.benchmark.model.BenchmarkFieldIdInfo.*;
+import static io.doov.core.dsl.DOOV.matchAll;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
+import io.doov.benchmark.model.*;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.sample.model.*;
 
-/**
- * @author Hardy Ferentschik
+/*
+ * http://in.relation.to/2017/10/31/bean-validation-benchmark-revisited/
  */
 public class CascadedValidation {
-
-    private static final String[] names = {
-            "Jacob",
-            "Isabella",
-            "Ethan",
-            "Sophia",
-            "Michael",
-            "Emma",
-            "Jayden",
-            "Olivia",
-            "William"
-    };
 
     @State(Scope.Benchmark)
     public static class CascadedValidationState {
 
-        volatile ValidationRule rule = DOOV.when(name().isNotNull()).validate();
-
-        volatile Random random = new Random();
+        volatile ValidationRule rule = DOOV
+                .when(matchAll(
+                        friendName1().isNotNull(),
+                        friendName2().isNotNull(),
+                        friendName3().isNotNull(),
+                        friendName4().isNotNull(),
+                        friendName5().isNotNull(),
+                        friendName6().isNotNull()))
+                .validate();
 
     }
 
@@ -46,25 +42,11 @@ public class CascadedValidation {
     @Threads(50)
     @Warmup(iterations = 10)
     @Measurement(iterations = 20)
-    public void testCascadedValidation(CascadedValidationState state, Blackhole bh) {
-        //        DriverSetup driverSetup = new DriverSetup(state);
-        //        Res
-        //
-        //        // TODO graphs needs to be generated and deeper
-        //        Person kermit = new Person("kermit");
-        //        Person piggy = new Person("miss piggy");
-        //        Person gonzo = new Person("gonzo");
-        //
-        //        kermit.addFriend(piggy).addFriend(gonzo);
-        //        piggy.addFriend(kermit).addFriend(gonzo);
-        //        gonzo.addFriend(kermit).addFriend(piggy);
-        //
-        //        state.rule.executeOn(state)
-        //
-        //        Set<ConstraintViolation<Person>> violations = state.validator.validate(kermit);
-        //        assertThat(violations).hasSize(0);
-        //
-        //        bh.consume(violations);
+    public void testCascadedValidation(CascadedValidationState state, Blackhole blackhole) {
+        DriverSetup driverSetup = new DriverSetup();
+        Result result = state.rule.executeOn(driverSetup.model);
+        assertThat(result.isTrue()).isTrue();
+        blackhole.consume(result);
     }
 
     public class DriverSetup {
@@ -72,16 +54,24 @@ public class CascadedValidation {
         private Driver driver;
         private DslModel model;
 
-        DriverSetup(CascadedValidationState state) {
-            String name = names[state.random.nextInt(10)];
+        DriverSetup() {
+            driver = new Driver("driver", 18, true);
 
-            Driver driver = new Driver();
-            driver.setName(name);
+            Friend kermit = new Friend("kermit");
+            Friend piggy = new Friend("miss piggy");
+            Friend gonzo = new Friend("gonzo");
 
-            SampleModel model = new SampleModel();
+            driver.addFriend(piggy);
+            driver.addFriend(gonzo);
+            driver.addFriend(kermit);
+            driver.addFriend(gonzo);
+            driver.addFriend(kermit);
+            driver.addFriend(piggy);
+
+            BenchmarkModel model = new BenchmarkModel();
             model.setDriver(driver);
 
-            this.model = new SampleModelWrapper(model);
+            this.model = new BenchmarkModelWrapper(model);
         }
 
     }

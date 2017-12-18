@@ -15,6 +15,8 @@
  */
 package io.doov.core;
 
+import static java.util.Collections.emptyList;
+
 import java.util.List;
 
 import io.doov.core.dsl.DslId;
@@ -32,12 +34,16 @@ public interface FieldId extends DslId {
     /**
      * @return the field position, when referencing an element in a {@code Collection}
      */
-    int position();
+    default int position() {
+        return -1;
+    }
 
     /**
      * @return optionnal tags used to decorate this field
      */
-    List<TagId> tags();
+    default List<TagId> tags() {
+        return emptyList();
+    }
 
     /**
      * @param tag the tag to check

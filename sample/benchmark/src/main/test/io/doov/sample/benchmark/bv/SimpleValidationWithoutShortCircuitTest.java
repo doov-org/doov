@@ -3,13 +3,15 @@ package io.doov.sample.benchmark.bv;
 import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.infra.Blackhole;
 
-public class SimpleValidationTest {
+import io.doov.sample.benchmark.bv.SimpleValidationWithoutShortCircuit.ValidationState;
+
+public class SimpleValidationWithoutShortCircuitTest {
 
     @Test
     public void test() {
-        SimpleValidation bench = new SimpleValidation();
+        SimpleValidationWithoutShortCircuit bench = new SimpleValidationWithoutShortCircuit();
         bench.testSimpleBeanValidation(
-                new SimpleValidation.ValidationState(),
+                new ValidationState(),
                 new Blackhole("Today's password is swordfish. " +
                         "I understand instantiating Blackholes directly is dangerous."));
     }

@@ -12,6 +12,13 @@
   <artifactId>doov-sample-generated</artifactId>
   <name>dOOv Sample Generated</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>io.doov</groupId>
+      <artifactId>doov-sample-base</artifactId>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -46,10 +53,12 @@
               <sourceClasses>
                 <sourceClass>io.doov.sample.model.SampleModel</sourceClass>
                 <sourceClass>io.doov.sample2.model.Sample2Model</sourceClass>
+                <sourceClass>io.doov.benchmark.model.BenchmarkModel</sourceClass>
               </sourceClasses>
               <fieldClasses>
                 <fieldClass>io.doov.sample.field.SampleFieldId</fieldClass>
                 <fieldClass>io.doov.sample2.field.Sample2FieldId</fieldClass>
+                <fieldClass>io.doov.benchmark.model.BenchmarkFieldId</fieldClass>
               </fieldClasses>
             </configuration>
           </execution>
@@ -58,10 +67,4 @@
     </plugins>
   </build>
 
-  <dependencies>
-    <dependency>
-      <groupId>io.doov</groupId>
-      <artifactId>doov-sample-base</artifactId>
-    </dependency>
-  </dependencies>
 </project>

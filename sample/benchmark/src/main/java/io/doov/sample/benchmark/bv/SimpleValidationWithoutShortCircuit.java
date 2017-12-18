@@ -6,9 +6,9 @@
  */
 package io.doov.sample.benchmark.bv;
 
-import static io.doov.sample.field.SampleFieldIdInfo.age;
-import static io.doov.sample.field.SampleFieldIdInfo.drivingLicense;
-import static io.doov.sample.field.SampleFieldIdInfo.name;
+import static io.doov.benchmark.model.BenchmarkFieldIdInfo.age;
+import static io.doov.benchmark.model.BenchmarkFieldIdInfo.drivingLicense;
+import static io.doov.benchmark.model.BenchmarkFieldIdInfo.name;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Random;
@@ -17,12 +17,12 @@ import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
+import io.doov.benchmark.model.*;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.FieldMetadata;
-import io.doov.sample.model.*;
 
 /*
  * http://in.relation.to/2017/10/31/bean-validation-benchmark-revisited/
@@ -97,10 +97,10 @@ public class SimpleValidationWithoutShortCircuit {
 
             driver = new Driver(name, randomAge, hasLicense);
 
-            SampleModel model = new SampleModel();
+            BenchmarkModel model = new BenchmarkModel();
             model.setDriver(driver);
 
-            this.model = new SampleModelWrapper(model);
+            this.model = new BenchmarkModelWrapper(model);
         }
 
     }

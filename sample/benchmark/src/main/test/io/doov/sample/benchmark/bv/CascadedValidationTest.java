@@ -3,13 +3,15 @@ package io.doov.sample.benchmark.bv;
 import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.infra.Blackhole;
 
-public class SimpleValidationTest {
+import io.doov.sample.benchmark.bv.CascadedValidation.CascadedValidationState;
+
+public class CascadedValidationTest {
 
     @Test
     public void test() {
-        SimpleValidation bench = new SimpleValidation();
-        bench.testSimpleBeanValidation(
-                new SimpleValidation.ValidationState(),
+        CascadedValidation bench = new CascadedValidation();
+        bench.testCascadedValidation(
+                new CascadedValidationState(),
                 new Blackhole("Today's password is swordfish. " +
                         "I understand instantiating Blackholes directly is dangerous."));
     }

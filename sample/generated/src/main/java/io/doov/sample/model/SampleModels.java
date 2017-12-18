@@ -51,16 +51,10 @@ public class SampleModels {
         configuration.setMaxEmailSize(25);
         configuration.setMinAge(18);
 
-        Driver driver = new Driver();
-        driver.setName("driver");
-        driver.setAge(18);
-        driver.setHasDrivingLicense(true);
-
         SampleModel model = new SampleModel();
         model.setUser(user);
         model.setAccount(account);
         model.setConfiguration(configuration);
-        model.setDriver(driver);
 
         return model;
     }

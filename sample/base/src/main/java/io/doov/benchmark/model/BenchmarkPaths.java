@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.sample.field;
+package io.doov.benchmark.model;
 
-import io.doov.core.PathConstraint;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-public enum SampleConstraint implements PathConstraint {
+@Retention(RetentionPolicy.RUNTIME)
+public @interface BenchmarkPaths {
 
-    NONE(""), //
-    USER("getUser()"), //
-    ACCOUNT("getAccount()"), //
-    ;
+    BenchmarkPath[] value();
 
-    private final String includePath;
-
-    SampleConstraint(String includePath) {
-        this.includePath = includePath;
-    }
-
-    @Override
-    public String includePath() {
-        return includePath;
-    }
 }
+
