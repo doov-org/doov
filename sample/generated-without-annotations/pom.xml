@@ -9,15 +9,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>doov-sample-generated</artifactId>
-  <name>dOOv Sample Generated</name>
-
-  <dependencies>
-    <dependency>
-      <groupId>io.doov</groupId>
-      <artifactId>doov-sample-base</artifactId>
-    </dependency>
-  </dependencies>
+  <artifactId>doov-sample-generated-without-annotations</artifactId>
+  <name>dOOv Sample Generated Without Annotations</name>
 
   <build>
     <plugins>
@@ -50,8 +43,9 @@
             </goals>
             <configuration>
               <packageFilter>io.doov.sample</packageFilter>
-              <fieldClass>io.doov.sample.field.SampleFieldId</fieldClass>
+              <fieldPathProvider>io.doov.sample.field.SampleFieldPath</fieldPathProvider>
               <sourceClass>io.doov.sample.model.SampleModel</sourceClass>
+              <fieldClass>io.doov.sample.field.SampleFieldId</fieldClass>
             </configuration>
           </execution>
           <execution>
@@ -61,19 +55,9 @@
             </goals>
             <configuration>
               <packageFilter>io.doov.sample2</packageFilter>
+              <fieldPathProvider>io.doov.sample2.field.Sample2FieldPath</fieldPathProvider>
               <fieldClass>io.doov.sample2.field.Sample2FieldId</fieldClass>
               <sourceClass>io.doov.sample2.model.Sample2Model</sourceClass>
-            </configuration>
-          </execution>
-          <execution>
-            <id>doov-map-gen-benchmark</id>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <packageFilter>io.doov.benchmark</packageFilter>
-              <fieldClass>io.doov.benchmark.model.BenchmarkFieldId</fieldClass>
-              <sourceClass>io.doov.benchmark.model.BenchmarkModel</sourceClass>
             </configuration>
           </execution>
         </executions>
@@ -81,4 +65,10 @@
     </plugins>
   </build>
 
+  <dependencies>
+    <dependency>
+      <groupId>io.doov</groupId>
+      <artifactId>doov-sample-base-without-annotations</artifactId>
+    </dependency>
+  </dependencies>
 </project>

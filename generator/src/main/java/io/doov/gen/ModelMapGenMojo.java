@@ -18,15 +18,18 @@ package io.doov.gen;
 import static io.doov.gen.FieldInfoGen.constants;
 import static io.doov.gen.FieldInfoGen.imports;
 import static io.doov.gen.ModelWrapperGen.*;
+import static io.doov.gen.utils.ClassUtils.transformPathToMethod;
 import static java.nio.file.Files.createDirectories;
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
 import static java.time.format.FormatStyle.SHORT;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
@@ -42,8 +45,10 @@ import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
 import io.doov.core.FieldId;
+import io.doov.core.dsl.path.*;
 import io.doov.gen.processor.MacroProcessor;
 import io.doov.gen.utils.ClassLoaderUtils;
+import io.doov.gen.utils.ClassUtils;
 
 @Mojo(name = "generate", defaultPhase = GENERATE_SOURCES, threadSafe = true)
 public final class ModelMapGenMojo extends AbstractMojo {
@@ -58,10 +63,10 @@ public final class ModelMapGenMojo extends AbstractMojo {
     private File outputResourceDirectory;
 
     @Parameter(required = true)
-    private List<String> sourceClasses;
+    private String sourceClass;
 
     @Parameter(required = true)
-    private List<String> fieldClasses;
+    private String fieldClass;
 
     @Parameter(required = true, readonly = true, property = "project")
     private MavenProject project;
@@ -69,22 +74,22 @@ public final class ModelMapGenMojo extends AbstractMojo {
     @Parameter(required = true)
     private String packageFilter;
 
+    @Parameter
+    private String fieldPathProvider;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        if (sourceClasses == null) {
+        if (sourceClass == null) {
             getLog().warn("no project classes");
         }
-        if (sourceClasses.isEmpty()) {
+        if (sourceClass.isEmpty()) {
             getLog().warn("project is empty");
         }
-        if (fieldClasses == null) {
+        if (fieldClass == null) {
             getLog().warn("no tunnel classes");
         }
-        if (fieldClasses.isEmpty()) {
+        if (fieldClass.isEmpty()) {
             getLog().warn("tunnel is empty");
-        }
-        if (fieldClasses.size() != sourceClasses.size()) {
-            getLog().warn("tunnel and projet have different size");
         }
         if (outputDirectory.exists() && !outputDirectory.isDirectory()) {
             throw new MojoFailureException(outputDirectory + " is not directory");
@@ -99,37 +104,52 @@ public final class ModelMapGenMojo extends AbstractMojo {
         }
 
         final URLClassLoader classLoader = ClassLoaderUtils.getUrlClassLoader(project);
-        final Map<Class<? extends FieldId>, Class<?>> generationInput = new HashMap<>();
         try {
-            for (int i = 0; i < sourceClasses.size(); i++) {
-                @SuppressWarnings("unchecked")
-                final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>) Class
-                        .forName(fieldClasses.get(i), true, classLoader);
-                final Class<?> modelClazz = Class.forName(sourceClasses.get(i), true, classLoader);
-                generationInput.put(fieldClazz, modelClazz);
+            List<FieldPath> fieldPaths = Collections.emptyList();
+            if (fieldPathProvider != null) {
+                FieldPathProvider fieldPathProvider = (FieldPathProvider) Class.forName(this.fieldPathProvider, true,
+                                classLoader).newInstance();
+                fieldPaths = fieldPathProvider.values();
             }
-            generateModels(generationInput);
+            @SuppressWarnings("unchecked")
+            final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>) Class
+                            .forName(fieldClass, true, classLoader);
+            final Class<?> modelClazz = Class.forName(sourceClass, true, classLoader);
+            generateModels(fieldClazz, modelClazz, fieldPaths);
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 
     }
 
-    private void generateModels(Map<Class<? extends FieldId>, Class<?>> generationInput) {
-        new ArrayList<>(generationInput.entrySet()).parallelStream().forEach(entry -> {
-            final Class<? extends FieldId> fieldClazz = entry.getKey();
-            final Class<?> modelClazz = entry.getValue();
-            try {
-                final List<VisitorPath> collected = process(modelClazz, packageFilter);
-                final Map<FieldId, VisitorPath> fieldPaths = validatePath(collected);
-                Runnable generateCsv = () -> generateCsv(fieldPaths, modelClazz);
-                Runnable generateWrapper = () -> generateWrapper(fieldPaths, modelClazz, fieldClazz);
-                Runnable generateFieldInfo = () -> generateFieldInfo(fieldPaths, fieldClazz);
-                asList(generateWrapper, generateCsv, generateFieldInfo).parallelStream().forEach(Runnable::run);
-            } catch (Exception e) {
-                throw new RuntimeException("generation failed for class " + modelClazz, e);
+    private void generateModels(Class<? extends FieldId> fieldClazz, Class<?> modelClazz, List<FieldPath> fieldPaths) {
+        try {
+            final List<VisitorPath> collected;
+            if (fieldPaths.isEmpty()) {
+                collected = process(modelClazz, packageFilter);
+            } else {
+                collected = fieldPaths.stream().map(this::createVisitorPath).collect(toList());
             }
-        });
+            final Map<FieldId, VisitorPath> fieldPathMap = validatePath(collected);
+            Runnable generateCsv = () -> generateCsv(fieldPathMap, modelClazz);
+            Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz);
+            Runnable generateFieldInfo = () -> generateFieldInfo(fieldPathMap, fieldClazz);
+            asList(generateWrapper, generateCsv, generateFieldInfo).parallelStream().forEach(Runnable::run);
+        } catch (Exception e) {
+            throw new RuntimeException("generation failed for class " + modelClazz, e);
+        }
+    }
+
+    private VisitorPath createVisitorPath(FieldPath p) {
+        getLog().debug("Processing field path " + p);
+        LinkedHashMap<Class, Method> path = transformPathToMethod(p.getBaseClass(), p.getPath());
+        List<Class> classes = new ArrayList<>(path.keySet());
+        List<Method> methods = new ArrayList<>(path.values());
+        // Last class of the path is the container of the field
+        Class containerClass = classes.get(classes.size() - 1);
+        Method readMethod = ClassUtils.getReferencedMethod(containerClass, p.getReadMethod());
+        Method writeMethod = ClassUtils.getReferencedMethod(containerClass, p.getWriteMethod());
+        return new VisitorPath(p.getBaseClass(), methods, p.getFieldId(), p.getReadable(), readMethod, writeMethod);
     }
 
     private List<VisitorPath> process(Class<?> projetClass, String filter) throws Exception {
