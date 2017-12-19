@@ -9,11 +9,7 @@ import java.text.MessageFormat;
 
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.FieldMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
@@ -49,18 +45,13 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void startMetadata(StepWhen metadata) {
-        writeWithBuffer(formatCurrentIndent());
-        writeWithBuffer(formatCurrentIndent());
-        writeWithBuffer(BEG_UL);
         writeWithBuffer(formatNewLine());
         writeWithBuffer(formatCurrentIndent());
-        writeWithBuffer(BEG_LI);
     }
 
     @Override
     public void visitMetadata(StepWhen metadata) {
         htmlFormatSpan(CSS_CLASS_WHEN, formatWhen());
-        writeWithBuffer(END_LI);
         writeWithBuffer(formatNewLine());
         writeWithBuffer(formatCurrentIndent());
         writeWithBuffer(BEG_UL);
@@ -86,9 +77,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(FieldMetadata metadata) {
-        // writeWithBuffer("<a href=\"/maintenance/exclusion-filters?module=auto&field=\""+getFieldId(metadata),ops);
         formatFieldClass(metadata);
-        // writeWithBuffer(">",ops);
     }
 
     @Override
@@ -169,12 +158,9 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(ValidationRule metadata) {
-        writeWithBuffer(BEG_LI);
         htmlFormatSpan(CSS_CLASS_VALIDATE, "validate with message");
         writeWithBuffer(" ");
         htmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata));
-        writeWithBuffer(END_LI);
-        writeWithBuffer(END_UL);
         writeWithBuffer(formatNewLine());
     }
 
@@ -194,7 +180,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // implementation
     protected String formatWhen() {
-        return "When";
+        return "when";
     }
 
     protected String formatMessage(ValidationRule metadata) {
@@ -202,11 +188,11 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     // format
-    private void formatFieldClass(FieldMetadata field) {
+    protected void formatFieldClass(FieldMetadata field) {
         field.stream().forEach(element -> htmlFormatSpan(getCssClass(element), element.getReadable().readable()));
     }
 
-    private String getCssClass(FieldMetadata.Element element) {
+    protected String getCssClass(FieldMetadata.Element element) {
         switch (element.getType()) {
             case field:
                 return "dsl-token-field";
@@ -221,7 +207,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         }
     }
 
-    private void htmlFormatSpan(String cssClass, String content) {
+    protected void htmlFormatSpan(String cssClass, String content) {
         writeWithBuffer("<span class=\"" + cssClass + "\">" + content + "</span> ");
     }
 
@@ -229,7 +215,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         writeWithBuffer("<div class=\"" + cssClass + "\">");
     }
 
-    private void writeWithBuffer(String s) {
+    protected void writeWithBuffer(String s) {
         lastLines[0] = lastLines[1];
         lastLines[1] = lastLines[2];
         lastLines[2] = s;
