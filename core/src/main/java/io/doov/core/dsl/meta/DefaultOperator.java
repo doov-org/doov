@@ -19,7 +19,7 @@ public enum DefaultOperator implements Operator {
     when("when"), //
     equals("equals"), //
     not_equals("not equals"), //
-    is_null("is_null"), //
+    is_null("is null"), //
     is_not_null("is not null"), //
     as_a_number("as a number"), //
     with("with"), //
