@@ -17,8 +17,7 @@ package io.doov.core.dsl.meta;
 
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
-public class UnaryMetadata implements Metadata {
-
+public class UnaryMetadata extends PredicateMetadata {
     private final Operator operator;
     private final Metadata value;
 

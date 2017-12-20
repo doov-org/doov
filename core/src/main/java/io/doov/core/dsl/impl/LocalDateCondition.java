@@ -16,7 +16,9 @@
 package io.doov.core.dsl.impl;
 
 import java.time.LocalDate;
-import java.time.temporal.*;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -24,7 +26,7 @@ import java.util.function.Function;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 
 public class LocalDateCondition extends TemporalCondition<LocalDate> {
 
@@ -32,13 +34,13 @@ public class LocalDateCondition extends TemporalCondition<LocalDate> {
         super(field);
     }
 
-    public LocalDateCondition(DslField field, Metadata metadata,
+    public LocalDateCondition(DslField field, PredicateMetadata metadata,
             BiFunction<DslModel, Context, Optional<LocalDate>> value) {
         super(field, metadata, value);
     }
 
     @Override
-    protected TemporalCondition<LocalDate> temporalCondition(DslField field, Metadata metadata,
+    protected TemporalCondition<LocalDate> temporalCondition(DslField field, PredicateMetadata metadata,
             BiFunction<DslModel, Context, Optional<LocalDate>> value) {
         return new LocalDateCondition(field, metadata, value);
     }

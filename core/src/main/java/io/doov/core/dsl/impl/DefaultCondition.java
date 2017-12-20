@@ -15,18 +15,31 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static io.doov.core.dsl.meta.FieldMetadata.equalsMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.mapToIntMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.matchAllMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.matchAnyMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.matchNoneMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.notEqualsMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.notNullMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.nullMetadata;
 import static java.util.Arrays.asList;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 
 public class DefaultCondition<T> extends AbstractCondition<T> {
 
@@ -34,7 +47,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
         super(field);
     }
 
-    public DefaultCondition(DslField field, Metadata metadata, BiFunction<DslModel, Context, Optional<T>> value) {
+    public DefaultCondition(DslField field, PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<T>> value) {
         super(field, metadata, value);
     }
 

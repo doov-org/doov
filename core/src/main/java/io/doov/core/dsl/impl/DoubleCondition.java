@@ -19,7 +19,7 @@ import java.util.function.BinaryOperator;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 
 public class DoubleCondition extends NumericCondition<Double> {
 
@@ -27,12 +27,12 @@ public class DoubleCondition extends NumericCondition<Double> {
         super(field);
     }
 
-    public DoubleCondition(DslField field, Metadata metadata, BiFunction<DslModel, Context, Optional<Double>> value) {
+    public DoubleCondition(DslField field, PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<Double>> value) {
         super(field, metadata, value);
     }
 
     @Override
-    NumericCondition<Double> numericCondition(DslField field, Metadata metadata,
+    NumericCondition<Double> numericCondition(DslField field, PredicateMetadata metadata,
             BiFunction<DslModel, Context, Optional<Double>> value) {
         return new DoubleCondition(field, metadata, value);
     }

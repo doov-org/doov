@@ -12,14 +12,24 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static io.doov.core.dsl.meta.FieldMetadata.afterMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.ageAtMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.beforeMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.equalsMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.minusMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.plusMetadata;
+import static io.doov.core.dsl.meta.FieldMetadata.withMetadata;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
-import java.time.temporal.*;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalUnit;
 import java.util.Optional;
-import java.util.function.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
@@ -27,7 +37,7 @@ import io.doov.core.dsl.field.NumericFieldInfo;
 import io.doov.core.dsl.field.TemporalFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 import io.doov.core.dsl.time.TemporalAdjuster;
 
 public abstract class TemporalCondition<N extends Temporal> extends DefaultCondition<N> {
@@ -36,19 +46,20 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         super(field);
     }
 
-    public TemporalCondition(DslField field, Metadata metadata, BiFunction<DslModel, Context, Optional<N>> value) {
+    public TemporalCondition(DslField field, PredicateMetadata metadata,
+                    BiFunction<DslModel, Context, Optional<N>> value) {
         super(field, metadata, value);
     }
 
-    protected abstract TemporalCondition<N> temporalCondition(DslField field, Metadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> value);
+    protected abstract TemporalCondition<N> temporalCondition(DslField field, PredicateMetadata metadata,
+                    BiFunction<DslModel, Context, Optional<N>> value);
 
     // with
 
     public final TemporalCondition<N> with(TemporalAdjuster adjuster) {
         return temporalCondition(field, withMetadata(field, adjuster.getMetadata()),
-                (model, context) -> value(model, field)
-                        .map(v -> withFunction(adjuster.getAdjuster()).apply(v)));
+                        (model, context) -> value(model, field)
+                                        .map(v -> withFunction(adjuster.getAdjuster()).apply(v)));
     }
 
     protected abstract Function<N, N> withFunction(java.time.temporal.TemporalAdjuster adjuster);
@@ -57,15 +68,15 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     public final TemporalCondition<N> minus(int value, TemporalUnit unit) {
         return temporalCondition(field, minusMetadata(field, value, unit),
-                (model, context) -> value(model, field)
-                        .map(v -> minusFunction(value, unit).apply(v)));
+                        (model, context) -> value(model, field)
+                                        .map(v -> minusFunction(value, unit).apply(v)));
     }
 
     public final TemporalCondition<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
         return temporalCondition(field, minusMetadata(field, value, unit),
-                (model, context) -> value(model, field)
-                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
-                                .map(r -> minusFunction(r, unit).apply(l))));
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
+                                                        .map(r -> minusFunction(r, unit).apply(l))));
     }
 
     protected abstract Function<N, N> minusFunction(int value, TemporalUnit unit);
@@ -74,15 +85,15 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     public final TemporalCondition<N> plus(int value, TemporalUnit unit) {
         return temporalCondition(field, plusMetadata(field, value, unit),
-                (model, context) -> value(model, field)
-                        .map(v -> plusFunction(value, unit).apply(v)));
+                        (model, context) -> value(model, field)
+                                        .map(v -> plusFunction(value, unit).apply(v)));
     }
 
     public final TemporalCondition<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
         return temporalCondition(field, plusMetadata(field, value, unit),
-                (model, context) -> value(model, field)
-                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
-                                .map(r -> plusFunction(r, unit).apply(l))));
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
+                                                        .map(r -> plusFunction(r, unit).apply(l))));
     }
 
     protected abstract Function<N, N> plusFunction(int value, TemporalUnit unit);
@@ -91,34 +102,34 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     public final StepCondition eq(TemporalCondition<N> value) {
         return predicate(equalsMetadata(field, value),
-                value.function,
-                Object::equals);
+                        value.function,
+                        Object::equals);
     }
 
     // before
 
     public final StepCondition before(N value) {
         return predicate(beforeMetadata(field, value),
-                (model, context) -> Optional.ofNullable(value),
-                (l, r) -> beforeFunction().apply(l, r));
+                        (model, context) -> Optional.ofNullable(value),
+                        (l, r) -> beforeFunction().apply(l, r));
     }
 
     public final StepCondition before(TemporalFieldInfo<N> value) {
         return predicate(beforeMetadata(field, value),
-                (model, context) -> value(model, value),
-                (l, r) -> beforeFunction().apply(l, r));
+                        (model, context) -> value(model, value),
+                        (l, r) -> beforeFunction().apply(l, r));
     }
 
     public final StepCondition before(Supplier<N> value) {
         return predicate(beforeMetadata(field, value),
-                (model, context) -> Optional.ofNullable(value.get()),
-                (l, r) -> beforeFunction().apply(l, r));
+                        (model, context) -> Optional.ofNullable(value.get()),
+                        (l, r) -> beforeFunction().apply(l, r));
     }
 
     public final StepCondition before(TemporalCondition<N> value) {
         return predicate(beforeMetadata(field, value.metadata),
-                value.function,
-                (l, r) -> beforeFunction().apply(l, r));
+                        value.function,
+                        (l, r) -> beforeFunction().apply(l, r));
     }
 
     public final StepCondition beforeOrEq(N value) {
@@ -139,26 +150,26 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     public final StepCondition after(N value) {
         return predicate(afterMetadata(field, value),
-                (model, context) -> Optional.ofNullable(value),
-                (l, r) -> afterFunction().apply(l, r));
+                        (model, context) -> Optional.ofNullable(value),
+                        (l, r) -> afterFunction().apply(l, r));
     }
 
     public final StepCondition after(TemporalFieldInfo<N> value) {
         return predicate(afterMetadata(field, value),
-                (model, context) -> value(model, value),
-                (l, r) -> afterFunction().apply(l, r));
+                        (model, context) -> value(model, value),
+                        (l, r) -> afterFunction().apply(l, r));
     }
 
     public final StepCondition after(Supplier<N> value) {
         return predicate(afterMetadata(field, value),
-                (model, context) -> Optional.ofNullable(value.get()),
-                (l, r) -> afterFunction().apply(l, r));
+                        (model, context) -> Optional.ofNullable(value.get()),
+                        (l, r) -> afterFunction().apply(l, r));
     }
 
     public final StepCondition after(TemporalCondition<N> value) {
         return predicate(afterMetadata(field, value.metadata),
-                value.function,
-                (l, r) -> afterFunction().apply(l, r));
+                        value.function,
+                        (l, r) -> afterFunction().apply(l, r));
     }
 
     public final StepCondition afterOrEq(N value) {
@@ -277,32 +288,34 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
 
     // time between
 
-    protected final NumericCondition<Long> timeBetween(Metadata metadata, ChronoUnit unit, N value) {
+    protected final NumericCondition<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, N value) {
         return new LongCondition(field, metadata,
-                (model, context) -> value(model, field)
-                        .flatMap(l -> Optional.ofNullable(value)
-                                .map(r -> betweenFunction(unit).apply(l, r))));
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> Optional.ofNullable(value)
+                                                        .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    protected final NumericCondition<Long> timeBetween(Metadata metadata, ChronoUnit unit, TemporalFieldInfo<N> value) {
+    protected final NumericCondition<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
+                    TemporalFieldInfo<N> value) {
         return new LongCondition(field, metadata,
-                (model, context) -> value(model, field)
-                        .flatMap(l -> valueModel(model, value)
-                                .map(r -> betweenFunction(unit).apply(l, r))));
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> valueModel(model, value)
+                                                        .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    protected final NumericCondition<Long> timeBetween(Metadata metadata, ChronoUnit unit, TemporalCondition<N> value) {
+    protected final NumericCondition<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
+                    TemporalCondition<N> value) {
         return new LongCondition(field, metadata,
-                (model, context) -> value(model, field)
-                        .flatMap(l -> value.function.apply(model, context)
-                                .map(r -> betweenFunction(unit).apply(l, r))));
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> value.function.apply(model, context)
+                                                        .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    protected final NumericCondition<Long> timeBetween(Metadata metadata, ChronoUnit unit, Supplier<N> value) {
+    protected final NumericCondition<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, Supplier<N> value) {
         return new LongCondition(field, metadata,
-                (model, context) -> value(model, field)
-                        .flatMap(l -> Optional.ofNullable(value.get())
-                                .map(r -> betweenFunction(unit).apply(l, r))));
+                        (model, context) -> value(model, field)
+                                        .flatMap(l -> Optional.ofNullable(value.get())
+                                                        .map(r -> betweenFunction(unit).apply(l, r))));
     }
 
     protected abstract BiFunction<N, N, Long> betweenFunction(ChronoUnit unit);

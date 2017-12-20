@@ -16,8 +16,7 @@ import java.util.List;
 
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
-public class NaryMetadata implements Metadata {
-
+public class NaryMetadata extends PredicateMetadata {
     private final Operator operator;
     private final List<Metadata> values;
 
@@ -70,7 +69,7 @@ public class NaryMetadata implements Metadata {
     }
 
     @Override
-    public Metadata merge(FieldMetadata other) {
+    public PredicateMetadata merge(FieldMetadata other) {
         return new NaryMetadata(new ComposeOperator(operator, other), values);
     }
 

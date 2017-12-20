@@ -12,14 +12,53 @@
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.DefaultOperator.after;
+import static io.doov.core.dsl.meta.DefaultOperator.age_at;
+import static io.doov.core.dsl.meta.DefaultOperator.always_false;
+import static io.doov.core.dsl.meta.DefaultOperator.always_true;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.as_a_number;
+import static io.doov.core.dsl.meta.DefaultOperator.before;
+import static io.doov.core.dsl.meta.DefaultOperator.contains;
+import static io.doov.core.dsl.meta.DefaultOperator.ends_with;
+import static io.doov.core.dsl.meta.DefaultOperator.equals;
+import static io.doov.core.dsl.meta.DefaultOperator.greater_or_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.greater_than;
+import static io.doov.core.dsl.meta.DefaultOperator.has_not_size;
+import static io.doov.core.dsl.meta.DefaultOperator.has_size;
+import static io.doov.core.dsl.meta.DefaultOperator.is;
+import static io.doov.core.dsl.meta.DefaultOperator.is_empty;
+import static io.doov.core.dsl.meta.DefaultOperator.is_not_empty;
+import static io.doov.core.dsl.meta.DefaultOperator.is_not_null;
+import static io.doov.core.dsl.meta.DefaultOperator.is_null;
+import static io.doov.core.dsl.meta.DefaultOperator.length_is;
+import static io.doov.core.dsl.meta.DefaultOperator.lesser_or_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.lesser_than;
+import static io.doov.core.dsl.meta.DefaultOperator.match_all;
+import static io.doov.core.dsl.meta.DefaultOperator.match_any;
+import static io.doov.core.dsl.meta.DefaultOperator.match_none;
+import static io.doov.core.dsl.meta.DefaultOperator.matches;
+import static io.doov.core.dsl.meta.DefaultOperator.min;
+import static io.doov.core.dsl.meta.DefaultOperator.minus;
+import static io.doov.core.dsl.meta.DefaultOperator.not;
+import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.plus;
+import static io.doov.core.dsl.meta.DefaultOperator.starts_with;
+import static io.doov.core.dsl.meta.DefaultOperator.sum;
+import static io.doov.core.dsl.meta.DefaultOperator.times;
+import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.DefaultOperator.with;
+import static io.doov.core.dsl.meta.DefaultOperator.xor;
 import static io.doov.core.dsl.meta.FieldMetadata.Type.field;
 import static io.doov.core.dsl.meta.FieldMetadata.Type.operator;
 import static io.doov.core.dsl.meta.FieldMetadata.Type.unknown;
 import static io.doov.core.dsl.meta.FieldMetadata.Type.value;
 import static java.util.stream.Collectors.joining;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Deque;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
@@ -28,10 +67,9 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
-public class FieldMetadata implements Metadata {
+public class FieldMetadata extends PredicateMetadata {
 
     private static final Collector<CharSequence, ?, String> COLLECTOR_LIST = joining(", ", " : ", "");
-
     private final Deque<Element> elements;
 
     public FieldMetadata() {
@@ -109,7 +147,7 @@ public class FieldMetadata implements Metadata {
     // implementation
 
     @Override
-    public Metadata merge(FieldMetadata other) {
+    public PredicateMetadata merge(FieldMetadata other) {
         removeDuplicateField(other);
         FieldMetadata fieldMetadata = new FieldMetadata(this);
         fieldMetadata.elements.addAll(other.elements);

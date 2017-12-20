@@ -19,7 +19,7 @@ import java.util.function.BinaryOperator;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 
 public class LongCondition extends NumericCondition<Long> {
 
@@ -27,13 +27,14 @@ public class LongCondition extends NumericCondition<Long> {
         super(field);
     }
 
-    public LongCondition(DslField field, Metadata metadata, BiFunction<DslModel, Context, Optional<Long>> value) {
+    public LongCondition(DslField field, PredicateMetadata metadata,
+                    BiFunction<DslModel, Context, Optional<Long>> value) {
         super(field, metadata, value);
     }
 
     @Override
-    NumericCondition<Long> numericCondition(DslField field, Metadata metadata,
-            BiFunction<DslModel, Context, Optional<Long>> value) {
+    NumericCondition<Long> numericCondition(DslField field, PredicateMetadata metadata,
+                    BiFunction<DslModel, Context, Optional<Long>> value) {
         return new LongCondition(field, metadata, value);
     }
 

@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.core.dsl.impl;
 
@@ -22,14 +19,15 @@ import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.PredicateMetadata;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 abstract class AbstractStepCondition implements StepCondition {
 
-    private final Metadata metadata;
+    private final PredicateMetadata metadata;
     private final BiPredicate<DslModel, Context> predicate;
 
-    protected AbstractStepCondition(Metadata metadata, BiPredicate<DslModel, Context> predicate) {
+    protected AbstractStepCondition(PredicateMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         this.metadata = metadata;
         this.predicate = predicate;
     }
@@ -42,8 +40,11 @@ abstract class AbstractStepCondition implements StepCondition {
     @Override
     public BiPredicate<DslModel, Context> predicate() {
         return (model, context) -> {
-            boolean test = predicate.test(model, context);
-            if (!test) {
+            final boolean test = predicate.test(model, context);
+            if (test) {
+                metadata.incrementValidated();
+            } else {
+                metadata.incrementInvalidated();
                 context.failed(metadata);
             }
             return test;

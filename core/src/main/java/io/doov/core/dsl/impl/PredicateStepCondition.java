@@ -21,17 +21,17 @@ import java.util.function.Function;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 
 class PredicateStepCondition<N> extends AbstractStepCondition {
 
-    protected PredicateStepCondition(Metadata metadata,
+    protected PredicateStepCondition(PredicateMetadata metadata,
             BiFunction<DslModel, Context, Optional<N>> value,
             Function<N, Boolean> predicate) {
         super(metadata, (model, context) -> value.apply(model, context).map(predicate).orElse(false));
     }
 
-    protected PredicateStepCondition(Metadata metadata,
+    protected PredicateStepCondition(PredicateMetadata metadata,
             BiFunction<DslModel, Context, Optional<N>> left,
             BiFunction<DslModel, Context, Optional<N>> right,
             BiFunction<N, N, Boolean> predicate) {

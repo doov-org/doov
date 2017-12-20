@@ -19,11 +19,11 @@ import java.util.function.BiPredicate;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 
 public class DefaultStepCondition extends AbstractStepCondition {
 
-    public DefaultStepCondition(Metadata metadata, BiPredicate<DslModel, Context> predicate) {
+    public DefaultStepCondition(PredicateMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         super(metadata, predicate);
     }
 
