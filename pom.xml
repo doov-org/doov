@@ -6,7 +6,7 @@
   <groupId>io.doov</groupId>
   <artifactId>doov-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.27.4</version>
+  <version>1.27.3</version>
 
   <name>dOOv Parent</name>
   <description>dOOv, a fluent API for type-safe domain model validation</description>
