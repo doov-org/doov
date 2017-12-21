@@ -1,5 +1,7 @@
 # dOOv (Domain Object Oriented Validation)
 
+[![Build Status](https://travis-ci.org/lesfurets/doov.svg?branch=master)](https://travis-ci.org/lesfurets/doov)
+
 dOOv is a fluent API for typesafe domain model validation. It uses annotations, code generation and a type safe DSL to make domain model validation fast and easy.
 
 ## Installation
