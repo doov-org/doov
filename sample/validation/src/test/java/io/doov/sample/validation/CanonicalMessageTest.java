@@ -26,6 +26,6 @@ public class CanonicalMessageTest {
     
     @Test
     public void testMe() {
-        Rules.RULE_ACCOUNT.executeOn(model).getInvalidated();
+        Rules.RULE_ACCOUNT.executeOn(model).getContext().getInvalidated();
     }
 }

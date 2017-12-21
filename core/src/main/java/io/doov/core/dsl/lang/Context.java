@@ -15,6 +15,8 @@
  */
 package io.doov.core.dsl.lang;
 
+import java.util.List;
+
 import io.doov.core.dsl.meta.Metadata;
 
 public interface Context {
@@ -24,5 +26,9 @@ public interface Context {
     void validated(Metadata metadata);
 
     boolean isShortCircuit();
+    
+    public List<Metadata> getValidated();
+    
+    public List<Metadata> getInvalidated();
 
 }

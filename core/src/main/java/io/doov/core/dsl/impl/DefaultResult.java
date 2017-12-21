@@ -12,10 +12,8 @@
  */
 package io.doov.core.dsl.impl;
 
-import java.util.List;
-
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultResult implements Result {
     private final boolean validity;
@@ -44,13 +42,7 @@ public class DefaultResult implements Result {
     }
 
     @Override
-    public List<Metadata> getValidated() {
-        return context.getValidated();
+    public Context getContext() {
+        return context;
     }
-
-    @Override
-    public List<Metadata> getInvalidated() {
-        return context.getInvalidated();
-    }
-
 }

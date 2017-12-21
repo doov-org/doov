@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.sample.benchmark.bv;
 
@@ -39,27 +36,27 @@ import io.doov.core.dsl.meta.FieldMetadata;
 public class SimpleValidationWithoutShortCircuit {
 
     private static final String[] names = {
-            null,
-            "Jacob",
-            "Isabella",
-            "Ethan",
-            "Sophia",
-            "Michael",
-            "Emma",
-            "Jayden",
-            "Olivia",
-            "William"
+                    null,
+                    "Jacob",
+                    "Isabella",
+                    "Ethan",
+                    "Sophia",
+                    "Michael",
+                    "Emma",
+                    "Jayden",
+                    "Olivia",
+                    "William"
     };
 
     @State(Scope.Benchmark)
     public static class ValidationState {
 
         volatile ValidationRule rule = DOOV
-                .when(name().isNotNull()
-                        .and(age().greaterOrEquals(18))
-                        .and(drivingLicense().isTrue()))
-                .validate()
-                .withShortCircuit(false);
+                        .when(name().isNotNull()
+                                        .and(age().greaterOrEquals(18))
+                                        .and(drivingLicense().isTrue()))
+                        .validate()
+                        .withShortCircuit(false);
 
         volatile Random random = new Random();
 
@@ -115,9 +112,9 @@ public class SimpleValidationWithoutShortCircuit {
     }
 
     private static int getActualViolationCount(Result result) {
-        return (int) result.getInvalidated().stream()
-                .filter(metadata -> metadata instanceof FieldMetadata)
-                .count();
+        return (int) result.getContext().getInvalidated().stream()
+                        .filter(metadata -> metadata instanceof FieldMetadata)
+                        .count();
     }
 
 }
