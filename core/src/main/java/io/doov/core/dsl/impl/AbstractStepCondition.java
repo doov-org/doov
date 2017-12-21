@@ -43,9 +43,10 @@ abstract class AbstractStepCondition implements StepCondition {
             final boolean test = predicate.test(model, context);
             if (test) {
                 metadata.incrementValidated();
+                context.validated(metadata);
             } else {
                 metadata.incrementInvalidated();
-                context.failed(metadata);
+                context.invalidated(metadata);
             }
             return test;
         };

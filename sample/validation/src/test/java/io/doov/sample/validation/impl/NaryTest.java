@@ -50,7 +50,7 @@ public class NaryTest {
         StepCondition node;
 
         rule = DOOV.when(matchAny(userFirstName().isNotNull(), userLastName().isNull())).validate();
-        assertThat(rule).validates(model).hasFailedNodeEmpty();
+        assertThat(rule).validates(model).hasNoInvalidatedMetadata();
 
         rule = DOOV.when(matchAny(userFirstName().isNotNull(), node = userLastName().isNull())).validate();
         rule = rule.withShortCircuit(false);

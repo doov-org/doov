@@ -115,7 +115,7 @@ public class SimpleValidationWithoutShortCircuit {
     }
 
     private static int getActualViolationCount(Result result) {
-        return (int) result.getFailedNodes().stream()
+        return (int) result.getInvalidated().stream()
                 .filter(metadata -> metadata instanceof FieldMetadata)
                 .count();
     }

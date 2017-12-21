@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.assertions;
 
@@ -33,14 +30,14 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     public ResultAssert isTrue() {
         if (!actual.isTrue()) {
-            failWithMessage("Expected result to be true (failed nodes: " + getFailedNodes() + ")");
+            failWithMessage("Expected result to be true (failed nodes: " + getInvalidatedMetadata() + ")");
         }
         return this;
     }
 
     public ResultAssert isFalse() {
         if (!actual.isFalse()) {
-            failWithMessage("Expected result to be false (failed nodes: " + getFailedNodes() + ")");
+            failWithMessage("Expected result to be false (failed nodes: " + getInvalidatedMetadata() + ")");
         }
         return this;
     }
@@ -60,22 +57,22 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
     }
 
     public ResultAssert hasFailedNode(Metadata metadata) {
-        if (!actual.getFailedNodes().contains(metadata)) {
+        if (!actual.getInvalidated().contains(metadata)) {
             failWithMessage("Expected result to have failed nodes + " + metadata.readable()
-                    + " but was " + getFailedNodes());
+                            + " but was " + getInvalidatedMetadata());
         }
         return this;
     }
 
-    public ResultAssert hasFailedNodeEmpty() {
-        if (!actual.getFailedNodes().isEmpty()) {
-            failWithMessage("Expected result to have empty failed nodes but was " + getFailedNodes());
+    public ResultAssert hasNoInvalidatedMetadata() {
+        if (!actual.getInvalidated().isEmpty()) {
+            failWithMessage("Expected result to have empty failed nodes but was " + getInvalidatedMetadata());
         }
         return this;
     }
 
-    private List<String> getFailedNodes() {
-        return actual.getFailedNodes().stream().map(Readable::readable).collect(toList());
+    private List<String> getInvalidatedMetadata() {
+        return actual.getInvalidated().stream().map(Readable::readable).collect(toList());
     }
 
 }

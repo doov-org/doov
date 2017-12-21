@@ -25,7 +25,8 @@ import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultContext implements Context {
 
-    private final List<Metadata> failed = new ArrayList<>();
+    private final List<Metadata> validated = new ArrayList<>();
+    private final List<Metadata> invalidated = new ArrayList<>();
     private final boolean shortCircuit;
 
     public DefaultContext() {
@@ -36,8 +37,12 @@ public class DefaultContext implements Context {
         this.shortCircuit = shortCircuit;
     }
 
-    public List<Metadata> getFailed() {
-        return unmodifiableList(failed);
+    public List<Metadata> getValidated() {
+        return unmodifiableList(validated);
+    }
+    
+    public List<Metadata> getInvalidated() {
+        return unmodifiableList(validated);
     }
 
     @Override
@@ -46,8 +51,12 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public void failed(Metadata metadata) {
-        failed.add(metadata);
+    public void validated(Metadata metadata) {
+        validated.add(metadata);
     }
-
+    
+    @Override
+    public void invalidated(Metadata metadata) {
+        invalidated.add(metadata);
+    }
 }

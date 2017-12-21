@@ -65,7 +65,7 @@ public class StringTest {
     public void should_parse_int_return_valid_integer_condition_or_exception() {
         account.setLogin("todo");
         assertThatThrownBy(() -> DOOV.when(accountLogin().parseInt().eq(4)).validate().executeOn(model))
-                .isInstanceOf(NumberFormatException.class);
+                        .isInstanceOf(NumberFormatException.class);
 
         account.setLogin("42");
         assertThat(accountLogin().parseInt().eq(42)).validates(model);

@@ -19,7 +19,9 @@ import io.doov.core.dsl.meta.Metadata;
 
 public interface Context {
 
-    void failed(Metadata metadata);
+    void invalidated(Metadata metadata);
+    
+    void validated(Metadata metadata);
 
     boolean isShortCircuit();
 
