@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.doov</groupId>
     <artifactId>doov-parent</artifactId>
-    <version>1.27.3</version>
+    <version>1.27.4</version>
   </parent>
 
   <artifactId>doov-generator</artifactId>
