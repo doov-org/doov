@@ -30,14 +30,14 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     public ResultAssert isTrue() {
         if (!actual.isTrue()) {
-            failWithMessage("Expected result to be true (failed nodes: " + getInvalidatedMetadata() + ")");
+            failWithMessage("Expected result to be true (invalidated nodes: " + getInvalidatedMetadata() + ")");
         }
         return this;
     }
 
     public ResultAssert isFalse() {
         if (!actual.isFalse()) {
-            failWithMessage("Expected result to be false (failed nodes: " + getInvalidatedMetadata() + ")");
+            failWithMessage("Expected result to be false (invalidated nodes: " + getInvalidatedMetadata() + ")");
         }
         return this;
     }
@@ -74,7 +74,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     public ResultAssert hasNoInvalidatedMetadata() {
         if (!actual.getInvalidated().isEmpty()) {
-            failWithMessage("Expected result to have empty failed nodes but was " + getInvalidatedMetadata());
+            failWithMessage("Expected result to have empty invalidated nodes but was " + getInvalidatedMetadata());
         }
         return this;
     }
