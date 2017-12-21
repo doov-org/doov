@@ -56,10 +56,18 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
         return this;
     }
 
-    public ResultAssert hasFailedNode(Metadata metadata) {
+    public ResultAssert hasInvalidated(Metadata metadata) {
         if (!actual.getInvalidated().contains(metadata)) {
-            failWithMessage("Expected result to have failed nodes + " + metadata.readable()
+            failWithMessage("Expected result to have invalidated nodes + " + metadata.readable()
                             + " but was " + getInvalidatedMetadata());
+        }
+        return this;
+    }
+
+    public ResultAssert hasValidated(Metadata metadata) {
+        if (!actual.getValidated().contains(metadata)) {
+            failWithMessage("Expected result to have validated nodes + " + metadata.readable()
+                            + " but was " + getValidatedMetadata());
         }
         return this;
     }
@@ -73,6 +81,10 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     private List<String> getInvalidatedMetadata() {
         return actual.getInvalidated().stream().map(Readable::readable).collect(toList());
+    }
+
+    private List<String> getValidatedMetadata() {
+        return actual.getValidated().stream().map(Readable::readable).collect(toList());
     }
 
 }
