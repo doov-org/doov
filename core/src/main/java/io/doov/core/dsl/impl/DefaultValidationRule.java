@@ -64,7 +64,7 @@ public class DefaultValidationRule implements ValidationRule {
         DefaultContext context = new DefaultContext(shortCircuit);
         boolean valid = stepWhen.stepCondition().predicate().test(model, context);
         String readable = valid ? null : (message == null ? stepWhen.stepCondition().readable() : message);
-        return new DefaultResult(valid, readable, context.getValidated(), context.getInvalidated());
+        return new DefaultResult(valid, readable, context);
     }
 
     @Override

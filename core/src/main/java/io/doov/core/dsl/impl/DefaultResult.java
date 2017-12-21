@@ -20,14 +20,12 @@ import io.doov.core.dsl.meta.Metadata;
 public class DefaultResult implements Result {
     private final boolean validity;
     private final String message;
-    private final List<Metadata> validated;
-    private final List<Metadata> invalidated;
+    private final DefaultContext context;
 
-    protected DefaultResult(boolean validity, String message, List<Metadata> validated, List<Metadata> invalidated) {
+    protected DefaultResult(boolean validity, String message, DefaultContext context) {
         this.validity = validity;
         this.message = message;
-        this.validated = validated;
-        this.invalidated = invalidated;
+        this.context = context;
     }
 
     @Override
@@ -47,12 +45,12 @@ public class DefaultResult implements Result {
 
     @Override
     public List<Metadata> getValidated() {
-        return validated;
+        return context.getValidated();
     }
 
     @Override
     public List<Metadata> getInvalidated() {
-        return invalidated;
+        return context.getInvalidated();
     }
 
 }

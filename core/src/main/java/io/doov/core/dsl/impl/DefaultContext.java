@@ -42,7 +42,7 @@ public class DefaultContext implements Context {
     }
     
     public List<Metadata> getInvalidated() {
-        return unmodifiableList(validated);
+        return unmodifiableList(invalidated);
     }
 
     @Override
