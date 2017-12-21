@@ -17,6 +17,14 @@ echo ""
 
 echo ""
 echo "====================================="
+echo "Testing code                         "
+echo "====================================="
+echo ""
+
+mvn clean test
+
+echo ""
+echo "====================================="
 echo "Changing pom.xml versions to ${VERSION}"
 echo "====================================="
 echo ""
