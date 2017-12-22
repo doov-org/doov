@@ -50,15 +50,18 @@ import static io.doov.core.dsl.meta.DefaultOperator.times;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.DefaultOperator.with;
 import static io.doov.core.dsl.meta.DefaultOperator.xor;
-import static io.doov.core.dsl.meta.FieldMetadata.Type.field;
-import static io.doov.core.dsl.meta.FieldMetadata.Type.operator;
-import static io.doov.core.dsl.meta.FieldMetadata.Type.unknown;
-import static io.doov.core.dsl.meta.FieldMetadata.Type.value;
+import static io.doov.core.dsl.meta.ElementType.FIELD;
+import static io.doov.core.dsl.meta.ElementType.OPERATOR;
+import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
+import static io.doov.core.dsl.meta.ElementType.VALUE;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static java.util.stream.Collectors.joining;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
@@ -103,45 +106,45 @@ public class FieldMetadata extends PredicateMetadata {
     // field
 
     public FieldMetadata field(DslField readable) {
-        return add(readable == null ? null : new Element(readable, field));
+        return add(readable == null ? null : new Element(readable, FIELD));
     }
 
     // operator
 
     public FieldMetadata operator(Operator op) {
-        return add(op == null ? null : new Element(op, operator));
+        return add(op == null ? null : new Element(op, OPERATOR));
     }
 
     // value
 
     public FieldMetadata valueObject(Object readable) {
-        return add(readable == null ? null : new Element(() -> String.valueOf(readable), value));
+        return add(readable == null ? null : new Element(() -> String.valueOf(readable), VALUE));
     }
 
     public FieldMetadata valueString(String readable) {
-        return add(readable == null ? null : new Element(() -> readable, value));
+        return add(readable == null ? null : new Element(() -> readable, VALUE));
     }
 
     public FieldMetadata valueReadable(Readable readable) {
-        return add(readable == null ? null : new Element(readable, value));
+        return add(readable == null ? null : new Element(readable, VALUE));
     }
 
     public FieldMetadata valueSupplier(Supplier<?> readable) {
-        return add(readable == null ? null : new Element(() -> String.valueOf(readable.get()), value));
+        return add(readable == null ? null : new Element(() -> String.valueOf(readable.get()), VALUE));
     }
 
     public FieldMetadata valueUnknown(String readable) {
-        return add(readable == null ? null : new Element(() -> "UNKNOWN " + readable, unknown));
+        return add(readable == null ? null : new Element(() -> "UNKNOWN " + readable, UNKNOWN));
     }
 
     public FieldMetadata valueListReadable(Collection<? extends Readable> readables) {
         return add(readables == null || readables.isEmpty() ? null
-                        : new Element(() -> formatListReadable(readables), value));
+                        : new Element(() -> formatListReadable(readables), VALUE));
     }
 
     public FieldMetadata valueListObject(Collection<?> readables) {
         return add(readables == null || readables.isEmpty() ? null
-                        : new Element(() -> formatListObject(readables), value));
+                        : new Element(() -> formatListObject(readables), VALUE));
     }
 
     // implementation
@@ -158,7 +161,8 @@ public class FieldMetadata extends PredicateMetadata {
         if (this.elements.isEmpty() || other.elements.isEmpty()) {
             return;
         }
-        if (this.elements.peek().type.equals(Type.field) && other.elements.peek().type.equals(Type.field)) {
+        if (this.elements.peek().getType().equals(ElementType.FIELD)
+                        && other.elements.peek().getType().equals(ElementType.FIELD)) {
             other.elements.pop();
         }
     }
@@ -553,30 +557,14 @@ public class FieldMetadata extends PredicateMetadata {
 
     // classes
 
-    public static class Element {
-
-        private final Readable readable;
-        private final Type type;
-
-        private Element(Readable readable, Type type) {
-            this.readable = readable;
-            this.type = type;
-        }
-
-        public Readable getReadable() {
-            return readable;
-        }
-
-        public Type getType() {
-            return type;
-        }
-
+    @Override
+    public List<Metadata> childs() {
+        return Collections.emptyList();
     }
 
-    public enum Type {
-
-        field, operator, value, unknown
-
+    @Override
+    public MetadataType type() {
+        return FIELD_PREDICATE;
     }
 
 }

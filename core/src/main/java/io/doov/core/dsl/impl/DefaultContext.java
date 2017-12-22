@@ -25,13 +25,20 @@ public class DefaultContext implements Context {
     private final List<Metadata> validated = new ArrayList<>();
     private final List<Metadata> invalidated = new ArrayList<>();
     private final boolean shortCircuit;
+    private Metadata rootMetadata;
 
-    public DefaultContext() {
-        this(true);
+    public DefaultContext(Metadata rootMetadata) {
+        this(true, rootMetadata);
     }
 
-    public DefaultContext(boolean shortCircuit) {
+    public DefaultContext(boolean shortCircuit, Metadata rootMetadata) {
         this.shortCircuit = shortCircuit;
+        this.rootMetadata = rootMetadata;
+    }
+    
+    @Override
+    public Metadata getRootMetadata() {
+        return rootMetadata;
     }
 
     @Override

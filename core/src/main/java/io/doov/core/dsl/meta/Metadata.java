@@ -12,6 +12,8 @@
  */
 package io.doov.core.dsl.meta;
 
+import java.util.List;
+
 import io.doov.core.dsl.lang.Readable;
 
 public interface Metadata extends Readable, SyntaxTree {
@@ -24,4 +26,8 @@ public interface Metadata extends Readable, SyntaxTree {
         throw new UnsupportedOperationException();
     }
 
+
+    List<Metadata> childs();
+    
+    MetadataType type();
 }

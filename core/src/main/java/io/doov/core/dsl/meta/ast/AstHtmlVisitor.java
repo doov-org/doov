@@ -192,15 +192,15 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         field.stream().forEach(element -> htmlFormatSpan(getCssClass(element), element.getReadable().readable()));
     }
 
-    protected String getCssClass(FieldMetadata.Element element) {
+    protected String getCssClass(Element element) {
         switch (element.getType()) {
-            case field:
+            case FIELD:
                 return "dsl-token-field";
-            case operator:
+            case OPERATOR:
                 return "dsl-token-operator";
-            case value:
+            case VALUE:
                 return "dsl-token-value";
-            case unknown:
+            case UNKNOWN:
                 return "dsl-token-unknown";
             default:
                 throw new IllegalArgumentException("Unknown css class for element " + element);

@@ -12,6 +12,9 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+
+import java.util.Collections;
 import java.util.List;
 
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
@@ -73,4 +76,13 @@ public class NaryMetadata extends PredicateMetadata {
         return new NaryMetadata(new ComposeOperator(operator, other), values);
     }
 
+    @Override
+    public List<Metadata> childs() {
+        return Collections.unmodifiableList(values);
+    }
+
+    @Override
+    public MetadataType type() {
+        return NARY_PREDICATE;
+    }
 }

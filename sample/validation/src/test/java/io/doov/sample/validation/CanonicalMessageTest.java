@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.lang.Result;
 import io.doov.sample.model.SampleModelWrapper;
 import io.doov.sample.model.SampleModels;
 
@@ -23,9 +24,11 @@ public class CanonicalMessageTest {
     public void before() {
         model = new SampleModelWrapper(SampleModels.sample());
     }
-    
+
     @Test
     public void testMe() {
-        Rules.RULE_ACCOUNT.executeOn(model).getContext().getInvalidated();
+        Result result = Rules.RULE_ACCOUNT.executeOn(model);
+        System.out.println(result.getContext().getValidated());
+        System.out.println(result.getContext().getInvalidated());
     }
 }

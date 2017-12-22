@@ -38,7 +38,7 @@ public class AstFullVisitor extends AbstractAstVisitor {
     public void visitMetadata(FieldMetadata metadata) {
         sb.append(formatCurrentIndent());
         sb.append("visit FieldMetadata ").append(metadata).append(" = ");
-        metadata.stream().map(FieldMetadata.Element::getReadable).forEach(sb::append);
+        metadata.stream().map(Element::getReadable).forEach(sb::append);
         sb.append("\n");
     }
 

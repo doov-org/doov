@@ -12,12 +12,14 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static java.util.stream.Collectors.joining;
 
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.Element;
 import io.doov.core.dsl.meta.FieldMetadata;
 import io.doov.core.dsl.meta.NaryMetadata;
 import io.doov.core.dsl.meta.UnaryMetadata;
@@ -101,8 +103,8 @@ public class AstTextVisitor extends AbstractAstVisitor {
 
     @Override
     protected int getCurrentIndentSize() {
-        if (AbstractAstVisitor.Element.BINARY.equals(stackPeek())) {
-            return (int) stackSteam().filter(e -> !AbstractAstVisitor.Element.BINARY.equals(e)).count() *
+        if (BINARY_PREDICATE.equals(stackPeek())) {
+            return (int) stackSteam().filter(e -> !BINARY_PREDICATE.equals(e)).count() *
                             getIndentSize();
         }
         return super.getCurrentIndentSize();
@@ -110,7 +112,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
 
     protected String formatFieldMetadata(FieldMetadata metadata) {
         return metadata.stream()
-                        .map(FieldMetadata.Element::getReadable)
+                        .map(Element::getReadable)
                         .map(Readable::readable)
                         .collect(joining(" "));
     }

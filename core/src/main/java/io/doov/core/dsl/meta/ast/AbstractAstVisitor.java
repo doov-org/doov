@@ -25,17 +25,14 @@ import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.BinaryMetadata;
 import io.doov.core.dsl.meta.FieldMetadata;
 import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
 import io.doov.core.dsl.meta.MetadataVisitor;
 import io.doov.core.dsl.meta.NaryMetadata;
 import io.doov.core.dsl.meta.UnaryMetadata;
 
 public abstract class AbstractAstVisitor implements MetadataVisitor {
 
-    enum Element {
-        RULE, WHEN, UNARY, BINARY, NARY
-    }
-
-    private final Deque<Element> stack = new ArrayDeque<>();
+    private final Deque<MetadataType> stack = new ArrayDeque<>();
 
     // Metadata
 
@@ -88,7 +85,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     @Override
     public final void start(BinaryMetadata metadata) {
         startMetadata(metadata);
-        stack.push(Element.BINARY);
+        stack.push(MetadataType.BINARY_PREDICATE);
     }
 
     protected void startMetadata(BinaryMetadata metadata) {
@@ -116,7 +113,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     @Override
     public final void start(NaryMetadata metadata) {
         startMetadata(metadata);
-        stack.push(Element.NARY);
+        stack.push(MetadataType.NARY_PREDICATE);
     }
 
     protected void startMetadata(NaryMetadata metadata) {
@@ -144,7 +141,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     @Override
     public final void start(ValidationRule metadata) {
         startMetadata(metadata);
-        stack.push(Element.RULE);
+        stack.push(MetadataType.RULE);
     }
 
     protected void startMetadata(ValidationRule metadata) {
@@ -172,7 +169,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     @Override
     public final void start(StepWhen metadata) {
         startMetadata(metadata);
-        stack.push(Element.WHEN);
+        stack.push(MetadataType.WHEN);
     }
 
     protected void startMetadata(StepWhen metadata) {
@@ -224,11 +221,11 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
         return "\n";
     }
 
-    protected final Element stackPeek() {
+    protected final MetadataType stackPeek() {
         return stack.peek();
     }
 
-    protected final Stream<Element> stackSteam() {
+    protected final Stream<MetadataType> stackSteam() {
         return stack.stream();
     }
 

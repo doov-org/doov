@@ -20,6 +20,8 @@ import java.util.List;
 import io.doov.core.dsl.meta.Metadata;
 
 public interface Context {
+    
+    Metadata getRootMetadata();
 
     void invalidated(Metadata metadata);
     
