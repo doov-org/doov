@@ -18,16 +18,11 @@ import io.doov.core.dsl.lang.Readable;
 
 public interface Metadata extends Readable, SyntaxTree {
 
-    default Metadata merge(Metadata other) {
-        throw new UnsupportedOperationException();
-    }
-
     default PredicateMetadata merge(FieldMetadata other) {
         throw new UnsupportedOperationException();
     }
 
-
     List<Metadata> childs();
-    
+
     MetadataType type();
 }
