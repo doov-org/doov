@@ -12,6 +12,8 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 
 import java.util.Arrays;
@@ -69,6 +71,12 @@ public class BinaryMetadata extends PredicateMetadata {
 
     @Override
     public Metadata message(Context context) {
+        if (operator == or && context.isEvalTrue(left) && context.isEvalFalse(right))
+            return left.message(context);
+        else if (operator == or && context.isEvalFalse(left) && context.isEvalTrue(right))
+            return right.message(context);
+        else if (operator == and && context.isEvalFalse(this))
+            return new EmptyMetadata();
         return new BinaryMetadata(left.message(context), operator, right.message(context));
     }
 

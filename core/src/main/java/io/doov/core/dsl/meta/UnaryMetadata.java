@@ -12,6 +12,7 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 
 import java.util.Arrays;
@@ -60,6 +61,8 @@ public class UnaryMetadata extends PredicateMetadata {
 
     @Override
     public Metadata message(Context context) {
+        if (operator == not)
+            new UnaryMetadata(operator, value);
         return new UnaryMetadata(operator, value.message(context));
     }
 }
