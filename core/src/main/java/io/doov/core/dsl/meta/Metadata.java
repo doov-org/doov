@@ -14,6 +14,7 @@ package io.doov.core.dsl.meta;
 
 import java.util.List;
 
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 
 public interface Metadata extends Readable, SyntaxTree {
@@ -25,4 +26,6 @@ public interface Metadata extends Readable, SyntaxTree {
     List<Metadata> childs();
 
     MetadataType type();
+    
+    Metadata message(Context context);
 }

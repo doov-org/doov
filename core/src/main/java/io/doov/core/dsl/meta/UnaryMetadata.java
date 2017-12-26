@@ -17,6 +17,7 @@ import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import java.util.Arrays;
 import java.util.List;
 
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class UnaryMetadata extends PredicateMetadata {
@@ -55,5 +56,10 @@ public class UnaryMetadata extends PredicateMetadata {
     @Override
     public MetadataType type() {
         return UNARY_PREDICATE;
+    }
+
+    @Override
+    public Metadata message(Context context) {
+        return new UnaryMetadata(operator, value.message(context));
     }
 }

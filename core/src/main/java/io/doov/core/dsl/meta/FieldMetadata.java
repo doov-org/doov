@@ -67,6 +67,7 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
@@ -565,6 +566,11 @@ public class FieldMetadata extends PredicateMetadata {
     @Override
     public MetadataType type() {
         return FIELD_PREDICATE;
+    }
+
+    @Override
+    public Metadata message(Context context) {
+        return this;
     }
 
 }

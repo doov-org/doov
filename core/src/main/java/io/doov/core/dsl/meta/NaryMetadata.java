@@ -13,10 +13,12 @@
 package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
 import java.util.List;
 
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class NaryMetadata extends PredicateMetadata {
@@ -84,5 +86,18 @@ public class NaryMetadata extends PredicateMetadata {
     @Override
     public MetadataType type() {
         return NARY_PREDICATE;
+    }
+
+    @Override
+    public Metadata message(Context context) {
+        if (operator == DefaultOperator.match_all) {
+            final List<Metadata> childMsgs = values.stream()
+                            .filter(md -> context.getInvalidated().contains(md))
+                            .map(md -> md.message(context)).collect(toList());
+            if (childMsgs.size() == 1)
+                return childMsgs.get(0);
+            return new NaryMetadata(operator, childMsgs);
+        }
+        return new NaryMetadata(operator, values.stream().map(md -> md.message(context)).collect(toList()));
     }
 }

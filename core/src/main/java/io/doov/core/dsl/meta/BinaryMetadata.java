@@ -17,6 +17,7 @@ import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import java.util.Arrays;
 import java.util.List;
 
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class BinaryMetadata extends PredicateMetadata {
@@ -64,6 +65,11 @@ public class BinaryMetadata extends PredicateMetadata {
     @Override
     public MetadataType type() {
         return BINARY_PREDICATE;
+    }
+
+    @Override
+    public Metadata message(Context context) {
+        return new BinaryMetadata(left.message(context), operator, right.message(context));
     }
 
 }
