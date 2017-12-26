@@ -79,5 +79,4 @@ public class BinaryMetadata extends PredicateMetadata {
             return new EmptyMetadata();
         return new BinaryMetadata(left.message(context), operator, right.message(context));
     }
-
 }

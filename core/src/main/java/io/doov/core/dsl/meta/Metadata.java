@@ -26,6 +26,6 @@ public interface Metadata extends Readable, SyntaxTree {
     List<Metadata> childs();
 
     MetadataType type();
-    
+
     Metadata message(Context context);
 }

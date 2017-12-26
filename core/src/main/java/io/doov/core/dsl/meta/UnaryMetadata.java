@@ -59,10 +59,14 @@ public class UnaryMetadata extends PredicateMetadata {
         return UNARY_PREDICATE;
     }
 
+    /**
+     * Be carrefull about the <em>boolean satisfiability problem</em> when we use the <b>not</b> operator<br/>
+     * https://en.wikipedia.org/wiki/Boolean_satisfiability_problem
+     */
     @Override
     public Metadata message(Context context) {
         if (operator == not)
-            new UnaryMetadata(operator, value);
+            return this;
         return new UnaryMetadata(operator, value.message(context));
     }
 }

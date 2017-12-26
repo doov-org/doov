@@ -15,8 +15,7 @@
  */
 package io.doov.assertions;
 
-import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.lang.ValidationRule;
+import io.doov.core.dsl.lang.*;
 
 public class Assertions {
 
@@ -26,6 +25,10 @@ public class Assertions {
 
     public static StepConditionAssert assertThat(StepCondition actual) {
         return new StepConditionAssert(actual, StepConditionAssert.class);
+    }
+    
+    public static ResultAssert assertThat(Result actual) {
+        return new ResultAssert(actual, ResultAssert.class);
     }
 
 }
