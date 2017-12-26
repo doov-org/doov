@@ -12,9 +12,8 @@
  */
 package io.doov.core.dsl.impl;
 
-import static java.util.Collections.unmodifiableList;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.doov.core.dsl.lang.Context;
@@ -22,8 +21,8 @@ import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultContext implements Context {
 
-    private final List<Metadata> validated = new ArrayList<>();
-    private final List<Metadata> invalidated = new ArrayList<>();
+    private final List<Metadata> evalTrue = new ArrayList<>();
+    private final List<Metadata> evalFalse = new ArrayList<>();
     private final boolean shortCircuit;
     private Metadata rootMetadata;
 
@@ -35,20 +34,20 @@ public class DefaultContext implements Context {
         this.shortCircuit = shortCircuit;
         this.rootMetadata = rootMetadata;
     }
-    
+
     @Override
     public Metadata getRootMetadata() {
         return rootMetadata;
     }
 
     @Override
-    public List<Metadata> getValidated() {
-        return unmodifiableList(validated);
+    public boolean isEvalTrue(Metadata metadata) {
+        return evalTrue.contains(metadata);
     }
 
     @Override
-    public List<Metadata> getInvalidated() {
-        return unmodifiableList(invalidated);
+    public boolean isEvalFalse(Metadata metadata) {
+        return evalFalse.contains(metadata);
     }
 
     @Override
@@ -57,12 +56,22 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public void validated(Metadata metadata) {
-        validated.add(metadata);
+    public void addEvalTrue(Metadata metadata) {
+        evalTrue.add(metadata);
     }
 
     @Override
-    public void invalidated(Metadata metadata) {
-        invalidated.add(metadata);
+    public void addEvalFalse(Metadata metadata) {
+        evalFalse.add(metadata);
+    }
+
+    @Override
+    public List<Metadata> getEvalTrue() {
+        return Collections.unmodifiableList(evalTrue);
+    }
+
+    @Override
+    public List<Metadata> getEvalFalse() {
+        return Collections.unmodifiableList(evalFalse);
     }
 }

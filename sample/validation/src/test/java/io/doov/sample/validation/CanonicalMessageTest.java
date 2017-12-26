@@ -45,9 +45,9 @@ public class CanonicalMessageTest {
 
     @Deprecated
     public static final void browseMetaData(Context context, Metadata metadata) {
-        if (context.getValidated().contains(metadata)) {
+        if (context.isEvalTrue(metadata)) {
             System.out.println("[valid] " + metadata.readable());
-        } else if (context.getInvalidated().contains(metadata))
+        } else if (context.isEvalFalse(metadata))
             System.out.println("[invalid] " + metadata.readable());
         if (metadata.type() == BINARY_PREDICATE) {
             BinaryMetadata binaryPredicate = (BinaryMetadata) metadata;

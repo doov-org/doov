@@ -50,7 +50,7 @@ public class BinaryTest {
 
         rule = DOOV.when(userFirstName().isNotNull().or(node = userLastName().isNull())).validate();
         rule = rule.withShortCircuit(false);
-        assertThat(rule).validates(model).hasInvalidated(node.getMetadata());
+        assertThat(rule).validates(model).isEvalFalse(node.getMetadata());
     }
 
 }

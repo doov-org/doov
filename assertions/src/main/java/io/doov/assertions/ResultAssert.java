@@ -56,16 +56,16 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
         return this;
     }
 
-    public ResultAssert hasInvalidated(Metadata metadata) {
-        if (!actual.getContext().getInvalidated().contains(metadata)) {
+    public ResultAssert isEvalFalse(Metadata metadata) {
+        if (!actual.getContext().isEvalFalse(metadata)) {
             failWithMessage("Expected result to have invalidated nodes + " + metadata.readable()
                             + " but was " + getInvalidatedMetadata());
         }
         return this;
     }
 
-    public ResultAssert hasValidated(Metadata metadata) {
-        if (!actual.getContext().getValidated().contains(metadata)) {
+    public ResultAssert isEvalTrue(Metadata metadata) {
+        if (!actual.getContext().isEvalTrue(metadata)) {
             failWithMessage("Expected result to have validated nodes + " + metadata.readable()
                             + " but was " + getValidatedMetadata());
         }
@@ -73,18 +73,18 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
     }
 
     public ResultAssert hasNoInvalidatedMetadata() {
-        if (!actual.getContext().getInvalidated().isEmpty()) {
+        if (!actual.getContext().getEvalFalse().isEmpty()) {
             failWithMessage("Expected result to have empty invalidated nodes but was " + getInvalidatedMetadata());
         }
         return this;
     }
 
     private List<String> getInvalidatedMetadata() {
-        return actual.getContext().getInvalidated().stream().map(Readable::readable).collect(toList());
+        return actual.getContext().getEvalFalse().stream().map(Readable::readable).collect(toList());
     }
 
     private List<String> getValidatedMetadata() {
-        return actual.getContext().getValidated().stream().map(Readable::readable).collect(toList());
+        return actual.getContext().getEvalTrue().stream().map(Readable::readable).collect(toList());
     }
 
 }

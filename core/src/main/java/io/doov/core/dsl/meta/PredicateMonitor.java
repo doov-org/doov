@@ -4,11 +4,11 @@
 package io.doov.core.dsl.meta;
 
 public interface PredicateMonitor {
-    int incrementValidated();
+    int incTrueEval();
     
-    int incrementInvalidated();
+    int incFalseEval();
     
-    int validatedCount();
+    int trueEvalCount();
 
-    int invalidatedCount();
+    int falseEvalCount();
 }

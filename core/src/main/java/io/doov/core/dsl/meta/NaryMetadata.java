@@ -92,7 +92,7 @@ public class NaryMetadata extends PredicateMetadata {
     public Metadata message(Context context) {
         if (operator == DefaultOperator.match_all) {
             final List<Metadata> childMsgs = values.stream()
-                            .filter(md -> context.getInvalidated().contains(md))
+                            .filter(md -> context.isEvalFalse(md))
                             .map(md -> md.message(context)).collect(toList());
             if (childMsgs.size() == 1)
                 return childMsgs.get(0);
