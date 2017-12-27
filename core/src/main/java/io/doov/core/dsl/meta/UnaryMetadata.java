@@ -60,7 +60,7 @@ public class UnaryMetadata extends PredicateMetadata {
     }
 
     /**
-     * Be carrefull about the <em>boolean satisfiability problem</em> when we use the <b>not</b> operator<br/>
+     * Be carrefull about the <em>boolean satisfiability problem</em> when we use the <b>not</b> operator
      * https://en.wikipedia.org/wiki/Boolean_satisfiability_problem
      */
     @Override
