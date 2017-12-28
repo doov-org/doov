@@ -3,13 +3,20 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
 
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.UnaryMetadata;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
@@ -103,7 +110,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
         writeWithBuffer(formatCurrentIndent());
-        htmlFormatSpan(CSS_CLASS_BINARY, metadata.getOperator().readable());
+        htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(metadata.getOperator().readable()));
         writeWithBuffer(formatNewLine());
     }
 
@@ -124,7 +131,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         writeWithBuffer(BEG_LI);
         writeWithBuffer(formatNewLine());
         writeWithBuffer(formatCurrentIndent());
-        htmlFormatSpan(CSS_CLASS_NARY, metadata.getOperator().readable());
+        htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(metadata.getOperator().readable()));
         writeWithBuffer(BEG_OL);
         writeWithBuffer(formatNewLine());
     }
@@ -143,7 +150,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(UnaryMetadata metadata) {
         writeWithBuffer(BEG_LI);
-        htmlFormatSpan(CSS_CLASS_UNARY, metadata.getOperator().readable());
+        htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(metadata.getOperator().readable()));
         writeWithBuffer(END_LI);
         writeWithBuffer(BEG_UL);
     }

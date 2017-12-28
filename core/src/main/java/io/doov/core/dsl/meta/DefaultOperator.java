@@ -17,8 +17,8 @@ public enum DefaultOperator implements Operator {
     always_false("always false"), //
     times("times"), //
     when("when"), //
-    equals("equals"), //
-    not_equals("not equals"), //
+    equals("="), //
+    not_equals("!="), //
     is_null("is null"), //
     is_not_null("is not null"), //
     as_a_number("as a number"), //
@@ -32,12 +32,12 @@ public enum DefaultOperator implements Operator {
     contains("contains"), //
     starts_with("starts with"), //
     ends_with("ends with"), //
-    greater_than("greater than"),
-    greater_or_equals("greater or equals"), //
+    greater_than(">"),
+    greater_or_equals(">="), //
     xor("xor"), //
     is("is"), //
-    lesser_than("lesser than"), //
-    lesser_or_equals("lesser or equals"), //
+    lesser_than("<"), //
+    lesser_or_equals("<="), //
     has_not_size("has not size"), //
     has_size("has size"), //
     is_empty("is empty"), //
