@@ -19,6 +19,8 @@ public interface Result {
     boolean isFalse();
 
     String getMessage();
+    
+    String getFailureCause();
 
     Context getContext();
 

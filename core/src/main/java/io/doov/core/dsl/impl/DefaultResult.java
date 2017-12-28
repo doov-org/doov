@@ -45,4 +45,9 @@ public class DefaultResult implements Result {
     public Context getContext() {
         return context;
     }
+
+    @Override
+    public String getFailureCause() {
+        return context.getRootMetadata().message(context).readable();
+    }
 }
