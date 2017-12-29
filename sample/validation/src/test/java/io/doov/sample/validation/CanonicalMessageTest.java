@@ -8,6 +8,7 @@ import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.matchAny;
+import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,9 +19,21 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.meta.*;
+import io.doov.sample.field.SampleFieldId;
+import io.doov.sample.model.Country;
 
 public class CanonicalMessageTest {
     private final FieldModel model = new BaseFieldModel(emptyList());
+
+    @Test
+    void matchAny_values() {
+        model.set(SampleFieldId.COUNTRY, Country.FR);
+        final Result result = DOOV.when(accountCountry().anyMatch(Country.FR, Country.CAN)).validate()
+                        .withShortCircuit(false).executeOn(model);
+        System.out.println(result.getContext().getRootMetadata().readable());
+        assertThat(result).isTrue();
+        assertThat(result.getContext().getEvalValue(SampleFieldId.COUNTRY)).isEqualTo(Country.FR);
+    }
 
     @Test
     public void combined_and_or() {

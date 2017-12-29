@@ -12,14 +12,15 @@
  */
 package io.doov.core.dsl.impl;
 
+import static io.doov.core.dsl.meta.DefaultOperator.match_any;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
+
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.*;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
-import io.doov.core.dsl.meta.PredicateMetadata;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 abstract class AbstractStepCondition implements StepCondition {
@@ -40,6 +41,15 @@ abstract class AbstractStepCondition implements StepCondition {
     @Override
     public BiPredicate<DslModel, Context> predicate() {
         return (model, context) -> {
+            // TODO improve speed and safety
+            if (metadata.type() == FIELD_PREDICATE) {
+                final FieldMetadata fmd = (FieldMetadata) metadata;
+                if (fmd.stream().anyMatch(e -> e.getReadable() == match_any)) {
+                    final Element field =  fmd.stream().findFirst().orElse(null);
+                    final DslId id = ((DslField) field.getReadable()).id();
+                    context.addEvalValue(id, model.get(id));
+                }
+            }
             final boolean test = predicate.test(model, context);
             if (test) {
                 metadata.incTrueEval();

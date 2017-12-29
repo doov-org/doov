@@ -14,6 +14,7 @@ package io.doov.core.dsl.lang;
 
 import java.util.List;
 
+import io.doov.core.dsl.DslId;
 import io.doov.core.dsl.meta.Metadata;
 
 public interface Context {
@@ -25,6 +26,10 @@ public interface Context {
     void addEvalFalse(Metadata metadata);
 
     void addEvalTrue(Metadata metadata);
+
+    void addEvalValue(DslId id, Object value);
+
+    Object getEvalValue(DslId id);
 
     public boolean isEvalTrue(Metadata metadata);
 
