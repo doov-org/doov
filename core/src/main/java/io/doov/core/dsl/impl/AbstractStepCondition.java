@@ -45,9 +45,11 @@ abstract class AbstractStepCondition implements StepCondition {
             if (metadata.type() == FIELD_PREDICATE) {
                 final FieldMetadata fmd = (FieldMetadata) metadata;
                 if (fmd.stream().anyMatch(e -> e.getReadable() == match_any)) {
-                    final Element field =  fmd.stream().findFirst().orElse(null);
-                    final DslId id = ((DslField) field.getReadable()).id();
-                    context.addEvalValue(id, model.get(id));
+                    final Element field = fmd.stream().findFirst().orElse(null);
+                    if (field != null && field.getType() == ElementType.FIELD) {
+                        final DslId id = ((DslField) field.getReadable()).id();
+                        context.addEvalValue(id, model.get(id));
+                    }
                 }
             }
             final boolean test = predicate.test(model, context);
