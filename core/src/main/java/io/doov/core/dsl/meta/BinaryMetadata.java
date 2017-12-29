@@ -60,7 +60,7 @@ public class BinaryMetadata extends PredicateMetadata {
     }
 
     @Override
-    public List<Metadata> childs() {
+    public List<Metadata> children() {
         return Arrays.asList(left, right);
     }
 

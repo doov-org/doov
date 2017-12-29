@@ -54,7 +54,7 @@ import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
 import static io.doov.core.dsl.meta.ElementType.VALUE;
-import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static java.util.stream.Collectors.joining;
 
 import java.util.ArrayDeque;
@@ -178,6 +178,21 @@ public class LeafMetadata extends PredicateMetadata {
         visitor.start(this);
         visitor.visit(this);
         visitor.end(this);
+    }
+
+    @Override
+    public List<Metadata> children() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public MetadataType type() {
+        return LEAF_PREDICATE;
+    }
+
+    @Override
+    public Metadata message(Context context) {
+        return this;
     }
 
     // static
@@ -555,22 +570,4 @@ public class LeafMetadata extends PredicateMetadata {
     private static String formatListObject(Collection<?> readables) {
         return readables.stream().map(Object::toString).collect(COLLECTOR_LIST);
     }
-
-    // classes
-
-    @Override
-    public List<Metadata> childs() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public MetadataType type() {
-        return FIELD_PREDICATE;
-    }
-
-    @Override
-    public Metadata message(Context context) {
-        return this;
-    }
-
 }

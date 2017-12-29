@@ -50,7 +50,7 @@ public class UnaryMetadata extends PredicateMetadata {
     }
 
     @Override
-    public List<Metadata> childs() {
+    public List<Metadata> children() {
         return Arrays.asList(value);
     }
 

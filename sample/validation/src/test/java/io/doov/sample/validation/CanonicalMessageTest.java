@@ -44,15 +44,15 @@ public class CanonicalMessageTest {
         assertThat(result).isTrue();
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs()).hasSize(2);
-        assertThat(result.getContext().getRootMetadata().childs().get(0)).isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs().get(1)).isInstanceOf(BinaryMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children().get(0)).isInstanceOf(BinaryMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(1)).isInstanceOf(BinaryMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(BinaryMetadata.class);
-        assertThat(msg.childs()).hasSize(2);
-        assertThat(msg.childs().get(0)).isInstanceOf(LeafMetadata.class);
-        assertThat(msg.childs().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(msg.children()).hasSize(2);
+        assertThat(msg.children().get(0)).isInstanceOf(LeafMetadata.class);
+        assertThat(msg.children().get(1)).isInstanceOf(LeafMetadata.class);
         System.out.println(">> " + msg.readable());
     }
 
@@ -65,9 +65,9 @@ public class CanonicalMessageTest {
         assertThat(result).isTrue();
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(NaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs()).hasSize(2);
-        assertThat(result.getContext().getRootMetadata().childs().get(0)).isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children().get(0)).isInstanceOf(BinaryMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(1)).isInstanceOf(LeafMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(LeafMetadata.class);
@@ -83,19 +83,19 @@ public class CanonicalMessageTest {
         assertThat(result).isTrue();
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(UnaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs().get(0)).isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs().get(0).childs().get(0))
+        assertThat(result.getContext().getRootMetadata().children().get(0)).isInstanceOf(BinaryMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children().get(0))
                         .isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs().get(0).childs().get(1))
+        assertThat(result.getContext().getRootMetadata().children().get(0).children().get(1))
                         .isInstanceOf(BinaryMetadata.class);
 
         // message is not simplified because the expression use a not at the top level
         // look at 'boolean satisfiability problem' for more details
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(UnaryMetadata.class);
-        assertThat(msg.childs().get(0)).isInstanceOf(BinaryMetadata.class);
-        assertThat(msg.childs().get(0).childs().get(0)).isInstanceOf(BinaryMetadata.class);
-        assertThat(msg.childs().get(0).childs().get(1)).isInstanceOf(BinaryMetadata.class);
+        assertThat(msg.children().get(0)).isInstanceOf(BinaryMetadata.class);
+        assertThat(msg.children().get(0).children().get(0)).isInstanceOf(BinaryMetadata.class);
+        assertThat(msg.children().get(0).children().get(1)).isInstanceOf(BinaryMetadata.class);
         System.out.println(">> " + msg.readable());
     }
 
@@ -108,7 +108,7 @@ public class CanonicalMessageTest {
         assertThat(result).isTrue();
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(UnaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs().get(0)).isInstanceOf(LeafMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(0)).isInstanceOf(LeafMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(UnaryMetadata.class);
@@ -124,7 +124,7 @@ public class CanonicalMessageTest {
         assertThat(result).isFalse();
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(NaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs()).hasSize(3);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(3);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(EmptyMetadata.class);
@@ -140,11 +140,11 @@ public class CanonicalMessageTest {
         assertThat(result).isTrue();
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(NaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs()).hasSize(3);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(3);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(NaryMetadata.class);
-        assertThat(msg.childs()).hasSize(2);
+        assertThat(msg.children()).hasSize(2);
         System.out.println(">> " + msg.readable());
     }
 
@@ -157,7 +157,7 @@ public class CanonicalMessageTest {
         assertThat(result).isFalse();
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(EmptyMetadata.class);
@@ -173,11 +173,11 @@ public class CanonicalMessageTest {
         assertThat(result).isTrue();
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(LeafMetadata.class);
-        assertThat(msg.childs()).isEmpty();
+        assertThat(msg.children()).isEmpty();
         System.out.println(">> " + msg.readable());
     }
 
@@ -190,13 +190,13 @@ public class CanonicalMessageTest {
         assertThat(result).isTrue();
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs()).hasSize(2);
-        assertThat(result.getContext().getRootMetadata().childs().get(1)).isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs().get(1).childs()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children().get(1)).isInstanceOf(BinaryMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(1).children()).hasSize(2);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(LeafMetadata.class);
-        assertThat(msg.childs()).isEmpty();
+        assertThat(msg.children()).isEmpty();
         System.out.println(">> " + msg.readable());
     }
 
@@ -209,15 +209,15 @@ public class CanonicalMessageTest {
         assertThat(result).isTrue();
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs()).hasSize(2);
-        assertThat(result.getContext().getRootMetadata().childs().get(1)).isInstanceOf(BinaryMetadata.class);
-        assertThat(result.getContext().getRootMetadata().childs().get(1).childs()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children().get(1)).isInstanceOf(BinaryMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(1).children()).hasSize(2);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(BinaryMetadata.class);
-        assertThat(msg.childs()).hasSize(2);
-        assertThat(msg.childs().get(0)).isInstanceOf(LeafMetadata.class);
-        assertThat(msg.childs().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(msg.children()).hasSize(2);
+        assertThat(msg.children().get(0)).isInstanceOf(LeafMetadata.class);
+        assertThat(msg.children().get(1)).isInstanceOf(LeafMetadata.class);
         System.out.println(">> " + msg.readable());
     }
 

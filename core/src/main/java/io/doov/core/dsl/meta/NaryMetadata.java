@@ -81,7 +81,7 @@ public class NaryMetadata extends PredicateMetadata {
     }
 
     @Override
-    public List<Metadata> childs() {
+    public List<Metadata> children() {
         return Collections.unmodifiableList(values);
     }
 

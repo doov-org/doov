@@ -21,7 +21,7 @@ public class EmptyMetadata implements Metadata {
     }
 
     @Override
-    public List<Metadata> childs() {
+    public List<Metadata> children() {
         return Collections.emptyList();
     }
 
