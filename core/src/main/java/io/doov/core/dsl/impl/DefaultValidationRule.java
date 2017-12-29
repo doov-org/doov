@@ -36,6 +36,10 @@ public class DefaultValidationRule implements ValidationRule {
         this.message = message;
         this.shortCircuit = shortCircuit;
     }
+    
+    protected boolean isShortCircuit() {
+        return shortCircuit;
+    }
 
     protected StepWhen getStepWhen() {
         return stepWhen;
