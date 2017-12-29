@@ -12,12 +12,10 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.DefaultOperator.match_any;
-import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
-
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.*;
+import io.doov.core.dsl.DslId;
+import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.*;
@@ -41,16 +39,7 @@ abstract class AbstractStepCondition implements StepCondition {
     @Override
     public BiPredicate<DslModel, Context> predicate() {
         return (model, context) -> {
-            // TODO improve speed and safety
-            if (metadata.type() == FIELD_PREDICATE) {
-                final FieldMetadata fmd = (FieldMetadata) metadata;
-                if (fmd.stream().anyMatch(e -> e.getReadable() == match_any)) {
-                    final Element field =  fmd.stream().findFirst().orElse(null);
-                    final DslId id = ((DslField) field.getReadable()).id();
-                    context.addEvalValue(id, model.get(id));
-                }
-            }
-            final boolean test = predicate.test(model, context);
+            final boolean test = predicate.test(new Interceptor(model, context), context);
             if (test) {
                 metadata.incTrueEval();
                 context.addEvalTrue(metadata);
@@ -60,6 +49,23 @@ abstract class AbstractStepCondition implements StepCondition {
             }
             return test;
         };
+    }
+
+    private static final class Interceptor implements DslModel {
+        private final DslModel model;
+        private final Context context;
+
+        Interceptor(DslModel model, Context context) {
+            this.model = model;
+            this.context = context;
+        }
+
+        @Override
+        public <T> T get(DslId id) {
+            final T value = model.get(id);
+            context.addEvalValue(id, value);
+            return value;
+        }
     }
 
     @Override
