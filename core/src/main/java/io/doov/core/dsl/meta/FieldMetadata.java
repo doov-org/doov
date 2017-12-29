@@ -135,7 +135,7 @@ public class FieldMetadata extends PredicateMetadata {
     }
 
     public FieldMetadata valueUnknown(String readable) {
-        return add(readable == null ? null : new Element(() -> "UNKNOWN " + readable, UNKNOWN));
+        return add(readable == null ? null : new Element(() -> "-function- " + readable, UNKNOWN));
     }
 
     public FieldMetadata valueListReadable(Collection<? extends Readable> readables) {
@@ -255,7 +255,7 @@ public class FieldMetadata extends PredicateMetadata {
     // match
 
     public static FieldMetadata matchAnyMetadata(DslField field) {
-        return new FieldMetadata().field(field).operator(match_any).valueUnknown("lambda");
+        return new FieldMetadata().field(field).operator(match_any).valueUnknown("-function-");
     }
 
     public static FieldMetadata matchAnyMetadata(DslField field, Collection<?> values) {
@@ -263,7 +263,7 @@ public class FieldMetadata extends PredicateMetadata {
     }
 
     public static FieldMetadata matchAllMetadata(DslField field) {
-        return new FieldMetadata().field(field).operator(match_all).valueUnknown("lambda");
+        return new FieldMetadata().field(field).operator(match_all).valueUnknown("-function-");
     }
 
     public static FieldMetadata matchAllMetadata(DslField field, Collection<?> values) {
@@ -271,7 +271,7 @@ public class FieldMetadata extends PredicateMetadata {
     }
 
     public static FieldMetadata matchNoneMetadata(DslField field) {
-        return new FieldMetadata().field(field).operator(match_none).valueUnknown("lamdba");
+        return new FieldMetadata().field(field).operator(match_none).valueUnknown("-function-");
     }
 
     public static FieldMetadata matchNoneMetadata(DslField field, Collection<?> values) {
