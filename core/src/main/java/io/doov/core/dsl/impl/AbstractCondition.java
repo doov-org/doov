@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.fieldMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.fieldMetadata;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -23,7 +23,7 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
 abstract class AbstractCondition<N> implements Readable {
@@ -56,12 +56,12 @@ abstract class AbstractCondition<N> implements Readable {
         return value.apply(model, field);
     }
 
-    protected final StepCondition predicate(FieldMetadata metadata,
+    protected final StepCondition predicate(LeafMetadata metadata,
             Function<N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, predicate);
     }
 
-    protected final StepCondition predicate(FieldMetadata metadata,
+    protected final StepCondition predicate(LeafMetadata metadata,
             BiFunction<DslModel, Context, Optional<N>> value,
             BiFunction<N, N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, value, predicate);

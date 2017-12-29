@@ -28,7 +28,7 @@ import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 
 /*
  * http://in.relation.to/2017/10/31/bean-validation-benchmark-revisited/
@@ -113,7 +113,7 @@ public class SimpleValidationWithoutShortCircuit {
 
     private static int getActualViolationCount(Result result) {
         return (int) result.getContext().getEvalFalse().stream()
-                        .filter(metadata -> metadata instanceof FieldMetadata)
+                        .filter(metadata -> metadata instanceof LeafMetadata)
                         .count();
     }
 

@@ -76,7 +76,7 @@ public class NaryMetadata extends PredicateMetadata {
     }
 
     @Override
-    public PredicateMetadata merge(FieldMetadata other) {
+    public PredicateMetadata merge(LeafMetadata other) {
         return new NaryMetadata(new ComposeOperator(operator, other), values);
     }
 

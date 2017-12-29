@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static io.doov.core.dsl.meta.LeafMetadata.*;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -21,7 +21,7 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 
 public class StringCondition extends DefaultCondition<String> {
 
@@ -29,7 +29,7 @@ public class StringCondition extends DefaultCondition<String> {
         super(field);
     }
 
-    public StringCondition(DslField field, FieldMetadata metadata,
+    public StringCondition(DslField field, LeafMetadata metadata,
             BiFunction<DslModel, Context, Optional<String>> value) {
         super(field, metadata, value);
     }

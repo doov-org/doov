@@ -15,8 +15,8 @@
  */
 package io.doov.core.dsl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.falseMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.trueMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.falseMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.trueMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.Arrays;

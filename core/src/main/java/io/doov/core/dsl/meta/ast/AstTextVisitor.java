@@ -20,7 +20,7 @@ import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.BinaryMetadata;
 import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.NaryMetadata;
 import io.doov.core.dsl.meta.UnaryMetadata;
 
@@ -45,7 +45,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(FieldMetadata metadata) {
+    public void visitMetadata(LeafMetadata metadata) {
         sb.append(formatCurrentIndent());
         sb.append(formatFieldMetadata(metadata));
         sb.append(formatNewLine());
@@ -110,7 +110,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
         return super.getCurrentIndentSize();
     }
 
-    protected String formatFieldMetadata(FieldMetadata metadata) {
+    protected String formatFieldMetadata(LeafMetadata metadata) {
         return metadata.stream()
                         .map(Element::getReadable)
                         .map(Readable::readable)

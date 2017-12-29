@@ -3,7 +3,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static io.doov.core.dsl.meta.LeafMetadata.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
@@ -15,7 +15,7 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 
 public class IterableCondition<T, C extends Iterable<T>> extends DefaultCondition<C> {
 
@@ -23,7 +23,7 @@ public class IterableCondition<T, C extends Iterable<T>> extends DefaultConditio
         super(field);
     }
 
-    public IterableCondition(DslField field, FieldMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
+    public IterableCondition(DslField field, LeafMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
         super(field, metadata, value);
     }
 

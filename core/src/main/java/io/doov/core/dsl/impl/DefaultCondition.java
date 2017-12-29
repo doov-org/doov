@@ -15,14 +15,14 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.equalsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.mapToIntMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.matchAllMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.matchAnyMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.matchNoneMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.notEqualsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.notNullMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.nullMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.equalsMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.mapToIntMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.matchAllMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.matchAnyMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.matchNoneMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.notEqualsMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.notNullMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.nullMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.Arrays;

@@ -12,13 +12,13 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.afterMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.ageAtMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.beforeMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.equalsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.minusMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.plusMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.withMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.afterMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.ageAtMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.beforeMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.equalsMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.minusMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.plusMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.withMetadata;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.time.temporal.ChronoUnit.YEARS;

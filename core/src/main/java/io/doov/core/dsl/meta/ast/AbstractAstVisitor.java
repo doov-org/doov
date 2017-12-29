@@ -23,7 +23,7 @@ import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataType;
 import io.doov.core.dsl.meta.MetadataVisitor;
@@ -47,27 +47,27 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     // FieldMetadata
 
     @Override
-    public final void start(FieldMetadata metadata) {
+    public final void start(LeafMetadata metadata) {
         startMetadata(metadata);
     }
 
-    protected void startMetadata(FieldMetadata metadata) {
+    protected void startMetadata(LeafMetadata metadata) {
     }
 
     @Override
-    public final void visit(FieldMetadata metadata) {
+    public final void visit(LeafMetadata metadata) {
         visitMetadata(metadata);
     }
 
-    protected void visitMetadata(FieldMetadata metadata) {
+    protected void visitMetadata(LeafMetadata metadata) {
     }
 
     @Override
-    public final void end(FieldMetadata metadata) {
+    public final void end(LeafMetadata metadata) {
         endMetadata(metadata);
     }
 
-    protected void endMetadata(FieldMetadata metadata) {
+    protected void endMetadata(LeafMetadata metadata) {
     }
 
     // UnaryMetadata

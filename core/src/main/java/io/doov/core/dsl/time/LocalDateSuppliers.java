@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl.time;
 
-import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static io.doov.core.dsl.meta.LeafMetadata.*;
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;

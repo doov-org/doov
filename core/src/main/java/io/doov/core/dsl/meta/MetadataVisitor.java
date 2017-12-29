@@ -25,11 +25,11 @@ public interface MetadataVisitor {
 
     // FieldMetadata
 
-    void start(FieldMetadata fieldMetadata);
+    void start(LeafMetadata fieldMetadata);
 
-    void visit(FieldMetadata fieldMetadata);
+    void visit(LeafMetadata fieldMetadata);
 
-    void end(FieldMetadata fieldMetadata);
+    void end(LeafMetadata fieldMetadata);
 
     // UnaryMetadata
 

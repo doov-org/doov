@@ -35,7 +35,7 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(FieldMetadata metadata) {
+    public void visitMetadata(LeafMetadata metadata) {
         sb.append(formatCurrentIndent());
         sb.append("visit FieldMetadata ").append(metadata).append(" = ");
         metadata.stream().map(Element::getReadable).forEach(sb::append);

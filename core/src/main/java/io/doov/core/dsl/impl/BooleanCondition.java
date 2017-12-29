@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.*;
+import static io.doov.core.dsl.meta.LeafMetadata.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
@@ -24,7 +24,7 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.LogicalFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 
 public class BooleanCondition extends DefaultCondition<Boolean> {
 
@@ -32,7 +32,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
         super(field);
     }
 
-    public BooleanCondition(DslField field, FieldMetadata metadata,
+    public BooleanCondition(DslField field, LeafMetadata metadata,
             BiFunction<DslModel, Context, Optional<Boolean>> value) {
         super(field, metadata, value);
     }

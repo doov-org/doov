@@ -13,7 +13,7 @@ import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.BinaryMetadata;
 import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.FieldMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.NaryMetadata;
 import io.doov.core.dsl.meta.UnaryMetadata;
@@ -74,7 +74,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // field metadata
     @Override
-    public void startMetadata(FieldMetadata metadata) {
+    public void startMetadata(LeafMetadata metadata) {
         writeWithBuffer(formatCurrentIndent());
         if (!lastLines[0].contains(">and<") && !lastLines[0].contains(">or<")) {
             writeWithBuffer(BEG_LI);
@@ -83,12 +83,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(FieldMetadata metadata) {
+    public void visitMetadata(LeafMetadata metadata) {
         formatFieldClass(metadata);
     }
 
     @Override
-    public void endMetadata(FieldMetadata metadata) {
+    public void endMetadata(LeafMetadata metadata) {
         if (closeFieldLI) {
             writeWithBuffer(END_LI);
             closeFieldLI = false;
@@ -195,7 +195,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     // format
-    protected void formatFieldClass(FieldMetadata field) {
+    protected void formatFieldClass(LeafMetadata field) {
         field.stream().forEach(element -> htmlFormatSpan(getCssClass(element), element.getReadable().readable()));
     }
 

@@ -12,12 +12,12 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.FieldMetadata.greaterOrEqualsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.greaterThanMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.lesserOrEqualsMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.lesserThanMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.timesMetadata;
-import static io.doov.core.dsl.meta.FieldMetadata.whenMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.greaterOrEqualsMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.greaterThanMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.lesserOrEqualsMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.lesserThanMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.timesMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.whenMetadata;
 import static io.doov.core.dsl.meta.NaryMetadata.minMetadata;
 import static io.doov.core.dsl.meta.NaryMetadata.sumMetadata;
 import static java.util.stream.Collectors.toList;

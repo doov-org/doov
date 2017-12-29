@@ -19,7 +19,7 @@ import io.doov.core.dsl.lang.Readable;
 
 public interface Metadata extends Readable, SyntaxTree {
 
-    default PredicateMetadata merge(FieldMetadata other) {
+    default PredicateMetadata merge(LeafMetadata other) {
         throw new UnsupportedOperationException();
     }
 
