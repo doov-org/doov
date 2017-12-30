@@ -16,4 +16,9 @@ public class ComposeOperator implements Operator {
     public String readable() {
         return  operator.readable() + " " + other.readable();
     }
+
+    @Override
+    public String name() {
+        return operator.name();
+    }
 }
