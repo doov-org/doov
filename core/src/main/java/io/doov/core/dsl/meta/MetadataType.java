@@ -4,5 +4,13 @@
 package io.doov.core.dsl.meta;
 
 public enum MetadataType {
-    RULE, WHEN, BINARY_PREDICATE, LEAF_PREDICATE, NARY_PREDICATE, UNARY_PREDICATE, EMPTY;
+    RULE, //
+    WHEN, //
+    BINARY_PREDICATE, //
+    LEAF_PREDICATE, //
+    FIELD_PREDICATE, //
+    FIELD_PREDICATE_MATHC_ANY, //
+    NARY_PREDICATE, //
+    UNARY_PREDICATE, //
+    EMPTY;
 }

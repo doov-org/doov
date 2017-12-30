@@ -8,6 +8,8 @@ import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.matchAny;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATHC_ANY;
 import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,6 +35,13 @@ public class CanonicalMessageTest {
         System.out.println(result.getContext().getRootMetadata().readable());
         assertThat(result).isTrue();
         assertThat(result.getContext().getEvalValue(SampleFieldId.COUNTRY)).isEqualTo(Country.FR);
+        assertThat(result.getContext().getRootMetadata()).isInstanceOf(LeafMetadata.class);
+        assertThat(result.getContext().getRootMetadata().type()).isEqualTo(FIELD_PREDICATE_MATHC_ANY);
+        
+        final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
+        assertThat(msg).isInstanceOf(LeafMetadata.class);
+        assertThat(msg.type()).isEqualTo(FIELD_PREDICATE);
+        System.out.println(">> " + msg.readable());
     }
 
     @Test
