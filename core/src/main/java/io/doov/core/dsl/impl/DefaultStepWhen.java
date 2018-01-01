@@ -15,9 +15,12 @@
  */
 package io.doov.core.dsl.impl;
 
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+
+import java.util.Locale;
+
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MetadataVisitor;
-import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class DefaultStepWhen implements StepWhen {
 
@@ -39,7 +42,7 @@ public class DefaultStepWhen implements StepWhen {
 
     @Override
     public String readable() {
-        return AstVisitorUtils.astToString(this);
+        return astToString(this, Locale.getDefault());
     }
 
     @Override

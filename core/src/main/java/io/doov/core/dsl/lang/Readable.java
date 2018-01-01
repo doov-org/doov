@@ -18,5 +18,4 @@ package io.doov.core.dsl.lang;
 public interface Readable {
 
     String readable();
-
 }

@@ -4,7 +4,7 @@
 package io.doov.core.dsl.meta.i18n;
 
 import static io.doov.core.dsl.meta.DefaultOperator.always_true;
-import static io.doov.core.dsl.meta.i18n.OperatorResourceBundle.BUNDLE;
+import static io.doov.core.dsl.meta.i18n.DefaultResourceBundle.BUNDLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Locale;

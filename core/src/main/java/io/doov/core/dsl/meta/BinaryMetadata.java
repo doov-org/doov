@@ -15,12 +15,11 @@ package io.doov.core.dsl.meta;
 import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class BinaryMetadata extends PredicateMetadata {
     private final Metadata left;
@@ -47,7 +46,7 @@ public class BinaryMetadata extends PredicateMetadata {
 
     @Override
     public String readable() {
-        return AstVisitorUtils.astToString(this);
+        return astToString(this, Locale.getDefault());
     }
 
     @Override

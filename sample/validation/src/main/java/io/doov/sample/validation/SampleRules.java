@@ -26,7 +26,7 @@ import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.sample.model.Country;
 
-public class Rules extends DefaultRuleRegistry {
+public class SampleRules extends DefaultRuleRegistry {
 
     public static ValidationRule RULE_EMAIL = DOOV
                     .when(accountEmail().matches("\\w+[@]\\w+\\.com")
@@ -108,8 +108,4 @@ public class Rules extends DefaultRuleRegistry {
                     .when(min(configurationMinAge(), configurationMaxEmailSize()).greaterOrEquals(0))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
-
-    public static void init() {
-    }
-
 }

@@ -12,27 +12,33 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.core.dsl.meta.DefaultOperator.empty;
+import static io.doov.core.dsl.meta.DefaultOperator.rule;
+import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
+import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.i18n.DefaultResourceBundle.BUNDLE;
 import static java.util.stream.Collectors.joining;
+
+import java.util.Locale;
 
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 
 public class AstTextVisitor extends AbstractAstVisitor {
 
     private static final int INDENT_SIZE = 2;
 
     protected final StringBuilder sb;
+    protected final Locale locale;
     protected int newLineIndex = 0;
 
-    public AstTextVisitor(StringBuilder sb) {
+    public AstTextVisitor(StringBuilder sb, Locale locale) {
         this.sb = sb;
+        this.locale = locale;
     }
 
     protected int getNewLineIndex() {
@@ -54,7 +60,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(UnaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(formatOperator(metadata));
+        sb.append(BUNDLE.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
@@ -62,14 +68,14 @@ public class AstTextVisitor extends AbstractAstVisitor {
     public void visitMetadata(BinaryMetadata metadata) {
         sb.delete(getNewLineIndex(), sb.length());
         sb.append(" ");
-        sb.append(formatOperator(metadata));
+        sb.append(BUNDLE.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
     @Override
     public void startMetadata(NaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(formatOperator(metadata));
+        sb.append(BUNDLE.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
@@ -111,17 +117,15 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     protected String formatFieldMetadata(LeafMetadata metadata) {
-        return metadata.stream()
-                        .map(Element::getReadable)
-                        .map(Readable::readable)
-                        .collect(joining(" "));
+        return metadata.stream().map(e -> {
+            if (e.getType() == OPERATOR)
+                return BUNDLE.get((Operator) e.getReadable(), locale);
+            else
+                return e.getReadable().readable();
+        }).collect(joining(" "));
     }
 
-    protected String formatField(Readable field) {
-        return field == null ? null : field.readable();
-    }
-
-    protected String formatOperator(Readable operator) {
+    protected String formatOperator(Operator operator) {
         return operator == null ? null : operator.readable();
     }
 
@@ -129,33 +133,21 @@ public class AstTextVisitor extends AbstractAstVisitor {
         return value == null ? null : value.readable();
     }
 
-    protected String formatOperator(UnaryMetadata metadata) {
-        return metadata.getOperator().readable();
-    }
-
-    protected String formatOperator(BinaryMetadata metadata) {
-        return metadata.getOperator().readable();
-    }
-
-    protected String formatOperator(NaryMetadata metadata) {
-        return metadata.getOperator().readable();
-    }
-
     protected String formatRule() {
-        return "Rule";
+        return BUNDLE.get(rule, locale);
     }
 
     protected String formatValidateWithMessage() {
-        return "validate with message";
+        return BUNDLE.get(validate_with_message, locale);
     }
 
     protected String formatMessage(ValidationRule metadata) {
-        String message = metadata.getMessage() == null ? "empty" : metadata.getMessage();
+        String message = metadata.getMessage() == null ? BUNDLE.get(empty, locale) : metadata.getMessage();
         return "'" + message + "'";
     }
 
     protected String formatWhen() {
-        return "when";
+        return BUNDLE.get(when, locale);
     }
 
 }

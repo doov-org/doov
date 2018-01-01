@@ -15,13 +15,12 @@ package io.doov.core.dsl.meta;
 import static io.doov.core.dsl.meta.DefaultOperator.match_all;
 import static io.doov.core.dsl.meta.DefaultOperator.match_any;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import static java.util.stream.Collectors.toList;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class NaryMetadata extends PredicateMetadata {
     private final Operator operator;
@@ -62,7 +61,7 @@ public class NaryMetadata extends PredicateMetadata {
 
     @Override
     public String readable() {
-        return AstVisitorUtils.astToString(this);
+        return astToString(this, Locale.getDefault());
     }
 
     @Override

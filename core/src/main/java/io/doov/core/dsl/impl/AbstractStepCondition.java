@@ -12,6 +12,9 @@
  */
 package io.doov.core.dsl.impl;
 
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+
+import java.util.Locale;
 import java.util.function.BiPredicate;
 
 import io.doov.core.dsl.DslId;
@@ -19,7 +22,6 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 abstract class AbstractStepCondition implements StepCondition {
 
@@ -70,7 +72,7 @@ abstract class AbstractStepCondition implements StepCondition {
 
     @Override
     public String readable() {
-        return AstVisitorUtils.astToString(this);
+        return astToString(this, Locale.getDefault());
     }
 
     @Override

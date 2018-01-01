@@ -3,20 +3,19 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.ElementType.OPERATOR;
+import static io.doov.core.dsl.meta.i18n.DefaultResourceBundle.BUNDLE;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
+import java.util.Locale;
 
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
@@ -43,9 +42,11 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private boolean closeFieldLI;
     private final String[] lastLines = new String[3];
     private final OutputStream ops;
+    private final Locale locale;
 
-    public AstHtmlVisitor(OutputStream ops) {
+    public AstHtmlVisitor(OutputStream ops, Locale locale) {
         this.ops = ops;
+        this.locale = locale;
     }
 
     // step when
@@ -76,7 +77,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void startMetadata(LeafMetadata metadata) {
         writeWithBuffer(formatCurrentIndent());
-        if (!lastLines[0].contains(">and<") && !lastLines[0].contains(">or<")) {
+        if (!lastLines[0].contains(">" + BUNDLE.get(and, locale) + "<")
+                        && !lastLines[0].contains(">" + BUNDLE.get(or, locale) + "<")) {
             writeWithBuffer(BEG_LI);
             closeFieldLI = true;
         }
@@ -99,7 +101,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // binary metadata
     @Override
     public void startMetadata(BinaryMetadata metadata) {
-        if (lastLines[1].contains(">and<") || lastLines[1].contains(">or<")) {
+        if (lastLines[1].contains(">" + BUNDLE.get(and, locale) + "<")
+                        || lastLines[1].contains(">" + BUNDLE.get(or, locale) + "<")) {
             writeWithBuffer(formatCurrentIndent());
             writeWithBuffer(BEG_UL);
             writeWithBuffer(formatNewLine());
@@ -110,7 +113,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
         writeWithBuffer(formatCurrentIndent());
-        htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(metadata.getOperator().readable()));
+        htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(BUNDLE.get(metadata.getOperator(), locale)));
         writeWithBuffer(formatNewLine());
     }
 
@@ -131,7 +134,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         writeWithBuffer(BEG_LI);
         writeWithBuffer(formatNewLine());
         writeWithBuffer(formatCurrentIndent());
-        htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(metadata.getOperator().readable()));
+        htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(BUNDLE.get(metadata.getOperator(), locale)));
         writeWithBuffer(BEG_OL);
         writeWithBuffer(formatNewLine());
     }
@@ -150,7 +153,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(UnaryMetadata metadata) {
         writeWithBuffer(BEG_LI);
-        htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(metadata.getOperator().readable()));
+        htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(BUNDLE.get(metadata.getOperator(), locale)));
         writeWithBuffer(END_LI);
         writeWithBuffer(BEG_UL);
     }
@@ -165,7 +168,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(ValidationRule metadata) {
-        htmlFormatSpan(CSS_CLASS_VALIDATE, "validate with message");
+        htmlFormatSpan(CSS_CLASS_VALIDATE, BUNDLE.get(validate_with_message, locale));
         writeWithBuffer(" ");
         htmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata));
         writeWithBuffer(formatNewLine());
@@ -187,16 +190,21 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // implementation
     protected String formatWhen() {
-        return "when";
+        return BUNDLE.get(when, locale);
     }
 
     protected String formatMessage(ValidationRule metadata) {
-        return MessageFormat.format("\"{0}\"", metadata.getMessage() == null ? "empty" : metadata.getMessage());
+        return MessageFormat.format("\"{0}\"", metadata.getMessage() == null ? BUNDLE.get(empty, locale) : metadata.getMessage());
     }
 
     // format
     protected void formatFieldClass(LeafMetadata field) {
-        field.stream().forEach(element -> htmlFormatSpan(getCssClass(element), element.getReadable().readable()));
+        field.stream().forEach(element -> {
+            if (element.getType() == OPERATOR)
+                htmlFormatSpan(getCssClass(element), BUNDLE.get((Operator) element.getReadable(), locale));
+            else
+                htmlFormatSpan(getCssClass(element), element.getReadable().readable());
+        });
     }
 
     protected String getCssClass(Element element) {

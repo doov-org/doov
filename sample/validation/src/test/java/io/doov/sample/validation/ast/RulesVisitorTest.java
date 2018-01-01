@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.sample.validation.ast;
 
@@ -20,19 +17,13 @@ import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Locale;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.meta.ast.*;
-import io.doov.sample.validation.Rules;
 
 public class RulesVisitorTest {
-
-    @BeforeAll
-    public static void beforeAll() {
-        Rules.init();
-    }
 
     @Test
     public void print_full_syntax_tree() {
@@ -48,7 +39,7 @@ public class RulesVisitorTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstLineVisitor(sb)));
+                        .forEach(rule -> rule.accept(new AstLineVisitor(sb, Locale.ENGLISH)));
         print(sb.toString());
     }
 
@@ -57,7 +48,7 @@ public class RulesVisitorTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstTextVisitor(sb)));
+                        .forEach(rule -> rule.accept(new AstTextVisitor(sb, Locale.ENGLISH)));
         print(sb.toString());
     }
 
@@ -66,7 +57,7 @@ public class RulesVisitorTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb)));
+                        .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb, Locale.ENGLISH)));
         print(sb.toString());
     }
 
@@ -81,7 +72,7 @@ public class RulesVisitorTest {
                                 e.printStackTrace();
                             }
                         })
-                        .forEach(rule -> rule.accept(new AstHtmlVisitor(ops)));
+                        .forEach(rule -> rule.accept(new AstHtmlVisitor(ops, Locale.ENGLISH)));
         print(new String(ops.toByteArray(), Charset.forName("UTF-8")));
     }
 

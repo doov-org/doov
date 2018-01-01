@@ -14,12 +14,11 @@ package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class UnaryMetadata extends PredicateMetadata {
     private final Operator operator;
@@ -40,7 +39,7 @@ public class UnaryMetadata extends PredicateMetadata {
 
     @Override
     public String readable() {
-        return AstVisitorUtils.astToString(this);
+        return astToString(this, Locale.getDefault());
     }
 
     @Override

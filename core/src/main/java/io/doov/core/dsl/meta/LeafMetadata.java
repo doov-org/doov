@@ -20,6 +20,7 @@ import static io.doov.core.dsl.meta.ElementType.VALUE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import static java.util.stream.Collectors.joining;
 
 import java.util.*;
@@ -30,7 +31,6 @@ import java.util.stream.Stream;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class LeafMetadata extends PredicateMetadata {
     private static final Collector<CharSequence, ?, String> COLLECTOR_LIST = joining(", ", " : ", "");
@@ -77,7 +77,7 @@ public class LeafMetadata extends PredicateMetadata {
 
     @Override
     public String readable() {
-        return AstVisitorUtils.astToString(this);
+        return astToString(this, Locale.getDefault());
     }
 
     @Override
