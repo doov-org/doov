@@ -333,19 +333,21 @@ public class LeafMetadata extends PredicateMetadata {
 
     public static LeafMetadata minusMetadata(DslField field, int value, Object unit) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(minus)
-                        .valueString(value + " " + formatUnit(unit));
+                        .valueObject(value)
+                        .valueString(formatUnit(unit));
     }
 
     public static LeafMetadata minusMetadata(DslField field1, DslField field2, Object unit) {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(minus).field(field2)
-                        .valueObject(formatUnit(unit));
+                        .valueString(formatUnit(unit));
     }
 
     // plus
 
     public static LeafMetadata plusMetadata(DslField field, int value, Object unit) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(plus)
-                        .valueString(value + " " + formatUnit(unit));
+                        .valueObject(value)
+                        .valueString(formatUnit(unit));
     }
 
     public static LeafMetadata plusMetadata(DslField field1, DslField field2, Object unit) {
