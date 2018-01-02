@@ -72,7 +72,6 @@ public class RulesVisitorTest {
 
     @Test
     public void print_html_syntax_tree() {
-
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> {

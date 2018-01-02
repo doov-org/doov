@@ -12,58 +12,17 @@
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.DefaultOperator.after;
-import static io.doov.core.dsl.meta.DefaultOperator.age_at;
-import static io.doov.core.dsl.meta.DefaultOperator.always_false;
-import static io.doov.core.dsl.meta.DefaultOperator.always_true;
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.as_a_number;
-import static io.doov.core.dsl.meta.DefaultOperator.before;
-import static io.doov.core.dsl.meta.DefaultOperator.contains;
-import static io.doov.core.dsl.meta.DefaultOperator.ends_with;
-import static io.doov.core.dsl.meta.DefaultOperator.equals;
-import static io.doov.core.dsl.meta.DefaultOperator.greater_or_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.greater_than;
-import static io.doov.core.dsl.meta.DefaultOperator.has_not_size;
-import static io.doov.core.dsl.meta.DefaultOperator.has_size;
-import static io.doov.core.dsl.meta.DefaultOperator.is;
-import static io.doov.core.dsl.meta.DefaultOperator.is_empty;
-import static io.doov.core.dsl.meta.DefaultOperator.is_not_empty;
-import static io.doov.core.dsl.meta.DefaultOperator.is_not_null;
-import static io.doov.core.dsl.meta.DefaultOperator.is_null;
-import static io.doov.core.dsl.meta.DefaultOperator.length_is;
-import static io.doov.core.dsl.meta.DefaultOperator.lesser_or_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.lesser_than;
-import static io.doov.core.dsl.meta.DefaultOperator.match_all;
-import static io.doov.core.dsl.meta.DefaultOperator.match_any;
-import static io.doov.core.dsl.meta.DefaultOperator.match_none;
-import static io.doov.core.dsl.meta.DefaultOperator.matches;
-import static io.doov.core.dsl.meta.DefaultOperator.min;
-import static io.doov.core.dsl.meta.DefaultOperator.minus;
-import static io.doov.core.dsl.meta.DefaultOperator.not;
-import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.DefaultOperator.plus;
-import static io.doov.core.dsl.meta.DefaultOperator.starts_with;
-import static io.doov.core.dsl.meta.DefaultOperator.sum;
-import static io.doov.core.dsl.meta.DefaultOperator.times;
-import static io.doov.core.dsl.meta.DefaultOperator.when;
-import static io.doov.core.dsl.meta.DefaultOperator.with;
-import static io.doov.core.dsl.meta.DefaultOperator.xor;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
 import static io.doov.core.dsl.meta.ElementType.VALUE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATHC_ANY;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static java.util.stream.Collectors.joining;
 
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
@@ -101,8 +60,8 @@ public class LeafMetadata extends PredicateMetadata {
     }
 
     private static MetadataType mergeType(MetadataType current, MetadataType merged) {
-        if (current == FIELD_PREDICATE && merged == FIELD_PREDICATE_MATHC_ANY)
-            return FIELD_PREDICATE_MATHC_ANY;
+        if (current == FIELD_PREDICATE && merged == FIELD_PREDICATE_MATCH_ANY)
+            return FIELD_PREDICATE_MATCH_ANY;
         return current;
     }
 
@@ -140,7 +99,7 @@ public class LeafMetadata extends PredicateMetadata {
 
     @Override
     public Metadata message(Context context) {
-        if (type == FIELD_PREDICATE_MATHC_ANY) {
+        if (type == FIELD_PREDICATE_MATCH_ANY) {
             final DslField field = (DslField) elements.getFirst().getReadable();
             return new LeafMetadata(FIELD_PREDICATE).field(field).operator(equals)
                             .valueObject(context.getEvalValue(field.id()));
@@ -272,11 +231,11 @@ public class LeafMetadata extends PredicateMetadata {
     // match
 
     public static LeafMetadata matchAnyMetadata(DslField field) {
-        return new LeafMetadata(FIELD_PREDICATE_MATHC_ANY).field(field).operator(match_any).valueUnknown("-function-");
+        return new LeafMetadata(FIELD_PREDICATE_MATCH_ANY).field(field).operator(match_any).valueUnknown("-function-");
     }
 
     public static LeafMetadata matchAnyMetadata(DslField field, Collection<?> values) {
-        return new LeafMetadata(FIELD_PREDICATE_MATHC_ANY).field(field).operator(match_any).valueListObject(values);
+        return new LeafMetadata(FIELD_PREDICATE_MATCH_ANY).field(field).operator(match_any).valueListObject(values);
     }
 
     public static LeafMetadata matchAllMetadata(DslField field) {

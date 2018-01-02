@@ -9,7 +9,7 @@ public enum MetadataType {
     BINARY_PREDICATE, //
     LEAF_PREDICATE, //
     FIELD_PREDICATE, //
-    FIELD_PREDICATE_MATHC_ANY, //
+    FIELD_PREDICATE_MATCH_ANY, //
     NARY_PREDICATE, //
     UNARY_PREDICATE, //
     EMPTY;
