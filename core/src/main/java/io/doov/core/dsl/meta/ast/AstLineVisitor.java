@@ -15,8 +15,6 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.i18n.DefaultResourceBundle.BUNDLE;
-
 import java.util.Locale;
 
 import io.doov.core.dsl.lang.ValidationRule;
@@ -25,8 +23,8 @@ import io.doov.core.dsl.meta.NaryMetadata;
 
 public class AstLineVisitor extends AstTextVisitor {
 
-    public AstLineVisitor(StringBuilder stringBuilder, Locale locale) {
-        super(stringBuilder, locale);
+    public AstLineVisitor(StringBuilder stringBuilder, ResourceProvider bundle, Locale locale) {
+        super(stringBuilder, bundle, locale);
     }
 
     @Override
@@ -67,7 +65,7 @@ public class AstLineVisitor extends AstTextVisitor {
 
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
-        sb.append(BUNDLE.get(metadata.getOperator(), locale));
+        sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 

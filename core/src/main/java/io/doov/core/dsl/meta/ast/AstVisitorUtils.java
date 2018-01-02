@@ -20,7 +20,7 @@ public class AstVisitorUtils {
 
     public static String astToString(SyntaxTree syntaxTree, Locale locale) {
         StringBuilder stringBuilder = new StringBuilder();
-        syntaxTree.accept(new AstLineVisitor(stringBuilder, locale));
+        syntaxTree.accept(new AstLineVisitor(stringBuilder, new ReadableResourceProvider(), locale));
         return stringBuilder.toString();
     }
 

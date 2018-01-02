@@ -17,7 +17,6 @@ import static io.doov.core.dsl.meta.DefaultOperator.rule;
 import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
-import static io.doov.core.dsl.meta.i18n.DefaultResourceBundle.BUNDLE;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Locale;
@@ -36,11 +35,13 @@ public class AstTextVisitor extends AbstractAstVisitor {
     private static final int INDENT_SIZE = 2;
 
     protected final StringBuilder sb;
+    protected final ResourceProvider bundle;
     protected final Locale locale;
     protected int newLineIndex = 0;
 
-    public AstTextVisitor(StringBuilder sb, Locale locale) {
+    public AstTextVisitor(StringBuilder sb, ResourceProvider bundle, Locale locale) {
         this.sb = sb;
+        this.bundle = bundle;
         this.locale = locale;
     }
 
@@ -63,7 +64,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(UnaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(BUNDLE.get(metadata.getOperator(), locale));
+        sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
@@ -71,14 +72,14 @@ public class AstTextVisitor extends AbstractAstVisitor {
     public void visitMetadata(BinaryMetadata metadata) {
         sb.delete(getNewLineIndex(), sb.length());
         sb.append(" ");
-        sb.append(BUNDLE.get(metadata.getOperator(), locale));
+        sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
     @Override
     public void startMetadata(NaryMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(BUNDLE.get(metadata.getOperator(), locale));
+        sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
@@ -123,11 +124,11 @@ public class AstTextVisitor extends AbstractAstVisitor {
         return metadata.stream().map(e -> {
             switch (e.getType()) {
                 case OPERATOR:
-                    return BUNDLE.get((Operator) e.getReadable(), locale);
+                    return bundle.get((Operator) e.getReadable(), locale);
                 case FIELD:
                     return e.getReadable().readable();
                 default:
-                    return BUNDLE.get(e.getReadable().readable(), locale);
+                    return bundle.get(e.getReadable().readable(), locale);
             }
         }).collect(joining(" "));
     }
@@ -141,20 +142,20 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     protected String formatRule() {
-        return BUNDLE.get(rule, locale);
+        return bundle.get(rule, locale);
     }
 
     protected String formatValidateWithMessage() {
-        return BUNDLE.get(validate_with_message, locale);
+        return bundle.get(validate_with_message, locale);
     }
 
     protected String formatMessage(ValidationRule metadata) {
-        String message = metadata.getMessage() == null ? BUNDLE.get(empty, locale) : metadata.getMessage();
+        String message = metadata.getMessage() == null ? bundle.get(empty, locale) : metadata.getMessage();
         return "'" + message + "'";
     }
 
     protected String formatWhen() {
-        return BUNDLE.get(when, locale);
+        return bundle.get(when, locale);
     }
 
 }

@@ -8,7 +8,6 @@ import static io.doov.core.dsl.meta.DefaultOperator.empty;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
-import static io.doov.core.dsl.meta.i18n.DefaultResourceBundle.BUNDLE;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
@@ -51,10 +50,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private boolean closeFieldLI;
     private final String[] lastLines = new String[3];
     private final OutputStream ops;
+    private final ResourceProvider bundle;
     private final Locale locale;
 
-    public AstHtmlVisitor(OutputStream ops, Locale locale) {
+    public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
         this.ops = ops;
+        this.bundle = bundle;
         this.locale = locale;
     }
 
@@ -86,8 +87,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void startMetadata(LeafMetadata metadata) {
         writeWithBuffer(formatCurrentIndent());
-        if (!lastLines[0].contains(">" + BUNDLE.get(and, locale) + "<")
-                        && !lastLines[0].contains(">" + BUNDLE.get(or, locale) + "<")) {
+        if (!lastLines[0].contains(">" + bundle.get(and, locale) + "<")
+                        && !lastLines[0].contains(">" + bundle.get(or, locale) + "<")) {
             writeWithBuffer(BEG_LI);
             closeFieldLI = true;
         }
@@ -110,8 +111,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // binary metadata
     @Override
     public void startMetadata(BinaryMetadata metadata) {
-        if (lastLines[1].contains(">" + BUNDLE.get(and, locale) + "<")
-                        || lastLines[1].contains(">" + BUNDLE.get(or, locale) + "<")) {
+        if (lastLines[1].contains(">" + bundle.get(and, locale) + "<")
+                        || lastLines[1].contains(">" + bundle.get(or, locale) + "<")) {
             writeWithBuffer(formatCurrentIndent());
             writeWithBuffer(BEG_UL);
             writeWithBuffer(formatNewLine());
@@ -122,7 +123,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(BinaryMetadata metadata) {
         writeWithBuffer(formatCurrentIndent());
-        htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(BUNDLE.get(metadata.getOperator(), locale)));
+        htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         writeWithBuffer(formatNewLine());
     }
 
@@ -143,7 +144,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         writeWithBuffer(BEG_LI);
         writeWithBuffer(formatNewLine());
         writeWithBuffer(formatCurrentIndent());
-        htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(BUNDLE.get(metadata.getOperator(), locale)));
+        htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         writeWithBuffer(BEG_OL);
         writeWithBuffer(formatNewLine());
     }
@@ -162,7 +163,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(UnaryMetadata metadata) {
         writeWithBuffer(BEG_LI);
-        htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(BUNDLE.get(metadata.getOperator(), locale)));
+        htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         writeWithBuffer(END_LI);
         writeWithBuffer(BEG_UL);
     }
@@ -177,7 +178,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(ValidationRule metadata) {
-        htmlFormatSpan(CSS_CLASS_VALIDATE, BUNDLE.get(validate_with_message, locale));
+        htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate_with_message, locale));
         writeWithBuffer(" ");
         htmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata));
         writeWithBuffer(formatNewLine());
@@ -199,12 +200,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // implementation
     protected String formatWhen() {
-        return BUNDLE.get(when, locale);
+        return bundle.get(when, locale);
     }
 
     protected String formatMessage(ValidationRule metadata) {
         return MessageFormat.format("\"{0}\"",
-                        metadata.getMessage() == null ? BUNDLE.get(empty, locale) : metadata.getMessage());
+                        metadata.getMessage() == null ? bundle.get(empty, locale) : metadata.getMessage());
     }
 
     // format
@@ -212,13 +213,13 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         field.stream().forEach(e -> {
             switch (e.getType()) {
                 case OPERATOR:
-                    htmlFormatSpan(getCssClass(e), BUNDLE.get((Operator) e.getReadable(), locale));
+                    htmlFormatSpan(getCssClass(e), bundle.get((Operator) e.getReadable(), locale));
                     break;
                 case FIELD:
                     htmlFormatSpan(getCssClass(e), e.getReadable().readable());
                     break;
                 default:
-                    htmlFormatSpan(getCssClass(e), BUNDLE.get(e.getReadable().readable(), locale));
+                    htmlFormatSpan(getCssClass(e), bundle.get(e.getReadable().readable(), locale));
                     break;
             }
         });
@@ -231,6 +232,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             case OPERATOR:
                 return "dsl-token-operator";
             case VALUE:
+            case CONDITION:
                 return "dsl-token-value";
             case UNKNOWN:
                 return "dsl-token-unknown";

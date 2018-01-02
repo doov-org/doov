@@ -12,16 +12,14 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.i18n.DefaultResourceBundle.BUNDLE;
-
 import java.util.Locale;
 
 import io.doov.core.dsl.meta.Operator;
 
 public class AstMarkdownVisitor extends AstTextVisitor {
 
-    public AstMarkdownVisitor(StringBuilder stringBuilder, Locale locale) {
-        super(stringBuilder, locale);
+    public AstMarkdownVisitor(StringBuilder stringBuilder, ResourceProvider bundle, Locale locale) {
+        super(stringBuilder, bundle, locale);
     }
 
     @Override
@@ -31,7 +29,7 @@ public class AstMarkdownVisitor extends AstTextVisitor {
 
     @Override
     protected String formatOperator(Operator operator) {
-        return "**" + BUNDLE.get(operator, locale) + "**";
+        return "**" + bundle.get(operator, locale) + "**";
     }
 
 }

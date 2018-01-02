@@ -13,6 +13,7 @@
 package io.doov.sample.validation.ast;
 
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
+import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class RulesVisitorTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstLineVisitor(sb, Locale.ENGLISH)));
+                        .forEach(rule -> rule.accept(new AstLineVisitor(sb, BUNDLE, Locale.ENGLISH)));
         print(sb.toString());
     }
 
@@ -55,7 +56,7 @@ public class RulesVisitorTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstTextVisitor(sb, Locale.ENGLISH)));
+                        .forEach(rule -> rule.accept(new AstTextVisitor(sb, BUNDLE, Locale.ENGLISH)));
         print(sb.toString());
     }
 
@@ -64,7 +65,7 @@ public class RulesVisitorTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb, Locale.ENGLISH)));
+                        .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb, BUNDLE, Locale.ENGLISH)));
         print(sb.toString());
     }
 
@@ -79,7 +80,7 @@ public class RulesVisitorTest {
                                 e.printStackTrace();
                             }
                         })
-                        .forEach(rule -> rule.accept(new AstHtmlVisitor(ops, Locale.ENGLISH)));
+                        .forEach(rule -> rule.accept(new AstHtmlVisitor(ops, BUNDLE, Locale.ENGLISH)));
         print(new String(ops.toByteArray(), Charset.forName("UTF-8")));
     }
 

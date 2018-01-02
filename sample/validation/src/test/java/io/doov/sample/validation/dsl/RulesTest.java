@@ -15,11 +15,16 @@ package io.doov.sample.validation.dsl;
 import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.sample.model.*;
+import io.doov.sample.validation.SampleRules;
 
 public class RulesTest {
 
@@ -30,15 +35,22 @@ public class RulesTest {
         model = new SampleModelWrapper(SampleModels.sample());
     }
 
-    @Test
-    public void should_rules_validates_with_no_messages() {
-        REGISTRY_DEFAULT.stream().forEach(rule -> assertThat(rule).validates(model).hasMessageNull());
+    @MethodSource("rules")
+    @ParameterizedTest
+    public void should_rules_validates_with_no_messages(ValidationRule rule) {
+        assertThat(rule).validates(model).hasMessageNull();
     }
 
-    @Test
-    public void should_rules_no_exception_on_null_model() {
-        REGISTRY_DEFAULT.stream().forEach(rule -> rule.executeOn(new SampleModelWrapper()));
-        REGISTRY_DEFAULT.stream().forEach(rule -> rule.executeOn(new SampleModelWrapper(new SampleModel())));
+    @MethodSource("rules")
+    @ParameterizedTest
+    public void should_rules_no_exception_on_null_model(ValidationRule rule) {
+        rule.executeOn(new SampleModelWrapper());
+        rule.executeOn(new SampleModelWrapper(new SampleModel()));
     }
 
+    @SuppressWarnings("unused")
+    private static Stream<ValidationRule> rules() {
+        new SampleRules();
+        return REGISTRY_DEFAULT.stream();
+    }
 }
