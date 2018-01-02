@@ -110,7 +110,7 @@ public class SampleRules extends DefaultRuleRegistry {
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_LAMBDA = DOOV
-                    .when(favoriteSiteName1().anyMatch(s -> !s.contains("dunno")))
+                    .when(favoriteSiteName1().anyMatch(s -> s.contains("dunno")))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
