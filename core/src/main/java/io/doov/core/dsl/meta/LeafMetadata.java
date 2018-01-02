@@ -12,7 +12,57 @@
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.DefaultOperator.after;
+import static io.doov.core.dsl.meta.DefaultOperator.age_at;
+import static io.doov.core.dsl.meta.DefaultOperator.always_false;
+import static io.doov.core.dsl.meta.DefaultOperator.always_true;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.as_a_number;
+import static io.doov.core.dsl.meta.DefaultOperator.before;
+import static io.doov.core.dsl.meta.DefaultOperator.contains;
+import static io.doov.core.dsl.meta.DefaultOperator.ends_with;
+import static io.doov.core.dsl.meta.DefaultOperator.equals;
+import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_month;
+import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_next_month;
+import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_next_year;
+import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_this_month;
+import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_this_year;
+import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_year;
+import static io.doov.core.dsl.meta.DefaultOperator.greater_or_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.greater_than;
+import static io.doov.core.dsl.meta.DefaultOperator.has_not_size;
+import static io.doov.core.dsl.meta.DefaultOperator.has_size;
+import static io.doov.core.dsl.meta.DefaultOperator.is;
+import static io.doov.core.dsl.meta.DefaultOperator.is_empty;
+import static io.doov.core.dsl.meta.DefaultOperator.is_not_empty;
+import static io.doov.core.dsl.meta.DefaultOperator.is_not_null;
+import static io.doov.core.dsl.meta.DefaultOperator.is_null;
+import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_month;
+import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_this_month;
+import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_this_year;
+import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_year;
+import static io.doov.core.dsl.meta.DefaultOperator.length_is;
+import static io.doov.core.dsl.meta.DefaultOperator.lesser_or_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.lesser_than;
+import static io.doov.core.dsl.meta.DefaultOperator.match_all;
+import static io.doov.core.dsl.meta.DefaultOperator.match_any;
+import static io.doov.core.dsl.meta.DefaultOperator.match_none;
+import static io.doov.core.dsl.meta.DefaultOperator.matches;
+import static io.doov.core.dsl.meta.DefaultOperator.min;
+import static io.doov.core.dsl.meta.DefaultOperator.minus;
+import static io.doov.core.dsl.meta.DefaultOperator.not;
+import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.plus;
+import static io.doov.core.dsl.meta.DefaultOperator.starts_with;
+import static io.doov.core.dsl.meta.DefaultOperator.sum;
+import static io.doov.core.dsl.meta.DefaultOperator.times;
+import static io.doov.core.dsl.meta.DefaultOperator.today;
+import static io.doov.core.dsl.meta.DefaultOperator.today_minus;
+import static io.doov.core.dsl.meta.DefaultOperator.today_plus;
+import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.DefaultOperator.with;
+import static io.doov.core.dsl.meta.DefaultOperator.xor;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
@@ -23,7 +73,12 @@ import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import static java.util.stream.Collectors.joining;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
+import java.util.Locale;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
@@ -461,31 +516,35 @@ public class LeafMetadata extends PredicateMetadata {
     // local date suppliers
 
     public static LeafMetadata todayMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("today");
+        return new LeafMetadata(LEAF_PREDICATE).operator(today);
     }
 
     public static LeafMetadata todayPlusMetadata(int value, Object unit) {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("today plus " + value + " " + formatUnit(unit));
+        return new LeafMetadata(LEAF_PREDICATE).operator(today_plus)
+                        .valueObject(value)
+                        .valueString(formatUnit(unit));
     }
 
     public static LeafMetadata todayMinusMetadata(int value, Object unit) {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("today minus " + value + " " + formatUnit(unit));
+        return new LeafMetadata(LEAF_PREDICATE).operator(today_minus)
+                        .valueObject(value)
+                        .valueString(formatUnit(unit));
     }
 
     public static LeafMetadata firstDayOfThisMonthMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("first day of this month");
+        return new LeafMetadata(LEAF_PREDICATE).operator(first_day_of_this_month);
     }
 
     public static LeafMetadata firstDayOfThisYearMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("first day of this year");
+        return new LeafMetadata(LEAF_PREDICATE).operator(first_day_of_this_year);
     }
 
     public static LeafMetadata lastDayOfThisMonthMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("last day of this month");
+        return new LeafMetadata(LEAF_PREDICATE).operator(last_day_of_this_month);
     }
 
     public static LeafMetadata lastDayOfThisYearMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("last day of this year");
+        return new LeafMetadata(LEAF_PREDICATE).operator(last_day_of_this_year);
     }
 
     public static LeafMetadata dateMetadata(Object date) {
@@ -495,27 +554,27 @@ public class LeafMetadata extends PredicateMetadata {
     // temporal adjusters
 
     public static LeafMetadata firstDayOfMonthMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("first day of month");
+        return new LeafMetadata(LEAF_PREDICATE).operator(first_day_of_month);
     }
 
     public static LeafMetadata firstDayOfNextMonthMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("first day of next month");
+        return new LeafMetadata(LEAF_PREDICATE).operator(first_day_of_next_month);
     }
 
     public static LeafMetadata firstDayOfYearMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("first day of year");
+        return new LeafMetadata(LEAF_PREDICATE).operator(first_day_of_year);
     }
 
     public static LeafMetadata firstDayOfNextYearMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("first day of next year");
+        return new LeafMetadata(LEAF_PREDICATE).operator(first_day_of_next_year);
     }
 
     public static LeafMetadata lastDayOfMonthMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("last day of month");
+        return new LeafMetadata(LEAF_PREDICATE).operator(last_day_of_month);
     }
 
     public static LeafMetadata lastDayOfYearMetadata() {
-        return new LeafMetadata(LEAF_PREDICATE).valueString("last day of year");
+        return new LeafMetadata(LEAF_PREDICATE).operator(last_day_of_year);
     }
 
     // utils

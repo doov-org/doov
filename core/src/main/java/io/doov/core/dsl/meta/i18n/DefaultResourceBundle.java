@@ -12,7 +12,7 @@ import io.doov.core.dsl.meta.Operator;
 public enum DefaultResourceBundle {
     BUNDLE;
 
-    private static final String baseName = "io.doov.core.dsl.meta.i18n.OperatorResourceBundle";
+    private static final String baseName = "io.doov.core.dsl.meta.i18n.DefaultResourceBundle";
 
     public String get(Operator operator) {
         return get(operator, Locale.getDefault());

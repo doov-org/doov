@@ -35,8 +35,7 @@ public enum DefaultOperator implements Operator {
     contains("contains"), //
     starts_with("starts with"), //
     ends_with("ends with"), //
-    greater_than(">"),
-    greater_or_equals(">="), //
+    greater_than(">"), greater_or_equals(">="), //
     xor("xor"), //
     is("is"), //
     lesser_than("<"), //
@@ -44,8 +43,23 @@ public enum DefaultOperator implements Operator {
     has_not_size("has not size"), //
     has_size("has size"), //
     is_empty("is empty"), //
-    is_not_empty("is not empty"),
-    length_is("length is");
+    is_not_empty("is not empty"), //
+    length_is("length is"), //
+
+    // TemporalAdjuster
+    today("today"), //
+    today_plus("today plus"), //
+    today_minus("today minus"), //
+    first_day_of_this_month("first day of this month"), //
+    first_day_of_this_year("first day of this year"), //
+    last_day_of_this_month("last day of this month"), //
+    last_day_of_this_year("last day of this year"), //
+    first_day_of_month("first day of month"), //
+    first_day_of_next_month("first day of next month"), //
+    first_day_of_year("first day of year"), //
+    first_day_of_next_year("first day of next year"), //
+    last_day_of_month("last day of month"), //
+    last_day_of_year("last day of year");
 
     private final String readable;
 
