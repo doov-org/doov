@@ -28,7 +28,7 @@ import io.doov.sample.model.Country;
 
 public class SampleRules extends DefaultRuleRegistry {
 
-    public static ValidationRule RULE_EMAIL = DOOV
+    public static final ValidationRule RULE_EMAIL = DOOV
                     .when(accountEmail().matches("\\w+[@]\\w+\\.com")
                                     .or(accountEmail().matches("\\w+[@]\\w+\\.fr")))
                     .validate()
@@ -108,4 +108,10 @@ public class SampleRules extends DefaultRuleRegistry {
                     .when(min(configurationMinAge(), configurationMaxEmailSize()).greaterOrEquals(0))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
+
+    public static final ValidationRule RULE_LAMBDA = DOOV
+                    .when(favoriteSiteName1().anyMatch(s -> s.contains("dunno")))
+                    .validate()
+                    .registerOn(REGISTRY_DEFAULT);
+
 }

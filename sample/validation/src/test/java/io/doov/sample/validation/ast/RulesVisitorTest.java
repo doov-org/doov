@@ -19,11 +19,18 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.meta.ast.*;
+import io.doov.sample.validation.SampleRules;
 
 public class RulesVisitorTest {
+
+    @BeforeAll
+    public static void init() {
+        new SampleRules();
+    }
 
     @Test
     public void print_full_syntax_tree() {
