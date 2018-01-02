@@ -3,14 +3,23 @@
  */
 package io.doov.sample.validation.i18n;
 
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.sample.validation.SampleRules.*;
 
 import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
+import io.doov.core.dsl.meta.SyntaxTree;
+import io.doov.core.dsl.meta.ast.AstLineVisitor;
+
 public class SampleRuleI18nTest {
+    private static String astToString(SyntaxTree syntaxTree, Locale locale) {
+        final StringBuilder sb = new StringBuilder();
+        syntaxTree.accept(new AstLineVisitor(sb, BUNDLE, locale));
+        return sb.toString();
+    }
+    
     @Test
     public void test_RULE_EMAIL() {
         System.out.println(astToString(RULE_EMAIL, Locale.FRANCE));

@@ -12,82 +12,21 @@
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.DefaultOperator.after;
-import static io.doov.core.dsl.meta.DefaultOperator.age_at;
-import static io.doov.core.dsl.meta.DefaultOperator.always_false;
-import static io.doov.core.dsl.meta.DefaultOperator.always_true;
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.as_a_number;
-import static io.doov.core.dsl.meta.DefaultOperator.before;
-import static io.doov.core.dsl.meta.DefaultOperator.contains;
-import static io.doov.core.dsl.meta.DefaultOperator.ends_with;
-import static io.doov.core.dsl.meta.DefaultOperator.equals;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_month;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_next_month;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_next_year;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_this_month;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_this_year;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_year;
-import static io.doov.core.dsl.meta.DefaultOperator.greater_or_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.greater_than;
-import static io.doov.core.dsl.meta.DefaultOperator.has_not_size;
-import static io.doov.core.dsl.meta.DefaultOperator.has_size;
-import static io.doov.core.dsl.meta.DefaultOperator.is;
-import static io.doov.core.dsl.meta.DefaultOperator.is_empty;
-import static io.doov.core.dsl.meta.DefaultOperator.is_not_empty;
-import static io.doov.core.dsl.meta.DefaultOperator.is_not_null;
-import static io.doov.core.dsl.meta.DefaultOperator.is_null;
-import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_month;
-import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_this_month;
-import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_this_year;
-import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_year;
-import static io.doov.core.dsl.meta.DefaultOperator.length_is;
-import static io.doov.core.dsl.meta.DefaultOperator.lesser_or_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.lesser_than;
-import static io.doov.core.dsl.meta.DefaultOperator.match_all;
-import static io.doov.core.dsl.meta.DefaultOperator.match_any;
-import static io.doov.core.dsl.meta.DefaultOperator.match_none;
-import static io.doov.core.dsl.meta.DefaultOperator.matches;
-import static io.doov.core.dsl.meta.DefaultOperator.min;
-import static io.doov.core.dsl.meta.DefaultOperator.minus;
-import static io.doov.core.dsl.meta.DefaultOperator.not;
-import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.DefaultOperator.plus;
-import static io.doov.core.dsl.meta.DefaultOperator.starts_with;
-import static io.doov.core.dsl.meta.DefaultOperator.sum;
-import static io.doov.core.dsl.meta.DefaultOperator.times;
-import static io.doov.core.dsl.meta.DefaultOperator.today;
-import static io.doov.core.dsl.meta.DefaultOperator.today_minus;
-import static io.doov.core.dsl.meta.DefaultOperator.today_plus;
-import static io.doov.core.dsl.meta.DefaultOperator.when;
-import static io.doov.core.dsl.meta.DefaultOperator.with;
-import static io.doov.core.dsl.meta.DefaultOperator.xor;
-import static io.doov.core.dsl.meta.ElementType.CONDITION;
-import static io.doov.core.dsl.meta.ElementType.FIELD;
-import static io.doov.core.dsl.meta.ElementType.OPERATOR;
-import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
-import static io.doov.core.dsl.meta.ElementType.VALUE;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.ElementType.*;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import static java.util.stream.Collectors.joining;
 
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.field.TemporalFieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 
@@ -196,11 +135,16 @@ public class LeafMetadata extends PredicateMetadata {
     }
 
     public LeafMetadata valueCondition(DefaultCondition<?> condition) {
-        return add(condition == null ? null : new Element(condition, CONDITION));
+        ((LeafMetadata) condition.getMetadata()).stream().forEach(e -> add(e));
+        return this;
     }
 
     public LeafMetadata valueReadable(Readable readable) {
         return add(readable == null ? null : new Element(readable, VALUE));
+    }
+    
+    public LeafMetadata valueTemporalAdjuster(Readable adjuster) {
+        return add(((LeafMetadata) adjuster).elements.getFirst());
     }
 
     public LeafMetadata valueSupplier(Supplier<?> readable) {
@@ -326,7 +270,7 @@ public class LeafMetadata extends PredicateMetadata {
     // with
 
     public static LeafMetadata withMetadata(DslField field, Readable adjuster) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(with).valueReadable(adjuster);
+        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(with).valueTemporalAdjuster(adjuster);
     }
 
     // minus
@@ -357,55 +301,55 @@ public class LeafMetadata extends PredicateMetadata {
 
     // after
 
-    public static LeafMetadata afterMetadata(DslField field, Object value) {
+    public static LeafMetadata afterValueMetadata(DslField field, Object value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(after).valueObject(value);
     }
 
-    public static LeafMetadata afterMetadata(DslField field1, TemporalFieldInfo<?> field2) {
+    public static LeafMetadata afterTemporalFieldMetadata(DslField field1, DslField field2) {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(after).field(field2);
     }
 
-    public static LeafMetadata afterMetadata(DslField field1, TemporalCondition<?> condition) {
+    public static LeafMetadata afterTemporalConditionMetadata(DslField field1, DefaultCondition<?> condition) {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(after).valueCondition(condition);
     }
 
-    public static LeafMetadata afterMetadata(DslField field, Supplier<?> value) {
+    public static LeafMetadata afterSupplierMetadata(DslField field, Supplier<?> value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(after).valueSupplier(value);
     }
 
     // before
 
-    public static LeafMetadata beforeMetadata(DslField field, Object value) {
+    public static LeafMetadata beforeValueMetadata(DslField field, Object value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(before).valueObject(value);
     }
 
-    public static LeafMetadata beforeMetadata(DslField field1, TemporalFieldInfo<?> field2) {
+    public static LeafMetadata beforeTemporalFieldMetadata(DslField field1, DslField field2) {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(before).field(field2);
     }
 
-    public static LeafMetadata beforeMetadata(DslField field1, TemporalCondition<?> condition) {
+    public static LeafMetadata beforeTemporalConditionMetadata(DslField field1, DefaultCondition<?> condition) {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(before).valueCondition(condition);
     }
 
-    public static LeafMetadata beforeMetadata(DslField field, Supplier<?> value) {
+    public static LeafMetadata beforeSupplierMetadata(DslField field, Supplier<?> value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(before).valueSupplier(value);
     }
 
     // age at
 
-    public static LeafMetadata ageAtMetadata(DslField field, Object value) {
+    public static LeafMetadata ageAtValueMetadata(DslField field, Object value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(age_at).valueObject(value);
     }
 
-    public static LeafMetadata ageAtMetadata(DslField field1, TemporalFieldInfo<?> field2) {
+    public static LeafMetadata ageAtTemporalFieldMetadata(DslField field1, DslField field2) {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(age_at).field(field2);
     }
 
-    public static LeafMetadata ageAtMetadata(DslField field1, TemporalCondition<?> condition) {
+    public static LeafMetadata ageAtTemporalConditionMetadata(DslField field1, DefaultCondition<?> condition) {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(age_at).valueCondition(condition);
     }
 
-    public static LeafMetadata ageAtMetadata(DslField field, Supplier<?> supplier) {
+    public static LeafMetadata ageAtSupplierMetadata(DslField field, Supplier<?> supplier) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(age_at).valueSupplier(supplier);
     }
 
@@ -473,12 +417,20 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(lesser_than).valueReadable(field2);
     }
 
+    public static LeafMetadata lesserThanMetadata(DslField field1, DslField field2) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(lesser_than).field(field2);
+    }
+
     public static LeafMetadata lesserOrEqualsMetadata(DslField field, Object value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(lesser_or_equals).valueObject(value);
     }
 
     public static LeafMetadata lesserOrEqualsMetadata(DslField field1, Readable field2) {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(lesser_or_equals).valueReadable(field2);
+    }
+
+    public static LeafMetadata lesserOrEqualsMetadata(DslField field1, DslField field2) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(lesser_or_equals).field(field2);
     }
 
     // lesser
@@ -491,6 +443,10 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(greater_than).valueReadable(field2);
     }
 
+    public static LeafMetadata greaterThanMetadata(DslField field1, DslField field2) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(greater_than).field(field2);
+    }
+
     public static LeafMetadata greaterOrEqualsMetadata(DslField field, Object value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(greater_or_equals).valueObject(value);
     }
@@ -499,6 +455,9 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(greater_or_equals).valueReadable(field2);
     }
 
+    public static LeafMetadata greaterOrEqualsMetadata(DslField field1, DslField field2) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(greater_or_equals).field(field2);
+    }
     // length is
 
     public static LeafMetadata lengthIsMetadata(DslField field) {

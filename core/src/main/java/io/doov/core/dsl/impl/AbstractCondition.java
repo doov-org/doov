@@ -23,8 +23,7 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.PredicateMetadata;
+import io.doov.core.dsl.meta.*;
 
 abstract class AbstractCondition<N> implements Readable {
 
@@ -65,6 +64,10 @@ abstract class AbstractCondition<N> implements Readable {
             BiFunction<DslModel, Context, Optional<N>> value,
             BiFunction<N, N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, value, predicate);
+    }
+    
+    public PredicateMetadata getMetadata() {
+        return metadata;
     }
 
     @Override

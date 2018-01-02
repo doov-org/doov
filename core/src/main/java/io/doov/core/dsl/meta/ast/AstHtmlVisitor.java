@@ -232,7 +232,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             case OPERATOR:
                 return "dsl-token-operator";
             case VALUE:
-            case CONDITION:
                 return "dsl-token-value";
             case UNKNOWN:
                 return "dsl-token-unknown";
