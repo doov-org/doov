@@ -63,6 +63,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.today_plus;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.DefaultOperator.with;
 import static io.doov.core.dsl.meta.DefaultOperator.xor;
+import static io.doov.core.dsl.meta.ElementType.CONDITION;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
@@ -84,6 +85,9 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.TemporalFieldInfo;
+import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 
@@ -189,6 +193,10 @@ public class LeafMetadata extends PredicateMetadata {
 
     public LeafMetadata valueString(String readable) {
         return add(readable == null ? null : new Element(() -> readable, VALUE));
+    }
+
+    public LeafMetadata valueCondition(DefaultCondition<?> condition) {
+        return add(condition == null ? null : new Element(condition, CONDITION));
     }
 
     public LeafMetadata valueReadable(Readable readable) {
@@ -351,8 +359,12 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(after).valueObject(value);
     }
 
-    public static LeafMetadata afterMetadata(DslField field1, Readable field2) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(after).valueReadable(field2);
+    public static LeafMetadata afterMetadata(DslField field1, TemporalFieldInfo<?> field2) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(after).field(field2);
+    }
+
+    public static LeafMetadata afterMetadata(DslField field1, TemporalCondition<?> condition) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(after).valueCondition(condition);
     }
 
     public static LeafMetadata afterMetadata(DslField field, Supplier<?> value) {
@@ -365,8 +377,12 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(before).valueObject(value);
     }
 
-    public static LeafMetadata beforeMetadata(DslField field1, Readable field2) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(before).valueReadable(field2);
+    public static LeafMetadata beforeMetadata(DslField field1, TemporalFieldInfo<?> field2) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(before).field(field2);
+    }
+
+    public static LeafMetadata beforeMetadata(DslField field1, TemporalCondition<?> condition) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(before).valueCondition(condition);
     }
 
     public static LeafMetadata beforeMetadata(DslField field, Supplier<?> value) {
@@ -379,8 +395,12 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(age_at).valueObject(value);
     }
 
-    public static LeafMetadata ageAtMetadata(DslField field1, Readable field2) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(age_at).valueReadable(field2);
+    public static LeafMetadata ageAtMetadata(DslField field1, TemporalFieldInfo<?> field2) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(age_at).field(field2);
+    }
+
+    public static LeafMetadata ageAtMetadata(DslField field1, TemporalCondition<?> condition) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(age_at).valueCondition(condition);
     }
 
     public static LeafMetadata ageAtMetadata(DslField field, Supplier<?> supplier) {

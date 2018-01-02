@@ -16,7 +16,6 @@ import static io.doov.core.dsl.meta.DefaultOperator.empty;
 import static io.doov.core.dsl.meta.DefaultOperator.rule;
 import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
-import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.i18n.DefaultResourceBundle.BUNDLE;
 import static java.util.stream.Collectors.joining;
@@ -26,7 +25,11 @@ import java.util.Locale;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.UnaryMetadata;
 
 public class AstTextVisitor extends AbstractAstVisitor {
 
@@ -53,7 +56,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(LeafMetadata metadata) {
         sb.append(formatCurrentIndent());
-        sb.append(formatFieldMetadata(metadata));
+        sb.append(formatLeafMetadata(metadata));
         sb.append(formatNewLine());
     }
 
@@ -116,12 +119,16 @@ public class AstTextVisitor extends AbstractAstVisitor {
         return super.getCurrentIndentSize();
     }
 
-    protected String formatFieldMetadata(LeafMetadata metadata) {
+    protected String formatLeafMetadata(LeafMetadata metadata) {
         return metadata.stream().map(e -> {
-            if (e.getType() == OPERATOR)
-                return BUNDLE.get((Operator) e.getReadable(), locale);
-            else
-                return e.getReadable().readable();
+            switch (e.getType()) {
+                case OPERATOR:
+                    return BUNDLE.get((Operator) e.getReadable(), locale);
+                case FIELD:
+                    return e.getReadable().readable();
+                default:
+                    return BUNDLE.get(e.getReadable().readable(), locale);
+            }
         }).collect(joining(" "));
     }
 

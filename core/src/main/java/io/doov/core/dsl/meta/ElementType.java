@@ -4,5 +4,5 @@
 package io.doov.core.dsl.meta;
 
 public enum ElementType {
-    FIELD, OPERATOR, VALUE, UNKNOWN;
+    FIELD, OPERATOR, VALUE, CONDITION, UNKNOWN;
 }

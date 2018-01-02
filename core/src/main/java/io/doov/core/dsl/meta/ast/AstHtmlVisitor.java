@@ -3,8 +3,11 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.ElementType.OPERATOR;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.empty;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
+import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.i18n.DefaultResourceBundle.BUNDLE;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
@@ -15,7 +18,13 @@ import java.util.Locale;
 
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.UnaryMetadata;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
@@ -194,16 +203,24 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     protected String formatMessage(ValidationRule metadata) {
-        return MessageFormat.format("\"{0}\"", metadata.getMessage() == null ? BUNDLE.get(empty, locale) : metadata.getMessage());
+        return MessageFormat.format("\"{0}\"",
+                        metadata.getMessage() == null ? BUNDLE.get(empty, locale) : metadata.getMessage());
     }
 
     // format
     protected void formatFieldClass(LeafMetadata field) {
-        field.stream().forEach(element -> {
-            if (element.getType() == OPERATOR)
-                htmlFormatSpan(getCssClass(element), BUNDLE.get((Operator) element.getReadable(), locale));
-            else
-                htmlFormatSpan(getCssClass(element), element.getReadable().readable());
+        field.stream().forEach(e -> {
+            switch (e.getType()) {
+                case OPERATOR:
+                    htmlFormatSpan(getCssClass(e), BUNDLE.get((Operator) e.getReadable(), locale));
+                    break;
+                case FIELD:
+                    htmlFormatSpan(getCssClass(e), e.getReadable().readable());
+                    break;
+                default:
+                    htmlFormatSpan(getCssClass(e), BUNDLE.get(e.getReadable().readable(), locale));
+                    break;
+            }
         });
     }
 
