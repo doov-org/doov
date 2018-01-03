@@ -95,8 +95,25 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(LeafMetadata metadata) {
-        formatFieldClass(metadata);
+    public void visitMetadata(LeafMetadata leaf) {
+        leaf.stream().forEach(e -> {
+            switch (e.getType()) {
+                case OPERATOR:
+                    formatLeafOperator(e);
+                    break;
+                case FIELD:
+                    formatLeafField(e);
+                    break;
+                case VALUE:
+                    formatLeafValue(e);
+                    break;
+                case UNKNOWN:
+                    formatLeafUnknown(e);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown element type " + e.getType());
+            }
+        });
     }
 
     @Override
@@ -208,36 +225,20 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
                         metadata.getMessage() == null ? bundle.get(empty, locale) : metadata.getMessage());
     }
 
-    // format
-    protected void formatFieldClass(LeafMetadata field) {
-        field.stream().forEach(e -> {
-            switch (e.getType()) {
-                case OPERATOR:
-                    htmlFormatSpan(getCssClass(e), bundle.get((Operator) e.getReadable(), locale));
-                    break;
-                case FIELD:
-                    htmlFormatSpan(getCssClass(e), e.getReadable().readable());
-                    break;
-                default:
-                    htmlFormatSpan(getCssClass(e), bundle.get(e.getReadable().readable(), locale));
-                    break;
-            }
-        });
+    protected void formatLeafOperator(Element e) {
+        htmlFormatSpan("dsl-token-operator", bundle.get((Operator) e.getReadable(), locale));
     }
 
-    protected String getCssClass(Element element) {
-        switch (element.getType()) {
-            case FIELD:
-                return "dsl-token-field";
-            case OPERATOR:
-                return "dsl-token-operator";
-            case VALUE:
-                return "dsl-token-value";
-            case UNKNOWN:
-                return "dsl-token-unknown";
-            default:
-                throw new IllegalArgumentException("Unknown css class for element " + element);
-        }
+    protected void formatLeafField(Element e) {
+        htmlFormatSpan("dsl-token-field", e.getReadable().readable());
+    }
+
+    protected void formatLeafValue(Element e) {
+        htmlFormatSpan("dsl-token-value", bundle.get(e.getReadable().readable(), locale));
+    }
+
+    protected void formatLeafUnknown(Element e) {
+        htmlFormatSpan("dsl-token-unknown", bundle.get(e.getReadable().readable(), locale));
     }
 
     protected void htmlFormatSpan(String cssClass, String content) {
