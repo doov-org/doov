@@ -22,4 +22,8 @@ public class Element {
         return type;
     }
 
+    @Override
+    public String toString() {
+        return readable.readable();
+    }
 }

@@ -28,4 +28,9 @@ public abstract class PredicateMetadata implements Metadata, PredicateMonitor {
     public int falseEvalCount() {
         return falseEval.get();
     }
+    
+    @Override
+    public String toString() {
+        return readable();
+    }
 }
