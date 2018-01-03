@@ -50,8 +50,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private boolean closeFieldLI;
     private final String[] lastLines = new String[3];
     private final OutputStream ops;
-    private final ResourceProvider bundle;
-    private final Locale locale;
+    protected final ResourceProvider bundle;
+    protected final Locale locale;
 
     public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
         this.ops = ops;
