@@ -3,18 +3,16 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.empty;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
-import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
-import java.util.Locale;
+import java.util.*;
 
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.BinaryMetadata;
@@ -46,8 +44,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private static final String BEG_UL = "<ul>";
     private static final String END_UL = "</ul>";
 
+    private static final List<Operator> operatorList = Arrays.asList(greater_or_equals, greater_than, equals,
+                    not_equals, lesser_or_equals, lesser_than);
+
     private int binaryDeep = 0;
     private boolean closeFieldLI;
+    private boolean endOfSum;
     private final String[] lastLines = new String[3];
     private final OutputStream ops;
     protected final ResourceProvider bundle;
@@ -89,7 +91,9 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         writeWithBuffer(formatCurrentIndent());
         if (!lastLines[0].contains(">" + bundle.get(and, locale) + "<")
                         && !lastLines[0].contains(">" + bundle.get(or, locale) + "<")) {
-            writeWithBuffer(BEG_LI);
+            if (!endOfSum) {
+                writeWithBuffer(BEG_LI);
+            }
             closeFieldLI = true;
         }
     }
@@ -122,6 +126,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             writeWithBuffer(END_LI);
             closeFieldLI = false;
         }
+        if (endOfSum) {
+            writeWithBuffer("</br>");
+            endOfSum=false;
+        }
         writeWithBuffer(formatNewLine());
     }
 
@@ -141,6 +149,9 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     public void visitMetadata(BinaryMetadata metadata) {
         writeWithBuffer(formatCurrentIndent());
         htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
+        if (operatorList.contains(metadata.getOperator())) {
+            endOfSum = true;
+        }
         writeWithBuffer(formatNewLine());
     }
 

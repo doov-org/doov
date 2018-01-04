@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.SyntaxTree;
-import io.doov.core.dsl.meta.ast.AstHtmlVisitor;
 import io.doov.core.dsl.meta.ast.AstLineVisitor;
 
 public class SampleRuleI18nTest {
@@ -56,9 +55,7 @@ public class SampleRuleI18nTest {
     }
 
     @Test
-    public void test_RULE_USER_ADULT_FIRSTDAY() {
-        System.out.println(toString(RULE_USER_ADULT_FIRSTDAY, Locale.FRANCE));
-    }
+    public void test_RULE_USER_ADULT_FIRSTDAY() { System.out.println(toString(RULE_USER_ADULT_FIRSTDAY, Locale.FRANCE)); }
 
     @Test
     public void test_RULE_FIRST_NAME() {
@@ -76,15 +73,12 @@ public class SampleRuleI18nTest {
     }
 
     @Test
-    public void test_RULE_SUM() {
-        System.out.println(toString(RULE_SUM, Locale.FRANCE));
-    }
+    public void test_RULE_SUM() { System.out.println(toString(RULE_SUM, Locale.FRANCE)); }
 
     @Test
     public void test_RULE_MIN() {
         System.out.println(toString(RULE_MIN, Locale.FRANCE));
     }
-
 
     @Test
     public void test_RULE_DOUBLE_TEMPORAL() { System.out.println(toString(RULE_DOUBLE_TEMPORAL, Locale.FRANCE)); }

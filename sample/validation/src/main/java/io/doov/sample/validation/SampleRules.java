@@ -53,20 +53,18 @@ public class SampleRules extends DefaultRuleRegistry {
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_USER = DOOV
-                    .when(count(
-                                    userFirstName().isNotNull(),
+                    .when(count(userFirstName().isNotNull(),
                                     userLastName().isNotNull().and(userLastName().matches("[A-Z]+")))
-                                                    .greaterOrEquals(0))
+                                    .greaterOrEquals(0))
                     .validate()
                     .withShortCircuit(false)
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_USER_2 = DOOV
                     .when(userLastName().isNotNull().and(userLastName().matches("[A-Z]+")
-                                    .and(count(
-                                                    accountPhoneNumber().isNotNull(),
+                                    .and(count(accountPhoneNumber().isNotNull(),
                                                     accountEmail().isNotNull())
-                                                                    .greaterThan(0))))
+                                                    .greaterThan(0))))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
@@ -120,6 +118,5 @@ public class SampleRules extends DefaultRuleRegistry {
                                     .ageAt(accountCreationDate().with(firstDayOfMonth()))
                                     .lesserThan(18))
                     .validate();
-
 
 }
