@@ -17,6 +17,7 @@ import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.min;
 import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
+import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfMonth;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
 import static io.doov.sample.field.SampleFieldIdInfo.*;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -109,9 +110,16 @@ public class SampleRules extends DefaultRuleRegistry {
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
-    public static final ValidationRule RULE_LAMBDA = DOOV
+    public static final ValidationRule RULE_DOUBLE_LAMBDA = DOOV
                     .when(favoriteSiteName1().anyMatch(s -> !s.contains("dunno")))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
+
+    public static final ValidationRule RULE_DOUBLE_TEMPORAL = DOOV
+                    .when(userBirthdate().with(firstDayOfMonth())
+                                    .ageAt(accountCreationDate().with(firstDayOfMonth()))
+                                    .lesserThan(18))
+                    .validate();
+
 
 }
