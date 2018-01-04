@@ -99,25 +99,25 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     // before
 
     public final StepCondition before(N value) {
-        return predicate(beforeValueMetadata(field, value),
+        return predicate(beforeValueMetadata(this, value),
                         (model, context) -> Optional.ofNullable(value),
                         (l, r) -> beforeFunction().apply(l, r));
     }
 
     public final StepCondition before(TemporalFieldInfo<N> value) {
-        return predicate(beforeTemporalFieldMetadata(field, value),
+        return predicate(beforeTemporalFieldMetadata(this, value),
                         (model, context) -> value(model, value),
                         (l, r) -> beforeFunction().apply(l, r));
     }
 
     public final StepCondition before(Supplier<N> value) {
-        return predicate(beforeSupplierMetadata(field, value),
+        return predicate(beforeSupplierMetadata(this, value),
                         (model, context) -> Optional.ofNullable(value.get()),
                         (l, r) -> beforeFunction().apply(l, r));
     }
 
     public final StepCondition before(TemporalCondition<N> value) {
-        return predicate(beforeTemporalConditionMetadata(field, value),
+        return predicate(beforeTemporalConditionMetadata(this, value),
                         value.function,
                         (l, r) -> beforeFunction().apply(l, r));
     }
@@ -139,25 +139,25 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     // after
 
     public final StepCondition after(N value) {
-        return predicate(afterValueMetadata(field, value),
+        return predicate(afterValueMetadata(this, value),
                         (model, context) -> Optional.ofNullable(value),
                         (l, r) -> afterFunction().apply(l, r));
     }
 
     public final StepCondition after(TemporalFieldInfo<N> value) {
-        return predicate(afterTemporalFieldMetadata(field, value),
+        return predicate(afterTemporalFieldMetadata(this, value),
                         (model, context) -> value(model, value),
                         (l, r) -> afterFunction().apply(l, r));
     }
 
     public final StepCondition after(Supplier<N> value) {
-        return predicate(afterSupplierMetadata(field, value),
+        return predicate(afterSupplierMetadata(this, value),
                         (model, context) -> Optional.ofNullable(value.get()),
                         (l, r) -> afterFunction().apply(l, r));
     }
 
     public final StepCondition after(TemporalCondition<N> value) {
-        return predicate(afterTemporalConditionMetadata(field, value),
+        return predicate(afterTemporalConditionMetadata(this, value),
                         value.function,
                         (l, r) -> afterFunction().apply(l, r));
     }
@@ -207,73 +207,73 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     // age
 
     public final NumericCondition<Integer> ageAt(N value) {
-        return new IntegerCondition(timeBetween(ageAtValueMetadata(field, value), YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtValueMetadata(this, value), YEARS, value));
     }
 
     public final NumericCondition<Integer> ageAt(TemporalFieldInfo<N> value) {
-        return new IntegerCondition(timeBetween(ageAtTemporalFieldMetadata(field, value), YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtTemporalFieldMetadata(this, value), YEARS, value));
     }
 
     public final NumericCondition<Integer> ageAt(TemporalCondition<N> value) {
-        return new IntegerCondition(timeBetween(ageAtTemporalConditionMetadata(field, value), YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtTemporalConditionMetadata(this, value), YEARS, value));
     }
 
     public final NumericCondition<Integer> ageAt(Supplier<N> value) {
-        return new IntegerCondition(timeBetween(ageAtSupplierMetadata(field, value), YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtSupplierMetadata(this, value), YEARS, value));
     }
 
     // days between
 
     public final NumericCondition<Integer> daysBetween(N value) {
-        return new IntegerCondition(timeBetween(ageAtValueMetadata(field, value), DAYS, value));
+        return new IntegerCondition(timeBetween(ageAtValueMetadata(this, value), DAYS, value));
     }
 
     public final NumericCondition<Integer> daysBetween(TemporalFieldInfo<N> value) {
-        return new IntegerCondition(timeBetween(ageAtTemporalFieldMetadata(field, value), DAYS, value));
+        return new IntegerCondition(timeBetween(ageAtTemporalFieldMetadata(this, value), DAYS, value));
     }
 
     public final NumericCondition<Integer> daysBetween(TemporalCondition<N> value) {
-        return new IntegerCondition(timeBetween(ageAtTemporalConditionMetadata(field, value), DAYS, value));
+        return new IntegerCondition(timeBetween(ageAtTemporalConditionMetadata(this, value), DAYS, value));
     }
 
     public final NumericCondition<Integer> daysBetween(Supplier<N> value) {
-        return new IntegerCondition(timeBetween(ageAtSupplierMetadata(field, value), DAYS, value));
+        return new IntegerCondition(timeBetween(ageAtSupplierMetadata(this, value), DAYS, value));
     }
 
     // months between
 
     public final NumericCondition<Integer> monthsBetween(N value) {
-        return new IntegerCondition(timeBetween(ageAtValueMetadata(field, value), MONTHS, value));
+        return new IntegerCondition(timeBetween(ageAtValueMetadata(this, value), MONTHS, value));
     }
 
     public final NumericCondition<Integer> monthsBetween(TemporalFieldInfo<N> value) {
-        return new IntegerCondition(timeBetween(ageAtTemporalFieldMetadata(field, value), MONTHS, value));
+        return new IntegerCondition(timeBetween(ageAtTemporalFieldMetadata(this, value), MONTHS, value));
     }
 
     public final NumericCondition<Integer> monthsBetween(TemporalCondition<N> value) {
-        return new IntegerCondition(timeBetween(ageAtTemporalConditionMetadata(field, value), MONTHS, value));
+        return new IntegerCondition(timeBetween(ageAtTemporalConditionMetadata(this, value), MONTHS, value));
     }
 
     public final NumericCondition<Integer> monthsBetween(Supplier<N> value) {
-        return new IntegerCondition(timeBetween(ageAtSupplierMetadata(field, value), MONTHS, value));
+        return new IntegerCondition(timeBetween(ageAtSupplierMetadata(this, value), MONTHS, value));
     }
 
     // years between
 
     public final NumericCondition<Integer> yearsBetween(N value) {
-        return new IntegerCondition(timeBetween(ageAtValueMetadata(field, value), YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtValueMetadata(this, value), YEARS, value));
     }
 
     public final NumericCondition<Integer> yearsBetween(TemporalFieldInfo<N> value) {
-        return new IntegerCondition(timeBetween(ageAtTemporalFieldMetadata(field, value), YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtTemporalFieldMetadata(this, value), YEARS, value));
     }
 
     public final NumericCondition<Integer> yearsBetween(TemporalCondition<N> value) {
-        return new IntegerCondition(timeBetween(ageAtTemporalConditionMetadata(field, value), YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtTemporalConditionMetadata(this, value), YEARS, value));
     }
 
     public final NumericCondition<Integer> yearsBetween(Supplier<N> value) {
-        return new IntegerCondition(timeBetween(ageAtSupplierMetadata(field, value), YEARS, value));
+        return new IntegerCondition(timeBetween(ageAtSupplierMetadata(this, value), YEARS, value));
     }
 
     // time between

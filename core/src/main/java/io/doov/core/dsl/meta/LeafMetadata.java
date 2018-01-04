@@ -142,7 +142,7 @@ public class LeafMetadata extends PredicateMetadata {
     public LeafMetadata valueReadable(Readable readable) {
         return add(readable == null ? null : new Element(readable, VALUE));
     }
-    
+
     public LeafMetadata valueTemporalAdjuster(Readable adjuster) {
         return add(((LeafMetadata) adjuster).elements.getFirst());
     }
@@ -301,56 +301,59 @@ public class LeafMetadata extends PredicateMetadata {
 
     // after
 
-    public static LeafMetadata afterValueMetadata(DslField field, Object value) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(after).valueObject(value);
+    public static LeafMetadata afterValueMetadata(DefaultCondition<?> condition, Object value) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(after).valueObject(value);
     }
 
-    public static LeafMetadata afterTemporalFieldMetadata(DslField field1, DslField field2) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(after).field(field2);
+    public static LeafMetadata afterTemporalFieldMetadata(DefaultCondition<?> condition, DslField field) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(after).field(field);
     }
 
-    public static LeafMetadata afterTemporalConditionMetadata(DslField field1, DefaultCondition<?> condition) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(after).valueCondition(condition);
+    public static LeafMetadata afterTemporalConditionMetadata(DefaultCondition<?> condition1,
+                    DefaultCondition<?> condition2) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition1).operator(after).valueCondition(condition2);
     }
 
-    public static LeafMetadata afterSupplierMetadata(DslField field, Supplier<?> value) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(after).valueSupplier(value);
+    public static LeafMetadata afterSupplierMetadata(DefaultCondition<?> condition, Supplier<?> value) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(after).valueSupplier(value);
     }
 
     // before
 
-    public static LeafMetadata beforeValueMetadata(DslField field, Object value) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(before).valueObject(value);
+    public static LeafMetadata beforeValueMetadata(DefaultCondition<?> condition, Object value) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before).valueObject(value);
     }
 
-    public static LeafMetadata beforeTemporalFieldMetadata(DslField field1, DslField field2) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(before).field(field2);
+    public static LeafMetadata beforeTemporalFieldMetadata(DefaultCondition<?> condition, DslField field) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before).field(field);
     }
 
-    public static LeafMetadata beforeTemporalConditionMetadata(DslField field1, DefaultCondition<?> condition) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(before).valueCondition(condition);
+    public static LeafMetadata beforeTemporalConditionMetadata(DefaultCondition<?> condition1,
+                    DefaultCondition<?> condition2) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition1).operator(before).valueCondition(condition2);
     }
 
-    public static LeafMetadata beforeSupplierMetadata(DslField field, Supplier<?> value) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(before).valueSupplier(value);
+    public static LeafMetadata beforeSupplierMetadata(DefaultCondition<?> condition, Supplier<?> value) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before).valueSupplier(value);
     }
 
     // age at
 
-    public static LeafMetadata ageAtValueMetadata(DslField field, Object value) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(age_at).valueObject(value);
+    public static LeafMetadata ageAtValueMetadata(DefaultCondition<?> condition, Object value) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(age_at).valueObject(value);
     }
 
-    public static LeafMetadata ageAtTemporalFieldMetadata(DslField field1, DslField field2) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(age_at).field(field2);
+    public static LeafMetadata ageAtTemporalFieldMetadata(DefaultCondition<?> condition, DslField field) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(age_at).field(field);
     }
 
-    public static LeafMetadata ageAtTemporalConditionMetadata(DslField field1, DefaultCondition<?> condition) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(age_at).valueCondition(condition);
+    public static LeafMetadata ageAtTemporalConditionMetadata(DefaultCondition<?> condition1,
+                    DefaultCondition<?> condition2) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition1).operator(age_at).valueCondition(condition2);
     }
 
-    public static LeafMetadata ageAtSupplierMetadata(DslField field, Supplier<?> supplier) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(age_at).valueSupplier(supplier);
+    public static LeafMetadata ageAtSupplierMetadata(DefaultCondition<?> condition, Supplier<?> supplier) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(age_at).valueSupplier(supplier);
     }
 
     // string

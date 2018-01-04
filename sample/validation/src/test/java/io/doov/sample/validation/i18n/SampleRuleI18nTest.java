@@ -5,7 +5,10 @@ package io.doov.sample.validation.i18n;
 
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
+import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfMonth;
+import static io.doov.sample.field.SampleFieldIdInfo.accountCreationDate;
 import static io.doov.sample.field.SampleFieldIdInfo.accountEmail;
+import static io.doov.sample.field.SampleFieldIdInfo.userBirthdate;
 import static io.doov.sample.validation.SampleRules.*;
 
 import java.util.Locale;
@@ -86,7 +89,12 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_RULE_DOUBLE_TEMPORAL() {
-        System.out.println(toString(RULE_DOUBLE_TEMPORAL, Locale.FRANCE));
+        ValidationRule rule = DOOV
+                        .when(userBirthdate().with(firstDayOfMonth())
+                                        .ageAt(accountCreationDate().with(firstDayOfMonth()))
+                                        .lesserThan(18))
+                        .validate();
+        System.out.println(toString(rule, Locale.FRANCE));
     }
 
     @Test
