@@ -26,7 +26,7 @@ public class BinaryMetadata extends PredicateMetadata {
     private final Operator operator;
     private final Metadata right;
 
-    private BinaryMetadata(Metadata left, Operator operator, Metadata right) {
+    BinaryMetadata(Metadata left, Operator operator, Metadata right) {
         this.left = left;
         this.operator = operator;
         this.right = right;

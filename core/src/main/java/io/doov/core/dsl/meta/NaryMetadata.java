@@ -14,11 +14,13 @@ package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.DefaultOperator.match_all;
 import static io.doov.core.dsl.meta.DefaultOperator.match_any;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import static java.util.stream.Collectors.toList;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import io.doov.core.dsl.lang.Context;
 
@@ -76,6 +78,12 @@ public class NaryMetadata extends PredicateMetadata {
 
     @Override
     public PredicateMetadata merge(LeafMetadata other) {
+        final List<Element> elts = other.stream().collect(Collectors.toList());
+        if (elts.size() == 2 && elts.get(0).getType() == ElementType.VALUE) {
+            // special case to build : count (predicate ...) operator value
+            return new BinaryMetadata(this, (Operator) elts.get(0).getReadable(),
+                            new LeafMetadata(LEAF_PREDICATE).valueReadable(elts.get(1).getReadable()));
+        }
         return new NaryMetadata(new ComposeOperator(operator, other), values);
     }
 
