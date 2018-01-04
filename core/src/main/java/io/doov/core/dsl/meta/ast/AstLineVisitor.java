@@ -38,47 +38,47 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void startMetadata(NaryMetadata metadata) {
-        super.startMetadata(metadata);
+    public void startMetadata(NaryMetadata metadata, int depth) {
+        super.startMetadata(metadata, depth);
         sb.append("[");
     }
 
     @Override
-    public void visitMetadata(NaryMetadata metadata) {
-        super.visitMetadata(metadata);
+    public void visitMetadata(NaryMetadata metadata, int depth) {
+        super.visitMetadata(metadata, depth);
         sb.delete(sb.length() - 1, sb.length());
         sb.append(", ");
     }
 
     @Override
-    protected void endMetadata(NaryMetadata metadata) {
-        super.endMetadata(metadata);
+    protected void endMetadata(NaryMetadata metadata, int depth) {
+        super.endMetadata(metadata, depth);
         sb.delete(sb.length() - 2, sb.length());
         sb.append("] ");
     }
 
     @Override
-    protected void startMetadata(BinaryMetadata metadata) {
-        super.startMetadata(metadata);
+    protected void startMetadata(BinaryMetadata metadata, int depth) {
+        super.startMetadata(metadata, depth);
         sb.append("(");
     }
 
     @Override
-    public void visitMetadata(BinaryMetadata metadata) {
+    public void visitMetadata(BinaryMetadata metadata, int depth) {
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
     @Override
-    protected void endMetadata(BinaryMetadata metadata) {
-        super.endMetadata(metadata);
+    protected void endMetadata(BinaryMetadata metadata, int depth) {
+        super.endMetadata(metadata, depth);
         sb.delete(sb.length() - 1, sb.length());
         sb.append(") ");
     }
 
     @Override
-    protected void endMetadata(ValidationRule metadata) {
-        super.endMetadata(metadata);
+    protected void endMetadata(ValidationRule metadata, int depth) {
+        super.endMetadata(metadata, depth);
         sb.append("\n");
     }
 

@@ -55,21 +55,21 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(LeafMetadata metadata) {
+    public void visitMetadata(LeafMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatLeafMetadata(metadata));
         sb.append(formatNewLine());
     }
 
     @Override
-    public void visitMetadata(UnaryMetadata metadata) {
+    public void visitMetadata(UnaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
     @Override
-    public void visitMetadata(BinaryMetadata metadata) {
+    public void visitMetadata(BinaryMetadata metadata, int depth) {
         sb.delete(getNewLineIndex(), sb.length());
         sb.append(" ");
         sb.append(bundle.get(metadata.getOperator(), locale));
@@ -77,21 +77,21 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startMetadata(NaryMetadata metadata) {
+    public void startMetadata(NaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
     @Override
-    public void startMetadata(ValidationRule metadata) {
+    public void startMetadata(ValidationRule metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatRule());
         sb.append(formatNewLine());
     }
 
     @Override
-    public void visitMetadata(ValidationRule metadata) {
+    public void visitMetadata(ValidationRule metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatValidateWithMessage());
         sb.append(" ");
@@ -100,7 +100,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startMetadata(StepWhen metadata) {
+    public void startMetadata(StepWhen metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatWhen());
         sb.append(formatNewLine());

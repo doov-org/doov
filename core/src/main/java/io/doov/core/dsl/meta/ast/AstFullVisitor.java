@@ -28,14 +28,14 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(Metadata metadata) {
+    public void visitMetadata(Metadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit Metadata ").append(metadata);
         sb.append("\n");
     }
 
     @Override
-    public void visitMetadata(LeafMetadata metadata) {
+    public void visitMetadata(LeafMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit FieldMetadata ").append(metadata).append(" = ");
         metadata.stream().map(Element::getReadable).forEach(sb::append);
@@ -43,98 +43,98 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(UnaryMetadata metadata) {
+    public void visitMetadata(UnaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit UnaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
     }
 
     @Override
-    public void startMetadata(BinaryMetadata metadata) {
+    public void startMetadata(BinaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("start BinaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
-    public void visitMetadata(BinaryMetadata metadata) {
+    public void visitMetadata(BinaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit BinaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
     }
 
     @Override
-    public void endMetadata(BinaryMetadata metadata) {
+    public void endMetadata(BinaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("end BinaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
-    public void startMetadata(NaryMetadata metadata) {
+    public void startMetadata(NaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("start NaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
     }
 
     @Override
-    public void visitMetadata(NaryMetadata metadata) {
+    public void visitMetadata(NaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit NaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
-    public void endMetadata(NaryMetadata metadata) {
+    public void endMetadata(NaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("end NaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
-    public void startMetadata(ValidationRule metadata) {
+    public void startMetadata(ValidationRule metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("start ValidationRule ").append(metadata).append(" = ").append("rule");
         sb.append("\n");
     }
 
     @Override
-    public void visitMetadata(ValidationRule metadata) {
+    public void visitMetadata(ValidationRule metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit ValidationRule ").append(metadata).append(" = ").append("validate with message");
         sb.append("\n");
     }
 
     @Override
-    public void endMetadata(ValidationRule metadata) {
+    public void endMetadata(ValidationRule metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("end ValidationRule ").append(metadata).append(" = ").append(metadata.getMessage());
         sb.append("\n");
     }
 
     @Override
-    public void startMetadata(StepWhen metadata) {
+    public void startMetadata(StepWhen metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("start StepWhen ").append(metadata).append(" = ").append("when");
         sb.append("\n");
     }
 
     @Override
-    public void visitMetadata(StepWhen metadata) {
+    public void visitMetadata(StepWhen metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit StepWhen ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
-    public void endMetadata(StepWhen metadata) {
+    public void endMetadata(StepWhen metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("end StepWhen ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
-    public void visitMetadata(StepCondition metadata) {
+    public void visitMetadata(StepCondition metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit StepCondition ").append(metadata).append(" = ").append("---");
         sb.append("\n");

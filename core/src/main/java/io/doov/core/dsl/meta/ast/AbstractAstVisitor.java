@@ -30,169 +30,169 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     @Override
     public final void visit(Metadata metadata, int depth) {
-        visitMetadata(metadata);
+        visitMetadata(metadata, depth);
     }
 
-    protected void visitMetadata(Metadata metadata) {
+    protected void visitMetadata(Metadata metadata, int depth) {
     }
 
     // FieldMetadata
 
     @Override
     public final void start(LeafMetadata metadata, int depth) {
-        startMetadata(metadata);
+        startMetadata(metadata, depth);
     }
 
-    protected void startMetadata(LeafMetadata metadata) {
+    protected void startMetadata(LeafMetadata metadata, int depth) {
     }
 
     @Override
     public final void visit(LeafMetadata metadata, int depth) {
-        visitMetadata(metadata);
+        visitMetadata(metadata, depth);
     }
 
-    protected void visitMetadata(LeafMetadata metadata) {
+    protected void visitMetadata(LeafMetadata metadata, int depth) {
     }
 
     @Override
     public final void end(LeafMetadata metadata, int depth) {
-        endMetadata(metadata);
+        endMetadata(metadata, depth);
     }
 
-    protected void endMetadata(LeafMetadata metadata) {
+    protected void endMetadata(LeafMetadata metadata, int depth) {
     }
 
     // UnaryMetadata
 
     @Override
     public final void visit(UnaryMetadata metadata, int depth) {
-        visitMetadata(metadata);
+        visitMetadata(metadata, depth);
     }
 
-    protected void visitMetadata(UnaryMetadata metadata) {
+    protected void visitMetadata(UnaryMetadata metadata, int depth) {
     }
 
     // BinaryMetadata
 
     @Override
     public final void start(BinaryMetadata metadata, int depth) {
-        startMetadata(metadata);
+        startMetadata(metadata, depth);
         stack.push(MetadataType.BINARY_PREDICATE);
     }
 
-    protected void startMetadata(BinaryMetadata metadata) {
+    protected void startMetadata(BinaryMetadata metadata, int depth) {
     }
 
     @Override
     public final void visit(BinaryMetadata metadata, int depth) {
-        visitMetadata(metadata);
+        visitMetadata(metadata, depth);
     }
 
-    protected void visitMetadata(BinaryMetadata metadata) {
+    protected void visitMetadata(BinaryMetadata metadata, int depth) {
     }
 
     @Override
     public final void end(BinaryMetadata metadata, int depth) {
         stack.pop();
-        endMetadata(metadata);
+        endMetadata(metadata, depth);
     }
 
-    protected void endMetadata(BinaryMetadata metadata) {
+    protected void endMetadata(BinaryMetadata metadata, int depth) {
     }
 
     // NaryMetadata
 
     @Override
     public final void start(NaryMetadata metadata, int depth) {
-        startMetadata(metadata);
+        startMetadata(metadata, depth);
         stack.push(MetadataType.NARY_PREDICATE);
     }
 
-    protected void startMetadata(NaryMetadata metadata) {
+    protected void startMetadata(NaryMetadata metadata, int depth) {
     }
 
     @Override
     public final void visit(NaryMetadata metadata, int depth) {
-        visitMetadata(metadata);
+        visitMetadata(metadata, depth);
     }
 
-    protected void visitMetadata(NaryMetadata metadata) {
+    protected void visitMetadata(NaryMetadata metadata, int depth) {
     }
 
     @Override
     public final void end(NaryMetadata metadata, int depth) {
         stack.pop();
-        endMetadata(metadata);
+        endMetadata(metadata, depth);
     }
 
-    protected void endMetadata(NaryMetadata metadata) {
+    protected void endMetadata(NaryMetadata metadata, int depth) {
     }
 
     // ValidationRule
 
     @Override
     public final void start(ValidationRule metadata, int depth) {
-        startMetadata(metadata);
+        startMetadata(metadata, depth);
         stack.push(MetadataType.RULE);
     }
 
-    protected void startMetadata(ValidationRule metadata) {
+    protected void startMetadata(ValidationRule metadata, int depth) {
     }
 
     @Override
     public final void visit(ValidationRule metadata, int depth) {
-        visitMetadata(metadata);
+        visitMetadata(metadata, depth);
     }
 
-    protected void visitMetadata(ValidationRule metadata) {
+    protected void visitMetadata(ValidationRule metadata, int depth) {
     }
 
     @Override
     public final void end(ValidationRule metadata, int depth) {
         stack.pop();
-        endMetadata(metadata);
+        endMetadata(metadata, depth);
     }
 
-    protected void endMetadata(ValidationRule metadata) {
+    protected void endMetadata(ValidationRule metadata, int depth) {
     }
 
     // StepWhen
 
     @Override
     public final void start(StepWhen metadata, int depth) {
-        startMetadata(metadata);
+        startMetadata(metadata, depth);
         stack.push(MetadataType.WHEN);
     }
 
-    protected void startMetadata(StepWhen metadata) {
+    protected void startMetadata(StepWhen metadata, int depth) {
     }
 
     @Override
     public final void visit(StepWhen metadata, int depth) {
-        visitMetadata(metadata);
+        visitMetadata(metadata, depth);
 
     }
 
-    protected void visitMetadata(StepWhen metadata) {
+    protected void visitMetadata(StepWhen metadata, int depth) {
     }
 
     @Override
     public final void end(StepWhen metadata, int depth) {
         stack.pop();
-        endMetadata(metadata);
+        endMetadata(metadata, depth);
     }
 
-    protected void endMetadata(StepWhen metadata) {
+    protected void endMetadata(StepWhen metadata, int depth) {
     }
 
     // StepCondition
 
     @Override
     public final void visit(StepCondition metadata, int depth) {
-        visitMetadata(metadata);
+        visitMetadata(metadata, depth);
     }
 
-    protected void visitMetadata(StepCondition metadata) {
+    protected void visitMetadata(StepCondition metadata, int depth) {
     }
 
     // Implementation

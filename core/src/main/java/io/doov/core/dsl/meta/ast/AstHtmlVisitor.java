@@ -3,16 +3,26 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.empty;
+import static io.doov.core.dsl.meta.DefaultOperator.equals;
+import static io.doov.core.dsl.meta.DefaultOperator.greater_or_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.greater_than;
+import static io.doov.core.dsl.meta.DefaultOperator.lesser_or_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.lesser_than;
+import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
+import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
-import io.doov.core.FieldInfo;
-import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.BinaryMetadata;
@@ -64,13 +74,13 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // step when
 
     @Override
-    public void startMetadata(StepWhen metadata) {
+    public void startMetadata(StepWhen metadata, int depth) {
         writeWithBuffer(formatNewLine());
         writeWithBuffer(formatCurrentIndent());
     }
 
     @Override
-    public void visitMetadata(StepWhen metadata) {
+    public void visitMetadata(StepWhen metadata, int depth) {
         htmlFormatSpan(CSS_CLASS_WHEN, formatWhen());
         writeWithBuffer(formatNewLine());
         writeWithBuffer(formatCurrentIndent());
@@ -79,7 +89,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endMetadata(StepWhen metadata) {
+    public void endMetadata(StepWhen metadata, int depth) {
         writeWithBuffer(formatCurrentIndent());
         writeWithBuffer(END_UL);
         writeWithBuffer(formatNewLine());
@@ -87,7 +97,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // field metadata
     @Override
-    public void startMetadata(LeafMetadata metadata) {
+    public void startMetadata(LeafMetadata metadata, int depth) {
         writeWithBuffer(formatCurrentIndent());
         if (!lastLines[0].contains(">" + bundle.get(and, locale) + "<")
                         && !lastLines[0].contains(">" + bundle.get(or, locale) + "<")) {
@@ -99,7 +109,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(LeafMetadata leaf) {
+    public void visitMetadata(LeafMetadata leaf, int depth) {
         leaf.stream().forEach(e -> {
             switch (e.getType()) {
                 case OPERATOR:
@@ -121,21 +131,21 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endMetadata(LeafMetadata metadata) {
+    public void endMetadata(LeafMetadata metadata, int depth) {
         if (closeFieldLI) {
             writeWithBuffer(END_LI);
             closeFieldLI = false;
         }
         if (endOfSum) {
             writeWithBuffer("</br>");
-            endOfSum=false;
+            endOfSum = false;
         }
         writeWithBuffer(formatNewLine());
     }
 
     // binary metadata
     @Override
-    public void startMetadata(BinaryMetadata metadata) {
+    public void startMetadata(BinaryMetadata metadata, int depth) {
         if (lastLines[1].contains(">" + bundle.get(and, locale) + "<")
                         || lastLines[1].contains(">" + bundle.get(or, locale) + "<")) {
             writeWithBuffer(formatCurrentIndent());
@@ -146,7 +156,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(BinaryMetadata metadata) {
+    public void visitMetadata(BinaryMetadata metadata, int depth) {
         writeWithBuffer(formatCurrentIndent());
         htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         if (operatorList.contains(metadata.getOperator())) {
@@ -156,7 +166,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endMetadata(BinaryMetadata metadata) {
+    public void endMetadata(BinaryMetadata metadata, int depth) {
         if (binaryDeep > 0) {
             writeWithBuffer(formatNewLine());
             writeWithBuffer(formatCurrentIndent());
@@ -167,7 +177,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // nary metadata
     @Override
-    public void startMetadata(NaryMetadata metadata) {
+    public void startMetadata(NaryMetadata metadata, int depth) {
         writeWithBuffer(formatCurrentIndent());
         writeWithBuffer(BEG_LI);
         writeWithBuffer(formatNewLine());
@@ -178,7 +188,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endMetadata(NaryMetadata metadata) {
+    public void endMetadata(NaryMetadata metadata, int depth) {
         writeWithBuffer(formatCurrentIndent());
         writeWithBuffer(END_OL);
         writeWithBuffer(formatNewLine());
@@ -189,7 +199,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // nary metadata
     @Override
-    public void visitMetadata(UnaryMetadata metadata) {
+    public void visitMetadata(UnaryMetadata metadata, int depth) {
         writeWithBuffer(BEG_LI);
         htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         writeWithBuffer(END_LI);
@@ -198,14 +208,14 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // validation rule
     @Override
-    public void startMetadata(ValidationRule metadata) {
+    public void startMetadata(ValidationRule metadata, int depth) {
         formatDivStart(CSS_CLASS_VALIDATION_RULE);
         writeWithBuffer(formatNewLine());
         writeWithBuffer(formatCurrentIndent());
     }
 
     @Override
-    public void visitMetadata(ValidationRule metadata) {
+    public void visitMetadata(ValidationRule metadata, int depth) {
         htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate_with_message, locale));
         writeWithBuffer(" ");
         htmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata));
@@ -213,7 +223,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endMetadata(ValidationRule metadata) {
+    public void endMetadata(ValidationRule metadata, int depth) {
         writeWithBuffer(formatCurrentIndent());
         writeWithBuffer(formatNewLine());
         writeWithBuffer(END_DIV);
@@ -222,7 +232,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // metadata
     @Override
-    public void visitMetadata(Metadata metadata) {
+    public void visitMetadata(Metadata metadata, int depth) {
         writeWithBuffer(metadata.readable());
     }
 
