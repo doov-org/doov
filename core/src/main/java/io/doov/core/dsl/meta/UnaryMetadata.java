@@ -43,9 +43,9 @@ public class UnaryMetadata extends PredicateMetadata {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor) {
-        visitor.visit(this);
-        value.accept(visitor);
+    public void accept(MetadataVisitor visitor, int depth) {
+        visitor.visit(this, depth);
+        value.accept(visitor, depth + 1);
     }
 
     @Override

@@ -79,10 +79,10 @@ public class LeafMetadata extends PredicateMetadata {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor) {
-        visitor.start(this);
-        visitor.visit(this);
-        visitor.end(this);
+    public void accept(MetadataVisitor visitor, int depth) {
+        visitor.start(this, depth);
+        visitor.visit(this, depth);
+        visitor.end(this, depth);
     }
 
     @Override

@@ -70,13 +70,13 @@ public class NaryMetadata extends PredicateMetadata {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor) {
-        visitor.start(this);
+    public void accept(MetadataVisitor visitor, int depth) {
+        visitor.start(this, depth);
         values.forEach(v -> {
-            v.accept(visitor);
-            visitor.visit(this);
+            v.accept(visitor, depth + 1);
+            visitor.visit(this, depth);
         });
-        visitor.end(this);
+        visitor.end(this, depth);
     }
 
     @Override

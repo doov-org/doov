@@ -83,11 +83,11 @@ public class DefaultValidationRule implements ValidationRule {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor) {
-        visitor.start(this);
-        stepWhen.accept(visitor);
-        visitor.visit(this);
-        visitor.end(this);
+    public void accept(MetadataVisitor visitor, int depth) {
+        visitor.start(this, depth);
+        stepWhen.accept(visitor, depth + 1);
+        visitor.visit(this, depth);
+        visitor.end(this, depth);
     }
 
 }

@@ -21,54 +21,54 @@ public interface MetadataVisitor {
 
     // Metadata
 
-    void visit(Metadata metadata);
+    void visit(Metadata metadata, int depth);
 
     // FieldMetadata
 
-    void start(LeafMetadata fieldMetadata);
+    void start(LeafMetadata fieldMetadata, int depth);
 
-    void visit(LeafMetadata fieldMetadata);
+    void visit(LeafMetadata fieldMetadata, int depth);
 
-    void end(LeafMetadata fieldMetadata);
+    void end(LeafMetadata fieldMetadata, int depth);
 
     // UnaryMetadata
 
-    void visit(UnaryMetadata unaryMetadata);
+    void visit(UnaryMetadata unaryMetadata, int depth);
 
     // BinaryMetadata
 
-    void start(BinaryMetadata binaryMetadata);
+    void start(BinaryMetadata binaryMetadata, int depth);
 
-    void visit(BinaryMetadata binaryMetadata);
+    void visit(BinaryMetadata binaryMetadata, int depth);
 
-    void end(BinaryMetadata binaryMetadata);
+    void end(BinaryMetadata binaryMetadata, int depth);
 
     // NaryMetadata
 
-    void start(NaryMetadata naryMetadata);
+    void start(NaryMetadata naryMetadata, int depth);
 
-    void visit(NaryMetadata naryMetadata);
+    void visit(NaryMetadata naryMetadata, int depth);
 
-    void end(NaryMetadata naryMetadata);
+    void end(NaryMetadata naryMetadata, int depth);
 
     // ValidationRule
 
-    void start(ValidationRule validationRule);
+    void start(ValidationRule validationRule, int depth);
 
-    void visit(ValidationRule validationRule);
+    void visit(ValidationRule validationRule, int depth);
 
-    void end(ValidationRule validationRule);
+    void end(ValidationRule validationRule, int depth);
 
     // StepWhen
 
-    void start(StepWhen stepWhen);
+    void start(StepWhen stepWhen, int depth);
 
-    void visit(StepWhen stepWhen);
+    void visit(StepWhen stepWhen, int depth);
 
-    void end(StepWhen stepWhen);
+    void end(StepWhen stepWhen, int depth);
 
     // StepCondition
 
-    void visit(StepCondition stepCondition);
+    void visit(StepCondition stepCondition, int depth);
 
 }

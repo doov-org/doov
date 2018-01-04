@@ -20,7 +20,7 @@ import io.doov.core.dsl.meta.ast.AstLineVisitor;
 public class SampleRuleI18nTest {
     private static String toString(SyntaxTree syntaxTree, Locale locale) {
         final StringBuilder sb = new StringBuilder();
-        syntaxTree.accept(new AstLineVisitor(sb, BUNDLE, locale));
+        syntaxTree.accept(new AstLineVisitor(sb, BUNDLE, locale), 0);
         return sb.toString();
     }
 

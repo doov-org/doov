@@ -29,7 +29,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     // Metadata
 
     @Override
-    public final void visit(Metadata metadata) {
+    public final void visit(Metadata metadata, int depth) {
         visitMetadata(metadata);
     }
 
@@ -39,7 +39,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     // FieldMetadata
 
     @Override
-    public final void start(LeafMetadata metadata) {
+    public final void start(LeafMetadata metadata, int depth) {
         startMetadata(metadata);
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     @Override
-    public final void visit(LeafMetadata metadata) {
+    public final void visit(LeafMetadata metadata, int depth) {
         visitMetadata(metadata);
     }
 
@@ -55,7 +55,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     @Override
-    public final void end(LeafMetadata metadata) {
+    public final void end(LeafMetadata metadata, int depth) {
         endMetadata(metadata);
     }
 
@@ -65,7 +65,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     // UnaryMetadata
 
     @Override
-    public final void visit(UnaryMetadata metadata) {
+    public final void visit(UnaryMetadata metadata, int depth) {
         visitMetadata(metadata);
     }
 
@@ -75,7 +75,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     // BinaryMetadata
 
     @Override
-    public final void start(BinaryMetadata metadata) {
+    public final void start(BinaryMetadata metadata, int depth) {
         startMetadata(metadata);
         stack.push(MetadataType.BINARY_PREDICATE);
     }
@@ -84,7 +84,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     @Override
-    public final void visit(BinaryMetadata metadata) {
+    public final void visit(BinaryMetadata metadata, int depth) {
         visitMetadata(metadata);
     }
 
@@ -92,7 +92,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     @Override
-    public final void end(BinaryMetadata metadata) {
+    public final void end(BinaryMetadata metadata, int depth) {
         stack.pop();
         endMetadata(metadata);
     }
@@ -103,7 +103,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     // NaryMetadata
 
     @Override
-    public final void start(NaryMetadata metadata) {
+    public final void start(NaryMetadata metadata, int depth) {
         startMetadata(metadata);
         stack.push(MetadataType.NARY_PREDICATE);
     }
@@ -112,7 +112,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     @Override
-    public final void visit(NaryMetadata metadata) {
+    public final void visit(NaryMetadata metadata, int depth) {
         visitMetadata(metadata);
     }
 
@@ -120,7 +120,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     @Override
-    public final void end(NaryMetadata metadata) {
+    public final void end(NaryMetadata metadata, int depth) {
         stack.pop();
         endMetadata(metadata);
     }
@@ -131,7 +131,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     // ValidationRule
 
     @Override
-    public final void start(ValidationRule metadata) {
+    public final void start(ValidationRule metadata, int depth) {
         startMetadata(metadata);
         stack.push(MetadataType.RULE);
     }
@@ -140,7 +140,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     @Override
-    public final void visit(ValidationRule metadata) {
+    public final void visit(ValidationRule metadata, int depth) {
         visitMetadata(metadata);
     }
 
@@ -148,7 +148,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     @Override
-    public final void end(ValidationRule metadata) {
+    public final void end(ValidationRule metadata, int depth) {
         stack.pop();
         endMetadata(metadata);
     }
@@ -159,7 +159,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     // StepWhen
 
     @Override
-    public final void start(StepWhen metadata) {
+    public final void start(StepWhen metadata, int depth) {
         startMetadata(metadata);
         stack.push(MetadataType.WHEN);
     }
@@ -168,7 +168,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     @Override
-    public final void visit(StepWhen metadata) {
+    public final void visit(StepWhen metadata, int depth) {
         visitMetadata(metadata);
 
     }
@@ -177,7 +177,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     @Override
-    public final void end(StepWhen metadata) {
+    public final void end(StepWhen metadata, int depth) {
         stack.pop();
         endMetadata(metadata);
     }
@@ -188,7 +188,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     // StepCondition
 
     @Override
-    public final void visit(StepCondition metadata) {
+    public final void visit(StepCondition metadata, int depth) {
         visitMetadata(metadata);
     }
 

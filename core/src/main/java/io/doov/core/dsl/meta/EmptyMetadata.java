@@ -16,8 +16,8 @@ public class EmptyMetadata implements Metadata {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor) {
-        visitor.visit(this);
+    public void accept(MetadataVisitor visitor, int depth) {
+        visitor.visit(this, depth);
     }
 
     @Override

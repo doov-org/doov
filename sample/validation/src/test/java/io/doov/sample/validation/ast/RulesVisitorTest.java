@@ -38,7 +38,7 @@ public class RulesVisitorTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstFullVisitor(sb)));
+                        .forEach(rule -> rule.accept(new AstFullVisitor(sb), 0));
         print(sb.toString());
     }
 
@@ -47,7 +47,7 @@ public class RulesVisitorTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstLineVisitor(sb, BUNDLE, Locale.ENGLISH)));
+                        .forEach(rule -> rule.accept(new AstLineVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
         print(sb.toString());
     }
 
@@ -56,7 +56,7 @@ public class RulesVisitorTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstTextVisitor(sb, BUNDLE, Locale.ENGLISH)));
+                        .forEach(rule -> rule.accept(new AstTextVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
         print(sb.toString());
     }
 
@@ -65,7 +65,7 @@ public class RulesVisitorTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb, BUNDLE, Locale.ENGLISH)));
+                        .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
         print(sb.toString());
     }
 
@@ -80,7 +80,7 @@ public class RulesVisitorTest {
                                 e.printStackTrace();
                             }
                         })
-                        .forEach(rule -> rule.accept(new AstHtmlVisitor(ops, BUNDLE, Locale.ENGLISH)));
+                        .forEach(rule -> rule.accept(new AstHtmlVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
         print(new String(ops.toByteArray(), Charset.forName("UTF-8")));
     }
 

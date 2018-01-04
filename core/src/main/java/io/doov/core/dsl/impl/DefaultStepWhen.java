@@ -46,11 +46,11 @@ public class DefaultStepWhen implements StepWhen {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor) {
-        visitor.start(this);
-        visitor.visit(this);
-        stepCondition.accept(visitor);
-        visitor.end(this);
+    public void accept(MetadataVisitor visitor, int depth) {
+        visitor.start(this, depth);
+        visitor.visit(this, depth);
+        stepCondition.accept(visitor, depth + 1);
+        visitor.end(this, depth);
     }
 
 }

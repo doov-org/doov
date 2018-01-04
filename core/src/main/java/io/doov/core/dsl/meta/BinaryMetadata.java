@@ -50,12 +50,12 @@ public class BinaryMetadata extends PredicateMetadata {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor) {
-        visitor.start(this);
-        left.accept(visitor);
-        visitor.visit(this);
-        right.accept(visitor);
-        visitor.end(this);
+    public void accept(MetadataVisitor visitor, int depth) {
+        visitor.start(this, depth);
+        left.accept(visitor, depth + 1);
+        visitor.visit(this, depth);
+        right.accept(visitor, depth + 1);
+        visitor.end(this, depth);
     }
 
     @Override

@@ -76,9 +76,9 @@ abstract class AbstractStepCondition implements StepCondition {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor) {
-        visitor.visit(this);
-        metadata.accept(visitor);
+    public void accept(MetadataVisitor visitor, int depth) {
+        visitor.visit(this, depth);
+        metadata.accept(visitor, depth + 1);
     }
 
 }

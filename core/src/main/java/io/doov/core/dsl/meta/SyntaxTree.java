@@ -17,6 +17,6 @@ package io.doov.core.dsl.meta;
 
 public interface SyntaxTree {
 
-    void accept(MetadataVisitor visitor);
+    void accept(MetadataVisitor visitor, int depth);
 
 }
