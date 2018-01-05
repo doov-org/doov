@@ -6,6 +6,7 @@ package io.doov.sample.validation.i18n;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfMonth;
@@ -32,10 +33,7 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.SyntaxTree;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.ast.AstLineVisitor;
 
 public class SampleRuleI18nTest {
@@ -101,12 +99,44 @@ public class SampleRuleI18nTest {
     @Test
     public void test_RULE_USER() {
         final ValidationRule rule = RULE_USER;
+        assertThat(rule.getRootMetadata()).isInstanceOf(BinaryMetadata.class);
+        assertThat(rule.getRootMetadata().type()).isEqualTo(BINARY_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(0).type()).isEqualTo(NARY_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(1).type()).isEqualTo(LEAF_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(0).children().get(0)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(0).children().get(0).type()).isEqualTo(FIELD_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(0).children().get(1)).isInstanceOf(BinaryMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(0).children().get(1).type()).isEqualTo(BINARY_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(0).children().get(1).children().get(0)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(0).children().get(1).children().get(0).type()).isEqualTo(FIELD_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(0).children().get(1).children().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(0).children().get(1).children().get(1).type()).isEqualTo(FIELD_PREDICATE);
         print(rule);
     }
 
     @Test
     public void test_RULE_USER_2() {
         final ValidationRule rule = RULE_USER_2;
+        assertThat(rule.getRootMetadata()).isInstanceOf(BinaryMetadata.class);
+        assertThat(rule.getRootMetadata().type()).isEqualTo(BINARY_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(0)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(0).type()).isEqualTo(FIELD_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(1)).isInstanceOf(BinaryMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(1).type()).isEqualTo(BINARY_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(0)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(0).type()).isEqualTo(FIELD_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(1)).isInstanceOf(BinaryMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(1).type()).isEqualTo(BINARY_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(1).children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(1).children().get(0).type()).isEqualTo(NARY_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(1).children().get(0).children().get(0)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(1).children().get(0).children().get(0).type()).isEqualTo(FIELD_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(1).children().get(0).children().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(1).children().get(0).children().get(1).type()).isEqualTo(FIELD_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(1).children().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(1).children().get(1).children().get(1).type()).isEqualTo(LEAF_PREDICATE);
         print(rule);
     }
 
