@@ -16,6 +16,7 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.SyntaxTree;
 
 public interface ValidationRule extends Readable, SyntaxTree {
@@ -29,5 +30,7 @@ public interface ValidationRule extends Readable, SyntaxTree {
     ValidationRule registerOn(RuleRegistry registry);
 
     String getMessage();
+    
+    Metadata getRootMetadata();
 
 }

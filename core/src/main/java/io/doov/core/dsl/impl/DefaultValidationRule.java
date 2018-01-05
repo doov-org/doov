@@ -18,6 +18,7 @@ import java.util.Locale;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultValidationRule implements ValidationRule {
@@ -88,6 +89,15 @@ public class DefaultValidationRule implements ValidationRule {
         stepWhen.accept(visitor, depth + 1);
         visitor.visit(this, depth);
         visitor.end(this, depth);
+    }
+
+    @Override
+    public Metadata getRootMetadata() {
+        if (stepWhen == null)
+            return null;
+        if (stepWhen.stepCondition() == null)
+            return null;
+        return stepWhen.stepCondition().getMetadata();
     }
 
 }
