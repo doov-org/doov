@@ -49,7 +49,7 @@ public class DefaultStepWhen implements StepWhen {
     public void accept(MetadataVisitor visitor, int depth) {
         visitor.start(this, depth);
         visitor.visit(this, depth);
-        stepCondition.accept(visitor, depth + 1);
+        stepCondition.accept(visitor, depth);
         visitor.end(this, depth);
     }
 
