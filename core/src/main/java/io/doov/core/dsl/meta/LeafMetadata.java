@@ -127,11 +127,15 @@ public class LeafMetadata extends PredicateMetadata {
     // value
 
     public LeafMetadata valueObject(Object readable) {
-        return add(readable == null ? null : new Element(() -> String.valueOf(readable), VALUE));
+        if (readable == null)
+            return null;
+        if (readable instanceof String)
+            return add(new Element(() -> (String) readable, STRING_VALUE));
+        return add(new Element(() -> String.valueOf(readable), VALUE));
     }
 
     public LeafMetadata valueString(String readable) {
-        return add(readable == null ? null : new Element(() -> readable, VALUE));
+        return add(readable == null ? null : new Element(() -> readable, STRING_VALUE));
     }
 
     public LeafMetadata valueCondition(DefaultCondition<?> condition) {

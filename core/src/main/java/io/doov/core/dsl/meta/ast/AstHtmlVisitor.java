@@ -14,6 +14,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
@@ -25,13 +26,7 @@ import java.util.Locale;
 
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.Operator;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
@@ -119,6 +114,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
                     formatLeafField(e);
                     break;
                 case VALUE:
+                case STRING_VALUE:
                     formatLeafValue(e);
                     break;
                 case UNKNOWN:
@@ -255,7 +251,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     protected void formatLeafValue(Element e) {
-        htmlFormatSpan("dsl-token-value", bundle.get(e.getReadable().readable(), locale));
+        if (e.getType() == STRING_VALUE)
+            htmlFormatSpan("dsl-token-value", "&quote;" + bundle.get(e.getReadable().readable() + "&quote;", locale));
+        else
+            htmlFormatSpan("dsl-token-value", bundle.get(e.getReadable().readable(), locale));
     }
 
     protected void formatLeafUnknown(Element e) {
