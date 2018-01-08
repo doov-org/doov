@@ -37,7 +37,6 @@ public class AstLinePercentVisitor extends AstLineVisitor {
         sb.append(formatCurrentIndent());
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
-        System.out.println(metadata.getOperator());
         if (metadata.getOperator() != DefaultOperator.count && metadata.getOperator() != DefaultOperator.count) {
             sb.append(percentage(metadata));
         }
