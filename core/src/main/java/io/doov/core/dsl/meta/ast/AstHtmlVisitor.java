@@ -58,7 +58,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private final String[] lastLines = new String[3];
     private final OutputStream ops;
     protected final ResourceProvider bundle;
-    protected final Locale locale;
+    protected Locale locale;
 
     public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
         this.ops = ops;
@@ -278,5 +278,9 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 }
