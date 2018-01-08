@@ -12,6 +12,7 @@ import io.doov.core.dsl.meta.*;
 
 public class AstLinePercentVisitor extends AstLineVisitor {
     private static final NumberFormat formatter = new DecimalFormat("###.#");
+    private boolean endNary;
 
     public AstLinePercentVisitor(StringBuilder stringBuilder, ResourceProvider bundle, Locale locale) {
         super(stringBuilder, bundle, locale);
@@ -24,17 +25,37 @@ public class AstLinePercentVisitor extends AstLineVisitor {
     }
 
     @Override
+    public void startMetadata(BinaryMetadata metadata, int depth) {
+        super.startMetadata(metadata, depth);
+        if (metadata.children().get(0).type() == MetadataType.NARY_PREDICATE) {
+            sb.append(percentage(metadata));
+        }
+    }
+
+    @Override
     public void startMetadata(NaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
-        sb.append(percentage(metadata) +" ");
+        System.out.println(metadata.getOperator());
+        if (metadata.getOperator() != DefaultOperator.count && metadata.getOperator() != DefaultOperator.count) {
+            sb.append(percentage(metadata));
+        }
         sb.append("[");
     }
 
     @Override
+    protected void endMetadata(NaryMetadata metadata, int depth) {
+        super.endMetadata(metadata, depth);
+        endNary = true;
+    }
+
+    @Override
     protected String formatLeafMetadata(LeafMetadata metadata) {
-        return super.formatLeafMetadata(metadata) +" "+ percentage(metadata);
+        if (stackPeek() == MetadataType.BINARY_PREDICATE) {
+            return super.formatLeafMetadata(metadata);
+        }
+        return percentage(metadata) + super.formatLeafMetadata(metadata);
     }
 
     private String percentage(PredicateMetadata metadata) {
