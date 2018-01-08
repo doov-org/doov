@@ -13,8 +13,21 @@ import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfMonth;
 import static io.doov.sample.field.SampleFieldIdInfo.accountCreationDate;
 import static io.doov.sample.field.SampleFieldIdInfo.accountEmail;
+import static io.doov.sample.field.SampleFieldIdInfo.configurationMaxEmailSize;
+import static io.doov.sample.field.SampleFieldIdInfo.configurationMinAge;
 import static io.doov.sample.field.SampleFieldIdInfo.userBirthdate;
-import static io.doov.sample.validation.SampleRules.*;
+import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT;
+import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT_2;
+import static io.doov.sample.validation.SampleRules.RULE_AGE_2;
+import static io.doov.sample.validation.SampleRules.RULE_EMAIL;
+import static io.doov.sample.validation.SampleRules.RULE_FIRST_NAME;
+import static io.doov.sample.validation.SampleRules.RULE_ID;
+import static io.doov.sample.validation.SampleRules.RULE_MIN;
+import static io.doov.sample.validation.SampleRules.RULE_SUM;
+import static io.doov.sample.validation.SampleRules.RULE_USER;
+import static io.doov.sample.validation.SampleRules.RULE_USER_2;
+import static io.doov.sample.validation.SampleRules.RULE_USER_ADULT;
+import static io.doov.sample.validation.SampleRules.RULE_USER_ADULT_FIRSTDAY;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,9 +37,19 @@ import java.util.Locale;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.field.*;
+import io.doov.core.dsl.field.IntegerFieldInfo;
+import io.doov.core.dsl.field.LocalDateFieldInfo;
+import io.doov.core.dsl.field.LongFieldInfo;
+import io.doov.core.dsl.field.StringFieldInfo;
+import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.DefaultOperator;
+import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.ElementType;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.SyntaxTree;
 import io.doov.core.dsl.meta.ast.AstLineVisitor;
 
 public class SampleRuleI18nTest {
@@ -341,6 +364,31 @@ public class SampleRuleI18nTest {
         assertThat(elts0).hasSize(3);
         final List<Element> elts1 = ((LeafMetadata) rule.getRootMetadata().children().get(0).children().get(1)).stream().collect(toList());
         assertThat(elts1).hasSize(3);
+        print(rule);
+    }
+
+    @Test
+    public void another_test_that_fail() {
+        ValidationRule rule = DOOV
+                        .when(configurationMinAge().when(configurationMaxEmailSize().anyMatch(11, 12, 13)).eq(1))
+                        .validate();
+        assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
+        final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
+        assertThat(elts).hasSize(5);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(IntegerFieldInfo.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(3).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
+        assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.VALUE);
+        assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.VALUE);
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("configuration min age");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("when");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("configuration max email size match any  : 11, 12, 13 ");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("=");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(4).isEqualTo("1");
         print(rule);
     }
 }
