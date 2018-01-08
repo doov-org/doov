@@ -368,27 +368,37 @@ public class SampleRuleI18nTest {
     }
 
     @Test
-    public void another_test_that_fail() {
+    public void test_combined_when() {
         ValidationRule rule = DOOV
                         .when(configurationMinAge().when(configurationMaxEmailSize().anyMatch(11, 12, 13)).eq(1))
                         .validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
-        assertThat(elts).hasSize(5);
+        assertThat(elts).hasSize(9);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(IntegerFieldInfo.class);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
-        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(3).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(3).isEqualTo(IntegerFieldInfo.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(4).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(7).isEqualTo(DefaultOperator.class);
         assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
         assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
-        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.VALUE);
-        assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.OPERATOR);
-        assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.VALUE);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.UNKNOWN);
+        assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.FIELD);
+        assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(5).isEqualTo(ElementType.VALUE);
+        assertThat(elts).extracting(Element::getType).element(6).isEqualTo(ElementType.UNKNOWN);
+        assertThat(elts).extracting(Element::getType).element(7).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(8).isEqualTo(ElementType.VALUE);
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("configuration min age");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("when");
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("configuration max email size match any  : 11, 12, 13 ");
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("=");
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(4).isEqualTo("1");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("(");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("configuration max email size");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(4).isEqualTo("match any");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(5).isEqualTo(" : 11, 12, 13");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(6).isEqualTo(")");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(7).isEqualTo("=");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(8).isEqualTo("1");
         print(rule);
     }
 }

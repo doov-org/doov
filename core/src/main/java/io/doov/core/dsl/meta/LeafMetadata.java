@@ -12,63 +12,8 @@
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.DefaultOperator.after;
-import static io.doov.core.dsl.meta.DefaultOperator.age_at;
-import static io.doov.core.dsl.meta.DefaultOperator.always_false;
-import static io.doov.core.dsl.meta.DefaultOperator.always_true;
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.as_a_number;
-import static io.doov.core.dsl.meta.DefaultOperator.before;
-import static io.doov.core.dsl.meta.DefaultOperator.contains;
-import static io.doov.core.dsl.meta.DefaultOperator.ends_with;
-import static io.doov.core.dsl.meta.DefaultOperator.equals;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_month;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_next_month;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_next_year;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_this_month;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_this_year;
-import static io.doov.core.dsl.meta.DefaultOperator.first_day_of_year;
-import static io.doov.core.dsl.meta.DefaultOperator.greater_or_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.greater_than;
-import static io.doov.core.dsl.meta.DefaultOperator.has_not_size;
-import static io.doov.core.dsl.meta.DefaultOperator.has_size;
-import static io.doov.core.dsl.meta.DefaultOperator.is;
-import static io.doov.core.dsl.meta.DefaultOperator.is_empty;
-import static io.doov.core.dsl.meta.DefaultOperator.is_not_empty;
-import static io.doov.core.dsl.meta.DefaultOperator.is_not_null;
-import static io.doov.core.dsl.meta.DefaultOperator.is_null;
-import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_month;
-import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_this_month;
-import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_this_year;
-import static io.doov.core.dsl.meta.DefaultOperator.last_day_of_year;
-import static io.doov.core.dsl.meta.DefaultOperator.length_is;
-import static io.doov.core.dsl.meta.DefaultOperator.lesser_or_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.lesser_than;
-import static io.doov.core.dsl.meta.DefaultOperator.match_all;
-import static io.doov.core.dsl.meta.DefaultOperator.match_any;
-import static io.doov.core.dsl.meta.DefaultOperator.match_none;
-import static io.doov.core.dsl.meta.DefaultOperator.matches;
-import static io.doov.core.dsl.meta.DefaultOperator.min;
-import static io.doov.core.dsl.meta.DefaultOperator.minus;
-import static io.doov.core.dsl.meta.DefaultOperator.not;
-import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.DefaultOperator.plus;
-import static io.doov.core.dsl.meta.DefaultOperator.starts_with;
-import static io.doov.core.dsl.meta.DefaultOperator.sum;
-import static io.doov.core.dsl.meta.DefaultOperator.times;
-import static io.doov.core.dsl.meta.DefaultOperator.today;
-import static io.doov.core.dsl.meta.DefaultOperator.today_minus;
-import static io.doov.core.dsl.meta.DefaultOperator.today_plus;
-import static io.doov.core.dsl.meta.DefaultOperator.when;
-import static io.doov.core.dsl.meta.DefaultOperator.with;
-import static io.doov.core.dsl.meta.DefaultOperator.xor;
-import static io.doov.core.dsl.meta.ElementType.FIELD;
-import static io.doov.core.dsl.meta.ElementType.OPERATOR;
-import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
-import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
-import static io.doov.core.dsl.meta.ElementType.VALUE;
-import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.ElementType.*;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
@@ -76,15 +21,9 @@ import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
@@ -278,7 +217,9 @@ public class LeafMetadata extends PredicateMetadata {
 
     public static LeafMetadata whenMetadata(DslField field, StepCondition condition) {
         final LeafMetadata exp = new LeafMetadata(FIELD_PREDICATE).field(field).operator(when);
+        exp.elements.add(new Element(() -> "(", ElementType.UNKNOWN));
         exp.elements.addAll(condition.getMetadata().flatten());
+        exp.elements.add(new Element(() -> ")", ElementType.UNKNOWN));
         return exp;
     }
 
