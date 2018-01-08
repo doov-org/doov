@@ -252,7 +252,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     protected void formatLeafValue(Element e) {
         if (e.getType() == STRING_VALUE)
-            htmlFormatSpan("dsl-token-value", "&quote;" + bundle.get(e.getReadable().readable() + "&quote;", locale));
+            htmlFormatSpan("dsl-token-value", escapeHtml4("'") + bundle.get(e.getReadable().readable() + escapeHtml4("'"), locale));
         else
             htmlFormatSpan("dsl-token-value", bundle.get(e.getReadable().readable(), locale));
     }
