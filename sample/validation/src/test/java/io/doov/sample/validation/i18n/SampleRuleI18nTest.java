@@ -283,6 +283,25 @@ public class SampleRuleI18nTest {
                         .validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
+        final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
+        assertThat(elts).hasSize(9);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(LocalDateFieldInfo.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(2).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(3).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(4).isEqualTo(LocalDateFieldInfo.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(5).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(6).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(7).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
+        assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.FIELD);
+        assertThat(elts).extracting(Element::getType).element(5).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(6).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(7).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(8).isEqualTo(ElementType.VALUE);
         print(rule);
     }
 
@@ -292,6 +311,14 @@ public class SampleRuleI18nTest {
                         accountEmail().startsWith("b"))).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(NaryMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(NARY_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(0)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(0).type()).isEqualTo(FIELD_PREDICATE);
+        assertThat(rule.getRootMetadata().children().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().children().get(1).type()).isEqualTo(FIELD_PREDICATE);
+        final List<Element> elts0 = ((LeafMetadata) rule.getRootMetadata().children().get(0)).stream().collect(toList());
+        assertThat(elts0).hasSize(3);
+        final List<Element> elts1 = ((LeafMetadata) rule.getRootMetadata().children().get(1)).stream().collect(toList());
+        assertThat(elts1).hasSize(3);
         print(rule);
     }
 
