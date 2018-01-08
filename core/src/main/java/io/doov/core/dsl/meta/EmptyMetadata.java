@@ -34,4 +34,9 @@ public class EmptyMetadata implements Metadata {
     public Metadata message(Context context) {
         return this;
     }
+
+    @Override
+    public List<Element> flatten() {
+        return Collections.emptyList();
+    }
 }

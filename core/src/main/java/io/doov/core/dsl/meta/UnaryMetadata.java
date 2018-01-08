@@ -13,6 +13,7 @@
 package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.DefaultOperator.not;
+import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
@@ -46,6 +47,14 @@ public class UnaryMetadata extends PredicateMetadata {
     public void accept(MetadataVisitor visitor, int depth) {
         visitor.visit(this, depth);
         value.accept(visitor, depth + 1);
+    }
+
+    @Override
+    public List<Element> flatten() {
+        final List<Element> flatten = new ArrayList<>();
+        flatten.add(new Element(operator, OPERATOR));
+        flatten.addAll(value.flatten());
+        return flatten;
     }
 
     @Override

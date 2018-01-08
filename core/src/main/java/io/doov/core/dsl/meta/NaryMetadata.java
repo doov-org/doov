@@ -20,6 +20,7 @@ import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -91,6 +92,14 @@ public class NaryMetadata extends PredicateMetadata {
     }
 
     @Override
+    public List<Element> flatten() {
+        final List<Element> flatten = new ArrayList<>();
+        flatten.add(new Element(operator, OPERATOR));
+        flatten.addAll(values.stream().map(Metadata::flatten).flatMap(List::stream).collect(Collectors.toList()));
+        return flatten;
+    }
+
+    @Override
     public List<Metadata> children() {
         return Collections.unmodifiableList(values);
     }
@@ -114,4 +123,5 @@ public class NaryMetadata extends PredicateMetadata {
         }
         return new NaryMetadata(operator, values.stream().map(md -> md.message(context)).collect(toList()));
     }
+
 }

@@ -23,6 +23,8 @@ public interface Metadata extends Readable, SyntaxTree {
         throw new UnsupportedOperationException();
     }
 
+    List<Element> flatten();
+    
     List<Metadata> children();
 
     MetadataType type();

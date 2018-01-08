@@ -14,10 +14,14 @@ package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import io.doov.core.dsl.lang.Context;
 
@@ -77,5 +81,13 @@ public class BinaryMetadata extends PredicateMetadata {
         else if (operator == and && context.isEvalFalse(this))
             return new EmptyMetadata();
         return new BinaryMetadata(left.message(context), operator, right.message(context));
+    }
+
+    @Override
+    public List<Element> flatten() {
+        final List<Element> flatten = new ArrayList<>(left.flatten());
+        flatten.add(new Element(operator, OPERATOR));
+        flatten.addAll(right.flatten());
+        return flatten;
     }
 }
