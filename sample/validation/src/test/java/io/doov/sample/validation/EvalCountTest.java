@@ -5,16 +5,21 @@ package io.doov.sample.validation;
 
 import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
+import static io.doov.core.dsl.DOOV.count;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
+import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
+import static io.doov.sample.field.SampleFieldIdInfo.configurationMaxEmailSize;
+import static io.doov.sample.field.SampleFieldIdInfo.configurationMinAge;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.rotate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -25,6 +30,7 @@ import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.ast.AstLinePercentVisitor;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.model.Country;
 
@@ -204,6 +210,23 @@ public class EvalCountTest {
     @Test
     public void combined_or_2() {
         ValidationRule rule = DOOV.when(alwaysTrue().or(alwaysFalse().or(alwaysTrue())))
+                        .validate().withShortCircuit(false);
+        Result result = rule.executeOn(model);
+        PredicateMetadata rootMetadata = (PredicateMetadata) result.getContext().getRootMetadata();
+
+        assertThat(rootMetadata.trueEvalCount()).isEqualTo(1);
+        assertThat(rootMetadata.falseEvalCount()).isEqualTo(0);
+
+        result = rule.executeOn(model);
+        rootMetadata = (PredicateMetadata) result.getContext().getRootMetadata();
+
+        assertThat(rootMetadata.trueEvalCount()).isEqualTo(2);
+        assertThat(rootMetadata.falseEvalCount()).isEqualTo(0);
+    }
+
+    @Test
+    public void simple_count() {
+        ValidationRule rule = DOOV.when(count(alwaysFalse(), alwaysTrue(), alwaysFalse()).greaterOrEquals(1))
                         .validate().withShortCircuit(false);
         Result result = rule.executeOn(model);
         PredicateMetadata rootMetadata = (PredicateMetadata) result.getContext().getRootMetadata();
