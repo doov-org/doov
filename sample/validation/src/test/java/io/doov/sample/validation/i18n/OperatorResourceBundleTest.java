@@ -1,7 +1,7 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package io.doov.core.dsl.meta.i18n;
+package io.doov.sample.validation.i18n;
 
 import static io.doov.core.dsl.meta.DefaultOperator.always_true;
 import static io.doov.core.dsl.meta.DefaultOperator.rule;

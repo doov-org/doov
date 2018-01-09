@@ -3,26 +3,16 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.empty;
-import static io.doov.core.dsl.meta.DefaultOperator.equals;
-import static io.doov.core.dsl.meta.DefaultOperator.greater_or_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.greater_than;
-import static io.doov.core.dsl.meta.DefaultOperator.lesser_or_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.lesser_than;
-import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
-import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
@@ -251,11 +241,11 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     protected void formatLeafValue(Element e) {
-        if (e.getType() == STRING_VALUE)
-            htmlFormatSpan("dsl-token-value", escapeHtml4("'") + bundle.get(e.getReadable().readable(), locale) +
-                            escapeHtml4("'"));
-        else
+        if (e.getType() == STRING_VALUE) {
+            htmlFormatSpan("dsl-token-value", "'" + bundle.get(e.getReadable().readable(), locale) + "'");
+        } else {
             htmlFormatSpan("dsl-token-value", bundle.get(e.getReadable().readable(), locale));
+        }
     }
 
     protected void formatLeafUnknown(Element e) {
