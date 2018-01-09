@@ -128,7 +128,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
                 case FIELD:
                     return e.getReadable().readable();
                 case STRING_VALUE:
-                    return "'" + e.getReadable().readable() + "'";
+                    return "'" + bundle.get(e.getReadable().readable(), locale) + "'";
                 default:
                     return bundle.get(e.getReadable().readable(), locale);
             }
