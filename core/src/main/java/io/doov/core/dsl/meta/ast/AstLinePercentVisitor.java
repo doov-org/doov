@@ -34,12 +34,12 @@ public class AstLinePercentVisitor extends AstLineVisitor {
 
     @Override
     public void startMetadata(NaryMetadata metadata, int depth) {
+        if (metadata.getOperator() != DefaultOperator.count && metadata.getOperator() != DefaultOperator.sum) {
+            sb.append(percentage(metadata));
+        }
         sb.append(formatCurrentIndent());
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
-        if (metadata.getOperator() != DefaultOperator.count && metadata.getOperator() != DefaultOperator.count) {
-            sb.append(percentage(metadata));
-        }
         sb.append("[");
     }
 
