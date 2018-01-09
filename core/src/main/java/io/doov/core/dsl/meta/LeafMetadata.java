@@ -28,11 +28,11 @@ import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.lang.StepCondition;
 
 public class LeafMetadata extends PredicateMetadata {
+
     private static final Collector<CharSequence, ?, String> COLLECTOR_LIST = joining(", ", " : ", "");
     private final Deque<Element> elements;
     private final MetadataType type;
@@ -59,15 +59,15 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(merge, mergeType(type, other.type));
     }
 
-
     @Override
     public List<Element> flatten() {
         return elements.stream().collect(toList());
     }
-    
+
     private static MetadataType mergeType(MetadataType current, MetadataType merged) {
-        if (current == FIELD_PREDICATE && merged == FIELD_PREDICATE_MATCH_ANY)
+        if (current == FIELD_PREDICATE && merged == FIELD_PREDICATE_MATCH_ANY) {
             return FIELD_PREDICATE_MATCH_ANY;
+        }
         return current;
     }
 
@@ -135,10 +135,12 @@ public class LeafMetadata extends PredicateMetadata {
     // value
 
     public LeafMetadata valueObject(Object readable) {
-        if (readable == null)
+        if (readable == null) {
             return null;
-        if (readable instanceof String)
+        }
+        if (readable instanceof String) {
             return add(new Element(() -> (String) readable, STRING_VALUE));
+        }
         return add(new Element(() -> String.valueOf(readable), VALUE));
     }
 
@@ -280,7 +282,7 @@ public class LeafMetadata extends PredicateMetadata {
     // map
 
     public static LeafMetadata mapToIntMetadata(DslField field) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(as_a_number);
+        return new LeafMetadata(FIELD_PREDICATE).field(field);
     }
 
     // with
@@ -325,9 +327,8 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(after).field(field);
     }
 
-    public static LeafMetadata afterTemporalConditionMetadata(DefaultCondition<?> condition1,
-                    DefaultCondition<?> condition2) {
-        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition1).operator(after).valueCondition(condition2);
+    public static LeafMetadata afterTemporalConditionMetadata(DefaultCondition<?> c1, DefaultCondition<?> c2) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(c1).operator(after).valueCondition(c2);
     }
 
     public static LeafMetadata afterSupplierMetadata(DefaultCondition<?> condition, Supplier<?> value) {
@@ -344,9 +345,8 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before).field(field);
     }
 
-    public static LeafMetadata beforeTemporalConditionMetadata(DefaultCondition<?> condition1,
-                    DefaultCondition<?> condition2) {
-        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition1).operator(before).valueCondition(condition2);
+    public static LeafMetadata beforeTemporalConditionMetadata(DefaultCondition<?> c1, DefaultCondition<?> c2) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(c1).operator(before).valueCondition(c2);
     }
 
     public static LeafMetadata beforeSupplierMetadata(DefaultCondition<?> condition, Supplier<?> value) {
@@ -363,9 +363,8 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(age_at).field(field);
     }
 
-    public static LeafMetadata ageAtTemporalConditionMetadata(DefaultCondition<?> condition1,
-                    DefaultCondition<?> condition2) {
-        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition1).operator(age_at).valueCondition(condition2);
+    public static LeafMetadata ageAtTemporalConditionMetadata(DefaultCondition<?> c1, DefaultCondition<?> c2) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(c1).operator(age_at).valueCondition(c2);
     }
 
     public static LeafMetadata ageAtSupplierMetadata(DefaultCondition<?> condition, Supplier<?> supplier) {
@@ -483,7 +482,7 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(length_is);
     }
 
-    // length is
+    // contains
 
     public static LeafMetadata containsMetadata(DslField field, Object value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(contains).valueObject(value);

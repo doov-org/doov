@@ -210,14 +210,12 @@ public class SampleRuleI18nTest {
         assertThat(rule.getRootMetadata().children().get(0)).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().children().get(0).type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata().children().get(0)).stream().collect(toList());
-        assertThat(elts).hasSize(4);
+        assertThat(elts).hasSize(3);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(StringFieldInfo.class);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
-        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(2).isEqualTo(DefaultOperator.class);
         assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
         assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
-        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.OPERATOR);
-        assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.VALUE);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.VALUE);
         print(rule);
     }
 
