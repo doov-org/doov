@@ -28,7 +28,7 @@ public class TemporalAdjuster {
     private final Metadata metadata;
     private final java.time.temporal.TemporalAdjuster adjuster;
 
-    private TemporalAdjuster(Metadata metadata, java.time.temporal.TemporalAdjuster adjuster) {
+    public TemporalAdjuster(Metadata metadata, java.time.temporal.TemporalAdjuster adjuster) {
         this.metadata = metadata;
         this.adjuster = adjuster;
     }
@@ -70,8 +70,11 @@ public class TemporalAdjuster {
     // date
 
     public static TemporalAdjuster ofDateAdjuster(UnaryOperator<LocalDate> dateBasedAdjuster) {
-        return new TemporalAdjuster(unknownMetadata("of date adjuster"),
-                TemporalAdjusters.ofDateAdjuster(dateBasedAdjuster));
+        return ofDateAdjuster(unknownMetadata("of date adjuster"), dateBasedAdjuster);
+    }
+
+    public static TemporalAdjuster ofDateAdjuster(Metadata metadata, UnaryOperator<LocalDate> dateBasedAdjuster) {
+        return new TemporalAdjuster(metadata, TemporalAdjusters.ofDateAdjuster(dateBasedAdjuster));
     }
 
 }
