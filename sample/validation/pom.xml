@@ -25,5 +25,9 @@
       <groupId>io.doov</groupId>
       <artifactId>doov-assertions</artifactId>
     </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
   </dependencies>
 </project>
