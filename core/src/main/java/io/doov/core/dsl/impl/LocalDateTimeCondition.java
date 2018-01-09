@@ -13,9 +13,7 @@
 package io.doov.core.dsl.impl;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjuster;
-import java.time.temporal.TemporalUnit;
+import java.time.temporal.*;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -44,17 +42,17 @@ public class LocalDateTimeCondition extends TemporalCondition<LocalDateTime> {
 
     @Override
     protected Function<LocalDateTime, LocalDateTime> minusFunction(int value, TemporalUnit unit) {
-        return d -> d.minus(value, unit);
+        return dateTime -> dateTime.minus(value, unit);
     }
 
     @Override
     protected Function<LocalDateTime, LocalDateTime> plusFunction(int value, TemporalUnit unit) {
-        return d -> d.plus(value, unit);
+        return dateTime -> dateTime.plus(value, unit);
     }
 
     @Override
     protected Function<LocalDateTime, LocalDateTime> withFunction(TemporalAdjuster ajuster) {
-        return d -> d.with(ajuster);
+        return dateTime -> dateTime.with(ajuster);
     }
 
     @Override
@@ -63,8 +61,18 @@ public class LocalDateTimeCondition extends TemporalCondition<LocalDateTime> {
     }
 
     @Override
+    protected BiFunction<LocalDateTime, LocalDateTime, Boolean> afterOrEqualsFunction() {
+        return (dateTime1, dateTime2) -> dateTime1.isAfter(dateTime2) || dateTime1.equals(dateTime2);
+    }
+
+    @Override
     protected BiFunction<LocalDateTime, LocalDateTime, Boolean> beforeFunction() {
         return LocalDateTime::isBefore;
+    }
+
+    @Override
+    protected BiFunction<LocalDateTime, LocalDateTime, Boolean> beforeOrEqualsFunction() {
+        return (dateTime1, dateTime2) -> dateTime1.isBefore(dateTime2) || dateTime1.equals(dateTime2);
     }
 
     @Override

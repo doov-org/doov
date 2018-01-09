@@ -28,8 +28,10 @@ public enum DefaultOperator implements Operator {
     minus("minus"), //
     plus("plus"), //
     after("after"), //
+    after_or_equals("after or equals"), //
     age_at("age at"), //
     before("before"), //
+    before_or_equals("before or equals"), //
     matches("matches"), //
     contains("contains"), //
     starts_with("starts with"), //

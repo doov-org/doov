@@ -335,6 +335,19 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(after).valueSupplier(value);
     }
 
+    public static LeafMetadata afterOrEqualsValueMetadata(DefaultCondition<?> condition, Object value) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(after_or_equals).valueObject(value);
+    }
+
+    public static LeafMetadata afterOrEqualsSupplierMetadata(DefaultCondition<?> condition, Supplier<?> value) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(after_or_equals)
+                        .valueSupplier(value);
+    }
+
+    public static LeafMetadata afterOrEqualsTemporalConditionMetadata(DefaultCondition<?> c1, DefaultCondition<?> c2) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(c1).operator(after_or_equals).valueCondition(c2);
+    }
+
     // before
 
     public static LeafMetadata beforeValueMetadata(DefaultCondition<?> condition, Object value) {
@@ -351,6 +364,20 @@ public class LeafMetadata extends PredicateMetadata {
 
     public static LeafMetadata beforeSupplierMetadata(DefaultCondition<?> condition, Supplier<?> value) {
         return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before).valueSupplier(value);
+    }
+
+    public static LeafMetadata beforeOrEqualsValueMetadata(DefaultCondition<?> condition, Object value) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before_or_equals)
+                        .valueObject(value);
+    }
+
+    public static LeafMetadata beforeOrEqualsSupplierMetadata(DefaultCondition<?> condition, Supplier<?> value) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before_or_equals)
+                        .valueSupplier(value);
+    }
+
+    public static LeafMetadata beforeOrEqualsTemporalConditionMetadata(DefaultCondition<?> c1, DefaultCondition<?> c2) {
+        return new LeafMetadata(FIELD_PREDICATE).valueCondition(c1).operator(before_or_equals).valueCondition(c2);
     }
 
     // age at

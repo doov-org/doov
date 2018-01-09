@@ -123,18 +123,26 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     }
 
     public final StepCondition beforeOrEq(N value) {
-        return LogicalBinaryCondition.or(before(value), eq(value));
+        return predicate(beforeOrEqualsValueMetadata(this, value),
+                        (model, context) -> Optional.ofNullable(value),
+                        (l, r) -> beforeOrEqualsFunction().apply(l, r));
     }
 
     public final StepCondition beforeOrEq(Supplier<N> value) {
-        return LogicalBinaryCondition.or(before(value), eq(value));
+        return predicate(beforeOrEqualsSupplierMetadata(this, value),
+                        (model, context) -> Optional.ofNullable(value.get()),
+                        (l, r) -> beforeOrEqualsFunction().apply(l, r));
     }
 
     public final StepCondition beforeOrEq(TemporalCondition<N> value) {
-        return LogicalBinaryCondition.or(before(value), eq(value));
+        return predicate(beforeOrEqualsTemporalConditionMetadata(this, value),
+                        value.function,
+                        (l, r) -> beforeOrEqualsFunction().apply(l, r));
     }
 
     protected abstract BiFunction<N, N, Boolean> beforeFunction();
+
+    protected abstract BiFunction<N, N, Boolean> beforeOrEqualsFunction();
 
     // after
 
@@ -163,18 +171,26 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     }
 
     public final StepCondition afterOrEq(N value) {
-        return LogicalBinaryCondition.or(after(value), eq(value));
+        return predicate(afterOrEqualsValueMetadata(this, value),
+                        (model, context) -> Optional.ofNullable(value),
+                        (l, r) -> afterOrEqualsFunction().apply(l, r));
     }
 
     public final StepCondition afterOrEq(Supplier<N> value) {
-        return LogicalBinaryCondition.or(after(value), eq(value));
+        return predicate(afterOrEqualsSupplierMetadata(this, value),
+                        (model, context) -> Optional.ofNullable(value.get()),
+                        (l, r) -> afterOrEqualsFunction().apply(l, r));
     }
 
     public final StepCondition afterOrEq(TemporalCondition<N> value) {
-        return LogicalBinaryCondition.or(after(value), eq(value));
+        return predicate(afterOrEqualsTemporalConditionMetadata(this, value),
+                        value.function,
+                        (l, r) -> afterOrEqualsFunction().apply(l, r));
     }
 
     protected abstract BiFunction<N, N, Boolean> afterFunction();
+
+    protected abstract BiFunction<N, N, Boolean> afterOrEqualsFunction();
 
     // between
 

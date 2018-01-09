@@ -16,9 +16,7 @@
 package io.doov.core.dsl.impl;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjuster;
-import java.time.temporal.TemporalUnit;
+import java.time.temporal.*;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -35,29 +33,29 @@ public class LocalDateCondition extends TemporalCondition<LocalDate> {
     }
 
     public LocalDateCondition(DslField field, PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<LocalDate>> value) {
+                    BiFunction<DslModel, Context, Optional<LocalDate>> value) {
         super(field, metadata, value);
     }
 
     @Override
     protected TemporalCondition<LocalDate> temporalCondition(DslField field, PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<LocalDate>> value) {
+                    BiFunction<DslModel, Context, Optional<LocalDate>> value) {
         return new LocalDateCondition(field, metadata, value);
     }
 
     @Override
     protected Function<LocalDate, LocalDate> minusFunction(int value, TemporalUnit unit) {
-        return d -> d.minus(value, unit);
+        return date -> date.minus(value, unit);
     }
 
     @Override
     protected Function<LocalDate, LocalDate> plusFunction(int value, TemporalUnit unit) {
-        return d -> d.plus(value, unit);
+        return date -> date.plus(value, unit);
     }
 
     @Override
     protected Function<LocalDate, LocalDate> withFunction(TemporalAdjuster ajuster) {
-        return d -> d.with(ajuster);
+        return date -> date.with(ajuster);
     }
 
     @Override
@@ -66,8 +64,18 @@ public class LocalDateCondition extends TemporalCondition<LocalDate> {
     }
 
     @Override
+    protected BiFunction<LocalDate, LocalDate, Boolean> afterOrEqualsFunction() {
+        return (date1, date2) -> date1.isAfter(date2) || date1.equals(date2);
+    }
+
+    @Override
     protected BiFunction<LocalDate, LocalDate, Boolean> beforeFunction() {
         return LocalDate::isBefore;
+    }
+
+    @Override
+    protected BiFunction<LocalDate, LocalDate, Boolean> beforeOrEqualsFunction() {
+        return (date1, date2) -> date1.isBefore(date2) || date1.equals(date2);
     }
 
     @Override
