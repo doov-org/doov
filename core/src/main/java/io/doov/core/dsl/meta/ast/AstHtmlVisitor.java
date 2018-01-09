@@ -3,20 +3,36 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.empty;
+import static io.doov.core.dsl.meta.DefaultOperator.equals;
+import static io.doov.core.dsl.meta.DefaultOperator.greater_or_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.greater_than;
+import static io.doov.core.dsl.meta.DefaultOperator.lesser_or_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.lesser_than;
+import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
+import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
-import java.util.*;
-
-import org.apache.commons.text.StringEscapeUtils;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.UnaryMetadata;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
@@ -99,6 +115,9 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             switch (e.getType()) {
                 case OPERATOR:
                     formatLeafOperator(e);
+                    break;
+                case TEMPORAL_UNIT:
+                    formatTemporalUnit(e);
                     break;
                 case FIELD:
                     formatLeafField(e);
@@ -235,7 +254,11 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected void formatLeafOperator(Element e) {
         htmlFormatSpan("dsl-token-operator", bundle.get((Operator) e.getReadable(), locale));
     }
-
+    
+    protected void formatTemporalUnit(Element e) {
+        htmlFormatSpan("dsl-token-operator", bundle.get(e.getReadable().readable(), locale));
+    }
+    
     protected void formatLeafField(Element e) {
         htmlFormatSpan("dsl-token-field", e.getReadable().readable());
     }

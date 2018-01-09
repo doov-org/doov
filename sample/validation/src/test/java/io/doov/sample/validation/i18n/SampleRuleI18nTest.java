@@ -28,6 +28,7 @@ import static io.doov.sample.validation.SampleRules.RULE_USER;
 import static io.doov.sample.validation.SampleRules.RULE_USER_2;
 import static io.doov.sample.validation.SampleRules.RULE_USER_ADULT;
 import static io.doov.sample.validation.SampleRules.RULE_USER_ADULT_FIRSTDAY;
+import static java.time.temporal.ChronoUnit.YEARS;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,6 +52,8 @@ import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.NaryMetadata;
 import io.doov.core.dsl.meta.SyntaxTree;
 import io.doov.core.dsl.meta.ast.AstLineVisitor;
+import io.doov.core.dsl.time.LocalDateSuppliers;
+import io.doov.sample.field.SampleFieldIdInfo;
 
 public class SampleRuleI18nTest {
     private static void print(SyntaxTree tree) {
@@ -249,7 +252,7 @@ public class SampleRuleI18nTest {
         assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.FIELD);
         assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.OPERATOR);
         assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.VALUE);
-        assertThat(elts).extracting(Element::getType).element(5).isEqualTo(ElementType.STRING_VALUE);
+        assertThat(elts).extracting(Element::getType).element(5).isEqualTo(ElementType.TEMPORAL_UNIT);
         print(rule);
     }
 
@@ -297,11 +300,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_RULE_DOUBLE_TEMPORAL() {
-        final ValidationRule rule = DOOV
-                        .when(userBirthdate().with(firstDayOfMonth())
-                                        .ageAt(accountCreationDate().with(firstDayOfMonth()))
-                                        .lesserThan(18))
-                        .validate();
+        final ValidationRule rule = DOOV.when(userBirthdate().with(firstDayOfMonth()).ageAt(accountCreationDate().with(firstDayOfMonth())).lesserThan(18)).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
@@ -328,8 +327,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_match_any() {
-        final ValidationRule rule = DOOV.when(matchAny(accountEmail().startsWith("a"),
-                        accountEmail().startsWith("b"))).validate();
+        final ValidationRule rule = DOOV.when(matchAny(accountEmail().startsWith("a"), accountEmail().startsWith("b"))).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(NaryMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(NARY_PREDICATE);
         assertThat(rule.getRootMetadata().children().get(0)).isInstanceOf(LeafMetadata.class);
@@ -345,8 +343,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_count_greater_than_2() {
-        ValidationRule rule = DOOV.when(count(accountEmail().startsWith("a"),
-                        accountEmail().startsWith("b")).greaterThan(2)).validate();
+        ValidationRule rule = DOOV.when(count(accountEmail().startsWith("a"), accountEmail().startsWith("b")).greaterThan(2)).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(BinaryMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(BINARY_PREDICATE);
         assertThat(rule.getRootMetadata().children().get(0)).isInstanceOf(NaryMetadata.class);
@@ -367,9 +364,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_combined_when() {
-        ValidationRule rule = DOOV
-                        .when(configurationMinAge().when(configurationMaxEmailSize().anyMatch(11, 12, 13)).eq(1))
-                        .validate();
+        ValidationRule rule = DOOV.when(configurationMinAge().when(configurationMaxEmailSize().anyMatch(11, 12, 13)).eq(1)).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
@@ -381,11 +376,11 @@ public class SampleRuleI18nTest {
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(7).isEqualTo(DefaultOperator.class);
         assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
         assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
-        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.UNKNOWN);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.PARENTHESIS_LEFT);
         assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.FIELD);
         assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.OPERATOR);
         assertThat(elts).extracting(Element::getType).element(5).isEqualTo(ElementType.VALUE);
-        assertThat(elts).extracting(Element::getType).element(6).isEqualTo(ElementType.UNKNOWN);
+        assertThat(elts).extracting(Element::getType).element(6).isEqualTo(ElementType.PARENTHESIS_RIGHT);
         assertThat(elts).extracting(Element::getType).element(7).isEqualTo(ElementType.OPERATOR);
         assertThat(elts).extracting(Element::getType).element(8).isEqualTo(ElementType.VALUE);
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("configuration min age");
@@ -397,6 +392,32 @@ public class SampleRuleI18nTest {
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(6).isEqualTo(")");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(7).isEqualTo("=");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(8).isEqualTo("1");
+        print(rule);
+    }
+
+    @Test
+    public void test_temporal_unit() {
+        ValidationRule rule = DOOV.when(SampleFieldIdInfo.userBirthdate().minus(1, YEARS).before(LocalDateSuppliers.today())).validate();
+        assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
+        final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
+        assertThat(elts).hasSize(6);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(LocalDateFieldInfo.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(4).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(5).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
+        assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.VALUE);
+        assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.TEMPORAL_UNIT);
+        assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(5).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user birthdate");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("minus");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("1");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("years");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(4).isEqualTo("before");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(5).isEqualTo("today");
         print(rule);
     }
 }

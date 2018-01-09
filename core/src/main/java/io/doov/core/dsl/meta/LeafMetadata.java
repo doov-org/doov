@@ -13,7 +13,14 @@
 package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.ElementType.*;
+import static io.doov.core.dsl.meta.Element.leftParenthesis;
+import static io.doov.core.dsl.meta.Element.rightParenthesis;
+import static io.doov.core.dsl.meta.ElementType.FIELD;
+import static io.doov.core.dsl.meta.ElementType.OPERATOR;
+import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
+import static io.doov.core.dsl.meta.ElementType.TEMPORAL_UNIT;
+import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
+import static io.doov.core.dsl.meta.ElementType.VALUE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
@@ -28,11 +35,11 @@ import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.StepCondition;
 
 public class LeafMetadata extends PredicateMetadata {
-
     private static final Collector<CharSequence, ?, String> COLLECTOR_LIST = joining(", ", " : ", "");
     private final Deque<Element> elements;
     private final MetadataType type;
@@ -53,7 +60,7 @@ public class LeafMetadata extends PredicateMetadata {
 
     @Override
     public PredicateMetadata merge(LeafMetadata other) {
-        removeDuplicateField(elements, other.elements);
+        removeDuplicate(elements, other.elements);
         final Deque<Element> merge = new ArrayDeque<>(elements);
         merge.addAll(other.elements);
         return new LeafMetadata(merge, mergeType(type, other.type));
@@ -65,19 +72,19 @@ public class LeafMetadata extends PredicateMetadata {
     }
 
     private static MetadataType mergeType(MetadataType current, MetadataType merged) {
-        if (current == FIELD_PREDICATE && merged == FIELD_PREDICATE_MATCH_ANY) {
+        if (current == FIELD_PREDICATE && merged == FIELD_PREDICATE_MATCH_ANY)
             return FIELD_PREDICATE_MATCH_ANY;
-        }
         return current;
     }
 
-    private static void removeDuplicateField(Deque<Element> current, Deque<Element> merged) {
-        if (current.isEmpty() || merged.isEmpty()) {
+    private static void removeDuplicate(Deque<Element> current, Deque<Element> merged) {
+        if (current.isEmpty() || merged.isEmpty())
             return;
-        }
-        if (current.peek().getType().equals(ElementType.FIELD)
-                        && merged.peek().getType().equals(ElementType.FIELD)) {
-            merged.pop();
+        for (Element element : current) {
+            if (merged.isEmpty())
+                break;
+            if (merged.peek().getType() == element.getType() && merged.peek().getReadable().readable().equals(element.getReadable().readable()))
+                merged.pop();
         }
     }
 
@@ -107,8 +114,7 @@ public class LeafMetadata extends PredicateMetadata {
     public Metadata message(Context context) {
         if (type == FIELD_PREDICATE_MATCH_ANY) {
             final DslField field = (DslField) elements.getFirst().getReadable();
-            return new LeafMetadata(FIELD_PREDICATE).field(field).operator(equals)
-                            .valueObject(context.getEvalValue(field.id()));
+            return new LeafMetadata(FIELD_PREDICATE).field(field).operator(equals).valueObject(context.getEvalValue(field.id()));
         }
         return this;
     }
@@ -135,17 +141,19 @@ public class LeafMetadata extends PredicateMetadata {
     // value
 
     public LeafMetadata valueObject(Object readable) {
-        if (readable == null) {
+        if (readable == null)
             return null;
-        }
-        if (readable instanceof String) {
+        if (readable instanceof String)
             return add(new Element(() -> (String) readable, STRING_VALUE));
-        }
         return add(new Element(() -> String.valueOf(readable), VALUE));
     }
 
     public LeafMetadata valueString(String readable) {
         return add(readable == null ? null : new Element(() -> readable, STRING_VALUE));
+    }
+
+    public LeafMetadata temporalUnit(Object unit) {
+        return add(unit == null ? null : new Element(() -> unit.toString().toLowerCase(), TEMPORAL_UNIT));
     }
 
     public LeafMetadata valueCondition(DefaultCondition<?> condition) {
@@ -170,13 +178,11 @@ public class LeafMetadata extends PredicateMetadata {
     }
 
     public LeafMetadata valueListReadable(Collection<? extends Readable> readables) {
-        return add(readables == null || readables.isEmpty() ? null
-                        : new Element(() -> formatListReadable(readables), VALUE));
+        return add(readables == null || readables.isEmpty() ? null : new Element(() -> formatListReadable(readables), VALUE));
     }
 
     public LeafMetadata valueListObject(Collection<?> readables) {
-        return add(readables == null || readables.isEmpty() ? null
-                        : new Element(() -> formatListObject(readables), VALUE));
+        return add(readables == null || readables.isEmpty() ? null : new Element(() -> formatListObject(readables), VALUE));
     }
 
     public static LeafMetadata fieldMetadata(DslField field) {
@@ -219,9 +225,9 @@ public class LeafMetadata extends PredicateMetadata {
 
     public static LeafMetadata whenMetadata(DslField field, StepCondition condition) {
         final LeafMetadata exp = new LeafMetadata(FIELD_PREDICATE).field(field).operator(when);
-        exp.elements.add(new Element(() -> "(", ElementType.UNKNOWN));
+        exp.elements.add(leftParenthesis());
         exp.elements.addAll(condition.getMetadata().flatten());
-        exp.elements.add(new Element(() -> ")", ElementType.UNKNOWN));
+        exp.elements.add(rightParenthesis());
         return exp;
     }
 
@@ -294,27 +300,21 @@ public class LeafMetadata extends PredicateMetadata {
     // minus
 
     public static LeafMetadata minusMetadata(DslField field, int value, Object unit) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(minus)
-                        .valueObject(value)
-                        .valueString(formatUnit(unit));
+        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(minus).valueObject(value).temporalUnit(unit);
     }
 
     public static LeafMetadata minusMetadata(DslField field1, DslField field2, Object unit) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(minus).field(field2)
-                        .valueString(formatUnit(unit));
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(minus).field(field2).temporalUnit(unit);
     }
 
     // plus
 
     public static LeafMetadata plusMetadata(DslField field, int value, Object unit) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(plus)
-                        .valueObject(value)
-                        .valueString(formatUnit(unit));
+        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(plus).valueObject(value).temporalUnit(unit);
     }
 
     public static LeafMetadata plusMetadata(DslField field1, DslField field2, Object unit) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(plus).field(field2)
-                        .valueObject(formatUnit(unit));
+        return new LeafMetadata(FIELD_PREDICATE).field(field1).operator(plus).field(field2).temporalUnit(unit);
     }
 
     // after
@@ -482,7 +482,7 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(length_is);
     }
 
-    // contains
+    // length is
 
     public static LeafMetadata containsMetadata(DslField field, Object value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(contains).valueObject(value);
@@ -519,15 +519,11 @@ public class LeafMetadata extends PredicateMetadata {
     }
 
     public static LeafMetadata todayPlusMetadata(int value, Object unit) {
-        return new LeafMetadata(LEAF_PREDICATE).operator(today_plus)
-                        .valueObject(value)
-                        .valueString(formatUnit(unit));
+        return new LeafMetadata(LEAF_PREDICATE).operator(today_plus).valueObject(value).temporalUnit(unit);
     }
 
     public static LeafMetadata todayMinusMetadata(int value, Object unit) {
-        return new LeafMetadata(LEAF_PREDICATE).operator(today_minus)
-                        .valueObject(value)
-                        .valueString(formatUnit(unit));
+        return new LeafMetadata(LEAF_PREDICATE).operator(today_minus).valueObject(value).temporalUnit(unit);
     }
 
     public static LeafMetadata firstDayOfThisMonthMetadata() {
@@ -574,12 +570,6 @@ public class LeafMetadata extends PredicateMetadata {
 
     public static LeafMetadata lastDayOfYearMetadata() {
         return new LeafMetadata(LEAF_PREDICATE).operator(last_day_of_year);
-    }
-
-    // utils
-
-    private static String formatUnit(Object unit) {
-        return unit.toString().toLowerCase();
     }
 
     private static String formatListReadable(Collection<? extends Readable> readables) {
