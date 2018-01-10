@@ -53,7 +53,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
                     not_equals, lesser_or_equals, lesser_than);
 
     private int binaryDeep = 0;
-    private boolean closeFieldLI;
     private boolean endOfSum;
     private final String[] lastLines = new String[3];
     private final OutputStream ops;
@@ -100,7 +99,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             if (!endOfSum) {
                 writeWithBuffer(BEG_LI);
             }
-//            closeFieldLI = true;
         }
     }
 
@@ -136,10 +134,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void endMetadata(LeafMetadata metadata, int depth) {
-//        if (closeFieldLI) {
-//            writeWithBuffer(END_LI);
-//            closeFieldLI = false;
-//        }
         if (endOfSum) {
             writeWithBuffer("</br>");
             endOfSum = false;

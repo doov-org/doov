@@ -39,6 +39,7 @@ import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.AstHtmlVisitor;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
+import io.doov.core.dsl.time.LocalDateSuppliers;
 import io.doov.sample.model.Country;
 
 public class SampleRules extends DefaultRuleRegistry {
@@ -124,12 +125,6 @@ public class SampleRules extends DefaultRuleRegistry {
 
     public static final ValidationRule RULE_DOUBLE_LAMBDA = DOOV
                     .when(favoriteSiteName1().anyMatch(s -> !s.contains("dunno")))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
-
-    public static final ValidationRule RULE_IMBRICATE_OR = DOOV
-                    .when(favoriteSiteName1().startsWith("e").or(favoriteSiteName1().startsWith("f").not().or
-                                    (favoriteSiteName1().startsWith("g").or(favoriteSiteName1().startsWith("h")))))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
