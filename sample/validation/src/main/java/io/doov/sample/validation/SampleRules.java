@@ -143,4 +143,5 @@ public class SampleRules extends DefaultRuleRegistry {
         System.out.println("written " + output.getAbsolutePath());
         System.exit(1);
     }
+
 }
