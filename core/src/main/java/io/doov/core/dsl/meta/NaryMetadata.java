@@ -15,6 +15,7 @@ package io.doov.core.dsl.meta;
 import static io.doov.core.dsl.meta.DefaultOperator.match_all;
 import static io.doov.core.dsl.meta.DefaultOperator.match_any;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
+import static io.doov.core.dsl.meta.MetadataType.EMPTY;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
@@ -74,10 +75,12 @@ public class NaryMetadata extends PredicateMetadata {
     @Override
     public void accept(MetadataVisitor visitor, int depth) {
         visitor.start(this, depth);
-        values.stream().filter(Objects::nonNull).forEach(v -> {
-            v.accept(visitor, depth + 1);
-            visitor.visit(this, depth);
-        });
+        values.stream().filter(Objects::nonNull)
+                        .filter(md -> EMPTY != md.type())
+                        .forEach(v -> {
+                            v.accept(visitor, depth + 1);
+                            visitor.visit(this, depth);
+                        });
         visitor.end(this, depth);
     }
 
@@ -117,14 +120,18 @@ public class NaryMetadata extends PredicateMetadata {
         } else if (operator == match_any) {
             final List<Metadata> childMsgs = values.stream()
                             .filter(md -> context.isEvalTrue(md))
-                            .map(md -> md.message(context)).collect(toList());
+                            .map(md -> md.message(context))
+                            .filter(Objects::nonNull)
+                            .filter(md -> EMPTY != md.type())
+                            .collect(toList());
             if (childMsgs.size() == 1)
                 return childMsgs.get(0);
             return new NaryMetadata(operator, childMsgs);
         }
         return new NaryMetadata(operator, values.stream()
                         .map(md -> md.message(context))
-                        .filter(Objects::nonNull).collect(toList()));
+                        .filter(Objects::nonNull)
+                        .filter(md -> EMPTY != md.type())
+                        .collect(toList()));
     }
-
 }
