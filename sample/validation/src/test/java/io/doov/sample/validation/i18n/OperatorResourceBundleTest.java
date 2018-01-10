@@ -42,6 +42,6 @@ public class OperatorResourceBundleTest {
 
     @Test
     public void today_fr_FR() {
-        assertThat(BUNDLE.get(today, Locale.FRANCE)).isEqualTo("aujourd'hui");
+        assertThat(BUNDLE.get(today, Locale.FRANCE)).isEqualTo("date du jour");
     }
 }
