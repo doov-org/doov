@@ -113,6 +113,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     public void visitMetadata(LeafMetadata leaf, int depth) {
         leaf.stream().forEach(e -> {
             switch (e.getType()) {
+                case PARENTHESIS_LEFT:
+                case PARENTHESIS_RIGHT:
+                    formatParenthesis(e);
+                    break;
                 case OPERATOR:
                     formatLeafOperator(e);
                     break;
@@ -261,6 +265,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     
     protected void formatLeafField(Element e) {
         htmlFormatSpan("dsl-token-field", e.getReadable().readable());
+    }
+
+    protected void formatParenthesis(Element e) {
+        htmlFormatSpan("dsl-token-parenthesis", e.getReadable().readable());
     }
 
     protected void formatLeafValue(Element e) {
