@@ -397,7 +397,7 @@ public class SampleRuleI18nTest {
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(5).isEqualTo("today");
         print(rule);
     }
-    
+
     @Test
     public void test_eq_today() {
         ValidationRule rule = DOOV.when(SampleFieldIdInfo.userBirthdate().eq(LocalDateSuppliers.today())).validate();
@@ -415,26 +415,29 @@ public class SampleRuleI18nTest {
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("today");
         print(rule);
     }
-    
+
     @Test
     public void test_eq_today_plus_1_day() {
         ValidationRule rule = DOOV.when(SampleFieldIdInfo.userBirthdate().eq(LocalDateSuppliers.today().plus(1, DAYS))).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
-        assertThat(elts).hasSize(5);
+        assertThat(elts).hasSize(6);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(LocalDateFieldInfo.class);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
         assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
         assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
         assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.OPERATOR);
-        assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.VALUE);
-        assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.TEMPORAL_UNIT);
+        assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.VALUE);
+        assertThat(elts).extracting(Element::getType).element(5).isEqualTo(ElementType.TEMPORAL_UNIT);
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user birthdate");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("=");
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("plus");
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("1");
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(4).isEqualTo("days");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("today");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("plus");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(4).isEqualTo("1");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(5).isEqualTo("days");
         print(rule);
     }
+
 }

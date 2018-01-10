@@ -28,7 +28,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
     // eq
     
     default StepCondition eq(TemporalCondition<N> value) {
-        return getDefaultCondition().eq(value);
+        return getTemporalCondition().eq(value);
     }
 
     // with

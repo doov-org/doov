@@ -47,7 +47,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     // with
 
     public final TemporalCondition<N> with(TemporalAdjuster adjuster) {
-        return temporalCondition(field, withMetadata(field, adjuster.getMetadata()),
+        return temporalCondition(field, metadata.merge(withMetadata(field, adjuster.getMetadata())),
                         (model, context) -> value(model, field)
                                         .map(v -> withFunction(adjuster.getAdjuster()).apply(v)));
     }
@@ -57,13 +57,13 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     // minus
 
     public final TemporalCondition<N> minus(int value, TemporalUnit unit) {
-        return temporalCondition(field, minusMetadata(field, value, unit),
+        return temporalCondition(field, metadata.merge(minusMetadata(field, value, unit)),
                         (model, context) -> value(model, field)
                                         .map(v -> minusFunction(value, unit).apply(v)));
     }
 
     public final TemporalCondition<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
-        return temporalCondition(field, minusMetadata(field, value, unit),
+        return temporalCondition(field, metadata.merge(minusMetadata(field, value, unit)),
                         (model, context) -> value(model, field)
                                         .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
                                                         .map(r -> minusFunction(r, unit).apply(l))));
@@ -74,13 +74,13 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
     // plus
 
     public final TemporalCondition<N> plus(int value, TemporalUnit unit) {
-        return temporalCondition(field, plusMetadata(field, value, unit),
+        return temporalCondition(field, metadata.merge(plusMetadata(field, value, unit)),
                         (model, context) -> value(model, field)
                                         .map(v -> plusFunction(value, unit).apply(v)));
     }
 
     public final TemporalCondition<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
-        return temporalCondition(field, plusMetadata(field, value, unit),
+        return temporalCondition(field, metadata.merge(plusMetadata(field, value, unit)),
                         (model, context) -> value(model, field)
                                         .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
                                                         .map(r -> plusFunction(r, unit).apply(l))));
