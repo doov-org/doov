@@ -40,6 +40,10 @@ public class BinaryMetadata extends PredicateMetadata {
         return operator;
     }
 
+    public Metadata getLeft() { return left; }
+
+    public Metadata getRight() { return right; }
+
     public static BinaryMetadata andMetadata(Metadata left, Metadata right) {
         return new BinaryMetadata(left, DefaultOperator.and, right);
     }

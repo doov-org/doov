@@ -26,13 +26,7 @@ import java.util.Locale;
 
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.Operator;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
@@ -65,6 +59,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private final OutputStream ops;
     protected final ResourceProvider bundle;
     protected Locale locale;
+    private boolean nextBinary;
 
     public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
         this.ops = ops;
@@ -105,7 +100,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             if (!endOfSum) {
                 writeWithBuffer(BEG_LI);
             }
-            closeFieldLI = true;
+//            closeFieldLI = true;
         }
     }
 
@@ -141,10 +136,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void endMetadata(LeafMetadata metadata, int depth) {
-        if (closeFieldLI) {
-            writeWithBuffer(END_LI);
-            closeFieldLI = false;
-        }
+//        if (closeFieldLI) {
+//            writeWithBuffer(END_LI);
+//            closeFieldLI = false;
+//        }
         if (endOfSum) {
             writeWithBuffer("</br>");
             endOfSum = false;
@@ -155,18 +150,28 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // binary metadata
     @Override
     public void startMetadata(BinaryMetadata metadata, int depth) {
-        if (lastLines[1].contains(">" + bundle.get(and, locale) + "<")
-                        || lastLines[1].contains(">" + bundle.get(or, locale) + "<")) {
+        if (stackPeek()== MetadataType.BINARY_PREDICATE && nextBinary) {
             writeWithBuffer(formatCurrentIndent());
             writeWithBuffer(BEG_UL);
             writeWithBuffer(formatNewLine());
             binaryDeep++;
+            nextBinary=false;
         }
+
+        if (metadata.children().get(1).type() == MetadataType.BINARY_PREDICATE) {
+            nextBinary=true;
+        }
+
     }
 
     @Override
     public void visitMetadata(BinaryMetadata metadata, int depth) {
         writeWithBuffer(formatCurrentIndent());
+        Metadata leftChild = metadata.getLeft();
+        if (leftChild.type() != MetadataType.NARY_PREDICATE) {
+                writeWithBuffer("<br>");
+        }
+
         htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         if (operatorList.contains(metadata.getOperator())) {
             endOfSum = true;

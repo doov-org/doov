@@ -22,6 +22,7 @@ import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
 import static io.doov.sample.field.SampleFieldIdInfo.*;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
@@ -29,8 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 
@@ -124,6 +124,12 @@ public class SampleRules extends DefaultRuleRegistry {
 
     public static final ValidationRule RULE_DOUBLE_LAMBDA = DOOV
                     .when(favoriteSiteName1().anyMatch(s -> !s.contains("dunno")))
+                    .validate()
+                    .registerOn(REGISTRY_DEFAULT);
+
+    public static final ValidationRule RULE_IMBRICATE_OR = DOOV
+                    .when(favoriteSiteName1().startsWith("e").or(favoriteSiteName1().startsWith("f").not().or
+                                    (favoriteSiteName1().startsWith("g").or(favoriteSiteName1().startsWith("h")))))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
