@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import io.doov.core.dsl.lang.Context;
@@ -73,7 +74,7 @@ public class NaryMetadata extends PredicateMetadata {
     @Override
     public void accept(MetadataVisitor visitor, int depth) {
         visitor.start(this, depth);
-        values.forEach(v -> {
+        values.stream().filter(Objects::nonNull).forEach(v -> {
             v.accept(visitor, depth + 1);
             visitor.visit(this, depth);
         });
@@ -121,7 +122,9 @@ public class NaryMetadata extends PredicateMetadata {
                 return childMsgs.get(0);
             return new NaryMetadata(operator, childMsgs);
         }
-        return new NaryMetadata(operator, values.stream().map(md -> md.message(context)).collect(toList()));
+        return new NaryMetadata(operator, values.stream()
+                        .map(md -> md.message(context))
+                        .filter(Objects::nonNull).collect(toList()));
     }
 
 }
