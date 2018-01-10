@@ -240,6 +240,10 @@ public class LeafMetadata extends PredicateMetadata {
     public static LeafMetadata equalsMetadata(DslField field, Readable value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(equals).valueReadable(value);
     }
+    
+    public static LeafMetadata equalsMetadata(DslField field, DefaultCondition<?> condition) {
+        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(equals).valueCondition(condition);
+    }
 
     public static LeafMetadata notEqualsMetadata(DslField field, Object value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(not_equals).valueObject(value);

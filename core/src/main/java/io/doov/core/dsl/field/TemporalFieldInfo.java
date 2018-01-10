@@ -24,6 +24,12 @@ import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.time.TemporalAdjuster;
 
 public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> {
+    
+    // eq
+    
+    default StepCondition eq(TemporalCondition<N> value) {
+        return getDefaultCondition().eq(value);
+    }
 
     // with
 

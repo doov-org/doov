@@ -420,4 +420,22 @@ public class SampleRuleI18nTest {
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(5).isEqualTo("today");
         print(rule);
     }
+    
+    @Test
+    public void test_eq_today() {
+        ValidationRule rule = DOOV.when(SampleFieldIdInfo.userBirthdate().eq(LocalDateSuppliers.today())).validate();
+        assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
+        final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
+        assertThat(elts).hasSize(3);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(LocalDateFieldInfo.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
+        assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user birthdate");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("=");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("today");
+        print(rule);
+    }
 }
