@@ -141,13 +141,11 @@ public class NaryMetadata extends PredicateMetadata {
                                     return true;
                                 if (elements.get(0).getType() != ElementType.FIELD)
                                     return true;
-                                final Object value = context
+                                final Number value = (Number) context
                                                 .getEvalValue(((DslField) elements.get(0).getReadable()).id());
                                 if (value == null)
                                     return false;
-                                if (!Number.class.isAssignableFrom(value.getClass()))
-                                    return true;
-                                return ((Number) value).intValue() != 0;
+                                return value.intValue() != 0;
                             }).map(md -> md.message(context))
                             .filter(Objects::nonNull)
                             .filter(md -> EMPTY != md.type())
