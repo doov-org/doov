@@ -24,6 +24,7 @@ public enum DefaultOperator implements Operator {
     not_equals("!="), //
     is_null("is null"), //
     is_not_null("is not null"), //
+    as_a_number("as a number"), //
     with("with"), //
     minus("minus"), //
     plus("plus"), //

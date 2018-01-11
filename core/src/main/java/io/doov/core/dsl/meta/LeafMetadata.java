@@ -292,7 +292,7 @@ public class LeafMetadata extends PredicateMetadata {
     // map
 
     public static LeafMetadata mapToIntMetadata(DslField field) {
-        return new LeafMetadata(FIELD_PREDICATE).field(field);
+        return new LeafMetadata(FIELD_PREDICATE).field(field).operator(as_a_number).valueUnknown("");
     }
 
     // with
