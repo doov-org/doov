@@ -26,7 +26,6 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.DefaultOperator;
 import io.doov.core.dsl.meta.EmptyMetadata;
 import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
