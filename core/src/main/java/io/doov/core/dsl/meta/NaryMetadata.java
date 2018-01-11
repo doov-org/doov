@@ -12,10 +12,13 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.match_all;
 import static io.doov.core.dsl.meta.DefaultOperator.match_any;
+import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.EMPTY;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
@@ -28,6 +31,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 
 public class NaryMetadata extends PredicateMetadata {
@@ -126,6 +130,31 @@ public class NaryMetadata extends PredicateMetadata {
                             .collect(toList());
             if (childMsgs.size() == 1)
                 return childMsgs.get(0);
+            return new NaryMetadata(operator, childMsgs);
+        } else if (operator == sum) {
+            return new NaryMetadata(operator, values.stream()
+                            .filter(md -> {
+                                if (md.type() != FIELD_PREDICATE)
+                                    return true;
+                                final List<Element> elements = md.flatten();
+                                if (elements.size() < 1)
+                                    return true;
+                                if (elements.get(0).getType() != ElementType.FIELD)
+                                    return true;
+                                final Number value = (Number) context
+                                                .getEvalValue(((DslField) elements.get(0).getReadable()).id());
+                                return value.intValue() != 0;
+                            }).map(md -> md.message(context))
+                            .filter(Objects::nonNull)
+                            .filter(md -> EMPTY != md.type())
+                            .collect(toList()));
+        } else if (operator == count) {
+            final List<Metadata> childMsgs = values.stream()
+                            .filter(md -> context.isEvalTrue(md))
+                            .map(md -> md.message(context))
+                            .filter(Objects::nonNull)
+                            .filter(md -> EMPTY != md.type())
+                            .collect(toList());
             return new NaryMetadata(operator, childMsgs);
         }
         return new NaryMetadata(operator, values.stream()

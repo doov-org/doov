@@ -8,9 +8,14 @@ import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.matchAny;
+import static io.doov.core.dsl.DOOV.sum;
+import static io.doov.core.dsl.meta.DefaultOperator.count;
+import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
+import static io.doov.sample.field.SampleFieldIdInfo.configurationMaxEmailSize;
+import static io.doov.sample.field.SampleFieldIdInfo.configurationMinAge;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +25,13 @@ import io.doov.core.BaseFieldModel;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.DefaultOperator;
+import io.doov.core.dsl.meta.EmptyMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.UnaryMetadata;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.model.Country;
 
@@ -37,11 +48,12 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getEvalValue(SampleFieldId.COUNTRY)).isEqualTo(Country.FR);
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(result.getContext().getRootMetadata().type()).isEqualTo(FIELD_PREDICATE_MATCH_ANY);
-        
+
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
+        System.out.println(">> " + msg.readable());
+
         assertThat(msg).isInstanceOf(LeafMetadata.class);
         assertThat(msg.type()).isEqualTo(FIELD_PREDICATE);
-        System.out.println(">> " + msg.readable());
     }
 
     @Test
@@ -58,11 +70,12 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children().get(1)).isInstanceOf(BinaryMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
+        System.out.println(">> " + msg.readable());
+
         assertThat(msg).isInstanceOf(BinaryMetadata.class);
         assertThat(msg.children()).hasSize(2);
         assertThat(msg.children().get(0)).isInstanceOf(LeafMetadata.class);
         assertThat(msg.children().get(1)).isInstanceOf(LeafMetadata.class);
-        System.out.println(">> " + msg.readable());
     }
 
     @Test
@@ -79,8 +92,9 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children().get(1)).isInstanceOf(LeafMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
-        assertThat(msg).isInstanceOf(LeafMetadata.class);
         System.out.println(">> " + msg.readable());
+
+        assertThat(msg).isInstanceOf(LeafMetadata.class);
     }
 
     @Test
@@ -120,8 +134,9 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children().get(0)).isInstanceOf(LeafMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
-        assertThat(msg).isInstanceOf(UnaryMetadata.class);
         System.out.println(">> " + msg.readable());
+
+        assertThat(msg).isInstanceOf(UnaryMetadata.class);
     }
 
     @Test
@@ -136,8 +151,9 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children()).hasSize(3);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
-        assertThat(msg).isInstanceOf(EmptyMetadata.class);
         System.out.println(">> " + msg.readable());
+
+        assertThat(msg).isInstanceOf(EmptyMetadata.class);
     }
 
     @Test
@@ -152,9 +168,10 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children()).hasSize(3);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
+        System.out.println(">> " + msg.readable());
+
         assertThat(msg).isInstanceOf(NaryMetadata.class);
         assertThat(msg.children()).hasSize(2);
-        System.out.println(">> " + msg.readable());
     }
 
     @Test
@@ -169,8 +186,9 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
-        assertThat(msg).isInstanceOf(EmptyMetadata.class);
         System.out.println(">> " + msg.readable());
+
+        assertThat(msg).isInstanceOf(EmptyMetadata.class);
     }
 
     @Test
@@ -185,9 +203,10 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
+        System.out.println(">> " + msg.readable());
+
         assertThat(msg).isInstanceOf(LeafMetadata.class);
         assertThat(msg.children()).isEmpty();
-        System.out.println(">> " + msg.readable());
     }
 
     @Test
@@ -204,9 +223,10 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children().get(1).children()).hasSize(2);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
+        System.out.println(">> " + msg.readable());
+
         assertThat(msg).isInstanceOf(LeafMetadata.class);
         assertThat(msg.children()).isEmpty();
-        System.out.println(">> " + msg.readable());
     }
 
     @Test
@@ -223,11 +243,111 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children().get(1).children()).hasSize(2);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
+        System.out.println(">> " + msg.readable());
+
         assertThat(msg).isInstanceOf(BinaryMetadata.class);
         assertThat(msg.children()).hasSize(2);
         assertThat(msg.children().get(0)).isInstanceOf(LeafMetadata.class);
         assertThat(msg.children().get(1)).isInstanceOf(LeafMetadata.class);
-        System.out.println(">> " + msg.readable());
     }
 
+    @Test
+    public void sum_numeric_fields() {
+        model.set(configurationMaxEmailSize().id(), 3);
+        model.set(configurationMinAge().id(), 0);
+        final Result result = DOOV.when(sum(configurationMaxEmailSize(), configurationMinAge()).greaterThan(2))
+                        .validate().withShortCircuit(false).executeOn(model);
+        System.out.println(result.getContext().getRootMetadata().readable());
+        assertThat(result).isTrue();
+
+        assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(((NaryMetadata) result.getContext().getRootMetadata().children().get(0)).getOperator())
+                        .isEqualTo(sum);
+        assertThat(result.getContext().getRootMetadata().children().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children().get(0))
+                        .isInstanceOf(LeafMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children().get(1))
+                        .isInstanceOf(LeafMetadata.class);
+
+        final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
+        System.out.println(">> " + msg.readable());
+
+        assertThat(msg).isInstanceOf(BinaryMetadata.class);
+        assertThat(msg.children()).hasSize(2);
+        assertThat(msg.children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(msg.children().get(0).children()).hasSize(1);
+        assertThat(msg.children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(((NaryMetadata) msg.children().get(0)).getOperator()).isEqualTo(sum);
+        assertThat(msg.children().get(0).children().get(0)).isInstanceOf(LeafMetadata.class);
+    }
+
+    @Test
+    public void sum_numeric_condition() {
+        model.set(configurationMaxEmailSize().id(), 1);
+        model.set(configurationMinAge().id(), 0);
+        final Result result = DOOV.when(sum(configurationMaxEmailSize().times(3), configurationMinAge().times(20))
+                        .greaterThan(2)).validate().withShortCircuit(false).executeOn(model);
+        System.out.println(result.getContext().getRootMetadata().readable());
+        assertThat(result).isTrue();
+
+        assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(((NaryMetadata) result.getContext().getRootMetadata().children().get(0)).getOperator())
+                        .isEqualTo(sum);
+        assertThat(result.getContext().getRootMetadata().children().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children().get(0))
+                        .isInstanceOf(LeafMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children().get(1))
+                        .isInstanceOf(LeafMetadata.class);
+
+        final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
+        System.out.println(">> " + msg.readable());
+
+        assertThat(msg).isInstanceOf(BinaryMetadata.class);
+        assertThat(msg.children()).hasSize(2);
+        assertThat(msg.children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(msg.children().get(0).children()).hasSize(1);
+        assertThat(msg.children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(((NaryMetadata) msg.children().get(0)).getOperator()).isEqualTo(sum);
+        assertThat(msg.children().get(0).children().get(0)).isInstanceOf(LeafMetadata.class);
+    }
+
+    @Test
+    public void count() {
+        final Result result = DOOV.when(DOOV.count(alwaysTrue(), alwaysTrue(), alwaysFalse())
+                        .greaterOrEquals(2)).validate().withShortCircuit(false).executeOn(model);
+        System.out.println(result.getContext().getRootMetadata().readable());
+        assertThat(result).isTrue();
+
+        assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
+        assertThat(result.getContext().getRootMetadata().children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(((NaryMetadata) result.getContext().getRootMetadata().children().get(0)).getOperator())
+                        .isEqualTo(count);
+        assertThat(result.getContext().getRootMetadata().children().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children()).hasSize(3);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children().get(0))
+                        .isInstanceOf(LeafMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children().get(1))
+                        .isInstanceOf(LeafMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children().get(0).children().get(2))
+                        .isInstanceOf(LeafMetadata.class);
+
+        final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
+        System.out.println(">> " + msg.readable());
+
+        assertThat(msg).isInstanceOf(BinaryMetadata.class);
+        assertThat(msg.children()).hasSize(2);
+        assertThat(msg.children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(msg.children().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(msg.children().get(0).children()).hasSize(2);
+        assertThat(((NaryMetadata) msg.children().get(0)).getOperator()).isEqualTo(count);
+        assertThat(msg.children().get(0).children().get(0)).isInstanceOf(LeafMetadata.class);
+        assertThat(msg.children().get(0).children().get(1)).isInstanceOf(LeafMetadata.class);
+    }
 }
