@@ -72,6 +72,14 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     protected void visitMetadata(UnaryMetadata metadata, int depth) {
     }
 
+    @Override
+    public final void end(UnaryMetadata metadata, int depth) {
+        endMetadata(metadata, depth);
+    }
+
+    protected void endMetadata(UnaryMetadata metadata, int depth) {
+    }
+
     // BinaryMetadata
 
     @Override

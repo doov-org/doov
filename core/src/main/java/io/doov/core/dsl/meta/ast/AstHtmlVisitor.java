@@ -3,17 +3,7 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.empty;
-import static io.doov.core.dsl.meta.DefaultOperator.equals;
-import static io.doov.core.dsl.meta.DefaultOperator.greater_or_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.greater_than;
-import static io.doov.core.dsl.meta.DefaultOperator.lesser_or_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.lesser_than;
-import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
-import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
@@ -59,6 +49,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected final ResourceProvider bundle;
     protected Locale locale;
     private boolean nextBinary;
+    private boolean noLiNary= false;
 
     public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
         this.ops = ops;
@@ -152,18 +143,19 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             nextBinary=false;
         }
 
-        if (metadata.children().get(1).type() == MetadataType.BINARY_PREDICATE) {
+        if (metadata.getRight().type() == MetadataType.BINARY_PREDICATE) {
             nextBinary=true;
         }
-
     }
 
     @Override
     public void visitMetadata(BinaryMetadata metadata, int depth) {
         writeWithBuffer(formatCurrentIndent());
-        Metadata leftChild = metadata.getLeft();
-        if (leftChild.type() != MetadataType.NARY_PREDICATE) {
+        if (metadata.getLeft().type() != MetadataType.NARY_PREDICATE) {
                 writeWithBuffer("<br>");
+        }
+        if (metadata.getRight().type() == MetadataType.NARY_PREDICATE || metadata.getRight().type()==MetadataType.UNARY_PREDICATE) {
+            noLiNary=true;
         }
 
         htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
@@ -187,7 +179,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void startMetadata(NaryMetadata metadata, int depth) {
         writeWithBuffer(formatCurrentIndent());
-        writeWithBuffer(BEG_LI);
+        if (!noLiNary) {
+            writeWithBuffer(BEG_LI);
+            noLiNary = false;
+        }
         writeWithBuffer(formatNewLine());
         writeWithBuffer(formatCurrentIndent());
         htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
@@ -205,13 +200,21 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         writeWithBuffer(formatNewLine());
     }
 
-    // nary metadata
+    // unary metadata
     @Override
     public void visitMetadata(UnaryMetadata metadata, int depth) {
-        writeWithBuffer(BEG_LI);
+        if (!noLiNary) {
+            writeWithBuffer(BEG_LI);
+            noLiNary=false;
+        }
         htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         writeWithBuffer(END_LI);
         writeWithBuffer(BEG_UL);
+    }
+
+    @Override
+    protected void endMetadata(UnaryMetadata metadata, int depth) {
+        writeWithBuffer(END_UL);
     }
 
     // validation rule

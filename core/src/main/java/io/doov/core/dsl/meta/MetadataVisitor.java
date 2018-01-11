@@ -35,6 +35,8 @@ public interface MetadataVisitor {
 
     void visit(UnaryMetadata unaryMetadata, int depth);
 
+    void end(UnaryMetadata unaryMetadata, int depth);
+
     // BinaryMetadata
 
     void start(BinaryMetadata binaryMetadata, int depth);
