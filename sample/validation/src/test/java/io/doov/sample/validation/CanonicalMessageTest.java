@@ -9,6 +9,7 @@ import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.sum;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
@@ -342,11 +343,8 @@ public class CanonicalMessageTest {
 
         assertThat(msg).isInstanceOf(BinaryMetadata.class);
         assertThat(msg.children()).hasSize(2);
-        assertThat(msg.children().get(0)).isInstanceOf(NaryMetadata.class);
+        assertThat(((BinaryMetadata) msg).getOperator()).isEqualTo(and);      
+        assertThat(msg.children().get(0)).isInstanceOf(LeafMetadata.class);
         assertThat(msg.children().get(1)).isInstanceOf(LeafMetadata.class);
-        assertThat(msg.children().get(0).children()).hasSize(2);
-        assertThat(((NaryMetadata) msg.children().get(0)).getOperator()).isEqualTo(count);
-        assertThat(msg.children().get(0).children().get(0)).isInstanceOf(LeafMetadata.class);
-        assertThat(msg.children().get(0).children().get(1)).isInstanceOf(LeafMetadata.class);
     }
 }
