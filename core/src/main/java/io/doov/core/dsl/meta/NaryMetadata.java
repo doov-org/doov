@@ -12,7 +12,6 @@
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.match_all;
 import static io.doov.core.dsl.meta.DefaultOperator.match_any;
@@ -133,7 +132,7 @@ public class NaryMetadata extends PredicateMetadata {
                 return childMsgs.get(0);
             return new NaryMetadata(operator, childMsgs);
         } else if (operator == sum) {
-            return new NaryMetadata(sum, values.stream()
+            return new NaryMetadata(operator, values.stream()
                             .filter(md -> {
                                 if (md.type() != FIELD_PREDICATE)
                                     return true;
@@ -158,20 +157,12 @@ public class NaryMetadata extends PredicateMetadata {
                             .filter(Objects::nonNull)
                             .filter(md -> EMPTY != md.type())
                             .collect(toList());
-            if (childMsgs.size() == 1)
-                return childMsgs.get(0);
-            return rewriteCount(childMsgs);
+            return new NaryMetadata(operator, childMsgs);
         }
         return new NaryMetadata(operator, values.stream()
                         .map(md -> md.message(context))
                         .filter(Objects::nonNull)
                         .filter(md -> EMPTY != md.type())
                         .collect(toList()));
-    }
-
-    private static BinaryMetadata rewriteCount(List<Metadata> childMsgs) {
-        if (childMsgs.size() == 2)
-            return new BinaryMetadata(childMsgs.get(0), and, childMsgs.get(1));
-        return new BinaryMetadata(childMsgs.get(0), and, rewriteCount(childMsgs.subList(1, childMsgs.size())));
     }
 }
