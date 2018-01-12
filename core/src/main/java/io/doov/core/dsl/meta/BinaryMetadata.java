@@ -13,6 +13,7 @@
 package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
@@ -40,9 +41,13 @@ public class BinaryMetadata extends PredicateMetadata {
         return operator;
     }
 
-    public Metadata getLeft() { return left; }
+    public Metadata getLeft() {
+        return left;
+    }
 
-    public Metadata getRight() { return right; }
+    public Metadata getRight() {
+        return right;
+    }
 
     public static BinaryMetadata andMetadata(Metadata left, Metadata right) {
         return new BinaryMetadata(left, DefaultOperator.and, right);
@@ -84,6 +89,10 @@ public class BinaryMetadata extends PredicateMetadata {
             return right.message(context);
         else if (operator == and && context.isEvalFalse(this))
             return new EmptyMetadata();
+        else if (NaryMetadata.class.isAssignableFrom(left.getClass())) {
+            if (((NaryMetadata) left).getOperator() == count)
+                return left.message(context);
+        }
         return new BinaryMetadata(left.message(context), operator, right.message(context));
     }
 
