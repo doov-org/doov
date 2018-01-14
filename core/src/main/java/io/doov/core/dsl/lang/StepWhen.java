@@ -36,4 +36,8 @@ public interface StepWhen extends Readable, SyntaxTree {
      */
     ValidationRule validate();
 
+    ConditionalMappingRule then(MappingRule... mapRule);
+
+    ConditionalMappingRule then(MappingRegistry mappingRegistry);
+
 }

@@ -20,6 +20,7 @@ import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import java.util.Locale;
 
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.mapping.DefaultConditionalMappingRule;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultStepWhen implements StepWhen {
@@ -38,6 +39,16 @@ public class DefaultStepWhen implements StepWhen {
     @Override
     public ValidationRule validate() {
         return new DefaultValidationRule(this);
+    }
+
+    @Override
+    public ConditionalMappingRule then(MappingRule... mappingRule) {
+        return new DefaultConditionalMappingRule(validate(), mappingRule);
+    }
+
+    @Override
+    public ConditionalMappingRule then(MappingRegistry mappingRegistry) {
+        return new DefaultConditionalMappingRule(validate(), mappingRegistry);
     }
 
     @Override

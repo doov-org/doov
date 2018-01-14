@@ -20,11 +20,22 @@ import static io.doov.core.dsl.meta.LeafMetadata.trueMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.*;
+import java.util.function.Supplier;
 
+import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
+import io.doov.core.dsl.lang.BiStepMap;
+import io.doov.core.dsl.lang.NaryStepMap;
+import io.doov.core.dsl.lang.StaticStepMap;
 import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.StepMap;
 import io.doov.core.dsl.lang.StepWhen;
+import io.doov.core.dsl.mapping.DefaultNaryStepMap;
+import io.doov.core.dsl.mapping.DefaultStaticStepMap;
+import io.doov.core.dsl.mapping.DefaultStepMap;
+import io.doov.core.dsl.mapping.DefaultBiStepMap;
+import io.doov.core.dsl.mapping.StaticSimpleStepMapping;
 
 /**
  * Entry point of the DSL.
@@ -110,6 +121,28 @@ public class DOOV {
      */
     public static StepCondition matchNone(StepCondition... steps) {
         return LogicalNaryCondition.matchNone(asList(steps));
+    }
+
+    // mapping
+
+    public static <I> StepMap<I> map(DslField<I> inFieldInfo) {
+        return new DefaultStepMap<>(inFieldInfo);
+    }
+
+    public static <I, J> BiStepMap<I, J> map(DslField<I> inFieldInfo, DslField<J> in2FieldInfo) {
+        return new DefaultBiStepMap<>(inFieldInfo, in2FieldInfo);
+    }
+
+    public static NaryStepMap map(DslField... inFieldInfo) {
+        return new DefaultNaryStepMap(Arrays.asList(inFieldInfo));
+    }
+
+    public static <I> StaticStepMap<I> map(Supplier<I> valueSupplier) {
+        return new DefaultStaticStepMap<>(valueSupplier);
+    }
+
+    public static <I> StaticStepMap<I> map(I value) {
+        return new DefaultStaticStepMap<>(() -> value);
     }
 
     /**
