@@ -15,19 +15,26 @@
  */
 package io.doov.assertions;
 
-import org.assertj.core.api.AbstractAssert;
-
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.ValidationRule;
+import org.assertj.core.api.AbstractAssert;
 
+/**
+ * Assertion for {@link StepCondition}.
+ */
 public class StepConditionAssert extends AbstractAssert<StepConditionAssert, StepCondition> {
 
     StepConditionAssert(StepCondition actual, Class<?> selfType) {
         super(actual, selfType);
     }
 
+    /**
+     * Verifies that the result is true for the given model.
+     *
+     * @see ValidationRuleAssert#validates(DslModel)
+     */
     public ValidationRuleAssert validates(DslModel model) {
         ValidationRule rule = DOOV.when(actual).validate();
         ValidationRuleAssert validationRuleAssert = new ValidationRuleAssert(rule, ValidationRuleAssert.class);
@@ -35,6 +42,11 @@ public class StepConditionAssert extends AbstractAssert<StepConditionAssert, Ste
         return validationRuleAssert;
     }
 
+    /**
+     * Verifies that the result is false for the given model.
+     *
+     * @see ValidationRuleAssert#doesNotValidate(DslModel)
+     */
     public ValidationRuleAssert doesNotValidate(DslModel model) {
         ValidationRule rule = DOOV.when(actual).validate();
         ValidationRuleAssert validationRuleAssert = new ValidationRuleAssert(rule, ValidationRuleAssert.class);

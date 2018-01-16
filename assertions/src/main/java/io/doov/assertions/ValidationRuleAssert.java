@@ -15,18 +15,25 @@
  */
 package io.doov.assertions;
 
-import org.assertj.core.api.AbstractAssert;
-
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
+import org.assertj.core.api.AbstractAssert;
 
+/**
+ * Assertion for {@link ValidationRule}.
+ */
 public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, ValidationRule> {
 
     ValidationRuleAssert(ValidationRule actual, Class<?> selfType) {
         super(actual, selfType);
     }
 
+    /**
+     * Verifies that the result is true for the given model.
+     *
+     * @see ResultAssert#isTrue()
+     */
     public ResultAssert validates(DslModel model) {
         Result result = actual.executeOn(model);
         ResultAssert resultAssert = new ResultAssert(result, ResultAssert.class);
@@ -34,6 +41,11 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
         return resultAssert;
     }
 
+    /**
+     * Verifies that the result is false for the given model.
+     *
+     * @see ResultAssert#isFalse()
+     */
     public ResultAssert doesNotValidate(DslModel model) {
         Result result = actual.executeOn(model);
         ResultAssert resultAssert = new ResultAssert(result, ResultAssert.class);
@@ -41,12 +53,24 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
         return resultAssert;
     }
 
-    // TODO move to LesFurets
+    /**
+     * Verifies that the result is true for the given model.
+     * <p>
+     * TODO move to LesFurets
+     *
+     * @see #validates(DslModel)
+     */
     public void excludes(DslModel model) {
         validates(model);
     }
 
-    // TODO move to LesFurets
+    /**
+     * Verifies that the result is false for the given model.
+     * <p>
+     * TODO move to LesFurets
+     *
+     * @see #doesNotValidate(DslModel)
+     */
     public void doesNotExclude(DslModel model) {
         doesNotValidate(model);
     }

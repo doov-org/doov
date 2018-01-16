@@ -31,11 +31,12 @@ public interface Context {
 
     Object getEvalValue(DslId id);
 
-    public boolean isEvalTrue(Metadata metadata);
+    boolean isEvalTrue(Metadata metadata);
 
-    public boolean isEvalFalse(Metadata metadata);
+    boolean isEvalFalse(Metadata metadata);
 
-    public List<Metadata> getEvalTrue();
+    List<Metadata> getEvalTrue();
 
-    public List<Metadata> getEvalFalse();
+    List<Metadata> getEvalFalse();
+
 }

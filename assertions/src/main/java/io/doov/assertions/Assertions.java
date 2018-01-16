@@ -15,18 +15,32 @@
  */
 package io.doov.assertions;
 
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.ValidationRule;
 
+/**
+ * Entry point for assertions methods for dOOv, see {@link org.assertj.core.api.Assertions}.
+ */
 public class Assertions {
 
+    /**
+     * Create assertion for {@link ValidationRule}.
+     */
     public static ValidationRuleAssert assertThat(ValidationRule actual) {
         return new ValidationRuleAssert(actual, ValidationRuleAssert.class);
     }
 
+    /**
+     * Create assertion for {@link StepCondition}.
+     */
     public static StepConditionAssert assertThat(StepCondition actual) {
         return new StepConditionAssert(actual, StepConditionAssert.class);
     }
-    
+
+    /**
+     * Create assertion for {@link Result}.
+     */
     public static ResultAssert assertThat(Result actual) {
         return new ResultAssert(actual, ResultAssert.class);
     }
