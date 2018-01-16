@@ -17,6 +17,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.match_all;
 import static io.doov.core.dsl.meta.DefaultOperator.match_any;
 import static io.doov.core.dsl.meta.DefaultOperator.sum;
+import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.EMPTY;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
@@ -140,15 +141,17 @@ public class NaryMetadata extends PredicateMetadata {
                                 final List<Element> elements = md.flatten();
                                 if (elements.size() < 1)
                                     return true;
-                                if (elements.get(0).getType() != ElementType.FIELD)
+                                if (elements.get(0).getType() != FIELD)
                                     return true;
                                 final Object value = context
                                                 .getEvalValue(((DslField) elements.get(0).getReadable()).id());
                                 if (value == null)
                                     return false;
-                                if (!Number.class.isAssignableFrom(value.getClass()))
+                                try {
+                                    return Double.parseDouble(value.toString()) != 0;
+                                } catch (NumberFormatException e) {
                                     return true;
-                                return ((Number) value).intValue() != 0;
+                                }
                             }).map(md -> md.message(context))
                             .filter(Objects::nonNull)
                             .filter(md -> EMPTY != md.type())

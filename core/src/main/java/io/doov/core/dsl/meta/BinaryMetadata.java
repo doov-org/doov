@@ -17,6 +17,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
 import java.util.ArrayList;
@@ -89,7 +90,7 @@ public class BinaryMetadata extends PredicateMetadata {
             return right.message(context);
         else if (operator == and && context.isEvalFalse(this))
             return new EmptyMetadata();
-        else if (NaryMetadata.class.isAssignableFrom(left.getClass())) {
+        else if (left.type() == NARY_PREDICATE) {
             if (((NaryMetadata) left).getOperator() == count)
                 return left.message(context);
         }
