@@ -26,6 +26,12 @@ import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.LeafMetadata;
 
+/**
+ * Base class for boolean conditions.
+ * <p>
+ * It contains a {@link DslField} to get the value from the model, a {@link LeafMetadata} to describe this node, and a
+ * {@link BiFunction} to take the value from the model and return an optional value.
+ */
 public class BooleanCondition extends DefaultCondition<Boolean> {
 
     public BooleanCondition(DslField field) {
@@ -33,72 +39,111 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
     }
 
     public BooleanCondition(DslField field, LeafMetadata metadata,
-            BiFunction<DslModel, Context, Optional<Boolean>> value) {
+                    BiFunction<DslModel, Context, Optional<Boolean>> value) {
         super(field, metadata, value);
     }
 
-    // not
-
+    /**
+     * Returns a step condition checking if the node value is not true.
+     *
+     * @return the step condition
+     */
     public final StepCondition not() {
         return predicate(notMetadata(field), value -> !value);
     }
 
-    // and
-
+    /**
+     * Returns a step condition checking if the node value and the given value is true.
+     *
+     * @param value the right value
+     * @return the step condition
+     */
     public final StepCondition and(boolean value) {
         return predicate(andMetadata(field, value),
-                (model, context) -> Optional.of(value),
-                Boolean::logicalAnd);
+                        (model, context) -> Optional.of(value),
+                        Boolean::logicalAnd);
     }
 
+    /**
+     * Returns a step condition checking if the node value and the given field value is true.
+     *
+     * @param value the right field value
+     * @return the step condition
+     */
     public final StepCondition and(LogicalFieldInfo value) {
         return predicate(andMetadata(field, value),
-                (model, context) -> valueModel(model, value),
-                Boolean::logicalAnd);
+                        (model, context) -> valueModel(model, value),
+                        Boolean::logicalAnd);
     }
 
-    // or
-
+    /**
+     * Returns a step condition checking if the node value or the given value is true.
+     *
+     * @param value the right value
+     * @return the step condition
+     */
     public final StepCondition or(boolean value) {
         return predicate(orMetadata(field, value),
-                (model, context) -> Optional.of(value),
-                Boolean::logicalOr);
+                        (model, context) -> Optional.of(value),
+                        Boolean::logicalOr);
     }
 
+    /**
+     * Returns a step condition checking if the node value or the given field value is true.
+     *
+     * @param value the right value
+     * @return the step condition
+     */
     public final StepCondition or(LogicalFieldInfo value) {
         return predicate(orMetadata(field, value),
-                (model, context) -> valueModel(model, value),
-                Boolean::logicalOr);
+                        (model, context) -> valueModel(model, value),
+                        Boolean::logicalOr);
     }
 
-    // xor
-
+    /**
+     * Returns a step condition checking if the node value or exclusive the given value is true.
+     *
+     * @param value the right value
+     * @return the step condition
+     */
     public final StepCondition xor(boolean value) {
         return predicate(xorMetadata(field, value),
-                (model, context) -> Optional.of(value),
-                Boolean::logicalXor);
+                        (model, context) -> Optional.of(value),
+                        Boolean::logicalXor);
     }
 
+    /**
+     * Returns a step condition checking if the node value or exclusive the given field value is true.
+     *
+     * @param value the right field value
+     * @return the step condition
+     */
     public final StepCondition xor(LogicalFieldInfo value) {
         return predicate(xorMetadata(field, value),
-                (model, context) -> valueModel(model, value),
-                Boolean::logicalXor);
+                        (model, context) -> valueModel(model, value),
+                        Boolean::logicalXor);
     }
 
-    // true
-
+    /**
+     * Returns a step condition checking if the node value is true.
+     *
+     * @return the step condition
+     */
     public final StepCondition isTrue() {
         return predicate(isMetadata(field, true),
-                (model, context) -> Optional.of(TRUE),
-                Boolean::equals);
+                        (model, context) -> Optional.of(TRUE),
+                        Boolean::equals);
     }
 
-    // false
-
+    /**
+     * Returns a step condition checking if the node value is false.
+     *
+     * @return the step condition
+     */
     public final StepCondition isFalse() {
         return predicate(isMetadata(field, false),
-                (model, context) -> Optional.of(FALSE),
-                Boolean::equals);
+                        (model, context) -> Optional.of(FALSE),
+                        Boolean::equals);
     }
 
 }

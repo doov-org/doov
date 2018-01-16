@@ -18,68 +18,154 @@ package io.doov.core.dsl.field;
 import io.doov.core.dsl.impl.NumericCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
+/**
+ * Base interface for numeric field info.
+ * <p>
+ * It contains default methods for common checks, which are calls to methods on {@link NumericCondition}.
+ *
+ * @param <N> the type of the field value
+ */
 public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
 
-    // lesser than
-
+    /**
+     * See {@link NumericCondition#lesserThan(Number)}
+     *
+     * @param value the right side value
+     * @return the step condition
+     * @see NumericCondition#lesserThan(Number)
+     */
     default StepCondition lesserThan(N value) {
         return getNumericCondition().lesserThan(value);
     }
 
+    /**
+     * See {@link NumericCondition#lesserThan(NumericFieldInfo)}
+     *
+     * @param value the right side value
+     * @return the step condition
+     * @see NumericCondition#lesserThan(NumericFieldInfo)
+     */
+    default StepCondition lesserThan(NumericFieldInfo<N> value) {
+        return getNumericCondition().lesserThan(value);
+    }
+
+    /**
+     * See {@link NumericCondition#lesserOrEquals(Number)}
+     *
+     * @param value the right side value
+     * @return the step condition
+     * @see NumericCondition#lesserOrEquals(Number)
+     */
     default StepCondition lesserOrEquals(N value) {
         return getNumericCondition().lesserOrEquals(value);
     }
 
-    default StepCondition lesserThan(NumericFieldInfo<N> field) {
-        return getNumericCondition().lesserThan(field);
+    /**
+     * See {@link NumericCondition#lesserOrEquals(NumericFieldInfo)}
+     *
+     * @param value the right side value
+     * @return the step condition
+     * @see NumericCondition#lesserOrEquals(NumericFieldInfo)
+     */
+    default StepCondition lesserOrEquals(NumericFieldInfo<N> value) {
+        return getNumericCondition().lesserOrEquals(value);
     }
 
-    default StepCondition lesserOrEquals(NumericFieldInfo<N> field) {
-        return getNumericCondition().lesserOrEquals(field);
-    }
-
-    // greater than
-
+    /**
+     * See {@link NumericCondition#greaterThan(Number)}
+     *
+     * @param value the right side value
+     * @return the step condition
+     * @see NumericCondition#greaterThan(Number)
+     */
     default StepCondition greaterThan(N value) {
         return getNumericCondition().greaterThan(value);
     }
 
-    default StepCondition greaterThan(NumericFieldInfo<N> field) {
-        return getNumericCondition().greaterThan(field);
+    /**
+     * See {@link NumericCondition#greaterThan(NumericFieldInfo)}
+     *
+     * @param value the right side value
+     * @return the step condition
+     * @see NumericCondition#greaterThan(NumericFieldInfo)
+     */
+    default StepCondition greaterThan(NumericFieldInfo<N> value) {
+        return getNumericCondition().greaterThan(value);
     }
 
+    /**
+     * See {@link NumericCondition#greaterOrEquals(Number)}
+     *
+     * @param value the right side value
+     * @return the step condition
+     * @see NumericCondition#greaterOrEquals(Number)
+     */
     default StepCondition greaterOrEquals(N value) {
         return getNumericCondition().greaterOrEquals(value);
     }
 
-    default StepCondition greaterOrEquals(NumericFieldInfo<N> field) {
-        return getNumericCondition().greaterOrEquals(field);
+    /**
+     * See {@link NumericCondition#greaterOrEquals(NumericFieldInfo)}
+     *
+     * @param value the right side value
+     * @return the step condition
+     * @see NumericCondition#greaterOrEquals(NumericFieldInfo)
+     */
+    default StepCondition greaterOrEquals(NumericFieldInfo<N> value) {
+        return getNumericCondition().greaterOrEquals(value);
     }
 
-    // between
-
+    /**
+     * See {@link NumericCondition#between(Number, Number)}
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     * @see NumericCondition#between(Number, Number)
+     */
     default StepCondition between(N minIncluded, N maxExcluded) {
         return getNumericCondition().between(minIncluded, maxExcluded);
     }
 
+    /**
+     * See {@link NumericCondition#between(NumericFieldInfo, NumericFieldInfo)}
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     * @see NumericCondition#between(NumericFieldInfo, NumericFieldInfo)
+     */
     default StepCondition between(NumericFieldInfo<N> minIncluded, NumericFieldInfo<N> maxExcluded) {
         return getNumericCondition().between(minIncluded, maxExcluded);
     }
 
-    // times
-
+    /**
+     * See {@link NumericCondition#times(int)}
+     *
+     * @param multiplier the multiplier
+     * @return the step condition
+     * @see NumericCondition#times(int)
+     */
     default NumericCondition<N> times(int multiplier) {
         return getNumericCondition().times(multiplier);
     }
 
-    // when
-
+    /**
+     * See {@link NumericCondition#when(StepCondition)}
+     *
+     * @param condition the condition to evaluate
+     * @return the step condition
+     * @see NumericCondition#when(StepCondition)
+     */
     default NumericCondition<N> when(StepCondition condition) {
         return getNumericCondition().when(condition);
     }
 
-    // abstract
-
+    /**
+     * Returns a new numeric condition that will use this as a value.
+     *
+     * @return the numeric condition
+     */
     NumericCondition<N> getNumericCondition();
 
 }

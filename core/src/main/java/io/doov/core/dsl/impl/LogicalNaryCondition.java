@@ -31,28 +31,45 @@ import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.NaryMetadata;
 
+/**
+ * Implements nary conditions like match any, all, none.
+ */
 public class LogicalNaryCondition extends AbstractStepCondition {
 
     private LogicalNaryCondition(NaryMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         super(metadata, predicate);
     }
 
-    // count
-
+    /**
+     * Returns an integer condition that returns the number of the given conditions that evaluate to true.
+     * <p>
+     * This operation depends on {@link Context#isShortCircuit()}. It won't change the predicate value, but might
+     * impact performance and tree evaluation.
+     *
+     * @param steps the conditions to count
+     * @return the integer condition
+     */
     public static IntegerCondition count(List<StepCondition> steps) {
         return new IntegerCondition(null, countMetadata(getMetadatas(steps)),
-                (model, context) -> Optional.of((int) steps.stream()
-                        .filter(s -> s.predicate().test(model, context))
-                        .count()));
+                        (model, context) -> Optional.of((int) steps.stream()
+                                        .filter(s -> s.predicate().test(model, context))
+                                        .count()));
     }
 
-    // match any
-
+    /**
+     * Returns a nary condition that returns true if any of the given steps evaluate to true.
+     * <p>
+     * This operation depends on {@link Context#isShortCircuit()}. It won't change the predicate value, but might
+     * impact performance and tree evaluation.
+     *
+     * @param steps the conditions to match
+     * @return the nary condition
+     */
     public static LogicalNaryCondition matchAny(List<StepCondition> steps) {
         return new LogicalNaryCondition(matchAnyMetadata(getMetadatas(steps)),
-                (model, context) -> context.isShortCircuit()
-                        ? matchAnyShortCircuit(steps, model, context)
-                        : matchAny(steps, model, context));
+                        (model, context) -> context.isShortCircuit()
+                                        ? matchAnyShortCircuit(steps, model, context)
+                                        : matchAny(steps, model, context));
     }
 
     private static boolean matchAnyShortCircuit(List<StepCondition> steps, DslModel model, Context context) {
@@ -64,13 +81,20 @@ public class LogicalNaryCondition extends AbstractStepCondition {
         return results.stream().anyMatch(Boolean::booleanValue);
     }
 
-    // match all
-
+    /**
+     * Returns a nary condition that returns true if all the given steps evaluate to true.
+     * <p>
+     * This operation depends on {@link Context#isShortCircuit()}. It won't change the predicate value, but might
+     * impact performance and tree evaluation.
+     *
+     * @param steps the conditions to match
+     * @return the nary condition
+     */
     public static LogicalNaryCondition matchAll(List<StepCondition> steps) {
         return new LogicalNaryCondition(matchAllMetadata(getMetadatas(steps)),
-                (model, context) -> context.isShortCircuit()
-                        ? matchAllShortCircuit(steps, model, context)
-                        : matchAll(steps, model, context));
+                        (model, context) -> context.isShortCircuit()
+                                        ? matchAllShortCircuit(steps, model, context)
+                                        : matchAll(steps, model, context));
     }
 
     private static boolean matchAllShortCircuit(List<StepCondition> steps, DslModel model, Context context) {
@@ -82,13 +106,20 @@ public class LogicalNaryCondition extends AbstractStepCondition {
         return results.stream().allMatch(Boolean::booleanValue);
     }
 
-    // match none
-
+    /**
+     * Returns a nary condition that returns true if none the given steps evaluate to true.
+     * <p>
+     * This operation depends on {@link Context#isShortCircuit()}. It won't change the predicate value, but might
+     * impact performance and tree evaluation.
+     *
+     * @param steps the conditions to match
+     * @return the nary condition
+     */
     public static LogicalNaryCondition matchNone(List<StepCondition> steps) {
         return new LogicalNaryCondition(matchNoneMetadata(getMetadatas(steps)),
-                (model, context) -> context.isShortCircuit()
-                        ? matchNoneShortCircuit(steps, model, context)
-                        : matchNone(steps, model, context));
+                        (model, context) -> context.isShortCircuit()
+                                        ? matchNoneShortCircuit(steps, model, context)
+                                        : matchNone(steps, model, context));
     }
 
     private static boolean matchNoneShortCircuit(List<StepCondition> steps, DslModel model, Context context) {
@@ -99,8 +130,6 @@ public class LogicalNaryCondition extends AbstractStepCondition {
         List<Boolean> results = steps.stream().map(s -> s.predicate().test(model, context)).collect(toList());
         return results.stream().noneMatch(Boolean::booleanValue);
     }
-
-    // static
 
     private static List<Metadata> getMetadatas(List<StepCondition> steps) {
         return steps.stream().map(StepCondition::getMetadata).collect(toList());

@@ -17,10 +17,23 @@ package io.doov.core.dsl.lang;
 
 import io.doov.core.dsl.meta.SyntaxTree;
 
+/**
+ * Interface for the when step that encapsulates the root condition of the syntax tree and the validation rule.
+ */
 public interface StepWhen extends Readable, SyntaxTree {
 
+    /**
+     * Returns the root condition of the syntax tree.
+     *
+     * @return the step condition
+     */
     StepCondition stepCondition();
 
+    /**
+     * Returns a validation rule.
+     *
+     * @return the validation rule
+     */
     ValidationRule validate();
 
 }

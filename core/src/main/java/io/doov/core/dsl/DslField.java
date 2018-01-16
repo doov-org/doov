@@ -17,6 +17,9 @@ package io.doov.core.dsl;
 
 import io.doov.core.dsl.lang.Readable;
 
+/**
+ * Interface for all field types.
+ */
 public interface DslField extends Readable {
 
     DslId id();

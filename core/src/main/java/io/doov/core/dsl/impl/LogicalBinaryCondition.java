@@ -25,19 +25,30 @@ import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.BinaryMetadata;
 
+/**
+ * Implement logical conditions like and, or.
+ */
 public class LogicalBinaryCondition extends AbstractStepCondition {
 
     private LogicalBinaryCondition(BinaryMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         super(metadata, predicate);
     }
 
-    // and
-
+    /**
+     * Returns a binary condition that returns true if the given left and right conditions evaluate to true.
+     * <p>
+     * This operation depends on {@link Context#isShortCircuit()}. It won't change the predicate value, but might
+     * impact performance and tree evaluation.
+     *
+     * @param left  the left condition
+     * @param right the right condition
+     * @return the binary condition
+     */
     public static LogicalBinaryCondition and(StepCondition left, StepCondition right) {
         return new LogicalBinaryCondition(andMetadata(left.getMetadata(), right.getMetadata()),
-                (model, context) -> context.isShortCircuit()
-                        ? andShortCircuit(left, right, model, context)
-                        : and(left, right, model, context));
+                        (model, context) -> context.isShortCircuit()
+                                        ? andShortCircuit(left, right, model, context)
+                                        : and(left, right, model, context));
     }
 
     private static boolean and(StepCondition left, StepCondition right, DslModel model, Context context) {
@@ -50,13 +61,21 @@ public class LogicalBinaryCondition extends AbstractStepCondition {
         return left.predicate().and(right.predicate()).test(model, context);
     }
 
-    // or
-
+    /**
+     * Returns a binary condition that returns true if the given left or right conditions evaluate to true.
+     * <p>
+     * This operation depends on {@link Context#isShortCircuit()}. It won't change the predicate value, but might
+     * impact performance and tree evaluation.
+     *
+     * @param left  the left condition
+     * @param right the right condition
+     * @return the binary condition
+     */
     public static LogicalBinaryCondition or(StepCondition left, StepCondition right) {
         return new LogicalBinaryCondition(orMetadata(left.getMetadata(), right.getMetadata()),
-                (model, context) -> context.isShortCircuit()
-                        ? orShortCircuit(left, right, model, context)
-                        : or(left, right, model, context));
+                        (model, context) -> context.isShortCircuit()
+                                        ? orShortCircuit(left, right, model, context)
+                                        : or(left, right, model, context));
     }
 
     private static boolean or(StepCondition left, StepCondition right, DslModel model, Context context) {

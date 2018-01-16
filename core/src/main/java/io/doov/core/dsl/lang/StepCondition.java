@@ -23,20 +23,52 @@ import io.doov.core.dsl.impl.LogicalUnaryCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.SyntaxTree;
 
+/**
+ * Interface for the condition which corresponds to a node in the syntax tree.
+ * <p>
+ * A condition is represented by a predicate {@link #predicate()} and a {@link #getMetadata()} describing the node.
+ */
 public interface StepCondition extends Readable, SyntaxTree {
 
+    /**
+     * Returns the predicate for this node value.
+     *
+     * @return the predicate
+     */
     BiPredicate<DslModel, Context> predicate();
 
+    /**
+     * Returns the metadata to describe this node.
+     *
+     * @return the metadata
+     */
     Metadata getMetadata();
 
+    /**
+     * Returns a condition checking if the node predicate and the given condition predicate evaluate to true.
+     *
+     * @param condition the right side condition
+     * @return the step condition
+     */
     default StepCondition and(StepCondition condition) {
         return LogicalBinaryCondition.and(this, condition);
     }
 
+    /**
+     * Returns a condition checking if the node predicate or the given condition predicate evaluate to true.
+     *
+     * @param condition the right side condition
+     * @return the step condition
+     */
     default StepCondition or(StepCondition condition) {
         return LogicalBinaryCondition.or(this, condition);
     }
 
+    /**
+     * Returns a condition checking if the node predicate does not evaluate to true.
+     *
+     * @return the step condition
+     */
     default StepCondition not() {
         return LogicalUnaryCondition.negate(this);
     }

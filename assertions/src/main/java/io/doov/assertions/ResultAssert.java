@@ -12,14 +12,15 @@
  */
 package io.doov.assertions;
 
-import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.meta.Metadata;
-import org.assertj.core.api.AbstractAssert;
+import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
+import org.assertj.core.api.AbstractAssert;
+
+import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Assertion for {@link Result}.
@@ -32,6 +33,8 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     /**
      * Verifies that the result is true (meaning the evaluated predicate is true).
+     *
+     * @return self
      */
     public ResultAssert isTrue() {
         if (!actual.isTrue()) {
@@ -42,6 +45,8 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     /**
      * Verifies that the result is false (meaning the evaluated predicate is false).
+     *
+     * @return self
      */
     public ResultAssert isFalse() {
         if (!actual.isFalse()) {
@@ -52,6 +57,9 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     /**
      * Verifies that the result message is equal to the given one.
+     *
+     * @param message the message
+     * @return self
      */
     public ResultAssert hasMessage(String message) {
         if (!actual.getMessage().equals(message)) {
@@ -62,6 +70,8 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     /**
      * Verifies that the result message is null.
+     *
+     * @return self
      */
     public ResultAssert hasMessageNull() {
         if (actual.getMessage() != null) {
@@ -72,28 +82,36 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     /**
      * Verifies that the result has a false node equal to the given one.
+     *
+     * @param metadata the metadata
+     * @return self
      */
     public ResultAssert isEvalFalse(Metadata metadata) {
         if (!actual.getContext().isEvalFalse(metadata)) {
             failWithMessage("Expected result to have invalidated nodes + " + metadata.readable()
-                    + " but was " + getInvalidatedMetadata());
+                            + " but was " + getInvalidatedMetadata());
         }
         return this;
     }
 
     /**
      * Verifies that the result has a true node equal to the given one.
+     *
+     * @param metadata the metadata
+     * @return self
      */
     public ResultAssert isEvalTrue(Metadata metadata) {
         if (!actual.getContext().isEvalTrue(metadata)) {
             failWithMessage("Expected result to have validated nodes + " + metadata.readable()
-                    + " but was " + getValidatedMetadata());
+                            + " but was " + getValidatedMetadata());
         }
         return this;
     }
 
     /**
      * Verifies that the result has no invalidated nodes (meaning the evaluated tree has no false nodes).
+     *
+     * @return self
      */
     public ResultAssert hasNoInvalidatedMetadata() {
         if (!actual.getContext().getEvalFalse().isEmpty()) {

@@ -15,6 +15,9 @@
  */
 package io.doov.core.dsl;
 
+/**
+ * Interface for all model.
+ */
 public interface DslModel {
 
     <T> T get(DslId id);

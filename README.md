@@ -6,19 +6,17 @@ dOOv is a fluent API for typesafe domain model validation. It uses annotations, 
 
 ## Documentation
 
-- **[doov-core](core)**: Contains the DSL, the AST and the annotations
-- **[doov-generator](generator)**: Contains the code generator for model-map and field infos
-- **[doov-assertions](assertions)**: Contains AssertJ assertions
+### Modules
 
-## Javadoc
+- **[doov-core](core)**: Contains the DSL, the AST and the annotations ([javadoc](http://doov.io/site/apidocs/core))
+- **[doov-generator](generator)**: Contains the code generator for model-map and field infos ([javadoc](http://doov.io/site/apidocs/assertions))
+- **[doov-assertions](assertions)**: Contains AssertJ assertions ([javadoc](http://doov.io/site/apidocs/generator))
 
-See [latest javadoc](http://doov.io/site/apidocs).
-
-## Presentations
+### Presentations
 
 See [latest presentation at Snowcamp 2018](http://doov.io/dsl_to_go_beyond_bean_validation_snowcamp.html)
 
-## Example
+### Example
 
 See [the sample project in dOOv](sample)
 
@@ -109,10 +107,12 @@ bin/release.sh VERSION REPOSITORY_ID REPOSITORY_URL [GPG_KEYNAME]
 
 It is automatically generated and commited by the release script (so the available documentation is the latest released version).
 
-It can also be generated for a snapshot version with the following command, the output is in target/apidocs.
+It can also be generated for a snapshot version with the following command, the output is in `target/site`.
 
 ```bash
-mvn -pl core/core clean site
+mvn -pl core clean site
+mvn -pl assertions clean site
+mvn -pl generator clean site
 ```
 
 ## Licence

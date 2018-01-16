@@ -22,6 +22,7 @@ import java.util.*;
 import io.doov.core.dsl.lang.Context;
 
 public class UnaryMetadata extends PredicateMetadata {
+
     private final Operator operator;
     private final Metadata value;
 
@@ -47,7 +48,7 @@ public class UnaryMetadata extends PredicateMetadata {
     public void accept(MetadataVisitor visitor, int depth) {
         visitor.visit(this, depth);
         value.accept(visitor, depth + 1);
-        visitor.end(this,depth);
+        visitor.end(this, depth);
     }
 
     @Override

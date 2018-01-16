@@ -19,6 +19,20 @@ import java.lang.annotation.*;
 
 /**
  * Annotates an annotation used to annotate a bean property (attribute, getter or setter) with a {@code FieldId}
+ *
+ * <pre>
+ * &#64;Path
+ * &#64;Retention(RetentionPolicy.RUNTIME)
+ * public &#64;interface ModelPath {
+ *
+ *     ModelFieldId field();
+ *
+ *     ModelConstraint constraint() default NONE;
+ *
+ *     String readable() default "";
+ *
+ * }
+ * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)

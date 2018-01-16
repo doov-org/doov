@@ -29,6 +29,10 @@ public class FieldModels {
 
     /**
      * Returns a {@code Collector} that accumulates the input elements into a unique {@code FieldModel}.
+     *
+     * @param <Fm>  the type of field model
+     * @param model the model
+     * @return the collector
      */
     public static <Fm extends FieldModel> Collector<Entry<FieldId, Object>, ?, Fm> toFieldModel(Fm model) {
         return new FieldModelCollector<>(model);
@@ -36,13 +40,17 @@ public class FieldModels {
 
     /**
      * Returns a concurrent {@code Collector} that accumulates the input elements into a unique {@code FieldModel}.
+     *
+     * @param <Fm>  the type of field model
+     * @param model the model
+     * @return the collector
      */
     public static <Fm extends FieldModel> Collector<Entry<FieldId, Object>, ?, Fm> toConcurrentFieldModel(Fm model) {
         return new ConcurrentFieldModelCollector<>(model);
     }
 
     private static final class FieldModelCollector<Fm extends FieldModel>
-            implements Collector<Entry<FieldId, Object>, Fm, Fm> {
+                    implements Collector<Entry<FieldId, Object>, Fm, Fm> {
 
         private final Fm model;
 
@@ -79,17 +87,18 @@ public class FieldModels {
         public Set<Characteristics> characteristics() {
             return EnumSet.allOf(Characteristics.class);
         }
+
     }
 
     private static final class ConcurrentFieldModelCollector<Fm extends FieldModel>
-            implements Collector<Entry<FieldId, Object>, Fm, Fm> {
+                    implements Collector<Entry<FieldId, Object>, Fm, Fm> {
 
         private final Fm model;
         private final ReentrantLock lock;
 
         ConcurrentFieldModelCollector(Fm model) {
             this.model = model;
-            this.lock = new ReentrantLock();
+            lock = new ReentrantLock();
         }
 
         @Override
@@ -127,5 +136,7 @@ public class FieldModels {
         public Set<Characteristics> characteristics() {
             return EnumSet.allOf(Characteristics.class);
         }
+
     }
+
 }

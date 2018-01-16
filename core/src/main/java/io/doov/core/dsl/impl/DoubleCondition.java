@@ -21,39 +21,43 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
+/**
+ * Implements {@link Double} functions for the numeric conditions.
+ */
 public class DoubleCondition extends NumericCondition<Double> {
 
     public DoubleCondition(DslField field) {
         super(field);
     }
 
-    public DoubleCondition(DslField field, PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<Double>> value) {
+    public DoubleCondition(DslField field, PredicateMetadata metadata,
+                    BiFunction<DslModel, Context, Optional<Double>> value) {
         super(field, metadata, value);
     }
 
     @Override
-    NumericCondition<Double> numericCondition(DslField field, PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<Double>> value) {
+    protected NumericCondition<Double> numericCondition(DslField field, PredicateMetadata metadata,
+                    BiFunction<DslModel, Context, Optional<Double>> value) {
         return new DoubleCondition(field, metadata, value);
     }
 
     @Override
-    public BiFunction<Double, Double, Boolean> lesserThanFunction() {
+    BiFunction<Double, Double, Boolean> lesserThanFunction() {
         return (l, r) -> l < r;
     }
 
     @Override
-    public BiFunction<Double, Double, Boolean> lesserOrEqualsFunction() {
+    BiFunction<Double, Double, Boolean> lesserOrEqualsFunction() {
         return (l, r) -> l <= r;
     }
 
     @Override
-    public BiFunction<Double, Double, Boolean> greaterThanFunction() {
+    BiFunction<Double, Double, Boolean> greaterThanFunction() {
         return (l, r) -> l > r;
     }
 
     @Override
-    public BiFunction<Double, Double, Boolean> greaterOrEqualsFunction() {
+    BiFunction<Double, Double, Boolean> greaterOrEqualsFunction() {
         return (l, r) -> l >= r;
     }
 
@@ -76,4 +80,5 @@ public class DoubleCondition extends NumericCondition<Double> {
     Double identity() {
         return 0d;
     }
+
 }

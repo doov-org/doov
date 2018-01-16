@@ -12,16 +12,48 @@
  */
 package io.doov.core.dsl.lang;
 
+import io.doov.core.dsl.DslModel;
+
+/**
+ * Interface for the execution result after a call to {@link ValidationRule#executeOn(DslModel)}.
+ */
 public interface Result {
 
+    /**
+     * Returns true if the predicate evaluates to true.
+     *
+     * @return true if true predicate
+     */
     boolean isTrue();
 
+    /**
+     * Returns true if the predicate evaluates to false.
+     *
+     * @return true if false predicate
+     */
     boolean isFalse();
 
+    /**
+     * Returns a human readable message of the validation rule. Depending if a message was provided during construction,
+     * this might be generated from the syntax tree.
+     *
+     * @return the validation message
+     */
     String getMessage();
-    
+
+    /**
+     * Returns the failure cause of the failed predicate. This will reduce the syntax tree using execution values to
+     * output the minimum failed tree.
+     *
+     * @return the failure cause, if failed
+     */
     String getFailureCause();
 
+    /**
+     * Returns the context that contains the execution values.
+     *
+     * @return the context
+     */
     Context getContext();
 
 }

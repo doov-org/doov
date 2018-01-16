@@ -23,6 +23,12 @@ import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.LeafMetadata;
 
+/**
+ * Base class for string conditions.
+ * <p>
+ * It contains a {@link DslField} to get the value from the model, a {@link LeafMetadata} to describe this node, and a
+ * {@link BiFunction} to take the value from the model and return an optional value.
+ */
 public class StringCondition extends DefaultCondition<String> {
 
     public StringCondition(DslField field) {
@@ -30,42 +36,78 @@ public class StringCondition extends DefaultCondition<String> {
     }
 
     public StringCondition(DslField field, LeafMetadata metadata,
-            BiFunction<DslModel, Context, Optional<String>> value) {
+                    BiFunction<DslModel, Context, Optional<String>> value) {
         super(field, metadata, value);
     }
 
+    /**
+     * Returns a condition checking if the node value contains the given value.
+     *
+     * @param value the value
+     * @return the step condition
+     */
     public final StepCondition contains(String value) {
         return predicate(containsMetadata(field, value),
-                (model, context) -> Optional.ofNullable(value),
-                String::contains);
+                        (model, context) -> Optional.ofNullable(value),
+                        String::contains);
     }
 
+    /**
+     * Returns a condition checking if the node value matches the given value.
+     *
+     * @param value the value
+     * @return the step condition
+     */
     public final StepCondition matches(String value) {
         return predicate(matchesMetadata(field, value),
-                (model, context) -> Optional.ofNullable(value),
-                String::matches);
+                        (model, context) -> Optional.ofNullable(value),
+                        String::matches);
     }
 
+    /**
+     * Returns a condition checking if the node value starts with the given value.
+     *
+     * @param value the value
+     * @return the step condition
+     */
     public final StepCondition startsWith(String value) {
         return predicate(startsWithMetadata(field, value),
-                (model, context) -> Optional.ofNullable(value),
-                String::startsWith);
+                        (model, context) -> Optional.ofNullable(value),
+                        String::startsWith);
     }
 
+    /**
+     * Returns a condition checking if the node value ends with the given value.
+     *
+     * @param value the value
+     * @return the step condition
+     */
     public final StepCondition endsWith(String value) {
         return predicate(endsWithMetadata(field, value),
-                (model, context) -> Optional.ofNullable(value),
-                String::endsWith);
+                        (model, context) -> Optional.ofNullable(value),
+                        String::endsWith);
     }
 
+    /**
+     * Returns an integer condition that returns the node value length.
+     *
+     * @return the integer condition
+     */
     public IntegerCondition length() {
         return new IntegerCondition(field, lengthIsMetadata(field),
-                (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(String::length));
+                        (model, context) -> Optional.ofNullable(model.<String> get(field.id()))
+                                        .map(String::length));
     }
 
+    /**
+     * Returns an integer condition that returns the node value as an integer.
+     *
+     * @return the integer condition
+     */
     public IntegerCondition parseInt() {
         return new IntegerCondition(field, fieldMetadata(field),
-                (model, context) -> Optional.ofNullable(model.<String> get(field.id())).map(Integer::parseInt));
+                        (model, context) -> Optional.ofNullable(model.<String> get(field.id()))
+                                        .map(Integer::parseInt));
     }
 
 }

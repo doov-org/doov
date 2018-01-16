@@ -79,6 +79,8 @@ echo "====================================="
 echo ""
 
 mvn -pl core -P publish-site clean site
+mvn -pl assertions -P publish-site clean site
+mvn -pl generator -P publish-site clean site
 git add .
 git commit -m "Release maven site ${VERSION}"
 

@@ -6,6 +6,7 @@ package io.doov.core.dsl.meta;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class PredicateMetadata implements Metadata, PredicateMonitor {
+
     private final AtomicInteger trueEval = new AtomicInteger();
     private final AtomicInteger falseEval = new AtomicInteger();
 
@@ -28,9 +29,10 @@ public abstract class PredicateMetadata implements Metadata, PredicateMonitor {
     public int falseEvalCount() {
         return falseEval.get();
     }
-    
+
     @Override
     public String toString() {
         return readable();
     }
+
 }

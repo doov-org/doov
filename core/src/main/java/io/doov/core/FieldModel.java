@@ -26,71 +26,91 @@ import io.doov.core.dsl.DslModel;
 public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslModel {
 
     /**
-     * @param fieldId the {@code FieldId} to read
-     * @return the the {@code FieldId} value
+     * Returns the {@code FieldId} value from the {@code FieldId} to read
+     *
+     * @param <T>     the type of the return
+     * @param fieldId the field id to get
+     * @return the field value
      */
     @Override
     <T> T get(DslId fieldId);
 
     /**
-     * @param fieldId the {@code FieldId} to update
-     * @param value   the new {@code FieldId} value
+     * Sets the given value to the given field id.
+     *
+     * @param <T>     the type of the value
+     * @param fieldId the field id to set
+     * @param value   the value to set
      */
     <T> void set(FieldId fieldId, T value);
 
     /**
-     * return a sequential {@code Stream} with all key-value pairs
+     * Returns a sequential {@code Stream} with all key-value pairs
+     *
+     * @return the stream
      */
     Stream<Map.Entry<FieldId, Object>> stream();
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     Spliterator<Map.Entry<FieldId, Object>> spliterator();
 
     /**
-     * return a parallel {@code Stream} with all key-value pairs
+     * Returns a parallel {@code Stream} with all key-value pairs
+     *
+     * @return the parallel stream
      */
     Stream<Map.Entry<FieldId, Object>> parallelStream();
 
     /**
-     * @return the {@code FieldInfo} FieldInfo for all this model {@code FieldId}
+     * Returns all the {@code FieldInfo} for this model
+     *
+     * @return the list of field infos
      */
     List<FieldInfo> getFieldInfos();
 
     /**
-     * @return all {@code FieldId}, with a not-null value
+     * Returns all {@code FieldId} with a not-null value
+     *
+     * @return the list of field ids
      */
     default List<FieldId> getFieldIds() {
         return getFieldInfos().stream().map(FieldInfo::id).collect(toList());
     }
 
     /**
-     * Copy all the values for the {@code FieldModel} <code>source</code>
+     * Sets all values from the given {@code FieldModel} source
      *
-     * @param source the source field model
+     * @param source the source content
      */
     default void setAll(FieldModel source) {
         getFieldInfos().stream().filter(info -> source.get(info.id()) != null)
-                .forEach(info -> set(info.id(), source.get(info.id())));
+                        .forEach(info -> set(info.id(), source.get(info.id())));
     }
 
     /**
-     * For all the {@code FieldId}, set their value to <code>null</code>
+     * Clears all the {@code FieldId} by setting their value to <code>null</code>
      */
     default void clear() {
         getFieldInfos().stream().filter(info -> get(info.id()) != null).forEach(info -> set(info.id(), null));
     }
 
     /**
-     * For all the {@code FieldId} tagged with the specified {@code TagId}, set their value to <code>null</code>
+     * Clears all the {@code FieldId} tagged with the specified {@code TagId} by setting their value to
+     * <code>null</code>
+     *
+     * @param tag the tag id
      */
     default void clear(TagId tag) {
         getFieldInfos().stream().filter(info -> info.id().hasTag(tag) && get(info.id()) != null)
-                .forEach(info -> set(info.id(), null));
+                        .forEach(info -> set(info.id(), null));
     }
 
+    /**
+     * Returns the field info for the given field id.
+     *
+     * @param id the field id
+     * @return the field info
+     */
     default FieldInfo info(FieldId id) {
         return getFieldInfos().stream().filter(info -> info.id() == id).findFirst().orElse(null);
     }

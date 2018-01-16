@@ -23,6 +23,10 @@ import java.util.function.UnaryOperator;
 
 import io.doov.core.dsl.meta.Metadata;
 
+/**
+ * Common and useful temporal adjusters. This class wraps {@link java.time.temporal.TemporalAdjuster} to add
+ * metadata information to each adjusters.
+ */
 public class TemporalAdjuster {
 
     private final Metadata metadata;
@@ -41,38 +45,85 @@ public class TemporalAdjuster {
         return adjuster;
     }
 
-    // adjusters
-
+    /**
+     * See {@link TemporalAdjusters#firstDayOfMonth()}
+     *
+     * @return the temporal adjuster
+     * @see TemporalAdjusters#firstDayOfMonth()
+     */
     public static TemporalAdjuster firstDayOfMonth() {
         return new TemporalAdjuster(firstDayOfMonthMetadata(), TemporalAdjusters.firstDayOfMonth());
     }
 
+    /**
+     * See {@link TemporalAdjusters#firstDayOfNextMonth()}
+     *
+     * @return the temporal adjuster
+     * @see TemporalAdjusters#firstDayOfNextMonth()
+     */
     public static TemporalAdjuster firstDayOfNextMonth() {
         return new TemporalAdjuster(firstDayOfNextMonthMetadata(), TemporalAdjusters.firstDayOfNextMonth());
     }
 
+    /**
+     * See {@link TemporalAdjusters#firstDayOfYear()}
+     *
+     * @return the temporal adjuster
+     * @see TemporalAdjusters#firstDayOfYear()
+     */
     public static TemporalAdjuster firstDayOfYear() {
         return new TemporalAdjuster(firstDayOfYearMetadata(), TemporalAdjusters.firstDayOfYear());
     }
 
+    /**
+     * See {@link TemporalAdjusters#firstDayOfNextYear()}
+     *
+     * @return the temporal adjuster
+     * @see TemporalAdjusters#firstDayOfNextYear()
+     */
     public static TemporalAdjuster firstDayOfNextYear() {
         return new TemporalAdjuster(firstDayOfNextYearMetadata(), TemporalAdjusters.firstDayOfNextYear());
     }
 
+    /**
+     * See {@link TemporalAdjusters#lastDayOfMonth()}
+     *
+     * @return the temporal adjuster
+     * @see TemporalAdjusters#lastDayOfMonth()
+     */
     public static TemporalAdjuster lastDayOfMonth() {
         return new TemporalAdjuster(lastDayOfMonthMetadata(), TemporalAdjusters.lastDayOfMonth());
     }
 
+    /**
+     * See {@link TemporalAdjusters#lastDayOfYear()}
+     *
+     * @return the temporal adjuster
+     * @see TemporalAdjusters#lastDayOfYear()
+     */
     public static TemporalAdjuster lastDayOfYear() {
         return new TemporalAdjuster(lastDayOfYearMetadata(), TemporalAdjusters.lastDayOfYear());
     }
 
-    // date
-
+    /**
+     * See {@link TemporalAdjusters#ofDateAdjuster(UnaryOperator)}
+     *
+     * @param dateBasedAdjuster the adjuster to apply
+     * @return the temporal adjuster
+     * @see TemporalAdjusters#ofDateAdjuster(UnaryOperator)
+     */
     public static TemporalAdjuster ofDateAdjuster(UnaryOperator<LocalDate> dateBasedAdjuster) {
         return ofDateAdjuster(unknownMetadata("of date adjuster"), dateBasedAdjuster);
     }
 
+    /**
+     * See {@link TemporalAdjusters#ofDateAdjuster(UnaryOperator)}
+     *
+     * @param metadata          the metadata for the adjuster
+     * @param dateBasedAdjuster the adjuster to apply
+     * @return the temporal adjuster
+     * @see TemporalAdjusters#ofDateAdjuster(UnaryOperator)
+     */
     public static TemporalAdjuster ofDateAdjuster(Metadata metadata, UnaryOperator<LocalDate> dateBasedAdjuster) {
         return new TemporalAdjuster(metadata, TemporalAdjusters.ofDateAdjuster(dateBasedAdjuster));
     }

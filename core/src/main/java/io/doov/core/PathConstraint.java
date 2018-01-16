@@ -21,7 +21,9 @@ package io.doov.core;
 public interface PathConstraint {
 
     /**
-     * @return the path contraint value
+     * Returns the path constraint value
+     *
+     * @return the include path
      */
     default String includePath() {
         return "";

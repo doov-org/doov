@@ -23,6 +23,9 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
+/**
+ * Implements {@link LocalTime} functions for the temporal conditions.
+ */
 public class LocalTimeCondition extends TemporalCondition<LocalTime> {
 
     public LocalTimeCondition(DslField field) {
@@ -41,42 +44,42 @@ public class LocalTimeCondition extends TemporalCondition<LocalTime> {
     }
 
     @Override
-    protected Function<LocalTime, LocalTime> minusFunction(int value, TemporalUnit unit) {
+    Function<LocalTime, LocalTime> minusFunction(int value, TemporalUnit unit) {
         return time -> time.minus(value, unit);
     }
 
     @Override
-    protected Function<LocalTime, LocalTime> plusFunction(int value, TemporalUnit unit) {
+    Function<LocalTime, LocalTime> plusFunction(int value, TemporalUnit unit) {
         return time -> time.plus(value, unit);
     }
 
     @Override
-    protected Function<LocalTime, LocalTime> withFunction(TemporalAdjuster ajuster) {
+    Function<LocalTime, LocalTime> withFunction(TemporalAdjuster ajuster) {
         return time -> time.with(ajuster);
     }
 
     @Override
-    protected BiFunction<LocalTime, LocalTime, Boolean> afterFunction() {
+    BiFunction<LocalTime, LocalTime, Boolean> afterFunction() {
         return LocalTime::isAfter;
     }
 
     @Override
-    protected BiFunction<LocalTime, LocalTime, Boolean> afterOrEqualsFunction() {
+    BiFunction<LocalTime, LocalTime, Boolean> afterOrEqualsFunction() {
         return (time1, time2) -> time1.isAfter(time2) || time1.equals(time2);
     }
 
     @Override
-    protected BiFunction<LocalTime, LocalTime, Boolean> beforeFunction() {
+    BiFunction<LocalTime, LocalTime, Boolean> beforeFunction() {
         return LocalTime::isBefore;
     }
 
     @Override
-    protected BiFunction<LocalTime, LocalTime, Boolean> beforeOrEqualsFunction() {
+    BiFunction<LocalTime, LocalTime, Boolean> beforeOrEqualsFunction() {
         return (time1, time2) -> time1.isBefore(time2) || time1.equals(time2);
     }
 
     @Override
-    protected BiFunction<LocalTime, LocalTime, Long> betweenFunction(ChronoUnit unit) {
+    BiFunction<LocalTime, LocalTime, Long> betweenFunction(ChronoUnit unit) {
         return unit::between;
     }
 

@@ -26,6 +26,9 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
+/**
+ * Implements {@link LocalDate} functions for the temporal conditions.
+ */
 public class LocalDateCondition extends TemporalCondition<LocalDate> {
 
     public LocalDateCondition(DslField field) {
@@ -44,42 +47,42 @@ public class LocalDateCondition extends TemporalCondition<LocalDate> {
     }
 
     @Override
-    protected Function<LocalDate, LocalDate> minusFunction(int value, TemporalUnit unit) {
+    Function<LocalDate, LocalDate> minusFunction(int value, TemporalUnit unit) {
         return date -> date.minus(value, unit);
     }
 
     @Override
-    protected Function<LocalDate, LocalDate> plusFunction(int value, TemporalUnit unit) {
+    Function<LocalDate, LocalDate> plusFunction(int value, TemporalUnit unit) {
         return date -> date.plus(value, unit);
     }
 
     @Override
-    protected Function<LocalDate, LocalDate> withFunction(TemporalAdjuster ajuster) {
+    Function<LocalDate, LocalDate> withFunction(TemporalAdjuster ajuster) {
         return date -> date.with(ajuster);
     }
 
     @Override
-    protected BiFunction<LocalDate, LocalDate, Boolean> afterFunction() {
+    BiFunction<LocalDate, LocalDate, Boolean> afterFunction() {
         return LocalDate::isAfter;
     }
 
     @Override
-    protected BiFunction<LocalDate, LocalDate, Boolean> afterOrEqualsFunction() {
+    BiFunction<LocalDate, LocalDate, Boolean> afterOrEqualsFunction() {
         return (date1, date2) -> date1.isAfter(date2) || date1.equals(date2);
     }
 
     @Override
-    protected BiFunction<LocalDate, LocalDate, Boolean> beforeFunction() {
+    BiFunction<LocalDate, LocalDate, Boolean> beforeFunction() {
         return LocalDate::isBefore;
     }
 
     @Override
-    protected BiFunction<LocalDate, LocalDate, Boolean> beforeOrEqualsFunction() {
+    BiFunction<LocalDate, LocalDate, Boolean> beforeOrEqualsFunction() {
         return (date1, date2) -> date1.isBefore(date2) || date1.equals(date2);
     }
 
     @Override
-    protected BiFunction<LocalDate, LocalDate, Long> betweenFunction(ChronoUnit unit) {
+    BiFunction<LocalDate, LocalDate, Long> betweenFunction(ChronoUnit unit) {
         return unit::between;
     }
 

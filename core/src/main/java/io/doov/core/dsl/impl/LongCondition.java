@@ -21,6 +21,9 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
+/**
+ * Implements {@link Long} functions for the numeric conditions.
+ */
 public class LongCondition extends NumericCondition<Long> {
 
     public LongCondition(DslField field) {
@@ -33,28 +36,28 @@ public class LongCondition extends NumericCondition<Long> {
     }
 
     @Override
-    NumericCondition<Long> numericCondition(DslField field, PredicateMetadata metadata,
+    protected NumericCondition<Long> numericCondition(DslField field, PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Long>> value) {
         return new LongCondition(field, metadata, value);
     }
 
     @Override
-    public BiFunction<Long, Long, Boolean> lesserThanFunction() {
+    BiFunction<Long, Long, Boolean> lesserThanFunction() {
         return (l, r) -> l < r;
     }
 
     @Override
-    public BiFunction<Long, Long, Boolean> lesserOrEqualsFunction() {
+    BiFunction<Long, Long, Boolean> lesserOrEqualsFunction() {
         return (l, r) -> l <= r;
     }
 
     @Override
-    public BiFunction<Long, Long, Boolean> greaterThanFunction() {
+    BiFunction<Long, Long, Boolean> greaterThanFunction() {
         return (l, r) -> l > r;
     }
 
     @Override
-    public BiFunction<Long, Long, Boolean> greaterOrEqualsFunction() {
+    BiFunction<Long, Long, Boolean> greaterOrEqualsFunction() {
         return (l, r) -> l >= r;
     }
 

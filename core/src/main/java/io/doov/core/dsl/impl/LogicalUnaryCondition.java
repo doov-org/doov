@@ -24,15 +24,24 @@ import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.UnaryMetadata;
 
+/**
+ * Implement unary conditions like negate.
+ */
 public class LogicalUnaryCondition extends AbstractStepCondition {
 
     private LogicalUnaryCondition(UnaryMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         super(metadata, predicate);
     }
 
+    /**
+     * Returns a unary condition that returns true if the given step does not evaluate to true.
+     *
+     * @param step the condition to negate
+     * @return the unary condition
+     */
     public static LogicalUnaryCondition negate(StepCondition step) {
         return new LogicalUnaryCondition(notMetadata(step.getMetadata()),
-                (model, context) -> step.predicate().negate().test(model, context));
+                        (model, context) -> step.predicate().negate().test(model, context));
     }
 
 }

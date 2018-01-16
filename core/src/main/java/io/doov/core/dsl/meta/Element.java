@@ -9,6 +9,7 @@ import static io.doov.core.dsl.meta.ElementType.PARENTHESIS_RIGHT;
 import io.doov.core.dsl.lang.Readable;
 
 public class Element {
+
     private final Readable readable;
     private final ElementType type;
 
@@ -33,8 +34,9 @@ public class Element {
     static Element leftParenthesis() {
         return new Element(() -> "(", PARENTHESIS_LEFT);
     }
-    
+
     static Element rightParenthesis() {
         return new Element(() -> ")", PARENTHESIS_RIGHT);
     }
+
 }

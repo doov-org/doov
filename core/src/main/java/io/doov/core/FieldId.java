@@ -27,27 +27,35 @@ import io.doov.core.dsl.DslId;
 public interface FieldId extends DslId {
 
     /**
-     * @return the field unique identifier
+     * Returns the field unique identifier
+     *
+     * @return the name
      */
     String name();
 
     /**
-     * @return the field position, when referencing an element in a {@code Collection}
+     * Returns the field position, when referencing an element in a {@code Collection}.
+     *
+     * @return the position, defaults to -1
      */
     default int position() {
         return -1;
     }
 
     /**
-     * @return optionnal tags used to decorate this field
+     * Returns optional tags used to decorate this field.
+     *
+     * @return the tags, defaults to empty list
      */
     default List<TagId> tags() {
         return emptyList();
     }
 
     /**
-     * @param tag the tag to check
-     * @return <code>true</code> if this field is tagged by <code>tag</code>
+     * Returns true if this field is tagged by the given tag.
+     *
+     * @param tag the tag to test
+     * @return true if tagged
      */
     default boolean hasTag(TagId tag) {
         return tags().contains(tag);

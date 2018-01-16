@@ -12,12 +12,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.LeafMetadata.greaterOrEqualsMetadata;
-import static io.doov.core.dsl.meta.LeafMetadata.greaterThanMetadata;
-import static io.doov.core.dsl.meta.LeafMetadata.lesserOrEqualsMetadata;
-import static io.doov.core.dsl.meta.LeafMetadata.lesserThanMetadata;
-import static io.doov.core.dsl.meta.LeafMetadata.timesMetadata;
-import static io.doov.core.dsl.meta.LeafMetadata.whenMetadata;
+import static io.doov.core.dsl.meta.LeafMetadata.*;
 import static io.doov.core.dsl.meta.NaryMetadata.minMetadata;
 import static io.doov.core.dsl.meta.NaryMetadata.sumMetadata;
 import static java.util.stream.Collectors.toList;
@@ -36,6 +31,14 @@ import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
+/**
+ * Base class for numeric conditions.
+ * <p>
+ * It contains a {@link DslField} to get the value from the model, a {@link PredicateMetadata} to describe this node,
+ * and a {@link BiFunction} to take the value from the model and return an optional value.
+ *
+ * @param <N> the type of the field value
+ */
 public abstract class NumericCondition<N extends Number> extends DefaultCondition<N> {
 
     NumericCondition(DslField field) {
@@ -46,81 +49,143 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
         super(field, metadata, value);
     }
 
-    abstract NumericCondition<N> numericCondition(DslField field, PredicateMetadata metadata,
+    protected abstract NumericCondition<N> numericCondition(DslField field, PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<N>> value);
 
-    // lesser than
-
+    /**
+     * Returns a step condition checking if the node value is lesser than the given value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
     public final StepCondition lesserThan(N value) {
         return predicate(lesserThanMetadata(field, value),
                         (model, context) -> Optional.ofNullable(value),
                         (l, r) -> lesserThanFunction().apply(l, r));
     }
 
+    /**
+     * Returns a step condition checking if the node value is lesser than the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
     public final StepCondition lesserThan(NumericFieldInfo<N> value) {
         return predicate(lesserThanMetadata(field, value),
                         (model, context) -> valueModel(model, value),
                         (l, r) -> lesserThanFunction().apply(l, r));
     }
 
+    /**
+     * Returns a step condition checking if the node value is lesser or equals the given value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
     public final StepCondition lesserOrEquals(N value) {
         return predicate(lesserOrEqualsMetadata(field, value),
                         (model, context) -> Optional.ofNullable(value),
                         (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
+    /**
+     * Returns a step condition checking if the node value is lesser or equals the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
     public final StepCondition lesserOrEquals(NumericFieldInfo<N> value) {
         return predicate(lesserOrEqualsMetadata(field, value),
                         (model, context) -> valueModel(model, value),
                         (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
-    public abstract BiFunction<N, N, Boolean> lesserThanFunction();
+    abstract BiFunction<N, N, Boolean> lesserThanFunction();
 
-    public abstract BiFunction<N, N, Boolean> lesserOrEqualsFunction();
+    abstract BiFunction<N, N, Boolean> lesserOrEqualsFunction();
 
-    // greater than
-
+    /**
+     * Returns a step condition checking if the node value is greater than the given value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
     public final StepCondition greaterThan(N value) {
         return predicate(greaterThanMetadata(field, value),
                         (model, context) -> Optional.ofNullable(value),
                         (l, r) -> greaterThanFunction().apply(l, r));
     }
 
+    /**
+     * Returns a step condition checking if the node value is greater than the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
     public final StepCondition greaterThan(NumericFieldInfo<N> value) {
         return predicate(greaterThanMetadata(field, value),
                         (model, context) -> valueModel(model, value),
                         (l, r) -> greaterThanFunction().apply(l, r));
     }
 
+    /**
+     * Returns a step condition checking if the node value is greater or equals the given value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
     public final StepCondition greaterOrEquals(N value) {
         return predicate(greaterOrEqualsMetadata(field, value),
                         (model, context) -> Optional.ofNullable(value),
                         (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
+    /**
+     * Returns a step condition checking if the node value is greater or equals the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
     public final StepCondition greaterOrEquals(NumericFieldInfo<N> value) {
         return predicate(greaterOrEqualsMetadata(field, value),
                         (model, context) -> valueModel(model, value),
                         (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
-    public abstract BiFunction<N, N, Boolean> greaterThanFunction();
+    abstract BiFunction<N, N, Boolean> greaterThanFunction();
 
-    public abstract BiFunction<N, N, Boolean> greaterOrEqualsFunction();
+    abstract BiFunction<N, N, Boolean> greaterOrEqualsFunction();
 
-    // between
-
+    /**
+     * Returns a step condition checking if the node value is between the given min included and max
+     * excluded values.
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     */
     public final StepCondition between(N minIncluded, N maxExcluded) {
         return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
 
+    /**
+     * Returns a step condition checking if the node value is between the given min included and max
+     * excluded field values.
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     */
     public final StepCondition between(NumericFieldInfo<N> minIncluded, NumericFieldInfo<N> maxExcluded) {
         return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
 
-    // min
-
+    /**
+     * Returns a numeric step condition that returns the min value of the given field values.
+     *
+     * @param fields the field values to minimize
+     * @return the numeric condition
+     */
     public final NumericCondition<N> min(List<NumericFieldInfo<N>> fields) {
         return numericCondition(null, minMetadata(getMetadataForFields(fields)),
                         (model, context) -> fields.stream()
@@ -131,8 +196,12 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     abstract BinaryOperator<N> minFunction();
 
-    // sum
-
+    /**
+     * Returns a numeric step condition that returns the sum value of the given field values.
+     *
+     * @param fields the field values to sum
+     * @return the numeric condition
+     */
     public final NumericCondition<N> sum(List<NumericFieldInfo<N>> fields) {
         return numericCondition(null, sumMetadata(getMetadataForFields(fields)),
                         (model, context) -> Optional.of(fields.stream()
@@ -141,6 +210,12 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
                                         .reduce(identity(), sumFunction())));
     }
 
+    /**
+     * Returns a numeric step condition that returns the sum value of the given condition values.
+     *
+     * @param conditions the condition values to sum
+     * @return the numeric condition
+     */
     public final NumericCondition<N> sumConditions(List<NumericCondition<N>> conditions) {
         return numericCondition(null, sumMetadata(getMetadataForConditions(conditions)),
                         (model, context) -> Optional.of(conditions.stream()
@@ -151,8 +226,12 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     abstract BinaryOperator<N> sumFunction();
 
-    // times
-
+    /**
+     * Returns a numeric step condition that returns the node value multiplied by the given multiplier.
+     *
+     * @param multiplier the multiplier
+     * @return the numeric condition
+     */
     public final NumericCondition<N> times(int multiplier) {
         return numericCondition(field, timesMetadata(field, multiplier),
                         (model, context) -> valueModel(model, field)
@@ -161,8 +240,12 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
 
     abstract BiFunction<N, Integer, N> timesFunction();
 
-    // when
-
+    /**
+     * Returns a numeric step condition that returns the node value if the condition evaluates to true.
+     *
+     * @param condition the condition to test
+     * @return the numeric condition
+     */
     public final NumericCondition<N> when(StepCondition condition) {
         return numericCondition(field, whenMetadata(field, condition),
                         (model, context) -> condition.predicate().test(model, context)
@@ -170,11 +253,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
                                         : Optional.empty());
     }
 
-    // identity
-
     abstract N identity();
-
-    // static
 
     private static <N extends Number> List<Metadata> getMetadataForFields(List<NumericFieldInfo<N>> fields) {
         return fields.stream().map(field -> field.getNumericCondition().metadata).collect(toList());

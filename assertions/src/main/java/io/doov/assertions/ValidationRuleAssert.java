@@ -15,10 +15,11 @@
  */
 package io.doov.assertions;
 
+import org.assertj.core.api.AbstractAssert;
+
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
-import org.assertj.core.api.AbstractAssert;
 
 /**
  * Assertion for {@link ValidationRule}.
@@ -32,6 +33,8 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
     /**
      * Verifies that the result is true for the given model.
      *
+     * @param model the model
+     * @return the assert
      * @see ResultAssert#isTrue()
      */
     public ResultAssert validates(DslModel model) {
@@ -44,6 +47,8 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
     /**
      * Verifies that the result is false for the given model.
      *
+     * @param model the model
+     * @return the assert
      * @see ResultAssert#isFalse()
      */
     public ResultAssert doesNotValidate(DslModel model) {
@@ -58,6 +63,7 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
      * <p>
      * TODO move to LesFurets
      *
+     * @param model the model
      * @see #validates(DslModel)
      */
     public void excludes(DslModel model) {
@@ -69,6 +75,7 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
      * <p>
      * TODO move to LesFurets
      *
+     * @param model the model
      * @see #doesNotValidate(DslModel)
      */
     public void doesNotExclude(DslModel model) {

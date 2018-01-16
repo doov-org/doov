@@ -17,17 +17,49 @@ import java.util.List;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 
+/**
+ * Interface for the description of a node in the syntax tree.
+ */
 public interface Metadata extends Readable, SyntaxTree {
 
+    /**
+     * Merges the node with the given node.
+     *
+     * @param other the other metadata to merge
+     * @return the merged metadata
+     */
     default PredicateMetadata merge(LeafMetadata other) {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Returns the tree of elements under this node in a flat list.
+     *
+     * @return the list of elements
+     */
     List<Element> flatten();
-    
+
+    /**
+     * Returns the direct children of this node in a flat list.
+     *
+     * @return the list of metadata
+     */
     List<Metadata> children();
 
+    /**
+     * Returns the metadata type.
+     *
+     * @return the type
+     */
     MetadataType type();
 
+    /**
+     * Returns the failure message from the given context. The message is returned in its shortest form by pruning
+     * branches in the evaluated syntax tree that are not needed for the failure message.
+     *
+     * @param context the evaluated context
+     * @return the metadata
+     */
     Metadata message(Context context);
+
 }

@@ -17,10 +17,25 @@ package io.doov.core.dsl.lang;
 
 import java.util.stream.Stream;
 
+/**
+ * Interface for the rules registry.
+ * <p>
+ * You can add a rule directly in the DSL with the method {@link ValidationRule#registerOn(RuleRegistry)}.
+ */
 public interface RuleRegistry {
 
+    /**
+     * Adds the given rule to this registry.
+     *
+     * @param rule the rule to register
+     */
     void register(ValidationRule rule);
 
+    /**
+     * Stream the rules of this registry.
+     *
+     * @return the rule stream
+     */
     Stream<ValidationRule> stream();
 
 }

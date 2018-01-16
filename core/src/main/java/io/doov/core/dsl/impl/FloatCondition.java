@@ -21,6 +21,9 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
+/**
+ * Implements {@link Float} functions for the numeric conditions.
+ */
 public class FloatCondition extends NumericCondition<Float> {
 
     public FloatCondition(DslField field) {
@@ -33,28 +36,28 @@ public class FloatCondition extends NumericCondition<Float> {
     }
 
     @Override
-    NumericCondition<Float> numericCondition(DslField field, PredicateMetadata metadata,
+    protected NumericCondition<Float> numericCondition(DslField field, PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Float>> value) {
         return new FloatCondition(field, metadata, value);
     }
 
     @Override
-    public BiFunction<Float, Float, Boolean> lesserThanFunction() {
+    BiFunction<Float, Float, Boolean> lesserThanFunction() {
         return (l, r) -> l < r;
     }
 
     @Override
-    public BiFunction<Float, Float, Boolean> lesserOrEqualsFunction() {
+    BiFunction<Float, Float, Boolean> lesserOrEqualsFunction() {
         return (l, r) -> l <= r;
     }
 
     @Override
-    public BiFunction<Float, Float, Boolean> greaterThanFunction() {
+    BiFunction<Float, Float, Boolean> greaterThanFunction() {
         return (l, r) -> l > r;
     }
 
     @Override
-    public BiFunction<Float, Float, Boolean> greaterOrEqualsFunction() {
+    BiFunction<Float, Float, Boolean> greaterOrEqualsFunction() {
         return (l, r) -> l >= r;
     }
 

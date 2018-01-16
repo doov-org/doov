@@ -23,22 +23,30 @@ import io.doov.core.dsl.lang.Readable;
 public interface FieldInfo extends Readable {
 
     /**
-     * @return the referenced {@code FieldId}
+     * Returns the referenced {@code FieldId}
+     *
+     * @return the field id
      */
     FieldId id();
 
     /**
-     * @return the other {@code FieldId} mapped on the same property
+     * Returns the other {@code FieldId} mapped on the same property
+     *
+     * @return the siblings array
      */
     FieldId[] siblings();
 
     /**
-     * @return the {@code FieldId} type
+     * Returns the {@code FieldId} type
+     *
+     * @return the field type
      */
     Class<?> type();
 
     /**
-     * @return the {@code FieldId} type parameters
+     * Returns the {@code FieldId} type parameters
+     *
+     * @return the field generic type array
      */
     Class<?>[] genericTypes();
 

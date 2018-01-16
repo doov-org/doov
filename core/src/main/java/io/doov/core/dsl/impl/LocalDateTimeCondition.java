@@ -23,6 +23,9 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
+/**
+ * Implements {@link LocalDateTime} functions for the temporal conditions.
+ */
 public class LocalDateTimeCondition extends TemporalCondition<LocalDateTime> {
 
     public LocalDateTimeCondition(DslField field) {
@@ -41,42 +44,42 @@ public class LocalDateTimeCondition extends TemporalCondition<LocalDateTime> {
     }
 
     @Override
-    protected Function<LocalDateTime, LocalDateTime> minusFunction(int value, TemporalUnit unit) {
+    Function<LocalDateTime, LocalDateTime> minusFunction(int value, TemporalUnit unit) {
         return dateTime -> dateTime.minus(value, unit);
     }
 
     @Override
-    protected Function<LocalDateTime, LocalDateTime> plusFunction(int value, TemporalUnit unit) {
+    Function<LocalDateTime, LocalDateTime> plusFunction(int value, TemporalUnit unit) {
         return dateTime -> dateTime.plus(value, unit);
     }
 
     @Override
-    protected Function<LocalDateTime, LocalDateTime> withFunction(TemporalAdjuster ajuster) {
+    Function<LocalDateTime, LocalDateTime> withFunction(TemporalAdjuster ajuster) {
         return dateTime -> dateTime.with(ajuster);
     }
 
     @Override
-    protected BiFunction<LocalDateTime, LocalDateTime, Boolean> afterFunction() {
+    BiFunction<LocalDateTime, LocalDateTime, Boolean> afterFunction() {
         return LocalDateTime::isAfter;
     }
 
     @Override
-    protected BiFunction<LocalDateTime, LocalDateTime, Boolean> afterOrEqualsFunction() {
+    BiFunction<LocalDateTime, LocalDateTime, Boolean> afterOrEqualsFunction() {
         return (dateTime1, dateTime2) -> dateTime1.isAfter(dateTime2) || dateTime1.equals(dateTime2);
     }
 
     @Override
-    protected BiFunction<LocalDateTime, LocalDateTime, Boolean> beforeFunction() {
+    BiFunction<LocalDateTime, LocalDateTime, Boolean> beforeFunction() {
         return LocalDateTime::isBefore;
     }
 
     @Override
-    protected BiFunction<LocalDateTime, LocalDateTime, Boolean> beforeOrEqualsFunction() {
+    BiFunction<LocalDateTime, LocalDateTime, Boolean> beforeOrEqualsFunction() {
         return (dateTime1, dateTime2) -> dateTime1.isBefore(dateTime2) || dateTime1.equals(dateTime2);
     }
 
     @Override
-    protected BiFunction<LocalDateTime, LocalDateTime, Long> betweenFunction(ChronoUnit unit) {
+    BiFunction<LocalDateTime, LocalDateTime, Long> betweenFunction(ChronoUnit unit) {
         return unit::between;
     }
 

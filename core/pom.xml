@@ -41,5 +41,23 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>publish-site</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <configuration>
+              <generateProjectInfo>false</generateProjectInfo>
+              <outputDirectory>${session.executionRootDirectory}/docs/site/core</outputDirectory>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>

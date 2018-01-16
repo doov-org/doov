@@ -16,6 +16,7 @@ import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Result;
 
 public class DefaultResult implements Result {
+
     private final boolean validity;
     private final String message;
     private final DefaultContext context;
@@ -50,4 +51,5 @@ public class DefaultResult implements Result {
     public String getFailureCause() {
         return context.getRootMetadata().message(context).readable();
     }
+
 }

@@ -21,44 +21,48 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
+/**
+ * Implements {@link Integer} functions for the numeric conditions.
+ */
 public class IntegerCondition extends NumericCondition<Integer> {
 
     public IntegerCondition(DslField field) {
         super(field);
     }
 
-    public IntegerCondition(DslField field, PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<Integer>> value) {
+    public IntegerCondition(DslField field, PredicateMetadata metadata,
+                    BiFunction<DslModel, Context, Optional<Integer>> value) {
         super(field, metadata, value);
     }
 
     public IntegerCondition(NumericCondition<Long> condition) {
         super(condition.field, condition.metadata,
-                (model, context) -> condition.function.apply(model, context).map(Long::intValue));
+                        (model, context) -> condition.function.apply(model, context).map(Long::intValue));
     }
 
     @Override
-    NumericCondition<Integer> numericCondition(DslField field, PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<Integer>> value) {
+    protected NumericCondition<Integer> numericCondition(DslField field, PredicateMetadata metadata,
+                    BiFunction<DslModel, Context, Optional<Integer>> value) {
         return new IntegerCondition(field, metadata, value);
     }
 
     @Override
-    public BiFunction<Integer, Integer, Boolean> lesserThanFunction() {
+    BiFunction<Integer, Integer, Boolean> lesserThanFunction() {
         return (l, r) -> l < r;
     }
 
     @Override
-    public BiFunction<Integer, Integer, Boolean> lesserOrEqualsFunction() {
+    BiFunction<Integer, Integer, Boolean> lesserOrEqualsFunction() {
         return (l, r) -> l <= r;
     }
 
     @Override
-    public BiFunction<Integer, Integer, Boolean> greaterThanFunction() {
+    BiFunction<Integer, Integer, Boolean> greaterThanFunction() {
         return (l, r) -> l > r;
     }
 
     @Override
-    public BiFunction<Integer, Integer, Boolean> greaterOrEqualsFunction() {
+    BiFunction<Integer, Integer, Boolean> greaterOrEqualsFunction() {
         return (l, r) -> l >= r;
     }
 

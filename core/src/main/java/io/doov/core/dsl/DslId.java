@@ -15,5 +15,8 @@
  */
 package io.doov.core.dsl;
 
+/**
+ * Interface for all field ids.
+ */
 public interface DslId {
 }

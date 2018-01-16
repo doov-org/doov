@@ -15,7 +15,16 @@
  */
 package io.doov.core.dsl.lang;
 
+/**
+ * Interface for human readable string representation.
+ */
 public interface Readable {
 
+    /**
+     * Returns the human readable version of this object.
+     *
+     * @return the readable string
+     */
     String readable();
+
 }
