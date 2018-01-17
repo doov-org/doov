@@ -10,9 +10,7 @@ import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
@@ -25,7 +23,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private static final String CSS_CLASS_VALIDATE = "dsl-token-validate";
     private static final String CSS_CLASS_BINARY = "dsl-token-binary";
     private static final String CSS_CLASS_UNARY = "dsl-token-unary";
-    private static final String CSS_CLASS_NARY = "dsl-token-nary";
+    protected static final String CSS_CLASS_NARY = "dsl-token-nary";
     private static final String CSS_CLASS_WHEN = "dsl-token-when";
 
     private static final String END_DIV = "</div>";
@@ -49,7 +47,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected final ResourceProvider bundle;
     protected Locale locale;
     private boolean nextBinary;
-    private boolean noLiNary= false;
+    protected boolean noLiNary= false;
 
     public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
         this.ops = ops;
