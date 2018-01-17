@@ -8,9 +8,9 @@ dOOv is a fluent API for typesafe domain model validation. It uses annotations, 
 
 ### Modules
 
-- **[doov-core](core)**: Contains the DSL, the AST and the annotations ([javadoc](http://doov.io/site/apidocs/core))
-- **[doov-generator](generator)**: Contains the code generator for model-map and field infos ([javadoc](http://doov.io/site/apidocs/assertions))
-- **[doov-assertions](assertions)**: Contains AssertJ assertions ([javadoc](http://doov.io/site/apidocs/generator))
+- **[doov-core](core)**: Contains the DSL, the AST and the annotations ([javadoc](http://doov.io/site/core/apidocs))
+- **[doov-assertions](assertions)**: Contains AssertJ assertions ([javadoc](http://doov.io/site/assertions/apidocs))
+- **[doov-generator](generator)**: Contains the code generator for model-map and field infos ([javadoc](http://doov.io/site/generator/apidocs))
 
 ### Presentations
 
