@@ -8,11 +8,10 @@ import static io.doov.sample.validation.RulesConference.userAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.assertions.ResultAssert;
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.meta.ast.AstFullVisitor;
 import io.doov.sample.model.SampleModels;
 
 public class RulesConferenceTest {
@@ -30,7 +29,7 @@ public class RulesConferenceTest {
         assertThat(accountEmail().isNotNull()).validates(wrapper);
 
         // Rule assert
-        assertThat(userAccount).validates(wrapper)
+        assertThat(userAccount).validates(wrapper);
 
         // Result assert
         Result result = userAccount.executeOn(wrapper);
@@ -42,6 +41,12 @@ public class RulesConferenceTest {
         REGISTRY_DEFAULT.stream()
             .map(Readable::readable)
             .forEach(System.out::print);
+
+        StringBuilder sb = new StringBuilder();
+        REGISTRY_DEFAULT.stream()
+            .peek(rule -> sb.append("--------------------------------").append("\n"))
+            .forEach(rule -> rule.accept(new AstFullVisitor(sb), 0));
+        System.out.println(sb.toString());
     }
 
 }
