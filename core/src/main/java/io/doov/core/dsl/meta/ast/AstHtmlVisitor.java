@@ -5,15 +5,17 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
+import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.WHEN;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Locale;
 
-import io.doov.core.dsl.lang.StepWhen;
-import io.doov.core.dsl.lang.ValidationRule;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
@@ -37,17 +39,15 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private static final String BEG_UL = "<ul>";
     private static final String END_UL = "</ul>";
 
-    private static final List<Operator> operatorList = Arrays.asList(greater_or_equals, greater_than, equals,
-                    not_equals, lesser_or_equals, lesser_than);
-
-    private int binaryDeep = 0;
-    private boolean endOfSum;
-    private final String[] lastLines = new String[3];
     private final OutputStream ops;
     protected final ResourceProvider bundle;
     protected Locale locale;
-    private boolean nextBinary;
-    protected boolean noLiNary= false;
+    private boolean closeSum = false;
+    private int closeUnaryUL = 0;
+    private int insideNary = 0;
+    private int nbImbriBinary = 0;
+    private boolean rightSideOfBinary = false;
+    private int seqBinary = 0;
 
     public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
         this.ops = ops;
@@ -55,39 +55,39 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         this.locale = locale;
     }
 
+    @Override
+    protected void visitMetadata(NaryMetadata metadata, int depth) {
+    }
+
+    @Override
+    protected void visitMetadata(StepCondition metadata, int depth) {
+    }
+
     // step when
 
     @Override
     public void startMetadata(StepWhen metadata, int depth) {
-        writeWithBuffer(formatNewLine());
-        writeWithBuffer(formatCurrentIndent());
+        write(BEG_UL);
     }
 
     @Override
     public void visitMetadata(StepWhen metadata, int depth) {
+        write(BEG_LI);
         htmlFormatSpan(CSS_CLASS_WHEN, formatWhen());
-        writeWithBuffer(formatNewLine());
-        writeWithBuffer(formatCurrentIndent());
-        writeWithBuffer(BEG_UL);
-        writeWithBuffer(formatNewLine());
+        write(END_LI);
+        write(BEG_UL);
     }
 
     @Override
     public void endMetadata(StepWhen metadata, int depth) {
-        writeWithBuffer(formatCurrentIndent());
-        writeWithBuffer(END_UL);
-        writeWithBuffer(formatNewLine());
+        write(END_UL);
     }
 
     // field metadata
     @Override
     public void startMetadata(LeafMetadata metadata, int depth) {
-        writeWithBuffer(formatCurrentIndent());
-        if (!lastLines[0].contains(">" + bundle.get(and, locale) + "<")
-                        && !lastLines[0].contains(">" + bundle.get(or, locale) + "<")) {
-            if (!endOfSum) {
-                writeWithBuffer(BEG_LI);
-            }
+        if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
+            write(BEG_LI);
         }
     }
 
@@ -123,126 +123,136 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void endMetadata(LeafMetadata metadata, int depth) {
-        if (endOfSum) {
-            writeWithBuffer("</br>");
-            endOfSum = false;
+        if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
+            write(END_LI);
         }
-        writeWithBuffer(formatNewLine());
     }
 
     // binary metadata
     @Override
     public void startMetadata(BinaryMetadata metadata, int depth) {
-        if (stackPeek()== MetadataType.BINARY_PREDICATE && nextBinary) {
-            writeWithBuffer(formatCurrentIndent());
-            writeWithBuffer(BEG_UL);
-            writeWithBuffer(formatNewLine());
-            binaryDeep++;
-            nextBinary=false;
-        }
+        Metadata leftChild = metadata.getLeft();
 
-        if (metadata.getRight().type() == MetadataType.BINARY_PREDICATE) {
-            nextBinary=true;
+        if (NARY_PREDICATE == stackPeek() && (metadata.getOperator() != or && metadata.getOperator() != and)) {
+            write(BEG_LI);
+            closeSum = true;
+        }
+        if (rightSideOfBinary && leftChild.type() != NARY_PREDICATE) {
+            write(BEG_UL);
+            nbImbriBinary++;
+            rightSideOfBinary = false;
+        }
+        if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
+            write(BEG_LI);
+        } else {
+            seqBinary++;
         }
     }
 
     @Override
     public void visitMetadata(BinaryMetadata metadata, int depth) {
-        writeWithBuffer(formatCurrentIndent());
-        if (metadata.getLeft().type() != MetadataType.NARY_PREDICATE) {
-                writeWithBuffer("<br>");
+        if (metadata.getOperator() == and || metadata.getOperator() == or) {
+            write("<br>");
         }
-        if (metadata.getRight().type() == MetadataType.NARY_PREDICATE || metadata.getRight().type()==MetadataType.UNARY_PREDICATE) {
-            noLiNary=true;
-        }
-
         htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
-        if (operatorList.contains(metadata.getOperator())) {
-            endOfSum = true;
-        }
-        writeWithBuffer(formatNewLine());
+        rightSideOfBinary = true;
     }
 
     @Override
     public void endMetadata(BinaryMetadata metadata, int depth) {
-        if (binaryDeep > 0) {
-            writeWithBuffer(formatNewLine());
-            writeWithBuffer(formatCurrentIndent());
-            writeWithBuffer(END_UL);
-            binaryDeep--;
+        if (nbImbriBinary > 1) {
+            write(END_UL);
+            nbImbriBinary--;
         }
+        if (seqBinary == 0) {
+            write(END_LI);
+        }
+        if (seqBinary > 0) {
+            seqBinary--;
+        }
+        if (closeSum) {
+            write(END_LI);
+            closeSum = true;
+        }
+        rightSideOfBinary = false;
     }
 
     // nary metadata
     @Override
     public void startMetadata(NaryMetadata metadata, int depth) {
-        writeWithBuffer(formatCurrentIndent());
-        if (!noLiNary) {
-            writeWithBuffer(BEG_LI);
-            noLiNary = false;
+
+        if (insideNary == 0 && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() ==
+                        count || metadata.getOperator() == min)) {
+            write(BEG_LI);
         }
-        writeWithBuffer(formatNewLine());
-        writeWithBuffer(formatCurrentIndent());
+        if (stackPeek() == WHEN || stackPeek() != BINARY_PREDICATE) {
+            write(BEG_LI);
+        }
+
         htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
-        writeWithBuffer(BEG_OL);
-        writeWithBuffer(formatNewLine());
+
+        if (insideNary == 0 && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() ==
+                        count || metadata.getOperator() == min)) {
+            write(END_LI);
+        }
+        if (stackPeek() == WHEN || stackPeek() != BINARY_PREDICATE) {
+            write(END_LI);
+        }
+        rightSideOfBinary = false;
+        write(BEG_OL);
+        insideNary++;
     }
 
     @Override
     public void endMetadata(NaryMetadata metadata, int depth) {
-        writeWithBuffer(formatCurrentIndent());
-        writeWithBuffer(END_OL);
-        writeWithBuffer(formatNewLine());
-        writeWithBuffer(formatCurrentIndent());
-        writeWithBuffer(END_LI);
-        writeWithBuffer(formatNewLine());
+        write(END_OL);
+        insideNary--;
     }
 
     // unary metadata
     @Override
     public void visitMetadata(UnaryMetadata metadata, int depth) {
-        if (!noLiNary) {
-            writeWithBuffer(BEG_LI);
-            noLiNary=false;
-        }
+        write(BEG_LI);
         htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
-        writeWithBuffer(END_LI);
-        writeWithBuffer(BEG_UL);
+        write(END_LI);
+        if (metadata.children().get(0).type() != MetadataType.LEAF_PREDICATE) {
+            write(BEG_UL);
+            closeUnaryUL++;
+        }
     }
 
     @Override
     protected void endMetadata(UnaryMetadata metadata, int depth) {
-        writeWithBuffer(END_UL);
+        if (closeUnaryUL > 0) {
+            write(END_UL);
+            closeUnaryUL--;
+        }
     }
 
     // validation rule
     @Override
     public void startMetadata(ValidationRule metadata, int depth) {
         formatDivStart(CSS_CLASS_VALIDATION_RULE);
-        writeWithBuffer(formatNewLine());
-        writeWithBuffer(formatCurrentIndent());
     }
 
     @Override
     public void visitMetadata(ValidationRule metadata, int depth) {
+        write(BEG_LI);
         htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate_with_message, locale));
-        writeWithBuffer(" ");
         htmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata));
-        writeWithBuffer(formatNewLine());
+        write(END_LI);
     }
 
     @Override
     public void endMetadata(ValidationRule metadata, int depth) {
-        writeWithBuffer(formatCurrentIndent());
-        writeWithBuffer(formatNewLine());
-        writeWithBuffer(END_DIV);
-        writeWithBuffer(formatNewLine());
+        write(END_UL);
+        write(END_DIV);
     }
 
     // metadata
     @Override
     public void visitMetadata(Metadata metadata, int depth) {
-        writeWithBuffer(metadata.readable());
+        write(metadata.readable());
     }
 
     // implementation
@@ -258,11 +268,11 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected void formatLeafOperator(Element e) {
         htmlFormatSpan("dsl-token-operator", bundle.get((Operator) e.getReadable(), locale));
     }
-    
+
     protected void formatTemporalUnit(Element e) {
         htmlFormatSpan("dsl-token-operator", bundle.get(e.getReadable().readable(), locale));
     }
-    
+
     protected void formatLeafField(Element e) {
         htmlFormatSpan("dsl-token-field", e.getReadable().readable());
     }
@@ -284,17 +294,14 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     protected void htmlFormatSpan(String cssClass, String content) {
-        writeWithBuffer("<span class=\"" + cssClass + "\">" + content + "</span> ");
+        write("<span class=\"" + cssClass + "\">" + content + "</span> ");
     }
 
     private void formatDivStart(String cssClass) {
-        writeWithBuffer("<div class=\"" + cssClass + "\">");
+        write("<div class=\"" + cssClass + "\">");
     }
 
-    protected void writeWithBuffer(String s) {
-        lastLines[0] = lastLines[1];
-        lastLines[1] = lastLines[2];
-        lastLines[2] = s;
+    protected void write(String s) {
         try {
             ops.write(s.getBytes("UTF-8"));
         } catch (IOException e) {

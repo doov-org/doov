@@ -12,6 +12,7 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static java.util.stream.Collectors.joining;
 
 import java.util.ArrayDeque;
@@ -66,6 +67,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     @Override
     public final void visit(UnaryMetadata metadata, int depth) {
+        stack.push(UNARY_PREDICATE);
         visitMetadata(metadata, depth);
     }
 
@@ -74,6 +76,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     @Override
     public final void end(UnaryMetadata metadata, int depth) {
+        stack.pop();
         endMetadata(metadata, depth);
     }
 
