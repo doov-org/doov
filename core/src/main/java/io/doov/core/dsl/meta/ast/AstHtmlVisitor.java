@@ -15,7 +15,8 @@ import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.Locale;
 
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.StepWhen;
+import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
@@ -55,14 +56,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         this.locale = locale;
     }
 
-    @Override
-    protected void visitMetadata(NaryMetadata metadata, int depth) {
-    }
-
-    @Override
-    protected void visitMetadata(StepCondition metadata, int depth) {
-    }
-
     // step when
 
     @Override
@@ -72,9 +65,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(StepWhen metadata, int depth) {
-        write(BEG_LI);
         htmlFormatSpan(CSS_CLASS_WHEN, formatWhen());
-        write(END_LI);
         write(BEG_UL);
     }
 
@@ -160,7 +151,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void endMetadata(BinaryMetadata metadata, int depth) {
-        if (nbImbriBinary > 1) {
+        if (nbImbriBinary > 0) {
             write(END_UL);
             nbImbriBinary--;
         }
@@ -237,10 +228,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(ValidationRule metadata, int depth) {
-        write(BEG_LI);
         htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate_with_message, locale));
         htmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata));
-        write(END_LI);
     }
 
     @Override
