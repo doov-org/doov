@@ -254,19 +254,10 @@ final class FieldInfoGen {
         if (siblings.isEmpty()) {
             return "";
         }
-        final StringBuilder builder = new StringBuilder();
-        builder.append(", ");
-        final Iterator<FieldId> it = siblings.iterator();
-        while (it.hasNext()) {
-            final FieldId FieldId = it.next();
-            builder.append(FieldId.getClass().getName());
-            builder.append(".");
-            builder.append(FieldId.toString());
-            if (it.hasNext()) {
-                builder.append(", ");
-            }
-        }
-        return builder.toString();
+        return siblings.stream()
+                        .sorted(comparing(FieldId::name))
+                        .map(f -> f.getClass().getSimpleName() + "." + f.toString())
+                        .collect(joining(", "));
     }
 
     private static Set<FieldId> siblings(VisitorPath currentPath, Collection<VisitorPath> collected) {
