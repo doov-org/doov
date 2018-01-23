@@ -27,16 +27,18 @@ import io.doov.gen.ModelVisitor.PathAnnotation;
 final class Visitor {
 
     private final Class<?> baseClass;
+    private final Class<? extends FieldId> fieldClass;
     private final List<VisitorPath> collected;
 
-    Visitor(Class<?> baseClass, List<VisitorPath> collected) {
+    Visitor(Class<?> baseClass, Class<? extends FieldId> fieldClass, List<VisitorPath> collected) {
         this.baseClass = baseClass;
+        this.fieldClass = fieldClass;
         this.collected = collected;
     }
 
     void visit(List<PathAnnotation> fieldTarget, Method getMethod, Method setMethod, List<Method> paths) {
         fieldTarget.forEach(annotation -> {
-            if (!checkFieldTargetConstraint(paths, annotation.fieldId, annotation.constraint)) {
+            if (!checkFieldTargetConstraint(fieldClass, paths, annotation.fieldId, annotation.constraint)) {
                 return;
             }
             final VisitorPath path = new VisitorPath(baseClass, paths, annotation.fieldId, annotation.readable,
@@ -48,9 +50,10 @@ final class Visitor {
         });
     }
 
-    private static boolean checkFieldTargetConstraint(List<Method> paths, FieldId FieldId, PathConstraint constraint) {
-        return isNullOrEmpty(constraint.includePath())
-                || VisitorPath.getterPath(paths, FieldId.position()).contains(constraint.includePath());
+    private static boolean checkFieldTargetConstraint(Class<? extends FieldId> fieldClass, List<Method> paths, FieldId fieldId, PathConstraint constraint) {
+        return fieldClass.isAssignableFrom(fieldId.getClass())
+                        && (isNullOrEmpty(constraint.includePath())
+                || VisitorPath.getterPath(paths, fieldId.position()).contains(constraint.includePath()));
     }
 
     private boolean contains(VisitorPath vPath) {

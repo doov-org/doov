@@ -126,7 +126,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
         try {
             final List<VisitorPath> collected;
             if (fieldPaths.isEmpty()) {
-                collected = process(modelClazz, packageFilter);
+                collected = process(modelClazz, packageFilter, fieldClazz);
             } else {
                 collected = fieldPaths.stream().map(this::createVisitorPath).collect(toList());
             }
@@ -152,9 +152,10 @@ public final class ModelMapGenMojo extends AbstractMojo {
         return new VisitorPath(p.getBaseClass(), methods, p.getFieldId(), p.getReadable(), readMethod, writeMethod);
     }
 
-    private List<VisitorPath> process(Class<?> projetClass, String filter) throws Exception {
+    private List<VisitorPath> process(Class<?> projetClass, String filter, Class<? extends FieldId> fieldClass)
+                    throws Exception {
         final List<VisitorPath> collected = new ArrayList<>();
-        new ModelVisitor(getLog()).visitModel(projetClass, new Visitor(projetClass, collected), filter);
+        new ModelVisitor(getLog()).visitModel(projetClass, fieldClass, new Visitor(projetClass, fieldClass, collected), filter);
         return collected;
     }
 
