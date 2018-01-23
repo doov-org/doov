@@ -138,9 +138,10 @@ final class ModelWrapperGen {
     private static String nullCheck(VisitorPath path) {
         final StringBuilder buffer = new StringBuilder();
         for (int i = 1; i < path.getPath().size(); i++) {
+            final Method lastGetMethod = path.getPath().get(i - 1);
             final List<Method> subPaths = path.getPath().subList(0, i);
             buffer.append(nullCheck(subPaths));
-            if (path.getFieldId().position() != -1 && i == (path.getPath().size() - 1)) {
+            if (List.class.isAssignableFrom(lastGetMethod.getReturnType())) {
                 buffer.append(sizeCheck(subPaths, path.getFieldId()));
             }
         }
