@@ -183,15 +183,22 @@ final class ModelWrapperGen {
     }
 
     private static String lazyInit(List<Method> paths, FieldId field, Method lastGetMethod) {
+        final Class<?> returnType = lastGetMethod.getReturnType();
         final String lazyInitTemplate = template("LazyInitBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         final String setterName = setterName(lastGetMethod);
         conf.put("partial.path", VisitorPath.getterPath(paths));
         conf.put("partial.path.init", setterPath(paths, setterName, field.position(), false));
-        conf.put("param", "new " + lastGetMethod.getReturnType().getName() + "()");
+        conf.put("param", "new " + returnType.getName() + diamond(returnType) + "()");
         buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
         return buffer.toString();
+    }
+
+    private static String diamond(Class<?> returnType) {
+        if (returnType.getTypeParameters().length > 0)
+            return "<>";
+        return "";
     }
 
     private static String lazyInitList(List<Method> paths, FieldId field, Method lastGetMethod) {
