@@ -40,7 +40,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private static final String BEG_UL = "<ul>";
     private static final String END_UL = "</ul>";
 
-    private final OutputStream ops;
+    protected final OutputStream ops;
     protected final ResourceProvider bundle;
     protected Locale locale;
     private boolean closeSum = false;
