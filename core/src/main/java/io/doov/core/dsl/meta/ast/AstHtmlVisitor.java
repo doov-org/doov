@@ -7,6 +7,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.WHEN;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
@@ -21,34 +22,34 @@ import io.doov.core.dsl.meta.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
-    private static final String CSS_CLASS_VALIDATION_MESSAGE = "dsl-validation-message";
-    private static final String CSS_CLASS_VALIDATION_RULE = "dsl-validation-rule";
-    private static final String CSS_CLASS_VALIDATE = "dsl-token-validate";
-    private static final String CSS_CLASS_BINARY = "dsl-token-binary";
-    private static final String CSS_CLASS_UNARY = "dsl-token-unary";
+    protected static final String CSS_CLASS_VALIDATION_MESSAGE = "dsl-validation-message";
+    protected static final String CSS_CLASS_VALIDATION_RULE = "dsl-validation-rule";
+    protected static final String CSS_CLASS_VALIDATE = "dsl-token-validate";
+    protected static final String CSS_CLASS_BINARY = "dsl-token-binary";
+    protected static final String CSS_CLASS_UNARY = "dsl-token-unary";
     protected static final String CSS_CLASS_NARY = "dsl-token-nary";
-    private static final String CSS_CLASS_WHEN = "dsl-token-when";
+    protected static final String CSS_CLASS_WHEN = "dsl-token-when";
 
-    private static final String END_DIV = "</div>";
+    protected static final String END_DIV = "</div>";
 
-    private static final String BEG_LI = "<li>";
-    private static final String END_LI = "</li>";
+    protected static final String BEG_LI = "<li>";
+    protected static final String END_LI = "</li>";
 
-    private static final String BEG_OL = "<ol>";
-    private static final String END_OL = "</ol>";
+    protected static final String BEG_OL = "<ol>";
+    protected static final String END_OL = "</ol>";
 
-    private static final String BEG_UL = "<ul>";
-    private static final String END_UL = "</ul>";
+    protected static final String BEG_UL = "<ul>";
+    protected static final String END_UL = "</ul>";
 
     protected final OutputStream ops;
     protected final ResourceProvider bundle;
     protected Locale locale;
-    private boolean closeSum = false;
-    private int closeUnaryUL = 0;
-    private int insideNary = 0;
-    private int nbImbriBinary = 0;
-    private boolean rightSideOfBinary = false;
-    private int seqBinary = 0;
+    protected boolean closeSum = false;
+    protected int closeUnaryUL = 0;
+    protected int insideNary = 0;
+    protected int nbImbriBinary = 0;
+    protected boolean rightSideOfBinary = false;
+    private boolean closeUn=false;
 
     public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
         this.ops = ops;
@@ -135,8 +136,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         }
         if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
             write(BEG_LI);
-        } else {
-            seqBinary++;
         }
     }
 
@@ -146,6 +145,11 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             write("<br>");
         }
         htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
+
+        if (metadata.getRight().type() == UNARY_PREDICATE) {
+            write(BEG_UL);
+            closeUn=true;
+        }
         rightSideOfBinary = true;
     }
 
@@ -155,15 +159,9 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             write(END_UL);
             nbImbriBinary--;
         }
-        if (seqBinary == 0) {
-            write(END_LI);
-        }
-        if (seqBinary > 0) {
-            seqBinary--;
-        }
         if (closeSum) {
             write(END_LI);
-            closeSum = true;
+            closeSum = false;
         }
         rightSideOfBinary = false;
     }
@@ -182,13 +180,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
         htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
-        if (insideNary == 0 && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() ==
-                        count || metadata.getOperator() == min)) {
-            write(END_LI);
-        }
-        if (stackPeek() == WHEN || stackPeek() != BINARY_PREDICATE) {
-            write(END_LI);
-        }
         rightSideOfBinary = false;
         write(BEG_OL);
         insideNary++;
@@ -205,7 +196,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     public void visitMetadata(UnaryMetadata metadata, int depth) {
         write(BEG_LI);
         htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
-        write(END_LI);
+
         if (metadata.children().get(0).type() != MetadataType.LEAF_PREDICATE) {
             write(BEG_UL);
             closeUnaryUL++;
@@ -214,10 +205,15 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     protected void endMetadata(UnaryMetadata metadata, int depth) {
+        if (closeUn) {
+            write(END_UL);
+            closeUn=false;
+        }
         if (closeUnaryUL > 0) {
             write(END_UL);
             closeUnaryUL--;
         }
+        write(END_LI);
     }
 
     // validation rule
@@ -234,7 +230,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void endMetadata(ValidationRule metadata, int depth) {
-        write(END_UL);
         write(END_DIV);
     }
 
