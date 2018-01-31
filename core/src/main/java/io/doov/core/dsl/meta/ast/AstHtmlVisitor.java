@@ -9,6 +9,7 @@ import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.WHEN;
+import static java.lang.Math.floor;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
@@ -50,6 +51,37 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected int nbImbriBinary = 0;
     protected boolean rightSideOfBinary = false;
     private boolean closeUn=false;
+    private boolean insideSum = false;
+    private boolean noExclusionNextLeaf = false;
+
+
+    private static final MessageFormat format_bar_not_available = new MessageFormat("<div class=''{0}''>"
+                    + "<div class=''percentage-value''> n/a</div><div class=''{1}''>"
+                    + "<div class=''{2}'' style=''width:0%;''>"
+                    + "</div></div></div>", Locale.US);
+    private static final MessageFormat format_bar_percentage = new MessageFormat("<div class=''{0}''>"
+                    + "<div class=''percentage-value''>{1} %</div>"
+                    + "<div class=''{2}''><div class=''{3}'' style=''width:{4}%;''>"
+                    + "</div></div></div>", Locale.US);
+
+    private String exclusionBar(PredicateMetadata metadata, ExclusionBar cssClass) {
+        final int nbTrue = metadata.trueEvalCount();
+        final int nbFalse = metadata.falseEvalCount();
+        if (nbTrue == 0 && nbFalse == 0) {
+            return format_bar_not_available.format(new Object[] { cssClass.getWrapperClass(), cssClass.getBorderClass(),
+                            cssClass.getFillingClass() });
+        }
+        final Double percentage = floor((nbTrue / ((double) nbTrue + nbFalse)) * 1000) / 10.0;
+        return format_bar_percentage.format(new Object[] { cssClass.getWrapperClass(), percentage,
+                        cssClass.getBorderClass(), cssClass.getFillingClass(),
+                        percentage });
+    }
+
+    public String exclusionBar(ValidationRule rule, ExclusionBar cssClass) {
+        PredicateMetadata rm = rule.getRootMetadata() instanceof PredicateMetadata ? ((PredicateMetadata) rule
+                        .getRootMetadata()) : null;
+        return exclusionBar(rm, cssClass);
+    }
 
     public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
         this.ops = ops;
@@ -85,6 +117,13 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(LeafMetadata leaf, int depth) {
+        if (!insideSum) {
+            if (noExclusionNextLeaf) {
+                noExclusionNextLeaf = false;
+            } else {
+                write(exclusionBar(leaf, ExclusionBar.SMALL));
+            }
+        }
         leaf.stream().forEach(e -> {
             switch (e.getType()) {
                 case PARENTHESIS_LEFT:
@@ -137,6 +176,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
             write(BEG_LI);
         }
+
+        if (metadata.getOperator() != and && metadata.getOperator() != or) {
+            write(exclusionBar(metadata, ExclusionBar.BIG));
+        }
     }
 
     @Override
@@ -151,6 +194,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             closeUn=true;
         }
         rightSideOfBinary = true;
+
+        if (metadata.getOperator() != and && metadata.getOperator() != or) {
+            noExclusionNextLeaf = true;
+        }
     }
 
     @Override
@@ -169,15 +216,21 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // nary metadata
     @Override
     public void startMetadata(NaryMetadata metadata, int depth) {
+        if (metadata.getOperator() == sum || metadata.getOperator() == min) {
+            insideSum = true;
+        }
 
-        if (insideNary == 0 && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() ==
-                        count || metadata.getOperator() == min)) {
+        if (insideNary == 0 && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() == count
+                        || metadata.getOperator() == min)) {
             write(BEG_LI);
         }
         if (stackPeek() == WHEN || stackPeek() != BINARY_PREDICATE) {
             write(BEG_LI);
         }
 
+        if (metadata.getOperator() != count && metadata.getOperator() != sum && metadata.getOperator() != min) {
+            write(exclusionBar(metadata, ExclusionBar.BIG));
+        }
         htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
         rightSideOfBinary = false;
@@ -189,6 +242,9 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     public void endMetadata(NaryMetadata metadata, int depth) {
         write(END_OL);
         insideNary--;
+        if (metadata.getOperator() == sum || metadata.getOperator() == min) {
+            insideSum = false;
+        }
     }
 
     // unary metadata

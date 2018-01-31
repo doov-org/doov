@@ -135,10 +135,12 @@ public class SampleRules extends DefaultRuleRegistry {
             IOUtils.write("<html><head><meta charset=\"UTF-8\"><style>"
                             + IOUtils.toString(AstVisitorUtils.class.getResourceAsStream("rules.css"), defaultCharset())
                             + "</style></head><body>", fos, defaultCharset());
+            IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());;
             for (ValidationRule r : rules) {
                 r.accept(new AstHtmlVisitor(fos, BUNDLE, Locale.FRANCE), 0);
                 IOUtils.write("<hr/>", fos, Charset.defaultCharset());
             }
+            IOUtils.write("</div>", fos, Charset.defaultCharset());
             IOUtils.write("</body></html>", fos, Charset.defaultCharset());
         }
         System.out.println("written " + output.getAbsolutePath());
