@@ -21,7 +21,7 @@ import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
-import java.time.LocalDate;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Optional;
@@ -31,20 +31,45 @@ import io.doov.core.dsl.impl.TemporalCondition;
 
 public class LocalDateSuppliers {
 
+    private static ThreadLocal<Clock> THREAD_CLOCK = new ThreadLocal<>();
+
     private LocalDateSuppliers() {
         // static
+    }
+
+    // Clock setters
+
+    public static Clock createClockFrom(LocalDate localDate) {
+        LocalDateTime time = LocalDateTime.of(localDate, LocalTime.of(0, 0));
+        return Clock.fixed(time.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+    }
+
+    public static boolean isClockSet() {
+        return THREAD_CLOCK.get() != null;
+    }
+
+    public static void setClock(Clock clock) {
+        THREAD_CLOCK.set(clock);
+    }
+
+    public static Clock getClock() {
+        return isClockSet() ? THREAD_CLOCK.get() : Clock.systemDefaultZone();
+    }
+
+    public static void setDefaultClock() {
+        THREAD_CLOCK.remove();
     }
 
     // today
 
     public static TemporalCondition<LocalDate> today() {
         return new LocalDateCondition(null, todayMetadata(),
-                (model, context) -> Optional.of(LocalDate.now()));
+                (model, context) -> Optional.of(LocalDate.now(getClock())));
     }
 
     public static TemporalCondition<LocalDate> todayPlus(int amountToAdd, TemporalUnit unit) {
         return new LocalDateCondition(null, todayPlusMetadata(amountToAdd, unit),
-                (model, context) -> Optional.of(LocalDate.now().plus(amountToAdd, unit)));
+                (model, context) -> Optional.of(LocalDate.now(getClock()).plus(amountToAdd, unit)));
     }
 
     public static TemporalCondition<LocalDate> todayPlusDays(int daysToAdd) {
@@ -57,7 +82,7 @@ public class LocalDateSuppliers {
 
     public static TemporalCondition<LocalDate> todayMinus(int amountToSubstract, TemporalUnit unit) {
         return new LocalDateCondition(null, todayMinusMetadata(amountToSubstract, unit),
-                (model, context) -> Optional.of(LocalDate.now().minus(amountToSubstract, unit)));
+                (model, context) -> Optional.of(LocalDate.now(getClock()).minus(amountToSubstract, unit)));
     }
 
     public static TemporalCondition<LocalDate> todayMinusDays(int daysToSubstract) {
@@ -72,22 +97,22 @@ public class LocalDateSuppliers {
 
     public static TemporalCondition<LocalDate> firstDayOfThisMonth() {
         return new LocalDateCondition(null, firstDayOfThisMonthMetadata(),
-                (model, context) -> Optional.of(LocalDate.now().with(firstDayOfMonth())));
+                (model, context) -> Optional.of(LocalDate.now(getClock()).with(firstDayOfMonth())));
     }
 
     public static TemporalCondition<LocalDate> firstDayOfThisYear() {
         return new LocalDateCondition(null, firstDayOfThisYearMetadata(),
-                (model, context) -> Optional.of(LocalDate.now().with(firstDayOfYear())));
+                (model, context) -> Optional.of(LocalDate.now(getClock()).with(firstDayOfYear())));
     }
 
     public static TemporalCondition<LocalDate> lastDayOfThisMonth() {
         return new LocalDateCondition(null, lastDayOfThisMonthMetadata(),
-                (model, context) -> Optional.of(LocalDate.now().with(lastDayOfMonth())));
+                (model, context) -> Optional.of(LocalDate.now(getClock()).with(lastDayOfMonth())));
     }
 
     public static TemporalCondition<LocalDate> lastDayOfThisYear() {
         return new LocalDateCondition(null, lastDayOfThisYearMetadata(),
-                (model, context) -> Optional.of(LocalDate.now().with(lastDayOfYear())));
+                (model, context) -> Optional.of(LocalDate.now(getClock()).with(lastDayOfYear())));
     }
 
     // date
