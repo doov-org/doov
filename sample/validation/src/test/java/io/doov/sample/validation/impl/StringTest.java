@@ -1,7 +1,7 @@
 package io.doov.sample.validation.impl;
 
 import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.sample.field.SampleFieldIdInfo.accountLogin;
+import static io.doov.sample.field.SampleFieldInfo.accountLogin;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;

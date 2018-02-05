@@ -3,7 +3,7 @@ package io.doov.sample.validation.impl;
 import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.min;
 import static io.doov.core.dsl.DOOV.sum;
-import static io.doov.sample.field.SampleFieldIdInfo.*;
+import static io.doov.sample.field.SampleFieldInfo.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

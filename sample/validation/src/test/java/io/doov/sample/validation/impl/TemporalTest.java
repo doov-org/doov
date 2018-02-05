@@ -21,9 +21,9 @@ import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfMonth;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfNextYear;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
 import static io.doov.core.dsl.time.TemporalAdjuster.ofDateAdjuster;
-import static io.doov.sample.field.SampleFieldIdInfo.accountCreationDate;
-import static io.doov.sample.field.SampleFieldIdInfo.configurationMinAge;
-import static io.doov.sample.field.SampleFieldIdInfo.userBirthdate;
+import static io.doov.sample.field.SampleFieldInfo.accountCreationDate;
+import static io.doov.sample.field.SampleFieldInfo.configurationMinAge;
+import static io.doov.sample.field.SampleFieldInfo.userBirthdate;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.YEARS;
 

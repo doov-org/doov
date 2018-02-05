@@ -17,8 +17,7 @@ package io.doov.sample.model;
 
 import java.time.LocalDate;
 
-import io.doov.sample.field.SampleFieldId;
-import io.doov.sample.field.SamplePath;
+import io.doov.sample.field.*;
 
 public class User extends Identity {
 
@@ -30,6 +29,12 @@ public class User extends Identity {
 
     @SamplePath(field = SampleFieldId.BIRTHDATE, readable = "user birthdate")
     private LocalDate birthDate;
+
+    @CorePath(field = CoreFieldId.ADDRESS, readable = "user address")
+    private String address;
+
+    @CorePath(field = CoreFieldId.TEL, readable = "user tel")
+    private String tel;
 
     @SamplePath(field = SampleFieldId.FULLNAME, readable = "user full name")
     public String getFullName() {
@@ -62,5 +67,21 @@ public class User extends Identity {
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 }

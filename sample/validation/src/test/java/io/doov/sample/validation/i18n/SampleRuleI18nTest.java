@@ -11,7 +11,7 @@ import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfMonth;
-import static io.doov.sample.field.SampleFieldIdInfo.*;
+import static io.doov.sample.field.SampleFieldInfo.*;
 import static io.doov.sample.validation.SampleRules.*;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.YEARS;
@@ -30,7 +30,7 @@ import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.ast.AstLineVisitor;
 import io.doov.core.dsl.time.LocalDateSuppliers;
-import io.doov.sample.field.SampleFieldIdInfo;
+import io.doov.sample.field.SampleFieldInfo;
 
 public class SampleRuleI18nTest {
     private static void print(SyntaxTree tree) {
@@ -378,7 +378,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_temporal_unit() {
-        ValidationRule rule = DOOV.when(SampleFieldIdInfo.userBirthdate().minus(1, YEARS).before(LocalDateSuppliers.today())).validate();
+        ValidationRule rule = DOOV.when(SampleFieldInfo.userBirthdate().minus(1, YEARS).before(LocalDateSuppliers.today())).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
@@ -404,7 +404,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_eq_today() {
-        ValidationRule rule = DOOV.when(SampleFieldIdInfo.userBirthdate().eq(LocalDateSuppliers.today())).validate();
+        ValidationRule rule = DOOV.when(SampleFieldInfo.userBirthdate().eq(LocalDateSuppliers.today())).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
@@ -422,7 +422,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_eq_today_plus_1_day() {
-        ValidationRule rule = DOOV.when(SampleFieldIdInfo.userBirthdate().eq(LocalDateSuppliers.today().plus(1, DAYS))).validate();
+        ValidationRule rule = DOOV.when(SampleFieldInfo.userBirthdate().eq(LocalDateSuppliers.today().plus(1, DAYS))).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());

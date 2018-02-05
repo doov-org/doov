@@ -169,7 +169,7 @@ final class ModelVisitor {
         return stream(clazz.getMethods())
                 .filter(f -> {
                     log.debug("process annotation field " + f.toString());
-                    return asList(f.getReturnType().getInterfaces()).contains(interfaceType);
+                    return interfaceType.isAssignableFrom(f.getReturnType());
                 })
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(clazz + " needs method with " + interfaceType));

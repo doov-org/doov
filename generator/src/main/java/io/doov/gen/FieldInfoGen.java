@@ -59,7 +59,7 @@ final class FieldInfoGen {
                 .distinct().sorted().map(clazz -> "import " + clazz + ";").collect(joining("\n"));
     }
 
-    static String constants(Map<FieldId, VisitorPath> fieldPaths) {
+    static String constants(Map<FieldId, VisitorPath> fieldPaths, Class<?> fieldClass) {
         StringBuilder constants = new StringBuilder();
         StringBuilder methods = new StringBuilder();
 

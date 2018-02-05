@@ -174,21 +174,21 @@ public final class ModelMapGenMojo extends AbstractMojo {
         }
     }
 
-    private void generateFieldInfo(Map<FieldId, VisitorPath> fieldPaths, Class<?> clazz) {
+    private void generateFieldInfo(Map<FieldId, VisitorPath> fieldPaths, Class<?> fieldClass) {
         try {
-            final String targetClassName = fieldInfoClassName(clazz);
-            final String targetPackage = clazz.getPackage().getName();
+            final String targetClassName = fieldInfoClassName(fieldClass);
+            final String targetPackage = fieldClass.getPackage().getName();
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
             final String classTemplate = template("FieldInfo.template");
             createDirectories(targetFile.getParentFile().toPath());
             final Map<String, String> conf = new HashMap<>();
             conf.put("package.name", targetPackage);
-            conf.put("process.class", clazz.getName());
+            conf.put("process.class", fieldClass.getName());
             conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
             conf.put("target.class.name", targetClassName);
             conf.put("imports", imports(fieldPaths));
-            conf.put("constants", constants(fieldPaths));
+            conf.put("constants", constants(fieldPaths, fieldClass));
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(classTemplate, conf);
             Files.write(content, targetFile, Charset.forName("UTF8"));

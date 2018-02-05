@@ -56,7 +56,7 @@ final class ModelWrapperGen {
             throw new IllegalStateException("some field ids have more than one path : " + invalidFieldId.toString());
         }
 
-        Map<FieldId, VisitorPath> paths = new TreeMap<>();
+        Map<FieldId, VisitorPath> paths = new TreeMap<>(Comparator.comparing(FieldId::name));
         pathByFieldId.forEach((fieldId, fieldPaths) -> paths.put(fieldId, fieldPaths.iterator().next()));
         return paths;
     }

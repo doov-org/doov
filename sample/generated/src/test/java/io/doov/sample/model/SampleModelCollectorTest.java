@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
 import io.doov.sample.field.SampleFieldId;
-import io.doov.sample.field.SampleFieldIdInfo;
+import io.doov.sample.field.SampleFieldInfo;
 
 public class SampleModelCollectorTest {
 
@@ -59,7 +59,7 @@ public class SampleModelCollectorTest {
 
     private static void should_collect_all_values_when_collect(FieldModel target, FieldModel source) {
         SoftAssertions softly = new SoftAssertions();
-        SampleFieldIdInfo.values().forEach(info -> {
+        SampleFieldInfo.values().forEach(info -> {
             Object after = target.get(info.id());
             Object before = source.get(info.id());
             softly.assertThat(after).describedAs(info.id().name()).isEqualTo(before);

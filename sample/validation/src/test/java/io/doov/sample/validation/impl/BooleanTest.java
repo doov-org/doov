@@ -1,8 +1,8 @@
 package io.doov.sample.validation.impl;
 
 import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.sample.field.SampleFieldIdInfo.accountAcceptEmail;
-import static io.doov.sample.field.SampleFieldIdInfo.configurationMailingCampaign;
+import static io.doov.sample.field.SampleFieldInfo.accountAcceptEmail;
+import static io.doov.sample.field.SampleFieldInfo.configurationMailingCampaign;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

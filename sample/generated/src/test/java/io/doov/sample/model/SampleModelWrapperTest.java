@@ -27,13 +27,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import io.doov.core.FieldInfo;
-import io.doov.sample.field.SampleFieldIdInfo;
+import io.doov.sample.field.SampleFieldInfo;
 import io.doov.sample.field.SampleTag;
 
 public class SampleModelWrapperTest {
 
     private static Collection<Object[]> data() {
-        return SampleFieldIdInfo.values().stream()
+        return SampleFieldInfo.values().stream()
                 .map(f -> new Object[] { f.id().name(), f })
                 .collect(toList());
     }
