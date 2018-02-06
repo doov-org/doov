@@ -3,9 +3,11 @@
  */
 package io.doov.core;
 
-import java.util.List;
+import java.util.*;
 
-public abstract class AbstractWrapper<M> implements FieldModel {
+import io.doov.core.serial.*;
+
+public abstract class AbstractWrapper<M> implements FieldModel, StringMapper {
 
     protected final List<FieldInfo> fieldInfos;
     protected final M model;
@@ -22,6 +24,55 @@ public abstract class AbstractWrapper<M> implements FieldModel {
     @Override
     public List<FieldInfo> getFieldInfos() {
         return fieldInfos;
+    }
+
+    protected abstract TypeAdapterRegistry getTypeAdapterRegistry();
+
+    @Override
+    public String getAsString(FieldId fieldId) {
+        Object value = get(fieldId);
+        if (value == null) {
+            return null;
+        }
+        return getTypeAdapterRegistry().stream()
+                        .filter(a -> a.accept(value))
+                        .findFirst()
+                        .map(a -> a.toString(value))
+                        .orElse(null);
+    }
+
+    @Override
+    public String getAsString(FieldInfo info) {
+        Objects.requireNonNull(info);
+        return getAsString(info.id());
+    }
+
+    @Override
+    public void setAsString(FieldId fieldId, String value) {
+        FieldInfo fieldInfo = fieldInfo(fieldId);
+        setAsString(fieldInfo, value);
+    }
+
+    @Override
+    public void setAsString(FieldInfo fieldInfo, String value) {
+        Objects.requireNonNull(fieldInfo);
+        if (value == null) {
+            set(fieldInfo.id(), null);
+        } else {
+            set(fieldInfo.id(), getTypeAdapterRegistry().stream()
+                            .filter(a -> a.accept(fieldInfo))
+                            .findFirst()
+                            .map(a -> a.fromString(fieldInfo, value))
+                            .orElseThrow(() -> new IllegalStateException("cannot set field "
+                                            + fieldInfo.id() + " with value " + value)));
+        }
+    }
+
+    private FieldInfo fieldInfo(FieldId fieldId) {
+        return getFieldInfos().stream()
+                        .filter(fieldInfo -> fieldInfo.id().equals(fieldId))
+                        .findFirst()
+                        .orElse(null);
     }
 
 }

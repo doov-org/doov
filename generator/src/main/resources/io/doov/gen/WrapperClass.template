@@ -19,10 +19,14 @@ import io.doov.core.FieldModel;
 import io.doov.core.FieldModels;
 import io.doov.core.dsl.DslId;
 import ${process.base.class.package};
+import io.doov.core.serial.TypeAdapterRegistry;
+import ${type.adapter.class.package};
 import ${target.field.info.package.name}.${target.field.info.class.name};
 
 @Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
 public final class ${target.class.name} extends ${process.base.class.name} {
+
+    private static TypeAdapterRegistry TYPE_ADAPTER_REGISTRY = new ${type.adapter.class.name}();
 
     public static Collector<Entry<FieldId, Object>, ?, ${target.class.name}> toFieldModel() {
         return FieldModels.<${target.class.name}> toFieldModel(new ${target.class.name}());
@@ -36,6 +40,11 @@ public final class ${target.class.name} extends ${process.base.class.name} {
         return ${target.field.info.class.name}.values();
     }
 ${constructors}
+    @Override
+    protected TypeAdapterRegistry getTypeAdapterRegistry() {
+        return TYPE_ADAPTER_REGISTRY;
+    }
+
     @Override
     public Iterator<Map.Entry<FieldId, Object>> iterator() {
         return new Iterator<Map.Entry<FieldId, Object>>() {

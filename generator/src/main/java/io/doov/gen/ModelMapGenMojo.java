@@ -46,6 +46,7 @@ import com.google.common.io.Resources;
 
 import io.doov.core.*;
 import io.doov.core.dsl.path.*;
+import io.doov.core.serial.*;
 import io.doov.gen.processor.MacroProcessor;
 import io.doov.gen.utils.ClassLoaderUtils;
 import io.doov.gen.utils.ClassUtils;
@@ -79,6 +80,9 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
     @Parameter
     private String baseClass;
+
+    @Parameter
+    private String typeAdapters;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -123,11 +127,26 @@ public final class ModelMapGenMojo extends AbstractMojo {
                 verifyBaseClass(modelClazz, baseClazz);
                 baseClazz = (Class<? extends AbstractWrapper>) Class.forName(baseClass, false, classLoader);
             }
-            generateModels(fieldClazz, modelClazz, baseClazz, fieldPaths);
+            Class<? extends TypeAdapterRegistry> typeAdapterClazz = loadTypeAdapterClass(classLoader);
+            generateModels(fieldClazz, modelClazz, baseClazz, typeAdapterClazz, fieldPaths);
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 
+    }
+
+    private Class<? extends TypeAdapterRegistry> loadTypeAdapterClass(URLClassLoader classLoader)
+                    throws MojoExecutionException, ClassNotFoundException {
+        Class<? extends TypeAdapterRegistry> typeAdapterClazz = TypeAdapters.class;
+        if (typeAdapters != null) {
+            Class<?> clazz = Class.forName(typeAdapters, true, classLoader);
+            if (TypeAdapterRegistry.class.isAssignableFrom(typeAdapterClazz)) {
+                throw new MojoExecutionException("Type Adapter class" + typeAdapterClazz
+                                + " does not implement TypeAdapterRegistry");
+            }
+            typeAdapterClazz = (Class<? extends TypeAdapterRegistry>) clazz;
+        }
+        return typeAdapterClazz;
     }
 
     private void verifyBaseClass(Class<?> modelClazz, Class<? extends FieldModel> baseClazz)
@@ -141,8 +160,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
         }
     }
 
-    private void generateModels(Class<? extends FieldId> fieldClazz, Class<?> modelClazz,
-                    Class<? extends FieldModel> baseClazz, List<FieldPath> fieldPaths) {
+    private void generateModels(Class<? extends FieldId> fieldClazz,
+                    Class<?> modelClazz,
+                    Class<? extends FieldModel> baseClazz,
+                    Class<? extends TypeAdapterRegistry> typeAdapterClazz,
+                    List<FieldPath> fieldPaths) {
         try {
             final List<VisitorPath> collected;
             if (fieldPaths.isEmpty()) {
@@ -152,7 +174,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             }
             final Map<FieldId, VisitorPath> fieldPathMap = validatePath(collected);
             Runnable generateCsv = () -> generateCsv(fieldPathMap, modelClazz);
-            Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz);
+            Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz, typeAdapterClazz);
             Runnable generateFieldInfo = () -> generateFieldInfo(fieldPathMap, fieldClazz);
             asList(generateWrapper, generateCsv, generateFieldInfo).parallelStream().forEach(Runnable::run);
         } catch (Exception e) {
@@ -231,7 +253,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
     }
 
     private void generateWrapper(Map<FieldId, VisitorPath> fieldPaths, Class<?> modelClass, Class<?> fieldClass,
-                    Class<? extends FieldModel> baseClazz) throws RuntimeException {
+                    Class<? extends FieldModel> baseClazz,
+                    Class<? extends TypeAdapterRegistry> typeAdapterClazz) throws RuntimeException {
         try {
             final String targetClassName = modelClass.getSimpleName() + "Wrapper";
             final String targetPackage = modelClass.getPackage().getName();
@@ -247,6 +270,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("process.base.class.package", baseClazz.getCanonicalName());
             conf.put("process.base.class.name", baseClassName(baseClazz, modelClass));
             conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
+            conf.put("type.adapter.class.package", typeAdapterClazz.getCanonicalName());
+            conf.put("type.adapter.class.name", typeAdapterClazz.getSimpleName());
             conf.put("constructors", mapConstructors(targetClassName, baseClazz, modelClass));
             conf.put("target.model.class.name", modelClass.getSimpleName());
             conf.put("target.model.class.full.name", modelClass.getName());
