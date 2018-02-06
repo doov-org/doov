@@ -52,6 +52,7 @@
               <packageFilter>io.doov.sample</packageFilter>
               <fieldClass>io.doov.sample.field.SampleField</fieldClass>
               <sourceClass>io.doov.sample.model.SampleModel</sourceClass>
+              <baseClass>io.doov.sample.field.SampleBase</baseClass>
             </configuration>
           </execution>
           <execution>

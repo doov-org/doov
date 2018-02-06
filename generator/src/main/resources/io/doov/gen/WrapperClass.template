@@ -18,14 +18,12 @@ import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
 import io.doov.core.FieldModels;
 import io.doov.core.dsl.DslId;
+import ${process.base.class.package};
 import ${target.field.info.package.name}.${target.field.info.class.name};
 
 @Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
-public final class ${target.class.name} implements FieldModel {
+public final class ${target.class.name} extends ${process.base.class.name} {
 
-    private final List<FieldInfo> fieldInfos;
-    private final ${target.model.class.name} model;
-    
     public static Collector<Entry<FieldId, Object>, ?, ${target.class.name}> toFieldModel() {
         return FieldModels.<${target.class.name}> toFieldModel(new ${target.class.name}());
     }
@@ -34,24 +32,10 @@ public final class ${target.class.name} implements FieldModel {
         return FieldModels.<${target.class.name}> toConcurrentFieldModel(new ${target.class.name}());
     }
 
-    public ${target.class.name}() {
-        this(new ${target.model.class.name}());
+    public static List<FieldInfo> fieldInfos() {
+        return ${target.field.info.class.name}.values();
     }
-
-    public ${target.class.name}(${target.model.class.name} model) {
-        this.fieldInfos = ${target.field.info.class.name}.values();
-        this.model = model;
-    }
-
-    public ${target.model.class.name} getModel() {
-        return model;
-    }
-
-    @Override
-    public List<FieldInfo> getFieldInfos() {
-        return fieldInfos;
-    }
-    
+${constructors}
     @Override
     public Iterator<Map.Entry<FieldId, Object>> iterator() {
         return new Iterator<Map.Entry<FieldId, Object>>() {

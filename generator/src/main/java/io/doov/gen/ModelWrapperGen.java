@@ -18,6 +18,8 @@ package io.doov.gen;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static io.doov.gen.ModelMapGenMojo.template;
 import static io.doov.gen.VisitorPath.pathByFieldId;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.*;
@@ -26,7 +28,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Joiner;
 
-import io.doov.core.FieldId;
+import io.doov.core.*;
 import io.doov.gen.processor.MacroProcessor;
 
 final class ModelWrapperGen {
@@ -432,5 +434,90 @@ final class ModelWrapperGen {
             }
         }
         return buffer.toString();
+    }
+
+    static String mapConstructors(String targetClassName,
+                    Class<? extends FieldModel> baseClazz,
+                    Class<?> modelClass) {
+        if (AbstractWrapper.class.equals(baseClazz)) {
+            return writeDefaultConstructors(targetClassName, modelClass);
+        }
+        return Arrays.stream(baseClazz.getDeclaredConstructors())
+                        .filter(c -> !Modifier.isPrivate(c.getModifiers()))
+                        .map(c -> mapConstructor(targetClassName, c, modelClass))
+                        .collect(joining());
+    }
+
+    private static String writeDefaultConstructors(String targetClassName, Class<?> modelClass) {
+        StringBuilder buffer = new StringBuilder();
+        List<String> superCall = asList("fieldInfos()", "new " + modelClass.getSimpleName() + "()");
+        buffer.append(writeConstructor(targetClassName, Collections.emptyList(), superCall));
+        List<String> parameters = Collections.singletonList(modelClass.getSimpleName() + " model");
+        superCall = asList("fieldInfos()", "model");
+        buffer.append(writeConstructor(targetClassName, parameters, superCall));
+        return buffer.toString();
+    }
+
+    private static String mapConstructor(String targetClassName, Constructor<?> constructor, Class<?> modelClass) {
+        StringBuilder buffer = new StringBuilder();
+        List<String> parameterTypes = new ArrayList<>();
+        List<String> superCall = new ArrayList<>();
+        Integer modelParameterIndex = null;
+        for (int i = 0; i < constructor.getParameters().length; i++) {
+            Parameter parameter = constructor.getParameters()[i];
+            Type type = parameter.getParameterizedType();
+            if (isModelParameter(modelClass, type)) {
+                superCall.add("new " + modelClass.getSimpleName() + "()");
+                modelParameterIndex = i;
+            } else if (isFieldInfoListParameter(type)) {
+                superCall.add("fieldInfos()");
+            } else {
+                parameterTypes.add(parameter.toString());
+                superCall.add(parameter.getName());
+            }
+        }
+        buffer.append(writeConstructor(targetClassName, parameterTypes, superCall));
+        // if the constructor has a parameter of type model it generates a second constructor keeping it as parameter
+        if (modelParameterIndex != null) {
+            superCall.set(modelParameterIndex, "model");
+            if (parameterTypes.size() > modelParameterIndex) {
+                parameterTypes.add(modelParameterIndex, modelClass.getSimpleName() + " model");
+            } else {
+                parameterTypes.add(modelClass.getSimpleName() + " model");
+            }
+            buffer.append(writeConstructor(targetClassName, parameterTypes, superCall));
+        }
+        return buffer.toString();
+    }
+
+    private static boolean isModelParameter(Class<?> modelClass, Type type) {
+        return Class.class.isAssignableFrom(type.getClass()) && modelClass.equals(type);
+    }
+
+    /**
+     * Captures List<FieldInfo>
+     */
+    private static boolean isFieldInfoListParameter(Type type) {
+        if (ParameterizedType.class.isAssignableFrom(type.getClass())) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            if (List.class.equals(parameterizedType.getRawType())) {
+                if (parameterizedType.getActualTypeArguments().length == 1) {
+                    Type parameterType = parameterizedType.getActualTypeArguments()[0];
+                    return FieldInfo.class.equals(parameterType);
+                }
+            }
+        }
+        return false;
+    }
+
+    private static String writeConstructor(String targetClassName,
+                    List<String> parameters,
+                    List<String> superCall) {
+        final String constructor = template("WrapperConstructor.template");
+        final Map<String, String> conf = new HashMap<>();
+        conf.put("target.class.name", targetClassName);
+        conf.put("constructor.parameters", parameters.stream().collect(joining(", ")));
+        conf.put("constructor.super.call", superCall.stream().collect(joining(", ")));
+        return MacroProcessor.replaceProperties(constructor, conf);
     }
 }
