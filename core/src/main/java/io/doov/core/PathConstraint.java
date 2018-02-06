@@ -15,6 +15,8 @@
  */
 package io.doov.core;
 
+import java.util.Map;
+
 /**
  * Constraints used to restrict a {@code FieldId} path
  */
@@ -27,6 +29,15 @@ public interface PathConstraint {
      */
     default String includePath() {
         return "";
+    }
+
+    /**
+     * Returns the map of replacements necessary to transform a path to a canonical form
+     *
+     * @return the canonical path replacements map
+     */
+    default Map<String, String> canonicalPathReplacements() {
+        return null;
     }
 
 }

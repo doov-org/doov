@@ -45,6 +45,7 @@ import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
 import io.doov.core.FieldId;
+import io.doov.core.PathConstraint;
 import io.doov.core.dsl.path.*;
 import io.doov.gen.processor.MacroProcessor;
 import io.doov.gen.utils.ClassLoaderUtils;
@@ -149,7 +150,13 @@ public final class ModelMapGenMojo extends AbstractMojo {
         Class containerClass = classes.get(classes.size() - 1);
         Method readMethod = ClassUtils.getReferencedMethod(containerClass, p.getReadMethod());
         Method writeMethod = ClassUtils.getReferencedMethod(containerClass, p.getWriteMethod());
-        return new VisitorPath(p.getBaseClass(), methods, p.getFieldId(), p.getReadable(), readMethod, writeMethod);
+        Map<String, String> cannonicalReplacement = new HashMap<>();
+        PathConstraint constraint = p.getConstraint();
+        if (constraint!= null && constraint.canonicalPathReplacements() != null) {
+            cannonicalReplacement.putAll(constraint.canonicalPathReplacements());
+        }
+        return new VisitorPath(p.getBaseClass(), methods, p.getFieldId(), p.getReadable(),
+                        readMethod, writeMethod, cannonicalReplacement);
     }
 
     private List<VisitorPath> process(Class<?> projetClass, String filter, Class<? extends FieldId> fieldClass)

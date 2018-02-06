@@ -19,6 +19,7 @@ import static io.doov.gen.ModelWrapperGen.typeParameters;
 import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toSet;
 
 import java.lang.reflect.Type;
 import java.text.Normalizer;
@@ -261,16 +262,12 @@ final class FieldInfoGen {
     }
 
     private static Set<FieldId> siblings(VisitorPath currentPath, Collection<VisitorPath> collected) {
-        final String currentCanonicalPath = currentPath.displayPath();
-        final Set<FieldId> siblings = new HashSet<>();
-        for (VisitorPath path : collected) {
-            if (path.getFieldId() == currentPath.getFieldId()) {
-                continue;
-            }
-            if (path.displayPath().equals(currentCanonicalPath)) {
-                siblings.add(path.getFieldId());
-            }
-        }
-        return siblings;
+        final String currentCanonicalPath = currentPath.canonicalPath();
+        return collected.stream().filter(p -> p.getFieldId() != currentPath.getFieldId())
+                        .filter(p -> p.canonicalPath().equals(currentCanonicalPath))
+                        .map(VisitorPath::getFieldId)
+                        .collect(toSet());
     }
+
+
 }

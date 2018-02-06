@@ -28,15 +28,17 @@ final class VisitorPath {
     private final String readable;
     private final Method getMethod;
     private final Method setMethod;
+    private final Map<String, String> canonicalReplacement;
 
     public VisitorPath(Class<?> baseClass, List<Method> getPath, FieldId fieldId, String readable,
-            Method getMethod, Method setMethod) {
+                    Method getMethod, Method setMethod, Map<String, String> canonicalReplacement) {
         this.baseClass = baseClass;
         this.path = new ArrayList<>(getPath);
         this.fieldId = fieldId;
         this.readable = readable;
         this.getMethod = getMethod;
         this.setMethod = setMethod;
+        this.canonicalReplacement = canonicalReplacement;
     }
 
     public Class<?> getBaseClass() {
@@ -73,6 +75,14 @@ final class VisitorPath {
 
     public String displayPath() {
         return getterPath(path, fieldId.position());
+    }
+
+    public String canonicalPath() {
+        String displayPath = displayPath();
+        for (Map.Entry<String, String> entry : canonicalReplacement.entrySet()) {
+            displayPath = displayPath.replaceAll(entry.getKey(), entry.getValue());
+        }
+        return displayPath;
     }
 
     @Override

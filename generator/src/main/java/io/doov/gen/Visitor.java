@@ -18,7 +18,7 @@ package io.doov.gen;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.*;
 
 import io.doov.core.FieldId;
 import io.doov.core.PathConstraint;
@@ -41,8 +41,12 @@ final class Visitor {
             if (!checkFieldTargetConstraint(fieldClass, paths, annotation.fieldId, annotation.constraint)) {
                 return;
             }
+            Map<String, String> cannonicalReplacement = new HashMap<>();
+            if (annotation.constraint != null && annotation.constraint.canonicalPathReplacements() != null) {
+                cannonicalReplacement.putAll(annotation.constraint.canonicalPathReplacements());
+            }
             final VisitorPath path = new VisitorPath(baseClass, paths, annotation.fieldId, annotation.readable,
-                    getMethod, setMethod);
+                    getMethod, setMethod, cannonicalReplacement);
             if (contains(path)) {
                 return;
             }
