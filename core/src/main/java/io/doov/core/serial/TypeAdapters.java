@@ -18,7 +18,8 @@ public class TypeAdapters implements TypeAdapterRegistry {
                     new FloatTypeAdapter(),
                     new StringTypeAdapter(),
                     new DateTypeAdapter(),
-                    new LocalDateTypeAdapter()
+                    new LocalDateTypeAdapter(),
+                    new CodeValuableEnumTypeAdapter()
     );
 
     @Override

@@ -86,6 +86,9 @@ public class FieldInfoProvider {
         protected FieldId fieldId;
         protected String readable;
         protected Class<?> type;
+        public boolean _transient = false;
+        public boolean codeValuable = false;
+        public boolean codeLookup = false;
         protected Class<?>[] genericTypes = new Class<?>[] {};
         protected FieldId[] siblings = new FieldId[] {};
 
@@ -101,6 +104,21 @@ public class FieldInfoProvider {
 
         public B type(Class<?> type) {
             this.type = type;
+            return (B) this;
+        }
+
+        public B _transient(boolean _transient) {
+            this._transient = _transient;
+            return (B) this;
+        }
+
+        public B codeValuable(boolean codeValuable) {
+            this.codeValuable = codeValuable;
+            return (B) this;
+        }
+
+        public B codeLookup(boolean codeLookup) {
+            this.codeLookup = codeLookup;
             return (B) this;
         }
 
@@ -123,7 +141,8 @@ public class FieldInfoProvider {
 
         @Override
         public DefaultFieldInfo<T> build(List<FieldInfo> allFields) {
-            DefaultFieldInfo<T> info = new DefaultFieldInfo<>(fieldId, readable, type, genericTypes, siblings);
+            DefaultFieldInfo<T> info = new DefaultFieldInfo<>(fieldId, readable, type, _transient, codeValuable,
+                            codeLookup, genericTypes, siblings);
             allFields.add(info);
             return info;
         }
@@ -135,7 +154,7 @@ public class FieldInfoProvider {
 
         @Override
         public BooleanFieldInfo build(List<FieldInfo> allFields) {
-            BooleanFieldInfo info = new BooleanFieldInfo(fieldId, readable, type, siblings);
+            BooleanFieldInfo info = new BooleanFieldInfo(fieldId, readable, type, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -147,7 +166,7 @@ public class FieldInfoProvider {
 
         @Override
         public StringFieldInfo build(List<FieldInfo> allFields) {
-            StringFieldInfo info = new StringFieldInfo(fieldId, readable, siblings);
+            StringFieldInfo info = new StringFieldInfo(fieldId, readable, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -159,7 +178,7 @@ public class FieldInfoProvider {
 
         @Override
         public CharacterFieldInfo build(List<FieldInfo> allFields) {
-            CharacterFieldInfo info = new CharacterFieldInfo(fieldId, readable, type, siblings);
+            CharacterFieldInfo info = new CharacterFieldInfo(fieldId, readable, type, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -171,7 +190,7 @@ public class FieldInfoProvider {
 
         @Override
         public DoubleFieldInfo build(List<FieldInfo> allFields) {
-            DoubleFieldInfo info = new DoubleFieldInfo(fieldId, readable, type, siblings);
+            DoubleFieldInfo info = new DoubleFieldInfo(fieldId, readable, type, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -183,7 +202,7 @@ public class FieldInfoProvider {
 
         @Override
         public FloatFieldInfo build(List<FieldInfo> allFields) {
-            FloatFieldInfo info = new FloatFieldInfo(fieldId, readable, type, siblings);
+            FloatFieldInfo info = new FloatFieldInfo(fieldId, readable, type, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -195,7 +214,7 @@ public class FieldInfoProvider {
 
         @Override
         public IntegerFieldInfo build(List<FieldInfo> allFields) {
-            IntegerFieldInfo info = new IntegerFieldInfo(fieldId, readable, type, siblings);
+            IntegerFieldInfo info = new IntegerFieldInfo(fieldId, readable, type, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -207,7 +226,7 @@ public class FieldInfoProvider {
 
         @Override
         public LongFieldInfo build(List<FieldInfo> allFields) {
-            LongFieldInfo info = new LongFieldInfo(fieldId, readable, type, siblings);
+            LongFieldInfo info = new LongFieldInfo(fieldId, readable, type, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -219,7 +238,7 @@ public class FieldInfoProvider {
 
         @Override
         public DateIsoFieldInfo build(List<FieldInfo> allFields) {
-            DateIsoFieldInfo info = new DateIsoFieldInfo(fieldId, readable, siblings);
+            DateIsoFieldInfo info = new DateIsoFieldInfo(fieldId, readable, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -231,7 +250,7 @@ public class FieldInfoProvider {
 
         @Override
         public TimeIsoFieldInfo build(List<FieldInfo> allFields) {
-            TimeIsoFieldInfo info = new TimeIsoFieldInfo(fieldId, readable, siblings);
+            TimeIsoFieldInfo info = new TimeIsoFieldInfo(fieldId, readable, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -243,7 +262,7 @@ public class FieldInfoProvider {
 
         @Override
         public LocalDateFieldInfo build(List<FieldInfo> allFields) {
-            LocalDateFieldInfo info = new LocalDateFieldInfo(fieldId, readable, siblings);
+            LocalDateFieldInfo info = new LocalDateFieldInfo(fieldId, readable, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -255,7 +274,7 @@ public class FieldInfoProvider {
 
         @Override
         public LocalDateTimeFieldInfo build(List<FieldInfo> allFields) {
-            LocalDateTimeFieldInfo info = new LocalDateTimeFieldInfo(fieldId, readable, siblings);
+            LocalDateTimeFieldInfo info = new LocalDateTimeFieldInfo(fieldId, readable, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -267,7 +286,7 @@ public class FieldInfoProvider {
 
         @Override
         public LocalTimeFieldInfo build(List<FieldInfo> allFields) {
-            LocalTimeFieldInfo info = new LocalTimeFieldInfo(fieldId, readable, siblings);
+            LocalTimeFieldInfo info = new LocalTimeFieldInfo(fieldId, readable, _transient, siblings);
             allFields.add(info);
             return info;
         }
@@ -279,7 +298,8 @@ public class FieldInfoProvider {
 
         @Override
         public EnumFieldInfo<T> build(List<FieldInfo> allFields) {
-            EnumFieldInfo<T> info = new EnumFieldInfo<>(fieldId, readable, type, siblings);
+            EnumFieldInfo<T> info = new EnumFieldInfo<>(fieldId, readable, type, _transient, codeValuable, codeLookup,
+                            siblings);
             allFields.add(info);
             return info;
         }
@@ -291,7 +311,8 @@ public class FieldInfoProvider {
 
         @Override
         public IterableFieldInfo<T, C> build(List<FieldInfo> allFields) {
-            IterableFieldInfo<T, C> info = new IterableFieldInfo<>(fieldId, readable, type, genericTypes, siblings);
+            IterableFieldInfo<T, C> info = new IterableFieldInfo<>(fieldId, readable, type, _transient, genericTypes,
+                            siblings);
             allFields.add(info);
             return info;
         }

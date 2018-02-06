@@ -36,7 +36,8 @@ final class Visitor {
         this.collected = collected;
     }
 
-    void visit(List<PathAnnotation> fieldTarget, Method getMethod, Method setMethod, List<Method> paths) {
+    void visit(List<PathAnnotation> fieldTarget, boolean _transient, Method getMethod, Method setMethod,
+                    List<Method> paths) {
         fieldTarget.forEach(annotation -> {
             if (!checkFieldTargetConstraint(fieldClass, paths, annotation.fieldId, annotation.constraint)) {
                 return;
@@ -46,7 +47,7 @@ final class Visitor {
                 cannonicalReplacement.putAll(annotation.constraint.canonicalPathReplacements());
             }
             final VisitorPath path = new VisitorPath(baseClass, paths, annotation.fieldId, annotation.readable,
-                    getMethod, setMethod, cannonicalReplacement);
+                            _transient, getMethod, setMethod, cannonicalReplacement);
             if (contains(path)) {
                 return;
             }

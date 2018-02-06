@@ -15,17 +15,19 @@ public class DefaultFieldPath implements FieldPath {
     private final FieldId fieldId;
     private final PathConstraint constraint;
     private final String readable;
+    private final boolean _transient;
     private final ReadMethodRef readMethodReference;
     private final WriteMethodRef writeMethodReference;
 
     public DefaultFieldPath(Class<?> baseClass, List<ReadMethodRef<?, ?>> path, FieldId fieldId,
-                    PathConstraint constraint, String readable, ReadMethodRef readMethodReference,
+                    PathConstraint constraint, String readable, boolean _transient, ReadMethodRef readMethodReference,
                     WriteMethodRef writeMethodReference) {
         this.baseClass = baseClass;
         this.path = path;
         this.fieldId = fieldId;
         this.constraint = constraint;
         this.readable = readable;
+        this._transient = _transient;
         this.readMethodReference = readMethodReference;
         this.writeMethodReference = writeMethodReference;
     }
@@ -56,6 +58,11 @@ public class DefaultFieldPath implements FieldPath {
     }
 
     @Override
+    public boolean isTransient() {
+        return _transient;
+    }
+
+    @Override
     public ReadMethodRef getReadMethod() {
         return readMethodReference;
     }
@@ -73,6 +80,7 @@ public class DefaultFieldPath implements FieldPath {
                         ", fieldId=" + fieldId +
                         ", constraint=" + constraint +
                         ", readable='" + readable + '\'' +
+                        ", _transient=" + _transient +
                         ", readMethodReference=" + readMethodReference +
                         ", writeMethodReference=" + writeMethodReference +
                         '}';

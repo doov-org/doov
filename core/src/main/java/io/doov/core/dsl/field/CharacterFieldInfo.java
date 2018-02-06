@@ -19,8 +19,8 @@ import io.doov.core.FieldId;
 
 public class CharacterFieldInfo extends DefaultFieldInfo<Character> {
 
-    public CharacterFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
-        super(fieldId, readable, type, new Class[] {}, siblings);
+    public CharacterFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, FieldId[] siblings) {
+        super(fieldId, readable, type, _transient, false, false, new Class[] {}, siblings);
     }
 
 }

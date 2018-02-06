@@ -50,4 +50,22 @@ public interface FieldInfo extends Readable {
      */
     Class<?>[] genericTypes();
 
+    /**
+     *
+     * @return
+     */
+    boolean isCodeLookup();
+
+    /**
+     * // TODO
+     * @return
+     */
+    boolean isCodeValuable();
+
+    /**
+     * //TODO
+     * @return
+     */
+    boolean isTransient();
+
 }

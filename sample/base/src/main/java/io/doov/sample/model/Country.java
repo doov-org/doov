@@ -15,6 +15,9 @@
  */
 package io.doov.sample.model;
 
-public enum Country {
-    US, UK, CAN, FR
+import io.doov.core.CodeValuable;
+
+public enum Country implements CodeValuable {
+    US, UK, CAN, FR;
+
 }

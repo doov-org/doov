@@ -78,7 +78,8 @@ final class ModelVisitor {
                     continue;
                 }
                 log.debug(fieldTarget.size() + " path(s) found from  " + desc);
-                visitor.visit(fieldTarget, desc.getReadMethod(), desc.getWriteMethod(), path);
+                boolean _transient = isTransient(clazz, desc);
+                visitor.visit(fieldTarget, _transient, desc.getReadMethod(), desc.getWriteMethod(), path);
             } finally {
                 path.removeLast();
             }
@@ -93,6 +94,19 @@ final class ModelVisitor {
             }
         }
         visitModel(clazz.getSuperclass(), fieldClass, visitor, path, packageFilter, deep + 1);
+    }
+
+    private boolean isTransient(Class<?> clazz, PropertyDescriptor desc) {
+        boolean declaredFieldTransient = false;
+        try {
+            Field field = clazz.getDeclaredField(desc.getName());
+            declaredFieldTransient = field.getAnnotation(FieldTransient.class) != null;
+        } catch (NoSuchFieldException e) {
+            // derived field without declared field
+        }
+        return declaredFieldTransient
+                        || desc.getReadMethod().getAnnotation(FieldTransient.class) != null
+                        || desc.getWriteMethod().getAnnotation(FieldTransient.class) != null;
     }
 
     private List<PathAnnotation> getFieldTarget(Class<?> clazz, PropertyDescriptor desc, Class<? extends FieldId> fieldClass) {

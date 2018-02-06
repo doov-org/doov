@@ -15,6 +15,7 @@ public class PathBuilder<B, C, T> {
     private FieldId fieldId;
     private PathConstraint constraint;
     private String readable;
+    private boolean _transient = false;
     private ReadMethodRef<C, ?> readMethodRef;
     private WriteMethodRef<C, T> writeMethodRef;
 
@@ -39,6 +40,11 @@ public class PathBuilder<B, C, T> {
 
     public PathBuilder<B, C, T> readable(String readable) {
         this.readable = readable;
+        return this;
+    }
+
+    public PathBuilder<B, C, T> _transient(boolean _transient) {
+        this._transient = _transient;
         return this;
     }
 
@@ -71,7 +77,7 @@ public class PathBuilder<B, C, T> {
 
     public DefaultFieldPath build() {
         return new DefaultFieldPath(baseClass, Collections.unmodifiableList(pathList), fieldId,
-                        constraint, readable, readMethodRef, writeMethodRef);
+                        constraint, readable, _transient, readMethodRef, writeMethodRef);
     }
 
     public DefaultFieldPath build(List<FieldPath> pathList) {

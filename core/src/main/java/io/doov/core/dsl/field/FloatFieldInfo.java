@@ -20,8 +20,8 @@ import io.doov.core.dsl.impl.FloatCondition;
 
 public class FloatFieldInfo extends DefaultFieldInfo<Float> implements NumericFieldInfo<Float> {
 
-    public FloatFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
-        super(fieldId, readable, type, new Class[] {}, siblings);
+    public FloatFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, FieldId[] siblings) {
+        super(fieldId, readable, type, _transient, false, false, new Class[] {}, siblings);
     }
 
     @Override

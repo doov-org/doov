@@ -9,9 +9,9 @@ import io.doov.core.dsl.lang.StepCondition;
 
 public class IterableFieldInfo<T, C extends Iterable<T>> extends DefaultFieldInfo<C> {
 
-    public IterableFieldInfo(FieldId fieldId, String readable, Class<?> type, Class<?>[] genericTypes, FieldId[]
-            siblings) {
-        super(fieldId, readable, type, genericTypes, siblings);
+    public IterableFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient,
+                    Class<?>[] genericTypes, FieldId[] siblings) {
+        super(fieldId, readable, type, _transient, false, false, genericTypes, siblings);
     }
 
     public StepCondition contains(T value) {

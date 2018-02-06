@@ -26,16 +26,18 @@ final class VisitorPath {
     private final List<Method> path;
     private final FieldId fieldId;
     private final String readable;
+    private final boolean _transient;
     private final Method getMethod;
     private final Method setMethod;
     private final Map<String, String> canonicalReplacement;
 
     public VisitorPath(Class<?> baseClass, List<Method> getPath, FieldId fieldId, String readable,
-                    Method getMethod, Method setMethod, Map<String, String> canonicalReplacement) {
+                    boolean aTransient, Method getMethod, Method setMethod, Map<String, String> canonicalReplacement) {
         this.baseClass = baseClass;
         this.path = new ArrayList<>(getPath);
         this.fieldId = fieldId;
         this.readable = readable;
+        this._transient = aTransient;
         this.getMethod = getMethod;
         this.setMethod = setMethod;
         this.canonicalReplacement = canonicalReplacement;
@@ -55,6 +57,10 @@ final class VisitorPath {
 
     public String getReadable() {
         return readable;
+    }
+
+    public boolean isTransient() {
+        return _transient;
     }
 
     public Method getGetMethod() {

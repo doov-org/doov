@@ -197,7 +197,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             cannonicalReplacement.putAll(constraint.canonicalPathReplacements());
         }
         return new VisitorPath(p.getBaseClass(), methods, p.getFieldId(), p.getReadable(),
-                        readMethod, writeMethod, cannonicalReplacement);
+                        p.isTransient(), readMethod, writeMethod, cannonicalReplacement);
     }
 
     private List<VisitorPath> process(Class<?> projetClass, String filter, Class<? extends FieldId> fieldClass)
