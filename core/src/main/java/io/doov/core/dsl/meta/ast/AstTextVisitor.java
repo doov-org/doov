@@ -12,9 +12,8 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.empty;
 import static io.doov.core.dsl.meta.DefaultOperator.rule;
-import static io.doov.core.dsl.meta.DefaultOperator.validate_with_message;
+import static io.doov.core.dsl.meta.DefaultOperator.validate;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static java.util.stream.Collectors.joining;
@@ -93,9 +92,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(ValidationRule metadata, int depth) {
         sb.append(formatCurrentIndent());
-        sb.append(formatValidateWithMessage());
-        sb.append(" ");
-        sb.append(formatMessage(metadata));
+        sb.append(formatValidate());
         sb.append(formatNewLine());
     }
 
@@ -147,14 +144,11 @@ public class AstTextVisitor extends AbstractAstVisitor {
         return bundle.get(rule, locale);
     }
 
-    protected String formatValidateWithMessage() {
-        return bundle.get(validate_with_message, locale);
+    protected String formatValidate() {
+        return bundle.get(validate, locale);
     }
 
-    protected String formatMessage(ValidationRule metadata) {
-        String message = metadata.getMessage() == null ? bundle.get(empty, locale) : metadata.getMessage();
-        return "'" + message + "'";
-    }
+
 
     protected String formatWhen() {
         return bundle.get(when, locale);

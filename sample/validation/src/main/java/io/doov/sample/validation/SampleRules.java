@@ -19,10 +19,19 @@ import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
-import static io.doov.sample.field.SampleFieldIdInfo.*;
+import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
+import static io.doov.sample.field.SampleFieldIdInfo.accountCreationDate;
+import static io.doov.sample.field.SampleFieldIdInfo.accountEmail;
+import static io.doov.sample.field.SampleFieldIdInfo.accountPhoneNumber;
+import static io.doov.sample.field.SampleFieldIdInfo.configurationMaxEmailSize;
+import static io.doov.sample.field.SampleFieldIdInfo.configurationMinAge;
+import static io.doov.sample.field.SampleFieldIdInfo.favoriteSiteName1;
+import static io.doov.sample.field.SampleFieldIdInfo.userBirthdate;
+import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;
+import static io.doov.sample.field.SampleFieldIdInfo.userId;
+import static io.doov.sample.field.SampleFieldIdInfo.userLastName;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
@@ -30,7 +39,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 
@@ -39,7 +49,6 @@ import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.AstHtmlVisitor;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
-import io.doov.core.dsl.time.LocalDateSuppliers;
 import io.doov.sample.model.Country;
 
 public class SampleRules extends DefaultRuleRegistry {
@@ -48,7 +57,6 @@ public class SampleRules extends DefaultRuleRegistry {
                     .when(accountEmail().matches("\\w+[@]\\w+\\.com")
                                     .or(accountEmail().matches("\\w+[@]\\w+\\.fr")))
                     .validate()
-                    .withMessage("email finishes with .com or .fr")
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_ACCOUNT = DOOV

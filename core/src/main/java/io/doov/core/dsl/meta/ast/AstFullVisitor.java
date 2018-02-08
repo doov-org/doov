@@ -101,14 +101,14 @@ public class AstFullVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(ValidationRule metadata, int depth) {
         sb.append(formatCurrentIndent());
-        sb.append("visit ValidationRule ").append(metadata).append(" = ").append("validate with message");
+        sb.append("visit ValidationRule ").append(metadata).append(" = ").append("validate");
         sb.append("\n");
     }
 
     @Override
     public void endMetadata(ValidationRule metadata, int depth) {
         sb.append(formatCurrentIndent());
-        sb.append("end ValidationRule ").append(metadata).append(" = ").append(metadata.getMessage());
+        sb.append("end ValidationRule ").append(metadata).append(" = ").append("validate");
         sb.append("\n");
     }
 

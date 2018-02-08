@@ -61,9 +61,9 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @param message the message
      * @return self
      */
-    public ResultAssert hasMessage(String message) {
-        if (!actual.getMessage().equals(message)) {
-            failWithMessage("Expected result to have message + " + message + " but was " + actual.getMessage());
+    public ResultAssert hasFailureCause(String message) {
+        if (!actual.getFailureCause().equals(message)) {
+            failWithMessage("Expected result to have message + " + message + " but was " + actual.getFailureCause());
         }
         return this;
     }
@@ -73,9 +73,9 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      *
      * @return self
      */
-    public ResultAssert hasMessageNull() {
-        if (actual.getMessage() != null) {
-            failWithMessage("Expected result to null message but was " + actual.getMessage());
+    public ResultAssert hasNoFailureCause() {
+        if (actual.getFailureCause() != null) {
+            failWithMessage("Expected result to null message but was " + actual.getFailureCause());
         }
         return this;
     }

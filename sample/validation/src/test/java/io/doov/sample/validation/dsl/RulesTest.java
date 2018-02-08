@@ -38,7 +38,7 @@ public class RulesTest {
     @MethodSource("rules")
     @ParameterizedTest
     public void should_rules_validates_with_no_messages(ValidationRule rule) {
-        assertThat(rule).validates(model).hasMessageNull();
+        assertThat(rule).validates(model).hasNoFailureCause();
     }
 
     @MethodSource("rules")

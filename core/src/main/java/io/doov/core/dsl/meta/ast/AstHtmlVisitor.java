@@ -23,7 +23,6 @@ import io.doov.core.dsl.meta.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
-    protected static final String CSS_CLASS_VALIDATION_MESSAGE = "dsl-validation-message";
     protected static final String CSS_CLASS_VALIDATION_RULE = "dsl-validation-rule";
     protected static final String CSS_CLASS_VALIDATE = "dsl-token-validate";
     protected static final String CSS_CLASS_BINARY = "dsl-token-binary";
@@ -280,8 +279,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(ValidationRule metadata, int depth) {
-        htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate_with_message, locale));
-        htmlFormatSpan(CSS_CLASS_VALIDATION_MESSAGE, formatMessage(metadata));
+        htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate, locale));
     }
 
     @Override
@@ -298,11 +296,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // implementation
     protected String formatWhen() {
         return bundle.get(when, locale);
-    }
-
-    protected String formatMessage(ValidationRule metadata) {
-        return MessageFormat.format("\"{0}\"",
-                        metadata.getMessage() == null ? bundle.get(empty, locale) : metadata.getMessage());
     }
 
     protected void formatLeafOperator(Element e) {

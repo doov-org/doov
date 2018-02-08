@@ -27,14 +27,6 @@ import io.doov.core.dsl.meta.SyntaxTree;
 public interface ValidationRule extends Readable, SyntaxTree {
 
     /**
-     * Returns a validation rule with the given message.
-     *
-     * @param message the message
-     * @return the validation rule
-     */
-    ValidationRule withMessage(String message);
-
-    /**
      * Returns a validation rule with the given short circuit.
      *
      * @param shortCircuit the short circuit
@@ -57,13 +49,6 @@ public interface ValidationRule extends Readable, SyntaxTree {
      * @return the validation rule
      */
     ValidationRule registerOn(RuleRegistry registry);
-
-    /**
-     * Returns the message of this validation rule.
-     *
-     * @return the message
-     */
-    String getMessage();
 
     /**
      * Returns the root node metadata of this validation rule.

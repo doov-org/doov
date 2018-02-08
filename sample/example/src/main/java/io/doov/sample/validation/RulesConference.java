@@ -19,8 +19,6 @@ public interface RulesConference {
             .and(accountPhoneNumber().startsWith("+33")))
         // Terminal operation is validate
         .validate()
-        // Optional: add message
-        .withMessage("user account")
         // Optional: add to registry
         .registerOn(REGISTRY_DEFAULT);
 

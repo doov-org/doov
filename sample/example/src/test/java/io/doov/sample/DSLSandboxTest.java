@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.sample;
 
@@ -40,10 +37,10 @@ public class DSLSandboxTest {
 
     @Test
     public void sample1() {
-        ValidationRule rule = DOOV.when(accountId().eq(1L)).validate().withMessage("incorrect account id");
+        ValidationRule rule = DOOV.when(accountId().eq(1L)).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isFalse();
-        assertThat(rule.executeOn(model).getMessage()).isEqualTo("incorrect account id");
+        assertThat(rule.executeOn(model).getFailureCause()).isEqualTo("account id = 1 ");
     }
 
     @Test
@@ -51,47 +48,43 @@ public class DSLSandboxTest {
         ValidationRule rule = DOOV.when(accountId().eq(1L)).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isFalse();
-        assertThat(rule.executeOn(model).getMessage()).isEqualTo("account id = 1 ");
+        assertThat(rule.executeOn(model).getFailureCause());
     }
 
     @Test
     public void sample3() {
-        ValidationRule rule = DOOV.when(accountId().eq(1L).not()).validate().withMessage("incorrect account id");
+        ValidationRule rule = DOOV.when(accountId().eq(1L).not()).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
-        assertThat(rule.executeOn(model).getMessage()).isNull();
+        assertThat(rule.executeOn(model).getFailureCause()).isNull();
     }
 
     @Test
     public void sample4() {
-        ValidationRule rule = DOOV.when(userBirthdate().eq(LocalDate.of(1980, 8, 1))).validate()
-                .withMessage("valid birthdate is August 1, 1980");
+        ValidationRule rule = DOOV.when(userBirthdate().eq(LocalDate.of(1980, 8, 1))).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
-        assertThat(rule.executeOn(model).getMessage()).isNull();
+        assertThat(rule.executeOn(model).getFailureCause()).isNull();
     }
 
     @Test
     public void sample5() {
         ValidationRule rule = DOOV.when(userBirthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31)))
-                .validate().withMessage("valid birthdate is in year 1980");
+                        .validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
-        assertThat(rule.executeOn(model).getMessage()).isNull();
+        assertThat(rule.executeOn(model).getFailureCause()).isNull();
     }
 
     @Test
     public void sample6() {
         ValidationRule rule = DOOV
-                .when(userBirthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31))
-                        .and(accountId().notEq(9L)).or((accountTimezone()).eq(ETC_GMT)))
-                .validate()
-                .withMessage("valid birthdate is in year 1980, " +
-                        "valid ID is different than 9, and " +
-                        "valid timezone is ETC_GMT");
+                        .when(userBirthdate().between(LocalDate.of(1980, 1, 1), LocalDate.of(1980, 12, 31))
+                                        .and(accountId().notEq(9L)).or((accountTimezone()).eq(ETC_GMT)))
+                        .validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
-        assertThat(rule.executeOn(model).getMessage()).isNull();
+        assertThat(rule.executeOn(model).getFailureCause()).isNull();
     }
 
     @Test
@@ -99,7 +92,7 @@ public class DSLSandboxTest {
         ValidationRule rule = DOOV.when(accountPreferencesMail().eq(EnumSet.of(ADMINISTRATOR, PRIVATE))).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
-        assertThat(rule.executeOn(model).getMessage()).isNull();
+        assertThat(rule.executeOn(model).getFailureCause()).isNull();
     }
 
     @Test
@@ -109,12 +102,12 @@ public class DSLSandboxTest {
         rule = DOOV.when(accountPreferencesMail().contains(ADMINISTRATOR)).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
-        assertThat(rule.executeOn(model).getMessage()).isNull();
+        assertThat(rule.executeOn(model).getFailureCause()).isNull();
 
         rule = DOOV.when(accountPreferencesMail().containsAll(ADMINISTRATOR, PRIVATE)).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
-        assertThat(rule.executeOn(model).getMessage()).isNull();
+        assertThat(rule.executeOn(model).getFailureCause()).isNull();
     }
 
     @Test
@@ -122,7 +115,7 @@ public class DSLSandboxTest {
         ValidationRule rule = DOOV.when(accountPreferencesMail().isNotEmpty()).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
-        assertThat(rule.executeOn(model).getMessage()).isNull();
+        assertThat(rule.executeOn(model).getFailureCause()).isNull();
     }
 
     @Test
@@ -130,7 +123,7 @@ public class DSLSandboxTest {
         ValidationRule rule = DOOV.when(accountPreferencesMail().hasNotSize(1)).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isTrue();
-        assertThat(rule.executeOn(model).getMessage()).isNull();
+        assertThat(rule.executeOn(model).getFailureCause()).isNull();
     }
 
     private static void print(String string) {

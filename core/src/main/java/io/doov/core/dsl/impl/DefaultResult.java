@@ -16,30 +16,22 @@ import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Result;
 
 public class DefaultResult implements Result {
-
-    private final boolean validity;
-    private final String message;
+    private final boolean validated;
     private final DefaultContext context;
 
-    protected DefaultResult(boolean validity, String message, DefaultContext context) {
-        this.validity = validity;
-        this.message = message;
+    protected DefaultResult(boolean validated, DefaultContext context) {
+        this.validated = validated;
         this.context = context;
     }
 
     @Override
     public boolean isTrue() {
-        return validity;
+        return validated;
     }
 
     @Override
     public boolean isFalse() {
-        return !validity;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
+        return !validated;
     }
 
     @Override
@@ -49,7 +41,7 @@ public class DefaultResult implements Result {
 
     @Override
     public String getFailureCause() {
-        return context.getRootMetadata().message(context).readable();
+        return !validated ? context.getRootMetadata().message(context).readable() : null;
     }
 
 }

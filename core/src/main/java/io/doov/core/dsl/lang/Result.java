@@ -34,14 +34,6 @@ public interface Result {
     boolean isFalse();
 
     /**
-     * Returns a human readable message of the validation rule. Depending if a message was provided during construction,
-     * this might be generated from the syntax tree.
-     *
-     * @return the validation message
-     */
-    String getMessage();
-
-    /**
      * Returns the failure cause of the failed predicate. This will reduce the syntax tree using execution values to
      * output the minimum failed tree.
      *
