@@ -1,0 +1,4 @@
+
+    public ${target.class.name}(${constructor.parameters}) {
+        super(${constructor.super.call});
+    }

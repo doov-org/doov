@@ -18,6 +18,7 @@ package io.doov.sample.model;
 import java.time.LocalDate;
 import java.util.*;
 
+import io.doov.core.FieldTransient;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.field.SamplePath;
 
@@ -50,6 +51,7 @@ public class Account extends Identity {
     @SamplePath(field = SampleFieldId.CREATION_DATE, readable = "account creation date")
     private LocalDate creationDate;
 
+    @FieldTransient
     @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "account préférences mail")
     private Collection<EmailType> emailTypes = new HashSet<>();
 

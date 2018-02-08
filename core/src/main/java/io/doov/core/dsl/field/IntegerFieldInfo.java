@@ -20,8 +20,8 @@ import io.doov.core.dsl.impl.IntegerCondition;
 
 public class IntegerFieldInfo extends DefaultFieldInfo<Integer> implements NumericFieldInfo<Integer> {
 
-    public IntegerFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
-        super(fieldId, readable, type, new Class[] {}, siblings);
+    public IntegerFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, FieldId[] siblings) {
+        super(fieldId, readable, type, _transient, false, false, new Class[] {}, siblings);
     }
 
     @Override

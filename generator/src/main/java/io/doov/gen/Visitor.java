@@ -18,7 +18,7 @@ package io.doov.gen;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.*;
 
 import io.doov.core.FieldId;
 import io.doov.core.PathConstraint;
@@ -34,13 +34,18 @@ final class Visitor {
         this.collected = collected;
     }
 
-    void visit(List<PathAnnotation> fieldTarget, Method getMethod, Method setMethod, List<Method> paths) {
+    void visit(List<PathAnnotation> fieldTarget, Method getMethod, Method setMethod,
+                    List<Method> paths, boolean _transient) {
         fieldTarget.forEach(annotation -> {
             if (!checkFieldTargetConstraint(paths, annotation.fieldId, annotation.constraint)) {
                 return;
             }
+            Map<String, String> cannonicalReplacement = new HashMap<>();
+            if (annotation.constraint.canonicalPathReplacements() != null) {
+                cannonicalReplacement.putAll(annotation.constraint.canonicalPathReplacements());
+            }
             final VisitorPath path = new VisitorPath(baseClass, paths, annotation.fieldId, annotation.readable,
-                    getMethod, setMethod);
+                            getMethod, setMethod, _transient, cannonicalReplacement);
             if (contains(path)) {
                 return;
             }
@@ -48,9 +53,9 @@ final class Visitor {
         });
     }
 
-    private static boolean checkFieldTargetConstraint(List<Method> paths, FieldId FieldId, PathConstraint constraint) {
+    private static boolean checkFieldTargetConstraint(List<Method> paths, FieldId fieldId, PathConstraint constraint) {
         return isNullOrEmpty(constraint.includePath())
-                || VisitorPath.getterPath(paths, FieldId.position()).contains(constraint.includePath());
+                        || VisitorPath.getterPath(paths, fieldId.position()).contains(constraint.includePath());
     }
 
     private boolean contains(VisitorPath vPath) {

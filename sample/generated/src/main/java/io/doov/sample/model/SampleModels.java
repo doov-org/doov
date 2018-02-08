@@ -29,6 +29,8 @@ public class SampleModels {
         user.setFirstName("Foo");
         user.setLastName("BAR");
         user.setBirthDate(LocalDate.of(1980, 8, 1));
+        user.setAddress("41 rue Thiers");
+        user.setTel("0102030405");
 
         Account account = new Account();
         account.setId(9);

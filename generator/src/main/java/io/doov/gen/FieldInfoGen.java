@@ -19,7 +19,9 @@ import static io.doov.gen.ModelWrapperGen.typeParameters;
 import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toSet;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.Normalizer;
 import java.time.*;
@@ -28,7 +30,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.CaseFormat;
 
-import io.doov.core.FieldId;
+import io.doov.core.*;
 import io.doov.core.dsl.field.*;
 
 final class FieldInfoGen {
@@ -36,6 +38,11 @@ final class FieldInfoGen {
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
     private static final Pattern UNDER = Pattern.compile("_");
+
+    private static boolean isAssignable(VisitorPath path, Class<?> clazz) {
+        final Method lastMethod = path.getPath().get(path.getPath().size() - 1);
+        return clazz.isAssignableFrom(lastMethod.getReturnType());
+    }
 
     static String imports(Map<FieldId, VisitorPath> fieldPaths) {
         return fieldPaths.entrySet().stream().flatMap(e -> {
@@ -59,7 +66,13 @@ final class FieldInfoGen {
                 .distinct().sorted().map(clazz -> "import " + clazz + ";").collect(joining("\n"));
     }
 
-    static String constants(Map<FieldId, VisitorPath> fieldPaths) {
+    static String constants(Map<FieldId, VisitorPath> fieldPaths, Class<?> fieldClass) {
+        // ensure all field id names are unique for each generated field info
+        final Set<String> codes = fieldPaths.keySet().stream().map(FieldId::name).collect(toSet());
+        if (fieldPaths.size() != codes.size()) {
+            throw new IllegalStateException("field id codes is not unique");
+        }
+
         StringBuilder constants = new StringBuilder();
         StringBuilder methods = new StringBuilder();
 
@@ -72,6 +85,8 @@ final class FieldInfoGen {
             final String genericTypes;
             final String genericTypesAsClass;
             final boolean isPrimitive = currentPath.getGetMethod().getReturnType().isPrimitive();
+            final boolean isCodeValuable = isAssignable(currentPath, CodeValuable.class);
+            final boolean isCodeLookup = isAssignable(currentPath, CodeLookup.class);
 
             if (boxingType.contains("<")) {
                 rawType = simpleName(boxingType.substring(0, boxingType.indexOf('<')));
@@ -108,6 +123,24 @@ final class FieldInfoGen {
             constants.append(rawType);
             constants.append(isPrimitive ? ".TYPE" : ".class");
             constants.append(")");
+            if (currentPath.isTransient()) {
+                constants.append("\n                    ");
+                constants.append("._transient(");
+                constants.append(Boolean.toString(currentPath.isTransient()));
+                constants.append(")");
+            }
+            if (isCodeValuable) {
+                constants.append("\n                    ");
+                constants.append(".codeValuable(");
+                constants.append(Boolean.toString(isCodeValuable));
+                constants.append(")");
+            }
+            if (isCodeLookup) {
+                constants.append("\n                    ");
+                constants.append(".codeLookup(");
+                constants.append(Boolean.toString(isCodeLookup));
+                constants.append(")");
+            }
             if (!genericTypes.isEmpty()) {
                 constants.append("\n                    ");
                 constants.append(".genericTypes(");
@@ -261,16 +294,12 @@ final class FieldInfoGen {
     }
 
     private static Set<FieldId> siblings(VisitorPath currentPath, Collection<VisitorPath> collected) {
-        final String currentCanonicalPath = currentPath.displayPath();
-        final Set<FieldId> siblings = new HashSet<>();
-        for (VisitorPath path : collected) {
-            if (path.getFieldId() == currentPath.getFieldId()) {
-                continue;
-            }
-            if (path.displayPath().equals(currentCanonicalPath)) {
-                siblings.add(path.getFieldId());
-            }
-        }
-        return siblings;
+        final String currentCanonicalPath = currentPath.canonicalPath();
+        return collected.stream().filter(p -> p.getFieldId() != currentPath.getFieldId())
+                        .filter(p -> p.canonicalPath().equals(currentCanonicalPath))
+                        .map(VisitorPath::getFieldId)
+                        .collect(toSet());
     }
+
+
 }

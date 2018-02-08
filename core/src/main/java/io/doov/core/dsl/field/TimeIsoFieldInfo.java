@@ -30,8 +30,8 @@ import io.doov.core.dsl.meta.PredicateMetadata;
 
 public class TimeIsoFieldInfo extends DefaultFieldInfo<LocalTime> implements TemporalFieldInfo<LocalTime> {
 
-    TimeIsoFieldInfo(FieldId fieldId, String readable, FieldId... siblings) {
-        super(fieldId, readable, String.class, new Class<?>[] {}, siblings);
+    TimeIsoFieldInfo(FieldId fieldId, String readable, boolean _transient, FieldId... siblings) {
+        super(fieldId, readable, String.class, _transient, false, false, new Class<?>[] {}, siblings);
     }
 
     @Override

@@ -19,8 +19,9 @@ import io.doov.core.FieldId;
 
 public class EnumFieldInfo<E extends Enum<E>> extends DefaultFieldInfo<E> {
 
-    public EnumFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
-        super(fieldId, readable, type, new Class[] {}, siblings);
+    public EnumFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, boolean codeValuable,
+                    boolean codeLookup, FieldId[] siblings) {
+        super(fieldId, readable, type, _transient, codeValuable, codeLookup, new Class[] {}, siblings);
     }
 
 }

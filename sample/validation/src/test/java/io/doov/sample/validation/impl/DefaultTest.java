@@ -1,9 +1,9 @@
 package io.doov.sample.validation.impl;
 
 import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.sample.field.SampleFieldIdInfo.accountCountry;
-import static io.doov.sample.field.SampleFieldIdInfo.accountLogin;
-import static io.doov.sample.field.SampleFieldIdInfo.userFirstName;
+import static io.doov.sample.field.SampleFieldInfo.accountCountry;
+import static io.doov.sample.field.SampleFieldInfo.accountLogin;
+import static io.doov.sample.field.SampleFieldInfo.userFirstName;
 
 import java.util.EnumSet;
 

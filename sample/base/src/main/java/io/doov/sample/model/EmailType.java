@@ -15,6 +15,9 @@
  */
 package io.doov.sample.model;
 
-public enum EmailType {
-    PRIVATE, ADMINISTRATOR, NEWSLETTER
+import io.doov.core.CodeValuable;
+
+public enum EmailType implements CodeValuable {
+    PRIVATE, ADMINISTRATOR, NEWSLETTER;
+
 }

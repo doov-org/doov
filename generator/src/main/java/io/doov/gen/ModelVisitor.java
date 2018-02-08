@@ -15,7 +15,6 @@
  */
 package io.doov.gen;
 
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -40,14 +39,14 @@ final class ModelVisitor {
         this.log = log;
     }
 
-    public void visitModel(Class<?> clazz, Visitor visitor, String packageFilter)
-            throws IntrospectionException, IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException {
+    public void visitModel(Class<?> clazz, Class<? extends FieldId> fieldClass, Visitor visitor, String packageFilter)
+            throws IntrospectionException, IllegalArgumentException {
         log.debug("starting visiting class " + clazz.getName());
-        visitModel(clazz, visitor, new LinkedList<>(), packageFilter, 0);
+        visitModel(clazz, fieldClass, visitor, new LinkedList<>(), packageFilter, 0);
     }
 
-    private void visitModel(Class<?> clazz, Visitor visitor, LinkedList<Method> path, String packageFilter, int deep)
+    private void visitModel(Class<?> clazz, Class<? extends FieldId> fieldClass, Visitor visitor,
+                    LinkedList<Method> path, String packageFilter, int deep)
             throws IntrospectionException, IllegalArgumentException {
         if (clazz == null) {
             return;
@@ -74,12 +73,13 @@ final class ModelVisitor {
                             + " from " + clazz.getName());
             path.addLast(desc.getReadMethod());
             try {
-                final List<PathAnnotation> fieldTarget = getFieldTarget(clazz, desc);
+                final List<PathAnnotation> fieldTarget = getFieldTarget(clazz, desc, fieldClass);
                 if (fieldTarget.isEmpty()) {
                     continue;
                 }
                 log.debug(fieldTarget.size() + " path(s) found from  " + desc);
-                visitor.visit(fieldTarget, desc.getReadMethod(), desc.getWriteMethod(), path);
+                boolean _transient = isTransient(clazz, desc);
+                visitor.visit(fieldTarget, desc.getReadMethod(), desc.getWriteMethod(), path, _transient);
             } finally {
                 path.removeLast();
             }
@@ -88,35 +88,48 @@ final class ModelVisitor {
         for (Method method : otherMethods) {
             path.addLast(method);
             try {
-                visitModel(returnType(method, packageFilter), visitor, path, packageFilter, deep + 1);
+                visitModel(returnType(method, packageFilter), fieldClass, visitor, path, packageFilter, deep + 1);
             } finally {
                 path.removeLast();
             }
         }
-        visitModel(clazz.getSuperclass(), visitor, path, packageFilter, deep + 1);
+        visitModel(clazz.getSuperclass(), fieldClass, visitor, path, packageFilter, deep + 1);
     }
 
-    private List<PathAnnotation> getFieldTarget(Class<?> clazz, PropertyDescriptor desc) {
+    private boolean isTransient(Class<?> clazz, PropertyDescriptor desc) {
+        boolean declaredFieldTransient = false;
+        try {
+            Field field = clazz.getDeclaredField(desc.getName());
+            declaredFieldTransient = field.getAnnotation(FieldTransient.class) != null;
+        } catch (NoSuchFieldException e) {
+            // derived field without declared field
+        }
+        return declaredFieldTransient
+                        || desc.getReadMethod().getAnnotation(FieldTransient.class) != null
+                        || desc.getWriteMethod().getAnnotation(FieldTransient.class) != null;
+    }
+
+    private List<PathAnnotation> getFieldTarget(Class<?> clazz, PropertyDescriptor desc, Class<? extends FieldId> fieldClass) {
         if (desc.getReadMethod() == null || desc.getWriteMethod() == null) {
             return emptyList();
         }
         List<PathAnnotation> fieldTarget = emptyList();
         try {
             Field field = clazz.getDeclaredField(desc.getName());
-            fieldTarget = getFieldTarget(field);
+            fieldTarget = getFieldTarget(field, fieldClass);
         } catch (NoSuchFieldException e) {
             // derived field without declared field
         }
         if (fieldTarget.isEmpty()) {
-            fieldTarget = getFieldTarget(desc.getReadMethod());
+            fieldTarget = getFieldTarget(desc.getReadMethod(), fieldClass);
         }
         if (fieldTarget.isEmpty()) {
-            fieldTarget = getFieldTarget(desc.getWriteMethod());
+            fieldTarget = getFieldTarget(desc.getWriteMethod(), fieldClass);
         }
         return fieldTarget;
     }
 
-    private List<PathAnnotation> getFieldTarget(AccessibleObject executable) {
+    private List<PathAnnotation> getFieldTarget(AccessibleObject executable, Class<? extends FieldId> fieldClass) {
         final Annotation[] annotations = executable.getAnnotations();
         log.debug(annotations.length + " annotations to process from " + executable.toString());
 
@@ -142,12 +155,16 @@ final class ModelVisitor {
         });
 
         log.debug(pathAnnotations.size() + " paths annotations to process from " + executable.toString());
-        return pathAnnotations.stream()
-                .map(a -> asList(executable.getAnnotationsByType(a)))
-                .flatMap(Collection::stream)
-                .map(this::asPathAnnotation)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        try {
+            return pathAnnotations.stream()
+                            .flatMap(a -> stream(executable.getAnnotationsByType(a)))
+                            .map(this::asPathAnnotation)
+                            .filter(Objects::nonNull)
+                            .filter(p -> fieldClass.isAssignableFrom(p.fieldId.getClass()))
+                            .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException(executable.toString(), e);
+        }
     }
 
     private PathAnnotation asPathAnnotation(Annotation annotation) {
@@ -169,7 +186,7 @@ final class ModelVisitor {
         return stream(clazz.getMethods())
                 .filter(f -> {
                     log.debug("process annotation field " + f.toString());
-                    return asList(f.getReturnType().getInterfaces()).contains(interfaceType);
+                    return interfaceType.isAssignableFrom(f.getReturnType());
                 })
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(clazz + " needs method with " + interfaceType));

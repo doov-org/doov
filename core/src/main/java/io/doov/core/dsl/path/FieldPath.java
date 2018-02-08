@@ -24,4 +24,6 @@ public interface FieldPath {
 
     WriteMethodRef getWriteMethod();
 
+    boolean isTransient();
+
 }

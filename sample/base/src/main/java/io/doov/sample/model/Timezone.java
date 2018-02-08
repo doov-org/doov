@@ -15,7 +15,9 @@
  */
 package io.doov.sample.model;
 
-public enum Timezone {
+import io.doov.core.CodeValuable;
+
+public enum Timezone implements CodeValuable {
     ETC_GMT_PLUS_12("GMT-12:00"), //
     ETC_GMT_PLUS_11("GMT-11:00"), //
     ETC_GMT_PLUS_10("GMT-10:00"), //

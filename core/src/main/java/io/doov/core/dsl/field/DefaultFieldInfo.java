@@ -21,14 +21,20 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T> {
     private final FieldId fieldId;
     private final String readable;
     private final Class<?> type;
+    private boolean _transient;
+    private boolean codeValuable;
+    private boolean codeLookup;
     private final Class<?>[] genericTypes;
     private final FieldId[] siblings;
 
-    public DefaultFieldInfo(FieldId fieldId, String readable, Class<?> type, Class<?>[] genericTypes,
-            FieldId... siblings) {
+    public DefaultFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, boolean codeValuable,
+                    boolean codeLookup, Class<?>[] genericTypes, FieldId... siblings) {
         this.fieldId = fieldId;
         this.readable = readable;
         this.type = type;
+        this._transient = _transient;
+        this.codeValuable = codeValuable;
+        this.codeLookup = codeLookup;
         this.genericTypes = genericTypes;
         this.siblings = siblings;
     }
@@ -46,6 +52,21 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T> {
     @Override
     public Class<?> type() {
         return type;
+    }
+
+    @Override
+    public boolean isTransient() {
+        return _transient;
+    }
+
+    @Override
+    public boolean isCodeValuable() {
+        return codeValuable;
+    }
+
+    @Override
+    public boolean isCodeLookup() {
+        return codeLookup;
     }
 
     @Override

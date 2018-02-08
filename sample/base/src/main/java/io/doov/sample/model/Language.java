@@ -15,6 +15,8 @@
  */
 package io.doov.sample.model;
 
-public enum Language {
+import io.doov.core.CodeValuable;
+
+public enum Language implements CodeValuable {
     EN, FR
 }

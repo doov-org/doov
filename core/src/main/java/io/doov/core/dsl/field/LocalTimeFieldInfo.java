@@ -23,8 +23,8 @@ import io.doov.core.dsl.impl.TemporalCondition;
 
 public class LocalTimeFieldInfo extends DefaultFieldInfo<LocalTime> implements TemporalFieldInfo<LocalTime> {
 
-    public LocalTimeFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
-        super(fieldId, readable, LocalTime.class, new Class[] {}, siblings);
+    public LocalTimeFieldInfo(FieldId fieldId, String readable, boolean _transient, FieldId[] siblings) {
+        super(fieldId, readable, LocalTime.class, _transient, false, false, new Class[] {}, siblings);
     }
 
     @Override

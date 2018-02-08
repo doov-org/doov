@@ -20,8 +20,8 @@ import io.doov.core.dsl.impl.StringCondition;
 
 public class StringFieldInfo extends DefaultFieldInfo<String> implements TextFieldInfo {
 
-    public StringFieldInfo(FieldId fieldId, String readable, FieldId[] siblings) {
-        super(fieldId, readable, String.class, new Class[] {}, siblings);
+    public StringFieldInfo(FieldId fieldId, String readable, boolean _transient, FieldId[] siblings) {
+        super(fieldId, readable, String.class, _transient, false, false, new Class[] {}, siblings);
     }
 
     @Override

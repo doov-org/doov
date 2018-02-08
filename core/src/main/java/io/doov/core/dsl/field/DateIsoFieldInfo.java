@@ -30,8 +30,8 @@ import io.doov.core.dsl.meta.PredicateMetadata;
 
 public class DateIsoFieldInfo extends DefaultFieldInfo<LocalDate> implements TemporalFieldInfo<LocalDate> {
 
-    DateIsoFieldInfo(FieldId fieldId, String readable, FieldId... siblings) {
-        super(fieldId, readable, String.class, new Class<?>[] {}, siblings);
+    DateIsoFieldInfo(FieldId fieldId, String readable, boolean _transient, FieldId... siblings) {
+        super(fieldId, readable, String.class, _transient, false, false, new Class<?>[] {}, siblings);
     }
 
     @Override

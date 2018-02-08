@@ -20,8 +20,8 @@ import io.doov.core.dsl.impl.DoubleCondition;
 
 public class DoubleFieldInfo extends DefaultFieldInfo<Double> implements NumericFieldInfo<Double> {
 
-    public DoubleFieldInfo(FieldId fieldId, String readable, Class<?> type, FieldId[] siblings) {
-        super(fieldId, readable, type, new Class[] {}, siblings);
+    public DoubleFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, FieldId[] siblings) {
+        super(fieldId, readable, type, _transient, false, false, new Class[] {}, siblings);
     }
 
     @Override
