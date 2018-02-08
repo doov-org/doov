@@ -69,8 +69,9 @@ final class ModelVisitor {
         final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
         final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor desc : propertyDescriptors) {
-            log.debug("property " + desc.getName() + " : " + desc.getPropertyType().getSimpleName()
-                    + " from " + clazz.getName());
+            log.debug("property " + desc.getName() + " : "
+                            + (desc.getPropertyType() != null ? desc.getPropertyType().getSimpleName() : null)
+                            + " from " + clazz.getName());
             path.addLast(desc.getReadMethod());
             try {
                 final List<PathAnnotation> fieldTarget = getFieldTarget(clazz, desc);
