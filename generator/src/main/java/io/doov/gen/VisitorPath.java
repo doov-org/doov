@@ -26,20 +26,20 @@ final class VisitorPath {
     private final List<Method> path;
     private final FieldId fieldId;
     private final String readable;
-    private final boolean _transient;
     private final Method getMethod;
     private final Method setMethod;
+    private final boolean _transient;
     private final Map<String, String> canonicalReplacement;
 
     public VisitorPath(Class<?> baseClass, List<Method> getPath, FieldId fieldId, String readable,
-                    boolean aTransient, Method getMethod, Method setMethod, Map<String, String> canonicalReplacement) {
+                    Method getMethod, Method setMethod, boolean _transient, Map<String, String> canonicalReplacement) {
         this.baseClass = baseClass;
         this.path = new ArrayList<>(getPath);
         this.fieldId = fieldId;
         this.readable = readable;
-        this._transient = aTransient;
         this.getMethod = getMethod;
         this.setMethod = setMethod;
+        this._transient = _transient;
         this.canonicalReplacement = canonicalReplacement;
     }
 
@@ -129,8 +129,7 @@ final class VisitorPath {
             textPaths.put(fieldId, new ArrayList<>(pathMap.values()));
         });
         // sort paths
-        textPaths.values().forEach(mappedPaths -> mappedPaths.sort((o1, o2) -> o1.toString().compareTo(o2.toString())));
+        textPaths.values().forEach(mappedPaths -> mappedPaths.sort(Comparator.comparing(VisitorPath::toString)));
         return textPaths;
     }
-
 }

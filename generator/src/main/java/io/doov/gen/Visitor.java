@@ -27,27 +27,25 @@ import io.doov.gen.ModelVisitor.PathAnnotation;
 final class Visitor {
 
     private final Class<?> baseClass;
-    private final Class<? extends FieldId> fieldClass;
     private final List<VisitorPath> collected;
 
-    Visitor(Class<?> baseClass, Class<? extends FieldId> fieldClass, List<VisitorPath> collected) {
+    Visitor(Class<?> baseClass, List<VisitorPath> collected) {
         this.baseClass = baseClass;
-        this.fieldClass = fieldClass;
         this.collected = collected;
     }
 
-    void visit(List<PathAnnotation> fieldTarget, boolean _transient, Method getMethod, Method setMethod,
-                    List<Method> paths) {
+    void visit(List<PathAnnotation> fieldTarget, Method getMethod, Method setMethod,
+                    List<Method> paths, boolean _transient) {
         fieldTarget.forEach(annotation -> {
-            if (!checkFieldTargetConstraint(fieldClass, paths, annotation.fieldId, annotation.constraint)) {
+            if (!checkFieldTargetConstraint(paths, annotation.fieldId, annotation.constraint)) {
                 return;
             }
             Map<String, String> cannonicalReplacement = new HashMap<>();
-            if (annotation.constraint != null && annotation.constraint.canonicalPathReplacements() != null) {
+            if (annotation.constraint.canonicalPathReplacements() != null) {
                 cannonicalReplacement.putAll(annotation.constraint.canonicalPathReplacements());
             }
             final VisitorPath path = new VisitorPath(baseClass, paths, annotation.fieldId, annotation.readable,
-                            _transient, getMethod, setMethod, cannonicalReplacement);
+                            getMethod, setMethod, _transient, cannonicalReplacement);
             if (contains(path)) {
                 return;
             }
@@ -55,10 +53,9 @@ final class Visitor {
         });
     }
 
-    private static boolean checkFieldTargetConstraint(Class<? extends FieldId> fieldClass, List<Method> paths, FieldId fieldId, PathConstraint constraint) {
-        return fieldClass.isAssignableFrom(fieldId.getClass())
-                        && (isNullOrEmpty(constraint.includePath())
-                || VisitorPath.getterPath(paths, fieldId.position()).contains(constraint.includePath()));
+    private static boolean checkFieldTargetConstraint(List<Method> paths, FieldId fieldId, PathConstraint constraint) {
+        return isNullOrEmpty(constraint.includePath())
+                        || VisitorPath.getterPath(paths, fieldId.position()).contains(constraint.includePath());
     }
 
     private boolean contains(VisitorPath vPath) {

@@ -122,17 +122,29 @@ public final class ModelMapGenMojo extends AbstractMojo {
             final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>) Class
                             .forName(fieldClass, true, classLoader);
             final Class<?> modelClazz = Class.forName(sourceClass, true, classLoader);
-            Class<? extends FieldModel> baseClazz = AbstractWrapper.class;
-            if (baseClass != null) {
-                verifyBaseClass(modelClazz, baseClazz);
-                baseClazz = (Class<? extends AbstractWrapper>) Class.forName(baseClass, false, classLoader);
-            }
+            Class<? extends FieldModel> baseClazz = loadWrapperBaseClass(modelClazz, classLoader);
             Class<? extends TypeAdapterRegistry> typeAdapterClazz = loadTypeAdapterClass(classLoader);
             generateModels(fieldClazz, modelClazz, baseClazz, typeAdapterClazz, fieldPaths);
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 
+    }
+
+    private Class<? extends FieldModel> loadWrapperBaseClass(Class<?> modelClazz, URLClassLoader classLoader)
+                    throws MojoExecutionException, ClassNotFoundException {
+        Class<? extends FieldModel> baseClazz = AbstractWrapper.class;
+        if (baseClass != null) {
+            if (!Modifier.isAbstract(baseClazz.getModifiers())) {
+                throw new MojoExecutionException("Base class" + baseClazz + " must be abstract");
+            }
+            if (!AbstractWrapper.class.isAssignableFrom(baseClazz)) {
+                throw new MojoExecutionException("Base class" + baseClazz + " does not implement AbstractWrapper<"
+                                + modelClazz + ">");
+            }
+            baseClazz = (Class<? extends AbstractWrapper>) Class.forName(baseClass, false, classLoader);
+        }
+        return baseClazz;
     }
 
     private Class<? extends TypeAdapterRegistry> loadTypeAdapterClass(URLClassLoader classLoader)
@@ -149,17 +161,6 @@ public final class ModelMapGenMojo extends AbstractMojo {
         return typeAdapterClazz;
     }
 
-    private void verifyBaseClass(Class<?> modelClazz, Class<? extends FieldModel> baseClazz)
-                    throws MojoExecutionException {
-        if (!Modifier.isAbstract(baseClazz.getModifiers())) {
-            throw new MojoExecutionException("Base class" + baseClazz + " must be abstract");
-        }
-        if (!AbstractWrapper.class.isAssignableFrom(baseClazz)) {
-            throw new MojoExecutionException("Base class" + baseClazz + " does not implement AbstractWrapper<"
-                            + modelClazz + ">");
-        }
-    }
-
     private void generateModels(Class<? extends FieldId> fieldClazz,
                     Class<?> modelClazz,
                     Class<? extends FieldModel> baseClazz,
@@ -172,7 +173,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             } else {
                 collected = fieldPaths.stream().map(this::createVisitorPath).collect(toList());
             }
-            final Map<FieldId, VisitorPath> fieldPathMap = validatePath(collected);
+            final Map<FieldId, VisitorPath> fieldPathMap = validatePath(collected, getLog());
             Runnable generateCsv = () -> generateCsv(fieldPathMap, modelClazz);
             Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz, typeAdapterClazz);
             Runnable generateFieldInfo = () -> generateFieldInfo(fieldPathMap, fieldClazz);
@@ -188,7 +189,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
         List<Class> classes = new ArrayList<>(path.keySet());
         List<Method> methods = new ArrayList<>(path.values());
         // Last class of the path is the container of the field
-        Class containerClass = classes.get(classes.size() - 1);
+        Class<?> containerClass = classes.get(classes.size() - 1);
         Method readMethod = ClassUtils.getReferencedMethod(containerClass, p.getReadMethod());
         Method writeMethod = ClassUtils.getReferencedMethod(containerClass, p.getWriteMethod());
         Map<String, String> cannonicalReplacement = new HashMap<>();
@@ -197,13 +198,13 @@ public final class ModelMapGenMojo extends AbstractMojo {
             cannonicalReplacement.putAll(constraint.canonicalPathReplacements());
         }
         return new VisitorPath(p.getBaseClass(), methods, p.getFieldId(), p.getReadable(),
-                        p.isTransient(), readMethod, writeMethod, cannonicalReplacement);
+                        readMethod, writeMethod, p.isTransient(), cannonicalReplacement);
     }
 
     private List<VisitorPath> process(Class<?> projetClass, String filter, Class<? extends FieldId> fieldClass)
                     throws Exception {
         final List<VisitorPath> collected = new ArrayList<>();
-        new ModelVisitor(getLog()).visitModel(projetClass, fieldClass, new Visitor(projetClass, fieldClass, collected), filter);
+        new ModelVisitor(getLog()).visitModel(projetClass, fieldClass, new Visitor(projetClass, collected), filter);
         return collected;
     }
 

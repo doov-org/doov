@@ -19,12 +19,15 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static io.doov.gen.ModelMapGenMojo.template;
 import static io.doov.gen.VisitorPath.pathByFieldId;
 import static java.util.Arrays.asList;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import org.apache.maven.plugin.logging.Log;
 
 import com.google.common.base.Joiner;
 
@@ -38,7 +41,7 @@ final class ModelWrapperGen {
         final String template = template(templateFileName);
         collected.keySet().stream()
                 .map((Object::getClass)).distinct()
-                .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                .sorted(comparing(Class::getName))
                 .forEach(fieldType -> {
                     final Map<String, String> conf = new HashMap<>();
                     conf.put("field.id.type", fieldType.getName());
@@ -47,7 +50,7 @@ final class ModelWrapperGen {
         return buffer.toString();
     }
 
-    static Map<FieldId, VisitorPath> validatePath(List<VisitorPath> collected) {
+    static Map<FieldId, VisitorPath> validatePath(List<VisitorPath> collected, Log log) {
         Map<FieldId, List<VisitorPath>> pathByFieldId = pathByFieldId(collected);
 
         List<FieldId> invalidFieldId = pathByFieldId.entrySet().stream()
@@ -55,10 +58,11 @@ final class ModelWrapperGen {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
         if (!invalidFieldId.isEmpty()) {
+            invalidFieldId.forEach(f -> log.debug(f.name() + " - " + pathByFieldId.get(f)));
             throw new IllegalStateException("some field ids have more than one path : " + invalidFieldId.toString());
         }
 
-        Map<FieldId, VisitorPath> paths = new TreeMap<>(Comparator.comparing(FieldId::name));
+        Map<FieldId, VisitorPath> paths = new TreeMap<>(comparing(FieldId::name));
         pathByFieldId.forEach((fieldId, fieldPaths) -> paths.put(fieldId, fieldPaths.iterator().next()));
         return paths;
     }
@@ -133,7 +137,7 @@ final class ModelWrapperGen {
     private static List<Class<?>> fieldTypes(Map<FieldId, VisitorPath> collected) {
         return collected.keySet().stream()
                 .map(Object::getClass).distinct()
-                .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                .sorted(comparing(Class::getName))
                 .collect(toList());
     }
 
@@ -236,7 +240,7 @@ final class ModelWrapperGen {
 
     private static List<FieldId> sortFields(Set<FieldId> FieldIds) {
         final List<FieldId> sortedList = new ArrayList<>(FieldIds);
-        sortedList.sort((o1, o2) -> o1.toString().compareTo(o2.toString()));
+        sortedList.sort(comparing(Object::toString));
         return sortedList;
     }
 

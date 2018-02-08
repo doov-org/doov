@@ -15,7 +15,6 @@
  */
 package io.doov.gen;
 
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -46,7 +45,8 @@ final class ModelVisitor {
         visitModel(clazz, fieldClass, visitor, new LinkedList<>(), packageFilter, 0);
     }
 
-    private void visitModel(Class<?> clazz, Class<? extends FieldId> fieldClass, Visitor visitor, LinkedList<Method> path, String packageFilter, int deep)
+    private void visitModel(Class<?> clazz, Class<? extends FieldId> fieldClass, Visitor visitor,
+                    LinkedList<Method> path, String packageFilter, int deep)
             throws IntrospectionException, IllegalArgumentException {
         if (clazz == null) {
             return;
@@ -79,7 +79,7 @@ final class ModelVisitor {
                 }
                 log.debug(fieldTarget.size() + " path(s) found from  " + desc);
                 boolean _transient = isTransient(clazz, desc);
-                visitor.visit(fieldTarget, _transient, desc.getReadMethod(), desc.getWriteMethod(), path);
+                visitor.visit(fieldTarget, desc.getReadMethod(), desc.getWriteMethod(), path, _transient);
             } finally {
                 path.removeLast();
             }
@@ -157,8 +157,7 @@ final class ModelVisitor {
         log.debug(pathAnnotations.size() + " paths annotations to process from " + executable.toString());
         try {
             return pathAnnotations.stream()
-                            .map(a -> asList(executable.getAnnotationsByType(a)))
-                            .flatMap(Collection::stream)
+                            .flatMap(a -> stream(executable.getAnnotationsByType(a)))
                             .map(this::asPathAnnotation)
                             .filter(Objects::nonNull)
                             .filter(p -> fieldClass.isAssignableFrom(p.fieldId.getClass()))
