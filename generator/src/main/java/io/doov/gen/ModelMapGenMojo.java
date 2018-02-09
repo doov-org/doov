@@ -114,58 +114,43 @@ public final class ModelMapGenMojo extends AbstractMojo {
         try {
             List<FieldPath> fieldPaths = Collections.emptyList();
             if (fieldPathProvider != null) {
-                FieldPathProvider fieldPathProvider = (FieldPathProvider) Class.forName(this.fieldPathProvider, true,
-                                classLoader).newInstance();
+                FieldPathProvider fieldPathProvider = loadClassWithType(this.fieldPathProvider, FieldPathProvider.class,
+                        null, classLoader).newInstance();
                 fieldPaths = fieldPathProvider.values();
             }
-            @SuppressWarnings("unchecked")
-            final Class<? extends FieldId> fieldClazz = (Class<? extends FieldId>) Class
-                            .forName(fieldClass, true, classLoader);
-            final Class<?> modelClazz = Class.forName(sourceClass, true, classLoader);
-            Class<? extends FieldModel> baseClazz = loadWrapperBaseClass(modelClazz, classLoader);
-            Class<? extends TypeAdapterRegistry> typeAdapterClazz = loadTypeAdapterClass(classLoader);
+            Class<?> modelClazz = Class.forName(sourceClass, true, classLoader);
+            Class<? extends FieldId> fieldClazz = loadClassWithType(fieldClass, FieldId.class, null, classLoader);
+            Class<? extends FieldModel> baseClazz = loadClassWithType(baseClass,
+                    AbstractWrapper.class, AbstractWrapper.class, classLoader);
+            Class<? extends TypeAdapterRegistry> typeAdapterClazz = loadClassWithType(typeAdapters,
+                    TypeAdapterRegistry.class, TypeAdapters.class, classLoader);
             generateModels(fieldClazz, modelClazz, baseClazz, typeAdapterClazz, fieldPaths);
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-
     }
 
-    private Class<? extends FieldModel> loadWrapperBaseClass(Class<?> modelClazz, URLClassLoader classLoader)
-                    throws MojoExecutionException, ClassNotFoundException {
-        Class<? extends FieldModel> baseClazz = AbstractWrapper.class;
-        if (baseClass != null) {
-            if (!Modifier.isAbstract(baseClazz.getModifiers())) {
-                throw new MojoExecutionException("Base class" + baseClazz + " must be abstract");
+    private <T> Class<? extends T> loadClassWithType(String className,
+                                                     Class<T> type,
+                                                     Class<? extends T> defaultClass,
+                                                     URLClassLoader classLoader)
+            throws MojoExecutionException, ClassNotFoundException {
+        Class<? extends T> classToLoad = defaultClass;
+        if (className != null) {
+            Class<?> loadedClass = Class.forName(className, true, classLoader);
+            if (!type.isAssignableFrom(type)) {
+                throw new MojoExecutionException("Class " + loadedClass + " does not implement " + type.getName());
             }
-            if (!AbstractWrapper.class.isAssignableFrom(baseClazz)) {
-                throw new MojoExecutionException("Base class" + baseClazz + " does not implement AbstractWrapper<"
-                                + modelClazz + ">");
-            }
-            baseClazz = (Class<? extends AbstractWrapper>) Class.forName(baseClass, false, classLoader);
+            classToLoad = (Class<? extends T>) loadedClass;
         }
-        return baseClazz;
-    }
-
-    private Class<? extends TypeAdapterRegistry> loadTypeAdapterClass(URLClassLoader classLoader)
-                    throws MojoExecutionException, ClassNotFoundException {
-        Class<? extends TypeAdapterRegistry> typeAdapterClazz = TypeAdapters.class;
-        if (typeAdapters != null) {
-            Class<?> clazz = Class.forName(typeAdapters, true, classLoader);
-            if (TypeAdapterRegistry.class.isAssignableFrom(typeAdapterClazz)) {
-                throw new MojoExecutionException("Type Adapter class" + typeAdapterClazz
-                                + " does not implement TypeAdapterRegistry");
-            }
-            typeAdapterClazz = (Class<? extends TypeAdapterRegistry>) clazz;
-        }
-        return typeAdapterClazz;
+        return classToLoad;
     }
 
     private void generateModels(Class<? extends FieldId> fieldClazz,
-                    Class<?> modelClazz,
-                    Class<? extends FieldModel> baseClazz,
-                    Class<? extends TypeAdapterRegistry> typeAdapterClazz,
-                    List<FieldPath> fieldPaths) {
+                                Class<?> modelClazz,
+                                Class<? extends FieldModel> baseClazz,
+                                Class<? extends TypeAdapterRegistry> typeAdapterClazz,
+                                List<FieldPath> fieldPaths) {
         try {
             final List<VisitorPath> collected;
             if (fieldPaths.isEmpty()) {
@@ -175,7 +160,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
             }
             final Map<FieldId, VisitorPath> fieldPathMap = validatePath(collected, getLog());
             Runnable generateCsv = () -> generateCsv(fieldPathMap, modelClazz);
-            Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz, typeAdapterClazz);
+            Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz,
+                    typeAdapterClazz);
             Runnable generateFieldInfo = () -> generateFieldInfo(fieldPathMap, fieldClazz);
             asList(generateWrapper, generateCsv, generateFieldInfo).parallelStream().forEach(Runnable::run);
         } catch (Exception e) {
@@ -194,15 +180,17 @@ public final class ModelMapGenMojo extends AbstractMojo {
         Method writeMethod = ClassUtils.getReferencedMethod(containerClass, p.getWriteMethod());
         Map<String, String> cannonicalReplacement = new HashMap<>();
         PathConstraint constraint = p.getConstraint();
-        if (constraint!= null && constraint.canonicalPathReplacements() != null) {
+        if (constraint != null && constraint.canonicalPathReplacements() != null) {
             cannonicalReplacement.putAll(constraint.canonicalPathReplacements());
         }
         return new VisitorPath(p.getBaseClass(), methods, p.getFieldId(), p.getReadable(),
-                        readMethod, writeMethod, p.isTransient(), cannonicalReplacement);
+                readMethod, writeMethod, p.isTransient(), cannonicalReplacement);
     }
 
-    private List<VisitorPath> process(Class<?> projetClass, String filter, Class<? extends FieldId> fieldClass)
-                    throws Exception {
+    private List<VisitorPath> process(Class<?> projetClass,
+                                      String filter,
+                                      Class<? extends FieldId> fieldClass)
+            throws Exception {
         final List<VisitorPath> collected = new ArrayList<>();
         new ModelVisitor(getLog()).visitModel(projetClass, fieldClass, new Visitor(projetClass, collected), filter);
         return collected;
@@ -253,9 +241,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
                 : clazz.getSimpleName() + "Info";
     }
 
-    private void generateWrapper(Map<FieldId, VisitorPath> fieldPaths, Class<?> modelClass, Class<?> fieldClass,
-                    Class<? extends FieldModel> baseClazz,
-                    Class<? extends TypeAdapterRegistry> typeAdapterClazz) throws RuntimeException {
+    private void generateWrapper(Map<FieldId, VisitorPath> fieldPaths,
+                                 Class<?> modelClass,
+                                 Class<?> fieldClass,
+                                 Class<? extends FieldModel> baseClazz,
+                                 Class<? extends TypeAdapterRegistry> typeAdapterClazz) throws RuntimeException {
         try {
             final String targetClassName = modelClass.getSimpleName() + "Wrapper";
             final String targetPackage = modelClass.getPackage().getName();
@@ -296,7 +286,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
     private String baseClassName(Class<? extends FieldModel> baseClazz, Class<?> modelClass) {
         if (AbstractWrapper.class.equals(baseClazz)) {
-            return AbstractWrapper.class.getSimpleName() + "<" + modelClass.getSimpleName()+ ">";
+            return AbstractWrapper.class.getSimpleName() + "<" + modelClass.getSimpleName() + ">";
         } else {
             return baseClazz.getSimpleName();
         }
