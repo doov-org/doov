@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,7 @@ import io.doov.sample.field.SampleTag;
 public class SampleModelWrapperTest {
 
     private static Collection<Object[]> data() {
-        return SampleFieldInfo.values().stream()
+        return SampleFieldInfo.stream()
                 .map(f -> new Object[] { f.id().name(), f })
                 .collect(toList());
     }

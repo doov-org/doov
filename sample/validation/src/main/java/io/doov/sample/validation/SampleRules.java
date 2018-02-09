@@ -19,7 +19,7 @@ import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
-import static io.doov.sample.field.SampleFieldInfo.*;
+import static io.doov.sample.field.dsl.DSLSampleModel.*;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;

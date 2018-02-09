@@ -2,7 +2,7 @@ package io.doov.sample.validation;
 
 import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
-import static io.doov.sample.field.SampleFieldInfo.accountEmail;
+import static io.doov.sample.field.dsl.DSLSampleModel.accountEmail;
 import static io.doov.sample.validation.RulesConference.userAccount;
 
 import org.junit.jupiter.api.BeforeEach;

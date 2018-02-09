@@ -15,8 +15,7 @@
  */
 package io.doov.gen;
 
-import static io.doov.gen.FieldInfoGen.constants;
-import static io.doov.gen.FieldInfoGen.imports;
+import static io.doov.gen.FieldInfoGen.*;
 import static io.doov.gen.ModelWrapperGen.*;
 import static io.doov.gen.utils.ClassUtils.transformPathToMethod;
 import static java.nio.file.Files.createDirectories;
@@ -84,6 +83,9 @@ public final class ModelMapGenMojo extends AbstractMojo {
     @Parameter
     private String typeAdapters;
 
+    @Parameter(defaultValue = "true")
+    private boolean enumFieldInfo;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (sourceClass == null) {
@@ -112,12 +114,10 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
         final URLClassLoader classLoader = ClassLoaderUtils.getUrlClassLoader(project);
         try {
-            List<FieldPath> fieldPaths = Collections.emptyList();
-            if (fieldPathProvider != null) {
-                FieldPathProvider fieldPathProvider = loadClassWithType(this.fieldPathProvider, FieldPathProvider.class,
-                        null, classLoader).newInstance();
-                fieldPaths = fieldPathProvider.values();
-            }
+            List<FieldPath> fieldPaths = fieldPathProvider != null ?
+                    loadClassWithType(this.fieldPathProvider, FieldPathProvider.class, null, classLoader)
+                            .newInstance().values()
+                    : Collections.emptyList();
             Class<?> modelClazz = Class.forName(sourceClass, true, classLoader);
             Class<? extends FieldId> fieldClazz = loadClassWithType(fieldClass, FieldId.class, null, classLoader);
             Class<? extends FieldModel> baseClazz = loadClassWithType(baseClass,
@@ -163,7 +163,9 @@ public final class ModelMapGenMojo extends AbstractMojo {
             Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz,
                     typeAdapterClazz);
             Runnable generateFieldInfo = () -> generateFieldInfo(fieldPathMap, fieldClazz);
-            asList(generateWrapper, generateCsv, generateFieldInfo).parallelStream().forEach(Runnable::run);
+            Runnable generateDslFields = () -> generateDslFields(fieldPathMap, modelClazz, fieldClazz);
+            asList(generateWrapper, generateCsv, generateFieldInfo, generateDslFields).parallelStream()
+                    .forEach(Runnable::run);
         } catch (Exception e) {
             throw new RuntimeException("generation failed for class " + modelClazz, e);
         }
@@ -218,7 +220,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
             final String targetPackage = fieldClass.getPackage().getName();
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
-            final String classTemplate = template("FieldInfo.template");
+            final String classTemplate = enumFieldInfo ? template("FieldInfoEnum.template") :
+                    template("FieldInfoClass.template");
             createDirectories(targetFile.getParentFile().toPath());
             final Map<String, String> conf = new HashMap<>();
             conf.put("package.name", targetPackage);
@@ -226,7 +229,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
             conf.put("target.class.name", targetClassName);
             conf.put("imports", imports(fieldPaths));
-            conf.put("constants", constants(fieldPaths, fieldClass));
+            conf.put("constants", constants(fieldPaths, fieldClass, enumFieldInfo));
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(classTemplate, conf);
             Files.write(content, targetFile, Charset.forName("UTF8"));
@@ -239,6 +242,38 @@ public final class ModelMapGenMojo extends AbstractMojo {
     private static String fieldInfoClassName(Class<?> clazz) {
         return clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1)
                 : clazz.getSimpleName() + "Info";
+    }
+
+    private void generateDslFields(Map<FieldId, VisitorPath> fieldPaths, Class<?> modelClazz, Class<?> fieldClass) {
+        try {
+            final String targetClassName = dslFieldsClassName(modelClazz);
+            final String fieldInfoClassName = fieldInfoClassName(fieldClass);
+            final String targetPackage = fieldClass.getPackage().getName() + ".dsl";
+            final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
+                    targetClassName + ".java");
+            final String classTemplate = template("DslFieldModel.template");
+            createDirectories(targetFile.getParentFile().toPath());
+            final Map<String, String> conf = new HashMap<>();
+            conf.put("package.name", targetPackage);
+            conf.put("process.class", fieldClass.getName());
+            conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
+            conf.put("target.class.name", targetClassName);
+            conf.put("process.field.info.class", fieldClass.getPackage().getName() + "." + fieldInfoClassName);
+            conf.put("imports", imports(fieldPaths));
+            conf.put("methods", methods(fieldPaths, fieldClass, enumFieldInfo));
+            conf.put("source.generator.name", getClass().getName());
+            final String content = MacroProcessor.replaceProperties(classTemplate, conf);
+            Files.write(content, targetFile, Charset.forName("UTF8"));
+            getLog().info("written : " + targetFile);
+        } catch (IOException e) {
+            throw new RuntimeException("error when generating wrapper", e);
+        }
+    }
+
+
+    private static String dslFieldsClassName(Class<?> clazz) {
+        return "DSL" +
+                (clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1) : clazz.getSimpleName());
     }
 
     private void generateWrapper(Map<FieldId, VisitorPath> fieldPaths,

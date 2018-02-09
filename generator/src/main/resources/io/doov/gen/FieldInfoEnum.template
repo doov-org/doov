@@ -1,0 +1,76 @@
+package ${package.name};
+
+import static io.doov.core.dsl.field.FieldInfoProvider.*;
+import static java.util.Collections.unmodifiableList;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+import javax.annotation.Generated;
+
+import io.doov.core.dsl.field.*;
+import io.doov.core.*;
+
+${imports}
+
+@Generated(value = "${source.generator.name}", comments = "generated from ${process.class}")
+public enum ${target.class.name} implements FieldInfo {
+${constants}
+    ;
+
+    public static Stream<FieldInfo> stream() {
+        return Arrays.stream(${target.class.name}.values());
+    }
+
+    private final FieldInfo delegate;
+
+    ${target.class.name}(FieldInfo delegate) {
+        this.delegate = delegate;
+    }
+
+    public FieldInfo delegate() {
+        return delegate;
+    }
+
+    @Override
+    public FieldId id() {
+        return delegate.id();
+    }
+
+    @Override
+    public String readable() {
+        return delegate.readable();
+    }
+
+    @Override
+    public Class<?> type() {
+        return delegate.type();
+    }
+
+    @Override
+    public boolean isTransient() {
+        return delegate.isTransient();
+    }
+
+    @Override
+    public boolean isCodeValuable() {
+        return delegate.isCodeValuable();
+    }
+
+    @Override
+    public boolean isCodeLookup() {
+        return delegate.isCodeLookup();
+    }
+
+    @Override
+    public FieldId[] siblings() {
+        return delegate.siblings();
+    }
+
+    @Override
+    public Class<?>[] genericTypes() {
+        return delegate.genericTypes();
+    }
+}

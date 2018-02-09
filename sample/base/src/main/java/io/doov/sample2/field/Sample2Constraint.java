@@ -417,9 +417,6 @@ public enum Sample2Constraint implements PathConstraint {
     ACCOUNT_395("getAccount395()"), //
     ACCOUNT_396("getAccount396()"), //
     ACCOUNT_397("getAccount397()"), //
-    ACCOUNT_398("getAccount398()"), //
-    ACCOUNT_399("getAccount399()"), //
-    ACCOUNT_400("getAccount400()"), //
     ;
 
     private final String includePath;

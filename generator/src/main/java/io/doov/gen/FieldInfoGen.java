@@ -63,18 +63,58 @@ final class FieldInfoGen {
 
             return imports.stream();
         }).filter(clazz -> clazz.contains(".")) // excluding java.lang.* types
-                .distinct().sorted().map(clazz -> "import " + clazz + ";").collect(joining("\n"));
+                .distinct().sorted()
+                .map(clazz -> "import " + clazz + ";")
+                .collect(joining("\n"));
     }
 
-    static String constants(Map<FieldId, VisitorPath> fieldPaths, Class<?> fieldClass) {
-        // ensure all field id names are unique for each generated field info
-        final Set<String> codes = fieldPaths.keySet().stream().map(FieldId::name).collect(toSet());
-        if (fieldPaths.size() != codes.size()) {
-            throw new IllegalStateException("field id codes is not unique");
-        }
+    static String methods(Map<FieldId, VisitorPath> fieldPaths, Class<?> fieldClass, boolean enumFieldInfo) {
+        final List<String> methods = new ArrayList<>();
 
-        StringBuilder constants = new StringBuilder();
-        StringBuilder methods = new StringBuilder();
+        fieldPaths.keySet().stream().sorted(comparing(FieldId::name)).forEach(fieldId -> {
+            final VisitorPath currentPath = fieldPaths.get(fieldId);
+            final Class<?> type = getterType(fieldPaths.get(fieldId));
+            final String boxingType = getterBoxingType(fieldPaths.get(fieldId), fieldId.position());
+            final String rawType;
+            final String genericTypes;
+
+            if (boxingType.contains("<")) {
+                rawType = simpleName(boxingType.substring(0, boxingType.indexOf('<')));
+                Type methodType = currentPath.getGetMethod().getGenericReturnType();
+                genericTypes = typeParameters(methodType).stream()
+                        .map(FieldInfoGen::simpleName)
+                        .collect(joining(", "));
+            } else {
+                rawType = simpleName(boxingType);
+                genericTypes = "";
+            }
+            String fieldType = fieldType(type, rawType, genericTypes);
+            String method;
+            if (enumFieldInfo) {
+                method = (fieldType.indexOf(">") > 0 ? "    @SuppressWarnings(\"unchecked\")\n" : "") +
+                        "    public static " +
+                        fieldType +
+                        " " +
+                        formatMethod(fieldId, currentPath) +
+                        "() {\n" +
+                        "        return (" +
+                        fieldType +
+                        ") " +
+                        fieldId.toString() +
+                        ".delegate();\n" +
+                        "    }";
+            } else {
+                 method = "    public static " + fieldType + " " + formatMethod(fieldId, currentPath) + "() {\n" +
+                        "        return " + fieldId.toString() + ";\n" +
+                        "    }";
+            }
+            methods.add(method);
+        });
+        return methods.stream().collect(joining("\n\n"));
+    }
+
+    static String constants(Map<FieldId, VisitorPath> fieldPaths, Class<?> fieldClass, boolean enumFieldInfo) {
+        final List<String> constants = new ArrayList<>();
 
         fieldPaths.keySet().stream().sorted(comparing(FieldId::name)).forEach(fieldId -> {
             final VisitorPath currentPath = fieldPaths.get(fieldId);
@@ -102,73 +142,124 @@ final class FieldInfoGen {
                 genericTypes = "";
             }
 
-            constants.append("    public static final ");
-            constants.append(fieldType(type, rawType, genericTypes));
-            constants.append(" ");
-            constants.append(fieldId.toString());
-            constants.append(" = ");
-            constants.append(fieldFactoryMethod(type, rawType, genericTypes));
-            constants.append("\n                    ");
-            constants.append(".fieldId(");
-            constants.append(fieldId.getClass().getSimpleName());
-            constants.append(".");
-            constants.append(fieldId.toString());
-            constants.append(")");
-            constants.append("\n                    ");
-            constants.append(".readable(\"");
-            constants.append(formatReadable(fieldId, currentPath));
-            constants.append("\")");
-            constants.append("\n                    ");
-            constants.append(".type(");
-            constants.append(rawType);
-            constants.append(isPrimitive ? ".TYPE" : ".class");
-            constants.append(")");
-            if (currentPath.isTransient()) {
-                constants.append("\n                    ");
-                constants.append("._transient(");
-                constants.append(Boolean.toString(currentPath.isTransient()));
-                constants.append(")");
+            String fieldInfoConstant;
+            if (enumFieldInfo) {
+                fieldInfoConstant = writeFieldInfoEnum(fieldId, currentPath, type, siblings,
+                        rawType, genericTypes, genericTypesAsClass, isPrimitive, isCodeValuable, isCodeLookup);
+            } else {
+                fieldInfoConstant = writeFieldInfo(fieldId, currentPath, type, siblings,
+                        rawType, genericTypes, genericTypesAsClass, isPrimitive, isCodeValuable, isCodeLookup);
             }
-            if (isCodeValuable) {
-                constants.append("\n                    ");
-                constants.append(".codeValuable(");
-                constants.append(Boolean.toString(isCodeValuable));
-                constants.append(")");
-            }
-            if (isCodeLookup) {
-                constants.append("\n                    ");
-                constants.append(".codeLookup(");
-                constants.append(Boolean.toString(isCodeLookup));
-                constants.append(")");
-            }
-            if (!genericTypes.isEmpty()) {
-                constants.append("\n                    ");
-                constants.append(".genericTypes(");
-                constants.append(genericTypesAsClass);
-                constants.append(")");
-            }
-            if (!siblings.isEmpty()) {
-                constants.append("\n                    ");
-                constants.append(".siblings(");
-                constants.append(siblings);
-                constants.append(")");
-            }
-            constants.append("\n                    ");
-            constants.append(".build(ALL);\n\n");
+            constants.add(fieldInfoConstant);
 
-            methods.append("    public static ");
-            methods.append(fieldType(type, rawType, genericTypes));
-            methods.append(" ");
-            methods.append(formatMethod(fieldId, currentPath));
-            methods.append("() {");
-            methods.append("\n        ");
-            methods.append("return ");
-            methods.append(fieldId.toString());
-            methods.append(";");
-            methods.append("\n    }\n\n");
         });
 
-        return constants.toString() + methods.toString();
+        return constants.stream().collect(joining("\n\n"));
+    }
+
+    private static String writeFieldInfo(FieldId fieldId,
+                                         VisitorPath currentPath,
+                                         Class<?> type,
+                                         String siblings,
+                                         String rawType,
+                                         String genericTypes,
+                                         String genericTypesAsClass,
+                                         boolean isPrimitive,
+                                         boolean isCodeValuable,
+                                         boolean isCodeLookup) {
+        StringBuilder constants = new StringBuilder();
+        constants.append("    public static final ");
+        constants.append(fieldType(type, rawType, genericTypes));
+        constants.append(" ");
+        constants.append(fieldId.toString());
+        constants.append(" = ");
+        constants.append(fieldFactoryMethod(type, rawType, genericTypes));
+        constants.append("\n                    ");
+        writeFieldInfoBuilder(fieldId, currentPath, siblings, rawType, genericTypes, genericTypesAsClass,
+                isPrimitive, isCodeValuable, isCodeLookup, constants);
+        constants.append("\n                    ");
+        constants.append(".build(ALL);");
+        return constants.toString();
+    }
+
+    private static String writeFieldInfoEnum(FieldId fieldId,
+                                         VisitorPath currentPath,
+                                         Class<?> type,
+                                         String siblings,
+                                         String rawType,
+                                         String genericTypes,
+                                         String genericTypesAsClass,
+                                         boolean isPrimitive,
+                                         boolean isCodeValuable,
+                                         boolean isCodeLookup) {
+        StringBuilder constant = new StringBuilder();
+        constant.append("    ");
+        constant.append(fieldId.toString());
+        constant.append("(");
+        constant.append(fieldFactoryMethod(type, rawType, genericTypes));
+        constant.append("\n                    ");
+        writeFieldInfoBuilder(fieldId, currentPath, siblings, rawType, genericTypes, genericTypesAsClass,
+                isPrimitive, isCodeValuable, isCodeLookup, constant);
+        constant.append("\n                    ");
+        constant.append(".build())");
+        constant.append(",");
+        return constant.toString();
+    }
+
+    private static void writeFieldInfoBuilder(FieldId fieldId,
+                                              VisitorPath currentPath,
+                                              String siblings,
+                                              String rawType,
+                                              String genericTypes,
+                                              String genericTypesAsClass,
+                                              boolean isPrimitive,
+                                              boolean isCodeValuable,
+                                              boolean isCodeLookup,
+                                              StringBuilder constant) {
+        constant.append(".fieldId(");
+        constant.append(fieldId.getClass().getSimpleName());
+        constant.append(".");
+        constant.append(fieldId.toString());
+        constant.append(")");
+        constant.append("\n                    ");
+        constant.append(".readable(\"");
+        constant.append(formatReadable(fieldId, currentPath));
+        constant.append("\")");
+        constant.append("\n                    ");
+        constant.append(".type(");
+        constant.append(rawType);
+        constant.append(isPrimitive ? ".TYPE" : ".class");
+        constant.append(")");
+        if (currentPath.isTransient()) {
+            constant.append("\n                    ");
+            constant.append("._transient(");
+            constant.append(Boolean.toString(currentPath.isTransient()));
+            constant.append(")");
+        }
+        if (isCodeValuable) {
+            constant.append("\n                    ");
+            constant.append(".codeValuable(");
+            constant.append(Boolean.toString(isCodeValuable));
+            constant.append(")");
+        }
+        if (isCodeLookup) {
+            constant.append("\n                    ");
+            constant.append(".codeLookup(");
+            constant.append(Boolean.toString(isCodeLookup));
+            constant.append(")");
+        }
+        if (!genericTypes.isEmpty()) {
+            constant.append("\n                    ");
+            constant.append(".genericTypes(");
+            constant.append(genericTypesAsClass);
+            constant.append(")");
+        }
+        if (!siblings.isEmpty()) {
+            constant.append("\n                    ");
+            constant.append(".siblings(");
+            constant.append(siblings);
+            constant.append(")");
+        }
     }
 
     private static String formatMethod(FieldId fieldId, VisitorPath currentPath) {

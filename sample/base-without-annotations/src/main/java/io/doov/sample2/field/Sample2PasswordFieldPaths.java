@@ -1109,16 +1109,6 @@ public class Sample2PasswordFieldPaths {
         final FieldPath PASSWORD_397 = from(Sample2Model.class).get(Sample2Model::getAccount397).field
                         (Account::getPassword, Account::setPassword).fieldId(Sample2FieldId.PASSWORD_397).readable("password 397").build
                         (ALL);
-        final FieldPath PASSWORD_398 = from(Sample2Model.class).get(Sample2Model::getAccount398).field
-                        (Account::getPassword, Account::setPassword).fieldId(Sample2FieldId.PASSWORD_398).readable("password 398").build
-                        (ALL);
-        final FieldPath PASSWORD_399 = from(Sample2Model.class).get(Sample2Model::getAccount399).field
-                        (Account::getPassword, Account::setPassword).fieldId(Sample2FieldId.PASSWORD_399).readable("password 399").build
-                        (ALL);
-        final FieldPath PASSWORD_400 = from(Sample2Model.class).get(Sample2Model::getAccount400).field
-                        (Account::getPassword, Account::setPassword).fieldId(Sample2FieldId.PASSWORD_400).readable("password 400").build
-                        (ALL);
-
 
         return ALL;
     }

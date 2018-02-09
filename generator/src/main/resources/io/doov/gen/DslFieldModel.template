@@ -1,0 +1,22 @@
+package ${package.name};
+
+import static io.doov.core.dsl.field.FieldInfoProvider.*;
+import static ${process.field.info.class}.*;
+import static java.util.Collections.unmodifiableList;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Generated;
+
+import io.doov.core.dsl.field.*;
+import io.doov.core.*;
+
+${imports}
+
+@Generated(value = "${source.generator.name}", comments = "generated from ${process.class}")
+public final class ${target.class.name} {
+
+${methods}
+
+}

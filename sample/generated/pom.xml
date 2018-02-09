@@ -64,6 +64,7 @@
               <packageFilter>io.doov.sample2</packageFilter>
               <fieldClass>io.doov.sample2.field.Sample2FieldId</fieldClass>
               <sourceClass>io.doov.sample2.model.Sample2Model</sourceClass>
+              <enumFieldInfo>false</enumFieldInfo>
             </configuration>
           </execution>
           <execution>

@@ -51,6 +51,7 @@ final class ModelWrapperGen {
     }
 
     static Map<FieldId, VisitorPath> validatePath(List<VisitorPath> collected, Log log) {
+        // ensure all field id names are unique for each generated field info
         Map<FieldId, List<VisitorPath>> pathByFieldId = pathByFieldId(collected);
 
         List<FieldId> invalidFieldId = pathByFieldId.entrySet().stream()

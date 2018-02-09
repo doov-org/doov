@@ -37,7 +37,7 @@ public final class ${target.class.name} extends ${process.base.class.name} {
     }
 
     public static List<FieldInfo> fieldInfos() {
-        return ${target.field.info.class.name}.values();
+        return Arrays.asList(${target.field.info.class.name}.values());
     }
 ${constructors}
     @Override

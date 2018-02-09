@@ -22,8 +22,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.sample.field.SampleFieldInfo.userFirstName;
-import static io.doov.sample.field.SampleFieldInfo.userLastName;
+import static io.doov.sample.field.dsl.DSLSampleModel.userFirstName;
+import static io.doov.sample.field.dsl.DSLSampleModel.userLastName;
 
 public class BinaryTest {
 

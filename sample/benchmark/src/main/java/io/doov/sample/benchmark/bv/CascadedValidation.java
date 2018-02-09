@@ -15,7 +15,7 @@
  */
 package io.doov.sample.benchmark.bv;
 
-import static io.doov.benchmark.model.BenchmarkFieldIdInfo.*;
+import static io.doov.benchmark.model.dsl.DSLBenchmarkModel.*;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static org.assertj.core.api.Assertions.assertThat;
 
