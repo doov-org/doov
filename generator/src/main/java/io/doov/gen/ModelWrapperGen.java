@@ -320,6 +320,10 @@ final class ModelWrapperGen {
         final Method lastMethod = path.getPath().get(path.getPath().size() - 1);
         final Type genericReturnType = lastMethod.getGenericReturnType();
         final Class<?> type = lastMethod.getReturnType();
+        return boxingType(type, genericReturnType, position);
+    }
+
+    static String primitiveBoxingType(Class<?> type) {
         if (Integer.TYPE.equals(type)) {
             return Integer.class.getSimpleName();
         }
@@ -340,6 +344,14 @@ final class ModelWrapperGen {
         }
         if (Character.TYPE.equals(type)) {
             return Character.class.getSimpleName();
+        } else {
+            return type.getSimpleName();
+        }
+    }
+
+    static String boxingType(Class<?> type, Type genericReturnType, int position) {
+        if (type.isPrimitive()) {
+            return primitiveBoxingType(type);
         }
         if ("java.lang".equals(type.getPackage().getName())) {
             return type.getSimpleName();

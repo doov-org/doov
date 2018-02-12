@@ -15,7 +15,10 @@
  */
 package io.doov.gen;
 
-import static io.doov.gen.FieldInfoGen.*;
+import static io.doov.gen.FieldInfoGen.constants;
+import static io.doov.gen.FieldInfoGen.createFieldInfos;
+import static io.doov.gen.FieldInfoGen.imports;
+import static io.doov.gen.FieldInfoGen.methods;
 import static io.doov.gen.ModelWrapperGen.*;
 import static io.doov.gen.utils.ClassUtils.transformPathToMethod;
 import static java.nio.file.Files.createDirectories;
@@ -28,7 +31,7 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURC
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
@@ -46,8 +49,10 @@ import com.google.common.io.Resources;
 import io.doov.core.*;
 import io.doov.core.dsl.field.FieldTypeProvider;
 import io.doov.core.dsl.field.FieldTypes;
-import io.doov.core.dsl.path.*;
-import io.doov.core.serial.*;
+import io.doov.core.dsl.path.FieldPath;
+import io.doov.core.dsl.path.FieldPathProvider;
+import io.doov.core.serial.TypeAdapterRegistry;
+import io.doov.core.serial.TypeAdapters;
 import io.doov.gen.processor.MacroProcessor;
 import io.doov.gen.utils.ClassLoaderUtils;
 import io.doov.gen.utils.ClassUtils;
@@ -168,10 +173,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
                 collected = fieldPaths.stream().map(this::createVisitorPath).collect(toList());
             }
             final Map<FieldId, VisitorPath> fieldPathMap = validatePath(collected, getLog());
+            final Map<FieldId, GeneratorFieldInfo> fieldInfoMap = createFieldInfos(fieldPathMap);
             Runnable generateCsv = () -> generateCsv(fieldPathMap, modelClazz);
             Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz, typeAdapterClazz);
-            Runnable generateFieldInfo = () -> generateFieldInfo(fieldPathMap, fieldClazz);
-            Runnable generateDslFields = () -> generateDslFields(fieldPathMap, modelClazz, fieldClazz, typeProvider);
+            Runnable generateFieldInfo = () -> generateFieldInfo(fieldInfoMap, fieldClazz);
+            Runnable generateDslFields = () -> generateDslFields(fieldInfoMap, modelClazz, fieldClazz, typeProvider);
             asList(generateWrapper, generateCsv, generateFieldInfo, generateDslFields).parallelStream()
                     .forEach(Runnable::run);
         } catch (Exception e) {
@@ -220,7 +226,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
         }
     }
 
-    private void generateFieldInfo(Map<FieldId, VisitorPath> fieldPaths, Class<?> fieldClass) {
+    private void generateFieldInfo(Map<FieldId, GeneratorFieldInfo> fieldInfoMap, Class<?> fieldClass) {
         try {
             final String targetClassName = fieldInfoClassName(fieldClass);
             final String targetPackage = fieldClass.getPackage().getName();
@@ -234,8 +240,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("process.class", fieldClass.getName());
             conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
             conf.put("target.class.name", targetClassName);
-            conf.put("imports", imports(fieldPaths));
-            conf.put("constants", constants(fieldPaths, fieldClass, enumFieldInfo));
+            conf.put("imports", imports(fieldInfoMap, null));
+            conf.put("constants", constants(fieldInfoMap, enumFieldInfo));
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(classTemplate, conf);
             Files.write(content, targetFile, Charset.forName("UTF8"));
@@ -250,7 +256,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
                 : clazz.getSimpleName() + "Info";
     }
 
-    private void generateDslFields(Map<FieldId, VisitorPath> fieldPaths,
+    private void generateDslFields(Map<FieldId, GeneratorFieldInfo> fieldInfoMap,
                                    Class<?> modelClazz,
                                    Class<?> fieldClass,
                                    FieldTypeProvider typeProvider) {
@@ -268,8 +274,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
             conf.put("target.class.name", targetClassName);
             conf.put("process.field.info.class", fieldClass.getPackage().getName() + "." + fieldInfoClassName);
-            conf.put("imports", imports(fieldPaths));
-            conf.put("methods", methods(fieldPaths, fieldClass, typeProvider, enumFieldInfo));
+            conf.put("imports", imports(fieldInfoMap, typeProvider));
+            conf.put("methods", methods(fieldInfoMap, typeProvider, enumFieldInfo));
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(classTemplate, conf);
             Files.write(content, targetFile, Charset.forName("UTF8"));

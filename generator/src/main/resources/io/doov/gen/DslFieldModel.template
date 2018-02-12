@@ -9,7 +9,6 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import io.doov.core.dsl.field.*;
-import io.doov.core.dsl.field.types.*;
 import io.doov.core.*;
 
 ${imports}
