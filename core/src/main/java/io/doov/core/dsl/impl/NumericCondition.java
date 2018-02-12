@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.field.NumericFieldInfo;
+import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;

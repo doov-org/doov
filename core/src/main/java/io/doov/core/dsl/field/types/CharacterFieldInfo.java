@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfo;
 
-public class CharacterFieldInfo extends DefaultFieldInfo<Character> {
+public class CharacterFieldInfo extends DelegatingFieldInfo<Character> {
 
-    public CharacterFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, FieldId[] siblings) {
-        super(fieldId, readable, type, _transient, false, false, new Class[] {}, siblings);
+    public CharacterFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
-
 }

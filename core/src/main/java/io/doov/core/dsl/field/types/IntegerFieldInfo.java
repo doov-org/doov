@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import io.doov.core.FieldId;
-import io.doov.core.dsl.impl.LongCondition;
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.impl.IntegerCondition;
 
-public class LongFieldInfo extends DefaultFieldInfo<Long> implements NumericFieldInfo<Long> {
+public class IntegerFieldInfo extends DelegatingFieldInfo<Integer> implements NumericFieldInfo<Integer> {
 
-    public LongFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, FieldId[] siblings) {
-        super(fieldId, readable, type, _transient, false, false, new Class[] {}, siblings);
+    public IntegerFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
 
     @Override
-    public LongCondition getNumericCondition() {
-        return new LongCondition(this);
+    public IntegerCondition getNumericCondition() {
+        return new IntegerCondition(this);
     }
 
 }

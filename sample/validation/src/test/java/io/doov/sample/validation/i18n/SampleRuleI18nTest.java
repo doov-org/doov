@@ -25,7 +25,7 @@ import io.doov.sample.field.dsl.DSLSampleModel;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.field.*;
+import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;

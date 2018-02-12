@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import io.doov.core.FieldId;
-import io.doov.core.dsl.impl.BooleanCondition;
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfo;
 
-public class BooleanFieldInfo extends DefaultFieldInfo<Boolean> implements LogicalFieldInfo {
+public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfo<E> {
 
-    public BooleanFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, FieldId[] siblings) {
-        super(fieldId, readable, type, _transient, false, false, new Class[] {}, siblings);
+    public EnumFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
-
-    @Override
-    public BooleanCondition getBooleanCondition() {
-        return new BooleanCondition(this);
-    }
-
 }

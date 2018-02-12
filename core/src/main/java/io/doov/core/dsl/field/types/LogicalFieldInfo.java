@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
+import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.impl.BooleanCondition;
 import io.doov.core.dsl.lang.StepCondition;
 

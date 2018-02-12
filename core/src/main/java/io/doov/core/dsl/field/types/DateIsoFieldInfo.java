@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
 import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
@@ -18,20 +18,21 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslId;
 import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.field.DelegatingFieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LocalDateCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
-public class DateIsoFieldInfo extends DefaultFieldInfo<LocalDate> implements TemporalFieldInfo<LocalDate> {
+public class DateIsoFieldInfo extends DelegatingFieldInfo<LocalDate> implements TemporalFieldInfo<LocalDate> {
 
-    DateIsoFieldInfo(FieldId fieldId, String readable, boolean _transient, FieldId... siblings) {
-        super(fieldId, readable, String.class, _transient, false, false, new Class<?>[] {}, siblings);
+    public DateIsoFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
 
     @Override

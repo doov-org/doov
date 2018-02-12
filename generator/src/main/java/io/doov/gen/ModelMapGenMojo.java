@@ -44,6 +44,8 @@ import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
 import io.doov.core.*;
+import io.doov.core.dsl.field.FieldTypeProvider;
+import io.doov.core.dsl.field.FieldTypes;
 import io.doov.core.dsl.path.*;
 import io.doov.core.serial.*;
 import io.doov.gen.processor.MacroProcessor;
@@ -86,6 +88,9 @@ public final class ModelMapGenMojo extends AbstractMojo {
     @Parameter(defaultValue = "true")
     private boolean enumFieldInfo;
 
+    @Parameter
+    private String fieldInfoTypes;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (sourceClass == null) {
@@ -124,10 +129,13 @@ public final class ModelMapGenMojo extends AbstractMojo {
                     AbstractWrapper.class, AbstractWrapper.class, classLoader);
             Class<? extends TypeAdapterRegistry> typeAdapterClazz = loadClassWithType(typeAdapters,
                     TypeAdapterRegistry.class, TypeAdapters.class, classLoader);
-            generateModels(fieldClazz, modelClazz, baseClazz, typeAdapterClazz, fieldPaths);
+            FieldTypeProvider typeProvider = loadClassWithType(fieldInfoTypes,
+                    FieldTypeProvider.class, FieldTypes.class, classLoader).newInstance();
+            generateModels(fieldClazz, modelClazz, baseClazz, typeAdapterClazz, typeProvider, fieldPaths);
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+
     }
 
     private <T> Class<? extends T> loadClassWithType(String className,
@@ -147,10 +155,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
     }
 
     private void generateModels(Class<? extends FieldId> fieldClazz,
-                                Class<?> modelClazz,
-                                Class<? extends FieldModel> baseClazz,
-                                Class<? extends TypeAdapterRegistry> typeAdapterClazz,
-                                List<FieldPath> fieldPaths) {
+                    Class<?> modelClazz,
+                    Class<? extends FieldModel> baseClazz,
+                    Class<? extends TypeAdapterRegistry> typeAdapterClazz,
+                    FieldTypeProvider typeProvider,
+                    List<FieldPath> fieldPaths) {
         try {
             final List<VisitorPath> collected;
             if (fieldPaths.isEmpty()) {
@@ -160,10 +169,9 @@ public final class ModelMapGenMojo extends AbstractMojo {
             }
             final Map<FieldId, VisitorPath> fieldPathMap = validatePath(collected, getLog());
             Runnable generateCsv = () -> generateCsv(fieldPathMap, modelClazz);
-            Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz,
-                    typeAdapterClazz);
+            Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz, typeAdapterClazz);
             Runnable generateFieldInfo = () -> generateFieldInfo(fieldPathMap, fieldClazz);
-            Runnable generateDslFields = () -> generateDslFields(fieldPathMap, modelClazz, fieldClazz);
+            Runnable generateDslFields = () -> generateDslFields(fieldPathMap, modelClazz, fieldClazz, typeProvider);
             asList(generateWrapper, generateCsv, generateFieldInfo, generateDslFields).parallelStream()
                     .forEach(Runnable::run);
         } catch (Exception e) {
@@ -186,13 +194,11 @@ public final class ModelMapGenMojo extends AbstractMojo {
             cannonicalReplacement.putAll(constraint.canonicalPathReplacements());
         }
         return new VisitorPath(p.getBaseClass(), methods, p.getFieldId(), p.getReadable(),
-                readMethod, writeMethod, p.isTransient(), cannonicalReplacement);
+                        readMethod, writeMethod, p.isTransient(), cannonicalReplacement);
     }
 
-    private List<VisitorPath> process(Class<?> projetClass,
-                                      String filter,
-                                      Class<? extends FieldId> fieldClass)
-            throws Exception {
+    private List<VisitorPath> process(Class<?> projetClass, String filter, Class<? extends FieldId> fieldClass)
+                    throws Exception {
         final List<VisitorPath> collected = new ArrayList<>();
         new ModelVisitor(getLog()).visitModel(projetClass, fieldClass, new Visitor(projetClass, collected), filter);
         return collected;
@@ -244,7 +250,10 @@ public final class ModelMapGenMojo extends AbstractMojo {
                 : clazz.getSimpleName() + "Info";
     }
 
-    private void generateDslFields(Map<FieldId, VisitorPath> fieldPaths, Class<?> modelClazz, Class<?> fieldClass) {
+    private void generateDslFields(Map<FieldId, VisitorPath> fieldPaths,
+                                   Class<?> modelClazz,
+                                   Class<?> fieldClass,
+                                   FieldTypeProvider typeProvider) {
         try {
             final String targetClassName = dslFieldsClassName(modelClazz);
             final String fieldInfoClassName = fieldInfoClassName(fieldClass);
@@ -260,7 +269,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("target.class.name", targetClassName);
             conf.put("process.field.info.class", fieldClass.getPackage().getName() + "." + fieldInfoClassName);
             conf.put("imports", imports(fieldPaths));
-            conf.put("methods", methods(fieldPaths, fieldClass, enumFieldInfo));
+            conf.put("methods", methods(fieldPaths, fieldClass, typeProvider, enumFieldInfo));
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(classTemplate, conf);
             Files.write(content, targetFile, Charset.forName("UTF8"));

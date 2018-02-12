@@ -1,6 +1,6 @@
 package ${package.name};
 
-import static io.doov.core.dsl.field.FieldInfoProvider.*;
+import static io.doov.core.dsl.field.FieldInfoBuilder.fieldInfo;
 
 import java.util.ArrayList;
 import java.util.List;
