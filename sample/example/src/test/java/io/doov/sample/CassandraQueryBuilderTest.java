@@ -82,6 +82,7 @@ public class CassandraQueryBuilderTest {
 
         model.getFieldInfos().stream()
                 .filter(info -> info.id() != LOGIN)
+                .filter(info -> !info.isTransient())
                 .forEach(info -> createRequest.addColumn(info.id().name(), cqlType(info)));
 
         Options createRequestWithOptions = createRequest.withOptions().clusteringOrder(LOGIN.name(), DESC);

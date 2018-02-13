@@ -39,6 +39,17 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T> {
         this.siblings = siblings;
     }
 
+    public DefaultFieldInfo(FieldInfo fieldInfo) {
+        this(fieldInfo.id(),
+                fieldInfo.readable(),
+                fieldInfo.type(),
+                fieldInfo.isTransient(),
+                fieldInfo.isCodeValuable(),
+                fieldInfo.isCodeLookup(),
+                fieldInfo.genericTypes(),
+                fieldInfo.siblings());
+    }
+
     @Override
     public FieldId id() {
         return fieldId;

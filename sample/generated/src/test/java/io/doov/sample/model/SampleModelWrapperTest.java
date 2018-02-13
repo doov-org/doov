@@ -23,9 +23,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 import io.doov.core.FieldInfo;
 import io.doov.sample.field.SampleFieldInfo;
@@ -127,6 +131,8 @@ public class SampleModelWrapperTest {
             return LocalDate.now();
         } else if (field.type().equals(String.class)) {
             return "foo";
+        } else if (field.type().equals(XMLGregorianCalendar.class)) {
+            return new XMLGregorianCalendarImpl();
         }
         return field.type().newInstance();
     }

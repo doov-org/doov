@@ -18,6 +18,8 @@ package io.doov.sample.model;
 import java.time.LocalDate;
 import java.util.*;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import io.doov.core.FieldTransient;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.field.SamplePath;
@@ -55,10 +57,22 @@ public class Account extends Identity {
     @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "account préférences mail")
     private Collection<EmailType> emailTypes = new HashSet<>();
 
+    @SamplePath(field = SampleFieldId.CALENDAR, readable = "account calendar")
+    @FieldTransient
+    private XMLGregorianCalendar calendar;
+
     private List<FavoriteWebsite> top3WebSite = new ArrayList<>();
+
+    public XMLGregorianCalendar getCalendar() {
+        return calendar;
+    }
 
     public String getLogin() {
         return login;
+    }
+
+    public void setCalendar(XMLGregorianCalendar calendar) {
+        this.calendar = calendar;
     }
 
     public void setLogin(String login) {

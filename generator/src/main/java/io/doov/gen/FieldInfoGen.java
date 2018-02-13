@@ -128,9 +128,8 @@ final class FieldInfoGen {
                 return infoType.getSimpleName() + "<" + genericTypes + ", " + rawType + "<" + genericTypes + ">>";
             }
         }
-        if (infoType == DefaultFieldInfo.class) {
-
-            return DefaultFieldInfo.class.getSimpleName() + "<" + rawType +
+        if (infoType.getTypeParameters().length != 0) {
+            return infoType.getSimpleName() + "<" + rawType +
                     (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">")
                     + ">";
         } else {
