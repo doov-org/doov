@@ -16,7 +16,6 @@
 package io.doov.gen;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static io.doov.gen.ModelMapGenMojo.template;
 import static io.doov.gen.VisitorPath.pathByFieldId;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
@@ -33,12 +32,12 @@ import com.google.common.base.Joiner;
 
 import io.doov.core.*;
 import io.doov.gen.processor.MacroProcessor;
+import io.doov.gen.processor.Templates;
 
 final class ModelWrapperGen {
 
-    static String mapFieldTypeIfStatement(String templateFileName, Map<FieldId, VisitorPath> collected) {
+    static String mapFieldTypeIfStatement(String template, Map<FieldId, VisitorPath> collected) {
         final StringBuilder buffer = new StringBuilder();
-        final String template = template(templateFileName);
         collected.keySet().stream()
                 .map((Object::getClass)).distinct()
                 .sorted(comparing(Class::getName))
@@ -70,7 +69,6 @@ final class ModelWrapperGen {
 
     static String mapFieldProperties(Map<FieldId, VisitorPath> collected, Class<?> modelClass) {
         final StringBuilder buffer = new StringBuilder();
-        final String getterTemplate = template("PropertyIdEnum.template");
 
         collected.forEach((fieldId, visitorPath) -> {
             Map<String, String> conf = new HashMap<>();
@@ -78,14 +76,13 @@ final class ModelWrapperGen {
             conf.put("field.id.type", fieldId.getClass().getName());
             conf.put("supplier.method", supplierMethod(fieldId, visitorPath, modelClass));
             conf.put("consumer.method", consumerMethod(fieldId, visitorPath, modelClass));
-            buffer.append(MacroProcessor.replaceProperties(getterTemplate, conf));
+            buffer.append(MacroProcessor.replaceProperties(Templates.propertyIdEnum, conf));
         });
 
         return buffer.toString();
     }
 
     private static String supplierMethod(FieldId fieldId, VisitorPath path, Class<?> modelClass) {
-        final String getterTemplate = template("PropertyLiteralSupplier.template");
         Map<String, String> conf = new HashMap<>();
         conf.put("field.class.name", fieldId.getClass().getName());
         conf.put("field.id.name", fieldId.toString());
@@ -93,11 +90,10 @@ final class ModelWrapperGen {
         conf.put("target.model.class.name", modelClass.getSimpleName());
         conf.put("null.check", nullCheck(path));
         conf.put("getter.path", getterPath(path));
-        return MacroProcessor.replaceProperties(getterTemplate, conf);
+        return MacroProcessor.replaceProperties(Templates.propertyLiteralSupplier, conf);
     }
 
     private static String consumerMethod(FieldId fieldId, VisitorPath path, Class<?> modelClass) {
-        final String getterTemplate = template("PropertyLiteralConsumer.template");
         final Map<String, String> conf = new HashMap<>();
         conf.put("field.class.name", fieldId.getClass().getName());
         conf.put("field.id.name", fieldId.toString());
@@ -106,31 +102,29 @@ final class ModelWrapperGen {
         conf.put("lazy.init", lazyInit(path));
         conf.put("setter.path", setterPath(path));
         conf.put("param", setterBoxingChecker(path));
-        return MacroProcessor.replaceProperties(getterTemplate, conf);
+        return MacroProcessor.replaceProperties(Templates.propertyLiteralConsumer, conf);
     }
 
     static String mapGetter(Map<FieldId, VisitorPath> collected) {
         final StringBuilder buffer = new StringBuilder();
-        final String getterTemplate = template("MapGetMethod.template");
         fieldTypes(collected).forEach(fieldType -> {
             Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
             Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
             conf.put("switch.content", getterSwitchContent(paths));
-            buffer.append(MacroProcessor.replaceProperties(getterTemplate, conf));
+            buffer.append(MacroProcessor.replaceProperties(Templates.mapGetMethod, conf));
         });
         return buffer.toString();
     }
 
     static String mapSetter(Map<FieldId, VisitorPath> collected) {
         final StringBuilder buffer = new StringBuilder();
-        final String setterTemplate = template("MapSetMethod.template");
         fieldTypes(collected).forEach(fieldType -> {
             final Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
             conf.put("switch.content", setterSwitchContent(paths));
-            buffer.append(MacroProcessor.replaceProperties(setterTemplate, conf));
+            buffer.append(MacroProcessor.replaceProperties(Templates.mapSetMethod, conf));
         });
         return buffer.toString();
     }
@@ -156,22 +150,20 @@ final class ModelWrapperGen {
     }
 
     private static String nullCheck(List<Method> paths) {
-        final String lazyInitTemplate = template("NullCheckBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         conf.put("partial.path", VisitorPath.getterPath(paths));
-        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
+        buffer.append(MacroProcessor.replaceProperties(Templates.nullCheckBlock, conf));
         return buffer.toString();
     }
 
     private static String sizeCheck(List<Method> paths, FieldId fieldId) {
-        final String lazyInitTemplate = template("SizeCheckBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         conf.put("partial.path", VisitorPath.getterPath(paths));
         conf.put("size", String.valueOf(fieldId.position()));
         conf.put("index", String.valueOf(fieldId.position() - 1));
-        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
+        buffer.append(MacroProcessor.replaceProperties(Templates.sizeCheckBlock, conf));
         return buffer.toString();
     }
 
@@ -191,14 +183,13 @@ final class ModelWrapperGen {
 
     private static String lazyInit(List<Method> paths, FieldId field, Method lastGetMethod) {
         final Class<?> returnType = lastGetMethod.getReturnType();
-        final String lazyInitTemplate = template("LazyInitBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         final String setterName = setterName(lastGetMethod);
         conf.put("partial.path", VisitorPath.getterPath(paths));
         conf.put("partial.path.init", setterPath(paths, setterName, field.position(), false));
         conf.put("param", "new " + returnType.getName() + diamond(returnType) + "()");
-        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
+        buffer.append(MacroProcessor.replaceProperties(Templates.lazyInitBlock, conf));
         return buffer.toString();
     }
 
@@ -209,7 +200,6 @@ final class ModelWrapperGen {
     }
 
     private static String lazyInitList(List<Method> paths, FieldId field, Method lastGetMethod) {
-        final String lazyInitTemplate = template("LazyInitListBlock.template");
         final StringBuilder buffer = new StringBuilder();
         final Map<String, String> conf = new HashMap<>();
         final String setterName = setterName(lastGetMethod);
@@ -222,19 +212,18 @@ final class ModelWrapperGen {
         final ParameterizedType paramType = (ParameterizedType) lastGetMethod.getGenericReturnType();
         final Class<?> paramType0 = (Class<?>) paramType.getActualTypeArguments()[0];
         conf.put("target.type", paramType0.getName());
-        buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
+        buffer.append(MacroProcessor.replaceProperties(Templates.lazyInitListBlock, conf));
         return buffer.toString();
     }
 
     private static String listContentAsNull(List<Method> paths, FieldId field) {
         final StringBuilder buffer = new StringBuilder();
-        final String lazyInitTemplate = template("LazyInitListBlockNull.template");
         for (int i = 0; i < field.position() - 1; i++) {
             final Map<String, String> conf = new HashMap<>();
             conf.put("partial.path", VisitorPath.getterPath(paths));
             conf.put("index", Integer.toString(i));
             conf.put("position", Integer.toString(i + 1));
-            buffer.append(MacroProcessor.replaceProperties(lazyInitTemplate, conf));
+            buffer.append(MacroProcessor.replaceProperties(Templates.lazyInitListBlockNull, conf));
         }
         return buffer.toString();
     }
@@ -266,22 +255,20 @@ final class ModelWrapperGen {
 
     private static String setterSwitchContent(Map<FieldId, VisitorPath> paths) {
         final StringBuilder buffer = new StringBuilder();
-        final String switchContent = template("SetSwitchBlock.template");
         for (FieldId fieldid : sortFields(paths.keySet())) {
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.name", fieldid.toString());
-            buffer.append(MacroProcessor.replaceProperties(switchContent, conf));
+            buffer.append(MacroProcessor.replaceProperties(Templates.setSwitchBlock, conf));
         }
         return buffer.toString();
     }
 
     private static String getterSwitchContent(Map<FieldId, VisitorPath> paths) {
         final StringBuilder buffer = new StringBuilder();
-        final String switchContent = template("GetSwitchBlock.template");
         for (FieldId fieldId : sortFields(paths.keySet())) {
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.name", fieldId.toString());
-            buffer.append(MacroProcessor.replaceProperties(switchContent, conf));
+            buffer.append(MacroProcessor.replaceProperties(Templates.getSwitchBlock, conf));
         }
         return buffer.toString();
     }
@@ -530,11 +517,10 @@ final class ModelWrapperGen {
     private static String writeConstructor(String targetClassName,
                     List<String> parameters,
                     List<String> superCall) {
-        final String constructor = template("WrapperConstructor.template");
         final Map<String, String> conf = new HashMap<>();
         conf.put("target.class.name", targetClassName);
         conf.put("constructor.parameters", parameters.stream().collect(joining(", ")));
         conf.put("constructor.super.call", superCall.stream().collect(joining(", ")));
-        return MacroProcessor.replaceProperties(constructor, conf);
+        return MacroProcessor.replaceProperties(Templates.wrapperConstructor, conf);
     }
 }

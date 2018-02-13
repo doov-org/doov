@@ -32,7 +32,6 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURC
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -42,9 +41,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import com.google.common.io.Resources;
 
 import io.doov.core.*;
 import io.doov.core.dsl.field.FieldTypeProvider;
@@ -54,6 +51,7 @@ import io.doov.core.dsl.path.FieldPathProvider;
 import io.doov.core.serial.TypeAdapterRegistry;
 import io.doov.core.serial.TypeAdapters;
 import io.doov.gen.processor.MacroProcessor;
+import io.doov.gen.processor.Templates;
 import io.doov.gen.utils.ClassLoaderUtils;
 import io.doov.gen.utils.ClassUtils;
 
@@ -217,23 +215,13 @@ public final class ModelMapGenMojo extends AbstractMojo {
         getLog().info("written : " + targetFile);
     }
 
-    static String template(String template) {
-        try {
-            URL resource = Resources.getResource(ModelMapGenMojo.class, template);
-            return Resources.toString(resource, Charsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException("failed to load template " + template, e);
-        }
-    }
-
     private void generateFieldInfo(Map<FieldId, GeneratorFieldInfo> fieldInfoMap, Class<?> fieldClass) {
         try {
             final String targetClassName = fieldInfoClassName(fieldClass);
             final String targetPackage = fieldClass.getPackage().getName();
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
-            final String classTemplate = enumFieldInfo ? template("FieldInfoEnum.template") :
-                    template("FieldInfoClass.template");
+            final String classTemplate = enumFieldInfo ? Templates.fieldInfoEnum : Templates.fieldInfoClass;
             createDirectories(targetFile.getParentFile().toPath());
             final Map<String, String> conf = new HashMap<>();
             conf.put("package.name", targetPackage);
@@ -266,7 +254,6 @@ public final class ModelMapGenMojo extends AbstractMojo {
             final String targetPackage = fieldClass.getPackage().getName() + ".dsl";
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
-            final String classTemplate = template("DslFieldModel.template");
             createDirectories(targetFile.getParentFile().toPath());
             final Map<String, String> conf = new HashMap<>();
             conf.put("package.name", targetPackage);
@@ -277,7 +264,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("imports", imports(fieldInfoMap, typeProvider));
             conf.put("methods", methods(fieldInfoMap, typeProvider, enumFieldInfo));
             conf.put("source.generator.name", getClass().getName());
-            final String content = MacroProcessor.replaceProperties(classTemplate, conf);
+            final String content = MacroProcessor.replaceProperties(Templates.dslFieldModel, conf);
             Files.write(content, targetFile, Charset.forName("UTF8"));
             getLog().info("written : " + targetFile);
         } catch (IOException e) {
@@ -301,7 +288,6 @@ public final class ModelMapGenMojo extends AbstractMojo {
             final String targetPackage = modelClass.getPackage().getName();
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
-            final String classTemplate = template("WrapperClass.template");
 
             createDirectories(targetFile.getParentFile().toPath());
 
@@ -320,13 +306,13 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("target.field.info.class.name", fieldInfoClassName(fieldClass));
             conf.put("target.class.name", targetClassName);
             conf.put("map.getter", mapGetter(fieldPaths));
-            conf.put("map.getter.if", mapFieldTypeIfStatement("MapGetIfStatement.template", fieldPaths));
+            conf.put("map.getter.if", mapFieldTypeIfStatement(Templates.mapGetIf, fieldPaths));
             conf.put("map.setter", mapSetter(fieldPaths));
-            conf.put("map.setter.if", mapFieldTypeIfStatement("MapSetIfStatement.template", fieldPaths));
+            conf.put("map.setter.if", mapFieldTypeIfStatement(Templates.mapSetIf, fieldPaths));
             conf.put("map.properties", mapFieldProperties(fieldPaths, modelClass));
             conf.put("source.generator.name", getClass().getName());
 
-            String content = MacroProcessor.replaceProperties(classTemplate, conf);
+            String content = MacroProcessor.replaceProperties(Templates.wrapperClass, conf);
             Files.write(content, targetFile, Charset.forName("UTF8"));
             getLog().info("written : " + targetFile);
         } catch (IOException e) {

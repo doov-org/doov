@@ -13,7 +13,6 @@
 package io.doov.gen;
 
 import static io.doov.gen.GeneratorFieldInfo.fromVisitorPath;
-import static io.doov.gen.ModelMapGenMojo.template;
 import static io.doov.gen.ModelWrapperGen.boxingType;
 import static io.doov.gen.ModelWrapperGen.primitiveBoxingType;
 import static io.doov.gen.ModelWrapperGen.typeParameters;
@@ -33,10 +32,9 @@ import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DefaultFieldInfo;
 import io.doov.core.dsl.field.FieldTypeProvider;
 import io.doov.gen.processor.MacroProcessor;
+import io.doov.gen.processor.Templates;
 
 final class FieldInfoGen {
-
-    private final static String fieldMethodTemplate = template("DslFieldMethod.template");
 
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
@@ -90,7 +88,7 @@ final class FieldInfoGen {
             conf.put("field.type.class", fieldInfoClass.getSimpleName() + (fieldType.indexOf(">") > 0 ? "<>" : ""));
             conf.put("field.readable", formatMethod(fieldInfo.readable()));
             conf.put("field.info.ref", fieldInfo.id().toString() + (enumFieldInfo ? ".delegate()" : ""));
-            return  MacroProcessor.replaceProperties(fieldMethodTemplate, conf);
+            return  MacroProcessor.replaceProperties(Templates.dslFieldMethod, conf);
         }).collect(joining("\n\n"));
     }
 
