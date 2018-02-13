@@ -18,11 +18,11 @@ package io.doov.core.dsl.field.types;
 import java.time.LocalDate;
 
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.LocalDateCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 
-public class LocalDateFieldInfo extends DelegatingFieldInfo<LocalDate> implements TemporalFieldInfo<LocalDate> {
+public class LocalDateFieldInfo extends DelegatingFieldInfoImpl<LocalDate> implements TemporalFieldInfo<LocalDate> {
 
     public LocalDateFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

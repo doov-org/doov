@@ -7,56 +7,52 @@ import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
 
-public class DelegatingFieldInfo<T> implements FieldInfo, BaseFieldInfo<T> {
-
-    private FieldInfo fieldInfo;
-
-    public DelegatingFieldInfo(FieldInfo fieldInfo) {
-        this.fieldInfo = fieldInfo;
-    }
+public interface DelegatingFieldInfo<T> extends FieldInfo, BaseFieldInfo<T> {
 
     @Override
-    public DefaultCondition<T> getDefaultCondition() {
+    default DefaultCondition<T> getDefaultCondition() {
         return new DefaultCondition<>(this);
     }
 
+    FieldInfo delegate();
+
     @Override
-    public FieldId id() {
-        return fieldInfo.id();
+    default FieldId id() {
+        return delegate().id();
     }
 
     @Override
-    public String readable() {
-        return fieldInfo.readable();
+    default String readable() {
+        return delegate().readable();
     }
 
     @Override
-    public FieldId[] siblings() {
-        return fieldInfo.siblings();
+    default FieldId[] siblings() {
+        return delegate().siblings();
     }
 
     @Override
-    public Class<?> type() {
-        return fieldInfo.type();
+    default Class<?> type() {
+        return delegate().type();
     }
 
     @Override
-    public Class<?>[] genericTypes() {
-        return fieldInfo.genericTypes();
+    default Class<?>[] genericTypes() {
+        return delegate().genericTypes();
     }
 
     @Override
-    public boolean isCodeLookup() {
-        return fieldInfo.isCodeLookup();
+    default boolean isCodeLookup() {
+        return delegate().isCodeLookup();
     }
 
     @Override
-    public boolean isCodeValuable() {
-        return fieldInfo.isCodeValuable();
+    default boolean isCodeValuable() {
+        return delegate().isCodeValuable();
     }
 
     @Override
-    public boolean isTransient() {
-        return fieldInfo.isTransient();
+    default boolean isTransient() {
+        return delegate().isTransient();
     }
 }

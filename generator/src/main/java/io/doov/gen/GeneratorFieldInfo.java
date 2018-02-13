@@ -18,8 +18,9 @@ import java.util.regex.Pattern;
 
 import io.doov.core.*;
 import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 
-public class GeneratorFieldInfo<T> extends DelegatingFieldInfo<T> {
+public class GeneratorFieldInfo<T> extends DelegatingFieldInfoImpl<T> {
 
     private static final Pattern UNDER = Pattern.compile("_");
 

@@ -22,14 +22,14 @@ import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslId;
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LocalDateCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
-public class DateIsoFieldInfo extends DelegatingFieldInfo<LocalDate> implements TemporalFieldInfo<LocalDate> {
+public class DateIsoFieldInfo extends DelegatingFieldInfoImpl<LocalDate> implements TemporalFieldInfo<LocalDate> {
 
     public DateIsoFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

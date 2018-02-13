@@ -18,11 +18,11 @@ package io.doov.core.dsl.field.types;
 import java.time.LocalTime;
 
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.LocalTimeCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 
-public class LocalTimeFieldInfo extends DelegatingFieldInfo<LocalTime> implements TemporalFieldInfo<LocalTime> {
+public class LocalTimeFieldInfo extends DelegatingFieldInfoImpl<LocalTime> implements TemporalFieldInfo<LocalTime> {
 
     public LocalTimeFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

@@ -1,6 +1,7 @@
 package ${package.name};
 
 import static io.doov.core.dsl.field.FieldInfoBuilder.fieldInfo;
+import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
@@ -16,12 +17,18 @@ import io.doov.core.*;
 ${imports}
 
 @Generated(value = "${source.generator.name}", comments = "generated from ${process.class}")
-public enum ${target.class.name} implements FieldInfo {
+public enum ${target.class.name} implements DelegatingFieldInfo {
 ${constants}
     ;
 
+    static final List<FieldInfo> fieldInfos = unmodifiableList(asList(${target.class.name}.values()));
+
     public static Stream<FieldInfo> stream() {
-        return Arrays.stream(${target.class.name}.values());
+        return fieldInfos.stream();
+    }
+
+    public static List<FieldInfo> fieldInfos() {
+        return fieldInfos;
     }
 
     private final FieldInfo delegate;
@@ -30,47 +37,9 @@ ${constants}
         this.delegate = delegate;
     }
 
+    @Override
     public FieldInfo delegate() {
         return delegate;
     }
 
-    @Override
-    public FieldId id() {
-        return delegate.id();
-    }
-
-    @Override
-    public String readable() {
-        return delegate.readable();
-    }
-
-    @Override
-    public Class<?> type() {
-        return delegate.type();
-    }
-
-    @Override
-    public boolean isTransient() {
-        return delegate.isTransient();
-    }
-
-    @Override
-    public boolean isCodeValuable() {
-        return delegate.isCodeValuable();
-    }
-
-    @Override
-    public boolean isCodeLookup() {
-        return delegate.isCodeLookup();
-    }
-
-    @Override
-    public FieldId[] siblings() {
-        return delegate.siblings();
-    }
-
-    @Override
-    public Class<?>[] genericTypes() {
-        return delegate.genericTypes();
-    }
 }

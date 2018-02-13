@@ -16,10 +16,10 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.FloatCondition;
 
-public class FloatFieldInfo extends DelegatingFieldInfo<Float> implements NumericFieldInfo<Float> {
+public class FloatFieldInfo extends DelegatingFieldInfoImpl<Float> implements NumericFieldInfo<Float> {
 
     public FloatFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

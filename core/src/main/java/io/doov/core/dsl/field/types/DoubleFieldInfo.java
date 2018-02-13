@@ -16,10 +16,10 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.DoubleCondition;
 
-public class DoubleFieldInfo extends DelegatingFieldInfo<Double> implements NumericFieldInfo<Double> {
+public class DoubleFieldInfo extends DelegatingFieldInfoImpl<Double> implements NumericFieldInfo<Double> {
 
     public DoubleFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

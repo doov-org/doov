@@ -4,11 +4,11 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.IterableCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
-public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingFieldInfo<C> {
+public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingFieldInfoImpl<C> {
 
     public IterableFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

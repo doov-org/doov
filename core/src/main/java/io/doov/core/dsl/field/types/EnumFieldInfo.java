@@ -16,9 +16,9 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 
-public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfo<E> {
+public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfoImpl<E> {
 
     public EnumFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

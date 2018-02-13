@@ -16,9 +16,9 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 
-public class CharacterFieldInfo extends DelegatingFieldInfo<Character> {
+public class CharacterFieldInfo extends DelegatingFieldInfoImpl<Character> {
 
     public CharacterFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);
