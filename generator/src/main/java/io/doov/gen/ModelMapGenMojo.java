@@ -37,8 +37,8 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 import org.apache.maven.plugin.*;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import com.google.common.io.Files;
@@ -55,7 +55,10 @@ import io.doov.gen.processor.Templates;
 import io.doov.gen.utils.ClassLoaderUtils;
 import io.doov.gen.utils.ClassUtils;
 
-@Mojo(name = "generate", defaultPhase = GENERATE_SOURCES, threadSafe = true)
+@Mojo(name = "generate", defaultPhase = GENERATE_SOURCES,
+        requiresDependencyResolution = ResolutionScope.COMPILE,
+        requiresDependencyCollection = ResolutionScope.COMPILE,
+        threadSafe = true)
 public final class ModelMapGenMojo extends AbstractMojo {
 
     @Parameter(required = true, defaultValue = "${basedir}/src/generated/java")
