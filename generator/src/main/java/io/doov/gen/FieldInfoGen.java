@@ -138,23 +138,21 @@ final class FieldInfoGen {
 
     private static String fieldInfoType(Class<? extends FieldInfo> infoType, Class<?> type, String rawType,
                                         String genericTypes) {
-        if (Enum.class.isAssignableFrom(type)) {
-            return infoType.getSimpleName() + "<" + rawType + ">";
+        if (infoType.getTypeParameters().length == 0) {
+            return infoType.getSimpleName();
         }
-        if (Iterable.class.isAssignableFrom(type)) {
+        if (infoType.getTypeParameters().length == 1) {
+            return infoType.getSimpleName() + "<" + rawType +
+                    (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">") + ">";
+        }
+        if (infoType.getTypeParameters().length == 2) {
             if (genericTypes.isEmpty()) {
                 return infoType.getSimpleName() + "<?, " + rawType + ">";
             } else {
                 return infoType.getSimpleName() + "<" + genericTypes + ", " + rawType + "<" + genericTypes + ">>";
             }
         }
-        if (infoType.getTypeParameters().length != 0) {
-            return infoType.getSimpleName() + "<" + rawType +
-                    (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">")
-                    + ">";
-        } else {
-            return infoType.getSimpleName();
-        }
+        throw new IllegalStateException("FieldInfo type " +infoType.getName() + "is not compatible with generic types");
     }
 
     private static String formatGenericTypes(Class<?>[] genericTypes) {
