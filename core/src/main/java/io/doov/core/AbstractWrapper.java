@@ -49,7 +49,7 @@ public abstract class AbstractWrapper<M> implements FieldModel, StringMapper {
 
     @Override
     public void setAsString(FieldId fieldId, String value) {
-        FieldInfo fieldInfo = fieldInfo(fieldId);
+        FieldInfo fieldInfo = info(fieldId);
         setAsString(fieldInfo, value);
     }
 
@@ -66,13 +66,6 @@ public abstract class AbstractWrapper<M> implements FieldModel, StringMapper {
                             .orElseThrow(() -> new IllegalStateException("cannot set field "
                                             + fieldInfo.id() + " with value " + value)));
         }
-    }
-
-    private FieldInfo fieldInfo(FieldId fieldId) {
-        return getFieldInfos().stream()
-                        .filter(fieldInfo -> fieldInfo.id().equals(fieldId))
-                        .findFirst()
-                        .orElse(null);
     }
 
 }
