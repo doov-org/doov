@@ -18,6 +18,7 @@ import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
 import io.doov.core.FieldModels;
 import io.doov.core.dsl.DslId;
+import ${process.class};
 import ${process.base.class.package};
 import io.doov.core.serial.TypeAdapterRegistry;
 import ${type.adapter.class.package};

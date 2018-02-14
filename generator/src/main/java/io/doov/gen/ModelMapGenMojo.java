@@ -230,8 +230,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
     private void generateFieldInfo(Map<FieldId, GeneratorFieldInfo> fieldInfoMap, Class<?> fieldClass) {
         try {
             final String targetClassName = fieldInfoClassName(fieldClass);
-            final String targetPackage = fieldInfoPackage == null ?
-                    fieldClass.getPackage().getName() : fieldInfoPackage;
+            final String targetPackage = fieldInfoPackage(fieldClass);
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
             final String classTemplate = enumFieldInfo ? Templates.fieldInfoEnum : Templates.fieldInfoClass;
@@ -264,8 +263,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
         try {
             final String targetClassName = dslFieldsClassName(modelClazz);
             final String fieldInfoClassName = fieldInfoClassName(fieldClass);
-            final String targetPackage = dslModelPackage == null ?
-                    fieldClass.getPackage().getName() + ".dsl" : dslModelPackage;
+            final String targetFieldInfoPackage = fieldInfoPackage(fieldClass);
+            final String targetPackage = dslModelPackage(fieldClass);
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
             createDirectories(targetFile.getParentFile().toPath());
@@ -274,7 +273,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("process.class", fieldClass.getName());
             conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
             conf.put("target.class.name", targetClassName);
-            conf.put("process.field.info.class", fieldClass.getPackage().getName() + "." + fieldInfoClassName);
+            conf.put("process.field.info.class", targetFieldInfoPackage + "." + fieldInfoClassName);
             conf.put("imports", imports(fieldInfoMap, typeProvider));
             conf.put("methods", methods(fieldInfoMap, typeProvider, enumFieldInfo));
             conf.put("source.generator.name", getClass().getName());
@@ -298,7 +297,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
                                  Class<? extends TypeAdapterRegistry> typeAdapterClazz) throws RuntimeException {
         try {
             final String targetClassName = modelClass.getSimpleName() + "Wrapper";
-            final String targetPackage = wrapperPackage == null ? modelClass.getPackage().getName() : wrapperPackage;
+            final String targetFieldInfoPackage = fieldInfoPackage(fieldClass);
+            final String targetPackage = wrapperPackage(modelClass);
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
 
@@ -306,7 +306,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
 
             Map<String, String> conf = new HashMap<>();
             conf.put("package.name", targetPackage);
-            conf.put("process.class", modelClass.getName());
+            conf.put("process.class", modelClass.getCanonicalName());
             conf.put("process.base.class.package", baseClazz.getCanonicalName());
             conf.put("process.base.class.name", baseClassName(baseClazz, modelClass));
             conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
@@ -315,7 +315,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("constructors", mapConstructors(targetClassName, baseClazz, modelClass));
             conf.put("target.model.class.name", modelClass.getSimpleName());
             conf.put("target.model.class.full.name", modelClass.getName());
-            conf.put("target.field.info.package.name", fieldClass.getPackage().getName());
+            conf.put("target.field.info.package.name", targetFieldInfoPackage);
             conf.put("target.field.info.class.name", fieldInfoClassName(fieldClass));
             conf.put("target.class.name", targetClassName);
             conf.put("map.getter", mapGetter(fieldPaths));
@@ -331,6 +331,20 @@ public final class ModelMapGenMojo extends AbstractMojo {
         } catch (IOException e) {
             throw new RuntimeException("error when generating wrapper", e);
         }
+    }
+
+    private String fieldInfoPackage(Class<?> fieldClass) {
+        return fieldInfoPackage == null ?
+                fieldClass.getPackage().getName() : fieldInfoPackage;
+    }
+
+    private String dslModelPackage(Class<?> fieldClass) {
+        return dslModelPackage == null ?
+                fieldClass.getPackage().getName() + ".dsl" : dslModelPackage;
+    }
+
+    private String wrapperPackage(Class<?> modelClass) {
+        return wrapperPackage == null ? modelClass.getPackage().getName() : wrapperPackage;
     }
 
     private String baseClassName(Class<? extends FieldModel> baseClazz, Class<?> modelClass) {
