@@ -1,7 +1,6 @@
 package ${package.name};
 
 import static io.doov.core.dsl.field.FieldInfoBuilder.fieldInfo;
-import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +17,12 @@ ${imports}
 public final class ${target.class.name} {
     private static final List<FieldInfo> ALL = new ArrayList<>();
 
-    static final List<FieldInfo> fieldInfos = unmodifiableList(ALL);
-
     public static List<FieldInfo> fieldInfos() {
-        return fieldInfos;
+        return ALL;
     }
 
     public static Stream<FieldInfo> stream() {
-        return fieldInfos.stream();
+        return ALL.stream();
     }
 
 ${constants}

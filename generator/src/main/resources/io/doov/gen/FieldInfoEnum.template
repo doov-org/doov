@@ -2,7 +2,6 @@ package ${package.name};
 
 import static io.doov.core.dsl.field.FieldInfoBuilder.fieldInfo;
 import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +20,7 @@ public enum ${target.class.name} implements DelegatingFieldInfo {
 ${constants}
     ;
 
-    static final List<FieldInfo> fieldInfos = unmodifiableList(asList(${target.class.name}.values()));
+    static final List<FieldInfo> fieldInfos = asList(${target.class.name}.values());
 
     public static Stream<FieldInfo> stream() {
         return fieldInfos.stream();
