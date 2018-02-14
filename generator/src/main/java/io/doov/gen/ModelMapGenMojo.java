@@ -158,7 +158,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
         Class<? extends T> classToLoad = defaultClass;
         if (className != null) {
             Class<?> loadedClass = Class.forName(className, true, classLoader);
-            if (!type.isAssignableFrom(type)) {
+            if (!type.isAssignableFrom(loadedClass)) {
                 throw new MojoExecutionException("Class " + loadedClass + " does not implement " + type.getName());
             }
             classToLoad = (Class<? extends T>) loadedClass;
