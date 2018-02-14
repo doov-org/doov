@@ -287,7 +287,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
     }
 
     private static String dslFieldsClassName(Class<?> clazz) {
-        return "DSL" +
+        return "Dsl" +
                 (clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1) : clazz.getSimpleName());
     }
 

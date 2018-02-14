@@ -17,7 +17,7 @@ package io.doov.sample.benchmark;
 
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
-import static io.doov.sample.field.dsl.DSLSampleModel.*;
+import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static java.util.stream.Collectors.toList;
 
 import java.util.stream.IntStream;

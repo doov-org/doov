@@ -14,9 +14,9 @@ import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
-import static io.doov.sample.field.dsl.DSLSampleModel.accountCountry;
-import static io.doov.sample.field.dsl.DSLSampleModel.configurationMaxEmailSize;
-import static io.doov.sample.field.dsl.DSLSampleModel.configurationMinAge;
+import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
+import static io.doov.sample.field.dsl.DslSampleModel.configurationMaxEmailSize;
+import static io.doov.sample.field.dsl.DslSampleModel.configurationMinAge;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
