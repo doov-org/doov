@@ -110,7 +110,27 @@ final class FieldInfoGen {
     }
 
     private static String formatMethod(String readable) {
-        String underscore = WHITESPACE.matcher(readable).replaceAll("_");
+        String slug = readable
+                .replace(" and ", " ")
+                .replace(" the ", " ")
+                .replace(" à ", " ")
+                .replace(" d'", " ")
+                .replace(" a ", " ")
+                .replace(" l'", " ")
+                .replace(" du ", " ")
+                .replace(" au ", " ")
+                .replace(" en ", " ")
+                .replace(" de ", " ")
+                .replace(" un ", " ")
+                .replace(" la ", " ")
+                .replace(" le ", " ")
+                .replace(" une ", " ")
+                .replace(" aux ", " ")
+                .replace(" des ", " ")
+                .replace(" pour ", " ")
+                .replace(" avec ", " ")
+                .replaceAll("( )+", " ");
+        String underscore = WHITESPACE.matcher(slug).replaceAll("_");
         String normalized = Normalizer.normalize(underscore, Normalizer.Form.NFD);
         String latin = NONLATIN.matcher(normalized).replaceAll("").toLowerCase(Locale.ENGLISH);
         return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, latin);
