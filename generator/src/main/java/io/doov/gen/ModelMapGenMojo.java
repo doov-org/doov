@@ -94,6 +94,15 @@ public final class ModelMapGenMojo extends AbstractMojo {
     @Parameter
     private String fieldInfoTypes;
 
+    @Parameter
+    private String wrapperPackage;
+
+    @Parameter
+    private String fieldInfoPackage;
+
+    @Parameter
+    private String dslModelPackage;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (sourceClass == null) {
@@ -218,7 +227,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
     private void generateFieldInfo(Map<FieldId, GeneratorFieldInfo> fieldInfoMap, Class<?> fieldClass) {
         try {
             final String targetClassName = fieldInfoClassName(fieldClass);
-            final String targetPackage = fieldClass.getPackage().getName();
+            final String targetPackage = fieldInfoPackage == null ?
+                    fieldClass.getPackage().getName() : fieldInfoPackage;
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
             final String classTemplate = enumFieldInfo ? Templates.fieldInfoEnum : Templates.fieldInfoClass;
@@ -251,7 +261,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
         try {
             final String targetClassName = dslFieldsClassName(modelClazz);
             final String fieldInfoClassName = fieldInfoClassName(fieldClass);
-            final String targetPackage = fieldClass.getPackage().getName() + ".dsl";
+            final String targetPackage = dslModelPackage == null ?
+                    fieldClass.getPackage().getName() + ".dsl" : dslModelPackage;
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
             createDirectories(targetFile.getParentFile().toPath());
@@ -272,7 +283,6 @@ public final class ModelMapGenMojo extends AbstractMojo {
         }
     }
 
-
     private static String dslFieldsClassName(Class<?> clazz) {
         return "DSL" +
                 (clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1) : clazz.getSimpleName());
@@ -285,7 +295,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
                                  Class<? extends TypeAdapterRegistry> typeAdapterClazz) throws RuntimeException {
         try {
             final String targetClassName = modelClass.getSimpleName() + "Wrapper";
-            final String targetPackage = modelClass.getPackage().getName();
+            final String targetPackage = wrapperPackage == null ? modelClass.getPackage().getName() : wrapperPackage;
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
 
