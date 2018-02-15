@@ -12,10 +12,10 @@
  */
 package io.doov.sample;
 
-import static io.doov.sample.field.SampleFieldInfo.accountId;
-import static io.doov.sample.field.SampleFieldInfo.accountPreferencesMail;
-import static io.doov.sample.field.SampleFieldInfo.accountTimezone;
-import static io.doov.sample.field.SampleFieldInfo.userBirthdate;
+import static io.doov.sample.field.dsl.DslSampleModel.accountId;
+import static io.doov.sample.field.dsl.DslSampleModel.accountPreferencesMail;
+import static io.doov.sample.field.dsl.DslSampleModel.accountTimezone;
+import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
 import static io.doov.sample.model.EmailType.ADMINISTRATOR;
 import static io.doov.sample.model.EmailType.PRIVATE;
 import static io.doov.sample.model.Timezone.ETC_GMT;

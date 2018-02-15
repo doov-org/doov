@@ -424,9 +424,6 @@ public enum Sample2FieldId implements FieldId {
     USER_ID_395(ID), EMAIL_395(EMAIL), LOGIN_395(LOGIN), PASSWORD_395(PASSWORD), //
     USER_ID_396(ID), EMAIL_396(EMAIL), LOGIN_396(LOGIN), PASSWORD_396(PASSWORD), //
     USER_ID_397(ID), EMAIL_397(EMAIL), LOGIN_397(LOGIN), PASSWORD_397(PASSWORD), //
-    USER_ID_398(ID), EMAIL_398(EMAIL), LOGIN_398(LOGIN), PASSWORD_398(PASSWORD), //
-    USER_ID_399(ID), EMAIL_399(EMAIL), LOGIN_399(LOGIN), PASSWORD_399(PASSWORD), //
-    USER_ID_400(ID), EMAIL_400(EMAIL), LOGIN_400(LOGIN), PASSWORD_400(PASSWORD), //
     ;
 
     private final int position;
@@ -439,6 +436,11 @@ public enum Sample2FieldId implements FieldId {
     Sample2FieldId(int position, TagId... tags) {
         this.position = position;
         this.tags = Arrays.asList(tags);
+    }
+
+    @Override
+    public String code() {
+        return name();
     }
 
     @Override

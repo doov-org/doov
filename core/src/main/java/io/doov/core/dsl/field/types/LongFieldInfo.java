@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.LongCondition;
 
-public class LongFieldInfo extends DefaultFieldInfo<Long> implements NumericFieldInfo<Long> {
+public class LongFieldInfo extends DelegatingFieldInfoImpl<Long> implements NumericFieldInfo<Long> {
 
-    public LongFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, FieldId[] siblings) {
-        super(fieldId, readable, type, _transient, false, false, new Class[] {}, siblings);
+    public LongFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
 
     @Override

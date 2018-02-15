@@ -27,6 +27,8 @@ import io.doov.core.FieldModel;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.field.SampleFieldInfo;
 
+import java.util.Arrays;
+
 public class SampleModelCollectorTest {
 
     private SampleModel sample = SampleModels.sample();
@@ -59,10 +61,10 @@ public class SampleModelCollectorTest {
 
     private static void should_collect_all_values_when_collect(FieldModel target, FieldModel source) {
         SoftAssertions softly = new SoftAssertions();
-        SampleFieldInfo.values().forEach(info -> {
+        SampleFieldInfo.stream().forEach(info -> {
             Object after = target.get(info.id());
             Object before = source.get(info.id());
-            softly.assertThat(after).describedAs(info.id().name()).isEqualTo(before);
+            softly.assertThat(after).describedAs(info.id().code()).isEqualTo(before);
         });
         softly.assertAll();
     }

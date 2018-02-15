@@ -18,6 +18,7 @@ import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
 import io.doov.core.FieldModels;
 import io.doov.core.dsl.DslId;
+import ${process.class};
 import ${process.base.class.package};
 import io.doov.core.serial.TypeAdapterRegistry;
 import ${type.adapter.class.package};
@@ -37,7 +38,7 @@ public final class ${target.class.name} extends ${process.base.class.name} {
     }
 
     public static List<FieldInfo> fieldInfos() {
-        return ${target.field.info.class.name}.values();
+        return ${target.field.info.class.name}.fieldInfos();
     }
 ${constructors}
     @Override

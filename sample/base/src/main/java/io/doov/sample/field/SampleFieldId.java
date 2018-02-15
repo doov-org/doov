@@ -61,7 +61,9 @@ public enum SampleFieldId implements SampleField {
     CONFIGURATION_MAX_LONG(),
 
     LOGIN(ACCOUNT),
-    PASSWD(ACCOUNT);
+    PASSWD(ACCOUNT),
+    CALENDAR(ACCOUNT);
+
 
     private final int position;
     private final List<TagId> tags;
@@ -73,6 +75,11 @@ public enum SampleFieldId implements SampleField {
     SampleFieldId(int position, TagId... tags) {
         this.position = position;
         this.tags = Arrays.asList(tags);
+    }
+
+    @Override
+    public String code() {
+        return name();
     }
 
     @Override

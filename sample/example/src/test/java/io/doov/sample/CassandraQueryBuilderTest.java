@@ -82,7 +82,8 @@ public class CassandraQueryBuilderTest {
 
         model.getFieldInfos().stream()
                 .filter(info -> info.id() != LOGIN)
-                .forEach(info -> createRequest.addColumn(info.id().name(), cqlType(info)));
+                .filter(info -> !info.isTransient())
+                .forEach(info -> createRequest.addColumn(info.id().code(), cqlType(info)));
 
         Options createRequestWithOptions = createRequest.withOptions().clusteringOrder(LOGIN.name(), DESC);
         print(createRequestWithOptions.getQueryString());
@@ -94,7 +95,7 @@ public class CassandraQueryBuilderTest {
         Insert insertRequest = QueryBuilder.insertInto("fields_model");
         insertRequest.value("snapshot_id", UUID.randomUUID());
         insertRequest.values(
-                model.stream().map(e -> e.getKey().name()).collect(toList()),
+                model.stream().map(e -> e.getKey().code()).collect(toList()),
                 model.stream().map(Entry::getValue).collect(toList()));
         print(insertRequest.getQueryString(codecRegistry()));
     }

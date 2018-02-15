@@ -29,7 +29,7 @@ import io.doov.sample.field.SampleFieldInfo;
 public class SampleFieldIdInfoTest {
 
     private Optional<FieldInfo> fieldInfo(SampleFieldId id) {
-        return SampleFieldInfo.values().stream().filter(info -> info.id() == id).findFirst();
+        return SampleFieldInfo.stream().filter(info -> info.id() == id).findFirst();
     }
 
     @Test

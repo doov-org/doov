@@ -31,7 +31,7 @@ public interface FieldId extends DslId {
      *
      * @return the name
      */
-    String name();
+    String code();
 
     /**
      * Returns the field position, when referencing an element in a {@code Collection}.

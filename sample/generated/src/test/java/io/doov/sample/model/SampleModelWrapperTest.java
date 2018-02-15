@@ -20,11 +20,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 import io.doov.core.FieldInfo;
 import io.doov.sample.field.SampleFieldInfo;
@@ -33,8 +38,8 @@ import io.doov.sample.field.SampleTag;
 public class SampleModelWrapperTest {
 
     private static Collection<Object[]> data() {
-        return SampleFieldInfo.values().stream()
-                .map(f -> new Object[] { f.id().name(), f })
+        return SampleFieldInfo.stream()
+                .map(f -> new Object[] { f.id().code(), f })
                 .collect(toList());
     }
 
@@ -126,6 +131,8 @@ public class SampleModelWrapperTest {
             return LocalDate.now();
         } else if (field.type().equals(String.class)) {
             return "foo";
+        } else if (field.type().equals(XMLGregorianCalendar.class)) {
+            return new XMLGregorianCalendarImpl();
         }
         return field.type().newInstance();
     }

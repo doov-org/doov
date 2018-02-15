@@ -12,11 +12,13 @@
  */
 package io.doov.core.dsl.field;
 
+import java.io.Serializable;
+
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
 
-public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T> {
+public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Serializable {
 
     private final FieldId fieldId;
     private final String readable;
@@ -37,6 +39,17 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T> {
         this.codeLookup = codeLookup;
         this.genericTypes = genericTypes;
         this.siblings = siblings;
+    }
+
+    public DefaultFieldInfo(FieldInfo fieldInfo) {
+        this(fieldInfo.id(),
+                fieldInfo.readable(),
+                fieldInfo.type(),
+                fieldInfo.isTransient(),
+                fieldInfo.isCodeValuable(),
+                fieldInfo.isCodeLookup(),
+                fieldInfo.genericTypes(),
+                fieldInfo.siblings());
     }
 
     @Override

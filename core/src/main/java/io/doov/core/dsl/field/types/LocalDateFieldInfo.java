@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-import io.doov.core.FieldId;
-import io.doov.core.dsl.impl.LocalDateTimeCondition;
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
+import io.doov.core.dsl.impl.LocalDateCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 
-public class LocalDateTimeFieldInfo extends DefaultFieldInfo<LocalDateTime>
-        implements TemporalFieldInfo<LocalDateTime> {
+public class LocalDateFieldInfo extends DelegatingFieldInfoImpl<LocalDate> implements TemporalFieldInfo<LocalDate> {
 
-    public LocalDateTimeFieldInfo(FieldId fieldId, String readable, boolean _transient, FieldId[] siblings) {
-        super(fieldId, readable, LocalDateTime.class, _transient, false, false, new Class[] {}, siblings);
+    public LocalDateFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
 
     @Override
-    public TemporalCondition<LocalDateTime> getTemporalCondition() {
-        return new LocalDateTimeCondition(this);
+    public TemporalCondition<LocalDate> getTemporalCondition() {
+        return new LocalDateCondition(this);
     }
 
 }

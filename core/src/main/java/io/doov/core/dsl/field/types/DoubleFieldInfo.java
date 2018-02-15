@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import io.doov.core.FieldId;
-import io.doov.core.dsl.impl.FloatCondition;
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
+import io.doov.core.dsl.impl.DoubleCondition;
 
-public class FloatFieldInfo extends DefaultFieldInfo<Float> implements NumericFieldInfo<Float> {
+public class DoubleFieldInfo extends DelegatingFieldInfoImpl<Double> implements NumericFieldInfo<Double> {
 
-    public FloatFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, FieldId[] siblings) {
-        super(fieldId, readable, type, _transient, false, false, new Class[] {}, siblings);
+    public DoubleFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
 
     @Override
-    public FloatCondition getNumericCondition() {
-        return new FloatCondition(this);
+    public DoubleCondition getNumericCondition() {
+        return new DoubleCondition(this);
     }
 
 }

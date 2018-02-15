@@ -1,17 +1,17 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.IterableCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
-public class IterableFieldInfo<T, C extends Iterable<T>> extends DefaultFieldInfo<C> {
+public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingFieldInfoImpl<C> {
 
-    public IterableFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient,
-                    Class<?>[] genericTypes, FieldId[] siblings) {
-        super(fieldId, readable, type, _transient, false, false, genericTypes, siblings);
+    public IterableFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
 
     public StepCondition contains(T value) {

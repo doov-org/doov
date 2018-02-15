@@ -8,7 +8,7 @@ import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.count;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.matchAny;
-import static io.doov.sample.field.SampleFieldInfo.accountCountry;
+import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 

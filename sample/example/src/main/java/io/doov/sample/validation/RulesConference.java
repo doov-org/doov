@@ -3,7 +3,7 @@ package io.doov.sample.validation;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
-import static io.doov.sample.field.SampleFieldInfo.*;
+import static io.doov.sample.field.dsl.DslSampleModel.*;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.ValidationRule;

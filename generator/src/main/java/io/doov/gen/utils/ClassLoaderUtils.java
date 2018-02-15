@@ -32,21 +32,12 @@ public class ClassLoaderUtils {
     public static URLClassLoader getUrlClassLoader(MavenProject project) throws MojoFailureException {
         try {
             // collect compile classpath classes
-            final List<File> files = new ArrayList<>();
-            files.addAll(project.getCompileClasspathElements().stream().map(File::new).collect(toList()));
+            URL[] urls = project.getCompileClasspathElements().stream()
+                    .map(File::new)
+                    .filter(File::exists)
+                    .map(new FileToUrl()).toArray(URL[]::new);
 
-            // collect project dependencies
-            files.addAll(project.getDependencyArtifacts().stream()
-                    .map(a -> DependencyUtils.resolve(a, project))
-                    .filter(Objects::nonNull)
-                    .collect(toList()));
-
-            final List<URL> urls = files.stream()
-                    .filter(f -> f != null && f.exists())
-                    .map(new FileToUrl())
-                    .collect(toList());
-
-            return new URLClassLoader(urls.toArray(new URL[urls.size()]), currentThread().getContextClassLoader());
+            return new URLClassLoader(urls, currentThread().getContextClassLoader());
         } catch (DependencyResolutionRequiredException e) {
             throw new MojoFailureException(e.getMessage(), e);
         }

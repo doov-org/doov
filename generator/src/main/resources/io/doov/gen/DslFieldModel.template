@@ -1,5 +1,6 @@
 package ${package.name};
 
+import static ${process.field.info.class}.*;
 import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
@@ -8,17 +9,13 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import io.doov.core.dsl.field.*;
-import io.doov.core.FieldInfo;
+import io.doov.core.*;
 
 ${imports}
 
 @Generated(value = "${source.generator.name}", comments = "generated from ${process.class}")
-public final class ${target.class.name} extends FieldInfoProvider {
-    private static final List<FieldInfo> ALL = new ArrayList<>();
+public final class ${target.class.name} {
 
-    public static List<FieldInfo> values() {
-        return unmodifiableList(ALL);
-    }
+${methods}
 
-${constants}
 }

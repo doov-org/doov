@@ -59,10 +59,10 @@ public class SampleModelCollectorTest {
 
     private static void should_collect_all_values_when_collect(FieldModel target, FieldModel source) {
         SoftAssertions softly = new SoftAssertions();
-        SampleFieldIdInfo.values().forEach(info -> {
+        SampleFieldIdInfo.stream().forEach(info -> {
             Object after = target.get(info.id());
             Object before = source.get(info.id());
-            softly.assertThat(after).describedAs(info.id().name()).isEqualTo(before);
+            softly.assertThat(after).describedAs(info.id().code()).isEqualTo(before);
         });
         softly.assertAll();
     }

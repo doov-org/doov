@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
 import static java.time.temporal.ChronoUnit.YEARS;
 
@@ -18,6 +18,7 @@ import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
 import java.util.function.Supplier;
 
+import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.impl.NumericCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.StepCondition;

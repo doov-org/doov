@@ -26,8 +26,8 @@ import io.doov.core.dsl.DslId;
  */
 public class BaseFieldModel implements FieldModel {
 
-    private final Map<FieldId, Object> values;
-    private final List<FieldInfo> fieldInfos;
+    protected Map<FieldId, Object> values;
+    protected List<FieldInfo> fieldInfos;
 
     public BaseFieldModel(List<FieldInfo> fieldInfos) {
         this(new HashMap<>(), fieldInfos);

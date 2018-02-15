@@ -58,6 +58,7 @@
               <fieldPathProvider>io.doov.sample2.field.Sample2FieldPath</fieldPathProvider>
               <fieldClass>io.doov.sample2.field.Sample2FieldId</fieldClass>
               <sourceClass>io.doov.sample2.model.Sample2Model</sourceClass>
+              <enumFieldInfo>false</enumFieldInfo>
             </configuration>
           </execution>
         </executions>

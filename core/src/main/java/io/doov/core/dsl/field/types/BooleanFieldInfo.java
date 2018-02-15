@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
+import io.doov.core.dsl.impl.BooleanCondition;
 
-public class CharacterFieldInfo extends DefaultFieldInfo<Character> {
+public class BooleanFieldInfo extends DelegatingFieldInfoImpl<Boolean> implements LogicalFieldInfo {
 
-    public CharacterFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, FieldId[] siblings) {
-        super(fieldId, readable, type, _transient, false, false, new Class[] {}, siblings);
+    public BooleanFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
+    }
+
+    @Override
+    public BooleanCondition getBooleanCondition() {
+        return new BooleanCondition(this);
     }
 
 }

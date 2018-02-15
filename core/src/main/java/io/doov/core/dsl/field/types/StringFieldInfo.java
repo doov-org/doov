@@ -13,15 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
+import io.doov.core.dsl.impl.StringCondition;
 
-public class EnumFieldInfo<E extends Enum<E>> extends DefaultFieldInfo<E> {
+public class StringFieldInfo extends DelegatingFieldInfoImpl<String> implements TextFieldInfo {
 
-    public EnumFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, boolean codeValuable,
-                    boolean codeLookup, FieldId[] siblings) {
-        super(fieldId, readable, type, _transient, codeValuable, codeLookup, new Class[] {}, siblings);
+    public StringFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
+    }
+
+    @Override
+    public StringCondition getStringCondition() {
+        return new StringCondition(this);
     }
 
 }

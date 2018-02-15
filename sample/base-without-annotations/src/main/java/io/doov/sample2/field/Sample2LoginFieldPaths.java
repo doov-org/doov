@@ -811,12 +811,6 @@ public class Sample2LoginFieldPaths {
                         (Account::getLogin, Account::setLogin).fieldId(Sample2FieldId.LOGIN_396).readable("login 396").build(ALL);
         final FieldPath LOGIN_397 = from(Sample2Model.class).get(Sample2Model::getAccount397).field
                         (Account::getLogin, Account::setLogin).fieldId(Sample2FieldId.LOGIN_397).readable("login 397").build(ALL);
-        final FieldPath LOGIN_398 = from(Sample2Model.class).get(Sample2Model::getAccount398).field
-                        (Account::getLogin, Account::setLogin).fieldId(Sample2FieldId.LOGIN_398).readable("login 398").build(ALL);
-        final FieldPath LOGIN_399 = from(Sample2Model.class).get(Sample2Model::getAccount399).field
-                        (Account::getLogin, Account::setLogin).fieldId(Sample2FieldId.LOGIN_399).readable("login 399").build(ALL);
-        final FieldPath LOGIN_400 = from(Sample2Model.class).get(Sample2Model::getAccount400).field
-                        (Account::getLogin, Account::setLogin).fieldId(Sample2FieldId.LOGIN_400).readable("login 400").build(ALL);
 
         return ALL;
     }

@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import java.time.LocalTime;
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
+import io.doov.core.dsl.impl.FloatCondition;
 
-import io.doov.core.FieldId;
-import io.doov.core.dsl.impl.LocalTimeCondition;
-import io.doov.core.dsl.impl.TemporalCondition;
+public class FloatFieldInfo extends DelegatingFieldInfoImpl<Float> implements NumericFieldInfo<Float> {
 
-public class LocalTimeFieldInfo extends DefaultFieldInfo<LocalTime> implements TemporalFieldInfo<LocalTime> {
-
-    public LocalTimeFieldInfo(FieldId fieldId, String readable, boolean _transient, FieldId[] siblings) {
-        super(fieldId, readable, LocalTime.class, _transient, false, false, new Class[] {}, siblings);
+    public FloatFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
 
     @Override
-    public TemporalCondition<LocalTime> getTemporalCondition() {
-        return new LocalTimeCondition(this);
+    public FloatCondition getNumericCondition() {
+        return new FloatCondition(this);
     }
 
 }

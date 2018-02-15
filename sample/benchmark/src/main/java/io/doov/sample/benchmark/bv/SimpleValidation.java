@@ -15,9 +15,9 @@
  */
 package io.doov.sample.benchmark.bv;
 
-import static io.doov.benchmark.model.BenchmarkFieldIdInfo.age;
-import static io.doov.benchmark.model.BenchmarkFieldIdInfo.drivingLicense;
-import static io.doov.benchmark.model.BenchmarkFieldIdInfo.name;
+import static io.doov.benchmark.model.dsl.DslBenchmarkModel.age;
+import static io.doov.benchmark.model.dsl.DslBenchmarkModel.drivingLicense;
+import static io.doov.benchmark.model.dsl.DslBenchmarkModel.name;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Random;

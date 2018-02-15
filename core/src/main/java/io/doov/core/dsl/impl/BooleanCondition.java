@@ -21,7 +21,7 @@ import java.util.function.BiFunction;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.field.LogicalFieldInfo;
+import io.doov.core.dsl.field.types.LogicalFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.LeafMetadata;

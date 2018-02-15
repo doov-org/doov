@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field;
+package io.doov.core.dsl.field.types;
 
-import io.doov.core.FieldId;
-import io.doov.core.dsl.impl.StringCondition;
+import java.time.LocalTime;
 
-public class StringFieldInfo extends DefaultFieldInfo<String> implements TextFieldInfo {
+import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
+import io.doov.core.dsl.impl.LocalTimeCondition;
+import io.doov.core.dsl.impl.TemporalCondition;
 
-    public StringFieldInfo(FieldId fieldId, String readable, boolean _transient, FieldId[] siblings) {
-        super(fieldId, readable, String.class, _transient, false, false, new Class[] {}, siblings);
+public class LocalTimeFieldInfo extends DelegatingFieldInfoImpl<LocalTime> implements TemporalFieldInfo<LocalTime> {
+
+    public LocalTimeFieldInfo(FieldInfo fieldInfo) {
+        super(fieldInfo);
     }
 
     @Override
-    public StringCondition getStringCondition() {
-        return new StringCondition(this);
+    public TemporalCondition<LocalTime> getTemporalCondition() {
+        return new LocalTimeCondition(this);
     }
 
 }

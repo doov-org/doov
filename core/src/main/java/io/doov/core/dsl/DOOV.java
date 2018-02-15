@@ -21,7 +21,7 @@ import static java.util.Arrays.asList;
 
 import java.util.*;
 
-import io.doov.core.dsl.field.NumericFieldInfo;
+import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.StepWhen;
