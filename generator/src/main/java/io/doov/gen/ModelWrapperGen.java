@@ -58,11 +58,11 @@ final class ModelWrapperGen {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
         if (!invalidFieldId.isEmpty()) {
-            invalidFieldId.forEach(f -> log.debug(f.name() + " - " + pathByFieldId.get(f)));
+            invalidFieldId.forEach(f -> log.debug(f.code() + " - " + pathByFieldId.get(f)));
             throw new IllegalStateException("some field ids have more than one path : " + invalidFieldId.toString());
         }
 
-        Map<FieldId, VisitorPath> paths = new TreeMap<>(comparing(FieldId::name));
+        Map<FieldId, VisitorPath> paths = new TreeMap<>(comparing(FieldId::code));
         pathByFieldId.forEach((fieldId, fieldPaths) -> paths.put(fieldId, fieldPaths.iterator().next()));
         return paths;
     }

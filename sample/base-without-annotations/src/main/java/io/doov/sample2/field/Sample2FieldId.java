@@ -439,6 +439,11 @@ public enum Sample2FieldId implements FieldId {
     }
 
     @Override
+    public String code() {
+        return name();
+    }
+
+    @Override
     public int position() {
         return position;
     }

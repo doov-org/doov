@@ -45,7 +45,7 @@ public class GeneratorFieldInfo<T> extends DelegatingFieldInfoImpl<T> {
                 .codeValuable(isAssignable(path, CodeValuable.class))
                 .codeLookup(isAssignable(path, CodeLookup.class))
                 .genericTypes(genericClasses(path))
-                .siblings(siblings(path, allPaths).stream().sorted(comparing(FieldId::name)).toArray(FieldId[]::new))
+                .siblings(siblings(path, allPaths).stream().sorted(comparing(FieldId::code)).toArray(FieldId[]::new))
                 .build(), genericReturnType);
     }
 
@@ -64,7 +64,7 @@ public class GeneratorFieldInfo<T> extends DelegatingFieldInfoImpl<T> {
 
     private static String formatReadable(VisitorPath currentPath) {
         return isNullOrEmpty(currentPath.getReadable())
-                ? stream(UNDER.split(currentPath.getFieldId().name())).map(String::toLowerCase).collect(joining(" "))
+                ? stream(UNDER.split(currentPath.getFieldId().code())).map(String::toLowerCase).collect(joining(" "))
                 : currentPath.getReadable();
     }
 
@@ -141,7 +141,7 @@ public class GeneratorFieldInfo<T> extends DelegatingFieldInfoImpl<T> {
             return "";
         }
         return siblings.stream()
-                .sorted(comparing(FieldId::name))
+                .sorted(comparing(FieldId::code))
                 .map(f -> f.getClass().getSimpleName() + "." + f.toString())
                 .collect(joining(", "));
     }

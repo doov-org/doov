@@ -96,13 +96,13 @@ public class LiveCode {
                 .addPartitionKey("snapshot_id", timeuuid());
 
         model.getFieldInfos().stream().filter(f -> f.id() != LOGIN)
-                .forEach(f -> create.addColumn(f.id().name(), cqlType(f)));
+                .forEach(f -> create.addColumn(f.id().code(), cqlType(f)));
 
         Create.Options createWithOptions = create.withOptions().clusteringOrder(LOGIN.name(), DESC);
         System.out.println(createWithOptions);
 
         Insert insert = QueryBuilder.insertInto("Field");
-        model.stream().forEach(e -> insert.value(e.getKey().name(), e.getValue()));
+        model.stream().forEach(e -> insert.value(e.getKey().code(), e.getValue()));
 
         System.out.println(insert.getQueryString(codecRegistry()));
     }

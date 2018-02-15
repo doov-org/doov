@@ -75,7 +75,7 @@ final class FieldInfoGen {
     static String methods(Map<FieldId, GeneratorFieldInfo> fieldInfos,
                           FieldTypeProvider typeProvider,
                           boolean enumFieldInfo) {
-        return fieldInfos.entrySet().stream().sorted(comparing(e -> e.getKey().name())).map(e -> {
+        return fieldInfos.entrySet().stream().sorted(comparing(e -> e.getKey().code())).map(e -> {
             final GeneratorFieldInfo fieldInfo = e.getValue();
             final Class<?> type = fieldInfo.type();
             final String rawType = fieldInfo.type().isPrimitive() ? primitiveBoxingType(type) : type.getSimpleName();
@@ -93,7 +93,7 @@ final class FieldInfoGen {
     }
 
     static String constants(Map<FieldId, GeneratorFieldInfo> fieldInfos, boolean enumFieldInfo) {
-        return fieldInfos.entrySet().stream().sorted(comparing(e -> e.getKey().name()))
+        return fieldInfos.entrySet().stream().sorted(comparing(e -> e.getKey().code()))
                 .map(e -> enumFieldInfo ? writeFieldInfoEnum(e.getValue()) : writeFieldInfo(e.getValue()))
                 .collect(joining("\n\n"));
     }

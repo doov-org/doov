@@ -32,7 +32,7 @@ public class SampleModelSerializationTest {
                         .filter(f -> !f.isTransient())
                         .forEach(f -> {
                             FieldId fieldId = f.id();
-                            csvWriter.writeRow(fieldId.name(), wrapper.getAsString(fieldId));
+                            csvWriter.writeRow(fieldId.code(), wrapper.getAsString(fieldId));
                         });
         csvWriter.close();
         System.out.println(csvResult.toString());
@@ -57,7 +57,7 @@ public class SampleModelSerializationTest {
     }
 
     private static FieldInfo fieldInfoByName(String name, FieldModel model) {
-        return model.getFieldInfos().stream().filter(f -> f.id().name().equals(name)).findFirst().orElse(null);
+        return model.getFieldInfos().stream().filter(f -> f.id().code().equals(name)).findFirst().orElse(null);
     }
 
 }

@@ -64,7 +64,7 @@ public class SampleModelCollectorTest {
         SampleFieldInfo.stream().forEach(info -> {
             Object after = target.get(info.id());
             Object before = source.get(info.id());
-            softly.assertThat(after).describedAs(info.id().name()).isEqualTo(before);
+            softly.assertThat(after).describedAs(info.id().code()).isEqualTo(before);
         });
         softly.assertAll();
     }

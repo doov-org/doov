@@ -78,6 +78,11 @@ public enum SampleFieldId implements SampleField {
     }
 
     @Override
+    public String code() {
+        return name();
+    }
+
+    @Override
     public int position() {
         return position;
     }
