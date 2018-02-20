@@ -15,15 +15,16 @@ import javax.annotation.Generated;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
-import io.doov.core.FieldModel;
 import io.doov.core.FieldModels;
 import io.doov.core.dsl.DslId;
-import ${process.class};
-import ${process.base.class.package};
 import io.doov.core.serial.TypeAdapterRegistry;
+
+import ${process.class};
 import ${type.adapter.class.package};
+import ${process.base.class.package};
 import ${target.field.info.package.name}.${target.field.info.class.name};
 
+@SuppressWarnings("serial")
 @Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
 public final class ${target.class.name} extends ${process.base.class.name} {
 

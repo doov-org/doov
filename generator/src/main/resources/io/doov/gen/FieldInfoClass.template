@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 
 import javax.annotation.Generated;
 
-import io.doov.core.dsl.field.*;
 import io.doov.core.FieldInfo;
 
 ${imports}
