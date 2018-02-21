@@ -106,27 +106,23 @@ final class ModelWrapperGen {
     }
 
     static String mapGetter(Map<FieldId, VisitorPath> collected) {
-        final StringBuilder buffer = new StringBuilder();
-        fieldTypes(collected).forEach(fieldType -> {
+        return fieldTypes(collected).stream().map(fieldType -> {
             Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
             Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
             conf.put("switch.content", getterSwitchContent(paths));
-            buffer.append(MacroProcessor.replaceProperties(Templates.mapGetMethod, conf));
-        });
-        return buffer.toString();
+            return MacroProcessor.replaceProperties(Templates.mapGetMethod, conf);
+        }).collect(joining("\n\n"));
     }
 
     static String mapSetter(Map<FieldId, VisitorPath> collected) {
-        final StringBuilder buffer = new StringBuilder();
-        fieldTypes(collected).forEach(fieldType -> {
+        return fieldTypes(collected).stream().map(fieldType -> {
             final Map<FieldId, VisitorPath> paths = filterByFieldType(collected, fieldType);
             final Map<String, String> conf = new HashMap<>();
             conf.put("field.id.type", fieldType.getName());
             conf.put("switch.content", setterSwitchContent(paths));
-            buffer.append(MacroProcessor.replaceProperties(Templates.mapSetMethod, conf));
-        });
-        return buffer.toString();
+            return MacroProcessor.replaceProperties(Templates.mapSetMethod, conf);
+        }).collect(joining("\n\n"));
     }
 
     private static List<Class<?>> fieldTypes(Map<FieldId, VisitorPath> collected) {
