@@ -14,7 +14,7 @@ dOOv is a fluent API for typesafe domain model validation. It uses annotations, 
 
 ### Presentations
 
-See [latest presentation at Snowcamp 2018](http://doov.io/dsl_to_go_beyond_bean_validation_snowcamp.html)
+See [latest presentation at Snowcamp 2018](http://doov.io/dsl_to_go_beyond_bean_validation_english.html)
 
 ### Example
 
