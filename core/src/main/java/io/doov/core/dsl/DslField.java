@@ -15,13 +15,14 @@
  */
 package io.doov.core.dsl;
 
+import io.doov.core.FieldId;
 import io.doov.core.dsl.lang.Readable;
 
 /**
  * Interface for all field types.
  */
-public interface DslField extends Readable {
+public interface DslField<T> extends Readable {
 
-    DslId id();
+    FieldId id();
 
 }

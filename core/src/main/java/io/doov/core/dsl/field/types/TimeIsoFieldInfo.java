@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslId;
@@ -45,7 +46,7 @@ public class TimeIsoFieldInfo extends DelegatingFieldInfoImpl<LocalTime> impleme
         return new TimeIsoCondition(this);
     }
 
-    public static Optional<LocalTime> parse(DslModel model, DslId id) {
+    public static Optional<LocalTime> parse(DslModel model, FieldId id) {
         return Optional.ofNullable(model.<String> get(id)).map(v -> LocalTime.parse(v, BASIC_ISO_DATE));
     }
 

@@ -85,7 +85,7 @@ ${constructors}
     }
 
     @Override
-    public <T> T get(DslId fieldId) {
+    public <T> T get(FieldId fieldId) {
 ${map.getter.if}        return null;
     }
 

@@ -35,7 +35,7 @@ import io.doov.core.dsl.lang.StepCondition;
  * @param <T> the type of the field value
  * @see #getDefaultCondition()
  */
-public interface BaseFieldInfo<T> extends DslField {
+public interface BaseFieldInfo<T> extends DslField<T> {
 
     /**
      * See {@link DefaultCondition#isNull()}
