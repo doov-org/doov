@@ -14,13 +14,13 @@ package io.doov.core.dsl.lang;
 
 import java.util.List;
 
-import io.doov.core.dsl.DslId;
+import io.doov.core.FieldId;
 import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Interface for the execution context.
  * <p>
- * You have for example node values (see {@link #getEvalValue(DslId)}), failed nodes (see {@link #getEvalFalse()}), etc.
+ * You have for example node values (see {@link #getEvalValue(FieldId)}), failed nodes (see {@link #getEvalFalse()}), etc.
  */
 public interface Context {
 
@@ -59,7 +59,7 @@ public interface Context {
      * @param id    the id
      * @param value the value
      */
-    void addEvalValue(DslId id, Object value);
+    void addEvalValue(FieldId id, Object value);
 
     /**
      * Return the evaluation value for this field id.
@@ -67,7 +67,7 @@ public interface Context {
      * @param id the id
      * @return the value
      */
-    Object getEvalValue(DslId id);
+    Object getEvalValue(FieldId id);
 
     /**
      * Returns true if the given node evaluation is true.

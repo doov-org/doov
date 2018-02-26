@@ -21,7 +21,6 @@ import java.util.function.BiFunction;
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslId;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.DefaultCondition;
