@@ -23,7 +23,6 @@ import ${type.adapter.class.package};
 import ${process.base.class.package};
 import ${target.field.info.package.name}.${target.field.info.class.name};
 
-@SuppressWarnings("serial")
 @Generated(value = "${source.generator.name}", comments="generated from ${process.class}")
 public final class ${target.class.name} extends ${process.base.class.name} {
 
