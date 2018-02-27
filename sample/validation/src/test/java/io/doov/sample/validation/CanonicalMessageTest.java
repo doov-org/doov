@@ -188,7 +188,8 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(EmptyMetadata.class);
+        assertThat(msg).isInstanceOf(LeafMetadata.class);
+        assertThat(msg.children()).isEmpty();
     }
 
     @Test

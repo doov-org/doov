@@ -88,8 +88,10 @@ public class BinaryMetadata extends PredicateMetadata {
             return left.message(context);
         else if (operator == or && context.isEvalFalse(left) && context.isEvalTrue(right))
             return right.message(context);
-        else if (operator == and && context.isEvalFalse(this))
-            return new EmptyMetadata();
+        if (operator == and && context.isEvalTrue(left) && context.isEvalFalse(right))
+            return right.message(context);
+        else if (operator == and && context.isEvalFalse(left) && context.isEvalTrue(right))
+            return left.message(context);
         else if (left.type() == NARY_PREDICATE) {
             if (((NaryMetadata) left).getOperator() == count)
                 return left.message(context);
