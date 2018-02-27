@@ -16,11 +16,9 @@
 package io.doov.gen.utils;
 
 import static java.lang.Thread.currentThread;
-import static java.util.stream.Collectors.toList;
 
 import java.io.File;
 import java.net.*;
-import java.util.*;
 import java.util.function.Function;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;

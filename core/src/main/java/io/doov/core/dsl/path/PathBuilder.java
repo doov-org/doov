@@ -50,6 +50,7 @@ public class PathBuilder<B, C, T> {
 
     public <R> PathBuilder<B, T, R> get(ReadMethodRef<T, R> readMethodRef) {
         pathList.add(readMethodRef);
+        @SuppressWarnings("unchecked")
         PathBuilder<B, T, R> pathBuilder = (PathBuilder<B, T, R>) this;
         pathBuilder.readMethodRef = readMethodRef;
         return pathBuilder;
@@ -57,6 +58,7 @@ public class PathBuilder<B, C, T> {
 
     public <R> PathBuilder<B, T, R> iterable(ReadMethodRef<T, Iterable<R>> readMethodRef) {
         pathList.add(readMethodRef);
+        @SuppressWarnings("unchecked")
         PathBuilder<B, T, R> pathBuilder = (PathBuilder<B, T, R>) this;
         pathBuilder.readMethodRef = readMethodRef;
         return pathBuilder;
@@ -64,6 +66,7 @@ public class PathBuilder<B, C, T> {
 
     public <R> PathBuilder<B, T, R> field(ReadMethodRef<T, R> readMethodRef, WriteMethodRef<T, R> writeMethodRef) {
         pathList.add(readMethodRef);
+        @SuppressWarnings("unchecked")
         PathBuilder<B, T, R> pathBuilder = (PathBuilder<B, T, R>) this;
         pathBuilder.readMethodRef = readMethodRef;
         pathBuilder.writeMethodRef = writeMethodRef;
