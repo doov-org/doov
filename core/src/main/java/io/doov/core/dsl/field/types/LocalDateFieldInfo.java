@@ -22,14 +22,14 @@ import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.LocalDateCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 
-public class LocalDateFieldInfo extends DelegatingFieldInfoImpl<LocalDate> implements TemporalFieldInfo<LocalDate> {
+public class LocalDateFieldInfo extends DelegatingFieldInfoImpl implements TemporalFieldInfo<LocalDate> {
 
     public LocalDateFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);
     }
 
     @Override
-    public TemporalCondition<LocalDate> getTemporalCondition() {
+    public LocalDateCondition getTemporalCondition() {
         return new LocalDateCondition(this);
     }
 

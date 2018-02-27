@@ -8,7 +8,7 @@ import java.util.Arrays;
 public interface CodeValuable {
 
     default String getCode() {
-        return ((Enum) this).name();
+        return ((Enum<?>) this).name();
     }
 
     class Helper {

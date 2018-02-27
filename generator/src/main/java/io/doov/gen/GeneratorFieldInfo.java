@@ -17,10 +17,9 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import io.doov.core.*;
-import io.doov.core.dsl.field.DelegatingFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 
-public class GeneratorFieldInfo<T> extends DelegatingFieldInfoImpl<T> {
+public class GeneratorFieldInfo extends DelegatingFieldInfoImpl {
 
     private static final Pattern UNDER = Pattern.compile("_");
 
@@ -37,7 +36,7 @@ public class GeneratorFieldInfo<T> extends DelegatingFieldInfoImpl<T> {
 
     static GeneratorFieldInfo fromVisitorPath(VisitorPath path, Collection<VisitorPath> allPaths) {
         Type genericReturnType = path.getPath().get(path.getPath().size() - 1).getGenericReturnType();
-        return new GeneratorFieldInfo<>(fieldInfo()
+        return new GeneratorFieldInfo(fieldInfo()
                 .fieldId(path.getFieldId())
                 .type(getterType(path))
                 .readable(formatReadable(path))

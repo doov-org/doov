@@ -15,13 +15,24 @@
  */
 package io.doov.core.dsl;
 
+import io.doov.core.FieldId;
+import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.Readable;
 
 /**
  * Interface for all field types.
+ *
+ * Generic type parameter {@link T} defines the type of the field.
  */
-public interface DslField extends Readable {
+public interface DslField<T> extends Readable {
 
-    DslId id();
+    FieldId id();
+
+    /**
+     * Returns a new default condition that will use this as a field.
+     *
+     * @return the default condition
+     */
+    DefaultCondition<T> getDefaultCondition();
 
 }

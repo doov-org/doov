@@ -19,7 +19,7 @@ import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.IntegerCondition;
 
-public class IntegerFieldInfo extends DelegatingFieldInfoImpl<Integer> implements NumericFieldInfo<Integer> {
+public class IntegerFieldInfo extends DelegatingFieldInfoImpl implements NumericFieldInfo<Integer> {
 
     public IntegerFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

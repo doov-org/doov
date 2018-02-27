@@ -18,34 +18,28 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslId;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LocalDateCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
-public class DateIsoFieldInfo extends DelegatingFieldInfoImpl<LocalDate> implements TemporalFieldInfo<LocalDate> {
+public class DateIsoFieldInfo extends DelegatingFieldInfoImpl implements TemporalFieldInfo<LocalDate> {
 
     public DateIsoFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);
     }
 
     @Override
-    public DefaultCondition<LocalDate> getDefaultCondition() {
+    public DateIsoCondition getTemporalCondition() {
         return new DateIsoCondition(this);
     }
 
-    @Override
-    public TemporalCondition<LocalDate> getTemporalCondition() {
-        return new DateIsoCondition(this);
-    }
-
-    public static Optional<LocalDate> parse(DslModel model, DslId id) {
+    public static Optional<LocalDate> parse(DslModel model, FieldId id) {
         return Optional.ofNullable(model.<String> get(id)).map(v -> LocalDate.parse(v, BASIC_ISO_DATE));
     }
 

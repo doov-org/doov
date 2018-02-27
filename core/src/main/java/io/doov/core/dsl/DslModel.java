@@ -15,11 +15,23 @@
  */
 package io.doov.core.dsl;
 
+import io.doov.core.FieldId;
+
 /**
  * Interface for all model.
  */
 public interface DslModel {
 
-    <T> T get(DslId id);
+    <T> T get(FieldId id);
+
+    default <T> T get(DslField<T> field) {
+        return get(field.id());
+    }
+
+    <T> void set(FieldId fieldId, T value);
+
+    default <T> void set(DslField<T> field, T value) {
+        set(field.id(), value);
+    }
 
 }

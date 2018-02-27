@@ -16,11 +16,18 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
+import io.doov.core.dsl.impl.DefaultCondition;
 
-public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfoImpl<E> {
+public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfoImpl implements BaseFieldInfo<E> {
 
     public EnumFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);
+    }
+
+    @Override
+    public DefaultCondition<E> getDefaultCondition() {
+        return new DefaultCondition<>(this);
     }
 }

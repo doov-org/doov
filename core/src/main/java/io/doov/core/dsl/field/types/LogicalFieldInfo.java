@@ -129,4 +129,9 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
      */
     BooleanCondition getBooleanCondition();
 
+    @Override
+    default BooleanCondition getDefaultCondition() {
+        return getBooleanCondition();
+    }
+
 }

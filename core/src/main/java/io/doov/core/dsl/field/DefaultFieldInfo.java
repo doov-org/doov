@@ -18,6 +18,7 @@ import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
 
+@SuppressWarnings("serial")
 public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Serializable {
 
     private final FieldId fieldId;
@@ -30,7 +31,7 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
     private final FieldId[] siblings;
 
     public DefaultFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, boolean codeValuable,
-                    boolean codeLookup, Class<?>[] genericTypes, FieldId... siblings) {
+                            boolean codeLookup, Class<?>[] genericTypes, FieldId... siblings) {
         this.fieldId = fieldId;
         this.readable = readable;
         this.type = type;

@@ -17,7 +17,6 @@ import static java.util.stream.Collectors.toList;
 import java.util.*;
 import java.util.stream.Stream;
 
-import io.doov.core.dsl.DslId;
 import io.doov.core.dsl.DslModel;
 
 /**
@@ -33,7 +32,7 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslMod
      * @return the field value
      */
     @Override
-    <T> T get(DslId fieldId);
+    <T> T get(FieldId fieldId);
 
     /**
      * Sets the given value to the given field id.
@@ -42,6 +41,7 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslMod
      * @param fieldId the field id to set
      * @param value   the value to set
      */
+    @Override
     <T> void set(FieldId fieldId, T value);
 
     /**

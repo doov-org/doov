@@ -4,14 +4,21 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
+import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.IterableCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
-public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingFieldInfoImpl<C> {
+public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingFieldInfoImpl implements BaseFieldInfo<C> {
 
     public IterableFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);
+    }
+
+    @Override
+    public DefaultCondition<C> getDefaultCondition() {
+        return new DefaultCondition<>(this);
     }
 
     public StepCondition contains(T value) {

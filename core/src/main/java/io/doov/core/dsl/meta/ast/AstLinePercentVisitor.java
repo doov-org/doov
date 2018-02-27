@@ -11,8 +11,8 @@ import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.meta.*;
 
 public class AstLinePercentVisitor extends AstLineVisitor {
+
     private static final NumberFormat formatter = new DecimalFormat("###.#");
-    private boolean endNary;
 
     public AstLinePercentVisitor(StringBuilder stringBuilder, ResourceProvider bundle, Locale locale) {
         super(stringBuilder, bundle, locale);
@@ -20,7 +20,7 @@ public class AstLinePercentVisitor extends AstLineVisitor {
 
     @Override
     public void startMetadata(StepWhen metadata, int depth) {
-        sb.append(percentage((PredicateMetadata) metadata.stepCondition().getMetadata())+ " ");
+        sb.append(percentage((PredicateMetadata) metadata.stepCondition().getMetadata()) + " ");
         super.startMetadata(metadata, depth);
     }
 
@@ -44,12 +44,6 @@ public class AstLinePercentVisitor extends AstLineVisitor {
     }
 
     @Override
-    protected void endMetadata(NaryMetadata metadata, int depth) {
-        super.endMetadata(metadata, depth);
-        endNary = true;
-    }
-
-    @Override
     protected String formatLeafMetadata(LeafMetadata metadata) {
         if (stackPeek() == MetadataType.BINARY_PREDICATE) {
             return super.formatLeafMetadata(metadata);
@@ -63,9 +57,8 @@ public class AstLinePercentVisitor extends AstLineVisitor {
 
         if (f == 0 && t == 0) {
             return "[n/a]";
-        }
-        else{
-            return "[" + formatter.format((t / ((double) t + f))*100) + "]";
+        } else {
+            return "[" + formatter.format((t / ((double) t + f)) * 100) + "]";
         }
     }
 }

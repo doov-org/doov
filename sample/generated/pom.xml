@@ -17,6 +17,10 @@
       <groupId>io.doov</groupId>
       <artifactId>doov-sample-base</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

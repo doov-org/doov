@@ -14,7 +14,7 @@ package io.doov.core.dsl.impl;
 
 import java.util.*;
 
-import io.doov.core.dsl.DslId;
+import io.doov.core.FieldId;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
@@ -22,7 +22,7 @@ public class DefaultContext implements Context {
 
     private final List<Metadata> evalTrue = new ArrayList<>();
     private final List<Metadata> evalFalse = new ArrayList<>();
-    private final Map<DslId, Object> values = new HashMap<>();
+    private final Map<FieldId, Object> values = new HashMap<>();
     private final boolean shortCircuit;
     private Metadata rootMetadata;
 
@@ -66,12 +66,12 @@ public class DefaultContext implements Context {
     }
 
     @Override
-    public void addEvalValue(DslId id, Object value) {
+    public void addEvalValue(FieldId id, Object value) {
         values.put(id, value);
     }
     
     @Override
-    public Object getEvalValue(DslId id) {
+    public Object getEvalValue(FieldId id) {
         return values.get(id);
     }
     

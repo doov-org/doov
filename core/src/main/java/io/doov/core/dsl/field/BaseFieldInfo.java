@@ -35,7 +35,7 @@ import io.doov.core.dsl.lang.StepCondition;
  * @param <T> the type of the field value
  * @see #getDefaultCondition()
  */
-public interface BaseFieldInfo<T> extends DslField {
+public interface BaseFieldInfo<T> extends DslField<T> {
 
     /**
      * See {@link DefaultCondition#isNull()}
@@ -224,12 +224,5 @@ public interface BaseFieldInfo<T> extends DslField {
     default IntegerCondition mapToInt(Function<T, Integer> mapper) {
         return getDefaultCondition().mapToInt(mapper);
     }
-
-    /**
-     * Returns a new default condition that will use this as a field.
-     *
-     * @return the default condition
-     */
-    DefaultCondition<T> getDefaultCondition();
 
 }

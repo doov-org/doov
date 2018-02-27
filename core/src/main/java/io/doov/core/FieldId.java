@@ -19,12 +19,10 @@ import static java.util.Collections.emptyList;
 
 import java.util.List;
 
-import io.doov.core.dsl.DslId;
-
 /**
  * Id representing a value of the  {@code FieldModel}
  */
-public interface FieldId extends DslId {
+public interface FieldId {
 
     /**
      * Returns the field unique identifier

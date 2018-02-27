@@ -17,7 +17,7 @@ import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import java.util.Locale;
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.DslId;
+import io.doov.core.FieldId;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
@@ -63,10 +63,16 @@ abstract class AbstractStepCondition implements StepCondition {
         }
 
         @Override
-        public <T> T get(DslId id) {
+        public <T> T get(FieldId id) {
             final T value = model.get(id);
             context.addEvalValue(id, value);
             return value;
+        }
+
+        @Override
+        public <T> void set(FieldId fieldId, T value) {
+            model.set(fieldId, value);
+            // TODO context
         }
     }
 

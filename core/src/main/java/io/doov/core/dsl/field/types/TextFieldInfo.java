@@ -98,4 +98,9 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
      */
     StringCondition getStringCondition();
 
+    @Override
+    default StringCondition getDefaultCondition() {
+        return getStringCondition();
+    }
+
 }

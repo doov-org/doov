@@ -23,7 +23,7 @@ public class DateTypeAdapter implements TypeAdapter {
     }
 
     @Override
-    @SuppressWarnings("deprecated")
+    @SuppressWarnings("deprecation")
     public String toString(Object value) {
         Date date = (Date) value;
         final int day = date.getDate();
@@ -33,7 +33,7 @@ public class DateTypeAdapter implements TypeAdapter {
     }
 
     @Override
-    @SuppressWarnings("deprecated")
+    @SuppressWarnings("deprecation")
     public Object fromString(FieldInfo info, String value) {
         int year = Integer.parseInt(value.substring(0, 4));
         int month = Integer.parseInt(value.substring(4, 6));
