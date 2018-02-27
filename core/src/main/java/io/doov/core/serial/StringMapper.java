@@ -8,6 +8,8 @@ import io.doov.core.FieldInfo;
 
 public interface StringMapper {
 
+    TypeAdapterRegistry getTypeAdapterRegistry();
+
     String getAsString(FieldId fieldId);
 
     String getAsString(FieldInfo fieldInfo);

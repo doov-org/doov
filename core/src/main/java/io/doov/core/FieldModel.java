@@ -18,11 +18,12 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslModel;
+import io.doov.core.serial.StringMapper;
 
 /**
  * An model that maps {@code FieldId} to values. Each {@code FieldId} can map to at most one value.
  */
-public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslModel {
+public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslModel, StringMapper {
 
     /**
      * Returns the {@code FieldId} value from the {@code FieldId} to read
@@ -113,6 +114,47 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslMod
      */
     default FieldInfo info(FieldId id) {
         return getFieldInfos().stream().filter(info -> info.id() == id).findFirst().orElse(null);
+    }
+
+
+    @Override
+    default String getAsString(FieldId fieldId) {
+        Object value = get(fieldId);
+        if (value == null) {
+            return null;
+        }
+        return getTypeAdapterRegistry().stream()
+                        .filter(a -> a.accept(value))
+                        .findFirst()
+                        .map(a -> a.toString(value))
+                        .orElse(null);
+    }
+
+    @Override
+    default String getAsString(FieldInfo info) {
+        Objects.requireNonNull(info);
+        return getAsString(info.id());
+    }
+
+    @Override
+    default void setAsString(FieldId fieldId, String value) {
+        FieldInfo fieldInfo = info(fieldId);
+        setAsString(fieldInfo, value);
+    }
+
+    @Override
+    default void setAsString(FieldInfo fieldInfo, String value) {
+        Objects.requireNonNull(fieldInfo);
+        if (value == null) {
+            set(fieldInfo.id(), null);
+        } else {
+            set(fieldInfo.id(), getTypeAdapterRegistry().stream()
+                            .filter(a -> a.accept(fieldInfo))
+                            .findFirst()
+                            .map(a -> a.fromString(fieldInfo, value))
+                            .orElseThrow(() -> new IllegalStateException("cannot set field "
+                                            + fieldInfo.id() + " with value " + value)));
+        }
     }
 
 }

@@ -19,10 +19,15 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 
+import io.doov.core.serial.TypeAdapterRegistry;
+import io.doov.core.serial.TypeAdapters;
+
 /**
  * {@code FieldModel} implementation based on {@code java.util.Map}
  */
 public class BaseFieldModel implements FieldModel {
+
+    private static TypeAdapterRegistry TYPE_ADAPTER_REGISTRY = new TypeAdapters();
 
     protected Map<FieldId, Object> values;
     protected List<FieldInfo> fieldInfos;
@@ -48,6 +53,11 @@ public class BaseFieldModel implements FieldModel {
     @Override
     public List<FieldInfo> getFieldInfos() {
         return fieldInfos;
+    }
+
+    @Override
+    public TypeAdapterRegistry getTypeAdapterRegistry() {
+        return TYPE_ADAPTER_REGISTRY;
     }
 
     @Override

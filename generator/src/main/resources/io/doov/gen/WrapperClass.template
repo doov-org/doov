@@ -41,7 +41,7 @@ public final class ${target.class.name} extends ${process.base.class.name} {
     }
 ${constructors}
     @Override
-    protected TypeAdapterRegistry getTypeAdapterRegistry() {
+    public TypeAdapterRegistry getTypeAdapterRegistry() {
         return TYPE_ADAPTER_REGISTRY;
     }
 
