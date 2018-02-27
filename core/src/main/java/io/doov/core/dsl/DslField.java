@@ -28,4 +28,11 @@ public interface DslField<T> extends Readable {
 
     FieldId id();
 
+    /**
+     * Returns a new default condition that will use this as a field.
+     *
+     * @return the default condition
+     */
+    DefaultCondition<T> getDefaultCondition();
+
 }

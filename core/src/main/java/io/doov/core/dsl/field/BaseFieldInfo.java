@@ -225,11 +225,4 @@ public interface BaseFieldInfo<T> extends DslField<T> {
         return getDefaultCondition().mapToInt(mapper);
     }
 
-    /**
-     * Returns a new default condition that will use this as a field.
-     *
-     * @return the default condition
-     */
-    DefaultCondition<T> getDefaultCondition();
-
 }
