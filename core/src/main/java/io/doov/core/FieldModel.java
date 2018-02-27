@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.serial.StringMapper;
+import io.doov.core.serial.TypeAdapter;
 
 /**
  * An model that maps {@code FieldId} to values. Each {@code FieldId} can map to at most one value.
@@ -148,12 +149,12 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslMod
         if (value == null) {
             set(fieldInfo.id(), null);
         } else {
-            set(fieldInfo.id(), getTypeAdapterRegistry().stream()
-                            .filter(a -> a.accept(fieldInfo))
-                            .findFirst()
-                            .map(a -> a.fromString(fieldInfo, value))
-                            .orElseThrow(() -> new IllegalStateException("cannot set field "
-                                            + fieldInfo.id() + " with value " + value)));
+            TypeAdapter typeAdapter = getTypeAdapterRegistry().stream()
+                    .filter(a -> a.accept(fieldInfo))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("cannot set field "
+                            + fieldInfo.id() + " with value " + value));
+            set(fieldInfo.id(), typeAdapter.fromString(fieldInfo, value));
         }
     }
 
