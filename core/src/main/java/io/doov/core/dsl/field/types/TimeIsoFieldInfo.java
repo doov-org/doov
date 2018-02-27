@@ -23,25 +23,19 @@ import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LocalTimeCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.PredicateMetadata;
 
-public class TimeIsoFieldInfo extends DelegatingFieldInfoImpl<LocalTime> implements TemporalFieldInfo<LocalTime> {
+public class TimeIsoFieldInfo extends DelegatingFieldInfoImpl implements TemporalFieldInfo<LocalTime> {
 
     public TimeIsoFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);
     }
 
     @Override
-    public DefaultCondition<LocalTime> getDefaultCondition() {
-        return new TimeIsoCondition(this);
-    }
-
-    @Override
-    public TemporalCondition<LocalTime> getTemporalCondition() {
+    public TimeIsoCondition getTemporalCondition() {
         return new TimeIsoCondition(this);
     }
 

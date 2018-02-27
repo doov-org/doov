@@ -16,10 +16,13 @@
 package io.doov.core.dsl;
 
 import io.doov.core.FieldId;
+import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.Readable;
 
 /**
  * Interface for all field types.
+ *
+ * Generic type parameter {@link T} defines the type of the field.
  */
 public interface DslField<T> extends Readable {
 

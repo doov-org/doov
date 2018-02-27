@@ -16,6 +16,7 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
+import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.NumericCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
@@ -169,4 +170,8 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      */
     NumericCondition<N> getNumericCondition();
 
+    @Override
+    default NumericCondition<N> getDefaultCondition() {
+        return getNumericCondition();
+    }
 }

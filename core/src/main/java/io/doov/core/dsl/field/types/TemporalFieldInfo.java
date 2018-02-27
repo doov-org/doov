@@ -19,6 +19,7 @@ import java.time.temporal.TemporalUnit;
 import java.util.function.Supplier;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
+import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.NumericCondition;
 import io.doov.core.dsl.impl.TemporalCondition;
 import io.doov.core.dsl.lang.StepCondition;
@@ -498,4 +499,8 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      */
     TemporalCondition<N> getTemporalCondition();
 
+    @Override
+    default TemporalCondition<N> getDefaultCondition() {
+        return getTemporalCondition();
+    }
 }

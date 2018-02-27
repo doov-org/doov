@@ -19,7 +19,7 @@ import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.StringCondition;
 
-public class StringFieldInfo extends DelegatingFieldInfoImpl<String> implements TextFieldInfo {
+public class StringFieldInfo extends DelegatingFieldInfoImpl implements TextFieldInfo {
 
     public StringFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

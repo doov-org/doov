@@ -16,11 +16,18 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
+import io.doov.core.dsl.impl.DefaultCondition;
 
-public class CharacterFieldInfo extends DelegatingFieldInfoImpl<Character> {
+public class CharacterFieldInfo extends DelegatingFieldInfoImpl implements BaseFieldInfo<Character> {
 
     public CharacterFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);
+    }
+
+    @Override
+    public DefaultCondition<Character> getDefaultCondition() {
+        return new DefaultCondition<>(this);
     }
 }

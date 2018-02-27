@@ -7,12 +7,7 @@ import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
 
-public interface DelegatingFieldInfo<T> extends FieldInfo, BaseFieldInfo<T> {
-
-    @Override
-    default DefaultCondition<T> getDefaultCondition() {
-        return new DefaultCondition<>(this);
-    }
+public interface DelegatingFieldInfo extends FieldInfo {
 
     FieldInfo delegate();
 

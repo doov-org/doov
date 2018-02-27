@@ -63,13 +63,13 @@ public class FieldInfoBuilder {
         return this;
     }
 
-    public FieldInfo build(List<FieldInfo> allFields) {
-        DefaultFieldInfo info = build();
+    public <T> FieldInfo build(List<FieldInfo> allFields) {
+        DefaultFieldInfo<T> info = build();
         allFields.add(info);
         return info;
     }
 
-    public DefaultFieldInfo build() {
+    public <T> DefaultFieldInfo<T> build() {
         return new DefaultFieldInfo<>(fieldId, readable, type, _transient, codeValuable,
                             codeLookup, genericTypes, siblings);
     }
