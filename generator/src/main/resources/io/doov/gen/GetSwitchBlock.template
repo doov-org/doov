@@ -1,2 +1,2 @@
-                case ${field.id.name}:
-                    return ${target.model.class.name}Property.${field.id.name}.supplier();
+            case ${field.id.name}:
+                return ${target.model.class.name}Property.${field.id.name}.supplier();
