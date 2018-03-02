@@ -7,8 +7,6 @@ import static io.doov.core.dsl.path.PathBuilder.from;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 import io.doov.core.dsl.path.*;
 import io.doov.sample.model.*;
@@ -198,6 +196,20 @@ public class SampleFieldPath implements FieldPathProvider {
                     .field(Account::getPassword, Account::setPassword)
                     .readable("account password")
                     .fieldId(SampleFieldId.PASSWD)
+                    .build(ALL);
+
+    private static final FieldPath ADDRESS = from(SampleModel.class)
+                    .get(SampleModel::getUser)
+                    .field(User::getAddress, User::setAddress)
+                    .readable("user address")
+                    .fieldId(CoreFieldId.ADDRESS)
+                    .build(ALL);
+
+    private static final FieldPath TEL = from(SampleModel.class)
+                    .get(SampleModel::getUser)
+                    .field(User::getTel, User::setTel)
+                    .readable("user tel")
+                    .fieldId(CoreFieldId.TEL)
                     .build(ALL);
 
     @Override

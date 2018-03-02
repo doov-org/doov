@@ -24,12 +24,12 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldInfo;
 import io.doov.sample.field.SampleFieldId;
-import io.doov.sample.field.SampleFieldIdInfo;
+import io.doov.sample.field.SampleFieldInfo;
 
 public class SampleFieldIdInfoTest {
 
     private Optional<FieldInfo> fieldInfo(SampleFieldId id) {
-        return SampleFieldIdInfo.stream().filter(info -> info.id() == id).findFirst();
+        return SampleFieldInfo.stream().filter(info -> info.id() == id).findFirst();
     }
 
     @Test

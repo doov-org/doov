@@ -22,10 +22,9 @@ import static io.doov.sample.field.SampleTag.USER;
 import java.util.Arrays;
 import java.util.List;
 
-import io.doov.core.FieldId;
 import io.doov.core.TagId;
 
-public enum SampleFieldId implements FieldId {
+public enum SampleFieldId implements SampleField {
 
     USER_ID(USER),
     ACCOUNT_ID(ACCOUNT),

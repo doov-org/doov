@@ -45,7 +45,7 @@
               <packageFilter>io.doov.sample</packageFilter>
               <fieldPathProvider>io.doov.sample.field.SampleFieldPath</fieldPathProvider>
               <sourceClass>io.doov.sample.model.SampleModel</sourceClass>
-              <fieldClass>io.doov.sample.field.SampleFieldId</fieldClass>
+              <fieldClass>io.doov.sample.field.SampleField</fieldClass>
             </configuration>
           </execution>
           <execution>

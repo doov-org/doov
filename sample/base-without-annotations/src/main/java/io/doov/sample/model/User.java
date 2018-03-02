@@ -25,6 +25,10 @@ public class User extends Identity {
 
     private LocalDate birthDate;
 
+    private String address;
+
+    private String tel;
+
     public String getFullName() {
         return firstName != null && lastName != null ? firstName + " " + lastName : null;
     }
@@ -55,5 +59,21 @@ public class User extends Identity {
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 }
