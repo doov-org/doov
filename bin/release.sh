@@ -69,7 +69,7 @@ echo "Commiting and tagging versions in git"
 echo "====================================="
 echo ""
 
-git commit -a -m "Release version ${VERSION}"
+git commit -a -m "[release] Release version ${VERSION}"
 git tag ${VERSION}
 
 echo ""
@@ -82,7 +82,7 @@ mvn -pl core -P publish-site clean site
 mvn -pl assertions -P publish-site clean site
 mvn -pl generator -P publish-site clean site
 git add .
-git commit -m "Release maven site ${VERSION}"
+git commit -m "[release] Release maven site ${VERSION}"
 
 echo ""
 echo "====================================="
@@ -91,7 +91,7 @@ echo "====================================="
 echo ""
 
 git revert --no-commit HEAD~1
-git commit -a -m "Revert versions to SNAPSHOT"
+git commit -a -m "[release] Revert versions to SNAPSHOT"
 
 echo ""
 echo "====================================="
