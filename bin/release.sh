@@ -54,13 +54,13 @@ echo "====================================="
 echo ""
 
 if [ -z "${GPG_KEYNAME}" ] ; then
-  mvn -f core -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
-  mvn -f assertions -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
-  mvn -f generator -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+  mvn -f core/pom.xml -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+  mvn -f assertions/pom.xml -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+  mvn -f generator/pom.xml -P release -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
 else
-  mvn -D gpg.keyname="${GPG_KEYNAME}" -f core -P release -P sign -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
-  mvn -D gpg.keyname="${GPG_KEYNAME}" -f assertions -P release -P sign -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
-  mvn -D gpg.keyname="${GPG_KEYNAME}" -f generator -P release -P sign -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+  mvn -D gpg.keyname="${GPG_KEYNAME}" -f core/pom.xml -P release -P sign -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+  mvn -D gpg.keyname="${GPG_KEYNAME}" -f assertions/pom.xml -P release -P sign -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
+  mvn -D gpg.keyname="${GPG_KEYNAME}" -f generator/pom.xml -P release -P sign -D altDeploymentRepository="${REPOSITORY_ID}::default::${REPOSITORY_URL}" clean deploy
 fi
 
 echo ""
