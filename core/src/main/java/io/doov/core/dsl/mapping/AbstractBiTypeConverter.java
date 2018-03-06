@@ -16,8 +16,4 @@ public abstract class AbstractBiTypeConverter<I, J, O> implements BiTypeConverte
         return convert(fieldModel.get(in.id()), fieldModel.get(in2.id()));
     }
 
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        // TODO
-    }
 }

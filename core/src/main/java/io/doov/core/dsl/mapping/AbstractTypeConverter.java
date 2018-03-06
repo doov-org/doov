@@ -16,8 +16,4 @@ public abstract class AbstractTypeConverter<I, O> implements TypeConverter<I, O>
         return convert(fieldModel.get(in.id()));
     }
 
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        // TODO
-    }
 }

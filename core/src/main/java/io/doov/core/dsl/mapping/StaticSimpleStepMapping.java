@@ -24,13 +24,4 @@ public class StaticSimpleStepMapping<I, O> implements StepMapping<I, O> {
         return new StaticMappingRule<>(inputObject, outFieldInfo, typeConverter);
     }
 
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        // TODO
-    }
-
-    @Override
-    public String readable() {
-        return null;
-    }
 }

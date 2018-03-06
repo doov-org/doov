@@ -12,5 +12,10 @@ public enum MetadataType {
     FIELD_PREDICATE_MATCH_ANY, //
     NARY_PREDICATE, //
     UNARY_PREDICATE, //
-    EMPTY;
+    EMPTY, //
+    SINGLE_MAPPING, //
+    MULTIPLE_MAPPING, //
+    TYPE_CONVERTER, //
+    TYPE_CONVERTER_IDENTITY, //
+    ;
 }

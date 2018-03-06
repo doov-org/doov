@@ -4,9 +4,9 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.BiStepMap;
 import io.doov.core.dsl.lang.BiStepMapping;
 import io.doov.core.dsl.lang.BiTypeConverter;
-import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultBiStepMap<I, J> implements BiStepMap<I, J> {
+
     private DslField<I> inFieldInfo;
     private DslField<J> in2FieldInfo;
 
@@ -20,13 +20,4 @@ public class DefaultBiStepMap<I, J> implements BiStepMap<I, J> {
         return new DefaultBiStepMapping<>(inFieldInfo, in2FieldInfo, typeConverter);
     }
 
-    @Override
-    public String readable() {
-        return null;
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        // TODO
-    }
 }

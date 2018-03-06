@@ -1,17 +1,21 @@
 package io.doov.core.dsl.mapping;
 
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+
+import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Function;
 
 import io.doov.core.dsl.lang.TypeConverter;
+import io.doov.core.dsl.meta.*;
 
 public class DefaultTypeConverter<I, O> extends AbstractTypeConverter<I, O> {
 
+    private final ConverterMetadata metadata;
     private Function<Optional<I>, O> converter;
-    private String description;
 
     public static <T> TypeConverter<T, T> identity() {
-        return converter(Function.identity(), null, "identity");
+        return new DefaultTypeConverter<>(i -> i.orElse(null), ConverterMetadata.identity());
     }
 
     public static <I, O> TypeConverter<I, O> converter(Function<Optional<I>, O> converter, String description) {
@@ -19,12 +23,16 @@ public class DefaultTypeConverter<I, O> extends AbstractTypeConverter<I, O> {
     }
 
     public static <I, O> TypeConverter<I, O> converter(Function<I, O> converter, O nullCase, String description) {
-        return new DefaultTypeConverter<>(i -> i.map(converter).orElse(nullCase), description);
+        return converter(i -> i.map(converter).orElse(nullCase), description);
     }
 
     public DefaultTypeConverter(Function<Optional<I>, O> converter, String description) {
+        this(converter, ConverterMetadata.metadata(description));
+    }
+
+    public DefaultTypeConverter(Function<Optional<I>, O> converter, ConverterMetadata metadata) {
         this.converter = converter;
-        this.description = description;
+        this.metadata = metadata;
     }
 
     @Override
@@ -33,8 +41,13 @@ public class DefaultTypeConverter<I, O> extends AbstractTypeConverter<I, O> {
     }
 
     @Override
+    public void accept(MetadataVisitor visitor, int depth) {
+        metadata.accept(visitor, depth);
+    }
+
+    @Override
     public String readable() {
-        return description;
+        return astToString(this, Locale.getDefault());
     }
 
 }

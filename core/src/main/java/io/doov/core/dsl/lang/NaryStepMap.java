@@ -1,12 +1,10 @@
 package io.doov.core.dsl.lang;
 
-import io.doov.core.dsl.meta.SyntaxTree;
-
 /**
  * First step for creating a n-ary mapping rule.
  * Associates the in fields with with a generic converter
  */
-public interface NaryStepMap extends Readable, SyntaxTree {
+public interface NaryStepMap {
 
     /**
      * Return the step mapping

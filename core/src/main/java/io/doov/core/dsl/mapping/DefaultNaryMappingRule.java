@@ -1,24 +1,30 @@
 package io.doov.core.dsl.mapping;
 
+import static io.doov.core.dsl.meta.MappingMetadata.mapping;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+
 import java.util.List;
+import java.util.Locale;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.GenericTypeConverter;
 import io.doov.core.dsl.lang.MappingRegistry;
 import io.doov.core.dsl.lang.NaryMappingRule;
-import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.*;
 
 public class DefaultNaryMappingRule<O> implements NaryMappingRule<O> {
 
-    private List<DslField> fieldInfos;
-    private DslField<O> outFieldInfo;
-    private GenericTypeConverter<O> typeConverter;
+    private final MappingMetadata metadata;
+    private final List<DslField> fieldInfos;
+    private final DslField<O> outFieldInfo;
+    private final GenericTypeConverter<O> typeConverter;
 
     public DefaultNaryMappingRule(List<DslField> fieldInfos, DslField<O> outFieldInfo,
-                                  GenericTypeConverter<O> typeConverter) {
+                    GenericTypeConverter<O> typeConverter) {
         this.fieldInfos = fieldInfos;
         this.outFieldInfo = outFieldInfo;
+        this.metadata = mapping(fieldInfos, outFieldInfo);
         this.typeConverter = typeConverter;
     }
 
@@ -42,12 +48,13 @@ public class DefaultNaryMappingRule<O> implements NaryMappingRule<O> {
     }
 
     @Override
-    public String readable() {
-        return null;
+    public void accept(MetadataVisitor visitor, int depth) {
+        metadata.accept(visitor, depth);
+        typeConverter.accept(visitor, depth);
     }
 
     @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-
+    public String readable() {
+        return astToString(this, Locale.getDefault());
     }
 }

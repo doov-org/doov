@@ -1,7 +1,6 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
  * Intermediary step for creating a bi mapping rule.
@@ -11,7 +10,7 @@ import io.doov.core.dsl.meta.SyntaxTree;
  * @param <J> 2nd in type
  * @param <O> out type
  */
-public interface BiStepMapping<I, J, O> extends Readable, SyntaxTree {
+public interface BiStepMapping<I, J, O> {
 
     /**
      * Return the bi mapping rule

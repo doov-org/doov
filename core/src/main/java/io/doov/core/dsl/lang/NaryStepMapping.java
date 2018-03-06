@@ -1,7 +1,6 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
  * Intermediary step for creating n-ary mapping rule.
@@ -9,7 +8,7 @@ import io.doov.core.dsl.meta.SyntaxTree;
  *
  * @param <O> out type
  */
-public interface NaryStepMapping<O> extends Readable, SyntaxTree {
+public interface NaryStepMapping<O> {
 
     /**
      * Return the n-ary mapping rule

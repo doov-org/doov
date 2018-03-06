@@ -16,6 +16,7 @@
 package io.doov.core.dsl.meta;
 
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.mapping.*;
 
 public interface MetadataVisitor {
 
@@ -72,5 +73,21 @@ public interface MetadataVisitor {
     // StepCondition
 
     void visit(StepCondition stepCondition, int depth);
+
+    // MappingRule
+
+    void start(MappingMetadata mappingMetadata, int depth);
+
+    void visit(MappingMetadata mappingMetadata, int depth);
+
+    void end(MappingMetadata mappingMetadata, int depth);
+
+    // TypeConverter
+
+    void end(ConverterMetadata metadata, int depth);
+
+    void visit(ConverterMetadata metadata, int depth);
+
+    void start(ConverterMetadata metadata, int depth);
 
 }

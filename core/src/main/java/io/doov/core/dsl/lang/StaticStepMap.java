@@ -5,14 +5,13 @@ package io.doov.core.dsl.lang;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.mapping.StaticMappingRule;
-import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
  * First step for creating a static mapping rule.
  *
  * @param <I> in type
  */
-public interface StaticStepMap<I> extends Readable, SyntaxTree {
+public interface StaticStepMap<I> {
 
     /**
      * Return the step mapping
