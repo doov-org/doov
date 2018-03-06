@@ -51,20 +51,24 @@ public interface FieldInfo extends Readable {
     Class<?>[] genericTypes();
 
     /**
+     * Field metadata for {@code CodeLookup}. This information is used for serialization of {@code Enum} types
      *
-     * @return
+     * @return whether {@link CodeLookup} is assignable from the field
      */
     boolean isCodeLookup();
 
     /**
-     * // TODO
-     * @return
+     * Field metadata for {@code CodeValuable}. This information is used for serialization of {@code Enum} types
+     *
+     * @return whether {@link CodeValuable} is assignable from the field
      */
     boolean isCodeValuable();
 
     /**
-     * //TODO
-     * @return
+     * Field metadata for transient. This information can be used to omit the serialization of this field.
+     * See {@link FieldTransient} annotation.
+     *
+     * @return whether the field is transient
      */
     boolean isTransient();
 

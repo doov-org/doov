@@ -8,6 +8,9 @@ import java.util.stream.Stream;
 
 import io.doov.core.serial.adapter.*;
 
+/**
+ * Default implementation of Type adapter registry
+ */
 public class TypeAdapters implements TypeAdapterRegistry {
 
     protected static List<TypeAdapter> TYPE_ADAPTERS = Arrays.asList(

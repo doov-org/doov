@@ -6,6 +6,11 @@ package io.doov.core;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+/**
+ * Enum type interface with overridable {@link #parseCode} implementation.
+ *
+ * @param <E> Enum type
+ */
 public interface CodeLookup<E extends Enum<E> & CodeValuable> extends CodeValuable {
 
     default E parseCode(String code) {

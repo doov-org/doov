@@ -5,6 +5,11 @@ package io.doov.core;
 
 import java.util.*;
 
+/**
+ * Base class for Wrapper implementation.
+ *
+ * @param <M> model type
+ */
 public abstract class AbstractWrapper<M> implements FieldModel {
 
     protected final List<FieldInfo> fieldInfos;

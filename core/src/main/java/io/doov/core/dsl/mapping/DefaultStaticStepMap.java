@@ -18,7 +18,7 @@ public class DefaultStaticStepMap<I> implements StaticStepMap<I> {
     }
 
     @Override
-    public SimpleMappingRule<I, I> to(DslField<I> outFieldInfo) {
+    public StaticMappingRule<I, I> to(DslField<I> outFieldInfo) {
         return new StaticMappingRule<>(inputObject, outFieldInfo, DefaultStaticTypeConverter.identity());
     }
 
