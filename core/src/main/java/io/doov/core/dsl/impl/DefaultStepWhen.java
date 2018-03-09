@@ -43,12 +43,12 @@ public class DefaultStepWhen implements StepWhen {
 
     @Override
     public ConditionalMappingRule then(MappingRule... mappingRule) {
-        return new DefaultConditionalMappingRule(validate(), mappingRule);
+        return new DefaultConditionalMappingRule(this, mappingRule);
     }
 
     @Override
     public ConditionalMappingRule then(MappingRegistry mappingRegistry) {
-        return new DefaultConditionalMappingRule(validate(), mappingRegistry);
+        return new DefaultConditionalMappingRule(this, mappingRegistry);
     }
 
     @Override

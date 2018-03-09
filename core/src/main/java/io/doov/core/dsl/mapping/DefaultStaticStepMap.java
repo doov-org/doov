@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultStaticStepMap<I> implements StaticStepMap<I> {
 
@@ -27,13 +26,4 @@ public class DefaultStaticStepMap<I> implements StaticStepMap<I> {
         return new StaticSimpleStepMapping<>(inputObject, typeConverter);
     }
 
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        // TODO
-    }
-
-    @Override
-    public String readable() {
-        return null;
-    }
 }

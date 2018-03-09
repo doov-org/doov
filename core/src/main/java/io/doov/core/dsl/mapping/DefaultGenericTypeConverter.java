@@ -1,27 +1,33 @@
 package io.doov.core.dsl.mapping;
 
-import java.util.Arrays;
-import java.util.List;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+
+import java.util.*;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.GenericTypeConverter;
+import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultGenericTypeConverter<O> implements GenericTypeConverter<O> {
 
+    private final ConverterMetadata metadata;
     private BiFunction<FieldModel, List<DslField>, O> function;
-    private String description;
 
     public static <O> GenericTypeConverter<O> nConverter(BiFunction<FieldModel, List<DslField>, O> function,
-                                                 String description) {
+                    String description) {
         return new DefaultGenericTypeConverter<>(function, description);
     }
 
     public DefaultGenericTypeConverter(BiFunction<FieldModel, List<DslField>, O> function, String description) {
+        this(function, ConverterMetadata.metadata(description));
+    }
+
+    public DefaultGenericTypeConverter(BiFunction<FieldModel, List<DslField>, O> function, ConverterMetadata metadata) {
         this.function = function;
-        this.description = description;
+        this.metadata = metadata;
     }
 
     @Override
@@ -31,12 +37,12 @@ public class DefaultGenericTypeConverter<O> implements GenericTypeConverter<O> {
     }
 
     @Override
-    public String readable() {
-        return description;
+    public void accept(MetadataVisitor visitor, int depth) {
+        metadata.accept(visitor, depth);
     }
 
     @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        // TODO
+    public String readable() {
+        return astToString(this, Locale.getDefault());
     }
 }

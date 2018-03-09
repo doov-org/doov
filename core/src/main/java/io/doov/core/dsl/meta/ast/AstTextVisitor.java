@@ -12,22 +12,16 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.rule;
-import static io.doov.core.dsl.meta.DefaultOperator.validate;
-import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.MappingOperator.*;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Locale;
 
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.lang.StepWhen;
-import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.Operator;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 
 public class AstTextVisitor extends AbstractAstVisitor {
 
@@ -104,6 +98,27 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
+    protected void startMetadata(ConverterMetadata metadata, int depth) {
+        sb.append(formatCurrentIndent());
+        sb.append(formatUsing());
+        sb.append(formatNewLine());
+    }
+
+    @Override
+    protected void visitMetadata(ConverterMetadata metadata, int depth) {
+        sb.append(formatCurrentIndent());
+        sb.append(formatValue(metadata));
+        sb.append(formatNewLine());
+    }
+
+    @Override
+    public void visitMetadata(MappingMetadata metadata, int depth) {
+        sb.append(formatCurrentIndent());
+        sb.append(formatMappingMetadata(metadata));
+        sb.append(formatNewLine());
+    }
+
+    @Override
     protected int getIndentSize() {
         return INDENT_SIZE;
     }
@@ -118,6 +133,21 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     protected String formatLeafMetadata(LeafMetadata metadata) {
+        return metadata.stream().map(e -> {
+            switch (e.getType()) {
+                case OPERATOR:
+                    return bundle.get((Operator) e.getReadable(), locale);
+                case FIELD:
+                    return e.getReadable().readable();
+                case STRING_VALUE:
+                    return "'" + bundle.get(e.getReadable().readable(), locale) + "'";
+                default:
+                    return bundle.get(e.getReadable().readable(), locale);
+            }
+        }).collect(joining(" "));
+    }
+
+    protected String formatMappingMetadata(MappingMetadata metadata) {
         return metadata.stream().map(e -> {
             switch (e.getType()) {
                 case OPERATOR:
@@ -148,10 +178,12 @@ public class AstTextVisitor extends AbstractAstVisitor {
         return bundle.get(validate, locale);
     }
 
-
-
     protected String formatWhen() {
         return bundle.get(when, locale);
+    }
+
+    private String formatUsing() {
+        return bundle.get(using, locale);
     }
 
 }

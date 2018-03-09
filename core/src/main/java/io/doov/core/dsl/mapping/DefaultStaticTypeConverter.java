@@ -3,18 +3,21 @@
  */
 package io.doov.core.dsl.mapping;
 
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+
+import java.util.Locale;
 import java.util.function.Function;
 
 import io.doov.core.dsl.lang.StaticTypeConverter;
-import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.*;
 
 public class DefaultStaticTypeConverter<I, O> implements StaticTypeConverter<I, O> {
 
     private final Function<I, O> function;
-    private final String description;
+    private final ConverterMetadata metadata;
 
     public static <I> StaticTypeConverter<I, I> identity() {
-        return converter(Function.identity(), "identity");
+        return new DefaultStaticTypeConverter<>(Function.identity(), ConverterMetadata.identity());
     }
 
     public static <I, O> StaticTypeConverter<I, O> converter(Function<I, O> function, String description) {
@@ -22,8 +25,12 @@ public class DefaultStaticTypeConverter<I, O> implements StaticTypeConverter<I, 
     }
 
     public DefaultStaticTypeConverter(Function<I, O> function, String description) {
+        this(function, ConverterMetadata.metadata(description));
+    }
+
+    public DefaultStaticTypeConverter(Function<I, O> function, ConverterMetadata metadata) {
         this.function = function;
-        this.description = description;
+        this.metadata = metadata;
     }
 
     @Override
@@ -33,11 +40,11 @@ public class DefaultStaticTypeConverter<I, O> implements StaticTypeConverter<I, 
 
     @Override
     public void accept(MetadataVisitor visitor, int depth) {
-
+        metadata.accept(visitor, depth);
     }
 
     @Override
     public String readable() {
-        return description;
+        return astToString(this, Locale.getDefault());
     }
 }

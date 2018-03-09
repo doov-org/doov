@@ -17,16 +17,6 @@ public class DefaultStepMapping<I, O> implements StepMapping<I, O> {
     }
 
     @Override
-    public String readable() {
-        return "to";
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        // TODO
-    }
-
-    @Override
     public SimpleMappingRule<I, O> to(DslField<O> outFieldInfo) {
         return new DefaultMappingRule<>(inFieldInfo, outFieldInfo, typeConverter);
     }

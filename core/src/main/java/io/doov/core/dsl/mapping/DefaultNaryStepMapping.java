@@ -6,7 +6,6 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.GenericTypeConverter;
 import io.doov.core.dsl.lang.NaryMappingRule;
 import io.doov.core.dsl.lang.NaryStepMapping;
-import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultNaryStepMapping<O> implements NaryStepMapping<O> {
 
@@ -23,13 +22,4 @@ public class DefaultNaryStepMapping<O> implements NaryStepMapping<O> {
         return new DefaultNaryMappingRule<>(fieldInfos, outFieldInfo, typeConverter);
     }
 
-    @Override
-    public String readable() {
-        return null;
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        // TODO
-    }
 }

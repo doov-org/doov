@@ -3,12 +3,16 @@
  */
 package io.doov.core.dsl.mapping;
 
+import static io.doov.core.dsl.meta.MappingMetadata.mapping;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+
+import java.util.Locale;
 import java.util.function.Supplier;
 
-import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class StaticMappingRule<I, O> implements SimpleMappingRule<I, O> {
@@ -16,11 +20,13 @@ public class StaticMappingRule<I, O> implements SimpleMappingRule<I, O> {
     private final Supplier<I> inputObject;
     private final DslField<O> outFieldInfo;
     private final StaticTypeConverter<I, O> typeConverter;
+    private final MappingMetadata metadata;
 
     public StaticMappingRule(Supplier<I> inputObject,
                              DslField<O> outFieldInfo,
                              StaticTypeConverter<I, O> typeConverter) {
         this.inputObject = inputObject;
+        this.metadata = mapping(inputObject, outFieldInfo);
         this.outFieldInfo = outFieldInfo;
         this.typeConverter = typeConverter;
     }
@@ -43,12 +49,13 @@ public class StaticMappingRule<I, O> implements SimpleMappingRule<I, O> {
 
     @Override
     public void accept(MetadataVisitor visitor, int depth) {
-
+        metadata.accept(visitor, depth);
+        typeConverter.accept(visitor, depth);
     }
 
     @Override
     public String readable() {
-        return null;
+        return astToString(this, Locale.getDefault());
     }
 
 }

@@ -232,4 +232,63 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
         return stack.stream();
     }
 
+    // TypeConverter
+
+    @Override
+    public void start(ConverterMetadata metadata, int depth) {
+        startMetadata(metadata, depth);
+        stack.push(metadata.type());
+    }
+
+    protected void startMetadata(ConverterMetadata metadata, int depth) {
+    }
+
+    @Override
+    public void visit(ConverterMetadata metadata, int depth) {
+        visitMetadata(metadata, depth);
+    }
+
+    protected void visitMetadata(ConverterMetadata metadata, int depth) {
+    }
+
+    @Override
+    public void end(ConverterMetadata metadata, int depth) {
+        stack.pop();
+        endMetadata(metadata, depth);
+    }
+
+    protected void endMetadata(ConverterMetadata metadata, int depth) {
+    }
+
+    @Override
+    public void start(MappingMetadata mappingMetadata, int depth) {
+        startMetadata(mappingMetadata, depth);
+    }
+
+    public void startMetadata(MappingMetadata mappingMetadata, int depth) {
+
+    }
+
+    @Override
+    public void visit(MappingMetadata mappingMetadata, int depth) {
+        visitMetadata(mappingMetadata, depth);
+        if (mappingMetadata.type() == MetadataType.MULTIPLE_MAPPING) {
+            stack.push(MetadataType.MULTIPLE_MAPPING);
+        }
+    }
+
+    public void visitMetadata(MappingMetadata mappingMetadata, int depth) {
+    }
+
+    @Override
+    public void end(MappingMetadata mappingMetadata, int depth) {
+        if (mappingMetadata.type() == MetadataType.MULTIPLE_MAPPING) {
+            stack.pop();
+        }
+        endMetadata(mappingMetadata, depth);
+    }
+
+    public void endMetadata(MappingMetadata mappingMetadata, int depth) {
+
+    }
 }

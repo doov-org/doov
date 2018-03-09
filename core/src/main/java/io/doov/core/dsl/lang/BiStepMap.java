@@ -1,7 +1,5 @@
 package io.doov.core.dsl.lang;
 
-import io.doov.core.dsl.meta.SyntaxTree;
-
 /**
  * First step for creating mapping rule.
  * Associates field with type {@link I} and {@link J} with a bi-converter.
@@ -9,7 +7,7 @@ import io.doov.core.dsl.meta.SyntaxTree;
  * @param <I> 1st in type
  * @param <J> 2nd in type
  */
-public interface BiStepMap<I, J> extends Readable, SyntaxTree {
+public interface BiStepMap<I, J> {
 
     /**
      * Returns bi step mapping
