@@ -2,7 +2,13 @@ package io.doov.core.dsl.lang;
 
 import io.doov.core.FieldModel;
 
-public interface SimpleMappingRule<I, O> extends MappingRule<I, O> {
+/**
+ * 1-to-1 mapping rule
+ *
+ * @param <I> in type
+ * @param <O> out type
+ */
+public interface SimpleMappingRule<I, O> extends MappingRule {
 
     boolean validate(FieldModel inModel, FieldModel outModel);
 

@@ -12,6 +12,9 @@ import java.util.function.Predicate;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.types.*;
 
+/**
+ * Default implementation for provided types.
+ */
 public class FieldTypes implements FieldTypeProvider {
 
     private static final Map<Predicate<FieldInfo>, Class<? extends FieldInfo>> TYPES;

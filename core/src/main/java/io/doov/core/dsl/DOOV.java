@@ -123,24 +123,53 @@ public class DOOV {
         return LogicalNaryCondition.matchNone(asList(steps));
     }
 
-    // mapping
-
+    /**
+     *
+     * @param inFieldInfo
+     * @param <I>
+     * @return
+     */
     public static <I> StepMap<I> map(DslField<I> inFieldInfo) {
         return new DefaultStepMap<>(inFieldInfo);
     }
 
+    /**
+     *
+     * @param inFieldInfo
+     * @param in2FieldInfo
+     * @param <I>
+     * @param <J>
+     * @return
+     */
     public static <I, J> BiStepMap<I, J> map(DslField<I> inFieldInfo, DslField<J> in2FieldInfo) {
         return new DefaultBiStepMap<>(inFieldInfo, in2FieldInfo);
     }
 
+    /**
+     *
+     * @param inFieldInfo
+     * @return
+     */
     public static NaryStepMap map(DslField... inFieldInfo) {
         return new DefaultNaryStepMap(Arrays.asList(inFieldInfo));
     }
 
+    /**
+     *
+     * @param valueSupplier
+     * @param <I>
+     * @return
+     */
     public static <I> StaticStepMap<I> map(Supplier<I> valueSupplier) {
         return new DefaultStaticStepMap<>(valueSupplier);
     }
 
+    /**
+     *
+     * @param value
+     * @param <I>
+     * @return
+     */
     public static <I> StaticStepMap<I> map(I value) {
         return new DefaultStaticStepMap<>(() -> value);
     }

@@ -5,6 +5,9 @@ package io.doov.core;
 
 import java.util.Arrays;
 
+/**
+ * Enum type interface for coherent String representation of an Enum literal.
+ */
 public interface CodeValuable {
 
     default String getCode() {
