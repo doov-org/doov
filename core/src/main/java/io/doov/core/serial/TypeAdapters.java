@@ -13,6 +13,8 @@ import io.doov.core.serial.adapter.*;
  */
 public class TypeAdapters implements TypeAdapterRegistry {
 
+    public static TypeAdapters INSTANCE = new TypeAdapters();
+
     protected static List<TypeAdapter> TYPE_ADAPTERS = Arrays.asList(
                     new BooleanTypeAdapter(),
                     new IntegerTypeAdapter(),
