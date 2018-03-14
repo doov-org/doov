@@ -26,7 +26,7 @@ public class RulesConferenceTest {
     @Test
     public void should_user_account_validates() {
         // Condition assert
-        assertThat(accountEmail().isNotNull()).validates(wrapper);
+        assertThat(accountEmail.isNotNull()).validates(wrapper);
 
         // Rule assert
         assertThat(userAccount).validates(wrapper);

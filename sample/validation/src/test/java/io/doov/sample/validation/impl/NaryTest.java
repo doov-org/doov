@@ -49,10 +49,10 @@ public class NaryTest {
         ValidationRule rule;
         StepCondition node;
 
-        rule = DOOV.when(matchAny(userFirstName().isNotNull(), userLastName().isNull())).validate();
+        rule = DOOV.when(matchAny(userFirstName.isNotNull(), userLastName.isNull())).validate();
         assertThat(rule).validates(model).hasNoInvalidatedMetadata();
 
-        rule = DOOV.when(matchAny(userFirstName().isNotNull(), node = userLastName().isNull())).validate();
+        rule = DOOV.when(matchAny(userFirstName.isNotNull(), node = userLastName.isNull())).validate();
         rule = rule.withShortCircuit(false);
         assertThat(rule).validates(model).isEvalFalse(node.getMetadata());
     }

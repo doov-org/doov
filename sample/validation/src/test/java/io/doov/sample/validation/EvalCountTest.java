@@ -29,7 +29,7 @@ public class EvalCountTest {
     @Test
     void matchAny_values() {
         model.set(SampleFieldId.COUNTRY, Country.FR);
-        ValidationRule rule = DOOV.when(accountCountry().anyMatch(Country.FR, Country.CAN)).validate()
+        ValidationRule rule = DOOV.when(accountCountry.anyMatch(Country.FR, Country.CAN)).validate()
                         .withShortCircuit(false);
 
         rule.executeOn(model);

@@ -28,8 +28,8 @@ public class RuntimeFieldTest {
     @BeforeEach
     void setUp() {
         wrapper = SampleModels.wrapper();
-        mappingRule = DOOV.map(userId()).to(userId());
-        mappingRule2 = DOOV.map(userBirthDate()).to(userBirthDate());
+        mappingRule = DOOV.map(userId).to(userId);
+        mappingRule2 = DOOV.map(userBirthDate).to(userBirthDate);
         mappingRule3 = DOOV.map(RuntimePath.TEL).to(RuntimePath.TEL);
     }
 
@@ -38,7 +38,7 @@ public class RuntimeFieldTest {
         RuntimeModel<SampleModel> runtimeModel = new RuntimeModel<>(RuntimePath.INSTANCE, new SampleModel());
         assertThat(mappingRule.validate(wrapper, runtimeModel)).isTrue();
         mappingRule.executeOn(wrapper, runtimeModel);
-        assertThat(runtimeModel.get(userId())).isEqualTo(1L);
+        assertThat(runtimeModel.get(userId)).isEqualTo(1L);
 
         assertThat(mappingRule3.validate(wrapper, runtimeModel)).isTrue();
         mappingRule3.executeOn(wrapper, runtimeModel);
@@ -58,7 +58,7 @@ public class RuntimeFieldTest {
         assertThat(mappingRule.validate(wrapper, modelWrapper)).isTrue();
         mappingRule.executeOn(wrapper, modelWrapper);
         System.out.println(started.elapsed(TimeUnit.NANOSECONDS));
-        assertThat(modelWrapper.get(userId())).isEqualTo(1L);
+        assertThat(modelWrapper.get(userId)).isEqualTo(1L);
 
         mappingRule.executeOn(wrapper, modelWrapper);
         assertThat(modelWrapper.get(RuntimePath.USER_ID)).isEqualTo(1L);

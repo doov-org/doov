@@ -44,85 +44,85 @@ import io.doov.sample.model.Country;
 public class SampleRules extends DefaultRuleRegistry {
 
     public static final ValidationRule RULE_EMAIL = DOOV
-                    .when(accountEmail().matches("\\w+[@]\\w+\\.com")
-                                    .or(accountEmail().matches("\\w+[@]\\w+\\.fr")))
+                    .when(accountEmail.matches("\\w+[@]\\w+\\.com")
+                                    .or(accountEmail.matches("\\w+[@]\\w+\\.fr")))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_ACCOUNT = DOOV
                     .when(matchAll(
-                                    userBirthdate().ageAt(today()).greaterOrEquals(18),
-                                    accountEmail().length().lesserOrEquals(configurationMaxEmailSize()),
-                                    accountCountry().eq(Country.FR).and(accountPhoneNumber().startsWith("+33"))))
+                                    userBirthdate.ageAt(today()).greaterOrEquals(18),
+                                    accountEmail.length().lesserOrEquals(configurationMaxEmailSize),
+                                    accountCountry.eq(Country.FR).and(accountPhoneNumber.startsWith("+33"))))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_ACCOUNT_2 = DOOV
-                    .when(userBirthdate().ageAt(today()).greaterOrEquals(18)
-                                    .and(accountEmail().length().lesserOrEquals(configurationMaxEmailSize()))
-                                    .and(accountCountry().eq(Country.FR))
-                                    .and(accountPhoneNumber().startsWith("+33")))
+                    .when(userBirthdate.ageAt(today()).greaterOrEquals(18)
+                                    .and(accountEmail.length().lesserOrEquals(configurationMaxEmailSize))
+                                    .and(accountCountry.eq(Country.FR))
+                                    .and(accountPhoneNumber.startsWith("+33")))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_USER = DOOV
-                    .when(count(userFirstName().isNotNull(),
-                                    userLastName().isNotNull().and(userLastName().matches("[A-Z]+")))
+                    .when(count(userFirstName.isNotNull(),
+                                    userLastName.isNotNull().and(userLastName.matches("[A-Z]+")))
                                                     .greaterOrEquals(0))
                     .validate()
                     .withShortCircuit(false)
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_USER_2 = DOOV
-                    .when(userLastName().isNotNull().and(userLastName().matches("[A-Z]+")
-                                    .and(count(accountPhoneNumber().isNotNull(),
-                                                    accountEmail().isNotNull())
+                    .when(userLastName.isNotNull().and(userLastName.matches("[A-Z]+")
+                                    .and(count(accountPhoneNumber.isNotNull(),
+                                                    accountEmail.isNotNull())
                                                                     .greaterThan(0))))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_USER_ADULT = DOOV
-                    .when(userBirthdate().ageAt(accountCreationDate()).greaterOrEquals(18))
+                    .when(userBirthdate.ageAt(accountCreationDate).greaterOrEquals(18))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_USER_ADULT_FIRSTDAY = DOOV
-                    .when(userBirthdate().ageAt(accountCreationDate().with(firstDayOfYear())).greaterOrEquals(18))
+                    .when(userBirthdate.ageAt(accountCreationDate.with(firstDayOfYear())).greaterOrEquals(18))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_FIRST_NAME = DOOV
-                    .when(matchAll(userFirstName().mapToInt(name -> 1).eq(1)))
+                    .when(matchAll(userFirstName.mapToInt(name -> 1).eq(1)))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_ID = DOOV
-                    .when(userId().isNotNull())
+                    .when(userId.isNotNull())
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_AGE = DOOV
-                    .when(userBirthdate().ageAt(today()).greaterOrEquals(18))
+                    .when(userBirthdate.ageAt(today()).greaterOrEquals(18))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_AGE_2 = DOOV
-                    .when(userBirthdate().after(userBirthdate().minus(1, DAYS)))
+                    .when(userBirthdate.after(userBirthdate.minus(1, DAYS)))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_SUM = DOOV
-                    .when(sum(configurationMinAge().times(0), configurationMaxEmailSize().times(1)).greaterOrEquals(0))
+                    .when(sum(configurationMinAge.times(0), configurationMaxEmailSize.times(1)).greaterOrEquals(0))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_MIN = DOOV
-                    .when(min(configurationMinAge(), configurationMaxEmailSize()).greaterOrEquals(0))
+                    .when(min(configurationMinAge, configurationMaxEmailSize).greaterOrEquals(0))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
     public static final ValidationRule RULE_DOUBLE_LAMBDA = DOOV
-                    .when(favoriteSiteName1().anyMatch(s -> !s.contains("dunno")))
+                    .when(favoriteSiteName1.anyMatch(s -> !s.contains("dunno")))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 

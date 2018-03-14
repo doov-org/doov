@@ -36,15 +36,15 @@ public class BenchmarkRule {
     private static final FieldModel MODEL = SampleModels.wrapper();
 
     private static final ValidationRule EMAIL = DOOV
-            .when(accountEmail().matches("\\w+[@]\\w+\\.com")
-                    .or(accountEmail().matches("\\w+[@]\\w+\\.fr")))
+            .when(accountEmail.matches("\\w+[@]\\w+\\.com")
+                    .or(accountEmail.matches("\\w+[@]\\w+\\.fr")))
             .validate();
 
     private static final ValidationRule COUNTY = DOOV
-            .when(userBirthdate().ageAt(today()).greaterOrEquals(18)
-                    .and(accountEmail().length().lesserOrEquals(configurationMaxEmailSize()))
-                    .and(accountCountry().eq(Country.FR))
-                    .and(accountPhoneNumber().startsWith("+33")))
+            .when(userBirthdate.ageAt(today()).greaterOrEquals(18)
+                    .and(accountEmail.length().lesserOrEquals(configurationMaxEmailSize))
+                    .and(accountCountry.eq(Country.FR))
+                    .and(accountPhoneNumber.startsWith("+33")))
             .validate();
 
     private static final ValidationRule ACCOUNT_VALID_COUNTRY_20 = DOOV.when(matchAll(conditions(20))).validate();
@@ -111,9 +111,9 @@ public class BenchmarkRule {
 
     private static StepCondition[] conditions(int count) {
         return IntStream.range(0, count)
-                .mapToObj(operand -> accountCountry().eq(Country.FR)
-                        .and(accountLanguage().eq(Language.FR))
-                        .and(accountPhoneNumber().startsWith("+33")))
+                .mapToObj(operand -> accountCountry.eq(Country.FR)
+                        .and(accountLanguage.eq(Language.FR))
+                        .and(accountPhoneNumber.startsWith("+33")))
                 .collect(toList())
                 .toArray(new StepCondition[] {});
     }

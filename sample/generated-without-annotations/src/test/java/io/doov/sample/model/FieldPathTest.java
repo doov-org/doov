@@ -44,7 +44,7 @@ public class FieldPathTest {
     void name3() {
         FieldModel wrapper = SampleModels.wrapper();
         RuntimeModel<SampleModel> runtimeModel = new RuntimeModel<>(FieldRegistry.INSTANCE, new SampleModel());
-        MappingRule to = DOOV.map(DslSampleModel.userId()).to(user_id);
+        MappingRule to = DOOV.map(DslSampleModel.userId).to(user_id);
         to.validate(wrapper, runtimeModel);
         to.executeOn(wrapper, runtimeModel);
         assertThat(runtimeModel.get(user_id)).isEqualTo(1L);

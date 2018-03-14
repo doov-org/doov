@@ -54,43 +54,43 @@ public class DOOVMappingTest {
     @BeforeEach
     void setUp() {
         mappings = mappings(
-                when(accountLanguage().eq(Language.FR)).then(
-                        map(accountPhoneNumber())
+                when(accountLanguage.eq(Language.FR)).then(
+                        map(accountPhoneNumber)
                                 .using(STRIPPING_COUNTRY_CODE)
-                                .to(accountPhoneNumber())),
+                                .to(accountPhoneNumber)),
 
-                map(accountId())
-                        .to(configurationMaxLong()),
+                map(accountId)
+                        .to(configurationMaxLong),
 
-                map(userFirstName())
+                map(userFirstName)
                         .using(LENGTH_OR_ZERO)
-                        .to(configurationMinAge()),
+                        .to(configurationMinAge),
 
-                map(userId())
-                        .to(userId()),
+                map(userId)
+                        .to(userId),
 
-                map(userFirstName(), userLastName())
+                map(userFirstName, userLastName)
                         .using(FULL_NAME)
-                        .to(userFirstName()),
-                when(accountAcceptEmail().isTrue()).then(
-                        map(accountPreferencesMail(), accountEmail())
+                        .to(userFirstName),
+                when(accountAcceptEmail.isTrue()).then(
+                        map(accountPreferencesMail, accountEmail)
                                 .using(CONVERTER)
-                                .to(accountEmail()))
+                                .to(accountEmail))
                         .otherwise(
                                 map(() -> false)
-                                        .to(configurationMailingCampaign())),
+                                        .to(configurationMailingCampaign)),
 
-                map(favoriteSiteName1(), favoriteSiteName2(), favoriteSiteName3())
+                map(favoriteSiteName1, favoriteSiteName2, favoriteSiteName3)
                         .using(EMAIL_SIZE)
-                        .to(configurationMaxEmailSize()),
+                        .to(configurationMaxEmailSize),
 
                 map(() -> Country.FR)
                         .using(valueConverter(this::countryToLanguage, ""))
-                        .to(accountLanguage()),
+                        .to(accountLanguage),
 
-                when(accountLogin().isNotNull()).then(
+                when(accountLogin.isNotNull()).then(
                         map(() -> true)
-                                .to(accountAcceptEmail()))
+                                .to(accountAcceptEmail))
         );
     }
 
@@ -125,7 +125,7 @@ public class DOOVMappingTest {
     void mapping_otherwise() {
         SampleModelWrapper sample = new SampleModelWrapper(sample());
         SampleModelWrapper copy = new SampleModelWrapper();
-        sample.set(accountAcceptEmail(), false);
+        sample.set(accountAcceptEmail, false);
         mappings.validateAndExecute(sample, copy);
         assertThat(copy.getModel().getConfiguration().getMaxLong()).isEqualTo(9);
         assertThat(copy.getModel().getConfiguration().getMinAge()).isEqualTo(3);

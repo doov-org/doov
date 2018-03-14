@@ -28,47 +28,47 @@ public class StringTest {
     @Test
     public void should_matches_works_like_java() {
         account.setLogin("toto");
-        assertThat(accountLogin().matches("[a-z]+")).validates(model);
+        assertThat(accountLogin.matches("[a-z]+")).validates(model);
 
         account.setLogin("toto2");
-        assertThat(accountLogin().matches("[a-z]+")).doesNotValidate(model);
+        assertThat(accountLogin.matches("[a-z]+")).doesNotValidate(model);
     }
 
     @Test
     public void should_contains_works_like_java() {
         account.setLogin("toto");
-        assertThat(accountLogin().contains("to")).validates(model);
-        assertThat(accountLogin().contains("ti")).doesNotValidate(model);
+        assertThat(accountLogin.contains("to")).validates(model);
+        assertThat(accountLogin.contains("ti")).doesNotValidate(model);
     }
 
     @Test
     public void should_starts_with_works_like_java() {
         account.setLogin("toti");
-        assertThat(accountLogin().startsWith("to")).validates(model);
-        assertThat(accountLogin().startsWith("ti")).doesNotValidate(model);
+        assertThat(accountLogin.startsWith("to")).validates(model);
+        assertThat(accountLogin.startsWith("ti")).doesNotValidate(model);
     }
 
     @Test
     public void should_ends_with_works_like_java() {
         account.setLogin("toti");
-        assertThat(accountLogin().endsWith("ti")).validates(model);
-        assertThat(accountLogin().endsWith("to")).doesNotValidate(model);
+        assertThat(accountLogin.endsWith("ti")).validates(model);
+        assertThat(accountLogin.endsWith("to")).doesNotValidate(model);
     }
 
     @Test
     public void should_length_return_valid_interger_condition() {
         account.setLogin("todo");
-        assertThat(accountLogin().length().eq(4)).validates(model);
+        assertThat(accountLogin.length().eq(4)).validates(model);
     }
 
     @Test
     public void should_parse_int_return_valid_integer_condition_or_exception() {
         account.setLogin("todo");
-        assertThatThrownBy(() -> DOOV.when(accountLogin().parseInt().eq(4)).validate().executeOn(model))
+        assertThatThrownBy(() -> DOOV.when(accountLogin.parseInt().eq(4)).validate().executeOn(model))
                         .isInstanceOf(NumberFormatException.class);
 
         account.setLogin("42");
-        assertThat(accountLogin().parseInt().eq(42)).validates(model);
+        assertThat(accountLogin.parseInt().eq(42)).validates(model);
     }
 
 }

@@ -54,9 +54,9 @@ public class SimpleValidation {
     public static class ValidationState {
 
         volatile ValidationRule rule = DOOV
-                .when(name().isNotNull()
-                        .and(age().greaterOrEquals(18))
-                        .and(drivingLicense().isTrue()))
+                .when(name.isNotNull()
+                        .and(age.greaterOrEquals(18))
+                        .and(drivingLicense.isTrue()))
                 .validate();
 
         volatile Random random = new Random();

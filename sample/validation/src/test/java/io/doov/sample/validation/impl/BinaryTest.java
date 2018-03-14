@@ -46,14 +46,14 @@ public class BinaryTest {
         ValidationRule rule;
         StepCondition node;
 
-        rule = DOOV.when(userFirstName().isNotNull().or(userLastName().isNull())).validate();
+        rule = DOOV.when(userFirstName.isNotNull().or(userLastName.isNull())).validate();
         assertThat(rule).validates(model).hasNoInvalidatedMetadata();
 
-        rule = DOOV.when(userFirstName().isNotNull().or(node = userLastName().isNull())).validate();
+        rule = DOOV.when(userFirstName.isNotNull().or(node = userLastName.isNull())).validate();
         rule = rule.withShortCircuit(false);
         assertThat(rule).validates(model).isEvalFalse(node.getMetadata());
 
-        assertThat(userFirstName().isNotNull()).validates(model);
+        assertThat(userFirstName.isNotNull()).validates(model);
 
 
     }
