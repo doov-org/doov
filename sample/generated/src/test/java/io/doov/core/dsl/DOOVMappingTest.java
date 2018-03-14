@@ -2,11 +2,8 @@ package io.doov.core.dsl;
 
 import static io.doov.core.dsl.DOOV.map;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.mapping.DefaultBiTypeConverter.biConverter;
-import static io.doov.core.dsl.mapping.DefaultNaryTypeConverter.nConverter;
+import static io.doov.core.dsl.mapping.TypeConverters.*;
 import static io.doov.core.dsl.mapping.DefaultMappingRegistry.mappings;
-import static io.doov.core.dsl.mapping.DefaultStaticTypeConverter.converter;
-import static io.doov.core.dsl.mapping.DefaultTypeConverter.converter;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.model.SampleModels.sample;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,20 +32,22 @@ public class DOOVMappingTest {
                     "stripping country code");
 
     private static final TypeConverter<String, Integer> LENGTH_OR_ZERO =
-            converter(in -> in.map(String::length).orElse(0), "string length");
+            converter(String::length, 0, "string length");
 
     private static final BiTypeConverter<String, String, String> FULL_NAME =
             biConverter((i, j) -> i + " " + j, "", "", "firstName lastName");
 
-    private static final BiTypeConverter<Collection<EmailType>, String, String> CONVERTER = biConverter((i, j) -> {
-        String[] em = j.split("@");
-        return em[0] + "+" + i.size() + "@" + em[1];
-    }, "", "WTF");
+    private static final BiTypeConverter<Collection<EmailType>, String, String> CONVERTER =
+            biConverter((i, j) -> {
+                String[] em = j.split("@");
+                return em[0] + "+" + i.size() + "@" + em[1];
+            }, "", "WTF");
 
-    private static final NaryTypeConverter<Integer> EMAIL_SIZE = nConverter((model, fieldInfos) ->
-            (int) fieldInfos.stream()
-                    .map(f -> model.get(f.id()))
-                    .filter(Objects::nonNull).count(), "favorite web site size -> email size");
+    private static final NaryTypeConverter<Integer> EMAIL_SIZE =
+            nConverter((model, fieldInfos) ->
+                    (int) fieldInfos.stream()
+                            .map(f -> model.get(f.id()))
+                            .filter(Objects::nonNull).count(), "favorite web site size -> email size");
 
     private MappingRegistry mappings;
 
@@ -86,7 +85,7 @@ public class DOOVMappingTest {
                         .to(configurationMaxEmailSize()),
 
                 map(() -> Country.FR)
-                        .using(converter(this::countryToLanguage, ""))
+                        .using(valueConverter(this::countryToLanguage, ""))
                         .to(accountLanguage()),
 
                 when(accountLogin().isNotNull()).then(
@@ -111,9 +110,7 @@ public class DOOVMappingTest {
     void doov() {
         SampleModelWrapper sample = new SampleModelWrapper(sample());
         SampleModelWrapper copy = new SampleModelWrapper();
-        mappings.stream()
-                .filter(m -> m.validate(sample, sample))
-                .forEachOrdered(m -> m.executeOn(sample, copy));
+        mappings.validateAndExecute(sample, copy);
         assertThat(copy.getModel().getConfiguration().getMaxLong()).isEqualTo(9);
         assertThat(copy.getModel().getConfiguration().getMinAge()).isEqualTo(3);
         assertThat(copy.getModel().getAccount().getPhoneNumber()).isEqualTo("0102030409");
@@ -129,9 +126,7 @@ public class DOOVMappingTest {
         SampleModelWrapper sample = new SampleModelWrapper(sample());
         SampleModelWrapper copy = new SampleModelWrapper();
         sample.set(accountAcceptEmail(), false);
-        mappings.stream()
-                .filter(m -> m.validate(sample, sample))
-                .forEachOrdered(m -> m.executeOn(sample, copy));
+        mappings.validateAndExecute(sample, copy);
         assertThat(copy.getModel().getConfiguration().getMaxLong()).isEqualTo(9);
         assertThat(copy.getModel().getConfiguration().getMinAge()).isEqualTo(3);
         assertThat(copy.getModel().getAccount().getPhoneNumber()).isEqualTo("0102030409");

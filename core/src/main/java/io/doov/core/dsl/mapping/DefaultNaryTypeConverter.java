@@ -16,11 +16,6 @@ public class DefaultNaryTypeConverter<O> implements NaryTypeConverter<O> {
     private final ConverterMetadata metadata;
     private BiFunction<FieldModel, List<DslField>, O> function;
 
-    public static <O> NaryTypeConverter<O> nConverter(BiFunction<FieldModel, List<DslField>, O> function,
-                    String description) {
-        return new DefaultNaryTypeConverter<>(function, description);
-    }
-
     public DefaultNaryTypeConverter(BiFunction<FieldModel, List<DslField>, O> function, String description) {
         this(function, ConverterMetadata.metadata(description));
     }

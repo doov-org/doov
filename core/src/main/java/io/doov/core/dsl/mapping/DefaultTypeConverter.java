@@ -14,19 +14,15 @@ import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultTypeConverter<I, O> implements TypeConverter<I, O> {
 
+    private static final TypeConverter<?, ?> IDENTITY =
+            new DefaultTypeConverter<>(i -> i.orElse(null), ConverterMetadata.identity());
+
     private final ConverterMetadata metadata;
     private Function<Optional<I>, O> converter;
 
+    @SuppressWarnings("unchecked")
     public static <T> TypeConverter<T, T> identity() {
-        return new DefaultTypeConverter<>(i -> i.orElse(null), ConverterMetadata.identity());
-    }
-
-    public static <I, O> TypeConverter<I, O> converter(Function<Optional<I>, O> converter, String description) {
-        return new DefaultTypeConverter<>(converter, description);
-    }
-
-    public static <I, O> TypeConverter<I, O> converter(Function<I, O> converter, O nullCase, String description) {
-        return converter(i -> i.map(converter).orElse(nullCase), description);
+        return (TypeConverter<T, T>) IDENTITY;
     }
 
     public DefaultTypeConverter(Function<Optional<I>, O> converter, String description) {
