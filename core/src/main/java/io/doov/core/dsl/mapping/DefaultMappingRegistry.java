@@ -1,7 +1,6 @@
 package io.doov.core.dsl.mapping;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.lang.MappingRegistry;
@@ -11,26 +10,28 @@ public class DefaultMappingRegistry implements MappingRegistry {
 
     private final List<MappingRule> mappingRules;
 
-    public DefaultMappingRegistry() {
-        mappingRules = new ArrayList<>();
-    }
-
     public static MappingRegistry mappings(MappingRule... mappingRules) {
-        DefaultMappingRegistry defaultMappingRegistry = new DefaultMappingRegistry();
-        for (MappingRule mappingRule : mappingRules) {
-            defaultMappingRegistry.register(mappingRule);
-        }
-        return defaultMappingRegistry;
+        return new DefaultMappingRegistry(mappingRules);
+    }
+
+    public static MappingRegistry mappings(MappingRegistry... mappingRegistries) {
+        return new DefaultMappingRegistry().with(mappingRegistries);
+    }
+
+    private DefaultMappingRegistry(MappingRule... mappingRules) {
+        this.mappingRules = Arrays.asList(mappingRules);
     }
 
     @Override
-    public void register(MappingRule rule) {
-        mappingRules.add(rule);
+    public MappingRegistry with(MappingRegistry... mappingRegistries) {
+        return new DefaultMappingRegistry(Stream.concat(this.stream(),
+                Arrays.stream(mappingRegistries).flatMap(MappingRegistry::stream)).toArray(MappingRule[]::new));
     }
 
     @Override
-    public void registerAll(MappingRegistry registry) {
-        registry.stream().forEach(m -> m.registerOn(this)) ;
+    public MappingRegistry with(MappingRule... mappingRules) {
+        return new DefaultMappingRegistry(Stream.concat(this.stream(),
+                Arrays.stream(mappingRules)).toArray(MappingRule[]::new));
     }
 
     @Override

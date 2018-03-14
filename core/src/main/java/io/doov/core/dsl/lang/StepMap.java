@@ -9,7 +9,7 @@ import io.doov.core.dsl.meta.SyntaxTree;
  *
  * @param <I> in type
  */
-public interface StepMap<I> extends Readable, SyntaxTree {
+public interface StepMap<I> {
 
     /**
      * Return the step mapping

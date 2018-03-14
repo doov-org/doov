@@ -26,12 +26,4 @@ public interface MappingRule extends Readable, SyntaxTree {
      */
     void executeOn(FieldModel inModel, FieldModel outModel);
 
-    /**
-     * Register this rule to the registry
-     *
-     * @param registry mapping registry
-     * @return itself
-     */
-    MappingRule registerOn(MappingRegistry registry);
-
 }

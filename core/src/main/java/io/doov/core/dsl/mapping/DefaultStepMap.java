@@ -17,16 +17,6 @@ public class DefaultStepMap<I> implements StepMap<I> {
     }
 
     @Override
-    public String readable() {
-        return "map";
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        // TODO
-    }
-
-    @Override
     public <O> StepMapping<I, O> using(TypeConverter<I, O> typeConverter) {
         return new DefaultStepMapping<>(inFieldInfo, typeConverter);
     }

@@ -13,5 +13,4 @@ public interface NaryMappingRule<O> extends MappingRule {
 
     void executeOn(FieldModel inModel, FieldModel outModel);
 
-    NaryMappingRule<O> registerOn(MappingRegistry registry);
 }

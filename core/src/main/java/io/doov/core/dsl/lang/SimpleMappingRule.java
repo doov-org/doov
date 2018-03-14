@@ -14,6 +14,4 @@ public interface SimpleMappingRule<I, O> extends MappingRule {
 
     void executeOn(FieldModel inModel, FieldModel outModel);
 
-    SimpleMappingRule<I, O> registerOn(MappingRegistry registry);
-
 }

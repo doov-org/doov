@@ -10,8 +10,8 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.BiMappingRule;
 import io.doov.core.dsl.lang.BiTypeConverter;
-import io.doov.core.dsl.lang.MappingRegistry;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.MappingMetadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultBiMappingRule<I, J, O> implements BiMappingRule<I, J, O> {
 
@@ -40,12 +40,6 @@ public class DefaultBiMappingRule<I, J, O> implements BiMappingRule<I, J, O> {
     @Override
     public void executeOn(FieldModel inModel, FieldModel outModel) {
         outModel.set(outFieldInfo.id(), typeConverter.convert(inModel, inFieldInfo, in2FieldInfo));
-    }
-
-    @Override
-    public BiMappingRule<I, J, O> registerOn(MappingRegistry registry) {
-        registry.register(this);
-        return this;
     }
 
     @Override

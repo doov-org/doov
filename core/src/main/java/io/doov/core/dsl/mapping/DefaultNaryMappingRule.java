@@ -9,9 +9,9 @@ import java.util.Locale;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.GenericTypeConverter;
-import io.doov.core.dsl.lang.MappingRegistry;
 import io.doov.core.dsl.lang.NaryMappingRule;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.MappingMetadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultNaryMappingRule<O> implements NaryMappingRule<O> {
 
@@ -39,12 +39,6 @@ public class DefaultNaryMappingRule<O> implements NaryMappingRule<O> {
         outModel.set(outFieldInfo.id(),
                 typeConverter.convert(inModel, fieldInfos.toArray(new DslField[0])));
 
-    }
-
-    @Override
-    public NaryMappingRule<O> registerOn(MappingRegistry registry) {
-        registry.register(this);
-        return this;
     }
 
     @Override

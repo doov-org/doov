@@ -14,5 +14,4 @@ public interface BiMappingRule<I, J, O> extends MappingRule {
 
     void executeOn(FieldModel inModel, FieldModel outModel);
 
-    BiMappingRule<I, J, O> registerOn(MappingRegistry registry);
 }
