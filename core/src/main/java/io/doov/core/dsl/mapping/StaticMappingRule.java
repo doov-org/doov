@@ -11,21 +11,19 @@ import java.util.function.Supplier;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.SimpleMappingRule;
+import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.lang.StaticTypeConverter;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
-public class StaticMappingRule<I, O> implements SimpleMappingRule<I, O> {
+public class StaticMappingRule<I, O> implements MappingRule {
 
     private final Supplier<I> inputObject;
     private final DslField<O> outFieldInfo;
     private final StaticTypeConverter<I, O> typeConverter;
     private final MappingMetadata metadata;
 
-    public StaticMappingRule(Supplier<I> inputObject,
-                             DslField<O> outFieldInfo,
-                             StaticTypeConverter<I, O> typeConverter) {
+    StaticMappingRule(Supplier<I> inputObject, DslField<O> outFieldInfo, StaticTypeConverter<I, O> typeConverter) {
         this.inputObject = inputObject;
         this.metadata = mapping(inputObject, outFieldInfo);
         this.outFieldInfo = outFieldInfo;

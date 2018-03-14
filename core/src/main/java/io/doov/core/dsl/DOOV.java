@@ -24,16 +24,9 @@ import java.util.function.Supplier;
 
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
-import io.doov.core.dsl.lang.BiStepMap;
-import io.doov.core.dsl.lang.NaryStepMap;
-import io.doov.core.dsl.lang.StaticStepMap;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.lang.StepMap;
 import io.doov.core.dsl.lang.StepWhen;
-import io.doov.core.dsl.mapping.DefaultNaryStepMap;
-import io.doov.core.dsl.mapping.DefaultStaticStepMap;
-import io.doov.core.dsl.mapping.DefaultStepMap;
-import io.doov.core.dsl.mapping.DefaultBiStepMap;
+import io.doov.core.dsl.mapping.*;
 
 /**
  * Entry point of the DSL.
@@ -128,8 +121,8 @@ public class DOOV {
      * @param <I>         in type
      * @return map step
      */
-    public static <I> StepMap<I> map(DslField<I> inFieldInfo) {
-        return new DefaultStepMap<>(inFieldInfo);
+    public static <I> SimpleStepMap<I> map(DslField<I> inFieldInfo) {
+        return new SimpleStepMap<>(inFieldInfo);
     }
 
     /**
@@ -142,7 +135,7 @@ public class DOOV {
      * @return bi map step
      */
     public static <I, J> BiStepMap<I, J> map(DslField<I> inFieldInfo, DslField<J> in2FieldInfo) {
-        return new DefaultBiStepMap<>(inFieldInfo, in2FieldInfo);
+        return new BiStepMap<>(inFieldInfo, in2FieldInfo);
     }
 
     /**
@@ -152,7 +145,7 @@ public class DOOV {
      * @return nary map step
      */
     public static NaryStepMap map(DslField... inFieldInfo) {
-        return new DefaultNaryStepMap(Arrays.asList(inFieldInfo));
+        return new NaryStepMap(Arrays.asList(inFieldInfo));
     }
 
     /**
@@ -163,7 +156,7 @@ public class DOOV {
      * @return value map step
      */
     public static <I> StaticStepMap<I> map(Supplier<I> valueSupplier) {
-        return new DefaultStaticStepMap<>(valueSupplier);
+        return new StaticStepMap<>(valueSupplier);
     }
 
     /**
@@ -174,7 +167,7 @@ public class DOOV {
      * @return value step map
      */
     public static <I> StaticStepMap<I> map(I value) {
-        return new DefaultStaticStepMap<>(() -> value);
+        return new StaticStepMap<>(() -> value);
     }
 
     /**

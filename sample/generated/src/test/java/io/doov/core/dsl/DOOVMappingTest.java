@@ -3,7 +3,7 @@ package io.doov.core.dsl;
 import static io.doov.core.dsl.DOOV.map;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.mapping.DefaultBiTypeConverter.biConverter;
-import static io.doov.core.dsl.mapping.DefaultGenericTypeConverter.nConverter;
+import static io.doov.core.dsl.mapping.DefaultNaryTypeConverter.nConverter;
 import static io.doov.core.dsl.mapping.DefaultMappingRegistry.mappings;
 import static io.doov.core.dsl.mapping.DefaultStaticTypeConverter.converter;
 import static io.doov.core.dsl.mapping.DefaultTypeConverter.converter;
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.lang.BiTypeConverter;
-import io.doov.core.dsl.lang.GenericTypeConverter;
+import io.doov.core.dsl.lang.NaryTypeConverter;
 import io.doov.core.dsl.lang.MappingRegistry;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.TypeConverter;
@@ -45,7 +45,7 @@ public class DOOVMappingTest {
         return em[0] + "+" + i.size() + "@" + em[1];
     }, "", "WTF");
 
-    private static final GenericTypeConverter<Integer> EMAIL_SIZE = nConverter((model, fieldInfos) ->
+    private static final NaryTypeConverter<Integer> EMAIL_SIZE = nConverter((model, fieldInfos) ->
             (int) fieldInfos.stream()
                     .map(f -> model.get(f.id()))
                     .filter(Objects::nonNull).count(), "favorite web site size -> email size");
@@ -56,23 +56,42 @@ public class DOOVMappingTest {
     void setUp() {
         mappings = mappings(
                 when(accountLanguage().eq(Language.FR)).then(
-                        map(accountPhoneNumber()).using(STRIPPING_COUNTRY_CODE).to(accountPhoneNumber
-                                ())),
-                map(accountId()).to(configurationMaxLong()),
-                map(userFirstName()).using(LENGTH_OR_ZERO).to(configurationMinAge()),
-                map(userId()).to(userId()),
-                map(userFirstName(), userLastName()).using(FULL_NAME).to(userFirstName()),
-                when(accountAcceptEmail().isTrue())
-                        .then(map(accountPreferencesMail(), accountEmail()).using(CONVERTER).to
-                                (accountEmail()))
-                        .otherwise(map(() -> false).to(configurationMailingCampaign())),
+                        map(accountPhoneNumber())
+                                .using(STRIPPING_COUNTRY_CODE)
+                                .to(accountPhoneNumber())),
+
+                map(accountId())
+                        .to(configurationMaxLong()),
+
+                map(userFirstName())
+                        .using(LENGTH_OR_ZERO)
+                        .to(configurationMinAge()),
+
+                map(userId())
+                        .to(userId()),
+
+                map(userFirstName(), userLastName())
+                        .using(FULL_NAME)
+                        .to(userFirstName()),
+                when(accountAcceptEmail().isTrue()).then(
+                        map(accountPreferencesMail(), accountEmail())
+                                .using(CONVERTER)
+                                .to(accountEmail()))
+                        .otherwise(
+                                map(() -> false)
+                                        .to(configurationMailingCampaign())),
+
                 map(favoriteSiteName1(), favoriteSiteName2(), favoriteSiteName3())
-                        .using(EMAIL_SIZE).to(configurationMaxEmailSize()),
+                        .using(EMAIL_SIZE)
+                        .to(configurationMaxEmailSize()),
+
                 map(() -> Country.FR)
                         .using(converter(this::countryToLanguage, ""))
                         .to(accountLanguage()),
+
                 when(accountLogin().isNotNull()).then(
-                        map(() -> true).to(accountAcceptEmail()))
+                        map(() -> true)
+                                .to(accountAcceptEmail()))
         );
     }
 

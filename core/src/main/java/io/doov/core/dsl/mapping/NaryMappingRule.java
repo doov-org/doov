@@ -8,20 +8,24 @@ import java.util.Locale;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.GenericTypeConverter;
-import io.doov.core.dsl.lang.NaryMappingRule;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
-public class DefaultNaryMappingRule<O> implements NaryMappingRule<O> {
+/**
+ * n-to-1 mapping rule
+ *
+ * @param <O> out type
+ */
+public class NaryMappingRule<O> implements MappingRule {
 
     private final MappingMetadata metadata;
     private final List<DslField> fieldInfos;
     private final DslField<O> outFieldInfo;
-    private final GenericTypeConverter<O> typeConverter;
+    private final NaryTypeConverter<O> typeConverter;
 
-    public DefaultNaryMappingRule(List<DslField> fieldInfos, DslField<O> outFieldInfo,
-                    GenericTypeConverter<O> typeConverter) {
+    NaryMappingRule(List<DslField> fieldInfos, DslField<O> outFieldInfo,
+            NaryTypeConverter<O> typeConverter) {
         this.fieldInfos = fieldInfos;
         this.outFieldInfo = outFieldInfo;
         this.metadata = mapping(fieldInfos, outFieldInfo);

@@ -4,8 +4,7 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
- * 1-to-1 mapping rule
- *
+ * Mapping rule
  */
 public interface MappingRule extends Readable, SyntaxTree {
 

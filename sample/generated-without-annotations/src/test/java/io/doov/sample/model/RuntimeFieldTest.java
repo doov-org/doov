@@ -14,16 +14,16 @@ import com.google.common.base.Stopwatch;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.lang.SimpleMappingRule;
+import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.runtime.RuntimeModel;
 import io.doov.sample.field.RuntimePath;
 
 public class RuntimeFieldTest {
 
     private FieldModel wrapper;
-    private SimpleMappingRule<Long, Long> mappingRule;
-    private SimpleMappingRule<LocalDate, LocalDate> mappingRule2;
-    private SimpleMappingRule<String, String> mappingRule3;
+    private MappingRule mappingRule;
+    private MappingRule mappingRule2;
+    private MappingRule mappingRule3;
 
     @BeforeEach
     void setUp() {
