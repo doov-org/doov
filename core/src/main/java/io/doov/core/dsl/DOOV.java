@@ -22,7 +22,6 @@ import static java.util.Arrays.asList;
 import java.util.*;
 import java.util.function.Supplier;
 
-import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.BiStepMap;
@@ -35,7 +34,6 @@ import io.doov.core.dsl.mapping.DefaultNaryStepMap;
 import io.doov.core.dsl.mapping.DefaultStaticStepMap;
 import io.doov.core.dsl.mapping.DefaultStepMap;
 import io.doov.core.dsl.mapping.DefaultBiStepMap;
-import io.doov.core.dsl.mapping.StaticSimpleStepMapping;
 
 /**
  * Entry point of the DSL.
@@ -124,51 +122,56 @@ public class DOOV {
     }
 
     /**
+     * Start defining a mapping
      *
-     * @param inFieldInfo
-     * @param <I>
-     * @return
+     * @param inFieldInfo in field
+     * @param <I>         in type
+     * @return map step
      */
     public static <I> StepMap<I> map(DslField<I> inFieldInfo) {
         return new DefaultStepMap<>(inFieldInfo);
     }
 
     /**
+     * Start defining a bi mapping
      *
-     * @param inFieldInfo
-     * @param in2FieldInfo
-     * @param <I>
-     * @param <J>
-     * @return
+     * @param inFieldInfo  in field
+     * @param in2FieldInfo in field 2
+     * @param <I>          in type
+     * @param <J>          in type 2
+     * @return bi map step
      */
     public static <I, J> BiStepMap<I, J> map(DslField<I> inFieldInfo, DslField<J> in2FieldInfo) {
         return new DefaultBiStepMap<>(inFieldInfo, in2FieldInfo);
     }
 
     /**
+     * Start defining a nary mapping
      *
-     * @param inFieldInfo
-     * @return
+     * @param inFieldInfo list of in fields
+     * @return nary map step
      */
     public static NaryStepMap map(DslField... inFieldInfo) {
         return new DefaultNaryStepMap(Arrays.asList(inFieldInfo));
     }
 
     /**
+     * Start defining a value mapping
      *
-     * @param valueSupplier
-     * @param <I>
-     * @return
+     * @param valueSupplier value supplier
+     * @param <I>           value type
+     * @return value map step
      */
     public static <I> StaticStepMap<I> map(Supplier<I> valueSupplier) {
         return new DefaultStaticStepMap<>(valueSupplier);
     }
 
     /**
+     * Start defining a value mapping
      *
-     * @param value
-     * @param <I>
-     * @return
+     * @param value value
+     * @param <I>   value type
+     * @return value step map
      */
     public static <I> StaticStepMap<I> map(I value) {
         return new DefaultStaticStepMap<>(() -> value);
@@ -185,11 +188,11 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericCondition<N> min(NumericFieldInfo<N>... fields) {
         return Arrays.stream(fields)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                        .map(NumericFieldInfo::getNumericCondition)
-                        .map(c -> c.min(Arrays.asList(fields)))
-                        .orElseThrow(IllegalArgumentException::new);
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(NumericFieldInfo::getNumericCondition)
+                .map(c -> c.min(Arrays.asList(fields)))
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     /**
@@ -203,11 +206,11 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericCondition<N> sum(NumericFieldInfo<N>... fields) {
         return Arrays.stream(fields)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                        .map(NumericFieldInfo::getNumericCondition)
-                        .map(c -> c.sum(Arrays.asList(fields)))
-                        .orElseThrow(IllegalArgumentException::new);
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(NumericFieldInfo::getNumericCondition)
+                .map(c -> c.sum(Arrays.asList(fields)))
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     /**
@@ -221,10 +224,10 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericCondition<N> sum(NumericCondition<N>... conditions) {
         return Arrays.stream(conditions)
-                        .filter(Objects::nonNull)
-                        .findFirst()
-                        .map(c -> c.sumConditions(Arrays.asList(conditions)))
-                        .orElseThrow(IllegalArgumentException::new);
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(c -> c.sumConditions(Arrays.asList(conditions)))
+                .orElseThrow(IllegalArgumentException::new);
     }
 
 }

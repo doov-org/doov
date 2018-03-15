@@ -21,7 +21,7 @@ public interface TypeAdapter {
     /**
      * Called before {@link #toString(Object)}
      *
-     * @param value
+     * @param value value
      * @return true if this type adapter accepts to serialize this object
      */
     boolean accept(Object value);
