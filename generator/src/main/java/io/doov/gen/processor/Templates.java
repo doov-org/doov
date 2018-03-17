@@ -39,6 +39,7 @@ public class Templates {
     // DslFieldModel Templates
     public static final String dslFieldModel = template("DslFieldModel.template");
     public final static String dslFieldMethod = template("DslFieldMethod.template");
+    public final static String dslFieldIterableMethod = template("DslFieldIterableMethod.template");
 
     private static String template(String template) {
         try {

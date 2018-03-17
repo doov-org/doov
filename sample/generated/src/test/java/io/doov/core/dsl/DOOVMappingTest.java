@@ -1,7 +1,6 @@
 package io.doov.core.dsl;
 
-import static io.doov.core.dsl.DOOV.map;
-import static io.doov.core.dsl.DOOV.when;
+import static io.doov.core.dsl.DOOV.*;
 import static io.doov.core.dsl.mapping.TypeConverters.*;
 import static io.doov.core.dsl.mapping.DefaultMappingRegistry.mappings;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
@@ -14,6 +13,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.BiTypeConverter;
 import io.doov.core.dsl.lang.NaryTypeConverter;
 import io.doov.core.dsl.lang.MappingRegistry;
@@ -59,15 +59,13 @@ public class DOOVMappingTest {
                                 .using(STRIPPING_COUNTRY_CODE)
                                 .to(accountPhoneNumber)),
 
-                map(accountId)
-                        .to(configurationMaxLong),
+                map(accountId).to(configurationMaxLong),
 
                 map(userFirstName)
                         .using(LENGTH_OR_ZERO)
                         .to(configurationMinAge),
 
-                map(userId)
-                        .to(userId),
+                map(userId).to(userId),
 
                 map(userFirstName, userLastName)
                         .using(FULL_NAME)
@@ -77,20 +75,22 @@ public class DOOVMappingTest {
                                 .using(CONVERTER)
                                 .to(accountEmail))
                         .otherwise(
-                                map(() -> false)
-                                        .to(configurationMailingCampaign)),
+                                map(() -> false).to(configurationMailingCampaign)),
 
-                map(favoriteSiteName1, favoriteSiteName2, favoriteSiteName3)
+                map(favoriteSiteName())
                         .using(EMAIL_SIZE)
                         .to(configurationMaxEmailSize),
+
+                when(matchAny(favoriteSiteName(), DefaultCondition::isNotNull)).then(
+                        mapRange(1, 4, i ->
+                                map(favoriteSiteName(i)).to(favoriteSiteName(i)))),
 
                 map(() -> Country.FR)
                         .using(valueConverter(this::countryToLanguage, ""))
                         .to(accountLanguage),
 
                 when(accountLogin.isNotNull()).then(
-                        map(() -> true)
-                                .to(accountAcceptEmail))
+                        map(() -> true).to(accountAcceptEmail))
         );
     }
 

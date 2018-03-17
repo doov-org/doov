@@ -20,10 +20,15 @@ import static io.doov.core.dsl.meta.LeafMetadata.trueMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
+import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.mapping.*;
@@ -93,6 +98,22 @@ public class DOOV {
     }
 
     /**
+     * See {@link LogicalNaryCondition#matchAny(List)}
+     *
+     * @param dslFields             stream of fields
+     * @param stepConditionFunction condition to apply
+     * @return step condition
+     */
+    public static StepCondition matchAny(Stream<? extends DslField<?>> dslFields,
+            Function<DefaultCondition, StepCondition> stepConditionFunction) {
+        return LogicalNaryCondition.matchAny(dslFields
+                .filter(Objects::nonNull)
+                .map(DslField::getDefaultCondition)
+                .map(stepConditionFunction)
+                .collect(Collectors.toList()));
+    }
+
+    /**
      * See {@link LogicalNaryCondition#matchAll(List)}
      *
      * @param steps the steps to match
@@ -104,6 +125,22 @@ public class DOOV {
     }
 
     /**
+     * See {@link LogicalNaryCondition#matchAll(List)}
+     *
+     * @param dslFields             stream of fields
+     * @param stepConditionFunction condition to apply
+     * @return step condition
+     */
+    public static StepCondition matchAll(Stream<? extends DslField<?>> dslFields,
+            Function<DefaultCondition, StepCondition> stepConditionFunction) {
+        return LogicalNaryCondition.matchAll(dslFields
+                .filter(Objects::nonNull)
+                .map(DslField::getDefaultCondition)
+                .map(stepConditionFunction)
+                .collect(Collectors.toList()));
+    }
+
+    /**
      * See {@link LogicalNaryCondition#matchNone(List)}
      *
      * @param steps the steps to match
@@ -112,6 +149,22 @@ public class DOOV {
      */
     public static StepCondition matchNone(StepCondition... steps) {
         return LogicalNaryCondition.matchNone(asList(steps));
+    }
+
+    /**
+     * See {@link LogicalNaryCondition#matchNone(List)}
+     *
+     * @param dslFields             stream of fields
+     * @param stepConditionFunction condition to apply
+     * @return step condition
+     */
+    public static StepCondition matchNone(Stream<? extends DslField<?>> dslFields,
+            Function<DefaultCondition, StepCondition> stepConditionFunction) {
+        return LogicalNaryCondition.matchNone(dslFields
+                .filter(Objects::nonNull)
+                .map(DslField::getDefaultCondition)
+                .map(stepConditionFunction)
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -141,11 +194,21 @@ public class DOOV {
     /**
      * Start defining a nary mapping
      *
-     * @param inFieldInfo list of in fields
+     * @param inFieldInfos list of in fields
      * @return nary map step
      */
-    public static NaryStepMap map(DslField... inFieldInfo) {
-        return new NaryStepMap(Arrays.asList(inFieldInfo));
+    public static NaryStepMap map(DslField<?>... inFieldInfos) {
+        return new NaryStepMap(Arrays.asList(inFieldInfos));
+    }
+
+    /**
+     * Start defining a nary mapping
+     *
+     * @param inFieldInfos list of in fields
+     * @return nary map step
+     */
+    public static NaryStepMap map(Stream<? extends DslField<?>> inFieldInfos) {
+        return new NaryStepMap(inFieldInfos.collect(Collectors.toList()));
     }
 
     /**
@@ -168,6 +231,52 @@ public class DOOV {
      */
     public static <I> StaticStepMap<I> map(I value) {
         return new StaticStepMap<>(() -> value);
+    }
+
+    /**
+     * Create an array of mapping rules from a range of index
+     *
+     * @param startInclusive      inclusive start index, inclusive
+     * @param endExclusive        exclusive end index
+     * @param mappingRuleFunction index to mapping rule function
+     * @return array of mapping rule
+     */
+    public static MappingRule[] mapRange(int startInclusive, int endExclusive,
+            Function<Integer, MappingRule> mappingRuleFunction) {
+        return IntStream.range(startInclusive, endExclusive)
+                .mapToObj(mappingRuleFunction::apply)
+                .toArray(MappingRule[]::new);
+    }
+
+    /**
+     * Create an array of mapping rules from a stream of fields
+     *
+     * @param fieldStream         field stream
+     * @param mappingRuleFunction field to mapping rule function
+     * @return array of mapping rule
+     */
+    public static MappingRule[] mapFor(Stream<? extends DslField<?>> fieldStream,
+            Function<DslField<?>, MappingRule> mappingRuleFunction) {
+        return fieldStream
+                .filter(Objects::nonNull)
+                .map(mappingRuleFunction::apply)
+                .toArray(MappingRule[]::new);
+    }
+
+    /**
+     * Returns the field in the position
+     *
+     * @param fieldStream field stream
+     * @param index       field list position
+     * @param <T>         field info type
+     * @return field info
+     */
+    public static <T extends DslField<?>> T fieldInPosition(Stream<T> fieldStream, int index) {
+        return fieldStream
+                .filter(Objects::nonNull)
+                .filter(f -> f.id().position() == index)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Field with position " + index + " not found."));
     }
 
     /**
