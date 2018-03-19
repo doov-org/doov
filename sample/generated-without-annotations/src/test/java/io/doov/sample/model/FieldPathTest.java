@@ -1,6 +1,9 @@
 package io.doov.sample.model;
 
-import static io.doov.sample.model.FieldRegistry.*;
+import static io.doov.sample.model.FieldRegistry.account_accept_email;
+import static io.doov.sample.model.FieldRegistry.favorite_site_1_name;
+import static io.doov.sample.model.FieldRegistry.favorite_site_2_url;
+import static io.doov.sample.model.FieldRegistry.user_id;
 import static io.doov.sample.model.SampleModels.sample;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.lang.SimpleMappingRule;
+import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.runtime.RuntimeModel;
 import io.doov.sample.field.dsl.DslSampleModel;
 
@@ -41,7 +44,7 @@ public class FieldPathTest {
     void name3() {
         FieldModel wrapper = SampleModels.wrapper();
         RuntimeModel<SampleModel> runtimeModel = new RuntimeModel<>(FieldRegistry.INSTANCE, new SampleModel());
-        SimpleMappingRule<Long, Long> to = DOOV.map(DslSampleModel.userId()).to(user_id);
+        MappingRule to = DOOV.map(DslSampleModel.userId).to(user_id);
         to.validate(wrapper, runtimeModel);
         to.executeOn(wrapper, runtimeModel);
         assertThat(runtimeModel.get(user_id)).isEqualTo(1L);

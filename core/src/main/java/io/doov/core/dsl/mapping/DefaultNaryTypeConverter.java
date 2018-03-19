@@ -7,25 +7,20 @@ import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.GenericTypeConverter;
+import io.doov.core.dsl.lang.NaryTypeConverter;
 import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
-public class DefaultGenericTypeConverter<O> implements GenericTypeConverter<O> {
+public class DefaultNaryTypeConverter<O> implements NaryTypeConverter<O> {
 
     private final ConverterMetadata metadata;
     private BiFunction<FieldModel, List<DslField>, O> function;
 
-    public static <O> GenericTypeConverter<O> nConverter(BiFunction<FieldModel, List<DslField>, O> function,
-                    String description) {
-        return new DefaultGenericTypeConverter<>(function, description);
-    }
-
-    public DefaultGenericTypeConverter(BiFunction<FieldModel, List<DslField>, O> function, String description) {
+    public DefaultNaryTypeConverter(BiFunction<FieldModel, List<DslField>, O> function, String description) {
         this(function, ConverterMetadata.metadata(description));
     }
 
-    public DefaultGenericTypeConverter(BiFunction<FieldModel, List<DslField>, O> function, ConverterMetadata metadata) {
+    public DefaultNaryTypeConverter(BiFunction<FieldModel, List<DslField>, O> function, ConverterMetadata metadata) {
         this.function = function;
         this.metadata = metadata;
     }

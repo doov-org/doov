@@ -40,12 +40,12 @@ public class CascadedValidation {
 
         volatile ValidationRule rule = DOOV
                 .when(matchAll(
-                        friendName1().isNotNull(),
-                        friendName2().isNotNull(),
-                        friendName3().isNotNull(),
-                        friendName4().isNotNull(),
-                        friendName5().isNotNull(),
-                        friendName6().isNotNull()))
+                        friendName1.isNotNull(),
+                        friendName2.isNotNull(),
+                        friendName3.isNotNull(),
+                        friendName4.isNotNull(),
+                        friendName5.isNotNull(),
+                        friendName6.isNotNull()))
                 .validate();
 
     }

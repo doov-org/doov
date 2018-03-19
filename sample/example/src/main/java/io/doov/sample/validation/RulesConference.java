@@ -13,10 +13,10 @@ public interface RulesConference {
 
     ValidationRule userAccount = DOOV
         // Entry point is when
-        .when(userBirthdate().ageAt(today()).greaterOrEquals(18)
-            .and(accountEmail().length().lesserOrEquals(configurationMaxEmailSize()))
-            .and(accountCountry().eq(Country.FR))
-            .and(accountPhoneNumber().startsWith("+33")))
+        .when(userBirthdate.ageAt(today()).greaterOrEquals(18)
+            .and(accountEmail.length().lesserOrEquals(configurationMaxEmailSize))
+            .and(accountCountry.eq(Country.FR))
+            .and(accountPhoneNumber.startsWith("+33")))
         // Terminal operation is validate
         .validate()
         // Optional: add to registry
@@ -24,10 +24,10 @@ public interface RulesConference {
 
     ValidationRule userAccountMatch = DOOV
         .when(matchAll(
-            userBirthdate().ageAt(today()).greaterOrEquals(18),
-            accountEmail().length().lesserOrEquals(configurationMaxEmailSize()),
-            accountCountry().eq(Country.FR),
-            accountPhoneNumber().startsWith("+33")))
+            userBirthdate.ageAt(today()).greaterOrEquals(18),
+            accountEmail.length().lesserOrEquals(configurationMaxEmailSize),
+            accountCountry.eq(Country.FR),
+            accountPhoneNumber.startsWith("+33")))
         .validate();
 
 }

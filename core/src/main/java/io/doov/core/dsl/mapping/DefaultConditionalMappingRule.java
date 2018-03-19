@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.MappingMetadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultConditionalMappingRule implements ConditionalMappingRule {
 
@@ -64,12 +65,6 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
         } else {
             elseMappingRules.forEach(m -> m.executeOn(inModel, outModel));
         }
-    }
-
-    @Override
-    public MappingRule registerOn(MappingRegistry registry) {
-        registry.register(this);
-        return this;
     }
 
     @Override

@@ -58,18 +58,18 @@ public class TemporalTest {
     public void should_temporal_same_as_local_date_operation_eq() {
         user.setBirthDate(LocalDate.now());
 
-        assertThat(userBirthdate().eq(LocalDate.now())).validates(model);
-        assertThat(userBirthdate().notEq(LocalDate.now())).doesNotValidate(model);
+        assertThat(userBirthdate.eq(LocalDate.now())).validates(model);
+        assertThat(userBirthdate.notEq(LocalDate.now())).doesNotValidate(model);
     }
 
     @Test
     public void should_temporal_same_as_local_date_operation_with() {
         user.setBirthDate(LocalDate.now());
 
-        assertThat(userBirthdate().with(firstDayOfMonth())
+        assertThat(userBirthdate.with(firstDayOfMonth())
                         .eq(LocalDate.now().with(TemporalAdjusters.firstDayOfMonth())))
                         .validates(model);
-        assertThat(userBirthdate().with(firstDayOfMonth())
+        assertThat(userBirthdate.with(firstDayOfMonth())
                         .notEq(LocalDate.now().with(TemporalAdjusters.firstDayOfMonth())))
                         .doesNotValidate(model);
     }
@@ -80,12 +80,12 @@ public class TemporalTest {
         user.setBirthDate(birthDate);
         configuration.setMinAge(18);
 
-        assertThat(userBirthdate().eq(birthDate)).validates(model);
-        assertThat(userBirthdate().minus(1, DAYS).eq(birthDate.minus(1, DAYS))).validates(model);
-        assertThat(userBirthdate().plus(1, DAYS).eq(birthDate.plus(1, DAYS))).validates(model);
-        assertThat(userBirthdate().minus(configurationMinAge(), YEARS).eq(birthDate.minus(18, YEARS)))
+        assertThat(userBirthdate.eq(birthDate)).validates(model);
+        assertThat(userBirthdate.minus(1, DAYS).eq(birthDate.minus(1, DAYS))).validates(model);
+        assertThat(userBirthdate.plus(1, DAYS).eq(birthDate.plus(1, DAYS))).validates(model);
+        assertThat(userBirthdate.minus(configurationMinAge, YEARS).eq(birthDate.minus(18, YEARS)))
                         .validates(model);
-        assertThat(userBirthdate().plus(configurationMinAge(), YEARS).eq(birthDate.plus(18, YEARS)))
+        assertThat(userBirthdate.plus(configurationMinAge, YEARS).eq(birthDate.plus(18, YEARS)))
                         .validates(model);
     }
 
@@ -95,23 +95,23 @@ public class TemporalTest {
         user.setBirthDate(birthDate);
         account.setCreationDate(LocalDate.now());
 
-        assertThat(userBirthdate().yearsBetween(LocalDate.now()).eq(18)).validates(model);
-        assertThat(userBirthdate().plus(1, DAYS).yearsBetween(LocalDate.now()).eq(18)).doesNotValidate(model);
-        assertThat(userBirthdate().plus(1, DAYS).minus(1, DAYS).yearsBetween(LocalDate.now()).eq(18)).validates(model);
-        assertThat(userBirthdate().yearsBetween(accountCreationDate()).eq(18)).validates(model);
+        assertThat(userBirthdate.yearsBetween(LocalDate.now()).eq(18)).validates(model);
+        assertThat(userBirthdate.plus(1, DAYS).yearsBetween(LocalDate.now()).eq(18)).doesNotValidate(model);
+        assertThat(userBirthdate.plus(1, DAYS).minus(1, DAYS).yearsBetween(LocalDate.now()).eq(18)).validates(model);
+        assertThat(userBirthdate.yearsBetween(accountCreationDate).eq(18)).validates(model);
 
         user.setBirthDate(birthDate.plus(1, DAYS));
-        assertThat(userBirthdate().yearsBetween(LocalDate.now()).eq(17)).validates(model);
-        assertThat(userBirthdate().minus(1, DAYS).yearsBetween(LocalDate.now()).eq(18)).validates(model);
-        assertThat(userBirthdate().yearsBetween(LocalDate.now().plus(1, DAYS)).eq(18)).validates(model);
+        assertThat(userBirthdate.yearsBetween(LocalDate.now()).eq(17)).validates(model);
+        assertThat(userBirthdate.minus(1, DAYS).yearsBetween(LocalDate.now()).eq(18)).validates(model);
+        assertThat(userBirthdate.yearsBetween(LocalDate.now().plus(1, DAYS)).eq(18)).validates(model);
 
         user.setBirthDate(LocalDate.of(2000, 1, 1));
-        assertThat(userBirthdate().yearsBetween(LocalDate.of(2018, 1, 1)).eq(18)).validates(model);
-        assertThat(userBirthdate().yearsBetween(LocalDate.of(2018, 1, 2)).eq(18)).validates(model);
-        assertThat(userBirthdate().yearsBetween(LocalDate.of(2017, 12, 31)).eq(17)).validates(model);
+        assertThat(userBirthdate.yearsBetween(LocalDate.of(2018, 1, 1)).eq(18)).validates(model);
+        assertThat(userBirthdate.yearsBetween(LocalDate.of(2018, 1, 2)).eq(18)).validates(model);
+        assertThat(userBirthdate.yearsBetween(LocalDate.of(2017, 12, 31)).eq(17)).validates(model);
 
         account.setCreationDate(LocalDate.of(2018, 1, 1));
-        assertThat(userBirthdate().yearsBetween(accountCreationDate()).eq(18)).validates(model);
+        assertThat(userBirthdate.yearsBetween(accountCreationDate).eq(18)).validates(model);
     }
 
     @Test
@@ -119,11 +119,11 @@ public class TemporalTest {
         LocalDate birthDate = LocalDate.now().minus(18, YEARS);
         user.setBirthDate(birthDate);
 
-        assertThat(userBirthdate().with(firstDayOfYear())
+        assertThat(userBirthdate.with(firstDayOfYear())
                         .yearsBetween(LocalDate.now().with(TemporalAdjusters.firstDayOfYear()))
                         .eq(18))
                         .validates(model);
-        assertThat(userBirthdate().with(firstDayOfNextYear()).with(ofDateAdjuster(d -> d.withDayOfMonth(15)))
+        assertThat(userBirthdate.with(firstDayOfNextYear()).with(ofDateAdjuster(d -> d.withDayOfMonth(15)))
                         .yearsBetween(LocalDate.now().with(TemporalAdjusters.firstDayOfNextYear())
                                         .with(TemporalAdjusters.ofDateAdjuster(d -> d.withDayOfMonth(15))))
                         .eq(18)).validates(model);
@@ -134,7 +134,7 @@ public class TemporalTest {
         user.setBirthDate(LocalDate.of(1980, 1, 1));
 
         LocalDateSuppliers.setClock(LocalDateSuppliers.createClockFrom(LocalDate.of(1990, 1, 1)));
-        assertThat(userBirthdate().ageAt(today()).greaterOrEquals(18)).doesNotValidate(model);
+        assertThat(userBirthdate.ageAt(today()).greaterOrEquals(18)).doesNotValidate(model);
         LocalDateSuppliers.setDefaultClock();
     }
 
@@ -143,7 +143,7 @@ public class TemporalTest {
         user.setBirthDate(LocalDate.of(1980, 1, 1));
 
         LocalDateSuppliers.setClock(LocalDateSuppliers.createClockFrom(LocalDate.of(2017, 1, 1)));
-        assertThat(userBirthdate().ageAt(today()).greaterOrEquals(18)).validates(model);
+        assertThat(userBirthdate.ageAt(today()).greaterOrEquals(18)).validates(model);
         LocalDateSuppliers.setDefaultClock();
     }
 }

@@ -41,7 +41,7 @@ public class CanonicalMessageTest {
     @Test
     void matchAny_values() {
         model.set(SampleFieldId.COUNTRY, Country.FR);
-        final Result result = DOOV.when(accountCountry().anyMatch(Country.FR, Country.CAN)).validate()
+        final Result result = DOOV.when(accountCountry.anyMatch(Country.FR, Country.CAN)).validate()
                         .withShortCircuit(false).executeOn(model);
         System.out.println(result.getContext().getRootMetadata().readable());
         assertThat(result).isTrue();
@@ -254,9 +254,9 @@ public class CanonicalMessageTest {
 
     @Test
     public void sum_numeric_fields() {
-        model.set(configurationMaxEmailSize().id(), 3);
-        model.set(configurationMinAge().id(), 0);
-        final Result result = DOOV.when(sum(configurationMaxEmailSize(), configurationMinAge()).greaterThan(2))
+        model.set(configurationMaxEmailSize.id(), 3);
+        model.set(configurationMinAge.id(), 0);
+        final Result result = DOOV.when(sum(configurationMaxEmailSize, configurationMinAge).greaterThan(2))
                         .validate().withShortCircuit(false).executeOn(model);
         System.out.println(result.getContext().getRootMetadata().readable());
         assertThat(result).isTrue();
@@ -287,9 +287,9 @@ public class CanonicalMessageTest {
 
     @Test
     public void sum_numeric_condition() {
-        model.set(configurationMaxEmailSize().id(), 1);
-        model.set(configurationMinAge().id(), 0);
-        final Result result = DOOV.when(sum(configurationMaxEmailSize().times(3), configurationMinAge().times(20))
+        model.set(configurationMaxEmailSize.id(), 1);
+        model.set(configurationMinAge.id(), 0);
+        final Result result = DOOV.when(sum(configurationMaxEmailSize.times(3), configurationMinAge.times(20))
                         .greaterThan(2)).validate().withShortCircuit(false).executeOn(model);
         System.out.println(result.getContext().getRootMetadata().readable());
         assertThat(result).isTrue();

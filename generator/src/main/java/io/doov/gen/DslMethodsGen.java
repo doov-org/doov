@@ -5,6 +5,7 @@ package io.doov.gen;
 
 import static io.doov.gen.ModelWrapperGen.primitiveBoxingType;
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
@@ -49,9 +50,9 @@ final class DslMethodsGen {
         return imports.stream();
     }
 
-    static String methods(Map<FieldId, GeneratorFieldInfo> fieldInfos,
-                    FieldTypeProvider typeProvider,
-                    boolean enumFieldInfo) {
+    static String fields(Map<FieldId, GeneratorFieldInfo> fieldInfos,
+                         FieldTypeProvider typeProvider,
+                         boolean enumFieldInfo) {
         return fieldInfos.entrySet().stream().sorted(comparing(e -> e.getKey().code())).map(e -> {
             final GeneratorFieldInfo fieldInfo = e.getValue();
             final Class<?> type = fieldInfo.type();
@@ -67,6 +68,34 @@ final class DslMethodsGen {
             conf.put("field.info.ref", fieldInfo.id().toString() + (enumFieldInfo ? ".delegate()" : ""));
             return MacroProcessor.replaceProperties(Templates.dslFieldMethod, conf);
         }).collect(joining("\n\n"));
+    }
+
+    static String iterableMethods(Map<FieldId, GeneratorFieldInfo> fieldInfos,
+                                  FieldTypeProvider typeProvider) {
+        return fieldInfos.entrySet().stream()
+                .filter(e -> e.getKey().position() > 0)
+                .collect(groupingBy(e -> e.getValue().getPath().canonicalPath().replaceAll("[0-9]+", "")))
+                .entrySet().stream()
+                .filter(e -> e.getValue().size() > 1)
+                .map(Map.Entry::getValue)
+                .sorted(comparing(l -> l.get(0).getValue().readable()))
+                .map(fieldInfoList -> {
+                    final GeneratorFieldInfo fieldInfo = fieldInfoList.get(0).getValue();
+                    final Class<?> type = fieldInfo.type();
+                    final String rawType = type.isPrimitive() ? primitiveBoxingType(type) : type.getSimpleName();
+                    final String genericTypes = formatGenericTypes(fieldInfo.genericTypes());
+                    final Class<? extends FieldInfo> fieldInfoClass = typeProvider.fielInfoType(fieldInfo);
+                    String fieldType = fieldInfoType(fieldInfoClass, type, rawType, genericTypes);
+                    String fieldList = fieldInfoList.stream()
+                            .sorted(comparing(f -> f.getKey().position()))
+                            .map(entry -> formatMethod(entry.getValue().readable()))
+                            .collect(joining(", "));
+                    final Map<String, String> conf = new HashMap<>();
+                    conf.put("field.type", fieldType);
+                    conf.put("method.name", formatMethod(fieldInfo.readable()).replaceAll("[0-9]+", ""));
+                    conf.put("field.info.refs", fieldList);
+                    return MacroProcessor.replaceProperties(Templates.dslFieldIterableMethod, conf);
+                }).collect(joining("\n\n"));
     }
 
     private static String fieldInfoType(Class<? extends FieldInfo> infoType, Class<?> type, String rawType,

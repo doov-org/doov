@@ -282,7 +282,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_RULE_DOUBLE_TEMPORAL() {
-        final ValidationRule rule = DOOV.when(userBirthdate().with(firstDayOfMonth()).ageAt(accountCreationDate().with(firstDayOfMonth())).lesserThan(18)).validate();
+        final ValidationRule rule = DOOV.when(userBirthdate.with(firstDayOfMonth()).ageAt(accountCreationDate.with(firstDayOfMonth())).lesserThan(18)).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
@@ -309,7 +309,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_match_any() {
-        final ValidationRule rule = DOOV.when(matchAny(accountEmail().startsWith("a"), accountEmail().startsWith("b"))).validate();
+        final ValidationRule rule = DOOV.when(matchAny(accountEmail.startsWith("a"), accountEmail.startsWith("b"))).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(NaryMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(NARY_PREDICATE);
         assertThat(rule.getRootMetadata().children().get(0)).isInstanceOf(LeafMetadata.class);
@@ -325,7 +325,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_count_greater_than_2() {
-        ValidationRule rule = DOOV.when(count(accountEmail().startsWith("a"), accountEmail().startsWith("b")).greaterThan(2)).validate();
+        ValidationRule rule = DOOV.when(count(accountEmail.startsWith("a"), accountEmail.startsWith("b")).greaterThan(2)).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(BinaryMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(BINARY_PREDICATE);
         assertThat(rule.getRootMetadata().children().get(0)).isInstanceOf(NaryMetadata.class);
@@ -346,7 +346,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_combined_when() {
-        ValidationRule rule = DOOV.when(configurationMinAge().when(configurationMaxEmailSize().anyMatch(11, 12, 13)).eq(1)).validate();
+        ValidationRule rule = DOOV.when(configurationMinAge.when(configurationMaxEmailSize.anyMatch(11, 12, 13)).eq(1)).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
@@ -379,7 +379,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_temporal_unit() {
-        ValidationRule rule = DOOV.when(DslSampleModel.userBirthdate().minus(1, YEARS).before(LocalDateSuppliers.today())).validate();
+        ValidationRule rule = DOOV.when(DslSampleModel.userBirthdate.minus(1, YEARS).before(LocalDateSuppliers.today())).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
@@ -405,7 +405,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_eq_today() {
-        ValidationRule rule = DOOV.when(DslSampleModel.userBirthdate().eq(LocalDateSuppliers.today())).validate();
+        ValidationRule rule = DOOV.when(DslSampleModel.userBirthdate.eq(LocalDateSuppliers.today())).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
@@ -423,7 +423,7 @@ public class SampleRuleI18nTest {
 
     @Test
     public void test_eq_today_plus_1_day() {
-        ValidationRule rule = DOOV.when(DslSampleModel.userBirthdate().eq(LocalDateSuppliers.today().plus(1, DAYS))).validate();
+        ValidationRule rule = DOOV.when(DslSampleModel.userBirthdate.eq(LocalDateSuppliers.today().plus(1, DAYS))).validate();
         assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
         final List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());

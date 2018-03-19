@@ -15,9 +15,10 @@
  */
 package io.doov.gen;
 
+import static io.doov.gen.DslMethodsGen.iterableMethods;
 import static io.doov.gen.FieldInfoGen.constants;
 import static io.doov.gen.FieldInfoGen.createFieldInfos;
-import static io.doov.gen.DslMethodsGen.methods;
+import static io.doov.gen.DslMethodsGen.fields;
 import static io.doov.gen.ModelWrapperGen.*;
 import static io.doov.gen.utils.ClassUtils.transformPathToMethod;
 import static java.nio.file.Files.createDirectories;
@@ -274,7 +275,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("target.class.name", targetClassName);
             conf.put("process.field.info.class", targetFieldInfoPackage + "." + fieldInfoClassName);
             conf.put("imports", DslMethodsGen.imports(fieldInfoMap, typeProvider));
-            conf.put("methods", methods(fieldInfoMap, typeProvider, enumFieldInfo));
+            conf.put("fields", fields(fieldInfoMap, typeProvider, enumFieldInfo));
+            conf.put("methods", iterableMethods(fieldInfoMap, typeProvider));
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(Templates.dslFieldModel, conf);
             Files.write(content, targetFile, Charset.forName("UTF8"));

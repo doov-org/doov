@@ -12,30 +12,36 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toSet;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
 import java.util.regex.Pattern;
 
-import io.doov.core.*;
+import io.doov.core.CodeLookup;
+import io.doov.core.CodeValuable;
+import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 
 public class GeneratorFieldInfo extends DelegatingFieldInfoImpl {
 
     private static final Pattern UNDER = Pattern.compile("_");
 
-    private final Type genericType;
+    private final VisitorPath path;
 
-    public GeneratorFieldInfo(FieldInfo fieldInfo, Type genericType) {
+    public GeneratorFieldInfo(FieldInfo fieldInfo, VisitorPath path) {
         super(fieldInfo);
-        this.genericType = genericType;
+        this.path = path;
     }
 
-    public Type genericType() {
-        return genericType;
+    public VisitorPath getPath() {
+        return path;
     }
 
     static GeneratorFieldInfo fromVisitorPath(VisitorPath path, Collection<VisitorPath> allPaths) {
-        Type genericReturnType = path.getPath().get(path.getPath().size() - 1).getGenericReturnType();
         return new GeneratorFieldInfo(fieldInfo()
                 .fieldId(path.getFieldId())
                 .type(getterType(path))
@@ -45,7 +51,7 @@ public class GeneratorFieldInfo extends DelegatingFieldInfoImpl {
                 .codeLookup(isAssignable(path, CodeLookup.class))
                 .genericTypes(genericClasses(path))
                 .siblings(siblings(path, allPaths).stream().sorted(comparing(FieldId::code)).toArray(FieldId[]::new))
-                .build(), genericReturnType);
+                .build(), path);
     }
 
     private static boolean isAssignable(VisitorPath path, Class<?> clazz) {
@@ -69,7 +75,7 @@ public class GeneratorFieldInfo extends DelegatingFieldInfoImpl {
 
     private static Class[] genericClasses(VisitorPath path) {
         Type returnType = path.getPath().get(path.getPath().size() - 1).getGenericReturnType();
-        Class[] genericClasses = new Class[] {};
+        Class[] genericClasses = new Class[]{};
         if (returnType instanceof ParameterizedType) {
             ParameterizedType genericReturnType = (ParameterizedType) returnType;
             genericClasses = Arrays.stream(genericReturnType.getActualTypeArguments())

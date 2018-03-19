@@ -52,9 +52,9 @@ public class SimpleValidationWithoutShortCircuit {
     public static class ValidationState {
 
         volatile ValidationRule rule = DOOV
-                        .when(name().isNotNull()
-                                        .and(age().greaterOrEquals(18))
-                                        .and(drivingLicense().isTrue()))
+                        .when(name.isNotNull()
+                                        .and(age.greaterOrEquals(18))
+                                        .and(drivingLicense.isTrue()))
                         .validate()
                         .withShortCircuit(false);
 

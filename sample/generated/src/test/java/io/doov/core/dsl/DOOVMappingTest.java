@@ -1,12 +1,8 @@
 package io.doov.core.dsl;
 
-import static io.doov.core.dsl.DOOV.map;
-import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.mapping.DefaultBiTypeConverter.biConverter;
-import static io.doov.core.dsl.mapping.DefaultGenericTypeConverter.nConverter;
+import static io.doov.core.dsl.DOOV.*;
+import static io.doov.core.dsl.mapping.TypeConverters.*;
 import static io.doov.core.dsl.mapping.DefaultMappingRegistry.mappings;
-import static io.doov.core.dsl.mapping.DefaultStaticTypeConverter.converter;
-import static io.doov.core.dsl.mapping.DefaultTypeConverter.converter;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.model.SampleModels.sample;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,8 +13,9 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.BiTypeConverter;
-import io.doov.core.dsl.lang.GenericTypeConverter;
+import io.doov.core.dsl.lang.NaryTypeConverter;
 import io.doov.core.dsl.lang.MappingRegistry;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.TypeConverter;
@@ -35,44 +32,65 @@ public class DOOVMappingTest {
                     "stripping country code");
 
     private static final TypeConverter<String, Integer> LENGTH_OR_ZERO =
-            converter(in -> in.map(String::length).orElse(0), "string length");
+            converter(String::length, 0, "string length");
 
     private static final BiTypeConverter<String, String, String> FULL_NAME =
             biConverter((i, j) -> i + " " + j, "", "", "firstName lastName");
 
-    private static final BiTypeConverter<Collection<EmailType>, String, String> CONVERTER = biConverter((i, j) -> {
-        String[] em = j.split("@");
-        return em[0] + "+" + i.size() + "@" + em[1];
-    }, "", "WTF");
+    private static final BiTypeConverter<Collection<EmailType>, String, String> CONVERTER =
+            biConverter((i, j) -> {
+                String[] em = j.split("@");
+                return em[0] + "+" + i.size() + "@" + em[1];
+            }, "", "WTF");
 
-    private static final GenericTypeConverter<Integer> EMAIL_SIZE = nConverter((model, fieldInfos) ->
-            (int) fieldInfos.stream()
-                    .map(f -> model.get(f.id()))
-                    .filter(Objects::nonNull).count(), "favorite web site size -> email size");
+    private static final NaryTypeConverter<Integer> EMAIL_SIZE =
+            nConverter((model, fieldInfos) ->
+                    (int) fieldInfos.stream()
+                            .map(f -> model.get(f.id()))
+                            .filter(Objects::nonNull).count(), "favorite web site size -> email size");
 
     private MappingRegistry mappings;
 
     @BeforeEach
     void setUp() {
         mappings = mappings(
-                when(accountLanguage().eq(Language.FR)).then(
-                        map(accountPhoneNumber()).using(STRIPPING_COUNTRY_CODE).to(accountPhoneNumber
-                                ())),
-                map(accountId()).to(configurationMaxLong()),
-                map(userFirstName()).using(LENGTH_OR_ZERO).to(configurationMinAge()),
-                map(userId()).to(userId()),
-                map(userFirstName(), userLastName()).using(FULL_NAME).to(userFirstName()),
-                when(accountAcceptEmail().isTrue())
-                        .then(map(accountPreferencesMail(), accountEmail()).using(CONVERTER).to
-                                (accountEmail()))
-                        .otherwise(map(() -> false).to(configurationMailingCampaign())),
-                map(favoriteSiteName1(), favoriteSiteName2(), favoriteSiteName3())
-                        .using(EMAIL_SIZE).to(configurationMaxEmailSize()),
+                when(accountLanguage.eq(Language.FR)).then(
+                        map(accountPhoneNumber)
+                                .using(STRIPPING_COUNTRY_CODE)
+                                .to(accountPhoneNumber)),
+
+                map(accountId).to(configurationMaxLong),
+
+                map(userFirstName)
+                        .using(LENGTH_OR_ZERO)
+                        .to(configurationMinAge),
+
+                map(userId).to(userId),
+
+                map(userFirstName, userLastName)
+                        .using(FULL_NAME)
+                        .to(userFirstName),
+                when(accountAcceptEmail.isTrue()).then(
+                        map(accountPreferencesMail, accountEmail)
+                                .using(CONVERTER)
+                                .to(accountEmail))
+                        .otherwise(
+                                map(() -> false).to(configurationMailingCampaign)),
+
+                map(favoriteSiteName())
+                        .using(EMAIL_SIZE)
+                        .to(configurationMaxEmailSize),
+
+                when(matchAny(favoriteSiteName(), DefaultCondition::isNotNull)).then(
+                        mapRange(1, 4, i ->
+                                map(favoriteSiteName(i)).to(favoriteSiteName(i)))),
+
                 map(() -> Country.FR)
-                        .using(converter(this::countryToLanguage, ""))
-                        .to(accountLanguage()),
-                when(accountLogin().isNotNull()).then(
-                        map(() -> true).to(accountAcceptEmail()))
+                        .using(valueConverter(this::countryToLanguage, ""))
+                        .to(accountLanguage),
+
+                when(accountLogin.isNotNull()).then(
+                        map(() -> true).to(accountAcceptEmail))
         );
     }
 
@@ -92,9 +110,7 @@ public class DOOVMappingTest {
     void doov() {
         SampleModelWrapper sample = new SampleModelWrapper(sample());
         SampleModelWrapper copy = new SampleModelWrapper();
-        mappings.stream()
-                .filter(m -> m.validate(sample, sample))
-                .forEachOrdered(m -> m.executeOn(sample, copy));
+        mappings.validateAndExecute(sample, copy);
         assertThat(copy.getModel().getConfiguration().getMaxLong()).isEqualTo(9);
         assertThat(copy.getModel().getConfiguration().getMinAge()).isEqualTo(3);
         assertThat(copy.getModel().getAccount().getPhoneNumber()).isEqualTo("0102030409");
@@ -109,10 +125,8 @@ public class DOOVMappingTest {
     void mapping_otherwise() {
         SampleModelWrapper sample = new SampleModelWrapper(sample());
         SampleModelWrapper copy = new SampleModelWrapper();
-        sample.set(accountAcceptEmail(), false);
-        mappings.stream()
-                .filter(m -> m.validate(sample, sample))
-                .forEachOrdered(m -> m.executeOn(sample, copy));
+        sample.set(accountAcceptEmail, false);
+        mappings.validateAndExecute(sample, copy);
         assertThat(copy.getModel().getConfiguration().getMaxLong()).isEqualTo(9);
         assertThat(copy.getModel().getConfiguration().getMinAge()).isEqualTo(3);
         assertThat(copy.getModel().getAccount().getPhoneNumber()).isEqualTo("0102030409");

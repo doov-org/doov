@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
-import io.doov.sample.field.dsl.DslSampleModel;
 
 public class SampleModelNullInitTest {
 
@@ -29,7 +28,7 @@ public class SampleModelNullInitTest {
         // given
         sample.setAccount(null);
         // when
-        source.set(accountId().id(), null);
+        source.set(accountId.id(), null);
         // then
         assertThat(sample.getAccount()).isNull();
     }
@@ -39,7 +38,7 @@ public class SampleModelNullInitTest {
         // given
         sample.getAccount().setTop3WebSite(null);
         // when
-        source.set(favoriteSiteName1().id(), null);
+        source.set(favoriteSiteName1.id(), null);
         // then
         assertThat(sample.getAccount().getTop3WebSite()).isNull();
     }

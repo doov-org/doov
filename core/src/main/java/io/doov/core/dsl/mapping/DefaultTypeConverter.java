@@ -6,24 +6,23 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Function;
 
+import io.doov.core.FieldModel;
+import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.TypeConverter;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.ConverterMetadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
 
-public class DefaultTypeConverter<I, O> extends AbstractTypeConverter<I, O> {
+public class DefaultTypeConverter<I, O> implements TypeConverter<I, O> {
+
+    private static final TypeConverter<?, ?> IDENTITY =
+            new DefaultTypeConverter<>(i -> i.orElse(null), ConverterMetadata.identity());
 
     private final ConverterMetadata metadata;
     private Function<Optional<I>, O> converter;
 
+    @SuppressWarnings("unchecked")
     public static <T> TypeConverter<T, T> identity() {
-        return new DefaultTypeConverter<>(i -> i.orElse(null), ConverterMetadata.identity());
-    }
-
-    public static <I, O> TypeConverter<I, O> converter(Function<Optional<I>, O> converter, String description) {
-        return new DefaultTypeConverter<>(converter, description);
-    }
-
-    public static <I, O> TypeConverter<I, O> converter(Function<I, O> converter, O nullCase, String description) {
-        return converter(i -> i.map(converter).orElse(nullCase), description);
+        return (TypeConverter<T, T>) IDENTITY;
     }
 
     public DefaultTypeConverter(Function<Optional<I>, O> converter, String description) {
@@ -36,8 +35,8 @@ public class DefaultTypeConverter<I, O> extends AbstractTypeConverter<I, O> {
     }
 
     @Override
-    O convert(I in) {
-        return converter.apply(Optional.ofNullable(in));
+    public O convert(FieldModel fieldModel, DslField<I> in) {
+        return converter.apply(Optional.ofNullable(fieldModel.get(in.id())));
     }
 
     @Override

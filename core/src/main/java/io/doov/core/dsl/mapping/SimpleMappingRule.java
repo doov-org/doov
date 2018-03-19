@@ -7,20 +7,25 @@ import java.util.Locale;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.MappingRegistry;
-import io.doov.core.dsl.lang.SimpleMappingRule;
+import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.lang.TypeConverter;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
-public class DefaultMappingRule<I, O> implements SimpleMappingRule<I, O> {
+/**
+ * 1-to-1 mapping rule
+ *
+ * @param <I> in type
+ * @param <O> out type
+ */
+public class SimpleMappingRule<I, O> implements MappingRule {
 
     private final MappingMetadata metadata;
     private final DslField<I> inFieldInfo;
     private final DslField<O> outFieldInfo;
     private final TypeConverter<I, O> typeConverter;
 
-    public DefaultMappingRule(DslField<I> inFieldInfo, DslField<O> outFieldInfo, TypeConverter<I, O> typeConverter) {
+    SimpleMappingRule(DslField<I> inFieldInfo, DslField<O> outFieldInfo, TypeConverter<I, O> typeConverter) {
         this.inFieldInfo = inFieldInfo;
         this.outFieldInfo = outFieldInfo;
         this.metadata = mapping(inFieldInfo, outFieldInfo);
@@ -47,12 +52,6 @@ public class DefaultMappingRule<I, O> implements SimpleMappingRule<I, O> {
     @Override
     public void executeOn(FieldModel inModel, FieldModel outModel) {
         outModel.set(outFieldInfo.id(), typeConverter.convert(inModel, inFieldInfo));
-    }
-
-    @Override
-    public SimpleMappingRule<I, O> registerOn(MappingRegistry registry) {
-        registry.register(this);
-        return this;
     }
 
 }
