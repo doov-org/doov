@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl;
 
+import static io.doov.core.dsl.mapping.MappingRegistry.mappings;
 import static io.doov.core.dsl.meta.LeafMetadata.falseMetadata;
 import static io.doov.core.dsl.meta.LeafMetadata.trueMetadata;
 import static java.util.Arrays.asList;
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
 
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
+import io.doov.core.dsl.mapping.MappingRegistry;
 import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.StepWhen;
@@ -239,13 +241,13 @@ public class DOOV {
      * @param startInclusive      inclusive start index, inclusive
      * @param endExclusive        exclusive end index
      * @param mappingRuleFunction index to mapping rule function
-     * @return array of mapping rule
+     * @return mapping registry containing rules
      */
-    public static MappingRule[] mapRange(int startInclusive, int endExclusive,
+    public static MappingRegistry mapRange(int startInclusive, int endExclusive,
             Function<Integer, MappingRule> mappingRuleFunction) {
-        return IntStream.range(startInclusive, endExclusive)
+        return mappings(IntStream.range(startInclusive, endExclusive)
                 .mapToObj(mappingRuleFunction::apply)
-                .toArray(MappingRule[]::new);
+                .toArray(MappingRule[]::new));
     }
 
     /**
@@ -253,14 +255,14 @@ public class DOOV {
      *
      * @param fieldStream         field stream
      * @param mappingRuleFunction field to mapping rule function
-     * @return array of mapping rule
+     * @return mapping registry containing rules
      */
-    public static MappingRule[] mapFor(Stream<? extends DslField<?>> fieldStream,
+    public static MappingRegistry mapFor(Stream<? extends DslField<?>> fieldStream,
             Function<DslField<?>, MappingRule> mappingRuleFunction) {
-        return fieldStream
+        return mappings(fieldStream
                 .filter(Objects::nonNull)
                 .map(mappingRuleFunction::apply)
-                .toArray(MappingRule[]::new);
+                .toArray(MappingRule[]::new));
     }
 
     /**

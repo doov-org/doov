@@ -4,10 +4,8 @@ import static io.doov.core.dsl.meta.MappingMetadata.mappings;
 import static io.doov.core.dsl.meta.MappingOperator._else;
 import static io.doov.core.dsl.meta.MappingOperator.then;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
-import static java.util.Arrays.asList;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Locale;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
@@ -18,22 +16,25 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
 
     private final StepWhen stepWhen;
     private final ValidationRule validationRule;
-    private final List<MappingRule> mappingRules;
-    private final List<MappingRule> elseMappingRules;
+    private final MappingRegistry mappingRules;
+    private final MappingRegistry elseMappingRules;
 
     public DefaultConditionalMappingRule(StepWhen stepWhen, MappingRule... mappingRules) {
-        this(stepWhen, asList(mappingRules), Collections.emptyList());
+        this(stepWhen, mappingRules, new MappingRule[] {});
     }
 
-    public DefaultConditionalMappingRule(StepWhen stepWhen, MappingRegistry mappingRules) {
-        this(stepWhen, mappingRules.stream().collect(Collectors.toList()), Collections.emptyList());
+    private DefaultConditionalMappingRule(StepWhen stepWhen, MappingRule[] thenRules, MappingRule[] elseRules) {
+        this.stepWhen = stepWhen;
+        this.validationRule = stepWhen.validate();
+        this.mappingRules = MappingRegistry.mappings(thenRules);
+        this.elseMappingRules = MappingRegistry.mappings(elseRules);
     }
 
-    public DefaultConditionalMappingRule(StepWhen stepWhen, List<MappingRule> thenRules, List<MappingRule> elseRules) {
+    private DefaultConditionalMappingRule(StepWhen stepWhen, MappingRegistry thenRules, MappingRule[] elseRules) {
         this.stepWhen = stepWhen;
         this.validationRule = stepWhen.validate();
         this.mappingRules = thenRules;
-        this.elseMappingRules = elseRules;
+        this.elseMappingRules = MappingRegistry.mappings(elseRules);
     }
 
     @Override
@@ -43,27 +44,20 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
 
     @Override
     public ConditionalMappingRule otherwise(MappingRule... elseRules) {
-        return new DefaultConditionalMappingRule(stepWhen, mappingRules, asList(elseRules));
-    }
-
-    @Override
-    public ConditionalMappingRule otherwise(MappingRegistry mappingRegistry) {
-        return new DefaultConditionalMappingRule(stepWhen, mappingRules,
-                        mappingRegistry.stream().collect(Collectors.toList()));
+        return new DefaultConditionalMappingRule(stepWhen, mappingRules, elseRules);
     }
 
     @Override
     public boolean validate(FieldModel inModel, FieldModel outModel) {
-        return mappingRules.stream().allMatch(m -> m.validate(inModel, outModel))
-                        && elseMappingRules.stream().allMatch(m -> m.validate(inModel, outModel));
+        return mappingRules.validate(inModel, outModel) && elseMappingRules.validate(inModel, outModel);
     }
 
     @Override
     public void executeOn(FieldModel inModel, FieldModel outModel) {
         if (validationRule.executeOn(inModel).isTrue()) {
-            mappingRules.forEach(m -> m.executeOn(inModel, outModel));
-        } else {
-            elseMappingRules.forEach(m -> m.executeOn(inModel, outModel));
+            mappingRules.executeOn(inModel, outModel);
+        } else if (!elseMappingRules.isEmpty()) {
+            elseMappingRules.executeOn(inModel, outModel);
         }
     }
 
@@ -79,14 +73,14 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
         MappingMetadata thenMetadata = mappings(then);
         visitor.start(thenMetadata, depth);
         visitor.visit(thenMetadata, depth);
-        mappingRules.forEach(r -> r.accept(visitor, depth + 1));
+        mappingRules.stream().forEach(r -> r.accept(visitor, depth + 1));
         visitor.end(thenMetadata, depth);
 
-        if (elseMappingRules.size() > 0) {
+        if (elseMappingRules.isEmpty()) {
             MappingMetadata elseMetadata = mappings(_else);
             visitor.start(elseMetadata, depth);
             visitor.visit(elseMetadata, depth);
-            elseMappingRules.forEach(r -> r.accept(visitor, depth + 1));
+            elseMappingRules.stream().forEach(r -> r.accept(visitor, depth + 1));
             visitor.end(elseMetadata, depth);
         }
     }

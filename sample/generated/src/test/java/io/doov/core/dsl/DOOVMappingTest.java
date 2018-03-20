@@ -2,7 +2,7 @@ package io.doov.core.dsl;
 
 import static io.doov.core.dsl.DOOV.*;
 import static io.doov.core.dsl.mapping.TypeConverters.*;
-import static io.doov.core.dsl.mapping.DefaultMappingRegistry.mappings;
+import static io.doov.core.dsl.mapping.MappingRegistry.mappings;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.model.SampleModels.sample;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,8 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.BiTypeConverter;
-import io.doov.core.dsl.lang.NaryTypeConverter;
-import io.doov.core.dsl.lang.MappingRegistry;
+import io.doov.core.dsl.mapping.MappingRegistry;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.TypeConverter;
 import io.doov.core.dsl.meta.ast.*;
@@ -42,12 +41,6 @@ public class DOOVMappingTest {
                 String[] em = j.split("@");
                 return em[0] + "+" + i.size() + "@" + em[1];
             }, "", "WTF");
-
-    private static final NaryTypeConverter<Integer> EMAIL_SIZE =
-            nConverter((model, fieldInfos) ->
-                    (int) fieldInfos.stream()
-                            .map(f -> model.get(f.id()))
-                            .filter(Objects::nonNull).count(), "favorite web site size -> email size");
 
     private MappingRegistry mappings;
 
@@ -77,8 +70,11 @@ public class DOOVMappingTest {
                         .otherwise(
                                 map(() -> false).to(configurationMailingCampaign)),
 
+                mapRange(1, 4, i ->
+                        map(favoriteSiteName(i)).to(favoriteSiteName(i))),
+
                 map(favoriteSiteName())
-                        .using(EMAIL_SIZE)
+                        .using(counter("email size"))
                         .to(configurationMaxEmailSize),
 
                 when(matchAny(favoriteSiteName(), DefaultCondition::isNotNull)).then(

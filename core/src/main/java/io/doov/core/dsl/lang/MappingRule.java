@@ -1,5 +1,7 @@
 package io.doov.core.dsl.lang;
 
+import java.util.stream.Stream;
+
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.meta.SyntaxTree;
 
@@ -25,4 +27,13 @@ public interface MappingRule extends Readable, SyntaxTree {
      */
     void executeOn(FieldModel inModel, FieldModel outModel);
 
+    /**
+     * Stream over mapping rules contained in this rule
+     * Default implementation returns a stream of itself.
+     *
+     * @return mapping rule stream
+     */
+    default Stream<MappingRule> stream() {
+        return Stream.of(this);
+    }
 }

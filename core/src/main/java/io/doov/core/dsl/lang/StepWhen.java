@@ -45,13 +45,4 @@ public interface StepWhen extends Readable, SyntaxTree {
      */
     ConditionalMappingRule then(MappingRule... mapRule);
 
-    /**
-     * Return a conditional mapping rule containing all the mapping rules in the mapping registry.
-     * The conditional mapping rule will execute when this validation rule is valid.
-     *
-     * @param mappingRegistry mapping registry
-     * @return the conditional mapping rule
-     */
-    ConditionalMappingRule then(MappingRegistry mappingRegistry);
-
 }

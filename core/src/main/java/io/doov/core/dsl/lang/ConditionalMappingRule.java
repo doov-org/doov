@@ -21,11 +21,4 @@ public interface ConditionalMappingRule extends MappingRule {
      */
     ConditionalMappingRule otherwise(MappingRule... mappingRule);
 
-    /**
-     * Adds rules to execute when the validation rule is invalid
-     *
-     * @param mappingRegistry mapping registry
-     * @return itself
-     */
-    ConditionalMappingRule otherwise(MappingRegistry mappingRegistry);
 }

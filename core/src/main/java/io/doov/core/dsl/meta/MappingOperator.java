@@ -12,7 +12,7 @@ public enum MappingOperator implements Operator {
 
     // mappings
     map("map"), //
-    mapAll("map all"), //
+    mappings("mappings"), //
     to("to"), //
     using("using"),//
     ; //

@@ -3,8 +3,7 @@
  */
 package io.doov.core.dsl.mapping;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -46,6 +45,14 @@ public class TypeConverters {
     public static <O> NaryTypeConverter<O> nConverter(BiFunction<FieldModel, List<DslField>, O> function,
             String description) {
         return new DefaultNaryTypeConverter<>(function, description);
+    }
+
+    public static NaryTypeConverter<Integer> counter(String description) {
+        return nConverter((model, fieldInfos) ->
+                (int) fieldInfos.stream()
+                        .map(f -> model.get(f.id()))
+                        .filter(Objects::nonNull)
+                        .count(), description);
     }
 
 }

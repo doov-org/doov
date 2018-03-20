@@ -47,11 +47,6 @@ public class DefaultStepWhen implements StepWhen {
     }
 
     @Override
-    public ConditionalMappingRule then(MappingRegistry mappingRegistry) {
-        return new DefaultConditionalMappingRule(this, mappingRegistry);
-    }
-
-    @Override
     public String readable() {
         return astToString(this, Locale.getDefault());
     }
