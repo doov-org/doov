@@ -76,7 +76,7 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
         mappingRules.stream().forEach(r -> r.accept(visitor, depth + 1));
         visitor.end(thenMetadata, depth);
 
-        if (elseMappingRules.isEmpty()) {
+        if (!elseMappingRules.isEmpty()) {
             MappingMetadata elseMetadata = mappings(_else);
             visitor.start(elseMetadata, depth);
             visitor.visit(elseMetadata, depth);
