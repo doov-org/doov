@@ -4,13 +4,15 @@
 
 dOOv is a fluent API for typesafe domain model validation. It uses annotations, code generation and a type safe DSL to make domain model validation fast and easy.
 
+![dOOv logo](docs/png/doov_io_logo_dark_small.png)
+
 ## Documentation
 
 ### Modules
 
 - **[doov-core](core)**: Contains the DSL, the AST and the annotations ([javadoc](http://doov.io/site/core/apidocs))
-- **[doov-assertions](assertions)**: Contains AssertJ assertions ([javadoc](http://doov.io/site/assertions/apidocs))
 - **[doov-generator](generator)**: Contains the code generator for model-map and field infos ([javadoc](http://doov.io/site/generator/apidocs))
+- **[doov-assertions](assertions)**: Contains AssertJ assertions ([javadoc](http://doov.io/site/assertions/apidocs))
 
 ### Presentations
 
