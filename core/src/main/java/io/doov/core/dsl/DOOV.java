@@ -98,6 +98,15 @@ public class DOOV {
     public static StepCondition matchAny(StepCondition... steps) {
         return LogicalNaryCondition.matchAny(asList(steps));
     }
+    
+    /**
+     * See {@link LogicalUnaryCondition#negate(StepCondition)}}
+     * @param step the step to negate
+     * @return the step condition
+     */
+    public static StepCondition not(StepCondition step) {
+        return LogicalUnaryCondition.negate(step);
+    }
 
     /**
      * See {@link LogicalNaryCondition#matchAny(List)}

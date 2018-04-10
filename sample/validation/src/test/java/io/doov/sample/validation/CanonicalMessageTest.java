@@ -4,11 +4,7 @@
 package io.doov.sample.validation;
 
 import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.core.dsl.DOOV.alwaysFalse;
-import static io.doov.core.dsl.DOOV.alwaysTrue;
-import static io.doov.core.dsl.DOOV.matchAll;
-import static io.doov.core.dsl.DOOV.matchAny;
-import static io.doov.core.dsl.DOOV.sum;
+import static io.doov.core.dsl.DOOV.*;
 import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.sum;
@@ -26,12 +22,7 @@ import io.doov.core.BaseFieldModel;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.EmptyMetadata;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.model.Country;
 
@@ -153,7 +144,7 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(EmptyMetadata.class);
+        assertThat(msg).isInstanceOf(LeafMetadata.class);
     }
 
     @Test
@@ -170,8 +161,7 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(NaryMetadata.class);
-        assertThat(msg.children()).hasSize(2);
+        assertThat(msg).isInstanceOf(LeafMetadata.class);
     }
 
     @Test
