@@ -17,41 +17,35 @@ public class FieldRegistry extends RuntimeFieldRegistry<SampleModel> {
 
     private static final List<RuntimeField<SampleModel, Object>> ALL = new ArrayList<>();
 
-    public final static RuntimeField<SampleModel, Boolean> account_accept_email = from(SampleModel.class)
-                    .fieldId(SampleFieldId.EMAIL_ACCEPTED)
+    public final static RuntimeField<SampleModel, Boolean> account_accept_email = from(SampleModel.class, SampleFieldId.EMAIL_ACCEPTED)
                     .get(SampleModel::getAccount, SampleModel::setAccount, Account::new)
                     .field(Account::getAcceptEmail, Account::setAcceptEmail, Boolean.TYPE)
                     .register(ALL);
 
-    public final static RuntimeField<SampleModel, Country> account_country = from(SampleModel.class)
-                    .fieldId(SampleFieldId.COUNTRY)
+    public final static RuntimeField<SampleModel, Country> account_country = from(SampleModel.class, SampleFieldId.COUNTRY)
                     ._transient(true)
                     .get(SampleModel::getAccount, SampleModel::setAccount, Account::new)
                     .field(Account::getCountry, Account::setCountry, Country.class)
                     .register(ALL);
 
-    public final static RuntimeField<SampleModel, String> favorite_site_1_name = from(SampleModel.class)
-                    .fieldId(SampleFieldId.FAVORITE_SITE_NAME_1)
+    public final static RuntimeField<SampleModel, String> favorite_site_1_name = from(SampleModel.class, SampleFieldId.FAVORITE_SITE_NAME_1)
                     .get(SampleModel::getAccount, SampleModel::setAccount, Account::new)
                     .list(Account::getTop3WebSite, Account::setTop3WebSite, 1, FavoriteWebsite::new)
                     .field(FavoriteWebsite::getName, FavoriteWebsite::setName, String.class)
                     .register(ALL);
 
-    public final static RuntimeField<SampleModel, String> favorite_site_2_url = from(SampleModel.class)
-                    .fieldId(SampleFieldId.FAVORITE_SITE_NAME_1)
+    public final static RuntimeField<SampleModel, String> favorite_site_2_url = from(SampleModel.class, SampleFieldId.FAVORITE_SITE_NAME_1)
                     .get(SampleModel::getAccount, SampleModel::setAccount, Account::new)
                     .list(Account::getTop3WebSite, Account::setTop3WebSite, 2, FavoriteWebsite::new)
                     .field(FavoriteWebsite::getUrl, FavoriteWebsite::setUrl, String.class)
                     .register(ALL);
 
-    public static final RuntimeField<SampleModel, Long> user_id = from(SampleModel.class)
-                    .fieldId(SampleFieldId.USER_ID)
+    public static final RuntimeField<SampleModel, Long> user_id = from(SampleModel.class, SampleFieldId.USER_ID)
                     .get(SampleModel::getUser, SampleModel::setUser, User::new)
                     .field(User::getId, User::setId, Long.TYPE)
                     .register(ALL);
 
-    public static final RuntimeField<SampleModel, LocalDate> user_birth_date = from(SampleModel.class)
-                    .fieldId(SampleFieldId.BIRTHDATE)
+    public static final RuntimeField<SampleModel, LocalDate> user_birth_date = from(SampleModel.class, SampleFieldId.BIRTHDATE)
                     .get(SampleModel::getUser, SampleModel::setUser, User::new)
                     .field(User::getBirthDate, User::setBirthDate, LocalDate.class)
                     .register(ALL);
