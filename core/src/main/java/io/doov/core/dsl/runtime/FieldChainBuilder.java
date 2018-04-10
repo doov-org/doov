@@ -73,9 +73,8 @@ public class FieldChainBuilder<B, T, R> {
     @SuppressWarnings("unchecked")
     public <O> FieldChainBuilder<B, R, O> list(Function<R, List<O>> readMethod,
                                                BiConsumer<R, List<O>> writeMethod,
-                                               int position,
                                                Supplier<O> supplier) {
-        PathMethod<R, O> method = new ListPathMethod<>(supplier, readMethod, writeMethod, position);
+        PathMethod<R, O> method = new ListPathMethod<>(supplier, readMethod, writeMethod, id.position());
         chain.add((PathMethod) method);
         return new FieldChainBuilder<>(this.rootType, this.chain, id, readable, siblings, isTransient);
     }

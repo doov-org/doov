@@ -101,42 +101,42 @@ public class RuntimePath extends RuntimeFieldRegistry<SampleModel> {
     public static final RuntimeField<SampleModel, String> FAVORITE_SITE_NAME_1 = from(SampleModel.class, SampleFieldId.FAVORITE_SITE_NAME_1)
                     .readable("account favorite web site name 1")
                     .get(SampleModel::getAccount, SampleModel::setAccount, Account::new)
-                    .list(Account::getTop3WebSite, Account::setTop3WebSite, 1, FavoriteWebsite::new)
+                    .list(Account::getTop3WebSite, Account::setTop3WebSite, FavoriteWebsite::new)
                     .field(FavoriteWebsite::getName, FavoriteWebsite::setName, String.class)
                     .register(ALL);
 
     public static final RuntimeField<SampleModel, String> FAVORITE_SITE_NAME_2 = from(SampleModel.class, SampleFieldId.FAVORITE_SITE_NAME_2)
                     .readable("account favorite web site name 2")
                     .get(SampleModel::getAccount, SampleModel::setAccount, Account::new)
-                    .list(Account::getTop3WebSite, Account::setTop3WebSite, 2, FavoriteWebsite::new)
+                    .list(Account::getTop3WebSite, Account::setTop3WebSite, FavoriteWebsite::new)
                     .field(FavoriteWebsite::getName, FavoriteWebsite::setName, String.class)
                     .register(ALL);
 
     public static final RuntimeField<SampleModel, String> FAVORITE_SITE_NAME_3 = from(SampleModel.class, SampleFieldId.FAVORITE_SITE_NAME_3)
                     .readable("account favorite web site name 3")
                     .get(SampleModel::getAccount, SampleModel::setAccount, Account::new)
-                    .list(Account::getTop3WebSite, Account::setTop3WebSite, 3, FavoriteWebsite::new)
+                    .list(Account::getTop3WebSite, Account::setTop3WebSite, FavoriteWebsite::new)
                     .field(FavoriteWebsite::getName, FavoriteWebsite::setName, String.class)
                     .register(ALL);
 
     public static final RuntimeField<SampleModel, String> FAVORITE_SITE_URL_1 = from(SampleModel.class, SampleFieldId.FAVORITE_SITE_URL_1)
                     .readable("account favorite web site url 1")
                     .get(SampleModel::getAccount, SampleModel::setAccount, Account::new)
-                    .list(Account::getTop3WebSite, Account::setTop3WebSite, 1, FavoriteWebsite::new)
+                    .list(Account::getTop3WebSite, Account::setTop3WebSite, FavoriteWebsite::new)
                     .field(FavoriteWebsite::getUrl, FavoriteWebsite::setUrl, String.class)
                     .register(ALL);
 
     public static final RuntimeField<SampleModel, String> FAVORITE_SITE_URL_2 = from(SampleModel.class, SampleFieldId.FAVORITE_SITE_URL_2)
                     .readable("account favorite web site url 2")
                     .get(SampleModel::getAccount, SampleModel::setAccount, Account::new)
-                    .list(Account::getTop3WebSite, Account::setTop3WebSite, 2, FavoriteWebsite::new)
+                    .list(Account::getTop3WebSite, Account::setTop3WebSite, FavoriteWebsite::new)
                     .field(FavoriteWebsite::getUrl, FavoriteWebsite::setUrl, String.class)
                     .register(ALL);
 
     public static final RuntimeField<SampleModel, String> FAVORITE_SITE_URL_3 = from(SampleModel.class, SampleFieldId.FAVORITE_SITE_URL_3)
                     .readable("account favorite web site url 3")
                     .get(SampleModel::getAccount, SampleModel::setAccount, Account::new)
-                    .list(Account::getTop3WebSite, Account::setTop3WebSite, 3, FavoriteWebsite::new)
+                    .list(Account::getTop3WebSite, Account::setTop3WebSite, FavoriteWebsite::new)
                     .field(FavoriteWebsite::getUrl, FavoriteWebsite::setUrl, String.class)
                     .register(ALL);
 
