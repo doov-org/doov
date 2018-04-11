@@ -114,7 +114,7 @@ public class LeafMetadata extends PredicateMetadata {
     public Metadata message(Context context) {
         if (type == FIELD_PREDICATE_MATCH_ANY) {
             final DslField field = (DslField) elements.getFirst().getReadable();
-            return new LeafMetadata(FIELD_PREDICATE).field(field).operator(equals).valueObject(context.getEvalValue(field.id()));
+            return new LeafMetadata(FIELD_PREDICATE).field(field).operator(not_equals).valueObject(context.getEvalValue(field.id()));
         }
         return this;
     }

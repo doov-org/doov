@@ -19,6 +19,7 @@ import static io.doov.core.dsl.meta.MetadataType.EMPTY;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.UnaryMetadata.notMetadata;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import static java.util.stream.Collectors.toList;
 
@@ -161,13 +162,11 @@ public class NaryMetadata extends PredicateMetadata {
                             .collect(toList()));
         } else if (operator == count) {
             final List<Metadata> childMsgs = values.stream()
-                            .filter(md -> context.isEvalTrue(md))
+                            .filter(md -> context.isEvalFalse(md))
                             .map(md -> md.message(context))
                             .filter(Objects::nonNull)
                             .filter(md -> EMPTY != md.type())
                             .collect(toList());
-            if (childMsgs.size() == 1)
-                return childMsgs.get(0);
             return rewriteCount(childMsgs);
         }
         return new NaryMetadata(operator, values.stream()
@@ -177,9 +176,12 @@ public class NaryMetadata extends PredicateMetadata {
                         .collect(toList()));
     }
 
-    private static BinaryMetadata rewriteCount(List<Metadata> childMsgs) {
-        if (childMsgs.size() == 2)
-            return new BinaryMetadata(childMsgs.get(0), and, childMsgs.get(1));
-        return new BinaryMetadata(childMsgs.get(0), and, rewriteCount(childMsgs.subList(1, childMsgs.size())));
+    private static Metadata rewriteCount(List<Metadata> childMsgs) {
+        if (childMsgs.size() == 0)
+            return new EmptyMetadata();
+        if (childMsgs.size() == 1)
+            return childMsgs.get(0);
+        return new BinaryMetadata(childMsgs.get(0), and,
+                        rewriteCount(childMsgs.subList(1, childMsgs.size())));
     }
 }

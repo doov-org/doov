@@ -14,12 +14,15 @@ import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.sample.model.*;
 
+/**
+ * Validate that a profile country is French or Canadian
+ */
 public class FailureCauseSample4Test {
     private final ValidationRule rule = DOOV.when(accountCountry.anyMatch(Country.CAN, Country.FR))
                     .validate();
 
-    private final SampleModel beanModel = new SampleModel();
-    private final DslModel wrapperModel = new SampleModelWrapper(beanModel);
+    private final SampleModel model = new SampleModel();
+    private final DslModel wrapper = new SampleModelWrapper(model);
 
     @BeforeEach
     public void plaintText() {
@@ -30,30 +33,30 @@ public class FailureCauseSample4Test {
     public void blankline() {
         System.out.println("");
     }
-    
+
     @Test
     @Disabled
     public void getFailureCause_setup_0() {
-        
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause());
     }
 
     @Test
     public void getFailureCause_setup_1() {
-        beanModel.getAccount().setCountry(Country.UK);
-        
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        model.getAccount().setCountry(Country.UK);
+
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause());
     }
 
     @Test
     public void getFailureCause_setup_2() {
-        beanModel.getAccount().setCountry(Country.CAN);
+        model.getAccount().setCountry(Country.CAN);
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isTrue();
         System.out.println("> " + result.getFailureCause());
     }

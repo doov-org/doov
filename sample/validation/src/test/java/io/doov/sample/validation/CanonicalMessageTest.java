@@ -5,7 +5,6 @@ package io.doov.sample.validation;
 
 import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.*;
-import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
@@ -332,10 +331,6 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(BinaryMetadata.class);
-        assertThat(msg.children()).hasSize(2);
-        assertThat(((BinaryMetadata) msg).getOperator()).isEqualTo(and);      
-        assertThat(msg.children().get(0)).isInstanceOf(LeafMetadata.class);
-        assertThat(msg.children().get(1)).isInstanceOf(LeafMetadata.class);
+        assertThat(msg).isInstanceOf(LeafMetadata.class);
     }
 }

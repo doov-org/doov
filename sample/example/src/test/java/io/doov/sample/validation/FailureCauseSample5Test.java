@@ -21,20 +21,20 @@ import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.sample.model.*;
 
 /**
- * Validate that a profile match at least two conditions :
+ * Validate that a profile match at least two conditions : <br>
  * profile has at least 18 years<br>
- * coutry is France<br>
- * phone number start with '+33
+ * country is France<br>
+ * phone number starts with '+33
  */
 public class FailureCauseSample5Test {
     private final ValidationRule rule = DOOV
-                    .when(count(userBirthdate.ageAt(today()).lesserThan(18),
-                                    accountCountry.notEq(Country.FR),
-                                    accountPhoneNumber.startsWith("+33").not()).lesserThan(2))
+                    .when(count(userBirthdate.ageAt(today()).greaterThan(18),
+                                    accountCountry.eq(Country.FR),
+                                    accountPhoneNumber.startsWith("+33")).greaterThan(1))
                     .validate();
 
-    private final SampleModel beanModel = new SampleModel();
-    private final DslModel wrapperModel = new SampleModelWrapper(beanModel);
+    private final SampleModel model = new SampleModel();
+    private final DslModel wrapper = new SampleModelWrapper(model);
 
     @BeforeEach
     public void plaintText() {
@@ -45,65 +45,65 @@ public class FailureCauseSample5Test {
     public void blankline() {
         System.out.println("");
     }
-    
+
     @Test
     public void getFailureCause_setup_0() {
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
-        assertThat(result).isTrue();
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
+        assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause());
     }
 
     @Test
     public void getFailureCause_setup_1() {
-        beanModel.getUser().setBirthDate(LocalDate.now().minusYears(19));
-        beanModel.getAccount().setCountry(Country.FR);
-        beanModel.getAccount().setPhoneNumber("+33 1 23 45 67 89");
-        
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        model.getUser().setBirthDate(LocalDate.now().minusYears(19));
+        model.getAccount().setCountry(Country.FR);
+        model.getAccount().setPhoneNumber("+33 1 23 45 67 89");
+
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isTrue();
         System.out.println("> " + result.getFailureCause());
     }
-    
+
     @Test
     public void getFailureCause_setup_2() {
-        beanModel.getUser().setBirthDate(LocalDate.now().minusYears(16));
-        beanModel.getAccount().setCountry(Country.FR);
-        beanModel.getAccount().setPhoneNumber("+33 1 23 45 67 89");
-        
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        model.getUser().setBirthDate(LocalDate.now().minusYears(16));
+        model.getAccount().setCountry(Country.FR);
+        model.getAccount().setPhoneNumber("+33 1 23 45 67 89");
+
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isTrue();
         System.out.println("> " + result.getFailureCause());
     }
 
     @Test
     public void getFailureCause_setup_3() {
-        beanModel.getUser().setBirthDate(LocalDate.now().minusYears(19));
-        beanModel.getAccount().setCountry(Country.CAN);
-        beanModel.getAccount().setPhoneNumber("1 23 45 67 89");
-        
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        model.getUser().setBirthDate(LocalDate.now().minusYears(19));
+        model.getAccount().setCountry(Country.CAN);
+        model.getAccount().setPhoneNumber("1 23 45 67 89");
+
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause());
     }
-    
+
     @Test
     public void getFailureCause_setup_4() {
-        beanModel.getUser().setBirthDate(LocalDate.now().minusYears(16));
-        beanModel.getAccount().setCountry(Country.CAN);
-        beanModel.getAccount().setPhoneNumber("1 23 45 67 89");
-        
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        model.getUser().setBirthDate(LocalDate.now().minusYears(16));
+        model.getAccount().setCountry(Country.CAN);
+        model.getAccount().setPhoneNumber("1 23 45 67 89");
+
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause());
     }
-    
+
     @Test
     public void getFailureCause_setup_5() {
-        beanModel.getUser().setBirthDate(LocalDate.now().minusYears(16));
-        beanModel.getAccount().setCountry(Country.CAN);
-        beanModel.getAccount().setPhoneNumber("+33 1 23 45 67 89");
-        
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        model.getUser().setBirthDate(LocalDate.now().minusYears(16));
+        model.getAccount().setCountry(Country.CAN);
+        model.getAccount().setPhoneNumber("+33 1 23 45 67 89");
+
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause());
     }

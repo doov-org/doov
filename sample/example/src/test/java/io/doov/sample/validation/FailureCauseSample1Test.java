@@ -22,8 +22,8 @@ import io.doov.sample.model.*;
 
 /**
  * Validate that a profile has an account email is less than 20 characters <br>
- * has at least 18 years when their coutry is France<br>
- * their coutry is France when their phone number does not start by '+33'
+ * has at least 18 years when their country is France<br>
+ * their country is France when their phone number starts with '+33'
  */
 public class FailureCauseSample1Test {
     private final ValidationRule rule = DOOV.when(accountEmail.length().lesserThan(20)
@@ -31,8 +31,8 @@ public class FailureCauseSample1Test {
                     .and(accountCountry.eq(Country.FR).and(accountPhoneNumber.startsWith("+33"))))
                     .validate();
 
-    private final SampleModel beanModel = new SampleModel();
-    private final DslModel wrapperModel = new SampleModelWrapper(beanModel);
+    private final SampleModel model = new SampleModel();
+    private final DslModel wrapper = new SampleModelWrapper(model);
 
     @BeforeEach
     public void plaintText() {
@@ -46,16 +46,16 @@ public class FailureCauseSample1Test {
 
     @Test
     public void getFailureCause_setup_1() {
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause());
     }
 
     @Test
     public void getFailureCause_setup_2() {
-        beanModel.getAccount().setEmail("aa");
+        model.getAccount().setEmail("test@test.org");
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
 
         System.out.println("> " + result.getFailureCause());
@@ -63,10 +63,10 @@ public class FailureCauseSample1Test {
 
     @Test
     public void getFailureCause_setup_3() {
-        beanModel.getAccount().setEmail("aa");
-        beanModel.getUser().setBirthDate(LocalDate.now().minusYears(19));
+        model.getAccount().setEmail("test@test.org");
+        model.getUser().setBirthDate(LocalDate.now().minusYears(19));
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
 
         System.out.println("> " + result.getFailureCause());
@@ -74,11 +74,11 @@ public class FailureCauseSample1Test {
     
     @Test
     public void getFailureCause_setup_4() {
-        beanModel.getAccount().setEmail("aa");
-        beanModel.getUser().setBirthDate(LocalDate.now().minusYears(19));
-        beanModel.getAccount().setCountry(Country.FR);
+        model.getAccount().setEmail("test@test.org");
+        model.getUser().setBirthDate(LocalDate.now().minusYears(19));
+        model.getAccount().setCountry(Country.FR);
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
 
         System.out.println("> " + result.getFailureCause());
@@ -86,12 +86,12 @@ public class FailureCauseSample1Test {
     
     @Test
     public void getFailureCause_setup_5() {
-        beanModel.getAccount().setEmail("aa");
-        beanModel.getUser().setBirthDate(LocalDate.now().minusYears(19));
-        beanModel.getAccount().setCountry(Country.FR);
-        beanModel.getAccount().setPhoneNumber("+33 1 23 45 67 89");
+        model.getAccount().setEmail("test@test.org");
+        model.getUser().setBirthDate(LocalDate.now().minusYears(19));
+        model.getAccount().setCountry(Country.FR);
+        model.getAccount().setPhoneNumber("+33 1 23 45 67 89");
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapperModel);
+        Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isTrue();
 
         System.out.println("> " + result.getFailureCause());
