@@ -16,9 +16,9 @@ import io.doov.core.FieldId;
  */
 public class FieldChainBuilder<B, T, R> {
 
-    private Class<B> rootType;
-    private List<PathMethod<Object, Object>> chain;
-    private FieldId id;
+    private final Class<B> rootType;
+    private final List<PathMethod<Object, Object>> chain;
+    private final FieldId id;
     private String readable;
     private FieldId[] siblings;
     private boolean isTransient;
@@ -42,13 +42,8 @@ public class FieldChainBuilder<B, T, R> {
         return (Class<T>) cls;
     }
 
-    public static <B> FieldChainBuilder<B, B, B> from(Class<B> root) {
-        return new FieldChainBuilder<>(root, new ArrayList<>(), null, null, null, false);
-    }
-
-    public FieldChainBuilder<B, T, R> fieldId(FieldId id) {
-        this.id = id;
-        return this;
+    public static <B> FieldChainBuilder<B, B, B> from(Class<B> root, FieldId id) {
+        return new FieldChainBuilder<>(root, new ArrayList<>(), id, null, null, false);
     }
 
     public FieldChainBuilder<B, T, R> readable(String readable) {
@@ -78,9 +73,8 @@ public class FieldChainBuilder<B, T, R> {
     @SuppressWarnings("unchecked")
     public <O> FieldChainBuilder<B, R, O> list(Function<R, List<O>> readMethod,
                                                BiConsumer<R, List<O>> writeMethod,
-                                               int position,
                                                Supplier<O> supplier) {
-        PathMethod<R, O> method = new ListPathMethod<>(supplier, readMethod, writeMethod, position);
+        PathMethod<R, O> method = new ListPathMethod<>(supplier, readMethod, writeMethod, id.position());
         chain.add((PathMethod) method);
         return new FieldChainBuilder<>(this.rootType, this.chain, id, readable, siblings, isTransient);
     }

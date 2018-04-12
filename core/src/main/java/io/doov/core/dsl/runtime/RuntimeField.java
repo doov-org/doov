@@ -95,23 +95,23 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     }
 
     public void set(B model, R value) {
-        if (model == null && value == null) {
+        if (model == null) {
             return;
         }
-        Object next = model;
+        Object nextNode = model;
         for (PathMethod<Object, Object> method : chain) {
-            Object o = method.get(next);
-            if (o == null) {
-                if (value != null) {
-                    next = method.create(next);
-                } else {
+            Object methodReturn = method.get(nextNode);
+            if (methodReturn == null) {
+                if (value != null) { // create the path to insert value
+                    nextNode = method.create(nextNode);
+                } else { // Don't create the path for a null value
                     return;
                 }
-            } else {
-                next = o;
+            } else { // Continue on path
+                nextNode = methodReturn;
             }
         }
-        lastLink.set(next, value);
+        lastLink.set(nextNode, value);
     }
 
     @SuppressWarnings("unchecked")
