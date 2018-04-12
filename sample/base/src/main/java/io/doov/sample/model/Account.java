@@ -1,23 +1,23 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.sample.model;
 
 import java.time.LocalDate;
 import java.util.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import io.doov.core.FieldTransient;
@@ -38,12 +38,16 @@ public class Account extends Identity {
     @SamplePath(field = SampleFieldId.LANGUAGE, readable = "account language")
     private Language language;
 
+    @NotNull
     @SamplePath(field = SampleFieldId.COUNTRY, readable = "account country")
     private Country country;
 
+    @NotNull
     @SamplePath(field = SampleFieldId.PHONE_NUMBER, readable = "account phone number")
     private String phoneNumber;
 
+    @NotNull
+    @Size(max = 20)
     @SamplePath(field = SampleFieldId.EMAIL, readable = "account email")
     private String email;
 
@@ -52,7 +56,7 @@ public class Account extends Identity {
 
     @SamplePath(field = SampleFieldId.CREATION_DATE, readable = "account creation date")
     private LocalDate creationDate;
-
+    
     @FieldTransient
     @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "account préférences mail")
     private Collection<EmailType> emailTypes = new HashSet<>();
@@ -61,6 +65,7 @@ public class Account extends Identity {
     @FieldTransient
     private XMLGregorianCalendar calendar;
 
+    @Valid
     private List<FavoriteWebsite> top3WebSite = new ArrayList<>();
 
     public XMLGregorianCalendar getCalendar() {

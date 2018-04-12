@@ -17,6 +17,9 @@ package io.doov.sample.model;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+
 import io.doov.sample.field.*;
 
 public class User extends Identity {
@@ -27,6 +30,8 @@ public class User extends Identity {
     @SamplePath(field = SampleFieldId.LAST_NAME, readable = "user last name")
     private String lastName;
 
+    @Past
+    @NotNull
     @SamplePath(field = SampleFieldId.BIRTHDATE, readable = "user birthdate")
     private LocalDate birthDate;
 
