@@ -82,6 +82,7 @@
     <cassandra-driver>3.1.0</cassandra-driver>
     <slf4j>1.7.21</slf4j>
     <cglib.version>3.2.5</cglib.version>
+    <jfreechart>1.5.0</jfreechart>
 
     <!-- Maven Dependencies -->
     <maven.core.version>3.0.5</maven.core.version>
@@ -106,6 +107,10 @@
 
     <!-- Benchmark Dependencies -->
     <openjdk.jmh.version>1.19</openjdk.jmh.version>
+    <beanvalidation-2.0.version>2.0.0.Final</beanvalidation-2.0.version>
+    <hibernate-validator-6.0-stable.version>6.0.7.Final</hibernate-validator-6.0-stable.version>
+    <javax-el>3.0.0</javax-el>
+    <javax-el-impl>2.2.6</javax-el-impl>
   </properties>
 
   <scm>
@@ -228,6 +233,26 @@
         <artifactId>jmh-generator-annprocess</artifactId>
         <version>${openjdk.jmh.version}</version>
       </dependency>
+      <dependency>
+				<groupId>org.hibernate.validator</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate-validator-6.0-stable.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>${beanvalidation-2.0.version}</version>
+			</dependency>
+      <dependency>
+        <groupId>javax.el</groupId>
+        <artifactId>javax.el-api</artifactId>
+        <version>${javax-el}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.web</groupId>
+        <artifactId>javax.el</artifactId>
+        <version>${javax-el-impl}</version>
+      </dependency>
 
       <!-- Other dependencies -->
 
@@ -270,6 +295,11 @@
         <groupId>cglib</groupId>
         <artifactId>cglib</artifactId>
         <version>${cglib.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jfree</groupId>
+        <artifactId>jfreechart</artifactId>
+        <version>${jfreechart}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

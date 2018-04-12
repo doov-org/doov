@@ -40,9 +40,9 @@ public class BenchmarkRule {
                     .or(accountEmail.matches("\\w+[@]\\w+\\.fr")))
             .validate();
 
-    private static final ValidationRule COUNTY = DOOV
+    public static final ValidationRule COUNTRY = DOOV
             .when(userBirthdate.ageAt(today()).greaterOrEquals(18)
-                    .and(accountEmail.length().lesserOrEquals(configurationMaxEmailSize))
+                    .and(accountEmail.length().lesserOrEquals(20))
                     .and(accountCountry.eq(Country.FR))
                     .and(accountPhoneNumber.startsWith("+33")))
             .validate();
@@ -63,13 +63,12 @@ public class BenchmarkRule {
 
     @Benchmark
     public void valid_country(Blackhole blackhole) {
-        boolean valid = COUNTY.executeOn(MODEL).isTrue();
+        boolean valid = COUNTRY.executeOn(MODEL).isTrue();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
     }
 
-    @SuppressWarnings("unused")
     public void valid_country_20(Blackhole blackhole) {
         boolean valid = ACCOUNT_VALID_COUNTRY_20.executeOn(MODEL).isTrue();
         if (blackhole != null) {
@@ -77,7 +76,6 @@ public class BenchmarkRule {
         }
     }
 
-    @SuppressWarnings("unused")
     public void valid_country_40(Blackhole blackhole) {
         boolean valid = ACCOUNT_VALID_COUNTRY_40.executeOn(MODEL).isTrue();
         if (blackhole != null) {
@@ -85,7 +83,6 @@ public class BenchmarkRule {
         }
     }
 
-    @SuppressWarnings("unused")
     public void valid_country_60(Blackhole blackhole) {
         boolean valid = ACCOUNT_VALID_COUNTRY_60.executeOn(MODEL).isTrue();
         if (blackhole != null) {
@@ -93,7 +90,6 @@ public class BenchmarkRule {
         }
     }
 
-    @SuppressWarnings("unused")
     public void valid_country_80(Blackhole blackhole) {
         boolean valid = ACCOUNT_VALID_COUNTRY_80.executeOn(MODEL).isTrue();
         if (blackhole != null) {
@@ -101,7 +97,6 @@ public class BenchmarkRule {
         }
     }
 
-    @SuppressWarnings("unused")
     public void valid_country_100(Blackhole blackhole) {
         boolean valid = ACCOUNT_VALID_COUNTRY_100.executeOn(MODEL).isTrue();
         if (blackhole != null) {
@@ -117,5 +112,4 @@ public class BenchmarkRule {
                 .collect(toList())
                 .toArray(new StepCondition[] {});
     }
-
 }
