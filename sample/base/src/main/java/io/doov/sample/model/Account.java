@@ -26,43 +26,43 @@ import io.doov.sample.field.SamplePath;
 
 public class Account extends Identity {
 
-    @SamplePath(field = SampleFieldId.LOGIN, readable = "account login")
+    @SamplePath(field = SampleFieldId.LOGIN, readable = "account.login")
     private String login;
 
-    @SamplePath(field = SampleFieldId.PASSWD, readable = "account password")
+    @SamplePath(field = SampleFieldId.PASSWD, readable = "account.password")
     private String password;
 
-    @SamplePath(field = SampleFieldId.TIMEZONE, readable = "account timezone")
+    @SamplePath(field = SampleFieldId.TIMEZONE, readable = "account.timezone")
     private Timezone timezone;
 
-    @SamplePath(field = SampleFieldId.LANGUAGE, readable = "account language")
+    @SamplePath(field = SampleFieldId.LANGUAGE, readable = "account.language")
     private Language language;
 
     @NotNull
-    @SamplePath(field = SampleFieldId.COUNTRY, readable = "account country")
+    @SamplePath(field = SampleFieldId.COUNTRY, readable = "account.country")
     private Country country;
 
     @NotNull
-    @SamplePath(field = SampleFieldId.PHONE_NUMBER, readable = "account phone number")
+    @SamplePath(field = SampleFieldId.PHONE_NUMBER, readable = "account.phone.number")
     private String phoneNumber;
 
     @NotNull
     @Size(max = 20)
-    @SamplePath(field = SampleFieldId.EMAIL, readable = "account email")
+    @SamplePath(field = SampleFieldId.EMAIL, readable = "account.email")
     private String email;
 
-    @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED, readable = "account accept email")
+    @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED, readable = "account accept.email")
     private boolean acceptEmail;
 
-    @SamplePath(field = SampleFieldId.CREATION_DATE, readable = "account creation date")
+    @SamplePath(field = SampleFieldId.CREATION_DATE, readable = "account.creation.date")
     private LocalDate creationDate;
     
     @FieldTransient
-    @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "account préférences mail")
+    @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "account.preferences.mail")
     private Collection<EmailType> emailTypes = new HashSet<>();
 
-    @SamplePath(field = SampleFieldId.CALENDAR, readable = "account calendar")
     @FieldTransient
+    @SamplePath(field = SampleFieldId.CALENDAR, readable = "account.calendar")
     private XMLGregorianCalendar calendar;
 
     @Valid

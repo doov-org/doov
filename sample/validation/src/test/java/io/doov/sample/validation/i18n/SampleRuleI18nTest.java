@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Locale;
 
-import io.doov.sample.field.dsl.DslSampleModel;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
@@ -31,7 +30,7 @@ import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.ast.AstLineVisitor;
 import io.doov.core.dsl.time.LocalDateSuppliers;
-import io.doov.sample.field.SampleFieldInfo;
+import io.doov.sample.field.dsl.DslSampleModel;
 
 public class SampleRuleI18nTest {
     private static void print(SyntaxTree tree) {
@@ -365,10 +364,10 @@ public class SampleRuleI18nTest {
         assertThat(elts).extracting(Element::getType).element(6).isEqualTo(ElementType.PARENTHESIS_RIGHT);
         assertThat(elts).extracting(Element::getType).element(7).isEqualTo(ElementType.OPERATOR);
         assertThat(elts).extracting(Element::getType).element(8).isEqualTo(ElementType.VALUE);
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("configuration min age");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("configuration.min.age");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("when");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("(");
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("configuration max email size");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("configuration.max.email.size");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(4).isEqualTo("match any");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(5).isEqualTo(" : 11, 12, 13");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(6).isEqualTo(")");
@@ -394,7 +393,7 @@ public class SampleRuleI18nTest {
         assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.TEMPORAL_UNIT);
         assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.OPERATOR);
         assertThat(elts).extracting(Element::getType).element(5).isEqualTo(ElementType.OPERATOR);
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user birthdate");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user.birthdate");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("minus");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("1");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("years");
@@ -415,7 +414,7 @@ public class SampleRuleI18nTest {
         assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
         assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
         assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.OPERATOR);
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user birthdate");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user.birthdate");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("=");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("today");
         print(rule);
@@ -436,7 +435,7 @@ public class SampleRuleI18nTest {
         assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.OPERATOR);
         assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.VALUE);
         assertThat(elts).extracting(Element::getType).element(5).isEqualTo(ElementType.TEMPORAL_UNIT);
-        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user birthdate");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user.birthdate");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("=");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("today");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("plus");

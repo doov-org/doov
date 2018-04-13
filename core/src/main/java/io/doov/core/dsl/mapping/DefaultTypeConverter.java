@@ -45,8 +45,8 @@ public class DefaultTypeConverter<I, O> implements TypeConverter<I, O> {
     }
 
     @Override
-    public String readable() {
-        return astToString(this, Locale.getDefault());
+    public String readable(Locale locale) {
+        return astToString(this, locale);
     }
 
 }

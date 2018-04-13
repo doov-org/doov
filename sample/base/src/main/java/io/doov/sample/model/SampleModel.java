@@ -14,7 +14,13 @@ package io.doov.sample.model;
 
 import javax.validation.Valid;
 
+import io.doov.core.dsl.meta.i18n.ResourceBundleProvider;
+
 public class SampleModel {
+    static {
+        ResourceBundleProvider.BUNDLE.register("io.doov.sample.i18n.SampleResourceBundle");
+    }
+
     @Valid
     private User user = new User();
     @Valid
@@ -45,5 +51,4 @@ public class SampleModel {
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
-
 }

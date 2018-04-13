@@ -1,5 +1,6 @@
 package io.doov.core.dsl.lang;
 
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import io.doov.core.FieldModel;
@@ -9,6 +10,17 @@ import io.doov.core.dsl.meta.SyntaxTree;
  * Mapping rule
  */
 public interface MappingRule extends Readable, SyntaxTree {
+    @Override
+    default String readable() {
+        return readable(Locale.getDefault());
+    }
+
+    /**
+     * Returns the human readable version of this object.
+     *
+     * @return the readable string
+     */
+    String readable(Locale locale);
 
     /**
      * Verifies the mapping rule for given in/out models

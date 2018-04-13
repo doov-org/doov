@@ -24,24 +24,24 @@ import io.doov.sample.field.*;
 
 public class User extends Identity {
 
-    @SamplePath(field = SampleFieldId.FIRST_NAME, readable = "user first name")
+    @SamplePath(field = SampleFieldId.FIRST_NAME, readable = "user.first.name")
     private String firstName;
 
-    @SamplePath(field = SampleFieldId.LAST_NAME, readable = "user last name")
+    @SamplePath(field = SampleFieldId.LAST_NAME, readable = "user.last.name")
     private String lastName;
 
     @Past
     @NotNull
-    @SamplePath(field = SampleFieldId.BIRTHDATE, readable = "user birthdate")
+    @SamplePath(field = SampleFieldId.BIRTHDATE, readable = "user.birthdate")
     private LocalDate birthDate;
 
-    @CorePath(field = CoreFieldId.ADDRESS, readable = "user address")
+    @CorePath(field = CoreFieldId.ADDRESS, readable = "user.address")
     private String address;
 
-    @CorePath(field = CoreFieldId.TEL, readable = "user tel")
+    @CorePath(field = CoreFieldId.TEL, readable = "user.tel")
     private String tel;
 
-    @SamplePath(field = SampleFieldId.FULLNAME, readable = "user full name")
+    @SamplePath(field = SampleFieldId.FULLNAME, readable = "user.full.name")
     public String getFullName() {
         return firstName != null && lastName != null ? firstName + " " + lastName : null;
     }

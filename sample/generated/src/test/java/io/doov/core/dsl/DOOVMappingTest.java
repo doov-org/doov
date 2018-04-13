@@ -1,13 +1,21 @@
 package io.doov.core.dsl;
 
-import static io.doov.core.dsl.DOOV.*;
-import static io.doov.core.dsl.mapping.TypeConverters.*;
+import static io.doov.core.dsl.DOOV.map;
+import static io.doov.core.dsl.DOOV.mapRange;
+import static io.doov.core.dsl.DOOV.matchAny;
+import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.mapping.MappingRegistry.mappings;
+import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
+import static io.doov.core.dsl.mapping.TypeConverters.converter;
+import static io.doov.core.dsl.mapping.TypeConverters.counter;
+import static io.doov.core.dsl.mapping.TypeConverters.valueConverter;
+import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.model.SampleModels.sample;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,14 +23,11 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.BiTypeConverter;
-import io.doov.core.dsl.mapping.MappingRegistry;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.TypeConverter;
-import io.doov.core.dsl.meta.ast.*;
-import io.doov.sample.model.Country;
-import io.doov.sample.model.EmailType;
-import io.doov.sample.model.Language;
-import io.doov.sample.model.SampleModelWrapper;
+import io.doov.core.dsl.mapping.MappingRegistry;
+import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
+import io.doov.sample.model.*;
 
 public class DOOVMappingTest {
 
@@ -141,7 +146,7 @@ public class DOOVMappingTest {
     @Test
     void print_ast_markdown() {
         StringBuilder sb = new StringBuilder();
-        AstMarkdownVisitor visitor = new AstMarkdownVisitor(sb, new ReadableResourceProvider(), Locale.getDefault());
+        AstMarkdownVisitor visitor = new AstMarkdownVisitor(sb, BUNDLE, Locale.getDefault());
         mappings.stream().forEach(m -> {
             m.accept(visitor, 0);
             sb.append("\n");

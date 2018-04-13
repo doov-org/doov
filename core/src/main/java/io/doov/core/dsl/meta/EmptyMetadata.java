@@ -3,15 +3,14 @@
  */
 package io.doov.core.dsl.meta;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import io.doov.core.dsl.lang.Context;
 
 public class EmptyMetadata implements Metadata {
 
     @Override
-    public String readable() {
+    public String readable(Locale locale) {
         return "";
     }
 

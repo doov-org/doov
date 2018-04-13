@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.gen.processor;
 
@@ -22,15 +19,12 @@ import java.util.*;
  * Substitution récursive de variables ${...} dans un template (à la script Ant).
  */
 public class MacroProcessor {
-
     private static final int MAX_DEPTH = 5;
     private static final String REF_PREFIX = "${";
     private static final String REF_SUFFIX = "}";
-    private static final String STR_MORE_THAN_0_LEVEL_TO_EXPAND_1 =
-            "There is more than {0} level to expand the property : ''{1}'')";
+    private static final String STR_MORE_THAN_0_LEVEL_TO_EXPAND_1 = "There is more than {0} level to expand the property : ''{1}'')";
     private static final String STR_SYNTAX_ERROR_IN_0 = "Syntax error in property: ''{0}''";
-    private static final MessageFormat MORE_THAN_0_LEVEL_TO_EXPAND_1 =
-            new MessageFormat(STR_MORE_THAN_0_LEVEL_TO_EXPAND_1);
+    private static final MessageFormat MORE_THAN_0_LEVEL_TO_EXPAND_1 = new MessageFormat(STR_MORE_THAN_0_LEVEL_TO_EXPAND_1);
 
     private static String eval(Map<String, Object> conf, String key) {
         final String replacement = MacroProcessor.REF_PREFIX + key + MacroProcessor.REF_SUFFIX;
@@ -47,27 +41,28 @@ public class MacroProcessor {
     @SuppressWarnings("unchecked")
     public static String replaceProperties(String value, Map<String, ?> conf) {
         return replacePropertiesRec(value,
-                (Map<String, Object>) conf,
-                new ArrayList<>(),
-                new ArrayList<>(),
-                0);
+                        (Map<String, Object>) conf,
+                        new ArrayList<>(),
+                        new ArrayList<>(),
+                        0);
     }
 
     /**
-     * Macro-expand parameter references <code>${xx}</code>.<br> If a reference is not found, the value of {@code param}
-     * is used if it is not null - otherwise referenc is not replaced.
+     * Macro-expand parameter references <code>${xx}</code>.<br>
+     * If a reference is not found, the value of {@code param} is used if it is not null - otherwise referenc is not
+     * replaced.
      *
      * @param value input string
-     * @param conf  map containing all known parameters
+     * @param conf map containing all known parameters
      * @param depth recursivity index, limited to {@value MacroProcessor#MAX_DEPTH}.
      * @return macro-expanded value.
      * @throws PropertyParsingException if recursivity goes beyond {@value MacroProcessor#MAX_DEPTH} limit.
      */
     private static String replacePropertiesRec(String value,
-            Map<String, Object> conf,
-            List<String> fragments,
-            List<String> propertyRefs,
-            int depth) {
+                    Map<String, Object> conf,
+                    List<String> fragments,
+                    List<String> propertyRefs,
+                    int depth) {
         parsePropertyString(value, fragments, propertyRefs);
         final StringBuilder unkownParam = new StringBuilder();
         final StringBuilder sb = new StringBuilder();
@@ -94,7 +89,7 @@ public class MacroProcessor {
             return replacePropertiesRec(expandedValue, conf, fragments, propertyRefs, depth + 1);
         } else if (containProperty && depth > MAX_DEPTH) {
             throw new PropertyParsingException(MORE_THAN_0_LEVEL_TO_EXPAND_1
-                    .format(new Object[] { MAX_DEPTH, expandedValue }));
+                            .format(new Object[] { MAX_DEPTH, expandedValue }));
         } else {
             return expandedValue;
         }
@@ -103,11 +98,12 @@ public class MacroProcessor {
     /**
      * Parses a string containing <code>${xxx}</code> style property references into two lists. The first list is a
      * collection of text fragments, while the other is a set of string property names. <code>null</code> entries in the
-     * first list indicate a property reference from the second list. <p> It can be overridden with a more efficient or
-     * customized version.
+     * first list indicate a property reference from the second list.
+     * <p>
+     * It can be overridden with a more efficient or customized version.
      *
-     * @param textToParse  Text to parse. Must not be <code>null</code>.
-     * @param fragments    List to add text fragments to. Must not be <code>null</code>.
+     * @param textToParse Text to parse. Must not be <code>null</code>.
+     * @param fragments List to add text fragments to. Must not be <code>null</code>.
      * @param propertyRefs List to add property names to. Must not be <code>null</code>.
      * @throws PropertyParsingException if the string contains an opening <code>${</code> without closing <code>}</code>
      */

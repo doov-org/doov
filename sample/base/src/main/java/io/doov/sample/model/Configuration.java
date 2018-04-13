@@ -20,22 +20,22 @@ import io.doov.sample.field.SamplePath;
 
 public class Configuration {
 
-    @SamplePath(field = SampleFieldId.CONFIGURATION_MAILING_CAMPAIGN, readable = "configuration mailing campaign")
+    @SamplePath(field = SampleFieldId.CONFIGURATION_MAILING_CAMPAIGN, readable = "configuration.mailing.campaign")
     private boolean mailingCampaign;
 
-    @SamplePath(field = SampleFieldId.CONFIGURATION_EMAIL_MAX_SIZE, readable = "configuration max email size")
+    @SamplePath(field = SampleFieldId.CONFIGURATION_EMAIL_MAX_SIZE, readable = "configuration.max.email.size")
     private int maxEmailSize;
 
-    @SamplePath(field = SampleFieldId.CONFIGURATION_MIN_AGE, readable = "configuration min age")
+    @SamplePath(field = SampleFieldId.CONFIGURATION_MIN_AGE, readable = "configuration.min.age")
     private int minAge;
 
-    @SamplePath(field = SampleFieldId.CONFIGURATION_MAX_DOUBLE, readable = "configuration max double")
+    @SamplePath(field = SampleFieldId.CONFIGURATION_MAX_DOUBLE, readable = "configuration.max.double")
     private double maxDouble;
 
-    @SamplePath(field = SampleFieldId.CONFIGURATION_MAX_FLOAT, readable = "configuration max float")
+    @SamplePath(field = SampleFieldId.CONFIGURATION_MAX_FLOAT, readable = "configuration.max.float")
     private float maxFloat;
 
-    @SamplePath(field = SampleFieldId.CONFIGURATION_MAX_LONG, readable = "configuration max long")
+    @SamplePath(field = SampleFieldId.CONFIGURATION_MAX_LONG, readable = "configuration.max.long")
     private long maxLong;
 
     public boolean isMailingCampaign() {

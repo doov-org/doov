@@ -24,6 +24,7 @@ import static io.doov.sample.field.dsl.DslSampleModel.accountPhoneNumber;
 import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 import org.junit.jupiter.api.*;
 
@@ -48,12 +49,13 @@ public class FailureCauseSample3Test {
                                                     accountPhoneNumber.startsWith("+1"))))
                     .validate();
 
+    private final Locale locale = Locale.FRENCH;
     private final SampleModel model = new SampleModel();
     private final DslModel wrapper = new SampleModelWrapper(model);
 
     @BeforeEach
     public void plaintText() {
-        System.out.print(rule.readable());
+        System.out.print(rule.readable(locale));
     }
 
     @AfterEach
@@ -65,7 +67,7 @@ public class FailureCauseSample3Test {
     public void getFailureCause_setup_1() {
         Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
-        System.out.println("> " + result.getFailureCause());
+        System.out.println("> " + result.getFailureCause(locale));
     }
 
     @Test
@@ -75,7 +77,7 @@ public class FailureCauseSample3Test {
         Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
 
-        System.out.println("> " + result.getFailureCause());
+        System.out.println("> " + result.getFailureCause(locale));
     }
 
     @Test
@@ -86,7 +88,7 @@ public class FailureCauseSample3Test {
         Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
 
-        System.out.println("> " + result.getFailureCause());
+        System.out.println("> " + result.getFailureCause(locale));
     }
 
     @Test
@@ -98,6 +100,6 @@ public class FailureCauseSample3Test {
         Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isTrue();
 
-        System.out.println("> " + result.getFailureCause());
+        System.out.println("> " + result.getFailureCause(locale));
     }
 }

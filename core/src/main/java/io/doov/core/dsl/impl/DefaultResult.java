@@ -12,6 +12,8 @@
  */
 package io.doov.core.dsl.impl;
 
+import java.util.Locale;
+
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Result;
 
@@ -40,8 +42,8 @@ public class DefaultResult implements Result {
     }
 
     @Override
-    public String getFailureCause() {
-        return !validated ? context.getRootMetadata().message(context).readable() : null;
+    public String getFailureCause(Locale locale) {
+        return !validated ? context.getRootMetadata().message(context).readable(locale) : null;
     }
 
 }

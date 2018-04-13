@@ -52,7 +52,7 @@ public class NaryMappingRule<O> implements MappingRule {
     }
 
     @Override
-    public String readable() {
-        return astToString(this, Locale.getDefault());
+    public String readable(Locale locale) {
+        return astToString(this, locale);
     }
 }

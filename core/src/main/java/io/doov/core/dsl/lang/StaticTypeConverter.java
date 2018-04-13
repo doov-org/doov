@@ -3,6 +3,8 @@
  */
 package io.doov.core.dsl.lang;
 
+import java.util.Locale;
+
 import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
@@ -12,6 +14,17 @@ import io.doov.core.dsl.meta.SyntaxTree;
  * @param <O> out type
  */
 public interface StaticTypeConverter<I, O> extends Readable, SyntaxTree {
+    @Override
+    default String readable() {
+        return readable(Locale.getDefault());
+    }
+
+    /**
+     * Returns the human readable version of this object.
+     *
+     * @return the readable string
+     */
+    String readable(Locale locale);
 
     /**
      * Return the converted value

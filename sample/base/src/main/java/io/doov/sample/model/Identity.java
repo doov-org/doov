@@ -19,8 +19,8 @@ import io.doov.sample.field.*;
 
 public class Identity {
 
-    @SamplePath(field = SampleFieldId.ACCOUNT_ID, constraint = SampleConstraint.ACCOUNT)
-    @SamplePath(field = SampleFieldId.USER_ID, constraint = SampleConstraint.USER)
+    @SamplePath(field = SampleFieldId.ACCOUNT_ID, constraint = SampleConstraint.ACCOUNT, readable = "account.id")
+    @SamplePath(field = SampleFieldId.USER_ID, constraint = SampleConstraint.USER, readable = "user.id")
     private long id;
 
     public void setId(long id) {

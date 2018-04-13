@@ -12,6 +12,8 @@
  */
 package io.doov.core.dsl.lang;
 
+import java.util.Locale;
+
 import io.doov.core.dsl.DslModel;
 
 /**
@@ -34,12 +36,23 @@ public interface Result {
     boolean isFalse();
 
     /**
-     * Returns the failure cause of the failed predicate. This will reduce the syntax tree using execution values to
-     * output the minimum failed tree.
+     * Returns the failure cause of the failed predicate. This will reduce the syntax tree using execution values to output
+     * the minimum failed tree.
+     *
+     * @param locale the desire locale for the failure cause
+     * @return the failure cause, if failed
+     */
+    String getFailureCause(Locale locale);
+
+    /**
+     * Returns the failure cause of the failed predicate. This will reduce the syntax tree using execution values to output
+     * the minimum failed tree.
      *
      * @return the failure cause, if failed
      */
-    String getFailureCause();
+    default String getFailureCause() {
+        return getFailureCause(Locale.getDefault());
+    }
 
     /**
      * Returns the context that contains the execution values.

@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl.lang;
 
+import java.util.Locale;
 import java.util.function.BiPredicate;
 
 import io.doov.core.dsl.DslModel;
@@ -72,5 +73,17 @@ public interface StepCondition extends Readable, SyntaxTree {
     default StepCondition not() {
         return LogicalUnaryCondition.negate(this);
     }
+    
+    @Override
+    default String readable() {
+        return readable(Locale.getDefault());
+    }
+
+    /**
+     * Returns the human readable version of this object.
+     *
+     * @return the readable string
+     */
+    String readable(Locale locale);
 
 }

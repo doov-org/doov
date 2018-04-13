@@ -44,7 +44,7 @@ public class DefaultStaticTypeConverter<I, O> implements StaticTypeConverter<I, 
     }
 
     @Override
-    public String readable() {
-        return astToString(this, Locale.getDefault());
+    public String readable(Locale locale) {
+        return astToString(this, locale);
     }
 }

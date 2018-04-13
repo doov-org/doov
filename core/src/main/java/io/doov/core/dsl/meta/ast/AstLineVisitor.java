@@ -17,6 +17,7 @@ import java.util.Locale;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.BinaryMetadata;
 import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class AstLineVisitor extends AstTextVisitor {
 

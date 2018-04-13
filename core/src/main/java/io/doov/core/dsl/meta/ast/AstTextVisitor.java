@@ -22,6 +22,7 @@ import java.util.Locale;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class AstTextVisitor extends AbstractAstVisitor {
 
@@ -138,7 +139,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
                 case OPERATOR:
                     return bundle.get((Operator) e.getReadable(), locale);
                 case FIELD:
-                    return e.getReadable().readable();
+                    return bundle.get(e.getReadable().readable(), locale);
                 case STRING_VALUE:
                     return "'" + bundle.get(e.getReadable().readable(), locale) + "'";
                 default:

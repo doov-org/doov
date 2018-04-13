@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.EnumSet;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +41,7 @@ public class DSLSandboxTest {
         ValidationRule rule = DOOV.when(accountId.eq(1L)).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isFalse();
-        assertThat(rule.executeOn(model).getFailureCause()).isEqualTo("account id = 1 ");
+        assertThat(rule.executeOn(model).getFailureCause(Locale.US)).isEqualTo("account id = 1 ");
     }
 
     @Test

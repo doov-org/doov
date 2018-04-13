@@ -124,6 +124,7 @@ final class DslMethodsGen {
 
     private static String formatMethod(String readable) {
         String slug = readable
+                        .replace(".", " ")
                         .replace(" and ", " ")
                         .replace(" the ", " ")
                         .replace(" à ", " ")

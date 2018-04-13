@@ -51,7 +51,7 @@ public class ConverterMetadata implements Metadata {
     }
 
     @Override
-    public String readable() {
+    public String readable(Locale locale) {
         return element.getReadable().readable();
     }
 

@@ -117,8 +117,8 @@ public class MappingMetadata implements Metadata {
     }
 
     @Override
-    public String readable() {
-        return astToString(this, Locale.getDefault());
+    public String readable(Locale locale) {
+        return astToString(this, locale);
     }
 
     @Override

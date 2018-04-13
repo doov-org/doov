@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.sample.validation;
 
@@ -23,6 +20,7 @@ import static io.doov.sample.field.dsl.DslSampleModel.accountPhoneNumber;
 import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 import org.junit.jupiter.api.*;
 
@@ -43,12 +41,13 @@ public class FailureCauseSample1Test {
                     .and(accountCountry.eq(Country.FR).and(accountPhoneNumber.startsWith("+33"))))
                     .validate();
 
+    private final Locale locale = Locale.US;
     private final SampleModel model = new SampleModel();
     private final DslModel wrapper = new SampleModelWrapper(model);
 
     @BeforeEach
     public void plaintText() {
-        System.out.print(rule.readable());
+        System.out.print(rule.readable(locale));
     }
 
     @AfterEach
@@ -60,7 +59,7 @@ public class FailureCauseSample1Test {
     public void getFailureCause_setup_1() {
         Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
-        System.out.println("> " + result.getFailureCause());
+        System.out.println("> " + result.getFailureCause(locale));
     }
 
     @Test
@@ -70,7 +69,7 @@ public class FailureCauseSample1Test {
         Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
 
-        System.out.println("> " + result.getFailureCause());
+        System.out.println("> " + result.getFailureCause(locale));
     }
 
     @Test
@@ -81,9 +80,9 @@ public class FailureCauseSample1Test {
         Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
 
-        System.out.println("> " + result.getFailureCause());
+        System.out.println("> " + result.getFailureCause(locale));
     }
-    
+
     @Test
     public void getFailureCause_setup_4() {
         model.getAccount().setEmail("test@test.org");
@@ -93,9 +92,9 @@ public class FailureCauseSample1Test {
         Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isFalse();
 
-        System.out.println("> " + result.getFailureCause());
+        System.out.println("> " + result.getFailureCause(locale));
     }
-    
+
     @Test
     public void getFailureCause_setup_5() {
         model.getAccount().setEmail("test@test.org");
@@ -106,6 +105,6 @@ public class FailureCauseSample1Test {
         Result result = rule.withShortCircuit(false).executeOn(wrapper);
         assertThat(result).isTrue();
 
-        System.out.println("> " + result.getFailureCause());
+        System.out.println("> " + result.getFailureCause(locale));
     }
 }

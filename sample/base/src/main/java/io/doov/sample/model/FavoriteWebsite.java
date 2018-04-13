@@ -27,14 +27,14 @@ public class FavoriteWebsite {
         return website;
     }
 
-    @SamplePath(field = SampleFieldId.FAVORITE_SITE_NAME_1)
-    @SamplePath(field = SampleFieldId.FAVORITE_SITE_NAME_2)
-    @SamplePath(field = SampleFieldId.FAVORITE_SITE_NAME_3)
+    @SamplePath(field = SampleFieldId.FAVORITE_SITE_NAME_1, readable = "favorite.site.name.1")
+    @SamplePath(field = SampleFieldId.FAVORITE_SITE_NAME_2, readable = "favorite.site.name.2")
+    @SamplePath(field = SampleFieldId.FAVORITE_SITE_NAME_3, readable = "favorite.site.name.3")
     private String name;
 
-    @SamplePath(field = SampleFieldId.FAVORITE_SITE_URL_1)
-    @SamplePath(field = SampleFieldId.FAVORITE_SITE_URL_2)
-    @SamplePath(field = SampleFieldId.FAVORITE_SITE_URL_3)
+    @SamplePath(field = SampleFieldId.FAVORITE_SITE_URL_1, readable = "favorite.site.url.1")
+    @SamplePath(field = SampleFieldId.FAVORITE_SITE_URL_2, readable = "favorite.site.url.2")
+    @SamplePath(field = SampleFieldId.FAVORITE_SITE_URL_3, readable = "favorite.site.url.3")
     private String url;
 
     public FavoriteWebsite() {
