@@ -13,15 +13,13 @@
 package io.doov.core.dsl.meta;
 
 import java.util.List;
-import java.util.Locale;
 
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.Readable;
 
 /**
  * Interface for the description of a node in the syntax tree.
  */
-public interface Metadata extends Readable, SyntaxTree {
+public interface Metadata extends SyntaxTree {
 
     /**
      * Merges the node with the given node.
@@ -55,23 +53,11 @@ public interface Metadata extends Readable, SyntaxTree {
     MetadataType type();
 
     /**
-     * Returns the failure message from the given context. The message is returned in its shortest form by pruning branches
-     * in the evaluated syntax tree that are not needed for the failure message.
+     * Returns the failure message from the given context. The message is returned in its shortest form by pruning
+     * branches in the evaluated syntax tree that are not needed for the failure message.
      *
      * @param context the evaluated context
      * @return the metadata
      */
     Metadata message(Context context);
-
-    @Override
-    default String readable() {
-        return readable(Locale.getDefault());
-    }
-
-    /**
-     * Returns the human readable version of this object.
-     *
-     * @return the readable string
-     */
-    String readable(Locale locale);
 }

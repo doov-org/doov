@@ -12,8 +12,6 @@
  */
 package io.doov.core.dsl.lang;
 
-import java.util.Locale;
-
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.SyntaxTree;
@@ -23,20 +21,7 @@ import io.doov.core.dsl.meta.SyntaxTree;
  * <p>
  * This class should be used when keeping references to specific rules.
  */
-public interface ValidationRule extends Readable, SyntaxTree {
-
-    /**
-     * Returns the human readable version of this object.
-     *
-     * @return the readable string
-     */
-    String readable(Locale locale);
-
-    @Override
-    default String readable() {
-        return readable(Locale.getDefault());
-    }
-
+public interface ValidationRule extends SyntaxTree {
     /**
      * Returns a validation rule with the given short circuit.
      *

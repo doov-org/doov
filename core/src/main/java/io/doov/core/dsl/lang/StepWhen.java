@@ -12,27 +12,12 @@
  */
 package io.doov.core.dsl.lang;
 
-import java.util.Locale;
-
 import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
  * Interface for the when step that encapsulates the root condition of the syntax tree and the validation rule.
  */
-public interface StepWhen extends Readable, SyntaxTree {
-
-    @Override
-    default String readable() {
-        return readable(Locale.getDefault());
-    }
-
-    /**
-     * Returns the human readable version of this object.
-     *
-     * @return the readable string
-     */
-    String readable(Locale locale);
-
+public interface StepWhen extends SyntaxTree {
     /**
      * Returns the root condition of the syntax tree.
      *
@@ -48,8 +33,8 @@ public interface StepWhen extends Readable, SyntaxTree {
     ValidationRule validate();
 
     /**
-     * Return a conditional mapping rule containing all the given mapping rules. The conditional mapping rule will execute
-     * when this validation rule is valid.
+     * Return a conditional mapping rule containing all the given mapping rules. The conditional mapping rule will
+     * execute when this validation rule is valid.
      *
      * @param mapRule mapping rules
      * @return the conditional mapping rule

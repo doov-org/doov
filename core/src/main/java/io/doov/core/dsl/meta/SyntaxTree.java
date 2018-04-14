@@ -15,7 +15,22 @@
  */
 package io.doov.core.dsl.meta;
 
-public interface SyntaxTree {
+import java.util.Locale;
+
+import io.doov.core.dsl.lang.Readable;
+
+public interface SyntaxTree extends Readable {
+    @Override
+    default String readable() {
+        return readable(Locale.getDefault());
+    }
+
+    /**
+     * Returns the human readable version of this object.
+     *
+     * @return the readable string
+     */
+    String readable(Locale locale);
 
     void accept(MetadataVisitor visitor, int depth);
 
