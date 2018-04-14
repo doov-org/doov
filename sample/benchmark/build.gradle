@@ -1,0 +1,12 @@
+dependencies {
+    compile project(':doov-sample-generated')
+    compile project(':doov-sample-example')
+    compile group: 'io.doov', name: 'doov-core', version: '1.0-SNAPSHOT'
+    compile group: 'io.doov', name: 'doov-assertions', version: '1.0-SNAPSHOT'
+    compile group: 'org.openjdk.jmh', name: 'jmh-core', version: ''
+    compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.19'
+    compile(group: 'org.jfree', name: 'jfreechart', version: '1.5.0') {
+        exclude group:'javax.servlet', module: 'servlet-api'
+        exclude group:'junit', module:'junit'
+    }
+}

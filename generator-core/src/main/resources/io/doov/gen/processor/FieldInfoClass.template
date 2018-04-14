@@ -1,0 +1,28 @@
+package ${package.name};
+
+import static io.doov.core.dsl.field.FieldInfoBuilder.fieldInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import javax.annotation.Generated;
+
+import io.doov.core.FieldInfo;
+
+${imports}
+
+@Generated(value = "${source.generator.name}", comments = "generated from ${process.class}")
+public final class ${target.class.name} {
+    private static final List<FieldInfo> ALL = new ArrayList<>();
+
+    public static List<FieldInfo> fieldInfos() {
+        return ALL;
+    }
+
+    public static Stream<FieldInfo> stream() {
+        return ALL.stream();
+    }
+
+${constants}
+}

@@ -1,0 +1,9 @@
+                    if (model.${partial.path} == null) {
+                        if (value == null)
+                            return;
+                        model.${partial.path.init};
+                    }${list.content.as.null}
+                    if (model.${partial.path}.size() < ${position})
+                        model.${partial.path}.add(${index}, new ${target.type}());
+                    if (model.${partial.path}.get(${index}) == null)
+                        model.${partial.path}.set(${index}, new ${target.type}());

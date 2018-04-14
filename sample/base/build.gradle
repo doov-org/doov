@@ -1,0 +1,4 @@
+dependencies {
+    compile group: 'io.doov', name: 'doov-core', version: '1.0-SNAPSHOT'
+    compile group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
+}

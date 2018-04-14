@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'io.doov', name: 'doov-gradle-generator', version: '1.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'io.doov.generator'
+
+dependencies {
+    compile project(':doov-sample-base')
+}
+
+sourceSets {
+    generated {
+        java.srcDir "${projectDir}/src/generated/java"
+    }
+}
+
+compileGeneratedJava {
+    classpath = configurations.compile
+}
+
+compileJava {
+    dependsOn(compileGeneratedJava)
+    source += sourceSets.generated.java
+}
+
+doovCodeGen {
+    doovMapGenSample {
+        packageFilter = 'io.doov.sample'
+        fieldClass = 'io.doov.sample.field.SampleField'
+        sourceClass = 'io.doov.sample.model.SampleModel'
+        baseClass = 'io.doov.sample.field.SampleBase'
+        fieldInfoTypes = 'io.doov.sample.field.FieldTypes'
+        wrapperPackage = 'io.doov.sample.wrapper'
+    }
+    doovMapGenSample2 {
+        packageFilter = 'io.doov.sample2'
+        fieldClass = 'io.doov.sample2.field.Sample2FieldId'
+        sourceClass = 'io.doov.sample2.model.Sample2Model'
+        wrapperPackage = 'io.doov.sample2.wrapper'
+        enumFieldInfo = false
+    }
+    doovMapGenBenchmark {
+        packageFilter = 'io.doov.benchmark'
+        fieldClass = 'io.doov.benchmark.model.BenchmarkFieldId'
+        sourceClass = 'io.doov.benchmark.model.BenchmarkModel'
+    }
+}

@@ -1,0 +1,11 @@
+rootProject.name='dOOv'
+
+include 'doov-core'
+include 'doov-assertions'
+include 'doov-generator-core'
+include 'doov-gradle-generator'
+
+project(':doov-core').projectDir = file('core')
+project(':doov-assertions').projectDir = file('assertions')
+project(':doov-generator-core').projectDir = file('generator-core')
+project(':doov-gradle-generator').projectDir = file('generator-gradle-plugin')

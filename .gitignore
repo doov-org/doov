@@ -70,3 +70,6 @@ doc/cdr/Backup_of_*.cdr
 /sample/validation/*.html
 
 /docs/cdr/Backup_*.cdr
+
+.gradle
+build

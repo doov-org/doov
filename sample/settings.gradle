@@ -1,0 +1,24 @@
+rootProject.name='dOOv-samples'
+
+includeBuild('../') {
+    dependencySubstitution {
+        substitute module('io.doov:doov-core') with project(':doov-core')
+        substitute module('io.doov:doov-assertions') with project(':doov-assertions')
+        substitute module('io.doov:doov-gradle-generator') with project(':doov-gradle-generator')
+    }
+}
+include 'doov-sample-base'
+include 'doov-sample-generated'
+include 'doov-sample-base-without-annotations'
+include 'doov-sample-generated-without-annotations'
+include 'doov-sample-example'
+include 'doov-sample-benchmark'
+include 'doov-sample-validation'
+
+project(':doov-sample-base').projectDir = file('base')
+project(':doov-sample-generated').projectDir = file('generated')
+project(':doov-sample-base-without-annotations').projectDir = file('base-without-annotations')
+project(':doov-sample-generated-without-annotations').projectDir = file('generated-without-annotations')
+project(':doov-sample-example').projectDir = file('example')
+project(':doov-sample-benchmark').projectDir = file('benchmark')
+project(':doov-sample-validation').projectDir = file('validation')

@@ -1,0 +1,7 @@
+dependencies {
+    compile project(':doov-sample-generated')
+    compile group: 'io.doov', name: 'doov-core', version: '1.0-SNAPSHOT'
+    compile group: 'io.doov', name: 'doov-assertions', version: '1.0-SNAPSHOT'
+    compile group: 'commons-io', name:'commons-io', version: '2.6'
+}
+

@@ -1,0 +1,22 @@
+allprojects {
+
+    group = 'io.doov'
+    version = "1.0-SNAPSHOT"
+
+    repositories {
+        mavenCentral()
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+wrapper {
+    version = '4.6'
+    distributionType = Wrapper.DistributionType.ALL
+}

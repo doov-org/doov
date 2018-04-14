@@ -1,0 +1,2 @@
+        if (fieldId instanceof ${field.id.type})
+            consumer((${field.id.type}) fieldId).accept(model, value);

@@ -1,0 +1,18 @@
+package ${package.name};
+
+import static io.doov.core.dsl.DOOV.fieldInPosition;
+import static ${process.field.info.class}.*;
+
+import javax.annotation.Generated;
+
+import java.util.stream.Stream;
+${imports}
+
+@Generated(value = "${source.generator.name}", comments = "generated from ${process.class}")
+public final class ${target.class.name} {
+
+${fields}
+
+${methods}
+
+}
