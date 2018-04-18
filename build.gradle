@@ -1,7 +1,11 @@
 allprojects {
-
     group = 'io.doov'
     version = "1.0-SNAPSHOT"
+    ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+}
+
+subprojects {
 
     repositories {
         mavenCentral()
@@ -10,14 +14,98 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'idea'
+    apply plugin: 'signing'
 
     compileJava {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
 
+    javadoc {
+        source = sourceSets.main.allJava
+        classpath += configurations.compile
+        classpath += configurations.compileOnly
+    }
+
     test {
         useJUnitPlatform()
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    signing {
+        required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+        sign configurations.archives
+    }
+
+    def pomProject = {
+        description = 'dOOv, a fluent API for type-safe domain model validation'
+        url = 'https://www.dOOv.io'
+        scm {
+            url 'https://github.com/lesfurets/dOOv'
+            connection 'scm:git:git://github.com/lesfurets/dOOv.git'
+            developerConnection 'scm:git:git@github.com/lesfurets/dOOv.git'
+        }
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+        developers {
+            developer {
+                name 'Alexandre Dubreuil'
+                email 'alexandre.dubreuil@lesfurets.com'
+                organization 'LesFurets.com'
+                organizationUrl 'https://www.lesfurets.com'
+            }
+            developer {
+                name 'Gilles DiGuglielmo'
+                email 'gilles.diguglielmo@lesfurets.com'
+                organization 'LesFurets.com'
+                organizationUrl 'https://www.lesfurets.com'
+            }
+            developer {
+                name 'Yohann Fouquer'
+                email 'yohann.fouquer@lesfurets.com'
+                organization 'LesFurets.com'
+                organizationUrl 'https://www.lesfurets.com'
+            }
+            developer {
+                name 'Ozan Gunalp'
+                email 'ozan.gunalp@lesfurets.com'
+                organization 'LesFurets.com'
+                organizationUrl 'https://www.lesfurets.com'
+            }
+        }
+    }
+
+    install {
+        repositories {
+            mavenInstaller {
+                pom.project pomProject
+            }
+        }
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                pom.project pomProject
+            }
+        }
     }
 }
 
