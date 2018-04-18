@@ -1,8 +1,9 @@
+apply from: 'dependencyVersions.gradle'
+
 allprojects {
     group = 'io.doov'
     version = "1.0-SNAPSHOT"
     ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
-
 }
 
 subprojects {

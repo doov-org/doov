@@ -1,4 +1,4 @@
 dependencies {
-    compile group: 'org.apache.commons', name: 'commons-text', version: '1.2'
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    compile group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
+    compile group: 'com.google.guava', name: 'guava', version: guavaVersion
 }
