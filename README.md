@@ -104,6 +104,38 @@ mvn -pl assertions clean site
 mvn -pl generator clean site
 ```
 
+## Gradle build
+
+To build core, assertions, generator core, maven generator plugin and gradle generator plugin modules:
+```bash
+./gradlew build
+```
+
+To build sample modules: 
+```bash
+cd sample
+./gradlew build
+```
+
+
+## Gradle deploy
+
+```bash
+./gradlew deploy
+```
+
+## Gradle commandline options
+
+```bash
+-Psigning.secretKeyRingFile=secret-file.gpg 
+-Psigning.keyId=key-id
+-Psigning.password=password
+-PsnapshotRepository=http://www.acme.com/repository/snapshots
+-Prepository=http://www.acme.com/repository/releases
+-PossrhUsername=userName
+-PossrhPassword=password
+```
+
 ## Licence
 
 [Apache-2.0](LICENSE)
