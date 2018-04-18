@@ -1,3 +1,17 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "me.champeau.gradle:jmh-gradle-plugin:0.4.5"
+    }
+}
+
+apply plugin: "me.champeau.gradle.jmh"
+
 dependencies {
     compile project(':doov-sample-generated')
     compile project(':doov-sample-example')
@@ -6,7 +20,39 @@ dependencies {
     compile group: 'org.openjdk.jmh', name: 'jmh-core', version: ''
     compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.19'
     compile(group: 'org.jfree', name: 'jfreechart', version: '1.5.0') {
-        exclude group:'javax.servlet', module: 'servlet-api'
-        exclude group:'junit', module:'junit'
+        exclude group: 'javax.servlet', module: 'servlet-api'
+        exclude group: 'junit', module: 'junit'
+    }
+    runtime group: 'org.glassfish.web', name: 'javax.el', version: '2.2.6'
+    runtime group: 'javax.el', name: 'javax.el-api', version: '3.0.0'
+    runtime group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.7.Final'
+    jmh group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.19'
+    jmh group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.19'
+}
+
+task copyEmptyBmList(type: Copy) {
+    from "$buildDir/jmh-generated-classes/META-INF/BenchmarkList"
+    into "$buildDir/tmp"
+}
+jmhRunBytecodeGenerator.finalizedBy copyEmptyBmList
+
+task copyEmptyBmListBack(type: Copy) {
+    from "$buildDir/tmp/BenchmarkList"
+    into "$buildDir/jmh-generated-classes/META-INF"
+}
+jmhCompileGeneratedClasses.finalizedBy copyEmptyBmListBack
+
+sourceSets {
+    jmh {
+        java.srcDirs "${projectDir}/src/main/java"
     }
 }
+
+
+jmh {
+    duplicateClassesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+jar.enabled = false
+
+build.dependsOn jmhJar
