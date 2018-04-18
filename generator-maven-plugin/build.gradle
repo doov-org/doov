@@ -1,0 +1,28 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.liferay:gradle-plugins-maven-plugin-builder:1.2.0"
+    }
+}
+
+apply plugin: "com.liferay.maven.plugin.builder"
+
+archivesBaseName = 'doov-generator'
+
+dependencies {
+    compile project(':doov-generator-core')
+    compile group:'org.apache.maven', name: 'maven-plugin-api', version: '3.0.5'
+    compile group:'org.apache.maven', name: 'maven-core', version: '3.0.5'
+    compileOnly group:'org.apache.maven.plugin-tools', name:'maven-plugin-annotations', version: '3.5'
+}
+
+buildPluginDescriptor {
+    outputDir = "${sourceSets.main.output.resourcesDir}/META-INF/maven"
+    goalPrefix = 'doov-generator'
+    pomVersion = project.version
+    pomArtifactId = 'doov-generator'
+}

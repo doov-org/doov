@@ -53,6 +53,4 @@ jmh {
     duplicateClassesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-jar.enabled = false
-
 build.dependsOn jmhJar
