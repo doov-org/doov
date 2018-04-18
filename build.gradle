@@ -6,6 +6,21 @@ allprojects {
     ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 }
 
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
+    }
+}
+
+apply plugin: "io.codearte.nexus-staging"
+
+defaultTasks 'verify'
+
 subprojects {
 
     repositories {
@@ -46,7 +61,7 @@ subprojects {
     }
 
     signing {
-        required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+        required { gradle.taskGraph.hasTask("uploadArchives") }
         sign configurations.archives
     }
 
@@ -104,10 +119,41 @@ subprojects {
     uploadArchives {
         repositories {
             mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                def userName = project.hasProperty('ossrhUsername') ? project.ossrhUsername : 'userName'
+                def password = project.hasProperty('ossrhPassword') ? project.ossrhPassword : 'password'
+
+                def repo = project.hasProperty('repository') ?
+                        project.repository :
+                        "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                repository(url: repo) {
+                    authentication(userName: userName, password: password)
+                }
+
+                def snapRepo = project.hasProperty('snapshotRepository') ?
+                        project.snapshotRepository :
+                        "https://oss.sonatype.org/content/repositories/snapshots/"
+                snapshotRepository(url: snapRepo) {
+                    authentication(userName: userName, password: password)
+                }
                 pom.project pomProject
             }
         }
     }
+
+    nexusStaging {
+        delayBetweenRetriesInMillis = 5000
+    }
+
+    // Deploy tasks
+    closeAndReleaseRepository.mustRunAfter(uploadArchives)
+    closeRepository.enabled = isReleaseVersion
+    releaseRepository.enabled = isReleaseVersion
+
+    task verify(dependsOn: build)
+    task deploy(dependsOn: [build, uploadArchives, closeAndReleaseRepository])
+
 }
 
 wrapper {
