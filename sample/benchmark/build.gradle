@@ -15,17 +15,17 @@ apply plugin: "me.champeau.gradle.jmh"
 dependencies {
     compile project(':doov-sample-generated')
     compile project(':doov-sample-example')
-    compile group: 'io.doov', name: 'doov-core', version: '1.0-SNAPSHOT'
-    compile group: 'io.doov', name: 'doov-assertions', version: '1.0-SNAPSHOT'
-    compile group: 'org.openjdk.jmh', name: 'jmh-core', version: jmhVersion
-    compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: jmhVersion
-    compile(group: 'org.jfree', name: 'jfreechart', version: jfreechartVersion) {
+    compile group: 'io.doov', name: 'doov-core'
+    compile group: 'io.doov', name: 'doov-assertions'
+    compile group: 'org.openjdk.jmh', name: 'jmh-core'
+    compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess'
+    compile(group: 'org.jfree', name: 'jfreechart') {
         exclude group: 'javax.servlet', module: 'servlet-api'
         exclude group: 'junit', module: 'junit'
     }
-    runtime group: 'org.glassfish.web', name: 'javax.el', version: javaxElVersion
-    runtime group: 'javax.el', name: 'javax.el-api', version: javaxElApiVersion
-    runtime group: 'org.hibernate.validator', name: 'hibernate-validator', version: hibernateValidatorVersion
+    runtime group: 'org.glassfish.web', name: 'javax.el'
+    runtime group: 'javax.el', name: 'javax.el-api'
+    runtime group: 'org.hibernate.validator', name: 'hibernate-validator'
     jmh group: 'org.openjdk.jmh', name: 'jmh-core', version: jmhVersion
     jmh group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: jmhVersion
 }

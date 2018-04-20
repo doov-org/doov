@@ -28,9 +28,29 @@ subprojects {
     }
 
     apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'maven'
     apply plugin: 'idea'
     apply plugin: 'signing'
+
+    dependencies {
+        constraints {
+            compile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+            compile group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
+            compile group: 'com.google.guava', name: 'guava', version: guavaVersion
+            compile group: 'cglib', name: 'cglib', version: '3.2.5'
+            compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+            compile group: 'org.apache.maven', name: 'maven-plugin-api', version: mavenPluginApiVersion
+            compile group: 'org.apache.maven', name: 'maven-core', version: mavenPluginApiVersion
+
+            compileOnly group: 'org.apache.maven.plugin-tools', name: 'maven-plugin-annotations', version: mavenPluginAnnotationsVersion
+
+            testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
+            testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
+            testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+        }
+    }
+
 
     compileJava {
         sourceCompatibility = '1.8'
@@ -157,6 +177,6 @@ subprojects {
 }
 
 wrapper {
-    version = '4.6'
+    version = '4.7'
     distributionType = Wrapper.DistributionType.ALL
 }

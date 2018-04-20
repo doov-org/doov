@@ -1,4 +1,4 @@
 dependencies {
     compile project(':doov-core')
-    compile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+    compile group: 'org.assertj', name: 'assertj-core'
 }

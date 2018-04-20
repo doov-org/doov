@@ -12,10 +12,26 @@ subprojects {
     }
 
     apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'maven'
     apply plugin: 'idea'
 
     dependencies {
+        constraints {
+            compile group: 'io.doov', name: 'doov-core', version: '1.0-SNAPSHOT'
+            compile group: 'io.doov', name: 'doov-assertions', version: '1.0-SNAPSHOT'
+            compile group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
+            compile group: 'com.datastax.cassandra', name: 'cassandra-driver-extras', version: '3.1.0'
+            compile group: 'com.datastax.cassandra', name: 'cassandra-driver-core', version: '3.1.0'
+            compile group: 'commons-io', name:'commons-io', version: commonsIoVersion
+            compile group: 'org.openjdk.jmh', name: 'jmh-core', version: jmhVersion
+            compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: jmhVersion
+            compile group: 'org.jfree', name: 'jfreechart', version: jfreechartVersion
+
+            runtime group: 'org.glassfish.web', name: 'javax.el', version: javaxElVersion
+            runtime group: 'javax.el', name: 'javax.el-api', version: javaxElApiVersion
+            runtime group: 'org.hibernate.validator', name: 'hibernate-validator', version: hibernateValidatorVersion
+        }
         compile group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
         compile group: 'com.google.guava', name: 'guava', version: guavaVersion
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
@@ -26,12 +42,17 @@ subprojects {
         testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
     }
 
+    compileJava {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+
     test {
         useJUnitPlatform()
     }
 }
 
 wrapper {
-    version = '4.6'
+    version = '4.7'
     distributionType = Wrapper.DistributionType.ALL
 }

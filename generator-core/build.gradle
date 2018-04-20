@@ -1,8 +1,8 @@
 dependencies {
     compile project(':doov-core')
-    compile group: 'cglib', name: 'cglib', version: '3.2.5'
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.2'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.0.2'
-    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.5.2'
+    compile group: 'cglib', name: 'cglib'
+    compile group: 'org.slf4j', name: 'slf4j-api'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
+    testCompile group: 'org.assertj', name: 'assertj-core'
 }
