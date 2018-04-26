@@ -2,3 +2,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-text'
     compile group: 'com.google.guava', name: 'guava'
 }
+
+javadoc {
+    destinationDir = new File("docs/site/core/apidocs")
+}

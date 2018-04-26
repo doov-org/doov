@@ -104,36 +104,43 @@ mvn -pl assertions clean site
 mvn -pl generator clean site
 ```
 
-## Gradle build
+## Build with gradle
 
 To build core, assertions, generator core, maven generator plugin and gradle generator plugin modules:
+
 ```bash
+# Core
 ./gradlew build
+
+# Sample modules with examples
+./gradlew -p sample build
 ```
 
-To build sample modules: 
+To deploy you need to configure the command line options for your repository:
+
 ```bash
-cd sample
-./gradlew build
+# You need to install first
+./gradlew install
+
+# Then you can deploy (with the configuration)
+./gradlew \
+  -Psigning.secretKeyRingFile=secret-file.gpg \
+  -Psigning.keyId=key-id \
+  -Psigning.password=password \
+  -PsnapshotRepository=http://www.acme.com/repository/snapshots \
+  -Prepository=http://www.acme.com/repository/releases \
+  -PossrhUsername=userName \
+  -PossrhPassword=password \
+  deploy
 ```
 
+You can either specify `snapshotRepository` or `repository` depending on the version type.
 
-## Gradle deploy
-
-```bash
-./gradlew deploy
-```
-
-## Gradle commandline options
+To generate documentation with gradle:
 
 ```bash
--Psigning.secretKeyRingFile=secret-file.gpg 
--Psigning.keyId=key-id
--Psigning.password=password
--PsnapshotRepository=http://www.acme.com/repository/snapshots
--Prepository=http://www.acme.com/repository/releases
--PossrhUsername=userName
--PossrhPassword=password
+# Generate documentation in docs/site/apidocs/subproject
+./gradlew javadoc
 ```
 
 ## Licence
