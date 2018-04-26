@@ -4,7 +4,7 @@ jdk:
   - oraclejdk8
 
 script:
-  mvn clean test
+  ./gradlew test && ./gradlew -p sample test
 
 branches:
   only:
