@@ -1,1 +1,0 @@
-    public static ${field.type} ${field.readable} = new ${field.type.class}(${field.info.ref});

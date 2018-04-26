@@ -1,7 +1,0 @@
-    public static Stream<${field.type}> ${method.name}() {
-        return Stream.of(${field.info.refs});
-    }
-
-    public static ${field.type} ${method.name}(int index) {
-        return fieldInPosition(${method.name}(), index);
-    }

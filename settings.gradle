@@ -8,6 +8,6 @@ include 'doov-maven-generator'
 
 project(':doov-core').projectDir = file('core')
 project(':doov-assertions').projectDir = file('assertions')
-project(':doov-generator-core').projectDir = file('generator-core')
-project(':doov-gradle-generator').projectDir = file('generator-gradle-plugin')
-project(':doov-maven-generator').projectDir = file('generator-maven-plugin')
+project(':doov-generator-core').projectDir = file('generator/generator-core')
+project(':doov-gradle-generator').projectDir = file('generator/generator-gradle-plugin')
+project(':doov-maven-generator').projectDir = file('generator/generator-maven-plugin')

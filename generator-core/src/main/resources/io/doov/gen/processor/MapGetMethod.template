@@ -1,7 +1,0 @@
-    private static <T> Function<${target.model.class.name}, T> supplier(${field.id.type} fieldId) {
-        switch (fieldId) {
-${switch.content}
-            default:
-                throw new IllegalArgumentException("unsupported field " + fieldId);
-        }
-    }

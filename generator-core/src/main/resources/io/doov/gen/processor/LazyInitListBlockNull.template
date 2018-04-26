@@ -1,3 +1,0 @@
-
-                    if (model.${partial.path}.size() < ${position})
-                        model.${partial.path}.add(${index}, null);

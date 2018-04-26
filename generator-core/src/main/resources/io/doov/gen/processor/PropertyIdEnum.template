@@ -1,5 +1,0 @@
-        ${field.id.name}(${field.id.type}.${field.id.name}){
-${supplier.method}
-
-${consumer.method}
-        },
