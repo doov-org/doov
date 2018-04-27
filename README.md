@@ -94,10 +94,6 @@ To build core, assertions, generator core, maven generator plugin and gradle gen
 To deploy you need to configure the command line options for your repository:
 
 ```bash
-# You need to install first
-./gradlew install
-
-# Then you can deploy (with the configuration)
 ./gradlew \
   -Psigning.secretKeyRingFile=secret-file.gpg \
   -Psigning.keyId=key-id \
@@ -119,6 +115,8 @@ To generate documentation with gradle:
 ```
 
 ## Release
+
+To release the code, it will create 2 commits with proper tags and versions and push them:
 
 ```bash
 ./gradlew \

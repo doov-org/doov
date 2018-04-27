@@ -15,7 +15,8 @@ class GitTagTask extends DefaultTask {
     def action() {
         project.exec {
             executable 'git'
-            args 'tag', "--force", "v${version ?: project.version}"
+            args 'tag', "--force", "${version ?: project.version}"
         }
     }
+
 }

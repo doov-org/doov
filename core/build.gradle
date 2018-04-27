@@ -3,6 +3,6 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava'
 }
 
-javadoc {
-    destinationDir = new File("docs/site/core/apidocs")
+if (isReleaseVersion) {
+    javadoc.destinationDir = file("${rootProject.projectDir}/docs/site/core/apidocs")
 }

@@ -11,7 +11,7 @@ class GitCommitTask extends DefaultTask {
 
     @Input
     @Optional
-    String message = "Release v%s"
+    String message = "[release] Release version %s"
 
     @Override
     Spec<? super TaskInternal> getOnlyIf() {
@@ -32,7 +32,11 @@ class GitCommitTask extends DefaultTask {
     def action() {
         project.exec {
             executable 'git'
-            args "commit", "-m", "${String.format(message, project.version)}", "--", "${project.buildFile.name}"
+            args "add", "docs/site"
+        }
+        project.exec {
+            executable 'git'
+            args "commit", "-m", "${String.format(message, project.version)}", "--", "${project.buildFile.name}", "docs/site"
         }
     }
 

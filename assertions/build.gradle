@@ -3,6 +3,6 @@ dependencies {
     compile group: 'org.assertj', name: 'assertj-core'
 }
 
-javadoc {
-    destinationDir = new File("docs/site/assertions/apidocs")
+if (isReleaseVersion) {
+    javadoc.destinationDir = file("${rootProject.projectDir}/docs/site/assertions/apidocs")
 }

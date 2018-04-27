@@ -23,7 +23,8 @@ class GitPushTask extends DefaultTask {
     def action() {
         def pushArgs = ['push']
         if (dryRun) {
-            pushArgs += '--dry-run'
+            println "Dry run: not pushing commits"
+            return
         }
         pushArgs += remotes
         if (tags) {
@@ -34,4 +35,5 @@ class GitPushTask extends DefaultTask {
             args pushArgs
         }
     }
+
 }
