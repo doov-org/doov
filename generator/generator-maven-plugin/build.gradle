@@ -26,3 +26,5 @@ buildPluginDescriptor {
     pomVersion = project.version
     pomArtifactId = 'doov-generator'
 }
+
+buildPluginDescriptor.dependsOn(project(':doov-generator-core').tasks.getByName('install'))
