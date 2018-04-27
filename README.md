@@ -120,7 +120,18 @@ To generate documentation with gradle:
 
 ## Release
 
-Todo release scripts
+```bash
+./gradlew \
+  -Psigning.secretKeyRingFile=secret-file.gpg \
+  -Psigning.keyId=key-id \
+  -Psigning.password=password \
+  -PsnapshotRepository=http://www.acme.com/repository/snapshots \
+  -Prepository=http://www.acme.com/repository/releases \
+  -PossrhUsername=userName \
+  -PossrhPassword=password \
+  -Pversions.newVersion=RELEASE_VERSION \
+  release
+```
 
 ## Licence
 
