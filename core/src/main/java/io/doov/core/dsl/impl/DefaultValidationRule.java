@@ -26,7 +26,7 @@ public class DefaultValidationRule implements ValidationRule {
     private final StepWhen stepWhen;
     private final boolean shortCircuit;
 
-    protected DefaultValidationRule(StepWhen stepWhen) {
+    public DefaultValidationRule(StepWhen stepWhen) {
         this(stepWhen, true);
     }
 

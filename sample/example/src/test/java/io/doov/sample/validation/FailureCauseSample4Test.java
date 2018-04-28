@@ -19,22 +19,21 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.*;
 
-import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.sample.model.*;
+import io.doov.sample.field.dsl.DslSampleModel;
+import io.doov.sample.field.dsl.DslSampleModel.SampleModelRule;
+import io.doov.sample.model.Country;
+import io.doov.sample.model.SampleModel;
 
 /**
  * Validate that a profile country is French or Canadian
  */
 public class FailureCauseSample4Test {
-    private final ValidationRule rule = DOOV.when(accountCountry.anyMatch(Country.CAN, Country.FR))
-                    .validate();
+    private final SampleModelRule rule = DslSampleModel.when(accountCountry.anyMatch(Country.CAN, Country.FR))
+            .validate();
 
     private final Locale locale = Locale.FRENCH;
     private final SampleModel model = new SampleModel();
-    private final DslModel wrapper = new SampleModelWrapper(model);
 
     @BeforeEach
     public void plaintText() {
@@ -50,7 +49,7 @@ public class FailureCauseSample4Test {
     @Disabled
     public void getFailureCause_setup_0() {
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapper);
+        Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause(locale));
     }
@@ -59,7 +58,7 @@ public class FailureCauseSample4Test {
     public void getFailureCause_setup_1() {
         model.getAccount().setCountry(Country.UK);
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapper);
+        Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause(locale));
     }
@@ -68,7 +67,7 @@ public class FailureCauseSample4Test {
     public void getFailureCause_setup_2() {
         model.getAccount().setCountry(Country.CAN);
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapper);
+        Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isTrue();
         System.out.println("> " + result.getFailureCause(locale));
     }

@@ -28,11 +28,11 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.*;
 
-import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.sample.model.*;
+import io.doov.sample.field.dsl.DslSampleModel;
+import io.doov.sample.field.dsl.DslSampleModel.SampleModelRule;
+import io.doov.sample.model.Country;
+import io.doov.sample.model.SampleModel;
 
 /**
  * Validate that a profile<br>
@@ -40,18 +40,17 @@ import io.doov.sample.model.*;
  * has at least 21 years when their country is Canadian and their phone number starts with '+1'<br>
  */
 public class FailureCauseSample3Test {
-    private final ValidationRule rule = DOOV
-                    .when(matchAny(matchAll(userBirthdate.ageAt(today()).greaterThan(18),
-                                    accountCountry.eq(Country.FR),
-                                    accountPhoneNumber.startsWith("+33")),
-                                    matchAll(userBirthdate.ageAt(today()).greaterThan(21),
-                                                    accountCountry.eq(Country.CAN),
-                                                    accountPhoneNumber.startsWith("+1"))))
-                    .validate();
+    private final SampleModelRule rule = DslSampleModel
+            .when(matchAny(matchAll(userBirthdate.ageAt(today()).greaterThan(18),
+                    accountCountry.eq(Country.FR),
+                    accountPhoneNumber.startsWith("+33")),
+                    matchAll(userBirthdate.ageAt(today()).greaterThan(21),
+                            accountCountry.eq(Country.CAN),
+                            accountPhoneNumber.startsWith("+1"))))
+            .validate();
 
     private final Locale locale = Locale.FRENCH;
     private final SampleModel model = new SampleModel();
-    private final DslModel wrapper = new SampleModelWrapper(model);
 
     @BeforeEach
     public void plaintText() {
@@ -65,7 +64,7 @@ public class FailureCauseSample3Test {
 
     @Test
     public void getFailureCause_setup_1() {
-        Result result = rule.withShortCircuit(false).executeOn(wrapper);
+        Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause(locale));
     }
@@ -74,7 +73,7 @@ public class FailureCauseSample3Test {
     public void getFailureCause_setup_3() {
         model.getUser().setBirthDate(LocalDate.now().minusYears(22));
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapper);
+        Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse();
 
         System.out.println("> " + result.getFailureCause(locale));
@@ -85,7 +84,7 @@ public class FailureCauseSample3Test {
         model.getUser().setBirthDate(LocalDate.now().minusYears(22));
         model.getAccount().setCountry(Country.FR);
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapper);
+        Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse();
 
         System.out.println("> " + result.getFailureCause(locale));
@@ -97,7 +96,7 @@ public class FailureCauseSample3Test {
         model.getAccount().setCountry(Country.FR);
         model.getAccount().setPhoneNumber("+33 1 23 45 67 89");
 
-        Result result = rule.withShortCircuit(false).executeOn(wrapper);
+        Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isTrue();
 
         System.out.println("> " + result.getFailureCause(locale));

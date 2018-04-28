@@ -27,18 +27,19 @@ final class DslMethodsGen {
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
 
-    static String imports(Map<FieldId, GeneratorFieldInfo> fieldPaths, FieldTypeProvider typeProvider) {
-        return fieldPaths.entrySet().stream()
-                        .flatMap(e -> toImports(typeProvider, e))
-                        .filter(clazz -> clazz.contains(".")) // exclude primitive types
-                        .filter(clazz -> !clazz.contains("java.lang.")) // excluding java.lang.* types
-                        .distinct().sorted()
-                        .map(clazz -> "import " + clazz + ";")
-                        .collect(joining("\n"));
+    static String imports(Map<FieldId, GeneratorFieldInfo> fieldPaths, FieldTypeProvider typeProvider,
+            List<String> extraImports) {
+        return Stream.concat(fieldPaths.entrySet().stream()
+                .flatMap(e -> toImports(typeProvider, e))
+                .filter(clazz -> clazz.contains(".")) // exclude primitive types
+                .filter(clazz -> !clazz.contains("java.lang.")), // excluding java.lang.* types
+                extraImports.stream()).distinct().sorted()
+                .map(clazz -> "import " + clazz + ";")
+                .collect(joining("\n"));
     }
 
     private static Stream<? extends String> toImports(FieldTypeProvider typeProvider,
-                    Map.Entry<FieldId, GeneratorFieldInfo> e) {
+            Map.Entry<FieldId, GeneratorFieldInfo> e) {
         List<String> imports = new ArrayList<>();
         GeneratorFieldInfo fieldInfo = e.getValue();
         Class<? extends FieldInfo> fieldInfoType = typeProvider.fielInfoType(fieldInfo);
@@ -51,8 +52,8 @@ final class DslMethodsGen {
     }
 
     static String fields(Map<FieldId, GeneratorFieldInfo> fieldInfos,
-                         FieldTypeProvider typeProvider,
-                         boolean enumFieldInfo) {
+            FieldTypeProvider typeProvider,
+            boolean enumFieldInfo) {
         return fieldInfos.entrySet().stream().sorted(comparing(e -> e.getKey().code())).map(e -> {
             final GeneratorFieldInfo fieldInfo = e.getValue();
             final Class<?> type = fieldInfo.type();
@@ -71,7 +72,7 @@ final class DslMethodsGen {
     }
 
     static String iterableMethods(Map<FieldId, GeneratorFieldInfo> fieldInfos,
-                                  FieldTypeProvider typeProvider) {
+            FieldTypeProvider typeProvider) {
         return fieldInfos.entrySet().stream()
                 .filter(e -> e.getKey().position() > 0)
                 .collect(groupingBy(e -> e.getValue().getPath().canonicalPath().replaceAll("[0-9]+", "")))
@@ -79,7 +80,8 @@ final class DslMethodsGen {
                 .filter(e -> e.getValue().size() > 1)
                 .map(Map.Entry::getValue)
                 .sorted(comparing(l -> l.get(0).getValue().readable()))
-                .map(fieldInfoList -> {
+                .map(fieldInfoList ->
+                {
                     final GeneratorFieldInfo fieldInfo = fieldInfoList.get(0).getValue();
                     final Class<?> type = fieldInfo.type();
                     final String rawType = type.isPrimitive() ? primitiveBoxingType(type) : type.getSimpleName();
@@ -99,13 +101,13 @@ final class DslMethodsGen {
     }
 
     private static String fieldInfoType(Class<? extends FieldInfo> infoType, Class<?> type, String rawType,
-                    String genericTypes) {
+            String genericTypes) {
         if (infoType.getTypeParameters().length == 0) {
             return infoType.getSimpleName();
         }
         if (infoType.getTypeParameters().length == 1) {
             return infoType.getSimpleName() + "<" + rawType +
-                            (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">") + ">";
+                    (genericTypes.isEmpty() ? "" : "<" + genericTypes + ">") + ">";
         }
         if (infoType.getTypeParameters().length == 2) {
             if (genericTypes.isEmpty()) {
@@ -115,7 +117,7 @@ final class DslMethodsGen {
             }
         }
         throw new IllegalStateException("FieldInfo type " + infoType.getName() + "is not compatible with generic " +
-                        "types");
+                "types");
     }
 
     private static String formatGenericTypes(Class<?>[] genericTypes) {
@@ -124,26 +126,26 @@ final class DslMethodsGen {
 
     private static String formatMethod(String readable) {
         String slug = readable
-                        .replace(".", " ")
-                        .replace(" and ", " ")
-                        .replace(" the ", " ")
-                        .replace(" à ", " ")
-                        .replace(" d'", " ")
-                        .replace(" a ", " ")
-                        .replace(" l'", " ")
-                        .replace(" du ", " ")
-                        .replace(" au ", " ")
-                        .replace(" en ", " ")
-                        .replace(" de ", " ")
-                        .replace(" un ", " ")
-                        .replace(" la ", " ")
-                        .replace(" le ", " ")
-                        .replace(" une ", " ")
-                        .replace(" aux ", " ")
-                        .replace(" des ", " ")
-                        .replace(" pour ", " ")
-                        .replace(" avec ", " ")
-                        .replaceAll("( )+", " ");
+                .replace(".", " ")
+                .replace(" and ", " ")
+                .replace(" the ", " ")
+                .replace(" à ", " ")
+                .replace(" d'", " ")
+                .replace(" a ", " ")
+                .replace(" l'", " ")
+                .replace(" du ", " ")
+                .replace(" au ", " ")
+                .replace(" en ", " ")
+                .replace(" de ", " ")
+                .replace(" un ", " ")
+                .replace(" la ", " ")
+                .replace(" le ", " ")
+                .replace(" une ", " ")
+                .replace(" aux ", " ")
+                .replace(" des ", " ")
+                .replace(" pour ", " ")
+                .replace(" avec ", " ")
+                .replaceAll("( )+", " ");
         String underscore = WHITESPACE.matcher(slug).replaceAll("_");
         String normalized = Normalizer.normalize(underscore, Normalizer.Form.NFD);
         String latin = NONLATIN.matcher(normalized).replaceAll("").toLowerCase(Locale.ENGLISH);

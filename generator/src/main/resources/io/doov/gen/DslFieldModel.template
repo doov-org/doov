@@ -6,6 +6,7 @@ import static ${process.field.info.class}.*;
 import javax.annotation.Generated;
 
 import java.util.stream.Stream;
+
 ${imports}
 
 @Generated(value = "${source.generator.name}", comments = "generated from ${process.class}")
@@ -15,4 +16,33 @@ ${fields}
 
 ${methods}
 
+    public static ${model.class.name}StepWhen when(StepCondition condition) {
+        return new ${model.class.name}StepWhen(condition);
+    }
+
+    public static class ${model.class.name}StepWhen extends DefaultStepWhen {
+        public ${model.class.name}StepWhen(StepCondition stepCondition) {
+            super(stepCondition);
+        }
+        
+        @Override
+        public ${model.class.name}Rule validate() {
+            return new ${model.class.name}Rule(this, true);
+        }
+    }
+
+    public static class ${model.class.name}Rule extends DefaultValidationRule {
+        public ${model.class.name}Rule(StepWhen stepWhen, boolean shortCircuit) {
+            super(stepWhen, shortCircuit);
+        }
+        
+        public Result executeOn(${model.class.name} model) {
+            return executeOn(new ${model.class.name}Wrapper(model));
+        }
+        
+        @Override
+        public ${model.class.name}Rule withShortCircuit(boolean shortCircuit) {
+            return new ${model.class.name}Rule(getStepWhen(), shortCircuit);
+        }
+    }
 }
