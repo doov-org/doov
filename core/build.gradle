@@ -1,6 +1,6 @@
 dependencies {
-    compile group: 'org.apache.commons', name: 'commons-text'
-    compile group: 'com.google.guava', name: 'guava'
+    compile group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
+    compile group: 'com.google.guava', name: 'guava', version: guavaVersion
 }
 
 if (isReleaseVersion) {

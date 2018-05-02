@@ -15,9 +15,9 @@ archivesBaseName = 'doov-generator'
 
 dependencies {
     compile project(':doov-generator-core')
-    compile group:'org.apache.maven', name: 'maven-plugin-api'
-    compile group:'org.apache.maven', name: 'maven-core'
-    compileOnly group:'org.apache.maven.plugin-tools', name:'maven-plugin-annotations'
+    compile group:'org.apache.maven', name: 'maven-plugin-api', version: mavenPluginApiVersion
+    compile group:'org.apache.maven', name: 'maven-core', version: mavenPluginApiVersion
+    compileOnly group:'org.apache.maven.plugin-tools', name:'maven-plugin-annotations', version: mavenPluginAnnotationsVersion
 }
 
 buildPluginDescriptor {
@@ -27,4 +27,21 @@ buildPluginDescriptor {
     pomArtifactId = 'doov-generator'
 }
 
+install {
+    repositories {
+        mavenInstaller {
+            pom.packaging = 'maven-plugin'
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.packaging = 'maven-plugin'
+        }
+    }
+}
+
 buildPluginDescriptor.dependsOn(project(':doov-generator-core').tasks.getByName('install'))
+buildPluginDescriptor.dependsOn(project(':doov-core').tasks.getByName('install'))
