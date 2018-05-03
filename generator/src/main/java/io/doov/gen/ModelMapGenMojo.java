@@ -298,9 +298,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
         }
     }
 
-    private static String dslFieldsClassName(Class<?> clazz) {
-        return "Dsl" +
-                (clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1) : clazz.getSimpleName());
+    private static String dslFieldsClassName(Class<?> c) {
+        return "Dsl" + (c.getSimpleName().startsWith("E") ? c.getSimpleName().substring(1) : c.getSimpleName());
     }
 
     private void generateWrapper(Map<FieldId, VisitorPath> fieldPaths,

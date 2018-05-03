@@ -41,7 +41,7 @@ public class DSLSandboxTest {
         ValidationRule rule = DOOV.when(accountId.eq(1L)).validate();
         print(rule.readable());
         assertThat(rule.executeOn(model).isTrue()).isFalse();
-        assertThat(rule.executeOn(model).getFailureCause(Locale.US)).isEqualTo("account id = 1 ");
+        assertThat(rule.executeOn(model).getFailureCause(Locale.US)).isEqualTo("account id = 1");
     }
 
     @Test

@@ -43,7 +43,7 @@ public class DefaultResult implements Result {
 
     @Override
     public String getFailureCause(Locale locale) {
-        return !validated ? context.getRootMetadata().message(context).readable(locale) : null;
+        return !validated ? context.getRootMetadata().message(context).readable(locale).trim() : null;
     }
 
 }

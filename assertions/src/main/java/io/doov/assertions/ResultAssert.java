@@ -63,7 +63,8 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      */
     public ResultAssert hasFailureCause(String message) {
         if (!actual.getFailureCause().equals(message)) {
-            failWithMessage("Expected result to have message + " + message + " but was " + actual.getFailureCause());
+            failWithMessage("Expected result to have message '" + message
+                    + "' but was '" + actual.getFailureCause() + "'");
         }
         return this;
     }
