@@ -39,10 +39,15 @@ ${methods}
         public Result executeOn(${model.class.name} model) {
             return executeOn(new ${model.class.name}Wrapper(model));
         }
-        
+
         @Override
         public ${model.class.name}Rule withShortCircuit(boolean shortCircuit) {
             return new ${model.class.name}Rule(getStepWhen(), shortCircuit);
+        }
+
+        @Override
+        public ${model.class.name}Rule registerOn(RuleRegistry registry) {
+            return (${model.class.name}Rule) super.registerOn(registry);
         }
     }
 }
