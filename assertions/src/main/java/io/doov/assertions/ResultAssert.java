@@ -15,6 +15,7 @@ package io.doov.assertions;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.assertj.core.api.AbstractAssert;
 
@@ -62,7 +63,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert hasFailureCause(String message) {
-        if (!actual.getFailureCause().equals(message)) {
+        if (!actual.getFailureCause(Locale.US).equals(message)) {
             failWithMessage("Expected result to have message '" + message
                     + "' but was '" + actual.getFailureCause() + "'");
         }

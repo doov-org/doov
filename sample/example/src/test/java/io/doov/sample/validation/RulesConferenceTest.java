@@ -4,8 +4,6 @@ import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
 import static io.doov.sample.validation.RulesConference.userAccount;
 
-import java.time.LocalDate;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
