@@ -1,13 +1,13 @@
 
 # Conference Session :
 
-# DSL.using(java).toGoBeyond(BeanValidation).at(Devoxx.eq(UK));
+# DSL.using(java).toGoBeyond(BeanValidation).at(Oracle.Code.One);
 
 Fluent, stream-like API are great for writing type checked code, taking
-advantage of Java 8 functions and lambdas. But what about creating your own
-fluent API to manipulate and validate your model? We created an open-source
-framework called dOOv, for "Domain Object Oriented Validation"
-(http://doov.io), that generates a validation DSL from a domain model. This
+advantage of Java 8 functions and lambdas. What about creating your own
+fluent API to manipulate and validate your model? We created an framework
+called dOOv, for "Domain Object Oriented Validation",
+that generates a validation DSL from a domain model. This
 presentation will demonstrate the efficiency and expressiveness of dOOv to
 define validation constraints. The validation rules are represented as an
 abstract syntax tree, which makes it possible to visit the tree and show the
@@ -29,7 +29,7 @@ to get feedback on dOOv, discuss about usage and future improvements.
 
 ## Status
 
-TO SUBMIT
+SUBMITED
 
 # BOF
 
@@ -47,26 +47,24 @@ rewriting.
 
 ## Status 
 
-TO SUBMIT
+SUBMITED
 
 # Hands-On-Labs
 
 # Getting Started with custom DSLs using the dOOv framework
 
 Have you heard a lot about the advantages of DSLs but don't know where to 
-start? During this 2-hour session, we will be modernizing a legacy e-Commerce 
-application, which has validation rules with BeanValidation and implements 
-business logic and mapping code with plain old Java. Using the dOOv framework, 
-attendees will generate a Java-based DSL and migrate incrementally the business 
-logic and mapping code of the existing application. First, attendees will use 
+start? In this session, we will be modernizing an e-Commerce application,
+which has validation rules with BeanValidation and implements 
+business logic and mapping code with plain old Java. Using dOOv, 
+attendees will generate a Java-based DSL and migrate incrementally the 
+logic and mapping code of the application. First, attendees will use 
 dOOv to rewrite BeanValidation rules and discover the benefits of a 
-strongly-typed fluent API to express validation constraints of a model. Then we 
-will review these rules in natural language to ensure their governance. We will 
-then grow this catalogue of rules by fully rewriting the business logic of the 
-application with the DSL approach. The mapping code is also migrated to ensure 
-the compliance of the exchanges with business partners. Finally, we will 
-evaluate the performance and gains in flexibility.
+strongly-typed fluent API to express constraints of a model.
+Then we will migrate the application logic and the mapping code to ensure 
+the compliance and governance of the partner exchanges. Finally, we will 
+evaluate the performance and flexibility gains.
 
 ## Status
 
-TO SUBMIT
+SUBMITED
