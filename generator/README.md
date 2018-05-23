@@ -1,5 +1,7 @@
 # dOOv generator
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.doov/doov-generator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.doov/doov-generator)
+
 ## Installation
 
 See [latest version in maven central](https://repo1.maven.org/maven2/io/doov).

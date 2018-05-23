@@ -1,5 +1,7 @@
 # dOOv assertions
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.doov/doov-assertions/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.doov/doov-assertions)
+
 ## Installation
 
 See [latest version in maven central](https://repo1.maven.org/maven2/io/doov).
