@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.sample.model.*;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class BooleanTest {
 

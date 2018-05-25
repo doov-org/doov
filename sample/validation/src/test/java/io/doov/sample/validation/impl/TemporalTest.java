@@ -33,10 +33,10 @@ import java.time.temporal.TemporalAdjusters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.time.LocalDateSuppliers;
 import io.doov.sample.model.*;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class TemporalTest {
 

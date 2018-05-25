@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import io.doov.core.FieldId;
 import io.doov.core.FieldModel;
 import io.doov.sample.field.SampleFieldId;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class SampleModelStreamTest {
 

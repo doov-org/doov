@@ -12,18 +12,19 @@
  */
 package io.doov.sample.validation.impl;
 
+import static io.doov.assertions.Assertions.assertThat;
+import static io.doov.sample.field.dsl.DslSampleModel.userFirstName;
+import static io.doov.sample.field.dsl.DslSampleModel.userLastName;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.sample.model.SampleModel;
-import io.doov.sample.model.SampleModelWrapper;
 import io.doov.sample.model.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.sample.field.dsl.DslSampleModel.userFirstName;
-import static io.doov.sample.field.dsl.DslSampleModel.userLastName;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class BinaryTest {
 
@@ -32,8 +33,8 @@ public class BinaryTest {
     @BeforeEach
     public void before() {
         User user = new User();
-        user.setFirstName("first name");
-        user.setLastName("last name");
+        user.setFirstName("first binary name");
+        user.setLastName("last binary name");
 
         SampleModel sampleModel = new SampleModel();
         sampleModel.setUser(user);

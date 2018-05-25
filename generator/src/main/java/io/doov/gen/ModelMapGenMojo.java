@@ -38,8 +38,7 @@ import java.util.*;
 
 import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 
 import com.google.common.io.Files;

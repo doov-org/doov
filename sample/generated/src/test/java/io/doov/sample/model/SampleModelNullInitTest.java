@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class SampleModelNullInitTest {
 

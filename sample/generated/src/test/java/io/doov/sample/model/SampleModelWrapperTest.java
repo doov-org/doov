@@ -20,9 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +32,7 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 import io.doov.core.FieldInfo;
 import io.doov.sample.field.SampleFieldInfo;
 import io.doov.sample.field.SampleTag;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class SampleModelWrapperTest {
 
@@ -52,6 +51,7 @@ public class SampleModelWrapperTest {
 
     @ParameterizedTest
     @MethodSource("data")
+    @SuppressWarnings("unused")
     public void should_contains_all_field_info(String name, FieldInfo field) {
         assertThat(wrapper.getFieldInfos()).contains(field);
         assertThat(wrapper.getFieldIds()).contains(field.id());
@@ -59,6 +59,7 @@ public class SampleModelWrapperTest {
 
     @ParameterizedTest
     @MethodSource("data")
+    @SuppressWarnings("unused")
     public void should_be_null_when_clear_all(String name, FieldInfo field) {
         if (field.type().isPrimitive()) {
             return;
@@ -69,6 +70,7 @@ public class SampleModelWrapperTest {
 
     @ParameterizedTest
     @MethodSource("data")
+    @SuppressWarnings("unused")
     public void should_be_null_when_clear_tag(String name, FieldInfo field) {
         if (field.type().isPrimitive()) {
             return;
@@ -82,12 +84,14 @@ public class SampleModelWrapperTest {
 
     @ParameterizedTest
     @MethodSource("data")
+    @SuppressWarnings("unused")
     public void should_not_throw_NPE_when_null_value_set(String name, FieldInfo field) {
         wrapper.set(field.id(), null);
     }
 
     @ParameterizedTest
     @MethodSource("data")
+    @SuppressWarnings("unused")
     public <T> void should_return_same_value_when_updated(String name, FieldInfo field) throws Exception {
         Object value = value(field);
         wrapper.set(field.id(), value);

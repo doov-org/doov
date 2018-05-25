@@ -17,37 +17,48 @@ package io.doov.sample;
 
 import io.doov.core.FieldModel;
 import io.doov.sample.field.SampleFieldId;
-import io.doov.sample.model.*;
+import io.doov.sample.model.FavoriteWebsite;
+import io.doov.sample.model.SampleModel;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class ExampleAccount {
 
     public class WithJavaBean {
 
         public String readSomeStuff(SampleModel model) {
-            if (model == null)
+            if (model == null) {
                 return null;
-            if (model.getAccount() == null)
+            }
+            if (model.getAccount() == null) {
                 return null;
-            if (model.getAccount().getTop3WebSite() == null)
+            }
+            if (model.getAccount().getTop3WebSite() == null) {
                 return null;
-            if (model.getAccount().getTop3WebSite().size() < 3)
+            }
+            if (model.getAccount().getTop3WebSite().size() < 3) {
                 return null;
+            }
             FavoriteWebsite website = model.getAccount().getTop3WebSite().get(2);
             return website != null ? website.getUrl() : null;
         }
 
         public void updateSomeStuff(SampleModel model, String url) {
-            if (model == null)
+            if (model == null) {
                 return;
-            if (model.getAccount() == null)
+            }
+            if (model.getAccount() == null) {
                 return;
-            if (model.getAccount().getTop3WebSite() == null)
+            }
+            if (model.getAccount().getTop3WebSite() == null) {
                 return;
-            if (model.getAccount().getTop3WebSite().size() < 3)
+            }
+            if (model.getAccount().getTop3WebSite().size() < 3) {
                 return;
+            }
             FavoriteWebsite website = model.getAccount().getTop3WebSite().get(2);
-            if (website != null)
+            if (website != null) {
                 website.setUrl(url);
+            }
         }
 
     }

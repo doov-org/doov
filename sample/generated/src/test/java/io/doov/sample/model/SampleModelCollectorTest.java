@@ -15,8 +15,8 @@
  */
 package io.doov.sample.model;
 
-import static io.doov.sample.model.SampleModelWrapper.toConcurrentFieldModel;
-import static io.doov.sample.model.SampleModelWrapper.toFieldModel;
+import static io.doov.sample.wrapper.SampleModelWrapper.toConcurrentFieldModel;
+import static io.doov.sample.wrapper.SampleModelWrapper.toFieldModel;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
@@ -26,8 +26,7 @@ import org.junit.jupiter.api.Test;
 import io.doov.core.FieldModel;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.field.SampleFieldInfo;
-
-import java.util.Arrays;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class SampleModelCollectorTest {
 

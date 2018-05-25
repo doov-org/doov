@@ -28,7 +28,9 @@ import org.junit.jupiter.api.Test;
 import io.doov.core.FieldId;
 import io.doov.core.FieldModel;
 import io.doov.sample.field.SampleFieldId;
-import io.doov.sample.model.*;
+import io.doov.sample.model.SampleModel;
+import io.doov.sample.model.SampleModels;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class ModelManipulationTest {
 

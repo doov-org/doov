@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 
 import io.doov.core.FieldModel;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class SampleModels {
 
