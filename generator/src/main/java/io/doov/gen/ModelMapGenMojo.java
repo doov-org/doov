@@ -267,7 +267,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             final String fieldInfoClassName = fieldInfoClassName(fieldClass);
             final String targetFieldInfoPackage = fieldInfoPackage(fieldClass);
             final String targetPackage = dslModelPackage(fieldClass);
-            final String wrapperFqcn = modelClazz.getPackage().getName() + "." + modelClazz.getSimpleName() + "Wrapper";
+            final String wrapperFqcn = wrapperPackage(modelClazz) + "." + modelClazz.getSimpleName() + "Wrapper";
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
             createDirectories(targetFile.getParentFile().toPath());
