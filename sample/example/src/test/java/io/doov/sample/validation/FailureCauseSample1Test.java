@@ -36,6 +36,7 @@ import io.doov.sample.model.SampleModel;
  * their country is France when their phone number starts with '+33'
  */
 public class FailureCauseSample1Test {
+
     private final SampleModelRule rule = DslSampleModel.when(accountEmail.length().lesserThan(20)
             .and(userBirthdate.ageAt(today()).greaterThan(18).and(accountCountry.eq(Country.FR)))
             .and(accountCountry.eq(Country.FR).and(accountPhoneNumber.startsWith("+33"))))
@@ -46,7 +47,7 @@ public class FailureCauseSample1Test {
 
     @BeforeEach
     public void plaintText() {
-        System.out.print(rule.readable(locale));
+        System.out.println(rule.readable(locale));
     }
 
     @AfterEach
@@ -106,4 +107,5 @@ public class FailureCauseSample1Test {
 
         System.out.println("> " + result.getFailureCause(locale));
     }
+
 }

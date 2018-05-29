@@ -63,7 +63,7 @@ public class DefaultValidationRule implements ValidationRule {
 
     @Override
     public String readable(Locale locale) {
-        return astToString(this, locale);
+        return astToString(this, locale).trim();
     }
 
     @Override
