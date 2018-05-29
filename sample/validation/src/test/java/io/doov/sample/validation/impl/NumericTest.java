@@ -143,4 +143,12 @@ public class NumericTest {
         assertThat(min(configurationMinAge, configurationMaxEmailSize).eq(18)).validates(model);
     }
 
+    @Test
+    public void should_map_to_int_work_with_chained_calls() {
+        user.setFirstName("first");
+
+        assertThat(userFirstName.mapToInt(first -> 1).eq(1)).validates(model);
+        assertThat(userFirstName.length().mapToInt(length -> 1).eq(1)).validates(model);
+    }
+
 }

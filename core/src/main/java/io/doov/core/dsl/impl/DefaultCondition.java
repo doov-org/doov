@@ -275,7 +275,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      */
     public final IntegerCondition mapToInt(Function<T, Integer> mapper) {
         return new IntegerCondition(field, mapToIntMetadata(field),
-                        (model, context) -> valueModel(model, field).flatMap(l -> Optional.of(mapper.apply(l))));
+                        (model, context) -> function.apply(model, context).map(mapper));
     }
 
 }
