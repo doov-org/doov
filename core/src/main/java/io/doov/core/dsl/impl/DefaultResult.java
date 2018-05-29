@@ -18,6 +18,7 @@ import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Result;
 
 public class DefaultResult implements Result {
+
     private final boolean validated;
     private final DefaultContext context;
 
@@ -43,7 +44,13 @@ public class DefaultResult implements Result {
 
     @Override
     public String getFailureCause(Locale locale) {
-        return !validated ? context.getRootMetadata().message(context).readable(locale).trim() : null;
+        if (validated) {
+            return null;
+        }
+        if (context.getRootMetadata().message(context) == null) {
+            return null;
+        }
+        return context.getRootMetadata().message(context).readable(locale).trim();
     }
 
 }

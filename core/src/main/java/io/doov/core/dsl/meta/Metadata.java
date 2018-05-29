@@ -60,4 +60,5 @@ public interface Metadata extends SyntaxTree {
      * @return the metadata
      */
     Metadata message(Context context);
+
 }

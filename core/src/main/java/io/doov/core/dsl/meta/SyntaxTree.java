@@ -20,6 +20,7 @@ import java.util.Locale;
 import io.doov.core.dsl.lang.Readable;
 
 public interface SyntaxTree extends Readable {
+
     @Override
     default String readable() {
         return readable(Locale.getDefault());

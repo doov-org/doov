@@ -14,6 +14,7 @@ package io.doov.sample.validation;
 
 import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
+import static io.doov.sample.model.Country.*;
 
 import java.util.Locale;
 
@@ -29,8 +30,8 @@ import io.doov.sample.model.SampleModel;
  * Validate that a profile country is French or Canadian
  */
 public class FailureCauseSample4Test {
-    private final SampleModelRule rule = DslSampleModel.when(accountCountry.anyMatch(Country.CAN, Country.FR))
-            .validate();
+
+    private final SampleModelRule rule = DslSampleModel.when(accountCountry.anyMatch(CAN, FR)).validate();
 
     private final Locale locale = Locale.FRENCH;
     private final SampleModel model = new SampleModel();
@@ -46,9 +47,7 @@ public class FailureCauseSample4Test {
     }
 
     @Test
-    @Disabled
     public void getFailureCause_setup_0() {
-
         Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse();
         System.out.println("> " + result.getFailureCause(locale));
@@ -56,7 +55,7 @@ public class FailureCauseSample4Test {
 
     @Test
     public void getFailureCause_setup_1() {
-        model.getAccount().setCountry(Country.UK);
+        model.getAccount().setCountry(UK);
 
         Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse();
@@ -65,10 +64,11 @@ public class FailureCauseSample4Test {
 
     @Test
     public void getFailureCause_setup_2() {
-        model.getAccount().setCountry(Country.CAN);
+        model.getAccount().setCountry(CAN);
 
         Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isTrue();
         System.out.println("> " + result.getFailureCause(locale));
     }
+
 }
