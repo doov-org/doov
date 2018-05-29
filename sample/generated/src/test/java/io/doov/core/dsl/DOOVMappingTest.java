@@ -22,12 +22,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.lang.BiTypeConverter;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.lang.TypeConverter;
 import io.doov.core.dsl.mapping.MappingRegistry;
 import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
 import io.doov.sample.model.*;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class DOOVMappingTest {
 

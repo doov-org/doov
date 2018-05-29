@@ -18,6 +18,7 @@ package io.doov.sample2.model;
 import org.junit.jupiter.api.RepeatedTest;
 
 import io.doov.core.FieldModels;
+import io.doov.sample2.wrapper.Sample2ModelWrapper;
 
 public class Sample2StreamTest {
 

@@ -10,17 +10,17 @@ import org.junit.jupiter.api.Test;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.DslModel;
 import io.doov.sample.model.*;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class StringTest {
 
     private DslModel model;
-    private User user;
     private Account account;
 
     @BeforeEach
     public void before() {
         SampleModel sampleModel = new SampleModel();
-        sampleModel.setUser(user = new User());
+        sampleModel.setUser(new User());
         sampleModel.setAccount(account = new Account());
         model = new SampleModelWrapper(sampleModel);
     }

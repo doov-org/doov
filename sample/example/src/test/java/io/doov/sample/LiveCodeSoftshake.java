@@ -19,7 +19,9 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
 import io.doov.sample.field.SampleFieldId;
-import io.doov.sample.model.*;
+import io.doov.sample.model.Account;
+import io.doov.sample.model.SampleModel;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class LiveCodeSoftshake {
 

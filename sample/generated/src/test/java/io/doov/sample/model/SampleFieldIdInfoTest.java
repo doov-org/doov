@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldInfo;
@@ -34,9 +35,16 @@ public class SampleFieldIdInfoTest {
 
     @Test
     public void should_have_field_info() {
-        Arrays.stream(SampleFieldId.values()).forEach(id -> assertThat(fieldInfo(id)).isPresent());
-        Arrays.stream(SampleFieldId.values()).forEach(id -> fieldInfo(id).map(info ->
-                assertThat(info.type()).isNotNull()));
+        SoftAssertions softAssertions = new SoftAssertions();
+
+        Arrays.stream(SampleFieldId.values()).forEach(id -> {
+            softAssertions.assertThat(fieldInfo(id)).isPresent();
+            softAssertions.assertThat(fieldInfo(id))
+                    .isNotEmpty()
+                    .hasValueSatisfying(info -> assertThat(info.type()).isNotNull());
+        });
+
+        softAssertions.assertAll();
     }
 
 }

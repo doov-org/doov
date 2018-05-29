@@ -38,8 +38,7 @@ import java.util.*;
 
 import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 
 import com.google.common.io.Files;
@@ -267,7 +266,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             final String fieldInfoClassName = fieldInfoClassName(fieldClass);
             final String targetFieldInfoPackage = fieldInfoPackage(fieldClass);
             final String targetPackage = dslModelPackage(fieldClass);
-            final String wrapperFqcn = modelClazz.getPackage().getName() + "." + modelClazz.getSimpleName() + "Wrapper";
+            final String wrapperFqcn = wrapperPackage(modelClazz) + "." + modelClazz.getSimpleName() + "Wrapper";
             final File targetFile = new File(outputDirectory + "/" + targetPackage.replace('.', '/'),
                     targetClassName + ".java");
             createDirectories(targetFile.getParentFile().toPath());

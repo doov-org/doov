@@ -18,6 +18,8 @@ package io.doov.sample.model;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import io.doov.sample.wrapper.SampleModelWrapper;
+
 public class SampleStreamTest {
 
     @Test

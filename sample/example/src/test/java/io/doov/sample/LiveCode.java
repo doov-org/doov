@@ -41,6 +41,7 @@ import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
 import io.doov.core.*;
 import io.doov.sample.field.SampleTag;
 import io.doov.sample.model.*;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class LiveCode {
 

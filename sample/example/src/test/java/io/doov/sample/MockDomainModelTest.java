@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 import io.doov.core.FieldModel;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.model.*;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class MockDomainModelTest {
 

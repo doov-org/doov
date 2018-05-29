@@ -26,7 +26,9 @@ import org.junit.jupiter.api.Test;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.sample.model.*;
+import io.doov.sample.model.SampleModel;
+import io.doov.sample.model.User;
+import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class NaryTest {
 
