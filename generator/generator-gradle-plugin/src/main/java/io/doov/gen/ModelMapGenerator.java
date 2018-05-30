@@ -23,8 +23,8 @@ public class ModelMapGenerator {
 
     public ModelMapGenerator(String name, Project project) {
         this.name = name;
-        this.outputDirectory = new File(project.getProjectDir(), "/src/generated/java");
-        this.outputResourceDirectory = project.getBuildDir();
+        this.outputDirectory = new File(project.getBuildDir(), "doov/" + name);
+        this.outputResourceDirectory = new File(project.getBuildDir(), "doov/" + name);
         this.enumFieldInfo = true;
     }
 
