@@ -1,7 +1,10 @@
 package io.doov.gen;
 
 import org.gradle.api.*;
+import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.Delete;
+import org.gradle.api.tasks.SourceSet;
+import org.gradle.api.tasks.compile.JavaCompile;
 
 public class GeneratorPlugin implements Plugin<Project> {
     @Override
@@ -10,8 +13,14 @@ public class GeneratorPlugin implements Plugin<Project> {
                 name -> new ModelMapGenerator(name, target));
         target.getExtensions().add("doovCodeGen", container);
         Delete deleteDoovCodeGen = target.getTasks().create("deleteDoovCodeGen", Delete.class);
+        JavaCompile compileJava = target.getTasks().withType(JavaCompile.class).getByName("compileJava");
+        JavaPluginConvention javaPluginConvention = target.getConvention().findPlugin(JavaPluginConvention.class);
+        SourceSet generated = javaPluginConvention.getSourceSets().maybeCreate("generated");
+
         container.all(modelMap -> {
             ModelMapGenTask task = target.getTasks().create(modelMap.getName(), ModelMapGenTask.class);
+            generated.getJava().srcDir(modelMap.getOutputDirectory());
+            compileJava.source(generated.getJava());
 
             target.afterEvaluate(project -> {
                 task.setClasspath(project.getConfigurations().getByName("compile"));
@@ -30,7 +39,7 @@ public class GeneratorPlugin implements Plugin<Project> {
 
                 deleteDoovCodeGen.delete(modelMap.getOutputDirectory());
                 task.dependsOn(deleteDoovCodeGen);
-                target.getTasks().getByName("compileGeneratedJava").dependsOn(task);
+                compileJava.dependsOn(task);
             });
 
         });

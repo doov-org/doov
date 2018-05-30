@@ -13,21 +13,6 @@ dependencies {
     compile project(':doov-sample-base-without-annotations')
 }
 
-sourceSets {
-    generated {
-        java.srcDir "${projectDir}/src/generated/java"
-    }
-}
-
-compileGeneratedJava {
-    classpath = configurations.compile
-}
-
-compileJava {
-    dependsOn(compileGeneratedJava)
-    source += sourceSets.generated.java
-}
-
 doovCodeGen {
     doovMapGenSample {
         packageFilter = 'io.doov.sample'
