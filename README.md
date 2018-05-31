@@ -8,25 +8,13 @@ dOOv is a fluent API for typesafe domain model validation. It uses annotations, 
 
 ## Documentation
 
-### Modules
-
-- **[doov-core](core)**: Contains the DSL, the AST and the annotations ([javadoc](http://doov.io/site/core/apidocs))
-- **[doov-generator](generator)**: Contains the code generator for model-map and field infos ([javadoc](http://doov.io/site/generator/apidocs))
-- **[doov-assertions](assertions)**: Contains AssertJ assertions ([javadoc](http://doov.io/site/assertions/apidocs))
-
-### Presentations
-
-See [latest presentation at Snowcamp 2018](http://doov.io/dsl_to_go_beyond_bean_validation_english.html)
-
-### Example
-
-See [the sample project in dOOv](sample)
+- **Wiki** [getting started](https://github.com/lesfurets/dOOv/wiki/Getting-Started)
+- **Presentation** [latest presentation at Snowcamp 2018](http://doov.io/dsl_to_go_beyond_bean_validation_english.html)
+- **Example** [the sample project in dOOv](sample)
 
 ## Usage overview
 
-**For a more in-depth usage documentation, see the [documentation](#documentation)**
-
-Annotate your model with @Path annotations on field, qualifying them with field ids.
+Annotate your model with @Path annotations on field, qualifying them with field ids (see wiki section [Domain Model Annotation](https://github.com/lesfurets/dOOv/wiki/Domain-Model-Annotation))
 
 ```java
 public class User {
@@ -43,12 +31,11 @@ public class User {
 }
 ```
 
-Use `mvn install` to generate code, it will generate a companion class named `SampleFieldIdInfo` with all your keys. There is a field for each annotated element, and a method named from the `readable` attribute in the model annotation, on which you can use a static import.
-
-Then write your rules with entry point `DOOV#when` and terminal operation `ValidationRule#validate`. You can see the `userBirthdate` method that is imported from the `SampleFieldIdInfo` class, and `today` that is imported from `LocalDateSuppliers`.
+Use the dOOv code genrator to generate a DSL with elements `userFirstName`, `userLastName` and `userBirthDate` (see wiki section [DSL Code Generation](https://github.com/lesfurets/dOOv/wiki/DSL-Code-Generation)). Then write your rules with entry point `DOOV#when` and terminal operation `ValidationRule#validate` (see wiki section [Validation Rules](https://github.com/lesfurets/dOOv/wiki/Validation-Rules)).
 
 ```java
-ValidationRule rule = DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18)).validate();
+ValidationRule rule = DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18))
+                          .validate();
 ```
 
 You can create more complex rules by chaining `and` and `or` or by using matching methods from the `DOOV` class like `matchAny`, etc.
@@ -59,7 +46,7 @@ DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18)
     .validate()
 ```
 
-You can then execute the rule on an instantiated model
+You can then execute the rule on an instantiated model (see wiki section [Validation Engine](https://github.com/lesfurets/dOOv/wiki/Validation-Engine)).
 
 ```java
 // Execute the DSL on the model
@@ -74,7 +61,7 @@ The result will return true or false depending on the result of the predicate, f
 
 ## Syntax tree
 
-The rules provides an AST that can be printed as a human readable format with the `Readable#readable` method that is available on any DSL object. By default the output is from `AstLineVisitor` that outputs the string in plain text.
+The rules provides an AST that can be printed as a human readable format with the `Readable#readable` method that is available on any DSL object. By default the output is from `AstLineVisitor` that outputs the string in plain text (see wiki section [Validation Engine](https://github.com/lesfurets/dOOv/wiki/Validation-Engine)).
 
 ```java
 DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18)).validate().readable()
@@ -83,7 +70,7 @@ DOOV.when(userBirthdate().ageAt(today()).greaterOrEquals(18)).validate().readabl
 
 ## Testing
 
-Assertions are available in the `doov-assertions` jar. It depends on AssertJ, so you can use the `assertThat` syntax.
+Assertions are available in the `doov-assertions` jar. It depends on AssertJ, so you can use the `assertThat` syntax (see wiki section [Testing Rules](https://github.com/lesfurets/dOOv/wiki/Testing-Rules)).
 
 ```java
 ValidationRule rule = DOOV.when(userFirstName().isNotNull().or(userLastName().isNull())).validate();
@@ -120,3 +107,4 @@ mvn -pl generator clean site
 ## Licence
 
 [Apache-2.0](LICENSE)
+
