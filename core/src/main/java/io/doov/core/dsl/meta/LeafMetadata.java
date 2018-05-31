@@ -83,7 +83,8 @@ public class LeafMetadata extends PredicateMetadata {
         for (Element element : current) {
             if (merged.isEmpty())
                 break;
-            if (merged.peek().getType() == element.getType() && merged.peek().getReadable().readable().equals(element.getReadable().readable()))
+            if (merged.peek().getType() == element.getType()
+                    && merged.peek().getReadable().readable().equals(element.getReadable().readable()))
                 merged.pop();
         }
     }
@@ -114,7 +115,8 @@ public class LeafMetadata extends PredicateMetadata {
     public Metadata message(Context context) {
         if (type == FIELD_PREDICATE_MATCH_ANY) {
             final DslField field = (DslField) elements.getFirst().getReadable();
-            return new LeafMetadata(FIELD_PREDICATE).field(field).operator(not_equals).valueObject(context.getEvalValue(field.id()));
+            return new LeafMetadata(FIELD_PREDICATE).field(field).operator(not_equals)
+                    .valueObject(context.getEvalValue(field.id()));
         }
         return this;
     }
@@ -142,10 +144,10 @@ public class LeafMetadata extends PredicateMetadata {
 
     public LeafMetadata valueObject(Object readable) {
         if (readable == null)
-            return null;
+            return valueReadable(() -> "null");
         if (readable instanceof String)
-            return add(new Element(() -> (String) readable, STRING_VALUE));
-        return add(new Element(() -> String.valueOf(readable), VALUE));
+            return valueString((String) readable);
+        return valueReadable(() -> String.valueOf(readable));
     }
 
     public LeafMetadata valueString(String readable) {
@@ -178,11 +180,13 @@ public class LeafMetadata extends PredicateMetadata {
     }
 
     public LeafMetadata valueListReadable(Collection<? extends Readable> readables) {
-        return add(readables == null || readables.isEmpty() ? null : new Element(() -> formatListReadable(readables), VALUE));
+        return add(readables == null || readables.isEmpty() ? null
+                : new Element(() -> formatListReadable(readables), VALUE));
     }
 
     public LeafMetadata valueListObject(Collection<?> readables) {
-        return add(readables == null || readables.isEmpty() ? null : new Element(() -> formatListObject(readables), VALUE));
+        return add(readables == null || readables.isEmpty() ? null
+                : new Element(() -> formatListObject(readables), VALUE));
     }
 
     public static LeafMetadata fieldMetadata(DslField field) {
@@ -240,7 +244,7 @@ public class LeafMetadata extends PredicateMetadata {
     public static LeafMetadata equalsMetadata(DslField field, Readable value) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(equals).valueReadable(value);
     }
-    
+
     public static LeafMetadata equalsMetadata(DslField field, DefaultCondition<?> condition) {
         return new LeafMetadata(FIELD_PREDICATE).field(field).operator(equals).valueCondition(condition);
     }
@@ -345,7 +349,7 @@ public class LeafMetadata extends PredicateMetadata {
 
     public static LeafMetadata afterOrEqualsSupplierMetadata(DefaultCondition<?> condition, Supplier<?> value) {
         return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(after_or_equals)
-                        .valueSupplier(value);
+                .valueSupplier(value);
     }
 
     public static LeafMetadata afterOrEqualsTemporalConditionMetadata(DefaultCondition<?> c1, DefaultCondition<?> c2) {
@@ -372,12 +376,12 @@ public class LeafMetadata extends PredicateMetadata {
 
     public static LeafMetadata beforeOrEqualsValueMetadata(DefaultCondition<?> condition, Object value) {
         return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before_or_equals)
-                        .valueObject(value);
+                .valueObject(value);
     }
 
     public static LeafMetadata beforeOrEqualsSupplierMetadata(DefaultCondition<?> condition, Supplier<?> value) {
         return new LeafMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before_or_equals)
-                        .valueSupplier(value);
+                .valueSupplier(value);
     }
 
     public static LeafMetadata beforeOrEqualsTemporalConditionMetadata(DefaultCondition<?> c1, DefaultCondition<?> c2) {
