@@ -28,7 +28,7 @@ class GitPushTask extends DefaultTask {
         }
         pushArgs += remotes
         if (tags) {
-            pushArgs += '--tags'
+            pushArgs += '--follow-tags'
         }
         project.exec {
             executable 'git'
