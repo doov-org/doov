@@ -51,7 +51,7 @@ public class FailureCauseSample2Test {
 
     @BeforeEach
     public void plaintText() {
-        System.out.print(rule.readable(locale));
+        System.out.println(rule.readable(locale));
     }
 
     @AfterEach

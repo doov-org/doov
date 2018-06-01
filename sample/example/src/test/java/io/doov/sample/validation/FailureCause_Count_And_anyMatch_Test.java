@@ -39,7 +39,7 @@ public class FailureCause_Count_And_anyMatch_Test {
 
     @BeforeEach
     public void plaintText() {
-        System.out.print(rule.readable(locale));
+        System.out.println(rule.readable(locale));
     }
 
     @AfterEach
