@@ -13,6 +13,8 @@ apply plugin: "com.liferay.maven.plugin.builder"
 
 archivesBaseName = 'doov-generator'
 
+ext.pomProjectName = 'dOOv Generator Maven Plugin'
+
 dependencies {
     compile project(':doov-generator-core')
     compile group:'org.apache.maven', name: 'maven-plugin-api', version: mavenPluginApiVersion
@@ -28,16 +30,16 @@ buildPluginDescriptor {
 }
 
 install {
-    repositories {
-        mavenInstaller {
+    repositories.mavenInstaller {
+        pom.whenConfigured { pom ->
             pom.packaging = 'maven-plugin'
         }
     }
 }
 
 uploadArchives {
-    repositories {
-        mavenDeployer {
+    repositories.mavenDeployer {
+        pom.whenConfigured { pom ->
             pom.packaging = 'maven-plugin'
         }
     }

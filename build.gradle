@@ -127,6 +127,11 @@ subprojects {
         repositories {
             mavenInstaller {
                 pom.project pomProject
+                pom.whenConfigured { pom ->
+                    pom.project {
+                        name = pomProjectName
+                    }
+                }
             }
         }
     }
@@ -144,6 +149,11 @@ subprojects {
                     authentication(userName: userName, password: password)
                 }
                 pom.project pomProject
+                pom.whenConfigured { pom ->
+                    pom.project {
+                        name = pomProjectName
+                    }
+                }
             }
         }
     }

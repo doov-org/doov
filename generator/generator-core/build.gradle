@@ -1,3 +1,5 @@
+ext.pomProjectName = 'dOOv Generator Core'
+
 dependencies {
     compile project(':doov-core')
     compile group: 'cglib', name: 'cglib', version: '3.2.5'
