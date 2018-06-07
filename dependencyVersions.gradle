@@ -1,0 +1,19 @@
+ext {
+    assertjVersion = '3.5.2'
+    guavaVersion = '19.0'
+    commonsTextVersion = '1.2'
+    commonsIoVersion = '2.6'
+    mavenPluginApiVersion = '3.0.5'
+    mavenPluginAnnotationsVersion = '3.5'
+    junitJupiterVersion = '5.2.0'
+    mockitoCoreVersion = '2.1.0'
+    junitPlatformLauncherVersion = '1.2.0'
+    jmhVersion = '1.19'
+    jfreechartVersion = '1.5.0'
+    javaxElVersion = '2.2.6'
+    javaxElApiVersion = '3.0.0'
+    hibernateValidatorVersion = '6.0.7.Final'
+
+    gradleMavenPluginBuilderVersion = '1.2.0'
+    gradleJmhPluginVersion = '0.4.5'
+}

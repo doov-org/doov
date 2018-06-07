@@ -1,0 +1,8 @@
+dependencies {
+    compile project(':doov-core')
+    compile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+}
+
+if (isReleaseVersion) {
+    javadoc.destinationDir = file("${rootProject.projectDir}/docs/site/assertions/apidocs")
+}

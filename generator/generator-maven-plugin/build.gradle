@@ -1,0 +1,47 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.liferay:gradle-plugins-maven-plugin-builder:${gradleMavenPluginBuilderVersion}"
+    }
+}
+
+apply plugin: "com.liferay.maven.plugin.builder"
+
+archivesBaseName = 'doov-generator'
+
+dependencies {
+    compile project(':doov-generator-core')
+    compile group:'org.apache.maven', name: 'maven-plugin-api', version: mavenPluginApiVersion
+    compile group:'org.apache.maven', name: 'maven-core', version: mavenPluginApiVersion
+    compileOnly group:'org.apache.maven.plugin-tools', name:'maven-plugin-annotations', version: mavenPluginAnnotationsVersion
+}
+
+buildPluginDescriptor {
+    outputDir = "${sourceSets.main.output.resourcesDir}/META-INF/maven"
+    goalPrefix = 'doov-generator'
+    pomVersion = project.version
+    pomArtifactId = 'doov-generator'
+}
+
+install {
+    repositories {
+        mavenInstaller {
+            pom.packaging = 'maven-plugin'
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.packaging = 'maven-plugin'
+        }
+    }
+}
+
+buildPluginDescriptor.dependsOn(project(':doov-generator-core').tasks.getByName('install'))
+buildPluginDescriptor.dependsOn(project(':doov-core').tasks.getByName('install'))

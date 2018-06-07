@@ -1,0 +1,3 @@
+dependencies {
+    compile group: 'io.doov', name: 'doov-core'
+}
