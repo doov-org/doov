@@ -148,17 +148,10 @@ subprojects {
         }
     }
 
-    nexusStaging {
-        delayBetweenRetriesInMillis = 5000
-    }
-
-    // Deploy tasks
-    closeAndReleaseRepository.mustRunAfter(uploadArchives)
-    closeRepository.enabled = isReleaseVersion && isSonaTypeRepository
-    releaseRepository.enabled = isReleaseVersion && isSonaTypeRepository
-
     task verify(dependsOn: build)
-    task deploy(dependsOn: [build, uploadArchives, closeAndReleaseRepository])
+    task deploy(dependsOn: [build, uploadArchives, project.rootProject.closeAndReleaseRepository])
+    project.rootProject.closeRepository.dependsOn(uploadArchives)
+    project.rootProject.releaseRepository.dependsOn(uploadArchives)
 
 }
 
@@ -166,6 +159,14 @@ wrapper {
     gradleVersion = '4.7'
     distributionType = Wrapper.DistributionType.ALL
 }
+
+nexusStaging {
+    delayBetweenRetriesInMillis = 5000
+}
+
+// Deploy tasks
+closeRepository.enabled = isReleaseVersion && isSonaTypeRepository
+releaseRepository.enabled = isReleaseVersion && isSonaTypeRepository
 
 // Release commits and tag
 task commitRelease(type: GitCommitTask, dependsOn: writeVersion)
