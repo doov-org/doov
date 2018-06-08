@@ -15,6 +15,7 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'maven'
     apply plugin: 'idea'
+    apply plugin: 'eclipse'
 
     dependencies {
         constraints {

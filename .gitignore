@@ -74,3 +74,4 @@ doc/cdr/Backup_of_*.cdr
 
 .gradle
 build
+bin
