@@ -39,7 +39,7 @@ public class RulesVisitorTest {
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
                         .forEach(rule -> rule.accept(new AstFullVisitor(sb), 0));
-        print(sb.toString());
+        System.out.println(sb.toString());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class RulesVisitorTest {
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
                         .forEach(rule -> rule.accept(new AstLineVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
-        print(sb.toString());
+        System.out.println(sb.toString());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class RulesVisitorTest {
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
                         .forEach(rule -> rule.accept(new AstTextVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
-        print(sb.toString());
+        System.out.println(sb.toString());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class RulesVisitorTest {
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
                         .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
-        print(sb.toString());
+        System.out.println(sb.toString());
     }
 
     @Test
@@ -81,13 +81,7 @@ public class RulesVisitorTest {
                             }
                         })
                         .forEach(rule -> rule.accept(new AstHtmlVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
-        print(new String(ops.toByteArray(), Charset.forName("UTF-8")));
-    }
-
-    private static void print(String string) {
-        if (System.getProperty("activateSystemOut") != null) {
-            System.out.println(string);
-        }
+        System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
     }
 
 }

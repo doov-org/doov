@@ -35,6 +35,7 @@ public class RulesSoftshakeTest {
 
         // Then
         assertThat(result.isTrue()).isTrue();
+        System.out.println(RulesSoftshake.EXAMPLE.readable());
     }
 
 }

@@ -33,6 +33,7 @@ import io.doov.core.dsl.time.LocalDateSuppliers;
 import io.doov.sample.field.dsl.DslSampleModel;
 
 public class SampleRuleI18nTest {
+
     private static void print(SyntaxTree tree) {
         final StringBuilder sb = new StringBuilder();
         tree.accept(new AstLineVisitor(sb, BUNDLE, Locale.FRANCE), 0);
@@ -193,7 +194,7 @@ public class SampleRuleI18nTest {
         assertThat(elts).hasSize(5);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(StringFieldInfo.class);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
-//        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(2).isEqualTo(LeafMetadata.class);
+        //        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(2).isEqualTo(LeafMetadata.class);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(3).isEqualTo(DefaultOperator.class);
         assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
         assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);

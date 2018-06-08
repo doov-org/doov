@@ -194,11 +194,10 @@ public class ModelMapGenTask extends DefaultTask {
         }
     }
 
-
     private <T> Class<? extends T> loadClassWithType(Property<String> className,
-                                                     Class<T> type,
-                                                     Class<? extends T> defaultClass,
-                                                     URLClassLoader classLoader) throws ClassNotFoundException {
+            Class<T> type,
+            Class<? extends T> defaultClass,
+            URLClassLoader classLoader) throws ClassNotFoundException {
         Class<? extends T> classToLoad = defaultClass;
         if (className.isPresent()) {
             Class<?> loadedClass = Class.forName(className.get(), true, classLoader);
@@ -210,13 +209,12 @@ public class ModelMapGenTask extends DefaultTask {
         return classToLoad;
     }
 
-
     private void generateModels(Class<? extends FieldId> fieldClazz,
-                                Class<?> modelClazz,
-                                Class<? extends FieldModel> baseClazz,
-                                Class<? extends TypeAdapterRegistry> typeAdapterClazz,
-                                FieldTypeProvider typeProvider,
-                                List<FieldPath> fieldPaths) {
+            Class<?> modelClazz,
+            Class<? extends FieldModel> baseClazz,
+            Class<? extends TypeAdapterRegistry> typeAdapterClazz,
+            FieldTypeProvider typeProvider,
+            List<FieldPath> fieldPaths) {
         try {
             final List<VisitorPath> collected;
             if (fieldPaths.isEmpty()) {
@@ -229,7 +227,7 @@ public class ModelMapGenTask extends DefaultTask {
             Runnable generateCsv = () -> generateCsv(fieldPathMap, modelClazz);
             Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz, typeAdapterClazz);
             Runnable generateFieldInfo = () -> generateFieldInfo(fieldInfoMap, fieldClazz);
-            Runnable generateDslFields = () -> generateDslFields(fieldInfoMap, modelClazz, fieldClazz, typeProvider);
+            Runnable generateDslFields = () -> generateDslFields(fieldInfoMap, modelClazz, fieldClazz, baseClazz, typeProvider);
             asList(generateWrapper, generateCsv, generateFieldInfo, generateDslFields).parallelStream()
                     .forEach(Runnable::run);
         } catch (Exception e) {
@@ -299,9 +297,10 @@ public class ModelMapGenTask extends DefaultTask {
     }
 
     private void generateDslFields(Map<FieldId, GeneratorFieldInfo> fieldInfoMap,
-                                   Class<?> modelClazz,
-                                   Class<?> fieldClass,
-                                   FieldTypeProvider typeProvider) {
+            Class<?> modelClazz,
+            Class<?> fieldClass,
+            Class<? extends FieldModel> baseClazz,
+            FieldTypeProvider typeProvider) {
         try {
             final String targetClassName = dslFieldsClassName(modelClazz);
             final String fieldInfoClassName = fieldInfoClassName(fieldClass);
@@ -315,6 +314,7 @@ public class ModelMapGenTask extends DefaultTask {
             conf.put("package.name", targetPackage);
             conf.put("process.class", fieldClass.getName());
             conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
+            conf.put("process.base.class.package", baseClazz.getPackage().getName());
             conf.put("target.class.name", targetClassName);
             conf.put("model.class.name", modelClazz.getSimpleName());
             conf.put("process.field.info.class", targetFieldInfoPackage + "." + fieldInfoClassName);
@@ -339,15 +339,14 @@ public class ModelMapGenTask extends DefaultTask {
     }
 
     private static String dslFieldsClassName(Class<?> clazz) {
-        return "Dsl" +
-                (clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1) : clazz.getSimpleName());
+        return "Dsl" + (clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1) : clazz.getSimpleName());
     }
 
     private void generateWrapper(Map<FieldId, VisitorPath> fieldPaths,
-                                 Class<?> modelClass,
-                                 Class<?> fieldClass,
-                                 Class<? extends FieldModel> baseClazz,
-                                 Class<? extends TypeAdapterRegistry> typeAdapterClazz) throws RuntimeException {
+            Class<?> modelClass,
+            Class<?> fieldClass,
+            Class<? extends FieldModel> baseClazz,
+            Class<? extends TypeAdapterRegistry> typeAdapterClazz) throws RuntimeException {
         try {
             final String targetClassName = modelClass.getSimpleName() + "Wrapper";
             final String targetFieldInfoPackage = getFieldInfoPackage(fieldClass);
@@ -399,7 +398,6 @@ public class ModelMapGenTask extends DefaultTask {
     private String getWrapperPackage(Class<?> modelClass) {
         return wrapperPackage.getOrElse(modelClass.getPackage().getName());
     }
-
 
     private String getDslModelPackage(Class<?> fieldClass) {
         return dslModelPackage.getOrElse(fieldClass.getPackage().getName() + ".dsl");

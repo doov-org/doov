@@ -15,7 +15,6 @@ package io.doov.assertions;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
-import java.util.Locale;
 
 import org.assertj.core.api.AbstractAssert;
 
@@ -63,7 +62,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert hasFailureCause(String message) {
-        if (!actual.getFailureCause(Locale.US).equals(message)) {
+        if (!actual.getFailureCause().equals(message)) {
             failWithMessage("Expected result to have message '" + message
                     + "' but was '" + actual.getFailureCause() + "'");
         }
@@ -91,7 +90,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
     public ResultAssert isEvalFalse(Metadata metadata) {
         if (!actual.getContext().isEvalFalse(metadata)) {
             failWithMessage("Expected result to have invalidated nodes + " + metadata.readable()
-                            + " but was " + getInvalidatedMetadata());
+                    + " but was " + getInvalidatedMetadata());
         }
         return this;
     }
@@ -105,7 +104,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
     public ResultAssert isEvalTrue(Metadata metadata) {
         if (!actual.getContext().isEvalTrue(metadata)) {
             failWithMessage("Expected result to have validated nodes + " + metadata.readable()
-                            + " but was " + getValidatedMetadata());
+                    + " but was " + getValidatedMetadata());
         }
         return this;
     }

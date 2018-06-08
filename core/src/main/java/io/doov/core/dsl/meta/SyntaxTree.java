@@ -29,7 +29,9 @@ public interface SyntaxTree extends Readable {
     /**
      * Returns the human readable version of this object.
      *
+     * @param locale the locale to use
      * @return the readable string
+     * @see #readable()
      */
     String readable(Locale locale);
 

@@ -7,10 +7,16 @@ import javax.annotation.Generated;
 
 import java.util.stream.Stream;
 
+import io.doov.core.dsl.meta.i18n.ResourceBundleProvider;
+
 ${imports}
 
 @Generated(value = "${source.generator.name}", comments = "generated from ${process.class}")
 public final class ${target.class.name} {
+
+    static {
+        ResourceBundleProvider.BUNDLE.register("${process.base.class.package}.i18n.${model.class.name}ResourceBundle");
+    }
 
 ${fields}
 
@@ -50,4 +56,5 @@ ${methods}
             return (${model.class.name}Rule) super.registerOn(registry);
         }
     }
+
 }

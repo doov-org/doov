@@ -193,7 +193,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz,
                     typeAdapterClazz);
             Runnable generateFieldInfo = () -> generateFieldInfo(fieldInfoMap, fieldClazz);
-            Runnable generateDslFields = () -> generateDslFields(fieldInfoMap, modelClazz, fieldClazz, typeProvider);
+            Runnable generateDslFields = () -> generateDslFields(fieldInfoMap, modelClazz, fieldClazz, baseClazz, typeProvider);
             asList(generateWrapper, generateCsv, generateFieldInfo, generateDslFields).parallelStream()
                     .forEach(Runnable::run);
         } catch (Exception e) {
@@ -265,6 +265,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
     private void generateDslFields(Map<FieldId, GeneratorFieldInfo> fieldInfoMap,
             Class<?> modelClazz,
             Class<?> fieldClass,
+            Class<? extends FieldModel> baseClazz,
             FieldTypeProvider typeProvider) {
         try {
             final String targetClassName = dslFieldsClassName(modelClazz);
@@ -279,6 +280,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
             conf.put("package.name", targetPackage);
             conf.put("process.class", fieldClass.getName());
             conf.put("process.date", ofLocalizedDateTime(SHORT).format(now()));
+            conf.put("process.base.class.package", baseClazz.getPackage().getName());
             conf.put("target.class.name", targetClassName);
             conf.put("model.class.name", modelClazz.getSimpleName());
             conf.put("process.field.info.class", targetFieldInfoPackage + "." + fieldInfoClassName);
@@ -302,8 +304,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
         }
     }
 
-    private static String dslFieldsClassName(Class<?> c) {
-        return "Dsl" + (c.getSimpleName().startsWith("E") ? c.getSimpleName().substring(1) : c.getSimpleName());
+    private static String dslFieldsClassName(Class<?> clazz) {
+        return "Dsl" + (clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1) : clazz.getSimpleName());
     }
 
     private void generateWrapper(Map<FieldId, VisitorPath> fieldPaths,
