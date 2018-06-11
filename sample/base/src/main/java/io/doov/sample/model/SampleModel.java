@@ -14,8 +14,6 @@ package io.doov.sample.model;
 
 import javax.validation.Valid;
 
-import io.doov.core.dsl.meta.i18n.ResourceBundleProvider;
-
 public class SampleModel {
 
     @Valid
