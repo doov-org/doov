@@ -8,9 +8,15 @@ dOOv is a fluent API for typesafe domain model validation. It uses annotations, 
 
 ## Documentation
 
-- **Wiki** [getting started](https://github.com/lesfurets/dOOv/wiki/Getting-Started)
-- **Presentation** [latest presentation at Snowcamp 2018](http://doov.io/dsl_to_go_beyond_bean_validation_english.html)
-- **Example** [the sample project in dOOv](sample)
+See the [getting started](https://github.com/lesfurets/dOOv/wiki/Getting-Started) section in the wiki, or see the small [usage overview](#usage).
+
+## Example
+
+See the [the sample project in dOOv](sample). It contains two model domains, maven and gradle code generation, and example rules.
+
+## Conferences
+
+See our [latest presentation slides](http://doov.io/dsl_to_go_beyond_bean_validation_jdk_io.html) at JDK.IO.
 
 ## Usage
 
