@@ -67,8 +67,8 @@ public class SimpleValidationWithoutShortCircuit {
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     @Fork(value = 1)
     @Threads(50)
-    @Warmup(iterations = 10)
-    @Measurement(iterations = 20)
+    @Warmup(iterations = 5)
+    @Measurement(iterations = 5)
     public void testSimpleBeanValidation(ValidationState state, Blackhole blackHole) {
         DriverSetup driverSetup = new DriverSetup(state);
         Result result = state.rule.executeOn(driverSetup.model);

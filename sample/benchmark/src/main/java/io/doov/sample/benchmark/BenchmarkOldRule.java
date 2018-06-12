@@ -22,9 +22,9 @@ import io.doov.sample.model.SampleModel;
 import io.doov.sample.model.SampleModels;
 import io.doov.sample.validation.RulesOld;
 
-@Fork(value = 5)
-@Warmup(iterations = 10)
-@Measurement(iterations = 10)
+@Fork(value = 1)
+@Warmup(iterations = 5)
+@Measurement(iterations = 5)
 public class BenchmarkOldRule {
 
     private static final SampleModel MODEL = SampleModels.sample();

@@ -55,8 +55,8 @@ public class CascadedValidation {
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
     @Fork(value = 1)
     @Threads(50)
-    @Warmup(iterations = 10)
-    @Measurement(iterations = 20)
+    @Warmup(iterations = 5)
+    @Measurement(iterations = 5)
     public void testCascadedValidation(CascadedValidationState state, Blackhole blackhole) {
         DriverSetup driverSetup = new DriverSetup();
         Result result = state.rule.executeOn(driverSetup.model);
