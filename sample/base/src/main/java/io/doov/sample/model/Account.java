@@ -43,6 +43,10 @@ public class Account extends Identity {
     private Country country;
 
     @NotNull
+    @SamplePath(field = SampleFieldId.COMPANY, readable = "account.company")
+    private Company company;
+
+    @NotNull
     @SamplePath(field = SampleFieldId.PHONE_NUMBER, readable = "account.phone.number")
     private String phoneNumber;
 
@@ -114,6 +118,14 @@ public class Account extends Identity {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public boolean getAcceptEmail() {

@@ -34,6 +34,7 @@ public class SampleModels {
         user.setTel("0102030405");
 
         Account account = new Account();
+        account.setCompany(Company.LES_FURETS);
         account.setId(9);
         account.setCreationDate(LocalDate.of(2017, 1, 1));
         account.setAcceptEmail(true);

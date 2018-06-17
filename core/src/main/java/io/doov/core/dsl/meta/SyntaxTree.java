@@ -18,13 +18,9 @@ package io.doov.core.dsl.meta;
 import java.util.Locale;
 
 import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public interface SyntaxTree extends Readable {
-
-    @Override
-    default String readable() {
-        return readable(Locale.getDefault());
-    }
 
     /**
      * Returns the human readable version of this object.
@@ -34,6 +30,19 @@ public interface SyntaxTree extends Readable {
      * @see #readable()
      */
     String readable(Locale locale);
+
+    @Override
+    default String readable() {
+        return readable(Locale.getDefault());
+    }
+
+    default String markdown() {
+        return markdown(Locale.getDefault());
+    }
+
+    default String markdown(Locale locale) {
+        return AstVisitorUtils.astToMarkdown(this, locale);
+    }
 
     void accept(MetadataVisitor visitor, int depth);
 

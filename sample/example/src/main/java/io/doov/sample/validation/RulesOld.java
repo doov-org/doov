@@ -51,7 +51,7 @@ public class RulesOld {
         }
         if (YEARS.between(user.getBirthDate(), LocalDate.now()) >= 18
                 && account.getEmail().length() <= config.getMaxEmailSize()
-                && account.getCountry().equals(Country.FR)
+                && account.getCompany() == Company.LES_FURETS
                 && account.getPhoneNumber().startsWith("+33")) {
             return true;
         }

@@ -26,4 +26,10 @@ public class AstVisitorUtils {
         return stringBuilder.toString();
     }
 
+    public static String astToMarkdown(SyntaxTree syntaxTree, Locale locale) {
+        StringBuilder stringBuilder = new StringBuilder();
+        syntaxTree.accept(new AstMarkdownVisitor(stringBuilder, BUNDLE, locale), 0);
+        return stringBuilder.toString();
+    }
+
 }
