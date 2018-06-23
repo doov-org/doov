@@ -32,7 +32,7 @@ import io.doov.sample.field.SampleTag;
 
 public class SampleModelWrapperTest {
 
-    private static Collection<Object[]> data() {
+    public static Collection<Object[]> data() {
         return SampleFieldInfo.stream()
                 .map(f -> new Object[] { f.id().code(), f })
                 .collect(toList());

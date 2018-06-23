@@ -62,8 +62,7 @@ public enum SampleFieldId implements SampleField {
     CONFIGURATION_MAX_LONG(),
 
     LOGIN(ACCOUNT),
-    PASSWD(ACCOUNT),
-    CALENDAR(ACCOUNT);
+    PASSWD(ACCOUNT);
 
 
     private final int position;

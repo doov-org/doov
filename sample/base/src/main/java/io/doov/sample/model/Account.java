@@ -60,28 +60,16 @@ public class Account extends Identity {
 
     @SamplePath(field = SampleFieldId.CREATION_DATE, readable = "account.creation.date")
     private LocalDate creationDate;
-    
+
     @FieldTransient
     @SamplePath(field = SampleFieldId.EMAILS_PREFERENCES, readable = "account.preferences.mail")
     private Collection<EmailType> emailTypes = new HashSet<>();
 
-    @FieldTransient
-    @SamplePath(field = SampleFieldId.CALENDAR, readable = "account.calendar")
-    private XMLGregorianCalendar calendar;
-
     @Valid
     private List<FavoriteWebsite> top3WebSite = new ArrayList<>();
 
-    public XMLGregorianCalendar getCalendar() {
-        return calendar;
-    }
-
     public String getLogin() {
         return login;
-    }
-
-    public void setCalendar(XMLGregorianCalendar calendar) {
-        this.calendar = calendar;
     }
 
     public void setLogin(String login) {

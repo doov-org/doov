@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.sample;
 
@@ -71,7 +68,8 @@ public class LiveCode {
         System.out.println(model.<String> get(EMAIL));
         model.stream().forEach(System.out::println);
 
-        Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
+        Map<FieldId, Object> map = model.stream().filter(e -> Objects.nonNull(e.getValue()))
+                        .collect(toMap(Entry::getKey, Entry::getValue));
         System.out.println(map);
 
         SampleModelWrapper newModel = map.entrySet().stream().collect(SampleModelWrapper.toFieldModel());
@@ -84,9 +82,9 @@ public class LiveCode {
 
         Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
         SampleModelWrapper newModel = map.entrySet().stream()
-                .filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
-                // .filter(e -> e.getKey().hasTag(SampleTag.USER))
-                .collect(SampleModelWrapper.toFieldModel());
+                        .filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
+                        // .filter(e -> e.getKey().hasTag(SampleTag.USER))
+                        .collect(SampleModelWrapper.toFieldModel());
 
         newModel.stream().forEach(System.out::println);
     }
@@ -94,10 +92,10 @@ public class LiveCode {
     private static void cqlBuilders() {
         FieldModel model = SampleModels.wrapper();
         Create create = SchemaBuilder.createTable("Field").addClusteringColumn(LOGIN.name(), text())
-                .addPartitionKey("snapshot_id", timeuuid());
+                        .addPartitionKey("snapshot_id", timeuuid());
 
         model.getFieldInfos().stream().filter(f -> f.id() != LOGIN)
-                .forEach(f -> create.addColumn(f.id().code(), cqlType(f)));
+                        .forEach(f -> create.addColumn(f.id().code(), cqlType(f)));
 
         Create.Options createWithOptions = create.withOptions().clusteringOrder(LOGIN.name(), DESC);
         System.out.println(createWithOptions);
@@ -121,14 +119,14 @@ public class LiveCode {
         /* stream all key-values pair from both models */
         Stream.concat(sample_1.stream().map(buildRight), sample_2.stream().map(buildLeft))
 
-                /* merging key-value pair in a map */
-                .collect(Collectors.toMap(Triple::getMiddle, Function.identity(), merge))
+                        /* merging key-value pair in a map */
+                        .collect(Collectors.toMap(Triple::getMiddle, Function.identity(), merge))
 
-                /* filter to keep only key with 2 differents values */
-                .values().stream().filter(isNotSame)
+                        /* filter to keep only key with 2 differents values */
+                        .values().stream().filter(isNotSame)
 
-                /* print keys with differents values */
-                .forEach(System.out::println);
+                        /* print keys with differents values */
+                        .forEach(System.out::println);
     }
 
     private static CodecRegistry codecRegistry() {
@@ -142,6 +140,12 @@ public class LiveCode {
             return text();
         } else if (Boolean.class.equals(info.type()) || Boolean.TYPE.equals(info.type())) {
             return DataType.cboolean();
+        } else if (Integer.class.equals(info.type()) || Integer.TYPE.equals(info.type())) {
+            return DataType.cint();
+        } else if (Double.class.equals(info.type()) || Double.TYPE.equals(info.type())) {
+            return DataType.cdouble();
+        } else if (Float.class.equals(info.type()) || Float.TYPE.equals(info.type())) {
+            return DataType.cfloat();
         } else if (Long.class.equals(info.type()) || Long.TYPE.equals(info.type())) {
             return DataType.cint();
         } else if (LocalDate.class.equals(info.type())) {
@@ -154,14 +158,14 @@ public class LiveCode {
         throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
     }
 
-    private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) ->
-            Triple.of(entry.getValue(), entry.getKey(), null);
+    private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) -> Triple
+                    .of(entry.getValue(), entry.getKey(), null);
 
-    private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) ->
-            Triple.of(null, entry.getKey(), entry.getValue());
+    private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildRight = (entry) -> Triple
+                    .of(null, entry.getKey(), entry.getValue());
 
-    private static Predicate<Triple<Object, FieldId, Object>> isNotSame = (triple) ->
-            !Objects.equals(triple.getLeft(), triple.getRight());
+    private static Predicate<Triple<Object, FieldId, Object>> isNotSame = (
+                    triple) -> !Objects.equals(triple.getLeft(), triple.getRight());
 
     private static BinaryOperator<Triple<Object, FieldId, Object>> merge = (t1, t2) -> {
         Object left = t1.getLeft() != null ? t1.getLeft() : t2.getLeft();
