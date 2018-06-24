@@ -26,8 +26,7 @@ import java.util.Map.Entry;
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.datastax.driver.core.schemabuilder.Create;
-import com.datastax.driver.core.schemabuilder.SchemaBuilder;
+import com.datastax.driver.core.schemabuilder.*;
 import com.datastax.driver.core.utils.UUIDs;
 import com.datastax.driver.extras.codecs.enums.EnumNameCodec;
 import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
@@ -49,11 +48,22 @@ public class LiveCodeCassandraMeetup {
         intro();
         mixingWithMap();
         tagFiltering();
-        cqlCreate();
-        cqlInsert();
+
+        Cluster cluster = new Cluster.Builder().addContactPoint("localhost")
+                .withCodecRegistry(codecRegistry()).build();
+        Session session = cluster.connect();
+
+        try {
+            cqlCreate(session);
+            cqlInsert(session);
+            cqlAlter(session);
+        } finally {
+            session.close();
+            cluster.close();
+        }
     }
 
-    private static void intro() {
+    static void intro() {
         SampleModel model = new SampleModel();
         model.setAccount(new Account());
         model.getAccount().setEmail("support@lesfurets.com");
@@ -66,7 +76,7 @@ public class LiveCodeCassandraMeetup {
         System.out.println(fieldModel.<String> get(EMAIL));
     }
 
-    private static void mixingWithMap() {
+    static void mixingWithMap() {
         FieldModel model = SampleModels.wrapper();
         System.out.println(model.<String> get(EMAIL));
         model.stream().forEach(System.out::println);
@@ -80,7 +90,7 @@ public class LiveCodeCassandraMeetup {
         System.out.println(newModel.getModel().getAccount().getEmail());
     }
 
-    private static void tagFiltering() {
+    static void tagFiltering() {
         FieldModel model = SampleModels.wrapper();
 
         Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
@@ -92,44 +102,39 @@ public class LiveCodeCassandraMeetup {
         newModel.stream().forEach(System.out::println);
     }
 
-    private static void cqlCreate() {
-        Cluster cluster = new Cluster.Builder().addContactPoint("localhost")
-                .withCodecRegistry(codecRegistry()).build();
-        Session session = cluster.connect();
-        try {
-            FieldModel model = SampleModels.wrapper();
-            Create create = SchemaBuilder.createTable("meetup", "sample_model")
-                    .addClusteringColumn(LOGIN.name(), text())
-                    .addPartitionKey("snapshot_id", timeuuid());
+    static void cqlCreate(Session session) {
+        FieldModel model = SampleModels.wrapper();
+        Create create = SchemaBuilder.createTable("meetup", "sample_model")
+                .addClusteringColumn(LOGIN.name(), text())
+                .addPartitionKey("snapshot_id", timeuuid());
 
-            model.getFieldInfos().stream().filter(f -> f.id() != LOGIN)
-                    .forEach(f -> create.addColumn(f.id().code(), cqlType(f)));
+        model.getFieldInfos().stream().filter(f -> f.id() != LOGIN)
+                .forEach(f -> create.addColumn(f.id().code(), cqlType(f)));
 
-            Create.Options createWithOptions = create.withOptions().clusteringOrder(LOGIN.name(), DESC);
-            session.execute(createWithOptions);
-        } finally {
-            session.close();
-            cluster.close();
-        }
+        Create.Options createWithOptions = create.withOptions().clusteringOrder(LOGIN.name(), DESC);
+        session.execute(createWithOptions);
     }
 
-    private static void cqlInsert() {
-        Cluster cluster = new Cluster.Builder().addContactPoint("localhost")
-                .withCodecRegistry(codecRegistry()).build();
-        Session session = cluster.connect();
-        try {
-            FieldModel model = SampleModels.wrapper();
-            Insert insert = QueryBuilder.insertInto("meetup", "sample_model");
-            model.stream().forEach(e -> insert.value(e.getKey().code(), e.getValue()));
-            insert.value("snapshot_id", UUIDs.timeBased());
-            session.execute(insert);
-        } finally {
-            session.close();
-            cluster.close();
-        }
+    static void cqlInsert(Session session) {
+        FieldModel model = SampleModels.wrapper();
+        Insert insert = QueryBuilder.insertInto("meetup", "sample_model");
+        model.stream().forEach(e -> insert.value(e.getKey().code(), e.getValue()));
+        insert.value("snapshot_id", UUIDs.timeBased());
+        session.execute(insert);
     }
 
-    private static CodecRegistry codecRegistry() {
+    static void cqlAlter(Session session) {
+        FieldModel model = SampleModels.wrapper();
+        Alter alter = SchemaBuilder.alterTable("meetup", "sample_model");
+        model.getFieldInfos().stream().filter(f -> {
+            ColumnMetadata column = session.getCluster().getMetadata()
+                    .getKeyspace("meetup").getTable("sample_model")
+                    .getColumn(f.id().code());
+            return column == null;
+        }).forEach(f -> session.execute(alter.addColumn(f.id().code()).type(cqlType(f))));
+    }
+
+    static CodecRegistry codecRegistry() {
         final CodecRegistry registry = new CodecRegistry();
         registry.register(LocalDateCodec.instance);
         registry.register(new EnumNameCodec<>(Country.class));
@@ -140,7 +145,7 @@ public class LiveCodeCassandraMeetup {
         return registry;
     }
 
-    private static DataType cqlType(FieldInfo info) {
+    static DataType cqlType(FieldInfo info) {
         if (String.class.equals(info.type())) {
             return text();
         } else if (Boolean.class.equals(info.type()) || Boolean.TYPE.equals(info.type())) {
