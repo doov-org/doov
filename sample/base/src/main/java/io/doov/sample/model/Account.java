@@ -18,7 +18,6 @@ import java.util.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import io.doov.core.FieldTransient;
 import io.doov.sample.field.SampleFieldId;

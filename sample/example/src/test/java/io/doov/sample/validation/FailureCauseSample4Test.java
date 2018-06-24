@@ -14,7 +14,9 @@ package io.doov.sample.validation;
 
 import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
-import static io.doov.sample.model.Country.*;
+import static io.doov.sample.model.Country.CAN;
+import static io.doov.sample.model.Country.FR;
+import static io.doov.sample.model.Country.UK;
 
 import java.util.Locale;
 
@@ -23,7 +25,6 @@ import org.junit.jupiter.api.*;
 import io.doov.core.dsl.lang.Result;
 import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.field.dsl.DslSampleModel.SampleModelRule;
-import io.doov.sample.model.Country;
 import io.doov.sample.model.SampleModel;
 
 /**
