@@ -26,7 +26,8 @@ import java.util.Map.Entry;
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.datastax.driver.core.schemabuilder.*;
+import com.datastax.driver.core.schemabuilder.Create;
+import com.datastax.driver.core.schemabuilder.SchemaBuilder;
 import com.datastax.driver.core.utils.UUIDs;
 import com.datastax.driver.extras.codecs.enums.EnumNameCodec;
 import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
@@ -49,17 +50,10 @@ public class LiveCodeCassandraMeetup {
         mixingWithMap();
         tagFiltering();
 
-        Cluster cluster = new Cluster.Builder().addContactPoint("localhost")
-                .withCodecRegistry(codecRegistry()).build();
-        Session session = cluster.connect();
-
-        try {
+        try (Cluster cluster = cluster(); Session session = cluster.connect()) {
             cqlCreate(session);
             cqlInsert(session);
             cqlAlter(session);
-        } finally {
-            session.close();
-            cluster.close();
         }
     }
 
@@ -132,6 +126,11 @@ public class LiveCodeCassandraMeetup {
             return column == null;
         }).forEach(f -> session.execute(SchemaBuilder.alterTable("meetup", "sample_model")
                 .addColumn(f.id().code()).type(cqlType(f))));
+    }
+
+    static Cluster cluster() {
+        return new Cluster.Builder().addContactPoint("localhost")
+                .withCodecRegistry(codecRegistry()).build();
     }
 
     static CodecRegistry codecRegistry() {
