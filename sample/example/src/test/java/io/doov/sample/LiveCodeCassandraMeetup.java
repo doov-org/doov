@@ -125,13 +125,13 @@ public class LiveCodeCassandraMeetup {
 
     static void cqlAlter(Session session) {
         FieldModel model = SampleModels.wrapper();
-        Alter alter = SchemaBuilder.alterTable("meetup", "sample_model");
         model.getFieldInfos().stream().filter(f -> {
             ColumnMetadata column = session.getCluster().getMetadata()
                     .getKeyspace("meetup").getTable("sample_model")
                     .getColumn(f.id().code());
             return column == null;
-        }).forEach(f -> session.execute(alter.addColumn(f.id().code()).type(cqlType(f))));
+        }).forEach(f -> session.execute(SchemaBuilder.alterTable("meetup", "sample_model")
+                .addColumn(f.id().code()).type(cqlType(f))));
     }
 
     static CodecRegistry codecRegistry() {
