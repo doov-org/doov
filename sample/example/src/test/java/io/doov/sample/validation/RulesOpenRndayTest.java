@@ -38,26 +38,19 @@ public class RulesOpenRndayTest {
         System.out.println(demoRule.markdown(Locale.FRANCE));
     }
 
-    /**
-     * Test is local platform dedpendent, hasFailureCause should manage locale properly
-     */
     @Test
-    @Disabled
     public void test_account_failure_cause() {
         sample.getAccount().setPhoneNumber("+1 12 34 56 78");
 
         Result result = demoRule.executeOn(sample);
 
         Assertions.assertThat(result)
-                        .isFalse()
-                        .hasFailureCause("account phone number starts with '+33'");
+                .isFalse()
+                .hasFailureCause("account phone number starts with '+33'",
+                        Locale.US);
     }
 
-    /**
-     * Test is local platform dedpendent, hasFailureCause should manage locale properly
-     */
     @Test
-    @Disabled
     public void test_account_failure_cause_2() {
         sample.getAccount().setPhoneNumber("+1 12 34 56 78");
         sample.getAccount().setCompany(Company.BLABLACAR);
@@ -65,9 +58,10 @@ public class RulesOpenRndayTest {
         Result result = demoRule.withShortCircuit(false).executeOn(sample);
 
         Assertions.assertThat(result)
-                        .isFalse()
-                        .hasFailureCause("match all [" +
-                                        "account company = LES_FURETS, " +
-                                        "account phone number starts with '+33']");
+                .isFalse()
+                .hasFailureCause("match all [" +
+                        "account company = LES_FURETS, " +
+                        "account phone number starts with '+33']",
+                        Locale.US);
     }
 }

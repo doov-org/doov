@@ -4,6 +4,8 @@ import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
 import static io.doov.sample.validation.RulesConference.userAccount;
 
+import java.util.Locale;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -29,15 +31,12 @@ public class RulesConferenceTest {
         assertThat(result).isTrue().hasNoFailureCause();
     }
 
-    /**
-     * Test is local platform dedpendent, hasFailureCause should manage locale properly
-     */
     @Test
-    @Disabled
     public void should_user_account_too_young_fail() {
         model.getAccount().setPhoneNumber(null);
         Result result = userAccount.executeOn(model);
-        assertThat(result).isFalse().hasFailureCause("account phone number starts with '+33'");
+        assertThat(result).isFalse().hasFailureCause("account phone number starts with '+33'",
+                Locale.US);
     }
 
     @Test
