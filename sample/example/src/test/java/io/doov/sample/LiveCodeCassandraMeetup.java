@@ -99,8 +99,8 @@ public class LiveCodeCassandraMeetup {
     static void cqlCreate(Session session) {
         FieldModel model = SampleModels.wrapper();
         Create create = SchemaBuilder.createTable("meetup", "sample_model")
-                .addClusteringColumn(LOGIN.name(), text())
-                .addPartitionKey("snapshot_id", timeuuid());
+                .addPartitionKey(LOGIN.name(), text())
+                .addClusteringColumn("snapshot_id", timeuuid());
 
         model.getFieldInfos().stream().filter(f -> f.id() != LOGIN)
                 .forEach(f -> create.addColumn(f.id().code(), cqlType(f)));
