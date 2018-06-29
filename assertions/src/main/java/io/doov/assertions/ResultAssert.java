@@ -15,6 +15,7 @@ package io.doov.assertions;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.assertj.core.api.AbstractAssert;
 
@@ -57,18 +58,32 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
     /**
      * Verifies that the result message is equal to the given one.
+     * <b>Beware : </b>only use this version if you do not use l10n feature
+     * otherwise your tests will be locale dependant
+     * <br>
+     * If you use l10n, please use #hasFailureCause(String message, Locale locale)
      *
      * @param message the message
      * @return self
      */
     public ResultAssert hasFailureCause(String message) {
-        if (!actual.getFailureCause().equals(message)) {
+        return hasFailureCause(message, Locale.getDefault());
+    }
+
+    /**
+     * Verifies that the result message is equal to the given one with
+     * Locale control to make tests independent from system locale
+     *
+     * @param message the message
+     * @return self
+     */
+    public ResultAssert hasFailureCause(String message, Locale locale) {
+        if (!actual.getFailureCause(locale).equals(message)) {
             failWithMessage("Expected result to have message '" + message
                     + "' but was '" + actual.getFailureCause() + "'");
         }
         return this;
     }
-
     /**
      * Verifies that the result message is null.
      *
