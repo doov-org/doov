@@ -4,7 +4,7 @@ import static io.doov.core.dsl.DOOV.map;
 import static io.doov.core.dsl.DOOV.mapRange;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.mapping.MappingRegistry.mappings;
+import static io.doov.core.dsl.DOOV.mappings;
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.mapping.TypeConverters.counter;

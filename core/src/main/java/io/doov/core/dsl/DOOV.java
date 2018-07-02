@@ -15,7 +15,6 @@
  */
 package io.doov.core.dsl;
 
-import static io.doov.core.dsl.mapping.MappingRegistry.mappings;
 import static io.doov.core.dsl.meta.LeafMetadata.falseMetadata;
 import static io.doov.core.dsl.meta.LeafMetadata.trueMetadata;
 import static java.util.Arrays.asList;
@@ -98,9 +97,10 @@ public class DOOV {
     public static StepCondition matchAny(StepCondition... steps) {
         return LogicalNaryCondition.matchAny(asList(steps));
     }
-    
+
     /**
      * See {@link LogicalUnaryCondition#negate(StepCondition)}}
+     *
      * @param step the step to negate
      * @return the step condition
      */
@@ -245,6 +245,17 @@ public class DOOV {
     }
 
     /**
+     * Create a mapping registry from given mapping rules
+     * See {@link MappingRegistry#mappings(MappingRule...)}
+     *
+     * @param mappingRules rules
+     * @return mapping registry containing rules
+     */
+    public static MappingRegistry mappings(MappingRule... mappingRules) {
+        return MappingRegistry.mappings(mappingRules);
+    }
+
+    /**
      * Create an array of mapping rules from a range of index
      *
      * @param startInclusive      inclusive start index, inclusive
@@ -254,7 +265,7 @@ public class DOOV {
      */
     public static MappingRegistry mapRange(int startInclusive, int endExclusive,
             Function<Integer, MappingRule> mappingRuleFunction) {
-        return mappings(IntStream.range(startInclusive, endExclusive)
+        return MappingRegistry.mappings(IntStream.range(startInclusive, endExclusive)
                 .mapToObj(mappingRuleFunction::apply)
                 .toArray(MappingRule[]::new));
     }
@@ -268,7 +279,7 @@ public class DOOV {
      */
     public static MappingRegistry mapFor(Stream<? extends DslField<?>> fieldStream,
             Function<DslField<?>, MappingRule> mappingRuleFunction) {
-        return mappings(fieldStream
+        return MappingRegistry.mappings(fieldStream
                 .filter(Objects::nonNull)
                 .map(mappingRuleFunction::apply)
                 .toArray(MappingRule[]::new));
