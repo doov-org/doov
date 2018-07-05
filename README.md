@@ -16,7 +16,9 @@ See the [the sample project in dOOv](sample). It contains two model domains, mav
 
 ## Conferences
 
-See our [latest presentation slides](http://doov.io/dsl_to_go_beyond_bean_validation_jdk_io.html) at JDK.IO.
+See our [presentation slides](http://doov.io/dsl_to_go_beyond_bean_validation_jdk_io.html) at JDK.IO.
+See our [presentation slides](http://doov.io/dsl_to_go_beyond_bean_validation_ocode.html) at Oracle Code.
+See our [presentation slides](http://doov.io/implementing_failure_causes_with_doov.html) about the implementation of failure cause at Sorbonne University.
 
 ## Usage
 
