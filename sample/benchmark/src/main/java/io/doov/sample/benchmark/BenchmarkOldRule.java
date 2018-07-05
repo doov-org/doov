@@ -15,6 +15,8 @@
  */
 package io.doov.sample.benchmark;
 
+import java.util.concurrent.TimeUnit;
+
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -25,6 +27,8 @@ import io.doov.sample.validation.RulesOld;
 @Fork(value = 1)
 @Warmup(iterations = 5)
 @Measurement(iterations = 5)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class BenchmarkOldRule {
 
     private static final SampleModel MODEL = SampleModels.sample();

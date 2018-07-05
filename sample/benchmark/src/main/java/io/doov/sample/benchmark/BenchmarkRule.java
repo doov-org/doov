@@ -20,9 +20,10 @@ import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static java.util.stream.Collectors.toList;
 
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
-import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import io.doov.core.FieldModel;
@@ -31,6 +32,11 @@ import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.sample.model.*;
 
+@Fork(value = 1)
+@Warmup(iterations = 5)
+@Measurement(iterations = 5)
+@BenchmarkMode(Mode.Throughput)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class BenchmarkRule {
 
     private static final FieldModel MODEL = SampleModels.wrapper();
