@@ -38,6 +38,8 @@ public class Templates {
     public static final String dslFieldModel = template("DslFieldModel.template");
     public final static String dslFieldMethod = template("DslFieldMethod.template");
     public final static String dslFieldIterableMethod = template("DslFieldIterableMethod.template");
+    public final static String dslEntrypointMethod = template("DslFieldEntrypointMethod.template");
+
 
     private static String template(String template) {
         try {

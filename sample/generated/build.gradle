@@ -33,5 +33,6 @@ doovCodeGen {
         packageFilter = 'io.doov.benchmark'
         fieldClass = 'io.doov.benchmark.model.BenchmarkFieldId'
         sourceClass = 'io.doov.benchmark.model.BenchmarkModel'
+        dslEntrypointMethods = false
     }
 }

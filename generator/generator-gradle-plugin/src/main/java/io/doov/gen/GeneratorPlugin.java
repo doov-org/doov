@@ -35,6 +35,7 @@ public class GeneratorPlugin implements Plugin<Project> {
                 task.getDslModelPackage().set(modelMap.getDslModelPackage());
                 task.getWrapperPackage().set(modelMap.getWrapperPackage());
                 task.getFieldInfoPackage().set(modelMap.getFieldInfoPackage());
+                task.getDslEntrypointMethods().set(modelMap.getDslEntrypointMethods());
 
                 task.doFirst(t -> {
                    target.delete(modelMap.getOutputDirectory());

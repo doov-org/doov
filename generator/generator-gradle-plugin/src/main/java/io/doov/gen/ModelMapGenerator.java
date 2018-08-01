@@ -20,12 +20,14 @@ public class ModelMapGenerator {
     private String wrapperPackage;
     private String fieldInfoPackage;
     private String dslModelPackage;
+    private Boolean dslEntrypointMethods;
 
     public ModelMapGenerator(String name, Project project) {
         this.name = name;
         this.outputDirectory = new File(project.getBuildDir(), "doov/" + name);
         this.outputResourceDirectory = new File(project.getBuildDir(), "doov/" + name);
         this.enumFieldInfo = true;
+        this.dslEntrypointMethods = true;
     }
 
     public String getName() {
@@ -134,6 +136,14 @@ public class ModelMapGenerator {
 
     public void setDslModelPackage(String dslModelPackage) {
         this.dslModelPackage = dslModelPackage;
+    }
+
+    public Boolean getDslEntrypointMethods() {
+        return dslEntrypointMethods;
+    }
+
+    public void setDslEntrypointMethods(Boolean dslEntrypointMethods) {
+        this.dslEntrypointMethods = dslEntrypointMethods;
     }
 
 }
