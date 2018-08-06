@@ -39,6 +39,15 @@ public interface ValidationRule extends SyntaxTree {
     Result executeOn(DslModel model);
 
     /**
+     * Executes the validation rule on the given model.
+     *
+     * @param model the model
+     * @param context custom context
+     * @return the result
+     */
+    Result executeOn(DslModel model, Context context);
+
+    /**
      * Registers this rule on the given registry.
      *
      * @param registry the registry

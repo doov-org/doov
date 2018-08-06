@@ -50,7 +50,11 @@ public class DefaultValidationRule implements ValidationRule {
 
     @Override
     public Result executeOn(DslModel model) {
-        final DefaultContext context = new DefaultContext(shortCircuit, stepWhen.stepCondition().getMetadata());
+        return executeOn(model, new DefaultContext(shortCircuit, stepWhen.stepCondition().getMetadata()));
+    }
+
+    @Override
+    public Result executeOn(DslModel model, Context context) {
         boolean valid = stepWhen.stepCondition().predicate().test(model, context);
         return new DefaultResult(valid, context);
     }

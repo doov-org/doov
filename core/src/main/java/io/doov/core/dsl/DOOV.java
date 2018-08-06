@@ -20,18 +20,15 @@ import static io.doov.core.dsl.meta.LeafMetadata.trueMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.MappingRegistry;
-import io.doov.core.dsl.lang.MappingRule;
-import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.mapping.*;
 
 /**
@@ -242,6 +239,27 @@ public class DOOV {
      */
     public static <I> StaticStepMap<I> map(I value) {
         return new StaticStepMap<>(() -> value);
+    }
+
+    /**
+     * Start defining a value mapping with value null
+     *
+     * @param <I> value type
+     * @return value map step
+     */
+    public static <I> StaticStepMap<I> mapNull() {
+        return new StaticStepMap<>(() -> null);
+    }
+
+    /**
+     * Start defining a context-aware value mapping
+     *
+     * @param valueFunction context dependent value function
+     * @param <I> value type
+     * @return value map step
+     */
+    public static <I> ContextawareStepMap<I> map(BiFunction<DslModel, Context, I> valueFunction) {
+        return new ContextawareStepMap<>(valueFunction);
     }
 
     /**

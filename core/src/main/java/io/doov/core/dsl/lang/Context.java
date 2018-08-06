@@ -62,6 +62,14 @@ public interface Context {
     void addEvalValue(FieldId id, Object value);
 
     /**
+     * Adds the set value for the given field id.
+     *
+     * @param id    the id
+     * @param value the value
+     */
+    void addSetValue(FieldId id, Object value);
+
+    /**
      * Return the evaluation value for this field id.
      *
      * @param id the id

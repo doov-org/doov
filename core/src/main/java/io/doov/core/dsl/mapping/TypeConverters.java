@@ -7,8 +7,8 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 
 public class TypeConverters {
@@ -22,7 +22,7 @@ public class TypeConverters {
     }
 
     public static <I, O> StaticTypeConverter<I, O> valueConverter(Function<I, O> function, String description) {
-        return new DefaultStaticTypeConverter<>(function, description);
+        return new DefaultStaticTypeConverter<>((context, i) -> function.apply(i), description);
     }
 
     public static <I, J, O> BiTypeConverter<I, J, O> biConverter(BiFunction<Optional<I>, Optional<J>, O> converter,
@@ -42,7 +42,7 @@ public class TypeConverters {
                 description);
     }
 
-    public static <O> NaryTypeConverter<O> nConverter(BiFunction<FieldModel, List<DslField>, O> function,
+    public static <O> NaryTypeConverter<O> nConverter(BiFunction<DslModel, List<DslField>, O> function,
             String description) {
         return new DefaultNaryTypeConverter<>(function, description);
     }

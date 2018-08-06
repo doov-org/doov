@@ -69,7 +69,12 @@ public class DefaultContext implements Context {
     public void addEvalValue(FieldId id, Object value) {
         values.put(id, value);
     }
-    
+
+    @Override
+    public void addSetValue(FieldId id, Object value) {
+        values.put(id, value);
+    }
+
     @Override
     public Object getEvalValue(FieldId id) {
         return values.get(id);

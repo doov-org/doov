@@ -27,6 +27,14 @@ public interface MappingRule extends SyntaxTree {
     void executeOn(FieldModel inModel, FieldModel outModel);
 
     /**
+     * Execute the mapping rule on in/out models with given context
+     *
+     * @param inModel in model
+     * @param outModel out model
+     */
+    void executeOn(FieldModel inModel, FieldModel outModel, Context context);
+
+    /**
      * Stream over mapping rules contained in this rule Default implementation returns a stream of itself.
      *
      * @return mapping rule stream

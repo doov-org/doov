@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.impl.DefaultContext;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MappingOperator;
@@ -50,8 +52,21 @@ public class MappingRegistry implements MappingRule {
      * @param outModel out model
      */
     public void validateAndExecute(FieldModel inModel, FieldModel outModel) {
+        DefaultContext context = new DefaultContext(REGISTRY_METADATA);
         mappingRules.stream().filter(m -> m.validate(inModel, outModel))
-                .forEach(m -> m.executeOn(inModel, outModel));
+                .forEach(m -> m.executeOn(inModel, outModel, context));
+    }
+
+    /**
+     * Validate and execute rules in this registry with contained order on given models
+     *
+     * @param inModel  in model
+     * @param outModel out model
+     * @param context context
+     */
+    public void validateAndExecute(FieldModel inModel, FieldModel outModel, Context context) {
+        mappingRules.stream().filter(m -> m.validate(inModel, outModel))
+                .forEach(m -> m.executeOn(inModel, outModel, context));
     }
 
     /**
@@ -67,10 +82,13 @@ public class MappingRegistry implements MappingRule {
     }
 
     @Override
+    public void executeOn(FieldModel inModel, FieldModel outModel, Context context) {
+        mappingRules.forEach(rule -> rule.executeOn(inModel, outModel, context));
+    }
+
+    @Override
     public void executeOn(FieldModel inModel, FieldModel outModel) {
-        for (MappingRule rule : mappingRules) {
-            rule.executeOn(inModel, outModel);
-        }
+        this.executeOn(inModel, outModel, new DefaultContext(REGISTRY_METADATA));
     }
 
     @Override

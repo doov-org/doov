@@ -20,9 +20,9 @@ import io.doov.core.dsl.lang.Result;
 public class DefaultResult implements Result {
 
     private final boolean validated;
-    private final DefaultContext context;
+    private final Context context;
 
-    protected DefaultResult(boolean validated, DefaultContext context) {
+    protected DefaultResult(boolean validated, Context context) {
         this.validated = validated;
         this.context = context;
     }

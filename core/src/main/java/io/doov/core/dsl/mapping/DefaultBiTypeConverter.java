@@ -6,9 +6,10 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.BiTypeConverter;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
@@ -27,7 +28,7 @@ public class DefaultBiTypeConverter<I, J, O> implements BiTypeConverter<I, J, O>
     }
 
     @Override
-    public O convert(FieldModel fieldModel, DslField<I> in, DslField<J> in2) {
+    public O convert(DslModel fieldModel, Context context, DslField<I> in, DslField<J> in2) {
         return converter.apply(
                 Optional.ofNullable(fieldModel.get(in.id())),
                 Optional.ofNullable(fieldModel.get(in2.id())));

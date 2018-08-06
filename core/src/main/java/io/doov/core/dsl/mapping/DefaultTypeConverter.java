@@ -6,8 +6,9 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Function;
 
-import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.TypeConverter;
 import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
@@ -35,7 +36,7 @@ public class DefaultTypeConverter<I, O> implements TypeConverter<I, O> {
     }
 
     @Override
-    public O convert(FieldModel fieldModel, DslField<I> in) {
+    public O convert(DslModel fieldModel, Context context, DslField<I> in) {
         return converter.apply(Optional.ofNullable(fieldModel.get(in.id())));
     }
 

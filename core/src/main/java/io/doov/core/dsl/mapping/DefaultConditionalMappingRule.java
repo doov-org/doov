@@ -8,6 +8,7 @@ import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import java.util.Locale;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
@@ -53,12 +54,17 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel) {
-        if (validationRule.executeOn(inModel).isTrue()) {
-            mappingRules.executeOn(inModel, outModel);
+    public void executeOn(FieldModel inModel, FieldModel outModel, Context context) {
+        if (validationRule.executeOn(inModel, context).isTrue()) {
+            mappingRules.executeOn(inModel, outModel, context);
         } else if (!elseMappingRules.isEmpty()) {
-            elseMappingRules.executeOn(inModel, outModel);
+            elseMappingRules.executeOn(inModel, outModel, context);
         }
+    }
+
+    @Override
+    public void executeOn(FieldModel inModel, FieldModel outModel) {
+        this.executeOn(inModel, outModel, new DefaultContext(mappings(then)));
     }
 
     @Override
