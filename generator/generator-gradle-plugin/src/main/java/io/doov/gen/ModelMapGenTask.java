@@ -59,6 +59,7 @@ public class ModelMapGenTask extends DefaultTask {
     private final Property<String> wrapperPackage;
     private final Property<String> fieldInfoPackage;
     private final Property<String> dslModelPackage;
+    private final Property<Boolean> dslEntrypointMethods;
 
     public ModelMapGenTask() {
         this.outputDirectory = getProject().getObjects().property(File.class);
@@ -74,6 +75,7 @@ public class ModelMapGenTask extends DefaultTask {
         this.wrapperPackage = getProject().getObjects().property(String.class);
         this.fieldInfoPackage = getProject().getObjects().property(String.class);
         this.dslModelPackage = getProject().getObjects().property(String.class);
+        this.dslEntrypointMethods = getProject().getObjects().property(Boolean.class);
     }
 
     @Classpath
@@ -156,6 +158,12 @@ public class ModelMapGenTask extends DefaultTask {
     @Optional
     public Property<String> getDslModelPackage() {
         return dslModelPackage;
+    }
+
+    @Input
+    @Optional
+    public Property<Boolean> getDslEntrypointMethods() {
+        return dslEntrypointMethods;
     }
 
     @TaskAction
@@ -318,7 +326,7 @@ public class ModelMapGenTask extends DefaultTask {
             conf.put("target.class.name", targetClassName);
             conf.put("model.class.name", modelClazz.getSimpleName());
             conf.put("process.field.info.class", targetFieldInfoPackage + "." + fieldInfoClassName);
-            conf.put("imports", DslMethodsGen.imports(fieldInfoMap, typeProvider,
+            conf.put("imports", DslMethodsGen.imports(fieldInfoMap, typeProvider, dslEntrypointMethods.get() ?
                     Arrays.asList(wrapperFqcn,
                             modelClazz.getName(),
                             DefaultStepWhen.class.getName(),
@@ -326,9 +334,11 @@ public class ModelMapGenTask extends DefaultTask {
                             Result.class.getName(),
                             StepCondition.class.getName(),
                             StepWhen.class.getName(),
-                            RuleRegistry.class.getName())));
+                            RuleRegistry.class.getName()) : Collections.emptyList()));
             conf.put("fields", fields(fieldInfoMap, typeProvider, enumFieldInfo.get()));
             conf.put("methods", iterableMethods(fieldInfoMap, typeProvider));
+            String entryPointMethods = dslEntrypointMethods.get() ? MacroProcessor.replaceProperties(Templates.dslEntrypointMethod, conf) : "";
+            conf.put("entrypoint", entryPointMethods);
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(Templates.dslFieldModel, conf);
             Files.write(content, targetFile, Charset.forName("UTF8"));

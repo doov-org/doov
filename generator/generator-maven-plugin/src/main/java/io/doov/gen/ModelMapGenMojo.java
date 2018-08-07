@@ -111,6 +111,9 @@ public final class ModelMapGenMojo extends AbstractMojo {
     @Parameter
     private String dslModelPackage;
 
+    @Parameter(defaultValue = "true")
+    private boolean dslEntrypointMethods;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (sourceClass == null) {
@@ -295,6 +298,8 @@ public final class ModelMapGenMojo extends AbstractMojo {
                             RuleRegistry.class.getName())));
             conf.put("fields", fields(fieldInfoMap, typeProvider, enumFieldInfo));
             conf.put("methods", iterableMethods(fieldInfoMap, typeProvider));
+            String entryPointMethods = dslEntrypointMethods ? MacroProcessor.replaceProperties(Templates.dslEntrypointMethod, conf) : "";
+            conf.put("entrypoint", entryPointMethods);
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(Templates.dslFieldModel, conf);
             Files.write(content, targetFile, Charset.forName("UTF8"));
