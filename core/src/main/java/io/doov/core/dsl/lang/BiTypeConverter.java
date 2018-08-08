@@ -16,6 +16,7 @@ public interface BiTypeConverter<I, J, O> extends SyntaxTree {
      * Convert the given fields in with type {@link O} {@link J}, the model to the value in type {@link O}
      *
      * @param fieldModel field model
+     * @param context context
      * @param in 1st in field
      * @param in2 2nd in field
      * @return output value

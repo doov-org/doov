@@ -14,6 +14,7 @@ public interface NaryTypeConverter<O> extends SyntaxTree {
      * Convert the given in fields in the model to the value in type {@link O}
      *
      * @param fieldModel in model
+     * @param context context
      * @param ins in fields
      * @return out value
      */
