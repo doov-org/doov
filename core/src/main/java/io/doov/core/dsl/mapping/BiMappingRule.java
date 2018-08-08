@@ -46,15 +46,16 @@ public class BiMappingRule<I, J, O> implements MappingRule {
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel, Context context) {
+    public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
         ModelInterceptor in = new ModelInterceptor(inModel, context);
         ModelInterceptor out = new ModelInterceptor(outModel, context);
         out.set(outFieldInfo.id(), typeConverter.convert(in, context, inFieldInfo, in2FieldInfo));
+        return context;
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel) {
-        this.executeOn(inModel, outModel, new DefaultContext(this.metadata));
+    public Context executeOn(FieldModel inModel, FieldModel outModel) {
+        return executeOn(inModel, outModel, new DefaultContext(this.metadata));
     }
 
     @Override

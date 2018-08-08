@@ -22,9 +22,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.mapping.MappingRegistry;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
 import io.doov.sample.model.*;
 import io.doov.sample.wrapper.SampleModelWrapper;
@@ -32,11 +34,9 @@ import io.doov.sample.wrapper.SampleModelWrapper;
 public class DOOVMappingTest {
 
     private static final TypeConverter<String, String> STRIPPING_COUNTRY_CODE =
-            converter(in -> in.startsWith("+33") ? "0" + in.substring(3, in.length()) : in, "",
-                    "stripping country code");
+            converter(in -> in.startsWith("+33") ? "0" + in.substring(3) : in, "", "stripping country code");
 
-    private static final TypeConverter<String, Integer> LENGTH_OR_ZERO =
-            converter(String::length, 0, "string length");
+    private static final TypeConverter<String, Integer> LENGTH_OR_ZERO = converter(String::length, 0, "string length");
 
     private static final BiTypeConverter<String, String, String> FULL_NAME =
             biConverter((i, j) -> i + " " + j, "", "", "firstName lastName");
@@ -91,7 +91,9 @@ public class DOOVMappingTest {
                         .to(accountLanguage),
 
                 when(accountLogin.isNotNull()).then(
-                        map(() -> true).to(accountAcceptEmail))
+                        map(() -> true).to(accountAcceptEmail)),
+
+                map((model, context) -> ((MyContext) context).isMine()).to(configurationMailingCampaign)
         );
     }
 
@@ -107,11 +109,24 @@ public class DOOVMappingTest {
         return null;
     }
 
+    private class MyContext extends DefaultContext {
+
+        private final boolean isMine = true;
+
+        MyContext() {
+            super(MappingMetadata.mappings(MappingOperator.mappings));
+        }
+
+        boolean isMine() {
+            return isMine;
+        }
+    }
+
     @Test
     void doov() {
         SampleModelWrapper sample = new SampleModelWrapper(sample());
         SampleModelWrapper copy = new SampleModelWrapper();
-        mappings.validateAndExecute(sample, copy);
+        mappings.validateAndExecute(sample, copy, new MyContext());
         assertThat(copy.getModel().getConfiguration().getMaxLong()).isEqualTo(9);
         assertThat(copy.getModel().getConfiguration().getMinAge()).isEqualTo(3);
         assertThat(copy.getModel().getAccount().getPhoneNumber()).isEqualTo("0102030409");
@@ -120,6 +135,7 @@ public class DOOVMappingTest {
         assertThat(copy.getModel().getConfiguration().getMaxEmailSize()).isEqualTo(3);
         assertThat(copy.getModel().getAccount().getLanguage()).isEqualTo(Language.FR);
         assertThat(copy.getModel().getAccount().getAcceptEmail()).isTrue();
+        assertThat(copy.getModel().getConfiguration().isMailingCampaign()).isTrue();
     }
 
     @Test
@@ -127,7 +143,7 @@ public class DOOVMappingTest {
         SampleModelWrapper sample = new SampleModelWrapper(sample());
         SampleModelWrapper copy = new SampleModelWrapper();
         sample.set(accountAcceptEmail, false);
-        mappings.validateAndExecute(sample, copy);
+        mappings.validateAndExecute(sample, copy, new MyContext());
         assertThat(copy.getModel().getConfiguration().getMaxLong()).isEqualTo(9);
         assertThat(copy.getModel().getConfiguration().getMinAge()).isEqualTo(3);
         assertThat(copy.getModel().getAccount().getPhoneNumber()).isEqualTo("0102030409");
@@ -135,7 +151,7 @@ public class DOOVMappingTest {
         assertThat(copy.getModel().getAccount().getEmail()).isNull();
         assertThat(copy.getModel().getConfiguration().getMaxEmailSize()).isEqualTo(3);
         assertThat(copy.getModel().getAccount().getLanguage()).isEqualTo(Language.FR);
-        assertThat(copy.getModel().getConfiguration().isMailingCampaign()).isFalse();
+        assertThat(copy.getModel().getConfiguration().isMailingCampaign()).isTrue();
     }
 
     @Test

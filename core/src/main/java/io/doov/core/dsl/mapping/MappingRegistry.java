@@ -13,9 +13,7 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.MappingRule;
-import io.doov.core.dsl.meta.MappingMetadata;
-import io.doov.core.dsl.meta.MappingOperator;
-import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.*;
 
 /**
  * Immutable, ordered, composable container for {@link MappingRule}s
@@ -50,11 +48,13 @@ public class MappingRegistry implements MappingRule {
      *
      * @param inModel  in model
      * @param outModel out model
+     * @return context
      */
-    public void validateAndExecute(FieldModel inModel, FieldModel outModel) {
+    public Context validateAndExecute(FieldModel inModel, FieldModel outModel) {
         DefaultContext context = new DefaultContext(REGISTRY_METADATA);
         mappingRules.stream().filter(m -> m.validate(inModel, outModel))
                 .forEach(m -> m.executeOn(inModel, outModel, context));
+        return context;
     }
 
     /**
@@ -63,10 +63,13 @@ public class MappingRegistry implements MappingRule {
      * @param inModel  in model
      * @param outModel out model
      * @param context context
+     * @param <C> context type
+     * @return context
      */
-    public void validateAndExecute(FieldModel inModel, FieldModel outModel, Context context) {
+    public <C extends Context> C validateAndExecute(FieldModel inModel, FieldModel outModel, C context) {
         mappingRules.stream().filter(m -> m.validate(inModel, outModel))
                 .forEach(m -> m.executeOn(inModel, outModel, context));
+        return context;
     }
 
     /**
@@ -82,13 +85,14 @@ public class MappingRegistry implements MappingRule {
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel, Context context) {
+    public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
         mappingRules.forEach(rule -> rule.executeOn(inModel, outModel, context));
+        return context;
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel) {
-        this.executeOn(inModel, outModel, new DefaultContext(REGISTRY_METADATA));
+    public Context executeOn(FieldModel inModel, FieldModel outModel) {
+        return this.executeOn(inModel, outModel, new DefaultContext(REGISTRY_METADATA));
     }
 
     @Override

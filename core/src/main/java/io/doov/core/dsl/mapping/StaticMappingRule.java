@@ -37,14 +37,15 @@ public class StaticMappingRule<I, O> implements MappingRule {
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel, Context context) {
+    public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
         ModelInterceptor out = new ModelInterceptor(outModel, context);
         out.set(outFieldInfo.id(), typeConverter.convert(context, inputObject.get()));
+        return context;
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel) {
-        this.executeOn(inModel, outModel, new DefaultContext(metadata));
+    public Context executeOn(FieldModel inModel, FieldModel outModel) {
+        return this.executeOn(inModel, outModel, new DefaultContext(metadata));
     }
 
     @Override

@@ -54,17 +54,18 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel, Context context) {
+    public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
         if (validationRule.executeOn(inModel, context).isTrue()) {
             mappingRules.executeOn(inModel, outModel, context);
         } else if (!elseMappingRules.isEmpty()) {
             elseMappingRules.executeOn(inModel, outModel, context);
         }
+        return context;
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel) {
-        this.executeOn(inModel, outModel, new DefaultContext(mappings(then)));
+    public Context executeOn(FieldModel inModel, FieldModel outModel) {
+        return this.executeOn(inModel, outModel, new DefaultContext(mappings(then)));
     }
 
     @Override

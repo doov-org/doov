@@ -8,7 +8,6 @@ import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
 import java.util.Locale;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
@@ -51,15 +50,16 @@ public class ContextawareMappingRule<I, O> implements MappingRule {
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel, Context context) {
+    public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
         ModelInterceptor out = new ModelInterceptor(outModel, context);
         ModelInterceptor in = new ModelInterceptor(inModel, context);
         out.set(outFieldInfo.id(), converter.convert(context, valueFunction.apply(in, context)));
+        return context;
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel) {
-        this.executeOn(inModel, outModel, new DefaultContext(metadata));
+    public Context executeOn(FieldModel inModel, FieldModel outModel) {
+        return this.executeOn(inModel, outModel, new DefaultContext(metadata));
     }
 
 }
