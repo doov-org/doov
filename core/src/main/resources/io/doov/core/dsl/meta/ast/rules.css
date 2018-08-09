@@ -1,0 +1,136 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    box-sizing:border-box;
+    line-height: 1.5;
+}
+.percentage-wrapper-big {
+    width: 130px;
+    float: right;
+    margin-left: 10px;
+    margin-top: 4px;
+}
+
+.percentage-wrapper-small {
+    width: 100px;
+    float: right;
+    margin-left: 10px;
+    margin-top: 6px;
+}
+
+.percentage-value {
+    width: 40px;
+    float: right;
+    text-align: right;
+    font-size: 10px;
+}
+
+.exclusion-furets-blue-big {
+    color: #fff !important;
+    background-color: #020C7E !important;
+    -webkit-print-color-adjust: exact;
+    height: 10px;
+}
+
+.exclusion-furets-blue-small {
+    color: #fff !important;
+    background-color: #020C7E !important;
+    -webkit-print-color-adjust: exact;
+    height: 7px;
+}
+
+.exclusion-border-big {
+    border: 1px solid #ccc !important;
+    width: 90px;
+    float: left;
+}
+
+.exclusion-border-small {
+    border: 1px solid #ccc !important;
+    width: 60px;
+    float: left;
+}
+
+.token-class-class {
+    color: #983E77;
+}
+
+.token-class-name {
+    color: black;
+}
+
+.dsl-navigation-table {
+    color: black;
+    margin-bottom: 5px;
+}
+
+.dsl-navigation-table td, th {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 3px 9px;
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+    vertical-align: baseline;
+}
+
+.dsl-validation-rule {
+    color: black;
+}
+
+.dsl-validation-rule li {
+    display: list-item;
+}
+
+.dsl-validation-rule ul {
+    margin-bottom: 3px;
+}
+
+.dsl-token-rule {
+    color: #983E77;
+}
+
+.dsl-token-when {
+    color: #983E77;
+}
+
+.dsl-token-validate {
+    color: #983E77;
+}
+
+.dsl-token-nary {
+    color: black;
+    font-weight: bold;
+}
+
+.dsl-token-unary {
+    font-weight: bold;
+}
+
+.dsl-token-binary {
+    color: black;
+    font-weight: bold;
+}
+
+.dsl-token-field {
+    color: #683E40;
+}
+
+.dsl-token-operator {
+    color: black;
+    font-weight: bold;
+}
+
+.dsl-token-value {
+    color: #020C7E;
+    font-style: italic;
+}
+
+.dsl-validation-message {
+    color: #020C7E;
+}
+
+.dsl-token-unknown {
+    color: red;
+}
