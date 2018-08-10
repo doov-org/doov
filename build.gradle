@@ -62,6 +62,11 @@ subprojects {
         useJUnitPlatform()
     }
 
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        options.compilerArgs << '-proc:none'
+    }
+
     task javadocJar(type: Jar) {
         classifier = 'javadoc'
         from javadoc
