@@ -34,19 +34,14 @@ public class ContextawareMappingRule<I, O> implements MappingRule {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        metadata.accept(visitor, depth);
-        converter.accept(visitor, depth);
-    }
-
-    @Override
-    public String readable(Locale locale) {
-        return astToString(this, locale);
-    }
-
-    @Override
     public boolean validate(FieldModel inModel, FieldModel outModel) {
         return outModel.getFieldInfos().stream().anyMatch(f -> f.id().equals(outFieldInfo.id()));
+    }
+
+    @Override
+    public Context executeOn(FieldModel inModel, FieldModel outModel) {
+        return this.executeOn(inModel, outModel, new DefaultContext(metadata));
+
     }
 
     @Override
@@ -58,8 +53,13 @@ public class ContextawareMappingRule<I, O> implements MappingRule {
     }
 
     @Override
-    public Context executeOn(FieldModel inModel, FieldModel outModel) {
-        return this.executeOn(inModel, outModel, new DefaultContext(metadata));
+    public void accept(MetadataVisitor visitor, int depth) {
+        metadata.accept(visitor, depth);
+        converter.accept(visitor, depth);
+    }
+    @Override
+    public String readable(Locale locale) {
+        return astToString(this, locale);
     }
 
 }
