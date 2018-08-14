@@ -1,7 +1,8 @@
 # dOOv (Domain Object Oriented Validation)
 
-[![Build Status](https://travis-ci.org/lesfurets/dOOv.svg?branch=master)](https://travis-ci.org/lesfurets/dOOv)
-[![Build status](https://ci.appveyor.com/api/projects/status/hnjtqh74yql2bb6c/branch/master?svg=true)](https://ci.appveyor.com/project/ozangunalp/doov/branch/master)
+[![Build Status](https://travis-ci.org/doov-io/doov.svg?branch=master)](https://travis-ci.org/doov-io/doov)
+[![Build status](https://ci.appveyor.com/api/projects/status/xpesv3x6bwt00ucj/branch/master?svg=true)](https://ci.appveyor.com/project/ozangunalp/doov-j6ky3/branch/master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.doov/doov-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.doov/doov-core)
 
 dOOv is a fluent API for typesafe domain model validation. It uses annotations, code generation and a type safe DSL to make domain model validation fast and easy.
 
