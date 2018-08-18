@@ -113,9 +113,40 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
+    public void startMetadata(MappingMetadata metadata, int depth) {
+        switch (metadata.type()) {
+            case SINGLE_MAPPING:
+                sb.append(formatCurrentIndent());
+                sb.append(formatOperator(MappingOperator.map));
+                sb.append(formatNewLine());
+                break;
+            case MULTIPLE_MAPPING:
+                sb.append(formatCurrentIndent());
+                sb.append(formatMappingMetadata(metadata));
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
     public void visitMetadata(MappingMetadata metadata, int depth) {
-        sb.append(formatCurrentIndent());
-        sb.append(formatMappingMetadata(metadata));
+        switch (metadata.type()) {
+            case MAPPING_INPUT:
+                sb.append(formatCurrentIndent());
+                sb.append(formatMappingMetadata(metadata));
+                break;
+            case MAPPING_OUTPUT:
+                sb.append(formatCurrentIndent());
+                sb.append(formatMappingMetadata(metadata));
+                break;
+            case SINGLE_MAPPING:
+                sb.append(formatCurrentIndent());
+                sb.append(formatOperator(MappingOperator.to));
+                break;
+            default:
+                break;
+        }
         sb.append(formatNewLine());
     }
 

@@ -10,6 +10,7 @@ import java.util.function.Function;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.mapping.converter.*;
 
 public class TypeConverters {
 
@@ -23,13 +24,6 @@ public class TypeConverters {
     public static <I, O> TypeConverter<I, O> converter(Function<I, O> converter, O nullCase,
             String description) {
         return new DefaultTypeConverter<>(i -> i.map(converter).orElse(nullCase), description);
-    }
-
-    // ValueConverters
-
-    public static <I, O> StaticTypeConverter<I, O> valueConverter(Function<I, O> function,
-            String description) {
-        return new DefaultStaticTypeConverter<>(function, description);
     }
 
     // BiConverters

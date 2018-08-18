@@ -8,7 +8,6 @@ import static io.doov.core.dsl.DOOV.mappings;
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.mapping.TypeConverters.counter;
-import static io.doov.core.dsl.mapping.TypeConverters.valueConverter;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.model.SampleModels.sample;
@@ -68,6 +67,7 @@ public class DOOVMappingTest {
                 map(userFirstName, userLastName)
                         .using(FULL_NAME)
                         .to(userFirstName),
+
                 when(accountAcceptEmail.isTrue()).then(
                         map(accountPreferencesMail, accountEmail)
                                 .using(CONVERTER)
@@ -87,7 +87,7 @@ public class DOOVMappingTest {
                                 map(favoriteSiteName(i)).to(favoriteSiteName(i)))),
 
                 map(() -> Country.FR)
-                        .using(valueConverter(this::countryToLanguage, ""))
+                        .using(converter(this::countryToLanguage, ""))
                         .to(accountLanguage),
 
                 when(accountLogin.isNotNull()).then(

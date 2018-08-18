@@ -14,6 +14,7 @@ import java.util.function.Function;
  * @param <V> the type of the third argument to the function
  * @param <R> the type of the result of the function
  */
+@FunctionalInterface
 public interface TriFunction<T, U, V, R> {
 
     /**

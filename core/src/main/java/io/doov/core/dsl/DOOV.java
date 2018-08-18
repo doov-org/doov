@@ -29,7 +29,7 @@ import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.MappingRegistry;
-import io.doov.core.dsl.mapping.*;
+import io.doov.core.dsl.mapping.builder.*;
 
 /**
  * Entry point of the DSL.

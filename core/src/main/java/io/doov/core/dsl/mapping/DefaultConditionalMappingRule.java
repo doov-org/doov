@@ -1,6 +1,5 @@
 package io.doov.core.dsl.mapping;
 
-import static io.doov.core.dsl.meta.MappingMetadata.mappings;
 import static io.doov.core.dsl.meta.MappingOperator._else;
 import static io.doov.core.dsl.meta.MappingOperator.then;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
@@ -14,6 +13,9 @@ import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultConditionalMappingRule implements ConditionalMappingRule {
+
+    private static final MappingMetadata thenMetadata = MappingMetadata.mappings(then);
+    private static final MappingMetadata elseMetadata = MappingMetadata.mappings(_else);
 
     private final StepWhen stepWhen;
     private final ValidationRule validationRule;
@@ -65,7 +67,7 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
 
     @Override
     public Context executeOn(FieldModel inModel, FieldModel outModel) {
-        return this.executeOn(inModel, outModel, new DefaultContext(mappings(then)));
+        return this.executeOn(inModel, outModel, new DefaultContext(thenMetadata));
     }
 
     @Override
@@ -77,18 +79,20 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
     public void accept(MetadataVisitor visitor, int depth) {
         stepWhen.accept(visitor, depth);
 
-        MappingMetadata thenMetadata = mappings(then);
         visitor.start(thenMetadata, depth);
-        visitor.visit(thenMetadata, depth);
-        mappingRules.stream().forEach(r -> r.accept(visitor, depth + 1));
-        visitor.end(thenMetadata, depth);
+        mappingRules.stream().forEach(r -> {
+            visitor.visit(thenMetadata, depth);
+            r.accept(visitor, depth + 1);
+            visitor.end(thenMetadata, depth);
+        });
 
         if (!elseMappingRules.isEmpty()) {
-            MappingMetadata elseMetadata = mappings(_else);
             visitor.start(elseMetadata, depth);
-            visitor.visit(elseMetadata, depth);
-            elseMappingRules.stream().forEach(r -> r.accept(visitor, depth + 1));
-            visitor.end(elseMetadata, depth);
+            elseMappingRules.stream().forEach(r -> {
+                visitor.visit(elseMetadata, depth);
+                r.accept(visitor, depth + 1);
+                visitor.end(elseMetadata, depth);
+            });
         }
     }
 }

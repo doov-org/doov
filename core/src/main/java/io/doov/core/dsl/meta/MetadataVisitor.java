@@ -16,7 +16,6 @@
 package io.doov.core.dsl.meta;
 
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.mapping.*;
 
 public interface MetadataVisitor {
 

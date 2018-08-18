@@ -10,6 +10,7 @@ import java.util.function.BiFunction;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.mapping.converter.*;
 
 public class TypeContextConverters {
 
@@ -18,13 +19,6 @@ public class TypeContextConverters {
     public static <I, O> TypeConverter<I, O> converter(BiFunction<Context, Optional<I>, O> converter,
             String description) {
         return new DefaultTypeConverter<>(converter, description);
-    }
-
-    // ValueConverters
-
-    public static <I, O> StaticTypeConverter<I, O> valueConverter(BiFunction<Context, I, O> function,
-            String description) {
-        return new DefaultStaticTypeConverter<>(function, description);
     }
 
     // BiConverters
