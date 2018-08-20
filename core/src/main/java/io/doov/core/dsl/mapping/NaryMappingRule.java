@@ -8,6 +8,8 @@ import java.util.Locale;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.impl.DefaultContext;
+import io.doov.core.dsl.impl.ModelInterceptor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
@@ -39,10 +41,16 @@ public class NaryMappingRule<O> implements MappingRule {
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel) {
-        outModel.set(outFieldInfo.id(),
-                typeConverter.convert(inModel, fieldInfos.toArray(new DslField[0])));
+    public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
+        ModelInterceptor in = new ModelInterceptor(inModel, context);
+        ModelInterceptor out = new ModelInterceptor(outModel, context);
+        out.set(outFieldInfo.id(), typeConverter.convert(in, context, fieldInfos.toArray(new DslField[0])));
+        return context;
+    }
 
+    @Override
+    public Context executeOn(FieldModel inModel, FieldModel outModel) {
+        return this.executeOn(inModel, outModel, new DefaultContext(metadata));
     }
 
     @Override

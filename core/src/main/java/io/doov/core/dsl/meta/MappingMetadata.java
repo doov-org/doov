@@ -5,6 +5,7 @@ package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
+import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
 import static io.doov.core.dsl.meta.MappingOperator.map;
 import static io.doov.core.dsl.meta.MappingOperator.to;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
@@ -16,10 +17,11 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 
 public class MappingMetadata implements Metadata {
@@ -65,6 +67,14 @@ public class MappingMetadata implements Metadata {
                 .field(outField);
     }
 
+    public static MappingMetadata mapping(BiFunction<DslModel, Context, ?> supplier, DslField outField) {
+        return new MappingMetadata(MetadataType.SINGLE_MAPPING)
+                .operator(map)
+                .function()
+                .operator(to)
+                .field(outField);
+    }
+
     private MappingMetadata fields(List<DslField> fields) {
         Iterator<DslField> iterator = fields.iterator();
         iterator.forEachRemaining(f -> {
@@ -82,6 +92,10 @@ public class MappingMetadata implements Metadata {
 
     private MappingMetadata value(Supplier<?> supplier) {
         return add(new Element(() -> String.valueOf(supplier.get()), ElementType.VALUE));
+    }
+
+    private MappingMetadata function() {
+        return add(new Element(() -> "-function-", UNKNOWN));
     }
 
     private MappingMetadata field(DslField readable) {

@@ -15,9 +15,10 @@ public interface StaticTypeConverter<I, O> extends SyntaxTree {
     /**
      * Return the converted value
      *
+     * @param context context
      * @param input input
      * @return output
      */
-    O convert(I input);
+    O convert(Context context, I input);
 
 }

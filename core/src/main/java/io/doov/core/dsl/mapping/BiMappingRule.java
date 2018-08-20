@@ -8,8 +8,9 @@ import java.util.Locale;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.BiTypeConverter;
-import io.doov.core.dsl.lang.MappingRule;
+import io.doov.core.dsl.impl.DefaultContext;
+import io.doov.core.dsl.impl.ModelInterceptor;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
@@ -45,8 +46,16 @@ public class BiMappingRule<I, J, O> implements MappingRule {
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel) {
-        outModel.set(outFieldInfo.id(), typeConverter.convert(inModel, inFieldInfo, in2FieldInfo));
+    public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
+        ModelInterceptor in = new ModelInterceptor(inModel, context);
+        ModelInterceptor out = new ModelInterceptor(outModel, context);
+        out.set(outFieldInfo.id(), typeConverter.convert(in, context, inFieldInfo, in2FieldInfo));
+        return context;
+    }
+
+    @Override
+    public Context executeOn(FieldModel inModel, FieldModel outModel) {
+        return executeOn(inModel, outModel, new DefaultContext(this.metadata));
     }
 
     @Override

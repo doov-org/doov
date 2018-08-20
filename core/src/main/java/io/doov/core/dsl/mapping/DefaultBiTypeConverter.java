@@ -6,29 +6,34 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.BiTypeConverter;
+import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class DefaultBiTypeConverter<I, J, O> implements BiTypeConverter<I, J, O> {
 
-    private BiFunction<Optional<I>, Optional<J>, O> converter;
+    private TriFunction<Context, Optional<I>, Optional<J>, O> function;
     private ConverterMetadata metadata;
 
-    public DefaultBiTypeConverter(BiFunction<Optional<I>, Optional<J>, O> converter, String description) {
-        this(converter, ConverterMetadata.metadata(description));
-    }
-
-    public DefaultBiTypeConverter(BiFunction<Optional<I>, Optional<J>, O> converter, ConverterMetadata metadata) {
-        this.converter = converter;
+    public DefaultBiTypeConverter(TriFunction<Context, Optional<I>, Optional<J>, O> function,
+            ConverterMetadata metadata) {
+        this.function = function;
         this.metadata = metadata;
     }
 
+    public DefaultBiTypeConverter(TriFunction<Context, Optional<I>, Optional<J>, O> converter, String description) {
+        this(converter, ConverterMetadata.metadata(description));
+    }
+
+    public DefaultBiTypeConverter(BiFunction<Optional<I>, Optional<J>, O> function, String description) {
+        this((c, i, j) -> function.apply(i, j), description);
+    }
+
     @Override
-    public O convert(FieldModel fieldModel, DslField<I> in, DslField<J> in2) {
-        return converter.apply(
+    public O convert(DslModel fieldModel, Context context, DslField<I> in, DslField<J> in2) {
+        return function.apply(context,
                 Optional.ofNullable(fieldModel.get(in.id())),
                 Optional.ofNullable(fieldModel.get(in2.id())));
     }

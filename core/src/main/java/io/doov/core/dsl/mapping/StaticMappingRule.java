@@ -11,8 +11,9 @@ import java.util.function.Supplier;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.MappingRule;
-import io.doov.core.dsl.lang.StaticTypeConverter;
+import io.doov.core.dsl.impl.DefaultContext;
+import io.doov.core.dsl.impl.ModelInterceptor;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
@@ -36,8 +37,15 @@ public class StaticMappingRule<I, O> implements MappingRule {
     }
 
     @Override
-    public void executeOn(FieldModel inModel, FieldModel outModel) {
-        outModel.set(outFieldInfo.id(), typeConverter.convert(inputObject.get()));
+    public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
+        ModelInterceptor out = new ModelInterceptor(outModel, context);
+        out.set(outFieldInfo.id(), typeConverter.convert(context, inputObject.get()));
+        return context;
+    }
+
+    @Override
+    public Context executeOn(FieldModel inModel, FieldModel outModel) {
+        return this.executeOn(inModel, outModel, new DefaultContext(metadata));
     }
 
     @Override

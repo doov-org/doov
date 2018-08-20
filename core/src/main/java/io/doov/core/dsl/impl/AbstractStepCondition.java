@@ -17,7 +17,6 @@ import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import java.util.Locale;
 import java.util.function.BiPredicate;
 
-import io.doov.core.FieldId;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
@@ -41,7 +40,7 @@ abstract class AbstractStepCondition implements StepCondition {
     @Override
     public BiPredicate<DslModel, Context> predicate() {
         return (model, context) -> {
-            final boolean test = predicate.test(new Interceptor(model, context), context);
+            final boolean test = predicate.test(new ModelInterceptor(model, context), context);
             if (test) {
                 metadata.incTrueEval();
                 context.addEvalTrue(metadata);
@@ -51,29 +50,6 @@ abstract class AbstractStepCondition implements StepCondition {
             }
             return test;
         };
-    }
-
-    private static final class Interceptor implements DslModel {
-        private final DslModel model;
-        private final Context context;
-
-        Interceptor(DslModel model, Context context) {
-            this.model = model;
-            this.context = context;
-        }
-
-        @Override
-        public <T> T get(FieldId id) {
-            final T value = model.get(id);
-            context.addEvalValue(id, value);
-            return value;
-        }
-
-        @Override
-        public <T> void set(FieldId fieldId, T value) {
-            model.set(fieldId, value);
-            // TODO context
-        }
     }
 
     @Override

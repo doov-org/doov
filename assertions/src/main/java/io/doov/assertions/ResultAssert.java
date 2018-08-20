@@ -75,6 +75,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * Locale control to make tests independent from system locale
      *
      * @param message the message
+     * @param locale locale
      * @return self
      */
     public ResultAssert hasFailureCause(String message, Locale locale) {
