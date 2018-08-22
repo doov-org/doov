@@ -7,10 +7,13 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.converter.*;
+import io.doov.core.serial.TypeAdapter;
+import io.doov.core.serial.TypeAdapterRegistry;
 
 /**
  * Factory methods of {@code TypeConverter}s
@@ -31,6 +34,45 @@ public class TypeConverters {
     public static <I, O> TypeConverter<I, O> converter(Function<I, O> converter,
             String description) {
         return new DefaultTypeConverter<>(i -> i.map(converter).orElseGet(() -> converter.apply(null)), description);
+    }
+
+    /**
+     * Convert the value in type {@code I} to String using {@code TypeAdapter} registry
+     *
+     * @param typeAdapters type adapter registry
+     * @param <I>          input type
+     * @return type converter that returns String representation of the value, {@code null} when the value is null,
+     * type converter throws {@code IllegalStateException} when no type adapters accepts to convert value.
+     */
+    public static <I> TypeConverter<I, String> asString(TypeAdapterRegistry typeAdapters) {
+        return new DefaultTypeConverter<>((context, i) ->
+                i.map(value -> typeAdapters.stream()
+                        .filter(t -> t.accept(value))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("cannot convert value " + value + " to string."))
+                        .toString(value))
+                        .orElse("null"), "as string");
+    }
+
+    /**
+     * Convert String to {@code I} using {@code TypeAdapter} registry
+     *
+     * @param fieldInfo field of the
+     * @param typeAdapters type adapter registry
+     * @param <O> output type
+     * @param <T> field type to lookup the type adapter
+     * @return type converter that returns the object value from String representation.
+     * @throws IllegalStateException if no type adapter is found for the given field
+     */
+    public static <O, T extends DslField<O> & FieldInfo> TypeConverter<String, O> fromString(T fieldInfo,
+            TypeAdapterRegistry typeAdapters) {
+        final TypeAdapter adapter = typeAdapters.stream()
+                .filter(t -> t.accept(fieldInfo))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("cannot find type adapter for field " + fieldInfo.id()));
+        return new DefaultTypeConverter<>((context, i) ->
+                i.map(value -> (O) adapter.fromString(fieldInfo, value))
+                        .orElse(null), "from string");
     }
 
     /**

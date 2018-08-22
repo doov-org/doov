@@ -22,9 +22,12 @@ import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.mapping.MappingRegistry;
+import io.doov.core.dsl.mapping.TypeConverters;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MappingOperator;
 import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
+import io.doov.core.serial.TypeAdapters;
+import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.model.*;
 import io.doov.sample.wrapper.SampleModelWrapper;
 
@@ -94,7 +97,8 @@ public class DOOVMappingTest {
                 map((model, context) -> ((MyContext) context).isMine()).to(configurationMailingCampaign),
 
                 map(Timezone.ETC_GMT).to(accountTimezone),
-                mapNull(accountTimezone)
+                mapNull(accountTimezone),
+                map(accountTimezone).using(TypeConverters.asString(TypeAdapters.INSTANCE)).to(DslSampleModel.userTel)
         );
     }
 
@@ -138,6 +142,7 @@ public class DOOVMappingTest {
         assertThat(copy.getModel().getAccount().getAcceptEmail()).isTrue();
         assertThat(copy.getModel().getConfiguration().isMailingCampaign()).isTrue();
         assertThat(copy.getModel().getAccount().getTimezone()).isNull();
+        assertThat(copy.getModel().getUser().getTel()).isEqualTo("ETC_GMT");
     }
 
     @Test
