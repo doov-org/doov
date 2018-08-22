@@ -1,15 +1,12 @@
 package io.doov.core.dsl;
 
-import static io.doov.core.dsl.DOOV.map;
-import static io.doov.core.dsl.DOOV.mapRange;
-import static io.doov.core.dsl.DOOV.matchAny;
-import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.DOOV.mappings;
+import static io.doov.core.dsl.DOOV.*;
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.mapping.TypeConverters.counter;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
+import static io.doov.sample.field.dsl.DslSampleModel.when;
 import static io.doov.sample.model.SampleModels.sample;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +22,8 @@ import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.mapping.MappingRegistry;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.MappingMetadata;
+import io.doov.core.dsl.meta.MappingOperator;
 import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
 import io.doov.sample.model.*;
 import io.doov.sample.wrapper.SampleModelWrapper;
@@ -93,7 +91,10 @@ public class DOOVMappingTest {
                 when(accountLogin.isNotNull()).then(
                         map(() -> true).to(accountAcceptEmail)),
 
-                map((model, context) -> ((MyContext) context).isMine()).to(configurationMailingCampaign)
+                map((model, context) -> ((MyContext) context).isMine()).to(configurationMailingCampaign),
+
+                map(Timezone.ETC_GMT).to(accountTimezone),
+                mapNull(accountTimezone)
         );
     }
 
@@ -136,6 +137,7 @@ public class DOOVMappingTest {
         assertThat(copy.getModel().getAccount().getLanguage()).isEqualTo(Language.FR);
         assertThat(copy.getModel().getAccount().getAcceptEmail()).isTrue();
         assertThat(copy.getModel().getConfiguration().isMailingCampaign()).isTrue();
+        assertThat(copy.getModel().getAccount().getTimezone()).isNull();
     }
 
     @Test
