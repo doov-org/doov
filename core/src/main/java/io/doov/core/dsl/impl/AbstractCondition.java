@@ -29,13 +29,11 @@ abstract class AbstractCondition<N> implements Readable {
 
     protected final DslField field;
     protected final PredicateMetadata metadata;
-    protected final BiFunction<DslModel, DslField, Optional<N>> value;
     protected final BiFunction<DslModel, Context, Optional<N>> function;
 
     protected AbstractCondition(DslField field) {
         this.field = field;
         this.metadata = fieldMetadata(field);
-        this.value = (model, context) -> valueModel(model, field);
         this.function = (model, context) -> valueModel(model, field);
     }
 
@@ -43,16 +41,15 @@ abstract class AbstractCondition<N> implements Readable {
             BiFunction<DslModel, Context, Optional<N>> function) {
         this.field = field;
         this.metadata = metadata;
-        this.value = (model, f) -> function.apply(model, null);
         this.function = function;
     }
 
     protected Optional<N> valueModel(DslModel model, DslField field) {
-        return Optional.ofNullable(model.<N> get(field.id()));
+        return Optional.ofNullable(model.get(field.id()));
     }
 
-    protected final Optional<N> value(DslModel model, DslField field) {
-        return value.apply(model, field);
+    protected final Optional<N> value(DslModel model, Context context) {
+        return function.apply(model, context);
     }
 
     protected final StepCondition predicate(LeafMetadata metadata,
