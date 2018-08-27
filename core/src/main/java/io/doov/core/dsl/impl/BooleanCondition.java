@@ -34,13 +34,12 @@ import io.doov.core.dsl.meta.LeafMetadata;
  */
 public class BooleanCondition extends DefaultCondition<Boolean> {
 
-    public BooleanCondition(DslField field) {
+    public BooleanCondition(DslField<Boolean> field) {
         super(field);
     }
 
-    public BooleanCondition(DslField field, LeafMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<Boolean>> value) {
-        super(field, metadata, value);
+    public BooleanCondition(LeafMetadata metadata, BiFunction<DslModel, Context, Optional<Boolean>> value) {
+        super(metadata, value);
     }
 
     /**
@@ -49,7 +48,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition not() {
-        return predicate(notMetadata(field), value -> !value);
+        return predicate(notMetadata(metadata), value -> !value);
     }
 
     /**
@@ -59,7 +58,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition and(boolean value) {
-        return predicate(andMetadata(field, value),
+        return predicate(andMetadata(metadata, value),
                         (model, context) -> Optional.of(value),
                         Boolean::logicalAnd);
     }
@@ -71,7 +70,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition and(LogicalFieldInfo value) {
-        return predicate(andMetadata(field, value),
+        return predicate(andMetadata(metadata, value),
                         (model, context) -> valueModel(model, value),
                         Boolean::logicalAnd);
     }
@@ -83,7 +82,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition or(boolean value) {
-        return predicate(orMetadata(field, value),
+        return predicate(orMetadata(metadata, value),
                         (model, context) -> Optional.of(value),
                         Boolean::logicalOr);
     }
@@ -95,7 +94,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition or(LogicalFieldInfo value) {
-        return predicate(orMetadata(field, value),
+        return predicate(orMetadata(metadata, value),
                         (model, context) -> valueModel(model, value),
                         Boolean::logicalOr);
     }
@@ -107,7 +106,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition xor(boolean value) {
-        return predicate(xorMetadata(field, value),
+        return predicate(xorMetadata(metadata, value),
                         (model, context) -> Optional.of(value),
                         Boolean::logicalXor);
     }
@@ -119,7 +118,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition xor(LogicalFieldInfo value) {
-        return predicate(xorMetadata(field, value),
+        return predicate(xorMetadata(metadata, value),
                         (model, context) -> valueModel(model, value),
                         Boolean::logicalXor);
     }
@@ -130,7 +129,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition isTrue() {
-        return predicate(isMetadata(field, true),
+        return predicate(isMetadata(metadata, true),
                         (model, context) -> Optional.of(TRUE),
                         Boolean::equals);
     }
@@ -141,7 +140,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition isFalse() {
-        return predicate(isMetadata(field, false),
+        return predicate(isMetadata(metadata, false),
                         (model, context) -> Optional.of(FALSE),
                         Boolean::equals);
     }

@@ -26,19 +26,19 @@ import io.doov.core.dsl.meta.PredicateMetadata;
  */
 public class DoubleCondition extends NumericCondition<Double> {
 
-    public DoubleCondition(DslField field) {
+    public DoubleCondition(DslField<Double> field) {
         super(field);
     }
 
-    public DoubleCondition(DslField field, PredicateMetadata metadata,
+    public DoubleCondition(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Double>> value) {
-        super(field, metadata, value);
+        super(metadata, value);
     }
 
     @Override
-    protected NumericCondition<Double> numericCondition(DslField field, PredicateMetadata metadata,
+    protected NumericCondition<Double> numericCondition(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Double>> value) {
-        return new DoubleCondition(field, metadata, value);
+        return new DoubleCondition(metadata, value);
     }
 
     @Override

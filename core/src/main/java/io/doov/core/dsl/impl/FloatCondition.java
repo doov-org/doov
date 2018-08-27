@@ -26,19 +26,18 @@ import io.doov.core.dsl.meta.PredicateMetadata;
  */
 public class FloatCondition extends NumericCondition<Float> {
 
-    public FloatCondition(DslField field) {
+    public FloatCondition(DslField<Float> field) {
         super(field);
     }
 
-    public FloatCondition(DslField field, PredicateMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<Float>> value) {
-        super(field, metadata, value);
+    public FloatCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<Float>> value) {
+        super(metadata, value);
     }
 
     @Override
-    protected NumericCondition<Float> numericCondition(DslField field, PredicateMetadata metadata,
+    protected NumericCondition<Float> numericCondition(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Float>> value) {
-        return new FloatCondition(field, metadata, value);
+        return new FloatCondition(metadata, value);
     }
 
     @Override

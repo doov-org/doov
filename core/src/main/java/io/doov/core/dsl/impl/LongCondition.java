@@ -26,19 +26,18 @@ import io.doov.core.dsl.meta.PredicateMetadata;
  */
 public class LongCondition extends NumericCondition<Long> {
 
-    public LongCondition(DslField field) {
+    public LongCondition(DslField<Long> field) {
         super(field);
     }
 
-    public LongCondition(DslField field, PredicateMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<Long>> value) {
-        super(field, metadata, value);
+    public LongCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<Long>> value) {
+        super(metadata, value);
     }
 
     @Override
-    protected NumericCondition<Long> numericCondition(DslField field, PredicateMetadata metadata,
+    protected NumericCondition<Long> numericCondition(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Long>> value) {
-        return new LongCondition(field, metadata, value);
+        return new LongCondition(metadata, value);
     }
 
     @Override

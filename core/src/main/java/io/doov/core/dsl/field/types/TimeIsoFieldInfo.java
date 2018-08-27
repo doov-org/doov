@@ -12,21 +12,16 @@
  */
 package io.doov.core.dsl.field.types;
 
+import static io.doov.core.dsl.meta.LeafMetadata.fieldMetadata;
 import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
 import java.time.LocalTime;
 import java.util.Optional;
-import java.util.function.BiFunction;
 
-import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.LocalTimeCondition;
-import io.doov.core.dsl.impl.TemporalCondition;
-import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.PredicateMetadata;
 
 public class TimeIsoFieldInfo extends DelegatingFieldInfoImpl implements TemporalFieldInfo<LocalTime> {
 
@@ -39,30 +34,12 @@ public class TimeIsoFieldInfo extends DelegatingFieldInfoImpl implements Tempora
         return new TimeIsoCondition(this);
     }
 
-    public static Optional<LocalTime> parse(DslModel model, FieldId id) {
-        return Optional.ofNullable(model.<String> get(id)).map(v -> LocalTime.parse(v, BASIC_ISO_DATE));
-    }
-
     private class TimeIsoCondition extends LocalTimeCondition {
 
         private TimeIsoCondition(DslField field) {
-            super(field);
-        }
-
-        private TimeIsoCondition(DslField field, PredicateMetadata metadata,
-                        BiFunction<DslModel, Context, Optional<LocalTime>> value) {
-            super(field, metadata, value);
-        }
-
-        @Override
-        protected TemporalCondition<LocalTime> temporalCondition(DslField field, PredicateMetadata metadata,
-                        BiFunction<DslModel, Context, Optional<LocalTime>> value) {
-            return new TimeIsoCondition(field, metadata, value);
-        }
-
-        @Override
-        protected Optional<LocalTime> valueModel(DslModel model, DslField field) {
-            return parse(model, field.id());
+            super(fieldMetadata(field),
+                    ((model, context) -> Optional.ofNullable(model.<String>get(field.id()))
+                            .map(v -> LocalTime.parse(v, BASIC_ISO_DATE))));
         }
 
     }

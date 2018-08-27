@@ -38,13 +38,12 @@ import io.doov.core.dsl.meta.PredicateMetadata;
  */
 public class DefaultCondition<T> extends AbstractCondition<T> {
 
-    public DefaultCondition(DslField field) {
-        super(field);
+    public DefaultCondition(DslField<T> field) {
+        this(fieldMetadata(field), (model, context) -> valueModel(model, field));
     }
 
-    public DefaultCondition(DslField field, PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<T>>
-                    value) {
-        super(field, metadata, value);
+    public DefaultCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<T>> value) {
+        super(metadata, value);
     }
 
     /**
@@ -53,9 +52,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition isNull() {
-        return new PredicateStepCondition<>(metadata.merge(nullMetadata(field)),
-                        (model, context) -> Optional.of(function.apply(model, context)),
-                        optional -> !optional.isPresent());
+        return new PredicateStepCondition<>(nullMetadata(metadata),
+                (model, context) -> Optional.of(value(model, context)),
+                optional -> !optional.isPresent());
     }
 
     /**
@@ -64,9 +63,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition isNotNull() {
-        return new PredicateStepCondition<>(metadata.merge(notNullMetadata(field)),
-                        (model, context) -> Optional.of(function.apply(model, context)),
-                        Optional::isPresent);
+        return new PredicateStepCondition<>(notNullMetadata(metadata),
+                (model, context) -> Optional.of(value(model, context)),
+                Optional::isPresent);
     }
 
     /**
@@ -76,9 +75,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition eq(T value) {
-        return predicate(equalsMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value),
-                        Object::equals);
+        return predicate(equalsMetadata(metadata, value),
+                (model, context) -> Optional.ofNullable(value),
+                Object::equals);
     }
 
     /**
@@ -88,9 +87,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition eq(Supplier<T> value) {
-        return predicate(equalsMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value.get()),
-                        Object::equals);
+        return predicate(equalsMetadata(metadata, value),
+                (model, context) -> Optional.ofNullable(value.get()),
+                Object::equals);
     }
 
     /**
@@ -100,9 +99,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition eq(BaseFieldInfo<T> value) {
-        return predicate(equalsMetadata(field, value),
-                        (model, context) -> valueModel(model, value),
-                        Object::equals);
+        return predicate(equalsMetadata(metadata, value),
+                (model, context) -> valueModel(model, value),
+                Object::equals);
     }
 
     /**
@@ -112,9 +111,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition eq(DefaultCondition<T> value) {
-        return predicate(equalsMetadata(field, value),
-                        value.function,
-                        Object::equals);
+        return predicate(equalsMetadata(metadata, value),
+                value.function,
+                Object::equals);
     }
 
     /**
@@ -124,9 +123,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition notEq(T value) {
-        return predicate(notEqualsMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value),
-                        (l, r) -> !l.equals(r));
+        return predicate(notEqualsMetadata(metadata, value),
+                (model, context) -> Optional.ofNullable(value),
+                (l, r) -> !l.equals(r));
     }
 
     /**
@@ -136,9 +135,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition notEq(Supplier<T> value) {
-        return predicate(notEqualsMetadata(field, value),
-                        (model, context) -> Optional.ofNullable(value.get()),
-                        (l, r) -> !l.equals(r));
+        return predicate(notEqualsMetadata(metadata, value),
+                (model, context) -> Optional.ofNullable(value.get()),
+                (l, r) -> !l.equals(r));
     }
 
     /**
@@ -148,9 +147,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition notEq(BaseFieldInfo<T> value) {
-        return predicate(notEqualsMetadata(field, value),
-                        (model, context) -> valueModel(model, value),
-                        (l, r) -> !l.equals(r));
+        return predicate(notEqualsMetadata(metadata, value),
+                (model, context) -> valueModel(model, value),
+                (l, r) -> !l.equals(r));
     }
 
     /**
@@ -160,9 +159,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition notEq(DefaultCondition<T> value) {
-        return predicate(notEqualsMetadata(field, value),
-                        value.function,
-                        (l, r) -> !l.equals(r));
+        return predicate(notEqualsMetadata(metadata, value),
+                value.function,
+                (l, r) -> !l.equals(r));
     }
 
     /**
@@ -173,8 +172,8 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      */
     @SafeVarargs
     public final StepCondition anyMatch(T... values) {
-        return predicate(matchAnyMetadata(field, asList(values)),
-                        value -> Arrays.stream(values).anyMatch(value::equals));
+        return predicate(matchAnyMetadata(metadata, asList(values)),
+                value -> Arrays.stream(values).anyMatch(value::equals));
     }
 
     /**
@@ -184,8 +183,8 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition anyMatch(Collection<T> values) {
-        return predicate(matchAnyMetadata(field, values),
-                        value -> values.stream().anyMatch(value::equals));
+        return predicate(matchAnyMetadata(metadata, values),
+                value -> values.stream().anyMatch(value::equals));
     }
 
     /**
@@ -195,8 +194,8 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition anyMatch(List<Predicate<T>> values) {
-        return predicate(matchAnyMetadata(field),
-                        value -> values.stream().anyMatch(v -> v.test(value)));
+        return predicate(matchAnyMetadata(metadata),
+                value -> values.stream().anyMatch(v -> v.test(value)));
     }
 
     /**
@@ -207,8 +206,8 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      */
     @SafeVarargs
     public final StepCondition allMatch(T... values) {
-        return predicate(matchAllMetadata(field, asList(values)),
-                        value -> Arrays.stream(values).allMatch(value::equals));
+        return predicate(matchAllMetadata(metadata, asList(values)),
+                value -> Arrays.stream(values).allMatch(value::equals));
     }
 
     /**
@@ -218,8 +217,8 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition allMatch(Collection<T> values) {
-        return predicate(matchAllMetadata(field, values),
-                        value -> values.stream().allMatch(value::equals));
+        return predicate(matchAllMetadata(metadata, values),
+                value -> values.stream().allMatch(value::equals));
     }
 
     /**
@@ -229,8 +228,8 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition allMatch(List<Predicate<T>> values) {
-        return predicate(matchAllMetadata(field),
-                        value -> values.stream().allMatch(v -> v.test(value)));
+        return predicate(matchAllMetadata(metadata),
+                value -> values.stream().allMatch(v -> v.test(value)));
     }
 
     /**
@@ -241,8 +240,8 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      */
     @SafeVarargs
     public final StepCondition noneMatch(T... values) {
-        return predicate(matchNoneMetadata(field, asList(values)),
-                        value -> Arrays.stream(values).noneMatch(value::equals));
+        return predicate(matchNoneMetadata(metadata, asList(values)),
+                value -> Arrays.stream(values).noneMatch(value::equals));
     }
 
     /**
@@ -252,8 +251,8 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition noneMatch(Collection<T> values) {
-        return predicate(matchNoneMetadata(field, values),
-                        value -> values.stream().noneMatch(value::equals));
+        return predicate(matchNoneMetadata(metadata, values),
+                value -> values.stream().noneMatch(value::equals));
     }
 
     /**
@@ -263,10 +262,9 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the step condition
      */
     public final StepCondition noneMatch(List<Predicate<T>> values) {
-        return predicate(matchNoneMetadata(field),
-                        value -> values.stream().noneMatch(v -> v.test(value)));
+        return predicate(matchNoneMetadata(metadata),
+                value -> values.stream().noneMatch(v -> v.test(value)));
     }
-
     /**
      * Returns an integer step condition that returns the node value mapped by the given mapper.
      *
@@ -274,8 +272,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @return the integer condition
      */
     public final IntegerCondition mapToInt(Function<T, Integer> mapper) {
-        return new IntegerCondition(field, mapToIntMetadata(field),
-                        (model, context) -> function.apply(model, context).map(mapper));
+        return new IntegerCondition(mapToIntMetadata(metadata), (model, context) -> value(model, context).map(mapper));
     }
 
 }

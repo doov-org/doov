@@ -28,19 +28,19 @@ import io.doov.core.dsl.meta.PredicateMetadata;
  */
 public class LocalTimeCondition extends TemporalCondition<LocalTime> {
 
-    public LocalTimeCondition(DslField field) {
+    public LocalTimeCondition(DslField<LocalTime> field) {
         super(field);
     }
 
-    public LocalTimeCondition(DslField field, PredicateMetadata metadata,
+    public LocalTimeCondition(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<LocalTime>> value) {
-        super(field, metadata, value);
+        super(metadata, value);
     }
 
     @Override
-    protected TemporalCondition<LocalTime> temporalCondition(DslField field, PredicateMetadata metadata,
+    protected TemporalCondition<LocalTime> temporalCondition(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<LocalTime>> value) {
-        return new LocalTimeCondition(field, metadata, value);
+        return new LocalTimeCondition(metadata, value);
     }
 
     @Override
