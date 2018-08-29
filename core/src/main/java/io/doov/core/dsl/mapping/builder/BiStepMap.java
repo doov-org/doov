@@ -65,6 +65,16 @@ public class BiStepMap<I, J> {
         /**
          * Return the bi mapping rule
          *
+         * @param output consumer output
+         * @return bi mapping rule
+         */
+        public DefaultMappingRule<O> to(ConsumerOutput<O> output) {
+            return new DefaultMappingRule<>(input, output);
+        }
+
+        /**
+         * Return the bi mapping rule
+         *
          * @param consumer consumer
          * @return bi mapping rule
          */

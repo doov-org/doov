@@ -14,12 +14,22 @@ public class ContextawareStepMap<I> {
 
     private MappingInput<I> input;
 
-    private ContextawareStepMap(MappingInput<I> input) {
+    public ContextawareStepMap(MappingInput<I> input) {
         this.input = input;
     }
 
     public ContextawareStepMap(BiFunction<DslModel, Context, I> valueFunction) {
-        input = new FunctionInput<>(valueFunction);
+        this(new FunctionInput<>(valueFunction));
+    }
+
+    /**
+     * Return the static mapping rule
+     *
+     * @param output consumer output
+     * @return the static mapping rule
+     */
+    public DefaultMappingRule<I> to(MappingOutput<I> output) {
+        return new DefaultMappingRule<>(input, output);
     }
 
     /**
@@ -29,7 +39,7 @@ public class ContextawareStepMap<I> {
      * @return the static mapping rule
      */
     public DefaultMappingRule<I> to(DslField<I> outFieldInfo) {
-        return new DefaultMappingRule<>(input, new FieldOutput<>(outFieldInfo));
+        return this.to(new FieldOutput<>(outFieldInfo));
     }
 
     /**
@@ -39,7 +49,7 @@ public class ContextawareStepMap<I> {
      * @return the static mapping rule
      */
     public DefaultMappingRule<I> to(TriConsumer<DslModel, Context, I> consumer) {
-        return new DefaultMappingRule<>(input, new ConsumerOutput<>(consumer));
+        return this.to(new ConsumerOutput<>(consumer));
     }
 
     /**

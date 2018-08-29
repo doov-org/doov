@@ -245,7 +245,7 @@ public class DOOV {
      * Start defining a value mapping with value null
      *
      * @param outFieldInfo output field
-     * @param <O> value type
+     * @param <O>          value type
      * @return value map step
      */
     public static <O> MappingRule mapNull(DslField<O> outFieldInfo) {
@@ -261,6 +261,17 @@ public class DOOV {
      */
     public static <I> ContextawareStepMap<I> map(BiFunction<DslModel, Context, I> valueFunction) {
         return new ContextawareStepMap<>(valueFunction);
+    }
+
+    /**
+     * Start defining a context-aware value mapping
+     *
+     * @param input mapping input
+     * @param <I>   value type
+     * @return value map step
+     */
+    public static <I> ContextawareStepMap<I> map(MappingInput<I> input) {
+        return new ContextawareStepMap<>(input);
     }
 
     /**

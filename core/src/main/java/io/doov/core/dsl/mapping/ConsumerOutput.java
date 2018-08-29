@@ -14,9 +14,13 @@ public class ConsumerOutput<T> implements MappingOutput<T> {
     private final TriConsumer<DslModel, Context, T> outputFunction;
     private final MappingMetadata metadata;
 
-    public ConsumerOutput(TriConsumer<DslModel, Context, T> outputFunction) {
+    public ConsumerOutput(MappingMetadata metadata, TriConsumer<DslModel, Context, T> outputFunction) {
+        this.metadata = metadata;
         this.outputFunction = outputFunction;
-        this.metadata = MappingMetadata.functionOutput();
+    }
+
+    public ConsumerOutput(TriConsumer<DslModel, Context, T> outputFunction) {
+        this(MappingMetadata.functionOutput(), outputFunction);
     }
 
     @Override

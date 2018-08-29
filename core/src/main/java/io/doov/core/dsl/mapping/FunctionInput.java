@@ -17,9 +17,13 @@ public class FunctionInput<T> implements MappingInput<T> {
     private final BiFunction<DslModel, Context, T> valueFunction;
     private final MappingMetadata metadata;
 
-    public FunctionInput(BiFunction<DslModel, Context, T> valueFunction) {
+    public FunctionInput(MappingMetadata metadata, BiFunction<DslModel, Context, T> valueFunction) {
+        this.metadata = metadata;
         this.valueFunction = valueFunction;
-        this.metadata = MappingMetadata.functionInput();
+    }
+
+    public FunctionInput(BiFunction<DslModel, Context, T> valueFunction) {
+        this(MappingMetadata.functionInput(), valueFunction);
     }
 
     @Override

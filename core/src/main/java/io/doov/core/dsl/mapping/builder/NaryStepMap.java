@@ -47,11 +47,21 @@ public class NaryStepMap {
         /**
          * Return the n-ary mapping rule
          *
+         * @param output consumer output
+         * @return n-ary mapping rule
+         */
+        public DefaultMappingRule<O> to(MappingOutput<O> output) {
+            return new DefaultMappingRule<>(input, output);
+        }
+
+        /**
+         * Return the n-ary mapping rule
+         *
          * @param outFieldInfo out field info
          * @return n-ary mapping rule
          */
         public DefaultMappingRule<O> to(DslField<O> outFieldInfo) {
-            return new DefaultMappingRule<>(input, new FieldOutput<>(outFieldInfo));
+            return this.to(new FieldOutput<>(outFieldInfo));
         }
 
         /**
@@ -61,7 +71,7 @@ public class NaryStepMap {
          * @return n-ary mapping rule
          */
         public DefaultMappingRule<O> to(TriConsumer<DslModel, Context, O> consumer) {
-            return new DefaultMappingRule<>(input, new ConsumerOutput<>(consumer));
+            return this.to(new ConsumerOutput<>(consumer));
         }
 
     }

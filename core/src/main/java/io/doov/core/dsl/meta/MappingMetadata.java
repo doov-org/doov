@@ -37,6 +37,10 @@ public class MappingMetadata implements Metadata {
         return new MappingMetadata(MetadataType.MAPPING_INPUT);
     }
 
+    public static MappingMetadata inputMetadata(String readable) {
+        return new MappingMetadata(MetadataType.MAPPING_INPUT).valueUnknown(readable);
+    }
+
     public static MappingMetadata valueInput(Supplier<?> supplier) {
         return inputMetadata().value(supplier);
     }
@@ -59,6 +63,10 @@ public class MappingMetadata implements Metadata {
 
     public static MappingMetadata outputMetadata() {
         return new MappingMetadata(MetadataType.MAPPING_OUTPUT);
+    }
+
+    public static MappingMetadata outputMetadata(String readable) {
+        return new MappingMetadata(MetadataType.MAPPING_OUTPUT).valueUnknown(readable);
     }
 
     public static MappingMetadata fieldOutput(DslField field) {
@@ -103,6 +111,10 @@ public class MappingMetadata implements Metadata {
 
     private MappingMetadata function() {
         return add(new Element(() -> "-function-", UNKNOWN));
+    }
+
+    public MappingMetadata valueUnknown(String readable) {
+        return add(readable == null ? null : new Element(() -> "-function- " + readable, UNKNOWN));
     }
 
     private MappingMetadata field(DslField readable) {

@@ -30,12 +30,23 @@ public class StaticStepMap<I> {
     /**
      * Return the static mapping rule
      *
+     * @param output consumer output
+     * @return the static mapping rule
+     */
+    public DefaultMappingRule<I> to(MappingOutput<I> output) {
+        return new DefaultMappingRule<>(input, output);
+    }
+
+    /**
+     * Return the static mapping rule
+     *
      * @param outFieldInfo out field info
      * @return the static mapping rule
      */
     public DefaultMappingRule<I> to(DslField<I> outFieldInfo) {
-        return new DefaultMappingRule<>(input, new FieldOutput<>(outFieldInfo));
+        return this.to(new FieldOutput<>(outFieldInfo));
     }
+
     /**
      * Return the static mapping rule
      *
@@ -43,7 +54,7 @@ public class StaticStepMap<I> {
      * @return the static mapping rule
      */
     public DefaultMappingRule<I> to(TriConsumer<DslModel, Context, I> consumer) {
-        return new DefaultMappingRule<>(input, new ConsumerOutput<>(consumer));
+        return this.to(new ConsumerOutput<>(consumer));
     }
 
     /**

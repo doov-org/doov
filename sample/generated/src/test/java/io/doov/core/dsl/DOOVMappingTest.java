@@ -21,8 +21,7 @@ import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.mapping.MappingRegistry;
-import io.doov.core.dsl.mapping.TypeConverters;
+import io.doov.core.dsl.mapping.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MappingOperator;
 import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
@@ -46,6 +45,12 @@ public class DOOVMappingTest {
                 String[] em = j.split("@");
                 return em[0] + "+" + i.size() + "@" + em[1];
             }, "", "WTF");
+
+    private static final FunctionInput<Boolean> functionInput = new FunctionInput<>(
+            MappingMetadata.inputMetadata("is mine"), (model, context) -> ((MyContext) context).isMine());
+
+    private static final ConsumerOutput<String> consumerOutput = new ConsumerOutput<>(
+            MappingMetadata.outputMetadata("sysout"),(model, context, s) -> System.out.println(s));
 
     private MappingRegistry mappings;
 
@@ -94,7 +99,9 @@ public class DOOVMappingTest {
                 when(accountLogin.isNotNull()).then(
                         map(() -> true).to(accountAcceptEmail)),
 
-                map((model, context) -> ((MyContext) context).isMine()).to(configurationMailingCampaign),
+                map(functionInput).to(configurationMailingCampaign),
+
+                map(userFirstName).to(consumerOutput),
 
                 map(Timezone.ETC_GMT).to(accountTimezone),
                 mapNull(accountTimezone),
