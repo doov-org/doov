@@ -76,7 +76,7 @@ public class LeafMetadata extends PredicateMetadata {
 
     @Override
     public List<Element> flatten() {
-        return elements.stream().collect(toList());
+        return new ArrayList<>(elements);
     }
 
     private static MetadataType mergeType(MetadataType current, MetadataType merged) {
