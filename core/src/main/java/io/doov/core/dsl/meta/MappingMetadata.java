@@ -6,6 +6,7 @@ package io.doov.core.dsl.meta;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
+import static io.doov.core.dsl.meta.ElementType.VALUE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
 import java.util.*;
@@ -14,6 +15,7 @@ import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.Readable;
 
 public class MappingMetadata implements Metadata {
 
@@ -38,7 +40,7 @@ public class MappingMetadata implements Metadata {
     }
 
     public static MappingMetadata inputMetadata(String readable) {
-        return new MappingMetadata(MetadataType.MAPPING_INPUT).valueUnknown(readable);
+        return new MappingMetadata(MetadataType.MAPPING_INPUT).valueReadable(() -> readable);
     }
 
     public static MappingMetadata valueInput(Supplier<?> supplier) {
@@ -66,7 +68,7 @@ public class MappingMetadata implements Metadata {
     }
 
     public static MappingMetadata outputMetadata(String readable) {
-        return new MappingMetadata(MetadataType.MAPPING_OUTPUT).valueUnknown(readable);
+        return new MappingMetadata(MetadataType.MAPPING_OUTPUT).valueReadable(() -> readable);
     }
 
     public static MappingMetadata fieldOutput(DslField field) {
@@ -111,6 +113,10 @@ public class MappingMetadata implements Metadata {
 
     private MappingMetadata function() {
         return add(new Element(() -> "-function-", UNKNOWN));
+    }
+
+    public MappingMetadata valueReadable(Readable readable) {
+        return add(readable == null ? null : new Element(readable, VALUE));
     }
 
     public MappingMetadata valueUnknown(String readable) {

@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,7 +40,9 @@ import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.AstHtmlVisitor;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
+import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.model.Country;
+import io.doov.sample.model.Timezone;
 
 public class SampleRules extends DefaultRuleRegistry {
 
@@ -123,6 +126,16 @@ public class SampleRules extends DefaultRuleRegistry {
 
     public static final ValidationRule RULE_DOUBLE_LAMBDA = DOOV
                     .when(favoriteSiteName1.anyMatch(s -> !s.contains("dunno")))
+                    .validate()
+                    .registerOn(REGISTRY_DEFAULT);
+
+    public static final ValidationRule RULE_BORN_1980 = DOOV
+                    .when(userBirthdate.mapToInt(LocalDate::getYear).eq(1980))
+                    .validate()
+                    .registerOn(REGISTRY_DEFAULT);
+
+    public static final ValidationRule RULE_BORN = DOOV
+                    .when(accountTimezone.mapToString(Timezone::getDescription).contains("00:00"))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 

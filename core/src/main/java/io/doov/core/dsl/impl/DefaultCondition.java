@@ -24,6 +24,7 @@ import java.util.function.*;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.BaseFieldInfo;
+import io.doov.core.dsl.field.types.Condition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.PredicateMetadata;
@@ -265,6 +266,7 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
         return predicate(matchNoneMetadata(metadata),
                 value -> values.stream().noneMatch(v -> v.test(value)));
     }
+
     /**
      * Returns an integer step condition that returns the node value mapped by the given mapper.
      *
@@ -273,6 +275,47 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      */
     public final IntegerCondition mapToInt(Function<T, Integer> mapper) {
         return new IntegerCondition(mapToIntMetadata(metadata), (model, context) -> value(model, context).map(mapper));
+    }
+
+    /**
+     * Returns a string step condition that returns the node value mapped by the given function.
+     *
+     * @param mapper function to string to apply
+     * @return string condition
+     */
+    public final StringCondition mapToString(Function<T, String> mapper) {
+        return new StringCondition(mapToStringMetadata(metadata),
+                (model, context) -> value(model, context).map(mapper));
+    }
+
+    /**
+     * Returns a default step condition that returns the node value mapped by the given function.
+     *
+     * @param readable text describing the function
+     * @param mapper   mapper function to apply
+     * @param <R>      target type
+     * @return condition with target type
+     */
+    public final <R> DefaultCondition<R> map(String readable, Function<T, R> mapper) {
+        return new DefaultCondition<>(mapAsMetadata(metadata, readable),
+                (model, context) -> value(model, context).map(mapper));
+    }
+
+    /**
+     * Returns an default step condition that returns the node value mapped by the given function.
+     *
+     * @param readable  description
+     * @param condition condition
+     * @param mapper    mapper function to apply
+     * @param <U>       condition type
+     * @param <R>       target type
+     * @return condition with target type
+     */
+    public final <U, R> DefaultCondition<R> mapUsing(String readable, Condition<U> condition,
+            BiFunction<T, U, R> mapper) {
+        return new DefaultCondition<>(mapUsingMetadata(metadata, readable, condition),
+                (model, context) -> value(model, context).flatMap(l -> Optional.ofNullable(mapper.apply(l,
+                        condition.value(model, context).orElse(null)))));
     }
 
 }

@@ -307,6 +307,19 @@ public class LeafMetadata extends PredicateMetadata {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(as_a_number).valueUnknown("");
     }
 
+    public static LeafMetadata mapToStringMetadata(PredicateMetadata metadata) {
+        return new LeafMetadata(metadata, FIELD_PREDICATE).operator(as_string).valueUnknown("");
+    }
+
+    public static LeafMetadata mapAsMetadata(PredicateMetadata metadata, String readable) {
+        return new LeafMetadata(metadata, FIELD_PREDICATE).operator(as).valueReadable(() -> readable);
+    }
+
+    public static LeafMetadata mapUsingMetadata(PredicateMetadata metadata, String readable, Readable condition) {
+        return new LeafMetadata(metadata, FIELD_PREDICATE).operator(as).valueReadable(() -> readable)
+                .operator(DefaultOperator.with).valueReadable(condition);
+    }
+
     // with
 
     public static LeafMetadata withMetadata(PredicateMetadata metadata, Readable adjuster) {

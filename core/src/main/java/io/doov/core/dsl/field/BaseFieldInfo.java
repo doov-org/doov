@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.impl.IntegerCondition;
+import io.doov.core.dsl.field.types.Condition;
+import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.StepCondition;
 
 /**
@@ -224,5 +224,43 @@ public interface BaseFieldInfo<T> extends DslField<T> {
     default IntegerCondition mapToInt(Function<T, Integer> mapper) {
         return getDefaultCondition().mapToInt(mapper);
     }
+
+    /**
+     * See {@link DefaultCondition#mapToString(Function)}
+     *
+     * @param mapper mapper function to apply
+     * @return string condition
+     */
+    default StringCondition mapToString(Function<T, String> mapper) {
+        return getDefaultCondition().mapToString(mapper);
+    }
+
+    /**
+     * See {@link DefaultCondition#map(String, Function)}
+     *
+     * @param readable text describing the function
+     * @param mapper mapper function to apply
+     * @param <R> target type
+     * @return condition with target type
+     */
+    default <R> DefaultCondition<R> map(String readable, Function<T, R> mapper) {
+        return getDefaultCondition().map(readable, mapper);
+    }
+
+    /**
+     * See {@link DefaultCondition#mapUsing(String, Condition, BiFunction)}
+     *
+     * @param readable description
+     * @param condition condition
+     * @param mapper mapper function to apply
+     * @param <U> condition type
+     * @param <R> target type
+     * @return condition with target type
+     */
+    default <U, R> DefaultCondition<R> mapUsing(String readable, DslField<U> condition,
+            BiFunction<T, U, R> mapper) {
+        return getDefaultCondition().mapUsing(readable, condition.getDefaultCondition(), mapper);
+    }
+
 
 }
