@@ -6,22 +6,13 @@ package io.doov.core.dsl.meta;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
-import static io.doov.core.dsl.meta.MappingOperator.map;
-import static io.doov.core.dsl.meta.MappingOperator.to;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.function.*;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 
 public class MappingMetadata implements Metadata {
@@ -34,55 +25,79 @@ public class MappingMetadata implements Metadata {
         this.type = type;
     }
 
-    private MappingMetadata(Deque<Element> elements, MetadataType type) {
-        this.elements = elements;
-        this.type = type;
-    }
-
     public static MappingMetadata mappings(MappingOperator operator) {
         return new MappingMetadata(MetadataType.MULTIPLE_MAPPING).operator(operator);
     }
 
-    public static MappingMetadata mapping(DslField inField, DslField outField) {
-        return new MappingMetadata(MetadataType.SINGLE_MAPPING)
-                .operator(map)
-                .field(inField)
-                .operator(to)
-                .field(outField);
+    public static MappingMetadata mapping() {
+        return new MappingMetadata(MetadataType.SINGLE_MAPPING);
     }
 
-    public static MappingMetadata mapping(List<DslField> inFields, DslField outField) {
-        return new MappingMetadata(MetadataType.SINGLE_MAPPING)
-                .operator(map)
-                .fields(inFields)
-                .operator(to)
-                .field(outField);
+    public static MappingMetadata inputMetadata() {
+        return new MappingMetadata(MetadataType.MAPPING_INPUT);
     }
 
-    public static MappingMetadata mapping(Supplier<?> supplier, DslField outField) {
-        return new MappingMetadata(MetadataType.SINGLE_MAPPING)
-                .operator(map)
-                .value(supplier)
-                .operator(to)
-                .field(outField);
+    public static MappingMetadata inputMetadata(String readable) {
+        return new MappingMetadata(MetadataType.MAPPING_INPUT).valueUnknown(readable);
     }
 
-    public static MappingMetadata mapping(BiFunction<DslModel, Context, ?> supplier, DslField outField) {
-        return new MappingMetadata(MetadataType.SINGLE_MAPPING)
-                .operator(map)
-                .function()
-                .operator(to)
-                .field(outField);
+    public static MappingMetadata valueInput(Supplier<?> supplier) {
+        return inputMetadata().value(supplier);
+    }
+
+    public static MappingMetadata fieldsInput(List<DslField> fields) {
+        return inputMetadata().fields(fields);
+    }
+
+    public static MappingMetadata functionInput() {
+        return inputMetadata().function();
+    }
+
+    public static MappingMetadata fieldInput(DslField field) {
+        return inputMetadata().field(field);
+    }
+
+    public static MappingMetadata metadataInput(MappingMetadata... metadata) {
+        return inputMetadata().mergeMetadata(metadata);
+    }
+
+    public static MappingMetadata outputMetadata() {
+        return new MappingMetadata(MetadataType.MAPPING_OUTPUT);
+    }
+
+    public static MappingMetadata outputMetadata(String readable) {
+        return new MappingMetadata(MetadataType.MAPPING_OUTPUT).valueUnknown(readable);
+    }
+
+    public static MappingMetadata fieldOutput(DslField field) {
+        return outputMetadata().field(field);
+    }
+
+    public static MappingMetadata functionOutput() {
+        return outputMetadata().function();
     }
 
     private MappingMetadata fields(List<DslField> fields) {
         Iterator<DslField> iterator = fields.iterator();
-        iterator.forEachRemaining(f -> {
+        while(iterator.hasNext()) {
+            DslField f = iterator.next();
             this.field(f);
             if (iterator.hasNext()) {
                 this.operator(MappingOperator.and);
             }
-        });
+        }
+        return this;
+    }
+
+    private MappingMetadata mergeMetadata(MappingMetadata... metadata) {
+        Iterator<MappingMetadata> iterator = Arrays.asList(metadata).iterator();
+        while (iterator.hasNext()) {
+            MappingMetadata m = iterator.next();
+            m.flatten().forEach(this::add);
+            if (iterator.hasNext()) {
+                this.operator(MappingOperator.and);
+            }
+        }
         return this;
     }
 
@@ -96,6 +111,10 @@ public class MappingMetadata implements Metadata {
 
     private MappingMetadata function() {
         return add(new Element(() -> "-function-", UNKNOWN));
+    }
+
+    public MappingMetadata valueUnknown(String readable) {
+        return add(readable == null ? null : new Element(() -> "-function- " + readable, UNKNOWN));
     }
 
     private MappingMetadata field(DslField readable) {

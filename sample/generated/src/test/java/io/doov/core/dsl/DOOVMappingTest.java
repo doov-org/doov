@@ -1,16 +1,12 @@
 package io.doov.core.dsl;
 
-import static io.doov.core.dsl.DOOV.map;
-import static io.doov.core.dsl.DOOV.mapRange;
-import static io.doov.core.dsl.DOOV.matchAny;
-import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.DOOV.mappings;
+import static io.doov.core.dsl.DOOV.*;
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.mapping.TypeConverters.counter;
-import static io.doov.core.dsl.mapping.TypeConverters.valueConverter;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
+import static io.doov.sample.field.dsl.DslSampleModel.when;
 import static io.doov.sample.model.SampleModels.sample;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,9 +21,12 @@ import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.mapping.MappingRegistry;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.mapping.*;
+import io.doov.core.dsl.meta.MappingMetadata;
+import io.doov.core.dsl.meta.MappingOperator;
 import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
+import io.doov.core.serial.TypeAdapters;
+import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.model.*;
 import io.doov.sample.wrapper.SampleModelWrapper;
 
@@ -46,6 +45,12 @@ public class DOOVMappingTest {
                 String[] em = j.split("@");
                 return em[0] + "+" + i.size() + "@" + em[1];
             }, "", "WTF");
+
+    private static final FunctionInput<Boolean> functionInput = new FunctionInput<>(
+            MappingMetadata.inputMetadata("is mine"), (model, context) -> ((MyContext) context).isMine());
+
+    private static final ConsumerOutput<String> consumerOutput = new ConsumerOutput<>(
+            MappingMetadata.outputMetadata("sysout"),(model, context, s) -> System.out.println(s));
 
     private MappingRegistry mappings;
 
@@ -68,6 +73,7 @@ public class DOOVMappingTest {
                 map(userFirstName, userLastName)
                         .using(FULL_NAME)
                         .to(userFirstName),
+
                 when(accountAcceptEmail.isTrue()).then(
                         map(accountPreferencesMail, accountEmail)
                                 .using(CONVERTER)
@@ -87,13 +93,19 @@ public class DOOVMappingTest {
                                 map(favoriteSiteName(i)).to(favoriteSiteName(i)))),
 
                 map(() -> Country.FR)
-                        .using(valueConverter(this::countryToLanguage, ""))
+                        .using(converter(this::countryToLanguage, ""))
                         .to(accountLanguage),
 
                 when(accountLogin.isNotNull()).then(
                         map(() -> true).to(accountAcceptEmail)),
 
-                map((model, context) -> ((MyContext) context).isMine()).to(configurationMailingCampaign)
+                map(functionInput).to(configurationMailingCampaign),
+
+                map(userFirstName).to(consumerOutput),
+
+                map(Timezone.ETC_GMT).to(accountTimezone),
+                mapNull(accountTimezone),
+                map(accountTimezone).using(TypeConverters.asString(TypeAdapters.INSTANCE)).to(DslSampleModel.userTel)
         );
     }
 
@@ -136,6 +148,8 @@ public class DOOVMappingTest {
         assertThat(copy.getModel().getAccount().getLanguage()).isEqualTo(Language.FR);
         assertThat(copy.getModel().getAccount().getAcceptEmail()).isTrue();
         assertThat(copy.getModel().getConfiguration().isMailingCampaign()).isTrue();
+        assertThat(copy.getModel().getAccount().getTimezone()).isNull();
+        assertThat(copy.getModel().getUser().getTel()).isEqualTo("ETC_GMT");
     }
 
     @Test

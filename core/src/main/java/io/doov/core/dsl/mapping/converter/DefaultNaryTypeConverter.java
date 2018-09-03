@@ -1,4 +1,4 @@
-package io.doov.core.dsl.mapping;
+package io.doov.core.dsl.mapping.converter;
 
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 

@@ -1,6 +1,5 @@
 package io.doov.core.dsl.lang;
 
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.meta.SyntaxTree;
 
@@ -16,9 +15,9 @@ public interface TypeConverter<I, O> extends SyntaxTree {
      *
      * @param fieldModel field model
      * @param context context
-     * @param in in field
+     * @param input input value
      * @return converted output value
      */
-    O convert(DslModel fieldModel, Context context, DslField<I> in);
+    O convert(DslModel fieldModel, Context context, I input);
 
 }

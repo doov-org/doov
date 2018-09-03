@@ -1,4 +1,4 @@
-package io.doov.core.dsl.mapping;
+package io.doov.core.dsl.mapping.converter;
 
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
@@ -6,7 +6,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.ConverterMetadata;
@@ -32,10 +31,8 @@ public class DefaultBiTypeConverter<I, J, O> implements BiTypeConverter<I, J, O>
     }
 
     @Override
-    public O convert(DslModel fieldModel, Context context, DslField<I> in, DslField<J> in2) {
-        return function.apply(context,
-                Optional.ofNullable(fieldModel.get(in.id())),
-                Optional.ofNullable(fieldModel.get(in2.id())));
+    public O convert(DslModel fieldModel, Context context, I in, J in2) {
+        return function.apply(context, Optional.ofNullable(in), Optional.ofNullable((in2)));
     }
 
     @Override

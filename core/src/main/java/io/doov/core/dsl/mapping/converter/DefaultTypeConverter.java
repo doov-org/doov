@@ -1,4 +1,4 @@
-package io.doov.core.dsl.mapping;
+package io.doov.core.dsl.mapping.converter;
 
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.TypeConverter;
@@ -41,8 +40,8 @@ public class DefaultTypeConverter<I, O> implements TypeConverter<I, O> {
     }
 
     @Override
-    public O convert(DslModel fieldModel, Context context, DslField<I> in) {
-        return function.apply(context, Optional.ofNullable(fieldModel.get(in.id())));
+    public O convert(DslModel fieldModel, Context context, I input) {
+        return function.apply(context, Optional.ofNullable(input));
     }
 
     @Override
