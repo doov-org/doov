@@ -12,51 +12,37 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.LeafMetadata.fieldMetadata;
-
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.field.types.Condition;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 
-abstract class AbstractCondition<N> implements Readable {
+abstract class AbstractCondition<N> implements Condition<N> {
 
-    protected final DslField field;
-    protected final PredicateMetadata metadata;
-    protected final BiFunction<DslModel, DslField, Optional<N>> value;
-    protected final BiFunction<DslModel, Context, Optional<N>> function;
-
-    protected AbstractCondition(DslField field) {
-        this.field = field;
-        this.metadata = fieldMetadata(field);
-        this.value = (model, context) -> valueModel(model, field);
-        this.function = (model, context) -> valueModel(model, field);
+    static <T> Optional<T> valueModel(DslModel model, DslField<T> field) {
+        return Optional.ofNullable(model.get(field.id()));
     }
 
-    protected AbstractCondition(DslField field, PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> function) {
-        this.field = field;
+    protected final PredicateMetadata metadata;
+    protected final BiFunction<DslModel, Context, Optional<N>> function;
+
+    protected AbstractCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<N>> function) {
         this.metadata = metadata;
-        this.value = (model, f) -> function.apply(model, null);
         this.function = function;
     }
 
-    protected Optional<N> valueModel(DslModel model, DslField field) {
-        return Optional.ofNullable(model.<N> get(field.id()));
+    public Optional<N> value(DslModel model, Context context) {
+        return function.apply(model, context);
     }
 
-    protected final Optional<N> value(DslModel model, DslField field) {
-        return value.apply(model, field);
-    }
-
-    protected final StepCondition predicate(LeafMetadata metadata,
-            Function<N, Boolean> predicate) {
+    protected final StepCondition predicate(LeafMetadata metadata, Function<N, Boolean> predicate) {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, predicate);
     }
 

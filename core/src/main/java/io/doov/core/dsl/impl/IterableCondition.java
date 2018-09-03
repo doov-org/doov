@@ -19,42 +19,42 @@ import io.doov.core.dsl.meta.LeafMetadata;
 
 public class IterableCondition<T, C extends Iterable<T>> extends DefaultCondition<C> {
 
-    public IterableCondition(DslField field) {
+    public IterableCondition(DslField<C> field) {
         super(field);
     }
 
-    public IterableCondition(DslField field, LeafMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
-        super(field, metadata, value);
+    public IterableCondition(LeafMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
+        super(metadata, value);
     }
 
     public StepCondition contains(T value) {
-        return predicate(containsMetadata(field, value),
+        return predicate(containsMetadata(metadata, value),
                 collection -> stream(collection.spliterator(), false)
                         .anyMatch(value::equals));
     }
 
     @SafeVarargs
     public final StepCondition containsAll(T... values) {
-        return predicate(containsMetadata(field, (Object[]) values),
+        return predicate(containsMetadata(metadata, (Object[]) values),
                 iterable -> stream(iterable.spliterator(), false)
                         .collect(toSet()).containsAll(asList(values)));
     }
 
     public StepCondition isEmpty() {
-        return predicate(isEmptyMetadata(field), iterable -> !iterable.iterator().hasNext());
+        return predicate(isEmptyMetadata(metadata), iterable -> !iterable.iterator().hasNext());
     }
 
     public StepCondition isNotEmpty() {
-        return predicate(isNotEmptyMetadata(field), iterable -> iterable.iterator().hasNext());
+        return predicate(isNotEmptyMetadata(metadata), iterable -> iterable.iterator().hasNext());
     }
 
     public StepCondition hasSize(int size) {
-        return predicate(hasSizeMetadata(field, size),
+        return predicate(hasSizeMetadata(metadata, size),
                 iterable -> stream(iterable.spliterator(), false).count() == size);
     }
 
     public StepCondition hasNotSize(int size) {
-        return predicate(hasNotSizeMetadata(field, size),
+        return predicate(hasNotSizeMetadata(metadata, size),
                 iterable -> stream(iterable.spliterator(), false).count() != size);
     }
 

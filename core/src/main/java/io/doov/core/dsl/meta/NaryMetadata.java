@@ -93,10 +93,14 @@ public class NaryMetadata extends PredicateMetadata {
     @Override
     public PredicateMetadata merge(LeafMetadata other) {
         final List<Element> elts = other.stream().collect(Collectors.toList());
-        if (elts.size() == 2 && elts.get(0).getType() == OPERATOR) {
+        if (elts.get(0).getType() == OPERATOR && (
+                elts.get(0).getReadable() == DefaultOperator.sum ||
+                        elts.get(0).getReadable() == DefaultOperator.min ||
+                        elts.get(0).getReadable() == DefaultOperator.count
+        )) {
             // special case to build : count (predicate ...) operator value
-            return new BinaryMetadata(this, (Operator) elts.get(0).getReadable(),
-                            new LeafMetadata(LEAF_PREDICATE).valueReadable(elts.get(1).getReadable()));
+            return new BinaryMetadata(this, (Operator) elts.get(elts.size() - 2).getReadable(),
+                            new LeafMetadata(LEAF_PREDICATE).valueReadable(elts.get(elts.size() - 1).getReadable()));
         }
         return new NaryMetadata(new ComposeOperator(operator, other), values);
     }

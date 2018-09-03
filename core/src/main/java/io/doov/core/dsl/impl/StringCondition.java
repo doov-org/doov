@@ -22,6 +22,7 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 
 /**
  * Base class for string conditions.
@@ -31,13 +32,12 @@ import io.doov.core.dsl.meta.LeafMetadata;
  */
 public class StringCondition extends DefaultCondition<String> {
 
-    public StringCondition(DslField field) {
+    public StringCondition(DslField<String> field) {
         super(field);
     }
 
-    public StringCondition(DslField field, LeafMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<String>> value) {
-        super(field, metadata, value);
+    public StringCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<String>> value) {
+        super(metadata, value);
     }
 
     /**
@@ -47,7 +47,7 @@ public class StringCondition extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition contains(String value) {
-        return predicate(containsMetadata(field, value),
+        return predicate(containsMetadata(metadata, value),
                         (model, context) -> Optional.ofNullable(value),
                         String::contains);
     }
@@ -59,7 +59,7 @@ public class StringCondition extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition matches(String value) {
-        return predicate(matchesMetadata(field, value),
+        return predicate(matchesMetadata(metadata, value),
                         (model, context) -> Optional.ofNullable(value),
                         String::matches);
     }
@@ -71,7 +71,7 @@ public class StringCondition extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition startsWith(String value) {
-        return predicate(startsWithMetadata(field, value),
+        return predicate(startsWithMetadata(metadata, value),
                         (model, context) -> Optional.ofNullable(value),
                         String::startsWith);
     }
@@ -83,7 +83,7 @@ public class StringCondition extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition endsWith(String value) {
-        return predicate(endsWithMetadata(field, value),
+        return predicate(endsWithMetadata(metadata, value),
                         (model, context) -> Optional.ofNullable(value),
                         String::endsWith);
     }
@@ -94,9 +94,8 @@ public class StringCondition extends DefaultCondition<String> {
      * @return the integer condition
      */
     public IntegerCondition length() {
-        return new IntegerCondition(field, lengthIsMetadata(field),
-                        (model, context) -> Optional.ofNullable(model.<String> get(field.id()))
-                                        .map(String::length));
+        return new IntegerCondition(lengthIsMetadata(metadata),
+                        (model, context) -> value(model, context).map(String::length));
     }
 
     /**
@@ -105,9 +104,8 @@ public class StringCondition extends DefaultCondition<String> {
      * @return the integer condition
      */
     public IntegerCondition parseInt() {
-        return new IntegerCondition(field, fieldMetadata(field),
-                        (model, context) -> Optional.ofNullable(model.<String> get(field.id()))
-                                        .map(Integer::parseInt));
+        return new IntegerCondition(metadata,
+                        (model, context) -> value(model, context).map(Integer::parseInt));
     }
 
 }

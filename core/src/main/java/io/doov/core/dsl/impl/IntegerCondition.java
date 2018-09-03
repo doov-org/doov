@@ -26,24 +26,22 @@ import io.doov.core.dsl.meta.PredicateMetadata;
  */
 public class IntegerCondition extends NumericCondition<Integer> {
 
-    public IntegerCondition(DslField field) {
+    public IntegerCondition(DslField<Integer> field) {
         super(field);
     }
 
-    public IntegerCondition(DslField field, PredicateMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<Integer>> value) {
-        super(field, metadata, value);
+    public IntegerCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<Integer>> value) {
+        super(metadata, value);
     }
 
     public IntegerCondition(NumericCondition<Long> condition) {
-        super(condition.field, condition.metadata,
-                        (model, context) -> condition.function.apply(model, context).map(Long::intValue));
+        this(condition.metadata, (model, context) -> condition.function.apply(model, context).map(Long::intValue));
     }
 
     @Override
-    protected NumericCondition<Integer> numericCondition(DslField field, PredicateMetadata metadata,
+    protected NumericCondition<Integer> numericCondition(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Integer>> value) {
-        return new IntegerCondition(field, metadata, value);
+        return new IntegerCondition(metadata, value);
     }
 
     @Override

@@ -91,7 +91,7 @@ public class LocalDateSuppliers {
      * @return the temporal condition
      */
     public static TemporalCondition<LocalDate> today() {
-        return new LocalDateCondition(null, todayMetadata(),
+        return new LocalDateCondition(todayMetadata(),
                         (model, context) -> Optional.of(LocalDate.now(getClock())));
     }
 
@@ -103,7 +103,7 @@ public class LocalDateSuppliers {
      * @return the temporal condition
      */
     public static TemporalCondition<LocalDate> todayPlus(int amountToAdd, TemporalUnit unit) {
-        return new LocalDateCondition(null, todayPlusMetadata(amountToAdd, unit),
+        return new LocalDateCondition(todayPlusMetadata(amountToAdd, unit),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).plus(amountToAdd, unit)));
     }
 
@@ -135,7 +135,7 @@ public class LocalDateSuppliers {
      * @return the temporal condition
      */
     public static TemporalCondition<LocalDate> todayMinus(int amountToSubstract, TemporalUnit unit) {
-        return new LocalDateCondition(null, todayMinusMetadata(amountToSubstract, unit),
+        return new LocalDateCondition(todayMinusMetadata(amountToSubstract, unit),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).minus(amountToSubstract, unit)));
     }
 
@@ -165,7 +165,7 @@ public class LocalDateSuppliers {
      * @return the temporal condition
      */
     public static TemporalCondition<LocalDate> firstDayOfThisMonth() {
-        return new LocalDateCondition(null, firstDayOfThisMonthMetadata(),
+        return new LocalDateCondition(firstDayOfThisMonthMetadata(),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).with(firstDayOfMonth())));
     }
 
@@ -175,7 +175,7 @@ public class LocalDateSuppliers {
      * @return the temporal condition
      */
     public static TemporalCondition<LocalDate> firstDayOfThisYear() {
-        return new LocalDateCondition(null, firstDayOfThisYearMetadata(),
+        return new LocalDateCondition(firstDayOfThisYearMetadata(),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).with(firstDayOfYear())));
     }
 
@@ -185,7 +185,7 @@ public class LocalDateSuppliers {
      * @return the temporal condition
      */
     public static TemporalCondition<LocalDate> lastDayOfThisMonth() {
-        return new LocalDateCondition(null, lastDayOfThisMonthMetadata(),
+        return new LocalDateCondition(lastDayOfThisMonthMetadata(),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).with(lastDayOfMonth())));
     }
 
@@ -195,7 +195,7 @@ public class LocalDateSuppliers {
      * @return the temporal condition
      */
     public static TemporalCondition<LocalDate> lastDayOfThisYear() {
-        return new LocalDateCondition(null, lastDayOfThisYearMetadata(),
+        return new LocalDateCondition(lastDayOfThisYearMetadata(),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).with(lastDayOfYear())));
     }
 
@@ -208,7 +208,7 @@ public class LocalDateSuppliers {
      * @return the temporal condition
      */
     public static TemporalCondition<LocalDate> date(int year, int month, int dayOfMonth) {
-        return new LocalDateCondition(null, dateMetadata(LocalDate.of(year, month, dayOfMonth)),
+        return new LocalDateCondition(dateMetadata(LocalDate.of(year, month, dayOfMonth)),
                         (model, context) -> Optional.of(LocalDate.of(year, month, dayOfMonth)));
     }
 
