@@ -5,6 +5,7 @@ package io.doov.core.dsl.meta.ast;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Locale;
 
 import io.doov.core.dsl.meta.BinaryMetadata;
@@ -34,24 +35,19 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(UnaryMetadata metadata, int depth) {
-        write(bundle.get(metadata.getOperator(), locale) + metadata.readable(locale));
+        write(bundle.get(metadata.getOperator(), locale) + metadata.readable());
     }
 
     @Override
     public void visitMetadata(BinaryMetadata metadata, int depth) {
-        String str = depth > 0 ? "(" : "";
-        str = str + metadata.getLeft().readable() + bundle.get(metadata.getOperator(), locale)
-                + metadata.getRight().readable() + (depth > 0 ? ")" : "");
-        write(str);
+        String s = metadata.getLeft().readable() + " " + bundle.get(metadata.getOperator(), locale)
+                + " " + metadata.getRight().readable();
+        s = (depth > 0 ? "(" + s + ")" : s);
+        write(s);
     }
 
     @Override
     public void visitMetadata(LeafMetadata metadata, int depth) {
-
-    }
-
-    @Override
-    public void visitMetadata(NaryMetadata metadata, int depth) {
         write("var arr_test = [];");
         for (Element mtd : metadata.flatten()) {
             Metadata tmp = (Metadata) mtd;
@@ -60,10 +56,28 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
         write("var arrayTrue = [];");
         write("var arrayFalse = [];");
         write("arr_test.forEach(function(value){"
-                + "if(" + metadata.getOperator().readable() + "(value))"
-                + "{ arrayTrue.push(value);}"
-                + "else{arrayFalse.push(value);}"
+                + "if(" + metadata.readable() + "(value))"
+                + "{ arrayTrue.push(value); }"
+                + "else{ arrayFalse.push(value); }"
                 + "}");
+
+        //test the emptiness of the arrayTrue dictionnary 
+        write("if(arrayTrue.length !=0){"
+                + "arrayTrue.toString();"
+                + "}");
+    }
+
+    @Override
+    public void visitMetadata(NaryMetadata metadata, int depth) {
+        write("var final_predicate = " + metadata.getOperator().readable() + "(");
+        List<Metadata> children_list = metadata.children();
+        for (Metadata mtd : children_list) {
+            write(mtd.readable());
+            if (children_list.indexOf(mtd) != children_list.size() - 1) {
+                write(", ");
+            }
+        }
+        write(")");
     }
 
     protected void write(String str) {
