@@ -6,7 +6,7 @@ package io.doov.core.dsl.mapping;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.MappingMetadata;
+import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class ConverterInput<S, T> implements MappingInput<T> {
@@ -25,7 +25,7 @@ public class ConverterInput<S, T> implements MappingInput<T> {
     }
 
     @Override
-    public MappingMetadata getMetadata() {
+    public Metadata getMetadata() {
         return sourceInput.getMetadata();
     }
 

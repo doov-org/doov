@@ -49,11 +49,11 @@ public class LeafMetadata extends PredicateMetadata {
         this.type = type;
     }
 
-    public LeafMetadata(PredicateMetadata metadata) {
+    public LeafMetadata(Metadata metadata) {
         this(new ArrayDeque<>(metadata.flatten()), metadata.type());
     }
 
-    public LeafMetadata(PredicateMetadata metadata, MetadataType type) {
+    public LeafMetadata(Metadata metadata, MetadataType type) {
         this(new ArrayDeque<>(metadata.flatten()), type);
     }
 
@@ -229,13 +229,13 @@ public class LeafMetadata extends PredicateMetadata {
 
     // times
 
-    public static LeafMetadata timesMetadata(PredicateMetadata metadata, int multiplier) {
+    public static LeafMetadata timesMetadata(Metadata metadata, int multiplier) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(times).valueObject(multiplier);
     }
 
     // when
 
-    public static LeafMetadata whenMetadata(PredicateMetadata metadata, StepCondition condition) {
+    public static LeafMetadata whenMetadata(Metadata metadata, StepCondition condition) {
         final LeafMetadata exp = new LeafMetadata(metadata, FIELD_PREDICATE).operator(when);
         exp.elements.add(leftParenthesis());
         exp.elements.addAll(condition.getMetadata().flatten());
@@ -245,104 +245,104 @@ public class LeafMetadata extends PredicateMetadata {
 
     // equals
 
-    public static LeafMetadata equalsMetadata(PredicateMetadata metadata, Object value) {
+    public static LeafMetadata equalsMetadata(Metadata metadata, Object value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(equals).valueObject(value);
     }
 
-    public static LeafMetadata equalsMetadata(PredicateMetadata metadata, Readable value) {
+    public static LeafMetadata equalsMetadata(Metadata metadata, Readable value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(equals).valueReadable(value);
     }
 
-    public static LeafMetadata equalsMetadata(PredicateMetadata metadata, DefaultCondition<?> condition) {
+    public static LeafMetadata equalsMetadata(Metadata metadata, DefaultCondition<?> condition) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(equals).valueCondition(condition);
     }
 
-    public static LeafMetadata notEqualsMetadata(PredicateMetadata metadata, Object value) {
+    public static LeafMetadata notEqualsMetadata(Metadata metadata, Object value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(not_equals).valueObject(value);
     }
 
-    public static LeafMetadata notEqualsMetadata(PredicateMetadata metadata, Readable value) {
+    public static LeafMetadata notEqualsMetadata(Metadata metadata, Readable value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(not_equals).valueReadable(value);
     }
 
     // null
 
-    public static LeafMetadata nullMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata nullMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(is_null);
     }
 
-    public static LeafMetadata notNullMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata notNullMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(is_not_null);
     }
 
     // match
 
-    public static LeafMetadata matchAnyMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata matchAnyMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE_MATCH_ANY).operator(match_any).valueUnknown("-function-");
     }
 
-    public static LeafMetadata matchAnyMetadata(PredicateMetadata metadata, Collection<?> values) {
+    public static LeafMetadata matchAnyMetadata(Metadata metadata, Collection<?> values) {
         return new LeafMetadata(metadata, FIELD_PREDICATE_MATCH_ANY).operator(match_any).valueListObject(values);
     }
 
-    public static LeafMetadata matchAllMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata matchAllMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(match_all).valueUnknown("-function-");
     }
 
-    public static LeafMetadata matchAllMetadata(PredicateMetadata metadata, Collection<?> values) {
+    public static LeafMetadata matchAllMetadata(Metadata metadata, Collection<?> values) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(match_all).valueListObject(values);
     }
 
-    public static LeafMetadata matchNoneMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata matchNoneMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(match_none).valueUnknown("-function-");
     }
 
-    public static LeafMetadata matchNoneMetadata(PredicateMetadata metadata, Collection<?> values) {
+    public static LeafMetadata matchNoneMetadata(Metadata metadata, Collection<?> values) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(match_none).valueListObject(values);
     }
 
     // map
 
-    public static LeafMetadata mapToIntMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata mapToIntMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(as_a_number).valueUnknown("");
     }
 
-    public static LeafMetadata mapToStringMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata mapToStringMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(as_string).valueUnknown("");
     }
 
-    public static LeafMetadata mapAsMetadata(PredicateMetadata metadata, String readable) {
+    public static LeafMetadata mapAsMetadata(Metadata metadata, String readable) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(as).valueReadable(() -> readable);
     }
 
-    public static LeafMetadata mapUsingMetadata(PredicateMetadata metadata, String readable, Readable condition) {
+    public static LeafMetadata mapUsingMetadata(Metadata metadata, String readable, Readable condition) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(as).valueReadable(() -> readable)
                 .operator(DefaultOperator.with).valueReadable(condition);
     }
 
     // with
 
-    public static LeafMetadata withMetadata(PredicateMetadata metadata, Readable adjuster) {
+    public static LeafMetadata withMetadata(Metadata metadata, Readable adjuster) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(with).valueTemporalAdjuster(adjuster);
     }
 
     // minus
 
-    public static LeafMetadata minusMetadata(PredicateMetadata metadata, int value, Object unit) {
+    public static LeafMetadata minusMetadata(Metadata metadata, int value, Object unit) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(minus).valueObject(value).temporalUnit(unit);
     }
 
-    public static LeafMetadata minusMetadata(PredicateMetadata metadata, DslField field2, Object unit) {
+    public static LeafMetadata minusMetadata(Metadata metadata, DslField field2, Object unit) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(minus).field(field2).temporalUnit(unit);
     }
 
     // plus
 
-    public static LeafMetadata plusMetadata(PredicateMetadata metadata, int value, Object unit) {
+    public static LeafMetadata plusMetadata(Metadata metadata, int value, Object unit) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(plus).valueObject(value).temporalUnit(unit);
     }
 
-    public static LeafMetadata plusMetadata(PredicateMetadata metadata, DslField field2, Object unit) {
+    public static LeafMetadata plusMetadata(Metadata metadata, DslField field2, Object unit) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(plus).field(field2).temporalUnit(unit);
     }
 
@@ -429,138 +429,138 @@ public class LeafMetadata extends PredicateMetadata {
 
     // string
 
-    public static LeafMetadata matchesMetadata(PredicateMetadata metadata, String value) {
+    public static LeafMetadata matchesMetadata(Metadata metadata, String value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(matches).valueString(value);
     }
 
-    public static LeafMetadata containsMetadata(PredicateMetadata metadata, String value) {
+    public static LeafMetadata containsMetadata(Metadata metadata, String value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(contains).valueString(value);
     }
 
-    public static LeafMetadata startsWithMetadata(PredicateMetadata metadata, String value) {
+    public static LeafMetadata startsWithMetadata(Metadata metadata, String value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(starts_with).valueString(value);
     }
 
-    public static LeafMetadata endsWithMetadata(PredicateMetadata metadata, String value) {
+    public static LeafMetadata endsWithMetadata(Metadata metadata, String value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(ends_with).valueString(value);
     }
 
     // boolean
 
-    public static LeafMetadata notMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata notMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(not);
     }
 
-    public static LeafMetadata andMetadata(PredicateMetadata metadata, boolean value) {
+    public static LeafMetadata andMetadata(Metadata metadata, boolean value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(and).valueObject(value);
     }
 
-    public static LeafMetadata andMetadata(PredicateMetadata metadata, Readable value) {
+    public static LeafMetadata andMetadata(Metadata metadata, Readable value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(and).valueReadable(value);
     }
 
-    public static LeafMetadata orMetadata(PredicateMetadata metadata, boolean value) {
+    public static LeafMetadata orMetadata(Metadata metadata, boolean value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(or).valueObject(value);
     }
 
-    public static LeafMetadata orMetadata(PredicateMetadata metadata, Readable value) {
+    public static LeafMetadata orMetadata(Metadata metadata, Readable value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(or).valueReadable(value);
     }
 
-    public static LeafMetadata xorMetadata(PredicateMetadata metadata, boolean value) {
+    public static LeafMetadata xorMetadata(Metadata metadata, boolean value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(xor).valueObject(value);
     }
 
-    public static LeafMetadata xorMetadata(PredicateMetadata metadata, Readable value) {
+    public static LeafMetadata xorMetadata(Metadata metadata, Readable value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(xor).valueReadable(value);
     }
 
     // is
 
-    public static LeafMetadata isMetadata(PredicateMetadata metadata, boolean value) {
+    public static LeafMetadata isMetadata(Metadata metadata, boolean value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(is).valueObject(value);
     }
 
     // lesser
 
-    public static LeafMetadata lesserThanMetadata(PredicateMetadata metadata, Object value) {
+    public static LeafMetadata lesserThanMetadata(Metadata metadata, Object value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(lesser_than).valueObject(value);
     }
 
-    public static LeafMetadata lesserThanMetadata(PredicateMetadata metadata, Readable field2) {
+    public static LeafMetadata lesserThanMetadata(Metadata metadata, Readable field2) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(lesser_than).valueReadable(field2);
     }
 
-    public static LeafMetadata lesserThanMetadata(PredicateMetadata metadata, DslField field2) {
+    public static LeafMetadata lesserThanMetadata(Metadata metadata, DslField field2) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(lesser_than).field(field2);
     }
 
-    public static LeafMetadata lesserOrEqualsMetadata(PredicateMetadata metadata, Object value) {
+    public static LeafMetadata lesserOrEqualsMetadata(Metadata metadata, Object value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(lesser_or_equals).valueObject(value);
     }
 
-    public static LeafMetadata lesserOrEqualsMetadata(PredicateMetadata metadata, DslField field2) {
+    public static LeafMetadata lesserOrEqualsMetadata(Metadata metadata, DslField field2) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(lesser_or_equals).field(field2);
     }
 
     // lesser
 
-    public static LeafMetadata greaterThanMetadata(PredicateMetadata metadata, Object value) {
+    public static LeafMetadata greaterThanMetadata(Metadata metadata, Object value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(greater_than).valueObject(value);
     }
 
-    public static LeafMetadata greaterThanMetadata(PredicateMetadata metadata, Readable field2) {
+    public static LeafMetadata greaterThanMetadata(Metadata metadata, Readable field2) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(greater_than).valueReadable(field2);
     }
 
-    public static LeafMetadata greaterThanMetadata(PredicateMetadata metadata, DslField field2) {
+    public static LeafMetadata greaterThanMetadata(Metadata metadata, DslField field2) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(greater_than).field(field2);
     }
 
-    public static LeafMetadata greaterOrEqualsMetadata(PredicateMetadata metadata, Object value) {
+    public static LeafMetadata greaterOrEqualsMetadata(Metadata metadata, Object value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(greater_or_equals).valueObject(value);
     }
 
-    public static LeafMetadata greaterOrEqualsMetadata(PredicateMetadata metadata, Readable field2) {
+    public static LeafMetadata greaterOrEqualsMetadata(Metadata metadata, Readable field2) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(greater_or_equals).valueReadable(field2);
     }
 
-    public static LeafMetadata greaterOrEqualsMetadata(PredicateMetadata metadata, DslField field2) {
+    public static LeafMetadata greaterOrEqualsMetadata(Metadata metadata, DslField field2) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(greater_or_equals).field(field2);
     }
     // length is
 
-    public static LeafMetadata lengthIsMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata lengthIsMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(length_is);
     }
 
     // length is
 
-    public static LeafMetadata containsMetadata(PredicateMetadata metadata, Object value) {
+    public static LeafMetadata containsMetadata(Metadata metadata, Object value) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(contains).valueObject(value);
     }
 
-    public static LeafMetadata containsMetadata(PredicateMetadata metadata, Collection<Object> values) {
+    public static LeafMetadata containsMetadata(Metadata metadata, Collection<Object> values) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(contains).valueListObject(values);
     }
 
     // empty
 
-    public static LeafMetadata isEmptyMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata isEmptyMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(is_empty);
     }
 
-    public static LeafMetadata isNotEmptyMetadata(PredicateMetadata metadata) {
+    public static LeafMetadata isNotEmptyMetadata(Metadata metadata) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(is_not_empty);
     }
 
     // size
 
-    public static LeafMetadata hasSizeMetadata(PredicateMetadata metadata, int size) {
+    public static LeafMetadata hasSizeMetadata(Metadata metadata, int size) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(has_size).valueObject(size);
     }
 
-    public static LeafMetadata hasNotSizeMetadata(PredicateMetadata metadata, int size) {
+    public static LeafMetadata hasNotSizeMetadata(Metadata metadata, int size) {
         return new LeafMetadata(metadata, FIELD_PREDICATE).operator(has_not_size).valueObject(size);
     }
 

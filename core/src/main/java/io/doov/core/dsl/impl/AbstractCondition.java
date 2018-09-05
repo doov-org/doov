@@ -21,8 +21,7 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.Condition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.PredicateMetadata;
+import io.doov.core.dsl.meta.*;
 
 abstract class AbstractCondition<N> implements Condition<N> {
 
@@ -52,7 +51,7 @@ abstract class AbstractCondition<N> implements Condition<N> {
         return new PredicateStepCondition<>(this.metadata.merge(metadata), function, value, predicate);
     }
     
-    public PredicateMetadata getMetadata() {
+    public Metadata getMetadata() {
         return metadata;
     }
 

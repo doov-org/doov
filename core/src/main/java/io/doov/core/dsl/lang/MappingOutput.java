@@ -9,7 +9,7 @@ import java.util.Locale;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.meta.MappingMetadata;
+import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
@@ -41,7 +41,7 @@ public interface MappingOutput<T> extends SyntaxTree {
      *
      * @return the metadata
      */
-    MappingMetadata getMetadata();
+    Metadata getMetadata();
 
     @Override
     default String readable(Locale locale) {

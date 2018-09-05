@@ -59,7 +59,7 @@ public class MappingMetadata implements Metadata {
         return inputMetadata().field(field);
     }
 
-    public static MappingMetadata metadataInput(MappingMetadata... metadata) {
+    public static MappingMetadata metadataInput(Metadata... metadata) {
         return inputMetadata().mergeMetadata(metadata);
     }
 
@@ -91,10 +91,10 @@ public class MappingMetadata implements Metadata {
         return this;
     }
 
-    private MappingMetadata mergeMetadata(MappingMetadata... metadata) {
-        Iterator<MappingMetadata> iterator = Arrays.asList(metadata).iterator();
+    private MappingMetadata mergeMetadata(Metadata... metadata) {
+        Iterator<Metadata> iterator = Arrays.asList(metadata).iterator();
         while (iterator.hasNext()) {
-            MappingMetadata m = iterator.next();
+            Metadata m = iterator.next();
             m.flatten().forEach(this::add);
             if (iterator.hasNext()) {
                 this.operator(MappingOperator.and);
