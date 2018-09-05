@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':doov-core')
+    compile project(':doov-assertions')
+    compile group: 'org.webjars', name: 'momentjs', version: '2.10.3'
+}
