@@ -15,7 +15,7 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 
 public class IterableCondition<T, C extends Iterable<T>> extends DefaultCondition<C> {
 
@@ -23,7 +23,7 @@ public class IterableCondition<T, C extends Iterable<T>> extends DefaultConditio
         super(field);
     }
 
-    public IterableCondition(LeafMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
+    public IterableCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
         super(metadata, value);
     }
 

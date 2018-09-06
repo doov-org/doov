@@ -25,6 +25,7 @@ import io.doov.core.dsl.field.types.LogicalFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.PredicateMetadata;
 
 /**
  * Base class for boolean conditions.
@@ -38,7 +39,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
         super(field);
     }
 
-    public BooleanCondition(LeafMetadata metadata, BiFunction<DslModel, Context, Optional<Boolean>> value) {
+    public BooleanCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<Boolean>> value) {
         super(metadata, value);
     }
 
