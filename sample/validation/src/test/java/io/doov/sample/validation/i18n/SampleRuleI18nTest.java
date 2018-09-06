@@ -7,6 +7,7 @@ import static io.doov.core.dsl.DOOV.count;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
@@ -445,4 +446,79 @@ public class SampleRuleI18nTest {
         print(rule);
     }
 
+    @Test
+    void test_age_at_today() {
+        ValidationRule rule = RULE_AGE;
+        assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
+        List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
+        assertThat(elts).hasSize(5);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(LocalDateFieldInfo.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
+        assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(3).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(4).isEqualTo(ElementType.VALUE);
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user.birthdate");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("age at");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("today");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo(">=");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(4).isEqualTo("18");
+    }
+
+    @Test
+    void test_double_lambda() {
+        ValidationRule rule = RULE_DOUBLE_LAMBDA;
+        assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE_MATCH_ANY);
+        List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
+        assertThat(elts).hasSize(3);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(StringFieldInfo.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
+        assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.UNKNOWN);
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("favorite.site.name.1");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("match any");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("-function- -function-");
+    }
+
+    @Test
+    void test_map_to_int() {
+        ValidationRule rule = RULE_BORN_1980;
+        assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
+        List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
+        assertThat(elts).hasSize(5);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(LocalDateFieldInfo.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
+        assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.UNKNOWN);
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("user.birthdate");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("as a number");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("-function- ");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("=");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(4).isEqualTo("1980");
+    }
+
+    @Test
+    void test_map_to_string() {
+        ValidationRule rule = RULE_ACCOUNT_TIME_CONTAINS;
+        assertThat(rule.getRootMetadata()).isInstanceOf(LeafMetadata.class);
+        assertThat(rule.getRootMetadata().type()).isEqualTo(FIELD_PREDICATE);
+        List<Element> elts = ((LeafMetadata) rule.getRootMetadata()).stream().collect(toList());
+        assertThat(elts).hasSize(5);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0).isEqualTo(EnumFieldInfo.class);
+        assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(1).isEqualTo(DefaultOperator.class);
+        assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
+        assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.UNKNOWN);
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0).isEqualTo("account.timezone");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1).isEqualTo("as a string");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2).isEqualTo("-function- ");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(3).isEqualTo("contains");
+        assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(4).isEqualTo("00:00");
+    }
 }

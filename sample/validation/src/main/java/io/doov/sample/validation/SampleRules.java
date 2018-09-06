@@ -134,7 +134,7 @@ public class SampleRules extends DefaultRuleRegistry {
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
-    public static final ValidationRule RULE_BORN = DOOV
+    public static final ValidationRule RULE_ACCOUNT_TIME_CONTAINS = DOOV
                     .when(accountTimezone.mapToString(Timezone::getDescription).contains("00:00"))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
