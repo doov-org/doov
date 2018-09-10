@@ -3,17 +3,16 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.core.dsl.meta.DefaultOperator.*;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
 
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
+
 
 public class AstProceduralJSVisitor extends AbstractAstVisitor {
 
@@ -25,28 +24,8 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
         this.ops = ops;
         this.bundle = bundle;
         this.locale = locale;
-    }
-
-    public void createDict() {
-        write("var dict = {"
-                + "not: !,"
-                + "and: &&,"
-                + "or: ||,"
-                //+ "minus: -,"
-                //+ "plus: +,"
-                + "times: *,"
-                + "is: ===,"
-                + "is_null: === null,"
-                + "is_not_null: !== null,"
-                + "min: Math.min"
-    //            + "sum: \"const red = (x,y)=>x+y; \"" // dont forget to add , on the line before
-                                                        // do a array.reduce(red)
-                + "}");
-        try {
-            ops.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        write("var moment = require('moment');");
+        write("moment().format(\"DD-MM-YYYY\");");
     }
 
     @Override
@@ -56,7 +35,31 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(UnaryMetadata metadata, int depth) {
-        write("dict." + bundle.get(metadata.getOperator(), locale) + " " + metadata.readable());
+        switch(metadata.getOperator().readable()){
+            case "not":
+                write("!"+metadata.readable());
+                break;
+            case "as a number":
+                write("parseInt("+metadata.readable()+")");
+                break;
+            case "as a string":
+                write("String("+metadata.readable()+")");
+                break;
+            case "is null":
+                write("null == "+metadata.readable());
+                break;
+            case "is not null":
+                write("null != "+metadata.readable());
+                break;
+            case "when":
+                write("if("+metadata.readable()+"){ return true; }");
+                break;
+            default:
+                write("Un-Error"); // will create a syntax error in js
+                // if unarymetadata operator unrecognized
+                break;
+        }
+
     }
 
     @Override
@@ -70,10 +73,43 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(BinaryMetadata metadata, int depth) {
-        String s = metadata.getLeft().readable() + " " + "dict." + bundle.get(metadata.getOperator(), locale)
-                + " " + metadata.getRight().readable();
-        s = (depth > 0 ? " ( " + s + " ) " : s);
-        write(s);
+        switch(metadata.getOperator().readable()){
+            case "and" :
+                write(metadata.getLeft().readable()+" && "+metadata.getRight());
+                break;
+            case "or" :
+                write(metadata.getLeft().readable()+" || "+metadata.getRight());
+                break;
+            case "=":
+                write(metadata.getLeft().readable()+" == "+metadata.getRight().readable());
+                break;
+            case "!=":
+                write(metadata.getLeft().readable()+" != "+metadata.getRight().readable());
+                break;
+            case "xor":
+                write("(!"+metadata.getLeft()+" && "+metadata.getRight()
+                    +") || ("+metadata.getLeft()+" && !"+metadata.getRight()+")");
+                break;
+            case "<":
+                write(metadata.getLeft()+" < "+metadata.getRight());
+                break;
+            case "<=":
+                write(metadata.getLeft()+" <= "+metadata.getRight());
+                break;
+            case ">":
+                write(metadata.getLeft()+" > "+metadata.getRight());
+                break;
+            case ">=":
+                write(metadata.getLeft()+" >= "+metadata.getRight());
+                break;
+            case "matches":
+                write("match("+metadata.getLeft()+", "+metadata.getRight()+");");
+                break;
+            default:
+                write("Bin-Error");// will create a syntax error in js
+                // if binarymetadata operator unrecognized
+                break;
+        }
     }
 
     @Override
@@ -87,23 +123,12 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(LeafMetadata metadata, int depth) {
-        write("var arr_test = [];");
-
-        for (Metadata mtd : metadata.children()) {
-            write("arr_test.push(" + mtd.readable() + ");");
+        switch (metadata.readable()){
+            default:
+                write("Leaf-Error");// will create a syntax error in js
+                // if leafmetadata operator unrecognized
+                break;
         }
-        write("var arrayTrue = [];");
-        write("var arrayFalse = [];");
-        write("arr_test.forEach(function(value){"
-                + "if(" + "dict." + metadata.readable() + "(value))"
-                + "{ arrayTrue.push(value); }"
-                + "else{ arrayFalse.push(value); }"
-                + "}");
-
-        //test the emptiness of the arrayTrue dictionnary
-        write("if(arrayTrue.length != 0){"
-                + "arrayTrue.toString();"
-                + "}");
     }
 
     @Override
@@ -117,15 +142,30 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(NaryMetadata metadata, int depth) {
-        write("var final_predicate = " + "dict." + metadata.getOperator().readable() + "(");
-        List<Metadata> children_list = metadata.children();
-        for (Metadata mtd : children_list) {
-            write(mtd.readable());
-            if (children_list.indexOf(mtd) != children_list.size() - 1) {
-                write(", ");
-            }
+        switch(metadata.getOperator().readable()){
+            case "count":
+                List<Metadata> children = metadata.children();
+                write("var array-test = [");
+                for (Metadata mtd: children) {
+                    write(mtd.readable());
+                    if(children.indexOf(mtd)!=children.size()-1){
+                        write(", ");
+                    }
+                }
+                write("];");
+                write("var nb-true = 0;" +
+                        "array-test.forEach(function(item){" +
+                        "if(item){" +
+                        "nb-true++;" +
+                        "}" +
+                        "});" +
+                        "return nb-true;");
+                break;
+            default:
+                write("Nary-Error");// will create a syntax error in js
+                // if narymetadata operator unrecognized
+                break;
         }
-        write(");");
     }
 
     @Override
