@@ -31,11 +31,13 @@ public class JavaScriptTest {
                         e.printStackTrace();
                     }
                 })
-                .forEach(rule -> rule.accept(new AstHtmlVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
+                .forEach(rule -> rule.accept(new AstProceduralJSVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
         System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
 
         try{
+            System.out.println("    Starting engine checking.");
             engine.eval(ops.toString());
+            System.out.println("    Ending engine checking.");
         }catch(final ScriptException se){
             throw new RuntimeException(se);
         }

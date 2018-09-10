@@ -54,6 +54,17 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
             case "when":
                 write("if("+metadata.readable()+"){ return true; }");
                 break;
+            case "today":
+                write("var now = moment();");
+                break;
+            case "today minus" :
+                write("var now = moment();");
+                write("now.subtract("+metadata.readable()+",'days');");
+                break;
+            case "today plus":
+                write("var now = moment();");
+                write("now.add("+metadata.readable()+",'days');");
+                break;
             default:
                 write("Un-Error"); // will create a syntax error in js
                 // if unarymetadata operator unrecognized
@@ -105,6 +116,14 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
             case "matches":
                 write("match("+metadata.getLeft()+", "+metadata.getRight()+");");
                 break;
+
+            case "minus" :
+                write(metadata.getLeft()+".subtract("+metadata.getRight()+",'days');");
+                break;
+            case "plus" :
+                write(metadata.getLeft()+".add("+metadata.getRight()+",'days');");
+                break;
+
             default:
                 write("Bin-Error");// will create a syntax error in js
                 // if binarymetadata operator unrecognized
@@ -142,9 +161,46 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
 
     @Override
     public void visitMetadata(NaryMetadata metadata, int depth) {
+        List<Metadata> children = metadata.children();
+        write("var array-test = [");
+        for (Metadata mtd: children) {
+            write(mtd.readable());
+            if(children.indexOf(mtd)!=children.size()-1){
+                write(", ");
+            }
+        }
+        write("];");
         switch(metadata.getOperator().readable()){
             case "count":
-                List<Metadata> children = metadata.children();
+                write("var nb-true = 0;" +
+                        "array-test.forEach(function(item){" +
+                        "if(item){" +
+                        "nb-true++;" +
+                        "}" +
+                        "});" +
+                        "return nb-true;");
+                break;
+            case "match all":
+                write("var test = 0 ;");
+                write("array-test.forEach(function(item){" +
+                        "if(!item){" +
+                        "test = 1;}" +
+                        "});");
+                write("if(test != 0 ){" +
+                        "return false;}" +
+                        "return true;");
+                break;
+            case "match none":
+                write("var test = 0 ;");
+                write("array-test.forEach(function(item){" +
+                        "if(item){" +
+                        "test = 1;}" +
+                        "});");
+                write("if(test != 0 ){" +
+                        "return false;}" +
+                        "return true;");
+                break;
+            case "match any":
                 write("var array-test = [");
                 for (Metadata mtd: children) {
                     write(mtd.readable());
@@ -153,13 +209,20 @@ public class AstProceduralJSVisitor extends AbstractAstVisitor {
                     }
                 }
                 write("];");
-                write("var nb-true = 0;" +
-                        "array-test.forEach(function(item){" +
+                write("array-test.forEach(function(item){" +
                         "if(item){" +
-                        "nb-true++;" +
-                        "}" +
-                        "});" +
-                        "return nb-true;");
+                        "return true;}" +
+                        "});");
+                break;
+            case "sum" :
+                write("array-test.reduce(function(acc,item)" +
+                        "{ return acc + item;" +
+                        "});");
+
+                break;
+
+            case "min" :
+                write("Math.min(array-test);");
                 break;
             default:
                 write("Nary-Error");// will create a syntax error in js
