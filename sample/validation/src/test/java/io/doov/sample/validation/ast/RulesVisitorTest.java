@@ -84,4 +84,19 @@ public class RulesVisitorTest {
         System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
     }
 
+
+    @Test
+    public void print_javascript_syntax_tree() {
+        ByteArrayOutputStream ops = new ByteArrayOutputStream();
+        REGISTRY_DEFAULT.stream()
+                .peek(rule -> {
+                    try {
+                        ops.write("--------------------------------\n".getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                })
+                .forEach(rule -> rule.accept(new AstProceduralJSVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
+        System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
+    }
 }
