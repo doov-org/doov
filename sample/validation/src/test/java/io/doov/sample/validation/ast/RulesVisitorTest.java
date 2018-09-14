@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
+import javax.script.*;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -97,6 +99,28 @@ public class RulesVisitorTest {
                     }
                 })
                 .forEach(rule -> rule.accept(new AstProceduralJSVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
+
         System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
+
+        //TODO test the engine evaluation
+//        //WIP - need to creation javascript object to instanciate the account/configuration values to real values
+//        ScriptEngineManager sem = new ScriptEngineManager();
+//        ScriptEngine engine = sem.getEngineByName("nashorn");
+//
+//        REGISTRY_DEFAULT.stream().forEach(rule -> {
+//            ops.reset();
+//            rule.accept(new AstProceduralJSVisitor(ops, BUNDLE, Locale.ENGLISH), 0);
+//            String request = new String (ops.toByteArray(), Charset.forName("UTF-8"));
+//            try{
+//                System.out.println("    Starting engine checking of : "+rule.readable());
+//                Object obj = engine.eval(request);
+//                System.out.println(obj.toString());
+//                System.out.println("    Ending engine checking.");
+//            }catch(final ScriptException se){
+//                throw new RuntimeException(se);
+//            }
+//        });
+
+
     }
 }
