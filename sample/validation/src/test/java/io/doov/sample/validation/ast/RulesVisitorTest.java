@@ -102,24 +102,32 @@ public class RulesVisitorTest {
 
         System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
 
-        //TODO test the engine evaluation
+        //TODO test the engine evaluation, solve the import moment js problem
 //        //WIP - need to creation javascript object to instanciate the account/configuration values to real values
-//        ScriptEngineManager sem = new ScriptEngineManager();
-//        ScriptEngine engine = sem.getEngineByName("nashorn");
-//
-//        REGISTRY_DEFAULT.stream().forEach(rule -> {
-//            ops.reset();
-//            rule.accept(new AstProceduralJSVisitor(ops, BUNDLE, Locale.ENGLISH), 0);
-//            String request = new String (ops.toByteArray(), Charset.forName("UTF-8"));
-//            try{
-//                System.out.println("    Starting engine checking of : "+rule.readable());
-//                Object obj = engine.eval(request);
-//                System.out.println(obj.toString());
-//                System.out.println("    Ending engine checking.");
-//            }catch(final ScriptException se){
-//                throw new RuntimeException(se);
-//            }
-//        });
+
+
+        ScriptEngineManager sem = new ScriptEngineManager();
+        ScriptEngine engine = sem.getEngineByName("nashorn");
+
+        REGISTRY_DEFAULT.stream().forEach(rule -> {
+            ops.reset();
+            try {
+//                ops.write("import ~/node_modules/moment/moment.js;\n".getBytes());
+                ops.write("var account = {email:\"potato@tomato.com\"};".getBytes("UTF-8"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            rule.accept(new AstProceduralJSVisitor(ops, BUNDLE, Locale.ENGLISH), 0);
+            String request = new String (ops.toByteArray(), Charset.forName("UTF-8"));
+            try{
+                System.out.println("    Starting engine checking of : "+rule.readable());
+                Object obj = engine.eval(request);
+                System.out.println(obj.toString());
+                System.out.println("    Ending engine checking.");
+            }catch(final ScriptException se){
+                throw new RuntimeException(se);
+            }
+        });
 
 
     }
