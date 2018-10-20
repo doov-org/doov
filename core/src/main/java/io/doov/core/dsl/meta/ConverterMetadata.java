@@ -3,53 +3,29 @@
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.TYPE_CONVERTER;
 import static io.doov.core.dsl.meta.MetadataType.TYPE_CONVERTER_IDENTITY;
 
-import java.util.*;
+import java.util.ArrayDeque;
 
-public class ConverterMetadata extends AbstractMetadata {
+import com.google.common.base.Strings;
 
-    private final Element element;
-    private final MetadataType type;
+public class ConverterMetadata extends LeafMetadata<ConverterMetadata> {
 
-    public ConverterMetadata(Element element, MetadataType type) {
-        this.element = element;
-        this.type = type;
+    public ConverterMetadata(MetadataType type) {
+        super(new ArrayDeque<>(), type);
     }
 
     public static ConverterMetadata metadata(String description) {
-        return new ConverterMetadata(new Element(
-                        () -> Optional.ofNullable(description).filter(d -> !d.isEmpty()).orElse("-function-"),
-                        STRING_VALUE), TYPE_CONVERTER);
-    }
-
-    public static ConverterMetadata identity() {
-        return new ConverterMetadata(new Element(() -> "identity", STRING_VALUE), TYPE_CONVERTER_IDENTITY);
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        if (type != MetadataType.TYPE_CONVERTER_IDENTITY) {
-            visitor.start(this, depth);
-            visitor.visit(this, depth);
-            visitor.end(this, depth);
+        if (Strings.isNullOrEmpty(description)) {
+            return new ConverterMetadata(TYPE_CONVERTER).valueUnknown(description);
+        } else {
+            return new ConverterMetadata(TYPE_CONVERTER).valueString(description);
         }
     }
 
-    @Override
-    public List<Element> flatten() {
-        return Collections.singletonList(element);
+    public static ConverterMetadata identity() {
+        return new ConverterMetadata(TYPE_CONVERTER_IDENTITY).valueString("identity");
     }
 
-    @Override
-    public String readable(Locale locale) {
-        return element.getReadable().readable();
-    }
-
-    @Override
-    public MetadataType type() {
-        return type;
-    }
 }

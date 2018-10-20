@@ -6,17 +6,18 @@ package io.doov.core.dsl.mapping;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.*;
 
 public class ConverterInput<S, T> extends AbstractDSLBuilder implements MappingInput<T> {
 
     private final MappingInput<S> sourceInput;
     private final TypeConverter<S, T> typeConverter;
+    private final MappingInputMetadata metadata;
 
     public ConverterInput(MappingInput<S> sourceInput, TypeConverter<S, T> typeConverter) {
         this.sourceInput = sourceInput;
         this.typeConverter = typeConverter;
+        this.metadata = MappingInputMetadata.inputMetadata(sourceInput.metadata(), typeConverter.metadata());
     }
 
     @Override
@@ -26,7 +27,7 @@ public class ConverterInput<S, T> extends AbstractDSLBuilder implements MappingI
 
     @Override
     public Metadata metadata() {
-        return sourceInput.metadata();
+        return metadata;
     }
 
     @Override
@@ -34,9 +35,4 @@ public class ConverterInput<S, T> extends AbstractDSLBuilder implements MappingI
         return typeConverter.convert(inModel, context, sourceInput.read(inModel, context));
     }
 
-    @Deprecated
-    public void accept(MetadataVisitor visitor, int depth) {
-        sourceInput.metadata().accept(visitor, depth);
-        typeConverter.metadata().accept(visitor, depth);
-    }
 }

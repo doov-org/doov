@@ -47,10 +47,12 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     startBinary((BinaryPredicateMetadata) metadata, depth);
                     break;
                 case MAPPING_INPUT:
-                case MAPPING_OUTPUT:
+                case MAPPING_LEAF:
                 case SINGLE_MAPPING:
                 case MULTIPLE_MAPPING:
-                    startMappingRule((MappingMetadata) metadata, depth);
+                case THEN_MAPPING:
+                case ELSE_MAPPING:
+                    startMappingRule(metadata, depth);
                     break;
                 case NARY_PREDICATE:
                     startNary((NaryPredicateMetadata) metadata, depth);
@@ -88,10 +90,12 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 visitBinary((BinaryPredicateMetadata) metadata, depth);
                 break;
             case MAPPING_INPUT:
-            case MAPPING_OUTPUT:
+            case MAPPING_LEAF:
             case SINGLE_MAPPING:
             case MULTIPLE_MAPPING:
-                visitMappingRule((MappingMetadata) metadata, depth);
+            case THEN_MAPPING:
+            case ELSE_MAPPING:
+                visitMappingRule(metadata, depth);
                 break;
             case NARY_PREDICATE:
                 visitNary((NaryPredicateMetadata) metadata, depth);
@@ -127,10 +131,12 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     endBinary((BinaryPredicateMetadata) metadata, depth);
                     break;
                 case MAPPING_INPUT:
-                case MAPPING_OUTPUT:
+                case MAPPING_LEAF:
                 case SINGLE_MAPPING:
                 case MULTIPLE_MAPPING:
-                    endMappingRule((MappingMetadata) metadata, depth);
+                case THEN_MAPPING:
+                case ELSE_MAPPING:
+                    endMappingRule(metadata, depth);
                     break;
                 case NARY_PREDICATE:
                     endNary((NaryPredicateMetadata) metadata, depth);
@@ -240,13 +246,13 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     // Mapping Rule
 
-    public void startMappingRule(MappingMetadata metadata, int depth) {
+    public void startMappingRule(Metadata metadata, int depth) {
     }
 
-    public void visitMappingRule(MappingMetadata metadata, int depth) {
+    public void visitMappingRule(Metadata metadata, int depth) {
     }
 
-    public void endMappingRule(MappingMetadata metadata, int depth) {
+    public void endMappingRule(Metadata metadata, int depth) {
     }
 
     // StepCondition

@@ -13,12 +13,12 @@ public class DefaultMappingRule<T> extends AbstractDSLBuilder implements Mapping
 
     private final MappingInput<T> input;
     private final MappingOutput<T> output;
-    private final MappingMetadata metadata;
+    private final MappingRuleMetadata metadata;
 
     public DefaultMappingRule(MappingInput<T> input, MappingOutput<T> output) {
         this.input = input;
         this.output = output;
-        this.metadata = MappingMetadata.mapping();
+        this.metadata = new MappingRuleMetadata(input.metadata(), output.metadata());
     }
 
     @Override
@@ -44,12 +44,4 @@ public class DefaultMappingRule<T> extends AbstractDSLBuilder implements Mapping
         return context;
     }
 
-    @Deprecated
-    public void accept(MetadataVisitor visitor, int depth) {
-        visitor.start(metadata, depth);
-        input.metadata().accept(visitor, depth);
-        visitor.visit(metadata, depth);
-        output.metadata().accept(visitor, depth);
-        visitor.end(metadata, depth);
-    }
 }

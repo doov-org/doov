@@ -18,9 +18,8 @@ import io.doov.core.dsl.meta.*;
  */
 public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
 
-    private static final MappingMetadata REGISTRY_METADATA = MappingMetadata.mappings(MappingOperator.mappings);
-
     private final List<MappingRule> mappingRules;
+    private final MappingRegistryMetadata metadata;
 
     public static MappingRegistry mappings(MappingRule... mappingRules) {
         return new MappingRegistry(mappingRules);
@@ -28,11 +27,13 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
 
     private MappingRegistry(MappingRule... mappingRules) {
         this.mappingRules = Arrays.stream(mappingRules).flatMap(MappingRule::stream).collect(Collectors.toList());
+        // TODO
+        this.metadata = MappingRegistryMetadata.mappings(stream().map(MappingRule::metadata).collect(Collectors.toList()));
     }
 
     @Override
     public Metadata metadata() {
-        return REGISTRY_METADATA;
+        return metadata;
     }
 
     /**
@@ -54,7 +55,7 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
      * @return context
      */
     public Context validateAndExecute(FieldModel inModel, FieldModel outModel) {
-        DefaultContext context = new DefaultContext(REGISTRY_METADATA);
+        DefaultContext context = new DefaultContext(metadata());
         mappingRules.stream().filter(m -> m.validate(inModel, outModel))
                         .forEach(m -> m.executeOn(inModel, outModel, context));
         return context;
@@ -95,7 +96,7 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
 
     @Override
     public Context executeOn(FieldModel inModel, FieldModel outModel) {
-        return this.executeOn(inModel, outModel, new DefaultContext(REGISTRY_METADATA));
+        return this.executeOn(inModel, outModel, new DefaultContext(metadata()));
     }
 
     @Override
@@ -103,11 +104,4 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
         return mappingRules.stream();
     }
 
-    @Deprecated
-    public void accept(MetadataVisitor visitor, int depth) {
-        visitor.start(REGISTRY_METADATA, depth);
-        visitor.visit(REGISTRY_METADATA, depth);
-        mappingRules.forEach(m -> m.metadata().accept(visitor, depth + 1));
-        visitor.end(REGISTRY_METADATA, depth);
-    }
 }
