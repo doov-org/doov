@@ -15,8 +15,10 @@ public enum MetadataType {
     EMPTY, //
     SINGLE_MAPPING, //
     MULTIPLE_MAPPING, //
+    THEN_MAPPING, //
+    ELSE_MAPPING, //
     MAPPING_INPUT, //
-    MAPPING_OUTPUT, //
+    MAPPING_LEAF, //
     TYPE_CONVERTER, //
     TYPE_CONVERTER_IDENTITY, //
     ;

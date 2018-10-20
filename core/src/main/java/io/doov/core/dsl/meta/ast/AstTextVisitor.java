@@ -21,7 +21,6 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Locale;
 
-import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.*;
@@ -110,21 +109,27 @@ public class AstTextVisitor extends AbstractAstVisitor {
     @Override
     public void visitTypeConverter(ConverterMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
-        sb.append(formatValue(metadata));
+        sb.append(formatLeafMetadata(metadata));
         sb.append(formatNewLine());
     }
 
     @Override
-    public void startMappingRule(MappingMetadata metadata, int depth) {
+    public void startMappingRule(Metadata metadata, int depth) {
         switch (metadata.type()) {
             case SINGLE_MAPPING:
                 sb.append(formatCurrentIndent());
                 sb.append(formatOperator(MappingOperator.map));
                 sb.append(formatNewLine());
                 break;
-            case MULTIPLE_MAPPING:
+            case THEN_MAPPING:
                 sb.append(formatCurrentIndent());
-                sb.append(formatMappingMetadata(metadata));
+                sb.append(formatOperator(MappingOperator.then));
+                sb.append(formatNewLine());
+                break;
+            case ELSE_MAPPING:
+                sb.append(formatCurrentIndent());
+                sb.append(formatOperator(MappingOperator._else));
+                sb.append(formatNewLine());
                 break;
             default:
                 break;
@@ -132,24 +137,21 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMappingRule(MappingMetadata metadata, int depth) {
+    public void visitMappingRule(Metadata metadata, int depth) {
         switch (metadata.type()) {
-            case MAPPING_INPUT:
+            case MAPPING_LEAF:
                 sb.append(formatCurrentIndent());
-                sb.append(formatMappingMetadata(metadata));
-                break;
-            case MAPPING_OUTPUT:
-                sb.append(formatCurrentIndent());
-                sb.append(formatMappingMetadata(metadata));
+                sb.append(formatLeafMetadata((LeafMetadata<?>) metadata));
+                sb.append(formatNewLine());
                 break;
             case SINGLE_MAPPING:
                 sb.append(formatCurrentIndent());
                 sb.append(formatOperator(MappingOperator.to));
+                sb.append(formatNewLine());
                 break;
             default:
                 break;
         }
-        sb.append(formatNewLine());
     }
 
     @Override
@@ -161,12 +163,16 @@ public class AstTextVisitor extends AbstractAstVisitor {
     protected int getCurrentIndentSize() {
         if (BINARY_PREDICATE.equals(stackPeek())) {
             return (int) stackSteam().filter(e -> !BINARY_PREDICATE.equals(e)).count() *
-                            getIndentSize();
+                    getIndentSize();
         }
         return super.getCurrentIndentSize();
     }
 
     protected String formatLeafMetadata(LeafPredicateMetadata<?> metadata) {
+        return this.formatLeafMetadata((LeafMetadata<?>) metadata);
+    }
+
+    protected String formatLeafMetadata(LeafMetadata<?> metadata) {
         return metadata.elements().stream().map(e -> {
             switch (e.getType()) {
                 case OPERATOR:
@@ -181,27 +187,8 @@ public class AstTextVisitor extends AbstractAstVisitor {
         }).collect(joining(" "));
     }
 
-    protected String formatMappingMetadata(MappingMetadata metadata) {
-        return metadata.stream().map(e -> {
-            switch (e.getType()) {
-                case OPERATOR:
-                    return bundle.get((Operator) e.getReadable(), locale);
-                case FIELD:
-                    return e.getReadable().readable();
-                case STRING_VALUE:
-                    return "'" + bundle.get(e.getReadable().readable(), locale) + "'";
-                default:
-                    return bundle.get(e.getReadable().readable(), locale);
-            }
-        }).collect(joining(" "));
-    }
-
-    protected String formatOperator(Operator operator) {
+        protected String formatOperator(Operator operator) {
         return operator == null ? null : operator.readable();
-    }
-
-    protected String formatValue(Readable value) {
-        return value == null ? null : value.readable();
     }
 
     protected String formatRule() {

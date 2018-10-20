@@ -3,15 +3,18 @@
  */
 package io.doov.core.dsl.mapping;
 
+import static io.doov.core.dsl.meta.MappingInputMetadata.inputMetadata;
+import static io.doov.core.dsl.meta.MappingMetadata.metadataInput;
+
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.MappingMetadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.MappingInputMetadata;
+import io.doov.core.dsl.meta.Metadata;
 
 public class BiConverterInput<U, S, T> extends AbstractDSLBuilder implements MappingInput<T> {
 
-    private final MappingMetadata metadata;
+    private final MappingInputMetadata metadata;
     private final MappingInput<U> mappingInput1;
     private final MappingInput<S> mappingInput2;
     private final BiTypeConverter<U, S, T> converter;
@@ -21,7 +24,7 @@ public class BiConverterInput<U, S, T> extends AbstractDSLBuilder implements Map
         this.mappingInput1 = mappingInput1;
         this.mappingInput2 = mappingInput2;
         this.converter = converter;
-        this.metadata = MappingMetadata.metadataInput(mappingInput1.metadata(), mappingInput2.metadata());
+        this.metadata = inputMetadata(metadataInput(mappingInput1.metadata(), mappingInput2.metadata()), converter.metadata());
     }
 
     @Override
@@ -30,7 +33,7 @@ public class BiConverterInput<U, S, T> extends AbstractDSLBuilder implements Map
     }
 
     @Override
-    public MappingMetadata metadata() {
+    public Metadata metadata() {
         return metadata;
     }
 
@@ -40,9 +43,4 @@ public class BiConverterInput<U, S, T> extends AbstractDSLBuilder implements Map
                         mappingInput2.read(inModel, context));
     }
 
-    @Deprecated
-    public void accept(MetadataVisitor visitor, int depth) {
-        metadata.accept(visitor, depth);
-        converter.metadata().accept(visitor, depth);
-    }
 }
