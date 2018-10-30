@@ -25,6 +25,10 @@ public class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMetadata {
         this.type = type;
     }
 
+    public LeafMetadata(MetadataType type) {
+        this(new ArrayDeque<>(), type);
+    }
+
     @Override
     public MetadataType type() {
         return type;

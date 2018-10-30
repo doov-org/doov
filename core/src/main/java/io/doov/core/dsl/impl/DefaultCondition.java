@@ -30,7 +30,7 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.types.Condition;
-import io.doov.core.dsl.impl.num.IntegerCondition;
+import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
@@ -259,9 +259,8 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @param mapper the to integer mapper to apply
      * @return the integer condition
      */
-    // TODO move into a function provider
-    public final IntegerCondition mapToInt(Function<T, Integer> mapper) {
-        return new IntegerCondition(mapToIntMetadata(metadata), (model, context) -> value(model, context).map(mapper));
+    public final IntegerFunction mapToInt(Function<T, Integer> mapper) {
+        return new IntegerFunction(mapToIntMetadata(metadata), (model, context) -> value(model, context).map(mapper));
     }
 
     /**
@@ -270,9 +269,8 @@ public class DefaultCondition<T> extends AbstractCondition<T> {
      * @param mapper function to string to apply
      * @return string condition
      */
-    // TODO move into a function provider
-    public final StringCondition mapToString(Function<T, String> mapper) {
-        return new StringCondition(mapToStringMetadata(metadata),
+    public final StringFunction mapToString(Function<T, String> mapper) {
+        return new StringFunction(mapToStringMetadata(metadata),
                 (model, context) -> value(model, context).map(mapper));
     }
 

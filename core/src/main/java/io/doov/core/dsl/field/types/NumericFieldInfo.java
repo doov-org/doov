@@ -164,13 +164,13 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
     }
 
     /**
-     * See {@link NumericCondition#when(StepCondition)}
+     * See {@link NumericFunction#when(StepCondition)}
      *
      * @param condition the condition to evaluate
      * @return the numeric function
-     * @see NumericCondition#when(StepCondition)
+     * @see NumericFunction#when(StepCondition)
      */
-    default NumericCondition<N> when(StepCondition condition) {
+    default NumericFunction<N> when(StepCondition condition) {
         return getNumericCondition().when(condition);
     }
 

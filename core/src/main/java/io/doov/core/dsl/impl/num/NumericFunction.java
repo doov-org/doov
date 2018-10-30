@@ -5,6 +5,7 @@ package io.doov.core.dsl.impl.num;
 
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.plusMetadata;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.timesMetadata;
+import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.whenMetadata;
 import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.minMetadata;
 import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.sumMetadata;
 import static java.util.stream.Collectors.toList;
@@ -19,6 +20,7 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.DSLFunction;
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
@@ -104,5 +106,17 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
 
     private static <N extends Number> List<Metadata> getMetadataForConditions(List<NumericCondition<N>> conditions) {
         return conditions.stream().map(condition -> condition.getMetadata()).collect(toList());
+    }
+
+    /**
+     * Returns a numeric step condition that returns the node value if the condition evaluates to true.
+     *
+     * @param condition the condition to test
+     * @return the numeric condition
+     */
+    public final NumericFunction<N> when(StepCondition condition) {
+        return numericCondition(whenMetadata(metadata, condition),
+                (model, context) -> condition.predicate().test(model, context) ? value(model, context)
+                        : Optional.empty());
     }
 }

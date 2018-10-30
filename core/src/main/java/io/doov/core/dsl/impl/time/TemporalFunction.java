@@ -266,25 +266,25 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
         return new IntegerFunction(timeBetween(ageAtSupplierMetadata(this, value), YEARS, value));
     }
 
-    private NumericCondition<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, N value) {
-        return new LongCondition(metadata, (model, context) -> value(model, context)
+    private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, N value) {
+        return new LongFunction(metadata, (model, context) -> value(model, context)
                         .flatMap(l -> Optional.ofNullable(value).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    private NumericCondition<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
+    private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
                     TemporalFieldInfo<N> value) {
-        return new LongCondition(metadata, (model, context) -> value(model, context)
+        return new LongFunction(metadata, (model, context) -> value(model, context)
                         .flatMap(l -> valueModel(model, value).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    private NumericCondition<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
+    private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
                     TemporalCondition<N> value) {
-        return new LongCondition(metadata, (model, context) -> value(model, context).flatMap(
+        return new LongFunction(metadata, (model, context) -> value(model, context).flatMap(
                         l -> value.getFunction().apply(model, context).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
-    private NumericCondition<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, Supplier<N> value) {
-        return new LongCondition(metadata, (model, context) -> value(model, context)
+    private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, Supplier<N> value) {
+        return new LongFunction(metadata, (model, context) -> value(model, context)
                         .flatMap(l -> Optional.ofNullable(value.get()).map(r -> betweenFunction(unit).apply(l, r))));
     }
 

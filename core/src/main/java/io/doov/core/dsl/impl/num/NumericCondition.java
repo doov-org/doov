@@ -162,15 +162,4 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
         return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
 
-    /**
-     * Returns a numeric step condition that returns the node value if the condition evaluates to true.
-     *
-     * @param condition the condition to test
-     * @return the numeric condition
-     */
-    public final NumericCondition<N> when(StepCondition condition) {
-        return numericCondition(whenMetadata(metadata, condition),
-                (model, context) -> condition.predicate().test(model, context) ? value(model, context)
-                        : Optional.empty());
-    }
 }
