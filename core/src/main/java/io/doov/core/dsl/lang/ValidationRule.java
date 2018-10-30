@@ -8,6 +8,14 @@ import io.doov.core.dsl.DslModel;
  * This class should be used when keeping references to specific rules.
  */
 public interface ValidationRule extends DSLBuilder {
+
+    /**
+     * Returns the root when node of this rule.
+     *
+     * @return the step when
+     */
+    StepWhen getStepWhen();
+
     /**
      * Returns a validation rule with the given short circuit.
      *
