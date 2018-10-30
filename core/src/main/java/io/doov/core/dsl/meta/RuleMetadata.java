@@ -15,7 +15,7 @@ public class RuleMetadata extends AbstractMetadata {
 
     private final Metadata value;
 
-    private RuleMetadata(Metadata value) {
+    public RuleMetadata(Metadata value) {
         this.value = value;
     }
     
