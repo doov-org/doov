@@ -25,7 +25,8 @@ public class DefaultValidationRule extends AbstractDSLBuilder implements Validat
         return shortCircuit;
     }
 
-    protected StepWhen getStepWhen() {
+    @Override
+    public StepWhen getStepWhen() {
         return stepWhen;
     }
 
