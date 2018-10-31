@@ -50,7 +50,7 @@ public interface Metadata extends Readable {
      * @see #readable()
      */
     default String readable(Locale locale) {
-        return astToString(this, locale);
+        return astToString(this, locale).trim();
     }
 
     @Override
