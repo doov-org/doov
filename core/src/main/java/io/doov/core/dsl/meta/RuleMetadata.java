@@ -29,6 +29,14 @@ public class RuleMetadata extends AbstractMetadata {
     }
 
     @Override
+    public void accept(MetadataVisitor visitor, int depth) {
+        visitor.start(this, depth);
+        value.accept(visitor, depth);
+        visitor.visit(this, depth);
+        visitor.end(this, depth);
+    }
+
+    @Override
     public List<Element> flatten() {
         final List<Element> flatten = new ArrayList<>();
         flatten.add(new Element(rule, OPERATOR));
