@@ -19,7 +19,7 @@ public interface DSLBuilder extends Readable {
      * @see #readable()
      */
     default String readable(Locale locale) {
-        return astToString(metadata(), locale);
+        return astToString(metadata(), locale).trim();
     }
 
     @Override
