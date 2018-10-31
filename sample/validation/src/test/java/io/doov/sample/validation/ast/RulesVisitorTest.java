@@ -98,11 +98,9 @@ public class RulesVisitorTest {
                     }
                 })
                 .forEach(rule -> rule.accept(new AstProceduralJSVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
-
         System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
 
-        //TODO test the engine evaluation, solve the import moment js problem
-//        //WIP - need to creation javascript object to instanciate the account/configuration values to real values
+//        WIP - need to creation javascript object to instanciate the account/configuration values to real values
 
         ScriptEngineManager sem = new ScriptEngineManager();
         ScriptEngine engine = sem.getEngineByName("nashorn");
@@ -111,7 +109,7 @@ public class RulesVisitorTest {
             try {
                 ops.write("var configuration = { max:{email:{size:\"24\"}}, min:{age:\"18\"}};".getBytes("UTF-8"));
                 ops.write("var account = {email:\"potato@tomato.com\", creation: {date : \"10-10-2000\"}, country:\"FR\", phone:{number:\"+33555555555\"}};".getBytes("UTF-8"));
-                ops.write("var user = {birthdate:\"09-08-1993\",first:{name:\"french\"}, last:{name:\"fries\"} };".getBytes("UTF-8"));
+                ops.write("var user = {id:\"notnull\", birthdate:\"09-08-1993\",first:{name:\"french\"}, last:{name:\"fries\"} };".getBytes("UTF-8"));
 
                 rule.accept(new AstProceduralJSVisitor(ops, BUNDLE, Locale.ENGLISH), 0);
                 String request = new String(ops.toByteArray(), Charset.forName("UTF-8"));
