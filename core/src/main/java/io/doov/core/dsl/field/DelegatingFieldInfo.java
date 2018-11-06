@@ -5,7 +5,6 @@ package io.doov.core.dsl.field;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.impl.DefaultCondition;
 
 /**
  * Delegates all FieldInfo methods to another.

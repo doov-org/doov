@@ -17,7 +17,7 @@ package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.FloatCondition;
+import io.doov.core.dsl.impl.num.FloatFunction;
 
 public class FloatFieldInfo extends DelegatingFieldInfoImpl implements NumericFieldInfo<Float> {
 
@@ -26,8 +26,8 @@ public class FloatFieldInfo extends DelegatingFieldInfoImpl implements NumericFi
     }
 
     @Override
-    public FloatCondition getNumericCondition() {
-        return new FloatCondition(this);
+    public FloatFunction getNumericCondition() {
+        return new FloatFunction(this);
     }
 
 }

@@ -2,9 +2,7 @@ package io.doov.core.dsl.runtime;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 import io.doov.core.FieldId;
 

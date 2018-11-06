@@ -17,7 +17,7 @@ package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.LongCondition;
+import io.doov.core.dsl.impl.num.LongFunction;
 
 public class LongFieldInfo extends DelegatingFieldInfoImpl implements NumericFieldInfo<Long> {
 
@@ -26,8 +26,8 @@ public class LongFieldInfo extends DelegatingFieldInfoImpl implements NumericFie
     }
 
     @Override
-    public LongCondition getNumericCondition() {
-        return new LongCondition(this);
+    public LongFunction getNumericCondition() {
+        return new LongFunction(this);
     }
 
 }

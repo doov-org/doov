@@ -6,7 +6,6 @@ package io.doov.core.dsl.mapping;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.AbstractMetadata;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 

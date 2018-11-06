@@ -38,7 +38,7 @@ public class UnaryPredicateMetadata extends UnaryMetadata implements PredicateMe
     }
 
     public static UnaryPredicateMetadata notMetadata(Metadata value) {
-        return new UnaryPredicateMetadata(DefaultOperator.not, value);
+        return new UnaryPredicateMetadata(not, value);
     }
 
     /**

@@ -10,11 +10,10 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.doov.core.dsl.impl;
+package io.doov.core.dsl.impl.num;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
@@ -24,7 +23,7 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 /**
  * Implements {@link Integer} functions for the numeric conditions.
  */
-public class IntegerCondition extends NumericCondition<Integer> {
+public class IntegerCondition extends NumericCondition<Integer> implements IntegerOperators {
 
     public IntegerCondition(DslField<Integer> field) {
         super(field);
@@ -35,53 +34,14 @@ public class IntegerCondition extends NumericCondition<Integer> {
     }
 
     public IntegerCondition(NumericCondition<Long> condition) {
-        this(condition.metadata, (model, context) -> condition.function.apply(model, context).map(Long::intValue));
+        this(condition.getMetadata(),
+                        (model, context) -> condition.getFunction().apply(model, context).map(Long::intValue));
     }
 
     @Override
     protected NumericCondition<Integer> numericCondition(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Integer>> value) {
         return new IntegerCondition(metadata, value);
-    }
-
-    @Override
-    BiFunction<Integer, Integer, Boolean> lesserThanFunction() {
-        return (l, r) -> l < r;
-    }
-
-    @Override
-    BiFunction<Integer, Integer, Boolean> lesserOrEqualsFunction() {
-        return (l, r) -> l <= r;
-    }
-
-    @Override
-    BiFunction<Integer, Integer, Boolean> greaterThanFunction() {
-        return (l, r) -> l > r;
-    }
-
-    @Override
-    BiFunction<Integer, Integer, Boolean> greaterOrEqualsFunction() {
-        return (l, r) -> l >= r;
-    }
-
-    @Override
-    BinaryOperator<Integer> minFunction() {
-        return Integer::min;
-    }
-
-    @Override
-    BinaryOperator<Integer> sumFunction() {
-        return Integer::sum;
-    }
-
-    @Override
-    BiFunction<Integer, Integer, Integer> timesFunction() {
-        return (l, r) -> l * r;
-    }
-
-    @Override
-    Integer identity() {
-        return 0;
     }
 
 }

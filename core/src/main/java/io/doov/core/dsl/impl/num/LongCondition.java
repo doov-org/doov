@@ -10,11 +10,10 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.doov.core.dsl.impl;
+package io.doov.core.dsl.impl.num;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
@@ -24,7 +23,7 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 /**
  * Implements {@link Long} functions for the numeric conditions.
  */
-public class LongCondition extends NumericCondition<Long> {
+public class LongCondition extends NumericCondition<Long> implements LongOperators {
 
     public LongCondition(DslField<Long> field) {
         super(field);
@@ -38,46 +37,6 @@ public class LongCondition extends NumericCondition<Long> {
     protected NumericCondition<Long> numericCondition(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Long>> value) {
         return new LongCondition(metadata, value);
-    }
-
-    @Override
-    BiFunction<Long, Long, Boolean> lesserThanFunction() {
-        return (l, r) -> l < r;
-    }
-
-    @Override
-    BiFunction<Long, Long, Boolean> lesserOrEqualsFunction() {
-        return (l, r) -> l <= r;
-    }
-
-    @Override
-    BiFunction<Long, Long, Boolean> greaterThanFunction() {
-        return (l, r) -> l > r;
-    }
-
-    @Override
-    BiFunction<Long, Long, Boolean> greaterOrEqualsFunction() {
-        return (l, r) -> l >= r;
-    }
-
-    @Override
-    BinaryOperator<Long> minFunction() {
-        return Long::min;
-    }
-
-    @Override
-    BinaryOperator<Long> sumFunction() {
-        return Long::sum;
-    }
-
-    @Override
-    BiFunction<Long, Integer, Long> timesFunction() {
-        return (l, r) -> l * r;
-    }
-
-    @Override
-    Long identity() {
-        return 0L;
     }
 
 }

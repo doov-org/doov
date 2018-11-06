@@ -5,12 +5,13 @@ package io.doov.core.dsl.meta.predicate;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
 public interface PredicateMetadata extends Metadata {
 
     AtomicInteger evalTrue();
-    
+
     AtomicInteger evalFalse();
 
     /**
@@ -19,7 +20,7 @@ public interface PredicateMetadata extends Metadata {
      * @param other the other metadata to merge
      * @return the merged metadata
      */
-    default PredicateMetadata merge(LeafPredicateMetadata other) {
+    default PredicateMetadata merge(LeafMetadata<?> other) {
         throw new UnsupportedOperationException();
     }
 

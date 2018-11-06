@@ -67,10 +67,10 @@ public class TemporalTest {
         user.setBirthDate(LocalDate.now());
 
         assertThat(userBirthdate.with(firstDayOfMonth())
-                        .eq(LocalDate.now().with(TemporalAdjusters.firstDayOfMonth())))
+                .eq(LocalDate.now().with(TemporalAdjusters.firstDayOfMonth())))
                         .validates(model);
         assertThat(userBirthdate.with(firstDayOfMonth())
-                        .notEq(LocalDate.now().with(TemporalAdjusters.firstDayOfMonth())))
+                .notEq(LocalDate.now().with(TemporalAdjusters.firstDayOfMonth())))
                         .doesNotValidate(model);
     }
 
@@ -84,9 +84,9 @@ public class TemporalTest {
         assertThat(userBirthdate.minus(1, DAYS).eq(birthDate.minus(1, DAYS))).validates(model);
         assertThat(userBirthdate.plus(1, DAYS).eq(birthDate.plus(1, DAYS))).validates(model);
         assertThat(userBirthdate.minus(configurationMinAge, YEARS).eq(birthDate.minus(18, YEARS)))
-                        .validates(model);
+                .validates(model);
         assertThat(userBirthdate.plus(configurationMinAge, YEARS).eq(birthDate.plus(18, YEARS)))
-                        .validates(model);
+                .validates(model);
     }
 
     @Test
@@ -120,13 +120,13 @@ public class TemporalTest {
         user.setBirthDate(birthDate);
 
         assertThat(userBirthdate.with(firstDayOfYear())
-                        .yearsBetween(LocalDate.now().with(TemporalAdjusters.firstDayOfYear()))
-                        .eq(18))
+                .yearsBetween(LocalDate.now().with(TemporalAdjusters.firstDayOfYear()))
+                .eq(18))
                         .validates(model);
         assertThat(userBirthdate.with(firstDayOfNextYear()).with(ofDateAdjuster(d -> d.withDayOfMonth(15)))
-                        .yearsBetween(LocalDate.now().with(TemporalAdjusters.firstDayOfNextYear())
-                                        .with(TemporalAdjusters.ofDateAdjuster(d -> d.withDayOfMonth(15))))
-                        .eq(18)).validates(model);
+                .yearsBetween(LocalDate.now().with(TemporalAdjusters.firstDayOfNextYear())
+                        .with(TemporalAdjusters.ofDateAdjuster(d -> d.withDayOfMonth(15))))
+                .eq(18)).validates(model);
     }
 
     @Test
@@ -145,5 +145,12 @@ public class TemporalTest {
         LocalDateSuppliers.setClock(LocalDateSuppliers.createClockFrom(LocalDate.of(2017, 1, 1)));
         assertThat(userBirthdate.ageAt(today()).greaterOrEquals(18)).validates(model);
         LocalDateSuppliers.setDefaultClock();
+    }
+
+    @Test
+    public void times_times_operator() {
+        user.setBirthDate(LocalDate.now().minusYears(3));
+        assertThat(userBirthdate.ageAt(LocalDateSuppliers.today()).times(3).times(4).greaterOrEquals(30))
+                .validates(model);
     }
 }

@@ -72,13 +72,13 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
     }
 
     @Override
-    public PredicateMetadata merge(LeafPredicateMetadata other) {
+    public PredicateMetadata merge(LeafMetadata<?> other) {
         final List<Element> elts = other.elements().stream().collect(Collectors.toList());
         if (elts.get(0).getType() == OPERATOR && (elts.get(0).getReadable() == sum || elts.get(0).getReadable() == min
                         || elts.get(0).getReadable() == count)) {
             // special case to build : count (predicate ...) operator value
             return new BinaryPredicateMetadata(this, (Operator) elts.get(elts.size() - 2).getReadable(),
-                            new LeafPredicateMetadata(LEAF_PREDICATE)
+                            new LeafPredicateMetadata<>(LEAF_PREDICATE)
                                             .valueReadable(elts.get(elts.size() - 1).getReadable()));
         }
         return new NaryPredicateMetadata(new ComposeOperator(getOperator(), other), getValues());
@@ -112,7 +112,7 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
                     return true;
                 if (elements.get(0).getType() != FIELD)
                     return true;
-                final Object value = context.getEvalValue(((DslField) elements.get(0).getReadable()).id());
+                final Object value = context.getEvalValue(((DslField<?>) elements.get(0).getReadable()).id());
                 if (value == null)
                     return false;
                 try {

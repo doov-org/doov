@@ -26,8 +26,8 @@ import io.doov.core.dsl.lang.ValidationRule;
  */
 public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, ValidationRule> {
 
-    ValidationRuleAssert(ValidationRule actual, Class<?> selfType) {
-        super(actual, selfType);
+    ValidationRuleAssert(ValidationRule rule, Class<?> selfType) {
+        super(rule, selfType);
     }
 
     /**

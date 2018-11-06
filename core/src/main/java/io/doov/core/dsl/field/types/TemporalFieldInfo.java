@@ -19,9 +19,9 @@ import java.time.temporal.TemporalUnit;
 import java.util.function.Supplier;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
-import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.impl.NumericCondition;
-import io.doov.core.dsl.impl.TemporalCondition;
+import io.doov.core.dsl.impl.num.NumericFunction;
+import io.doov.core.dsl.impl.time.TemporalCondition;
+import io.doov.core.dsl.impl.time.TemporalFunction;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.time.TemporalAdjuster;
 
@@ -42,88 +42,88 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#eq(TemporalCondition)
      */
     default StepCondition eq(TemporalCondition<N> value) {
-        return getTemporalCondition().eq(value);
+        return getTemporalFunction().eq(value);
     }
 
     /**
-     * See {@link TemporalCondition#with(TemporalAdjuster)}
+     * See {@link TemporalFunction#with(TemporalAdjuster)}
      *
      * @param adjuster the adjuster
      * @return the step condition
-     * @see TemporalCondition#with(TemporalAdjuster)
+     * @see TemporalFunction#with(TemporalAdjuster)
      */
-    default TemporalCondition<N> with(TemporalAdjuster adjuster) {
-        return getTemporalCondition().with(adjuster);
+    default TemporalFunction<N> with(TemporalAdjuster adjuster) {
+        return getTemporalFunction().with(adjuster);
     }
 
     /**
-     * See {@link TemporalCondition#minus(int, TemporalUnit)}
+     * See {@link TemporalFunction#minus(int, TemporalUnit)}
      *
      * @param value the minus value
-     * @param unit  the minus unit
+     * @param unit the minus unit
      * @return the step condition
-     * @see TemporalCondition#minus(int, TemporalUnit)
+     * @see TemporalFunction#minus(int, TemporalUnit)
      */
-    default TemporalCondition<N> minus(int value, TemporalUnit unit) {
-        return getTemporalCondition().minus(value, unit);
+    default TemporalFunction<N> minus(int value, TemporalUnit unit) {
+        return getTemporalFunction().minus(value, unit);
     }
 
     /**
-     * See {@link TemporalCondition#minus(NumericFieldInfo, TemporalUnit)}
+     * See {@link TemporalFunction#minus(NumericFieldInfo, TemporalUnit)}
      *
      * @param value the minus field value
-     * @param unit  the minus unit
+     * @param unit the minus unit
      * @return the step condition
-     * @see TemporalCondition#minus(NumericFieldInfo, TemporalUnit)
+     * @see TemporalFunction#minus(NumericFieldInfo, TemporalUnit)
      */
-    default TemporalCondition<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
-        return getTemporalCondition().minus(value, unit);
+    default TemporalFunction<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
+        return getTemporalFunction().minus(value, unit);
     }
 
     /**
-     * See {@link TemporalCondition#minus(NumericFieldInfo, TemporalUnit)}
+     * See {@link TemporalFunction#minus(NumericFieldInfo, TemporalUnit)}
      *
      * @param value the years to remove
      * @return the step condition
-     * @see TemporalCondition#minus(NumericFieldInfo, TemporalUnit)
+     * @see TemporalFunction#minus(NumericFieldInfo, TemporalUnit)
      */
-    default TemporalCondition<N> minusYears(int value) {
-        return getTemporalCondition().minus(value, YEARS);
+    default TemporalFunction<N> minusYears(int value) {
+        return getTemporalFunction().minus(value, YEARS);
     }
 
     /**
-     * See {@link TemporalCondition#plus(int, TemporalUnit)}
+     * See {@link TemporalFunction#plus(int, TemporalUnit)}
      *
      * @param value the plus value
-     * @param unit  the plus unit
+     * @param unit the plus unit
      * @return the step condition
-     * @see TemporalCondition#plus(int, TemporalUnit)
+     * @see TemporalFunction#plus(int, TemporalUnit)
      */
-    default TemporalCondition<N> plus(int value, TemporalUnit unit) {
-        return getTemporalCondition().plus(value, unit);
+    default TemporalFunction<N> plus(int value, TemporalUnit unit) {
+        return getTemporalFunction().plus(value, unit);
     }
 
     /**
-     * See {@link TemporalCondition#plus(NumericFieldInfo, TemporalUnit)}
+     * See {@link TemporalFunction#plus(NumericFieldInfo, TemporalUnit)}
      *
      * @param value the plus field value
-     * @param unit  the plus unit
+     * @param unit the plus unit
      * @return the step condition
-     * @see TemporalCondition#plus(NumericFieldInfo, TemporalUnit)
+     * @see TemporalFunction#plus(NumericFieldInfo, TemporalUnit)
      */
-    default TemporalCondition<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
-        return getTemporalCondition().plus(value, unit);
+    default TemporalFunction<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
+        return getTemporalFunction().plus(value, unit);
     }
 
     /**
-     * See {@link TemporalCondition#plus(int, TemporalUnit)}
+     * See {@link TemporalFunction#plus(int, TemporalUnit)}
      *
      * @param value the years to add
      * @return the step condition
-     * @see TemporalCondition#plus(int, TemporalUnit)
+     * @see TemporalFunction#plus(int, TemporalUnit)
      */
-    default TemporalCondition<N> plusYears(int value) {
-        return getTemporalCondition().plus(value, YEARS);
+    default TemporalFunction<N> plusYears(int value) {
+        return getTemporalFunction().plus(value, YEARS);
     }
 
     /**
@@ -134,7 +134,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#before(Temporal)
      */
     default StepCondition before(N value) {
-        return getTemporalCondition().before(value);
+        return getTemporalFunction().before(value);
     }
 
     /**
@@ -145,7 +145,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#before(TemporalFieldInfo)
      */
     default StepCondition before(TemporalFieldInfo<N> value) {
-        return getTemporalCondition().before(value);
+        return getTemporalFunction().before(value);
     }
 
     /**
@@ -156,7 +156,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#before(Supplier)
      */
     default StepCondition before(Supplier<N> value) {
-        return getTemporalCondition().before(value);
+        return getTemporalFunction().before(value);
     }
 
     /**
@@ -167,7 +167,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#before(TemporalCondition)
      */
     default StepCondition before(TemporalCondition<N> value) {
-        return getTemporalCondition().before(value);
+        return getTemporalFunction().before(value);
     }
 
     /**
@@ -178,7 +178,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#beforeOrEq(Temporal)
      */
     default StepCondition beforeOrEq(N value) {
-        return getTemporalCondition().beforeOrEq(value);
+        return getTemporalFunction().beforeOrEq(value);
     }
 
     /**
@@ -189,7 +189,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#beforeOrEq(Supplier)
      */
     default StepCondition beforeOrEq(Supplier<N> value) {
-        return getTemporalCondition().beforeOrEq(value);
+        return getTemporalFunction().beforeOrEq(value);
     }
 
     /**
@@ -200,7 +200,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#beforeOrEq(TemporalCondition)
      */
     default StepCondition beforeOrEq(TemporalCondition<N> value) {
-        return getTemporalCondition().beforeOrEq(value);
+        return getTemporalFunction().beforeOrEq(value);
     }
 
     /**
@@ -211,7 +211,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#after(Temporal)
      */
     default StepCondition after(N value) {
-        return getTemporalCondition().after(value);
+        return getTemporalFunction().after(value);
     }
 
     /**
@@ -222,7 +222,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#after(TemporalFieldInfo)
      */
     default StepCondition after(TemporalFieldInfo<N> value) {
-        return getTemporalCondition().after(value);
+        return getTemporalFunction().after(value);
     }
 
     /**
@@ -233,7 +233,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#after(Supplier)
      */
     default StepCondition after(Supplier<N> value) {
-        return getTemporalCondition().after(value);
+        return getTemporalFunction().after(value);
     }
 
     /**
@@ -244,7 +244,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#after(TemporalCondition)
      */
     default StepCondition after(TemporalCondition<N> value) {
-        return getTemporalCondition().after(value);
+        return getTemporalFunction().after(value);
     }
 
     /**
@@ -255,7 +255,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#afterOrEq(Temporal)
      */
     default StepCondition afterOrEq(N value) {
-        return getTemporalCondition().afterOrEq(value);
+        return getTemporalFunction().afterOrEq(value);
     }
 
     /**
@@ -266,7 +266,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#afterOrEq(Supplier)
      */
     default StepCondition afterOrEq(Supplier<N> value) {
-        return getTemporalCondition().afterOrEq(value);
+        return getTemporalFunction().afterOrEq(value);
     }
 
     /**
@@ -277,7 +277,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#afterOrEq(TemporalCondition)
      */
     default StepCondition afterOrEq(TemporalCondition<N> value) {
-        return getTemporalCondition().afterOrEq(value);
+        return getTemporalFunction().afterOrEq(value);
     }
 
     /**
@@ -289,7 +289,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#between(Temporal, Temporal)
      */
     default StepCondition between(N minIncluded, N maxExcluded) {
-        return getTemporalCondition().between(minIncluded, maxExcluded);
+        return getTemporalFunction().between(minIncluded, maxExcluded);
     }
 
     /**
@@ -301,7 +301,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#between(Supplier, Supplier)
      */
     default StepCondition between(Supplier<N> minIncluded, Supplier<N> maxExcluded) {
-        return getTemporalCondition().between(minIncluded, maxExcluded);
+        return getTemporalFunction().between(minIncluded, maxExcluded);
     }
 
     /**
@@ -313,194 +313,194 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      * @see TemporalCondition#notBetween(Temporal, Temporal)
      */
     default StepCondition notBetween(N minIncluded, N maxExcluded) {
-        return getTemporalCondition().notBetween(minIncluded, maxExcluded);
+        return getTemporalFunction().notBetween(minIncluded, maxExcluded);
     }
 
     /**
-     * See {@link TemporalCondition#ageAt(Temporal)}
+     * See {@link TemporalFunction#ageAt(Temporal)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#ageAt(Temporal)
+     * @return the numeric function
+     * @see TemporalFunction#ageAt(Temporal)
      */
-    default NumericCondition<Integer> ageAt(N value) {
-        return getTemporalCondition().ageAt(value);
+    default NumericFunction<Integer> ageAt(N value) {
+        return getTemporalFunction().ageAt(value);
     }
 
     /**
-     * See {@link TemporalCondition#ageAt(TemporalFieldInfo)}
+     * See {@link TemporalFunction#ageAt(TemporalFieldInfo)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#ageAt(TemporalFieldInfo)
+     * @return the numeric function
+     * @see TemporalFunction#ageAt(TemporalFieldInfo)
      */
-    default NumericCondition<Integer> ageAt(TemporalFieldInfo<N> value) {
-        return getTemporalCondition().ageAt(value);
+    default NumericFunction<Integer> ageAt(TemporalFieldInfo<N> value) {
+        return getTemporalFunction().ageAt(value);
     }
 
     /**
-     * See {@link TemporalCondition#ageAt(TemporalCondition)}
+     * See {@link TemporalFunction#ageAt(TemporalFunction)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#ageAt(TemporalCondition)
+     * @return the numeric function
+     * @see TemporalFunction#ageAt(TemporalFunction)
      */
-    default NumericCondition<Integer> ageAt(TemporalCondition<N> value) {
-        return getTemporalCondition().ageAt(value);
+    default NumericFunction<Integer> ageAt(TemporalFunction<N> value) {
+        return getTemporalFunction().ageAt(value);
     }
 
     /**
-     * See {@link TemporalCondition#ageAt(Supplier)}
+     * See {@link TemporalFunction#ageAt(Supplier)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#ageAt(Supplier)
+     * @return the numeric function
+     * @see TemporalFunction#ageAt(Supplier)
      */
-    default NumericCondition<Integer> ageAt(Supplier<N> value) {
-        return getTemporalCondition().ageAt(value);
+    default NumericFunction<Integer> ageAt(Supplier<N> value) {
+        return getTemporalFunction().ageAt(value);
     }
 
     /**
-     * See {@link TemporalCondition#daysBetween(Temporal)}
+     * See {@link TemporalFunction#daysBetween(Temporal)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#daysBetween(Temporal)
+     * @return the numeric function
+     * @see TemporalFunction#daysBetween(Temporal)
      */
-    default NumericCondition<Integer> daysBetween(N value) {
-        return getTemporalCondition().daysBetween(value);
+    default NumericFunction<Integer> daysBetween(N value) {
+        return getTemporalFunction().daysBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#daysBetween(TemporalFieldInfo)}
+     * See {@link TemporalFunction#daysBetween(TemporalFieldInfo)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#daysBetween(TemporalFieldInfo)
+     * @return the numeric function
+     * @see TemporalFunction#daysBetween(TemporalFieldInfo)
      */
-    default NumericCondition<Integer> daysBetween(TemporalFieldInfo<N> value) {
-        return getTemporalCondition().daysBetween(value);
+    default NumericFunction<Integer> daysBetween(TemporalFieldInfo<N> value) {
+        return getTemporalFunction().daysBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#daysBetween(TemporalCondition)}
+     * See {@link TemporalFunction#daysBetween(TemporalFunction)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#daysBetween(TemporalCondition)
+     * @return the numeric function
+     * @see TemporalFunction#daysBetween(TemporalFunction)
      */
-    default NumericCondition<Integer> daysBetween(TemporalCondition<N> value) {
-        return getTemporalCondition().daysBetween(value);
+    default NumericFunction<Integer> daysBetween(TemporalFunction<N> value) {
+        return getTemporalFunction().daysBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#daysBetween(Supplier)}
+     * See {@link TemporalFunction#daysBetween(Supplier)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#daysBetween(Supplier)
+     * @return the numeric function
+     * @see TemporalFunction#daysBetween(Supplier)
      */
-    default NumericCondition<Integer> daysBetween(Supplier<N> value) {
-        return getTemporalCondition().daysBetween(value);
+    default NumericFunction<Integer> daysBetween(Supplier<N> value) {
+        return getTemporalFunction().daysBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#monthsBetween(Temporal)}
+     * See {@link TemporalFunction#monthsBetween(Temporal)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#monthsBetween(Temporal)
+     * @return the numeric function
+     * @see TemporalFunction#monthsBetween(Temporal)
      */
-    default NumericCondition<Integer> monthsBetween(N value) {
-        return getTemporalCondition().monthsBetween(value);
+    default NumericFunction<Integer> monthsBetween(N value) {
+        return getTemporalFunction().monthsBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#monthsBetween(TemporalFieldInfo)}
+     * See {@link TemporalFunction#monthsBetween(TemporalFieldInfo)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#monthsBetween(TemporalFieldInfo)
+     * @return the numeric function
+     * @see TemporalFunction#monthsBetween(TemporalFieldInfo)
      */
-    default NumericCondition<Integer> monthsBetween(TemporalFieldInfo<N> value) {
-        return getTemporalCondition().monthsBetween(value);
+    default NumericFunction<Integer> monthsBetween(TemporalFieldInfo<N> value) {
+        return getTemporalFunction().monthsBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#monthsBetween(TemporalCondition)}
+     * See {@link TemporalFunction#monthsBetween(TemporalFunction)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#monthsBetween(TemporalCondition)
+     * @return the numeric function
+     * @see TemporalFunction#monthsBetween(TemporalFunction)
      */
-    default NumericCondition<Integer> monthsBetween(TemporalCondition<N> value) {
-        return getTemporalCondition().monthsBetween(value);
+    default NumericFunction<Integer> monthsBetween(TemporalFunction<N> value) {
+        return getTemporalFunction().monthsBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#monthsBetween(Supplier)}
+     * See {@link TemporalFunction#monthsBetween(Supplier)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#monthsBetween(Supplier)
+     * @return the numeric function
+     * @see TemporalFunction#monthsBetween(Supplier)
      */
-    default NumericCondition<Integer> monthsBetween(Supplier<N> value) {
-        return getTemporalCondition().monthsBetween(value);
+    default NumericFunction<Integer> monthsBetween(Supplier<N> value) {
+        return getTemporalFunction().monthsBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#yearsBetween(Temporal)}
+     * See {@link TemporalFunction#yearsBetween(Temporal)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#yearsBetween(Temporal)
+     * @return the numeric function
+     * @see TemporalFunction#yearsBetween(Temporal)
      */
-    default NumericCondition<Integer> yearsBetween(N value) {
-        return getTemporalCondition().yearsBetween(value);
+    default NumericFunction<Integer> yearsBetween(N value) {
+        return getTemporalFunction().yearsBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#yearsBetween(TemporalFieldInfo)}
+     * See {@link TemporalFunction#yearsBetween(TemporalFieldInfo)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#yearsBetween(TemporalFieldInfo)
+     * @return the numeric function
+     * @see TemporalFunction#yearsBetween(TemporalFieldInfo)
      */
-    default NumericCondition<Integer> yearsBetween(TemporalFieldInfo<N> value) {
-        return getTemporalCondition().yearsBetween(value);
+    default NumericFunction<Integer> yearsBetween(TemporalFieldInfo<N> value) {
+        return getTemporalFunction().yearsBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#yearsBetween(TemporalCondition)}
+     * See {@link TemporalFunction#yearsBetween(TemporalFunction)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#yearsBetween(TemporalCondition)
+     * @return the numeric function
+     * @see TemporalFunction#yearsBetween(TemporalFunction)
      */
-    default NumericCondition<Integer> yearsBetween(TemporalCondition<N> value) {
-        return getTemporalCondition().yearsBetween(value);
+    default NumericFunction<Integer> yearsBetween(TemporalFunction<N> value) {
+        return getTemporalFunction().yearsBetween(value);
     }
 
     /**
-     * See {@link TemporalCondition#yearsBetween(Supplier)}
+     * See {@link TemporalFunction#yearsBetween(Supplier)}
      *
      * @param value the right side value
-     * @return the numeric condition
-     * @see TemporalCondition#yearsBetween(Supplier)
+     * @return the numeric function
+     * @see TemporalFunction#yearsBetween(Supplier)
      */
-    default NumericCondition<Integer> yearsBetween(Supplier<N> value) {
-        return getTemporalCondition().yearsBetween(value);
+    default NumericFunction<Integer> yearsBetween(Supplier<N> value) {
+        return getTemporalFunction().yearsBetween(value);
     }
 
     /**
-     * Returns a new temporal condition that will use this as a field.
+     * Returns a new temporal function that will use this as a field.
      *
-     * @return the temporal condition
+     * @return the temporal function
      */
-    TemporalCondition<N> getTemporalCondition();
+    TemporalFunction<N> getTemporalFunction();
 
     @Override
-    default TemporalCondition<N> getDefaultCondition() {
-        return getTemporalCondition();
+    default TemporalFunction<N> getDefaultCondition() {
+        return getTemporalFunction();
     }
 }

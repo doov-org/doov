@@ -22,8 +22,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.*;
 import java.util.stream.Collector;
 
-import io.doov.core.serial.*;
-
 /**
  * Utility methods for creating and manipulating {@code FieldModel}.
  */

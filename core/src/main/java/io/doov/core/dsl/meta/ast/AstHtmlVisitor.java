@@ -18,7 +18,6 @@ import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.Locale;
 
-import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
@@ -108,14 +107,14 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // field metadata
     @Override
-    public void startLeaf(LeafPredicateMetadata metadata, int depth) {
+    public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
         if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
             write(BEG_LI);
         }
     }
 
     @Override
-    public void visitLeaf(LeafPredicateMetadata leaf, int depth) {
+    public void visitLeaf(LeafPredicateMetadata<?> leaf, int depth) {
         if (!insideSum) {
             if (noExclusionNextLeaf) {
                 noExclusionNextLeaf = false;
@@ -152,7 +151,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endLeaf(LeafPredicateMetadata metadata, int depth) {
+    public void endLeaf(LeafPredicateMetadata<?> metadata, int depth) {
         if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
             write(END_LI);
         }

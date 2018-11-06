@@ -25,31 +25,31 @@ public class Assertions {
     /**
      * Create assertion for {@link ValidationRule}.
      *
-     * @param actual the rule to assert
+     * @param rule the rule to assert
      * @return the assertion
      */
-    public static ValidationRuleAssert assertThat(ValidationRule actual) {
-        return new ValidationRuleAssert(actual, ValidationRuleAssert.class);
+    public static ValidationRuleAssert assertThat(ValidationRule rule) {
+        return new ValidationRuleAssert(rule, ValidationRuleAssert.class);
     }
 
     /**
      * Create assertion for {@link StepCondition}.
      *
-     * @param actual the condition to assert
+     * @param condition the condition to assert
      * @return the assertion
      */
-    public static StepConditionAssert assertThat(StepCondition actual) {
-        return new StepConditionAssert(actual, StepConditionAssert.class);
+    public static StepConditionAssert assertThat(StepCondition condition) {
+        return new StepConditionAssert(condition, StepConditionAssert.class);
     }
 
     /**
      * Create assertion for {@link Result}.
      *
-     * @param actual the result to assert
+     * @param result the result to assert
      * @return the assertion
      */
-    public static ResultAssert assertThat(Result actual) {
-        return new ResultAssert(actual, ResultAssert.class);
+    public static ResultAssert assertThat(Result result) {
+        return new ResultAssert(result, ResultAssert.class);
     }
 
 }

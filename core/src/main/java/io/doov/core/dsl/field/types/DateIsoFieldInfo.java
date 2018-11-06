@@ -21,7 +21,7 @@ import java.util.Optional;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.LocalDateCondition;
+import io.doov.core.dsl.impl.time.LocalDateFunction;
 
 public class DateIsoFieldInfo extends DelegatingFieldInfoImpl implements TemporalFieldInfo<LocalDate> {
 
@@ -30,13 +30,13 @@ public class DateIsoFieldInfo extends DelegatingFieldInfoImpl implements Tempora
     }
 
     @Override
-    public DateIsoCondition getTemporalCondition() {
-        return new DateIsoCondition(this);
+    public DateIsoFunction getTemporalFunction() {
+        return new DateIsoFunction(this);
     }
 
-    private class DateIsoCondition extends LocalDateCondition {
+    private class DateIsoFunction extends LocalDateFunction {
 
-        private DateIsoCondition(DslField field) {
+        private DateIsoFunction(DslField<?> field) {
             super(fieldMetadata(field),
                     ((model, context) -> Optional.ofNullable(model.<String> get(field.id()))
                             .map(v -> LocalDate.parse(v, BASIC_ISO_DATE))));

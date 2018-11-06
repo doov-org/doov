@@ -12,7 +12,8 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.*;
+import static io.doov.core.dsl.impl.LeafStepCondition.predicate;
+import static io.doov.core.dsl.meta.function.BooleanFunctionMetadata.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
@@ -49,7 +50,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition not() {
-        return predicate(notMetadata(metadata), value -> !value);
+        return predicate(this, notMetadata(metadata), value -> !value);
     }
 
     /**
@@ -59,9 +60,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition and(boolean value) {
-        return predicate(andMetadata(metadata, value),
-                        (model, context) -> Optional.of(value),
-                        Boolean::logicalAnd);
+        return predicate(this, andMetadata(metadata, value), value, Boolean::logicalAnd);
     }
 
     /**
@@ -71,9 +70,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition and(LogicalFieldInfo value) {
-        return predicate(andMetadata(metadata, value),
-                        (model, context) -> valueModel(model, value),
-                        Boolean::logicalAnd);
+        return predicate(this, andMetadata(metadata, value), value, Boolean::logicalAnd);
     }
 
     /**
@@ -83,9 +80,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition or(boolean value) {
-        return predicate(orMetadata(metadata, value),
-                        (model, context) -> Optional.of(value),
-                        Boolean::logicalOr);
+        return predicate(this, orMetadata(metadata, value), value, Boolean::logicalOr);
     }
 
     /**
@@ -95,9 +90,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition or(LogicalFieldInfo value) {
-        return predicate(orMetadata(metadata, value),
-                        (model, context) -> valueModel(model, value),
-                        Boolean::logicalOr);
+        return predicate(this, orMetadata(metadata, value), value, Boolean::logicalOr);
     }
 
     /**
@@ -107,9 +100,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition xor(boolean value) {
-        return predicate(xorMetadata(metadata, value),
-                        (model, context) -> Optional.of(value),
-                        Boolean::logicalXor);
+        return predicate(this, xorMetadata(metadata, value), value, Boolean::logicalXor);
     }
 
     /**
@@ -119,9 +110,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition xor(LogicalFieldInfo value) {
-        return predicate(xorMetadata(metadata, value),
-                        (model, context) -> valueModel(model, value),
-                        Boolean::logicalXor);
+        return predicate(this, xorMetadata(metadata, value), value, Boolean::logicalXor);
     }
 
     /**
@@ -130,9 +119,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition isTrue() {
-        return predicate(isMetadata(metadata, true),
-                        (model, context) -> Optional.of(TRUE),
-                        Boolean::equals);
+        return predicate(this, isMetadata(metadata, true), TRUE, Boolean::equals);
     }
 
     /**
@@ -141,9 +128,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition isFalse() {
-        return predicate(isMetadata(metadata, false),
-                        (model, context) -> Optional.of(FALSE),
-                        Boolean::equals);
+        return predicate(this, isMetadata(metadata, false), FALSE, Boolean::equals);
     }
 
 }

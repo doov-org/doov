@@ -2,7 +2,8 @@ package io.doov.core.dsl.impl;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.RuleMetadata;
 
 public class DefaultValidationRule extends AbstractDSLBuilder implements ValidationRule {
 

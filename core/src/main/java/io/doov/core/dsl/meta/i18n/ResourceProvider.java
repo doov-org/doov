@@ -3,7 +3,7 @@
  */
 package io.doov.core.dsl.meta.i18n;
 
-import java.util.*;
+import java.util.Locale;
 
 import io.doov.core.dsl.meta.Operator;
 
