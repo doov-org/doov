@@ -3,12 +3,11 @@ package io.doov.core.dsl.lang;
 import java.util.stream.Stream;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
  * Mapping rule
  */
-public interface MappingRule extends SyntaxTree {
+public interface MappingRule extends DSLBuilder {
     /**
      * Verifies the mapping rule for given in/out models
      *

@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.LeafMetadata.*;
+import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.*;
 import static java.util.Arrays.asList;
 
 import java.util.*;
@@ -27,7 +27,7 @@ import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.types.Condition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.PredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 /**
  * Base class for all conditions.

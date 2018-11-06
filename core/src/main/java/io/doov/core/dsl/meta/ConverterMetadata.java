@@ -7,11 +7,12 @@ import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.TYPE_CONVERTER;
 import static io.doov.core.dsl.meta.MetadataType.TYPE_CONVERTER_IDENTITY;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
-import io.doov.core.dsl.lang.*;
-
-public class ConverterMetadata implements Metadata {
+public class ConverterMetadata extends AbstractMetadata {
 
     private final Element element;
     private final MetadataType type;
@@ -22,9 +23,9 @@ public class ConverterMetadata implements Metadata {
     }
 
     public static ConverterMetadata metadata(String description) {
-        return new ConverterMetadata(new Element(() -> Optional.ofNullable(description)
-                        .filter(d -> !d.isEmpty())
-                        .orElse("-function-"), STRING_VALUE), TYPE_CONVERTER);
+        return new ConverterMetadata(new Element(
+                        () -> Optional.ofNullable(description).filter(d -> !d.isEmpty()).orElse("-function-"),
+                        STRING_VALUE), TYPE_CONVERTER);
     }
 
     public static ConverterMetadata identity() {
@@ -46,11 +47,6 @@ public class ConverterMetadata implements Metadata {
     }
 
     @Override
-    public List<Metadata> children() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public String readable(Locale locale) {
         return element.getReadable().readable();
     }
@@ -58,10 +54,5 @@ public class ConverterMetadata implements Metadata {
     @Override
     public MetadataType type() {
         return type;
-    }
-
-    @Override
-    public Metadata message(Context context) {
-        return this;
     }
 }

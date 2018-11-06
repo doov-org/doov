@@ -7,7 +7,6 @@ import static io.doov.sample.validation.RulesConference.userAccount;
 import java.util.Locale;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.lang.Readable;
@@ -48,7 +47,7 @@ public class RulesConferenceTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.accept(new AstFullVisitor(sb), 0));
+                        .forEach(rule -> rule.metadata().accept(new AstFullVisitor(sb), 0));
         System.out.println(sb.toString());
     }
 

@@ -15,21 +15,21 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.UnaryMetadata.notMetadata;
+import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.notMetadata;
 
 import java.util.function.BiPredicate;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 
 /**
  * Implement unary conditions like negate.
  */
 public class LogicalUnaryCondition extends AbstractStepCondition {
 
-    private LogicalUnaryCondition(UnaryMetadata metadata, BiPredicate<DslModel, Context> predicate) {
+    private LogicalUnaryCondition(UnaryPredicateMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         super(metadata, predicate);
     }
 
@@ -40,7 +40,7 @@ public class LogicalUnaryCondition extends AbstractStepCondition {
      * @return the unary condition
      */
     public static LogicalUnaryCondition negate(StepCondition step) {
-        return new LogicalUnaryCondition(notMetadata(step.getMetadata()),
+        return new LogicalUnaryCondition(notMetadata(step.metadata()),
                         (model, context) -> step.predicate().negate().test(model, context));
     }
 

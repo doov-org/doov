@@ -19,7 +19,7 @@ import java.util.function.BinaryOperator;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.PredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 /**
  * Implements {@link Double} functions for the numeric conditions.

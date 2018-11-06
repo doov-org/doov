@@ -56,7 +56,7 @@ public class NaryTest {
 
         rule = DOOV.when(matchAny(userFirstName.isNotNull(), node = userLastName.isNull())).validate();
         rule = rule.withShortCircuit(false);
-        assertThat(rule).validates(model).isEvalFalse(node.getMetadata());
+        assertThat(rule).validates(model).isEvalFalse(node.metadata());
     }
 
 }

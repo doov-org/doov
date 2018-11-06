@@ -27,7 +27,7 @@ public class FieldOutput<T> implements MappingOutput<T> {
     }
 
     @Override
-    public MappingMetadata getMetadata() {
+    public MappingMetadata metadata() {
         return metadata;
     }
 
@@ -36,7 +36,6 @@ public class FieldOutput<T> implements MappingOutput<T> {
         outModel.set(field, value);
     }
 
-    @Override
     public void accept(MetadataVisitor visitor, int depth) {
         metadata.accept(visitor, depth);
     }

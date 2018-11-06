@@ -12,7 +12,7 @@ import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
 
-public class NaryConverterInput<T> implements MappingInput<T> {
+public class NaryConverterInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
 
     private final List<DslField> fields;
     private final NaryTypeConverter<T> converter;
@@ -30,7 +30,7 @@ public class NaryConverterInput<T> implements MappingInput<T> {
     }
 
     @Override
-    public MappingMetadata getMetadata() {
+    public MappingMetadata metadata() {
         return metadata;
     }
 
@@ -39,9 +39,9 @@ public class NaryConverterInput<T> implements MappingInput<T> {
         return converter.convert(inModel, context, fields.toArray(new DslField[0]));
     }
 
-    @Override
+    @Deprecated
     public void accept(MetadataVisitor visitor, int depth) {
         metadata.accept(visitor, depth);
-        converter.accept(visitor, depth);
+        converter.metadata().accept(visitor, depth);
     }
 }

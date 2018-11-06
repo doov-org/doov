@@ -7,17 +7,15 @@ import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
 import static io.doov.core.dsl.meta.ElementType.VALUE;
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 
-public class MappingMetadata implements Metadata {
+public class MappingMetadata extends AbstractMetadata {
 
     private final Deque<Element> elements;
     private final MetadataType type;
@@ -81,7 +79,7 @@ public class MappingMetadata implements Metadata {
 
     private MappingMetadata fields(List<DslField> fields) {
         Iterator<DslField> iterator = fields.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             DslField f = iterator.next();
             this.field(f);
             if (iterator.hasNext()) {
@@ -139,34 +137,12 @@ public class MappingMetadata implements Metadata {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        visitor.start(this, depth);
-        visitor.visit(this, depth);
-        visitor.end(this, depth);
-    }
-
-    @Override
     public List<Element> flatten() {
         return new ArrayList<>(elements);
     }
 
     @Override
-    public List<Metadata> children() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String readable(Locale locale) {
-        return astToString(this, locale);
-    }
-
-    @Override
     public MetadataType type() {
         return type;
-    }
-
-    @Override
-    public Metadata message(Context context) {
-        return this;
     }
 }

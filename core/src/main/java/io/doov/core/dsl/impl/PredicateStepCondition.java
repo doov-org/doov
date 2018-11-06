@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.PredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 class PredicateStepCondition<N> extends AbstractStepCondition {
 

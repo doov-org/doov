@@ -12,17 +12,14 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
-
-import java.util.Locale;
 import java.util.function.BiPredicate;
 
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-abstract class AbstractStepCondition implements StepCondition {
+abstract class AbstractStepCondition extends AbstractDSLBuilder implements StepCondition {
 
     private final PredicateMetadata metadata;
     private final BiPredicate<DslModel, Context> predicate;
@@ -33,7 +30,7 @@ abstract class AbstractStepCondition implements StepCondition {
     }
 
     @Override
-    public Metadata getMetadata() {
+    public Metadata metadata() {
         return metadata;
     }
 
@@ -51,16 +48,4 @@ abstract class AbstractStepCondition implements StepCondition {
             return test;
         };
     }
-
-    @Override
-    public String readable(Locale locale) {
-        return astToString(this, locale);
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        visitor.visit(this, depth);
-        metadata.accept(visitor, depth);
-    }
-
 }

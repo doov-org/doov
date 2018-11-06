@@ -1,7 +1,6 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
  * Bi type converter
@@ -10,7 +9,7 @@ import io.doov.core.dsl.meta.SyntaxTree;
  * @param <J> 2nd in type
  * @param <O> out type
  */
-public interface BiTypeConverter<I, J, O> extends SyntaxTree {
+public interface BiTypeConverter<I, J, O> extends DSLBuilder {
     /**
      * Convert the given fields in with type {@link O} {@link J}, the model to the value in type {@link O}
      *

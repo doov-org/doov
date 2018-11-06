@@ -24,10 +24,7 @@ import static java.nio.charset.Charset.defaultCharset;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.List;
@@ -40,7 +37,6 @@ import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.AstHtmlVisitor;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
-import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.model.Country;
 import io.doov.sample.model.Timezone;
 
@@ -148,7 +144,7 @@ public class SampleRules extends DefaultRuleRegistry {
                             + "</style></head><body>", fos, defaultCharset());
             IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());;
             for (ValidationRule r : rules) {
-                r.accept(new AstHtmlVisitor(fos, BUNDLE, Locale.FRANCE), 0);
+                r.metadata().accept(new AstHtmlVisitor(fos, BUNDLE, Locale.FRANCE), 0);
                 IOUtils.write("<hr/>", fos, Charset.defaultCharset());
             }
             IOUtils.write("</div>", fos, Charset.defaultCharset());

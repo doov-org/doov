@@ -16,19 +16,19 @@ import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 
 import java.util.Locale;
 
-import io.doov.core.dsl.meta.SyntaxTree;
+import io.doov.core.dsl.meta.Metadata;
 
 public class AstVisitorUtils {
 
-    public static String astToString(SyntaxTree syntaxTree, Locale locale) {
+    public static String astToString(Metadata metadata, Locale locale) {
         StringBuilder stringBuilder = new StringBuilder();
-        syntaxTree.accept(new AstLineVisitor(stringBuilder, BUNDLE, locale), 0);
+        metadata.accept(new AstLineVisitor(stringBuilder, BUNDLE, locale), 0);
         return stringBuilder.toString();
     }
 
-    public static String astToMarkdown(SyntaxTree syntaxTree, Locale locale) {
+    public static String astToMarkdown(Metadata metadata, Locale locale) {
         StringBuilder stringBuilder = new StringBuilder();
-        syntaxTree.accept(new AstMarkdownVisitor(stringBuilder, BUNDLE, locale), 0);
+        metadata.accept(new AstMarkdownVisitor(stringBuilder, BUNDLE, locale), 0);
         return stringBuilder.toString();
     }
 

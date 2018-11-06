@@ -3,11 +3,9 @@
  */
 package io.doov.core.dsl.meta;
 
-import java.util.*;
+import java.util.Locale;
 
-import io.doov.core.dsl.lang.Context;
-
-public class EmptyMetadata implements Metadata {
+public class EmptyMetadata extends AbstractMetadata {
 
     @Override
     public String readable(Locale locale) {
@@ -15,27 +13,7 @@ public class EmptyMetadata implements Metadata {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        visitor.visit(this, depth);
-    }
-
-    @Override
-    public List<Metadata> children() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public MetadataType type() {
         return MetadataType.EMPTY;
-    }
-
-    @Override
-    public Metadata message(Context context) {
-        return this;
-    }
-
-    @Override
-    public List<Element> flatten() {
-        return Collections.emptyList();
     }
 }

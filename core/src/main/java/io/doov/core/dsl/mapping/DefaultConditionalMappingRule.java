@@ -2,17 +2,13 @@ package io.doov.core.dsl.mapping;
 
 import static io.doov.core.dsl.meta.MappingOperator._else;
 import static io.doov.core.dsl.meta.MappingOperator.then;
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
-
-import java.util.Locale;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.MappingMetadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.*;
 
-public class DefaultConditionalMappingRule implements ConditionalMappingRule {
+public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements ConditionalMappingRule {
 
     private static final MappingMetadata thenMetadata = MappingMetadata.mappings(then);
     private static final MappingMetadata elseMetadata = MappingMetadata.mappings(_else);
@@ -38,6 +34,11 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
         this.validationRule = stepWhen.validate();
         this.mappingRules = thenRules;
         this.elseMappingRules = MappingRegistry.mappings(elseRules);
+    }
+
+    @Override
+    public Metadata metadata() {
+        return thenMetadata;
     }
 
     @Override
@@ -70,29 +71,22 @@ public class DefaultConditionalMappingRule implements ConditionalMappingRule {
         return this.executeOn(inModel, outModel, new DefaultContext(thenMetadata));
     }
 
-    @Override
-    public String readable(Locale locale) {
-        return astToString(this, locale);
-    }
-
-    @Override
+    @Deprecated
     public void accept(MetadataVisitor visitor, int depth) {
-        stepWhen.accept(visitor, depth);
+        stepWhen.metadata().accept(visitor, depth);
 
-        visitor.start(thenMetadata, depth);
         mappingRules.stream().forEach(r -> {
+            visitor.start(thenMetadata, depth);
             visitor.visit(thenMetadata, depth);
-            r.accept(visitor, depth + 1);
+            r.metadata().accept(visitor, depth + 1);
             visitor.end(thenMetadata, depth);
         });
 
-        if (!elseMappingRules.isEmpty()) {
+        elseMappingRules.stream().forEach(r -> {
             visitor.start(elseMetadata, depth);
-            elseMappingRules.stream().forEach(r -> {
-                visitor.visit(elseMetadata, depth);
-                r.accept(visitor, depth + 1);
-                visitor.end(elseMetadata, depth);
-            });
-        }
+            visitor.visit(elseMetadata, depth);
+            r.metadata().accept(visitor, depth + 1);
+            visitor.end(elseMetadata, depth);
+        });
     }
 }

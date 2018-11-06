@@ -7,12 +7,10 @@ import java.util.function.Supplier;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.MappingInput;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
 
-public class StaticInput<T> implements MappingInput<T> {
+public class StaticInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
 
     private final Supplier<T> valueSupplier;
     private final MappingMetadata metadata;
@@ -28,17 +26,12 @@ public class StaticInput<T> implements MappingInput<T> {
     }
 
     @Override
-    public MappingMetadata getMetadata() {
+    public MappingMetadata metadata() {
         return metadata;
     }
 
     @Override
     public T read(DslModel inModel, Context context) {
         return valueSupplier.get();
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        metadata.accept(visitor, depth);
     }
 }
