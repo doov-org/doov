@@ -27,8 +27,8 @@ import io.doov.core.dsl.lang.ValidationRule;
  */
 public class StepConditionAssert extends AbstractAssert<StepConditionAssert, StepCondition> {
 
-    StepConditionAssert(StepCondition actual, Class<?> selfType) {
-        super(actual, selfType);
+    StepConditionAssert(StepCondition condition, Class<?> selfType) {
+        super(condition, selfType);
     }
 
     /**

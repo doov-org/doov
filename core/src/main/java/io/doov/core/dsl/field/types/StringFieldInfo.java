@@ -17,7 +17,7 @@ package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.StringCondition;
+import io.doov.core.dsl.impl.StringFunction;
 
 public class StringFieldInfo extends DelegatingFieldInfoImpl implements TextFieldInfo {
 
@@ -26,8 +26,8 @@ public class StringFieldInfo extends DelegatingFieldInfoImpl implements TextFiel
     }
 
     @Override
-    public StringCondition getStringCondition() {
-        return new StringCondition(this);
+    public StringFunction getStringCondition() {
+        return new StringFunction(this);
     }
 
 }

@@ -12,14 +12,15 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.MappingOperator.*;
+import static io.doov.core.dsl.meta.DefaultOperator.rule;
+import static io.doov.core.dsl.meta.DefaultOperator.validate;
+import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.MappingOperator.using;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Locale;
 
-import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
@@ -50,7 +51,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitLeaf(LeafPredicateMetadata metadata, int depth) {
+    public void visitLeaf(LeafPredicateMetadata<?> metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatLeafMetadata(metadata));
         sb.append(formatNewLine());
@@ -165,7 +166,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
         return super.getCurrentIndentSize();
     }
 
-    protected String formatLeafMetadata(LeafPredicateMetadata metadata) {
+    protected String formatLeafMetadata(LeafPredicateMetadata<?> metadata) {
         return metadata.elements().stream().map(e -> {
             switch (e.getType()) {
                 case OPERATOR:

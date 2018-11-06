@@ -28,8 +28,8 @@ import io.doov.core.dsl.meta.Metadata;
  */
 public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
-    ResultAssert(Result actual, Class<?> selfType) {
-        super(actual, selfType);
+    ResultAssert(Result result, Class<?> selfType) {
+        super(result, selfType);
     }
 
     /**

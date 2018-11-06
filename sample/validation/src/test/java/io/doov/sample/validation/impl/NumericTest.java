@@ -16,12 +16,14 @@ public class NumericTest {
 
     private DslModel model;
     private User user;
+    private Account account;
     private Configuration configuration;
 
     @BeforeEach
     public void before() {
         SampleModel sampleModel = new SampleModel();
         sampleModel.setUser(user = new User());
+        sampleModel.setAccount(account = new Account());
         sampleModel.setConfiguration(configuration = new Configuration());
         model = new SampleModelWrapper(sampleModel);
     }
@@ -149,6 +151,13 @@ public class NumericTest {
 
         assertThat(userFirstName.mapToInt(first -> 1).eq(1)).validates(model);
         assertThat(userFirstName.length().mapToInt(length -> 1).eq(1)).validates(model);
+    }
+
+    @Test
+    public void plusFieldOperator() {
+        user.setId(5l);
+        account.setId(5l);
+        assertThat(userId.plus(accountId).greaterOrEquals(10l)).validates(model);
     }
 
 }

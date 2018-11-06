@@ -24,7 +24,9 @@ import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.Condition;
-import io.doov.core.dsl.impl.*;
+import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.StringCondition;
+import io.doov.core.dsl.impl.num.IntegerCondition;
 import io.doov.core.dsl.lang.StepCondition;
 
 /**

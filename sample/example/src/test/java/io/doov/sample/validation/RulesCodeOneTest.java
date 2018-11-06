@@ -20,7 +20,10 @@ import io.doov.sample.model.Company;
 import io.doov.sample.model.SampleModel;
 import io.doov.sample.model.SampleModels;
 
-public class RulesOpenRndayTest {
+/**
+ * @see io.doov.sample.validation.RulesOld
+ */
+public class RulesCodeOneTest {
     SampleModel sample = SampleModels.sample();
     /**
      * @see RulesOld#validateAccount(io.doov.sample.model.User, io.doov.sample.model.Account,

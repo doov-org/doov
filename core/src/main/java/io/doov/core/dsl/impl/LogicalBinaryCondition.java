@@ -28,7 +28,7 @@ import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
 /**
  * Implement logical conditions like and, or.
  */
-public class LogicalBinaryCondition extends AbstractStepCondition {
+public class LogicalBinaryCondition extends DefaultStepCondition {
 
     private LogicalBinaryCondition(BinaryPredicateMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         super(metadata, predicate);

@@ -7,10 +7,7 @@ import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.TYPE_CONVERTER;
 import static io.doov.core.dsl.meta.MetadataType.TYPE_CONVERTER_IDENTITY;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 public class ConverterMetadata extends AbstractMetadata {
 

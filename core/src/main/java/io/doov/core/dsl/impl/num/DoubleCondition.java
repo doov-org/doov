@@ -10,11 +10,10 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package io.doov.core.dsl.impl;
+package io.doov.core.dsl.impl.num;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
@@ -24,7 +23,7 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 /**
  * Implements {@link Double} functions for the numeric conditions.
  */
-public class DoubleCondition extends NumericCondition<Double> {
+public class DoubleCondition extends NumericCondition<Double> implements DoubleOperators {
 
     public DoubleCondition(DslField<Double> field) {
         super(field);
@@ -40,45 +39,4 @@ public class DoubleCondition extends NumericCondition<Double> {
                     BiFunction<DslModel, Context, Optional<Double>> value) {
         return new DoubleCondition(metadata, value);
     }
-
-    @Override
-    BiFunction<Double, Double, Boolean> lesserThanFunction() {
-        return (l, r) -> l < r;
-    }
-
-    @Override
-    BiFunction<Double, Double, Boolean> lesserOrEqualsFunction() {
-        return (l, r) -> l <= r;
-    }
-
-    @Override
-    BiFunction<Double, Double, Boolean> greaterThanFunction() {
-        return (l, r) -> l > r;
-    }
-
-    @Override
-    BiFunction<Double, Double, Boolean> greaterOrEqualsFunction() {
-        return (l, r) -> l >= r;
-    }
-
-    @Override
-    BinaryOperator<Double> minFunction() {
-        return Double::min;
-    }
-
-    @Override
-    BinaryOperator<Double> sumFunction() {
-        return Double::sum;
-    }
-
-    @Override
-    BiFunction<Double, Integer, Double> timesFunction() {
-        return (l, r) -> l * r;
-    }
-
-    @Override
-    Double identity() {
-        return 0d;
-    }
-
 }

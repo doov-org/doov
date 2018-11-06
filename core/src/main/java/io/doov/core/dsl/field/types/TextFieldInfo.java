@@ -16,8 +16,9 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
-import io.doov.core.dsl.impl.IntegerCondition;
 import io.doov.core.dsl.impl.StringCondition;
+import io.doov.core.dsl.impl.StringFunction;
+import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.StepCondition;
 
 /**
@@ -72,22 +73,22 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
     }
 
     /**
-     * See {@link StringCondition#length()}
+     * See {@link StringFunction#length()}
      *
      * @return the integer condition
-     * @see StringCondition#length()
+     * @see StringFunction#length()
      */
-    default IntegerCondition length() {
+    default IntegerFunction length() {
         return getStringCondition().length();
     }
 
     /**
-     * See {@link StringCondition#parseInt()}
+     * See {@link StringFunction#parseInt()}
      *
      * @return the integer condition
-     * @see StringCondition#parseInt()
+     * @see StringFunction#parseInt()
      */
-    default IntegerCondition parseInt() {
+    default IntegerFunction parseInt() {
         return getStringCondition().parseInt();
     }
 
@@ -96,7 +97,7 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
      *
      * @return the step condition
      */
-    StringCondition getStringCondition();
+    StringFunction getStringCondition();
 
     @Override
     default StringCondition getDefaultCondition() {

@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.predicate.*;
 
@@ -33,7 +33,7 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitLeaf(LeafPredicateMetadata metadata, int depth) {
+    public void visitLeaf(LeafPredicateMetadata<?> metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit FieldMetadata ").append(metadata).append(" = ");
         metadata.elements().stream().map(Element::getReadable).forEach(sb::append);

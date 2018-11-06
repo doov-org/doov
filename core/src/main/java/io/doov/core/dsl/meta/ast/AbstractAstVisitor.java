@@ -41,7 +41,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case FIELD_PREDICATE:
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
-                    startLeaf((LeafPredicateMetadata) metadata, depth);
+                    startLeaf((LeafPredicateMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
                     startBinary((BinaryPredicateMetadata) metadata, depth);
@@ -82,7 +82,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
             case LEAF_PREDICATE:
-                visitLeaf((LeafPredicateMetadata) metadata, depth);
+                visitLeaf((LeafPredicateMetadata<?>) metadata, depth);
                 break;
             case BINARY_PREDICATE:
                 visitBinary((BinaryPredicateMetadata) metadata, depth);
@@ -121,7 +121,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case FIELD_PREDICATE:
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
-                    endLeaf((LeafPredicateMetadata) metadata, depth);
+                    endLeaf((LeafPredicateMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
                     endBinary((BinaryPredicateMetadata) metadata, depth);
@@ -164,13 +164,13 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     // LeafMetadata
 
-    public void startLeaf(LeafPredicateMetadata metadata, int depth) {
+    public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
     }
 
-    public void visitLeaf(LeafPredicateMetadata metadata, int depth) {
+    public void visitLeaf(LeafPredicateMetadata<?> metadata, int depth) {
     }
 
-    public void endLeaf(LeafPredicateMetadata metadata, int depth) {
+    public void endLeaf(LeafPredicateMetadata<?> metadata, int depth) {
     }
 
     // UnaryMetadata

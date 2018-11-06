@@ -17,7 +17,7 @@ package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.DoubleCondition;
+import io.doov.core.dsl.impl.num.DoubleFunction;
 
 public class DoubleFieldInfo extends DelegatingFieldInfoImpl implements NumericFieldInfo<Double> {
 
@@ -26,8 +26,8 @@ public class DoubleFieldInfo extends DelegatingFieldInfoImpl implements NumericF
     }
 
     @Override
-    public DoubleCondition getNumericCondition() {
-        return new DoubleCondition(this);
+    public DoubleFunction getNumericCondition() {
+        return new DoubleFunction(this);
     }
 
 }

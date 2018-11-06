@@ -19,8 +19,7 @@ import java.time.LocalDate;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.LocalDateCondition;
-import io.doov.core.dsl.impl.TemporalCondition;
+import io.doov.core.dsl.impl.time.LocalDateFunction;
 
 public class LocalDateFieldInfo extends DelegatingFieldInfoImpl implements TemporalFieldInfo<LocalDate> {
 
@@ -29,8 +28,8 @@ public class LocalDateFieldInfo extends DelegatingFieldInfoImpl implements Tempo
     }
 
     @Override
-    public LocalDateCondition getTemporalCondition() {
-        return new LocalDateCondition(this);
+    public LocalDateFunction getTemporalFunction() {
+        return new LocalDateFunction(this);
     }
 
 }

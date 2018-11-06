@@ -27,7 +27,7 @@ import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 /**
  * Implement unary conditions like negate.
  */
-public class LogicalUnaryCondition extends AbstractStepCondition {
+public class LogicalUnaryCondition extends DefaultStepCondition {
 
     private LogicalUnaryCondition(UnaryPredicateMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         super(metadata, predicate);

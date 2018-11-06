@@ -17,7 +17,7 @@ package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.IntegerCondition;
+import io.doov.core.dsl.impl.num.IntegerFunction;
 
 public class IntegerFieldInfo extends DelegatingFieldInfoImpl implements NumericFieldInfo<Integer> {
 
@@ -26,8 +26,8 @@ public class IntegerFieldInfo extends DelegatingFieldInfoImpl implements Numeric
     }
 
     @Override
-    public IntegerCondition getNumericCondition() {
-        return new IntegerCondition(this);
+    public IntegerFunction getNumericCondition() {
+        return new IntegerFunction(this);
     }
 
 }

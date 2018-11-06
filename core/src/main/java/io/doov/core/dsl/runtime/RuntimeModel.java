@@ -3,16 +3,10 @@
  */
 package io.doov.core.dsl.runtime;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Spliterator;
+import java.util.*;
 import java.util.stream.Stream;
 
-import io.doov.core.FieldId;
-import io.doov.core.FieldInfo;
-import io.doov.core.FieldModel;
+import io.doov.core.*;
 import io.doov.core.serial.TypeAdapterRegistry;
 import io.doov.core.serial.TypeAdapters;
 

@@ -1,21 +1,18 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.core.dsl.time;
 
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.*;
+import static io.doov.core.dsl.meta.function.TemporalFunctionMetadata.*;
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
@@ -26,8 +23,8 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 
-import io.doov.core.dsl.impl.LocalDateCondition;
-import io.doov.core.dsl.impl.TemporalCondition;
+import io.doov.core.dsl.impl.time.LocalDateFunction;
+import io.doov.core.dsl.impl.time.TemporalFunction;
 
 /**
  * Common and useful local date suppliers. You can mock the clock by using {@link #setClock(Clock)}.
@@ -90,20 +87,19 @@ public class LocalDateSuppliers {
      *
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> today() {
-        return new LocalDateCondition(todayMetadata(),
-                        (model, context) -> Optional.of(LocalDate.now(getClock())));
+    public static TemporalFunction<LocalDate> today() {
+        return new LocalDateFunction(todayMetadata(), (model, context) -> Optional.of(LocalDate.now(getClock())));
     }
 
     /**
      * Return a temporal condition that returns today's local date plus the given amount and unit.
      *
      * @param amountToAdd the amount to add
-     * @param unit        the unit of the amount
+     * @param unit the unit of the amount
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> todayPlus(int amountToAdd, TemporalUnit unit) {
-        return new LocalDateCondition(todayPlusMetadata(amountToAdd, unit),
+    public static TemporalFunction<LocalDate> todayPlus(int amountToAdd, TemporalUnit unit) {
+        return new LocalDateFunction(todayPlusMetadata(amountToAdd, unit),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).plus(amountToAdd, unit)));
     }
 
@@ -113,7 +109,7 @@ public class LocalDateSuppliers {
      * @param daysToAdd the amount of days to add
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> todayPlusDays(int daysToAdd) {
+    public static TemporalFunction<LocalDate> todayPlusDays(int daysToAdd) {
         return todayPlus(daysToAdd, ChronoUnit.DAYS);
     }
 
@@ -123,7 +119,7 @@ public class LocalDateSuppliers {
      * @param yearsToAdd the amount of years to add
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> todayPlusYears(int yearsToAdd) {
+    public static TemporalFunction<LocalDate> todayPlusYears(int yearsToAdd) {
         return todayPlus(yearsToAdd, ChronoUnit.YEARS);
     }
 
@@ -131,11 +127,11 @@ public class LocalDateSuppliers {
      * Return a temporal condition that returns today's local date minus the given amount and unit.
      *
      * @param amountToSubstract the amount to remove
-     * @param unit              the unit of the amount
+     * @param unit the unit of the amount
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> todayMinus(int amountToSubstract, TemporalUnit unit) {
-        return new LocalDateCondition(todayMinusMetadata(amountToSubstract, unit),
+    public static TemporalFunction<LocalDate> todayMinus(int amountToSubstract, TemporalUnit unit) {
+        return new LocalDateFunction(todayMinusMetadata(amountToSubstract, unit),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).minus(amountToSubstract, unit)));
     }
 
@@ -145,7 +141,7 @@ public class LocalDateSuppliers {
      * @param daysToSubstract the amount of days to remove
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> todayMinusDays(int daysToSubstract) {
+    public static TemporalFunction<LocalDate> todayMinusDays(int daysToSubstract) {
         return todayMinus(daysToSubstract, ChronoUnit.DAYS);
     }
 
@@ -155,7 +151,7 @@ public class LocalDateSuppliers {
      * @param yearsToSubstract the amount of years to remove
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> todayMinusYears(int yearsToSubstract) {
+    public static TemporalFunction<LocalDate> todayMinusYears(int yearsToSubstract) {
         return todayMinus(yearsToSubstract, ChronoUnit.YEARS);
     }
 
@@ -164,8 +160,8 @@ public class LocalDateSuppliers {
      *
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> firstDayOfThisMonth() {
-        return new LocalDateCondition(firstDayOfThisMonthMetadata(),
+    public static TemporalFunction<LocalDate> firstDayOfThisMonth() {
+        return new LocalDateFunction(firstDayOfThisMonthMetadata(),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).with(firstDayOfMonth())));
     }
 
@@ -174,8 +170,8 @@ public class LocalDateSuppliers {
      *
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> firstDayOfThisYear() {
-        return new LocalDateCondition(firstDayOfThisYearMetadata(),
+    public static TemporalFunction<LocalDate> firstDayOfThisYear() {
+        return new LocalDateFunction(firstDayOfThisYearMetadata(),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).with(firstDayOfYear())));
     }
 
@@ -184,8 +180,8 @@ public class LocalDateSuppliers {
      *
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> lastDayOfThisMonth() {
-        return new LocalDateCondition(lastDayOfThisMonthMetadata(),
+    public static TemporalFunction<LocalDate> lastDayOfThisMonth() {
+        return new LocalDateFunction(lastDayOfThisMonthMetadata(),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).with(lastDayOfMonth())));
     }
 
@@ -194,21 +190,21 @@ public class LocalDateSuppliers {
      *
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> lastDayOfThisYear() {
-        return new LocalDateCondition(lastDayOfThisYearMetadata(),
+    public static TemporalFunction<LocalDate> lastDayOfThisYear() {
+        return new LocalDateFunction(lastDayOfThisYearMetadata(),
                         (model, context) -> Optional.of(LocalDate.now(getClock()).with(lastDayOfYear())));
     }
 
     /**
      * Return a temporal condition that returns the local date from the given year, month, and day.
      *
-     * @param year       the year of the date
-     * @param month      the month of the date
+     * @param year the year of the date
+     * @param month the month of the date
      * @param dayOfMonth the day of the date
      * @return the temporal condition
      */
-    public static TemporalCondition<LocalDate> date(int year, int month, int dayOfMonth) {
-        return new LocalDateCondition(dateMetadata(LocalDate.of(year, month, dayOfMonth)),
+    public static TemporalFunction<LocalDate> date(int year, int month, int dayOfMonth) {
+        return new LocalDateFunction(dateMetadata(LocalDate.of(year, month, dayOfMonth)),
                         (model, context) -> Optional.of(LocalDate.of(year, month, dayOfMonth)));
     }
 
