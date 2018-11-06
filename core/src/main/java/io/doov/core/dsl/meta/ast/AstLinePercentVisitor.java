@@ -3,13 +3,19 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.core.dsl.meta.DefaultOperator.count;
+import static io.doov.core.dsl.meta.DefaultOperator.sum;
+import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static java.util.stream.Collectors.toList;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
+import io.doov.core.dsl.meta.predicate.*;
 
 public class AstLinePercentVisitor extends AstLineVisitor {
 
@@ -20,22 +26,22 @@ public class AstLinePercentVisitor extends AstLineVisitor {
     }
 
     @Override
-    public void startMetadata(StepWhen metadata, int depth) {
-        sb.append(percentage((PredicateMetadata) metadata.stepCondition().getMetadata()) + " ");
-        super.startMetadata(metadata, depth);
+    public void startWhen(WhenMetadata metadata, int depth) {
+        sb.append(percentage((PredicateMetadata) metadata.children().findFirst().orElse(null)) + " ");
+        super.startWhen(metadata, depth);
     }
 
     @Override
-    public void startMetadata(BinaryMetadata metadata, int depth) {
-        super.startMetadata(metadata, depth);
-        if (metadata.children().get(0).type() == MetadataType.NARY_PREDICATE) {
+    public void startBinary(BinaryPredicateMetadata metadata, int depth) {
+        super.startBinary(metadata, depth);
+        if (metadata.children().collect(toList()).get(0).type() == NARY_PREDICATE) {
             sb.append(percentage(metadata));
         }
     }
 
     @Override
-    public void startMetadata(NaryMetadata metadata, int depth) {
-        if (metadata.getOperator() != DefaultOperator.count && metadata.getOperator() != DefaultOperator.sum) {
+    public void startNary(NaryPredicateMetadata metadata, int depth) {
+        if (metadata.getOperator() != count && metadata.getOperator() != sum) {
             sb.append(percentage(metadata));
         }
         sb.append(formatCurrentIndent());
@@ -45,8 +51,8 @@ public class AstLinePercentVisitor extends AstLineVisitor {
     }
 
     @Override
-    protected String formatLeafMetadata(LeafMetadata metadata) {
-        if (stackPeek() == MetadataType.BINARY_PREDICATE) {
+    protected String formatLeafMetadata(LeafPredicateMetadata metadata) {
+        if (stackPeek() == BINARY_PREDICATE) {
             return super.formatLeafMetadata(metadata);
         }
         return percentage(metadata) + super.formatLeafMetadata(metadata);

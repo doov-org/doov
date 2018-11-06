@@ -12,9 +12,9 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.LeafMetadata.*;
-import static io.doov.core.dsl.meta.NaryMetadata.minMetadata;
-import static io.doov.core.dsl.meta.NaryMetadata.sumMetadata;
+import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.*;
+import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.minMetadata;
+import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.sumMetadata;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -29,7 +29,7 @@ import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.PredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 /**
  * Base class for numeric conditions.

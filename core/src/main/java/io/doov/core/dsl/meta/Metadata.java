@@ -12,23 +12,85 @@
  */
 package io.doov.core.dsl.meta;
 
-import java.util.List;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+
+import java.util.*;
+import java.util.stream.Stream;
 
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 /**
  * Interface for the description of a node in the syntax tree.
  */
-public interface Metadata extends SyntaxTree {
+public interface Metadata extends Readable {
+
+    default void accept(MetadataVisitor visitor, int depth) {
+        visitor.start(this, depth);
+        if (this.children().count() == 0)
+            visitor.visit(this, depth);
+        else {
+            Iterator<Metadata> it = this.children().iterator();
+            while (it.hasNext()) {
+                final Metadata v = it.next();
+                v.accept(visitor, depth + 1);
+                if (it.hasNext())
+                    visitor.visit(this, depth);
+            }
+        }
+        visitor.end(this, depth);
+    }
 
     /**
-     * Merges the node with the given node.
+     * Returns the human readable version of this object.
      *
-     * @param other the other metadata to merge
-     * @return the merged metadata
+     * @param locale the locale to use
+     * @return the readable string
+     * @see #readable()
      */
-    default PredicateMetadata merge(LeafMetadata other) {
-        throw new UnsupportedOperationException();
+    default String readable(Locale locale) {
+        return astToString(this, locale);
+    }
+
+    @Override
+    default String readable() {
+        return readable(Locale.getDefault());
+    }
+
+    default String markdown() {
+        return markdown(Locale.getDefault());
+    }
+
+    default String markdown(Locale locale) {
+        return AstVisitorUtils.astToMarkdown(this, locale);
+    }
+
+    /**
+     * Returns the direct left children of this node in a flat list.
+     *
+     * @return the list of metadata
+     */
+    default Stream<Metadata> left() {
+        return Stream.empty();
+    }
+
+    /**
+     * Returns the direct right children of this node in a flat list.
+     *
+     * @return the list of metadata
+     */
+    default Stream<Metadata> right() {
+        return Stream.empty();
+    }
+
+    /**
+     * Returns the direct children of this node in a flat list.
+     *
+     * @return the list of metadata
+     */
+    default Stream<Metadata> children() {
+        return Stream.concat(left(), right());
     }
 
     /**
@@ -36,14 +98,9 @@ public interface Metadata extends SyntaxTree {
      *
      * @return the list of elements
      */
-    List<Element> flatten();
-
-    /**
-     * Returns the direct children of this node in a flat list.
-     *
-     * @return the list of metadata
-     */
-    List<Metadata> children();
+    default List<Element> flatten() {
+        return Collections.emptyList();
+    }
 
     /**
      * Returns the metadata type.
@@ -59,6 +116,7 @@ public interface Metadata extends SyntaxTree {
      * @param context the evaluated context
      * @return the metadata
      */
-    Metadata message(Context context);
-
+    default Metadata message(Context context) {
+        return this;
+    }
 }

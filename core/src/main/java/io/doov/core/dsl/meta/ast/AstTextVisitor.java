@@ -23,6 +23,7 @@ import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
+import io.doov.core.dsl.meta.predicate.*;
 
 public class AstTextVisitor extends AbstractAstVisitor {
 
@@ -49,21 +50,21 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(LeafMetadata metadata, int depth) {
+    public void visitLeaf(LeafPredicateMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatLeafMetadata(metadata));
         sb.append(formatNewLine());
     }
 
     @Override
-    public void visitMetadata(UnaryMetadata metadata, int depth) {
+    public void visitUnary(UnaryPredicateMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
     @Override
-    public void visitMetadata(BinaryMetadata metadata, int depth) {
+    public void visitBinary(BinaryPredicateMetadata metadata, int depth) {
         sb.delete(getNewLineIndex(), sb.length());
         sb.append(" ");
         sb.append(bundle.get(metadata.getOperator(), locale));
@@ -71,49 +72,49 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startMetadata(NaryMetadata metadata, int depth) {
+    public void startNary(NaryPredicateMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
     @Override
-    public void startMetadata(ValidationRule metadata, int depth) {
+    public void startRule(RuleMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatRule());
         sb.append(formatNewLine());
     }
 
     @Override
-    public void visitMetadata(ValidationRule metadata, int depth) {
+    public void visitRule(RuleMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatValidate());
         sb.append(formatNewLine());
     }
 
     @Override
-    public void startMetadata(StepWhen metadata, int depth) {
+    public void startWhen(WhenMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatWhen());
         sb.append(formatNewLine());
     }
 
     @Override
-    protected void startMetadata(ConverterMetadata metadata, int depth) {
+    public void startTypeConverter(ConverterMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatUsing());
         sb.append(formatNewLine());
     }
 
     @Override
-    protected void visitMetadata(ConverterMetadata metadata, int depth) {
+    public void visitTypeConverter(ConverterMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatValue(metadata));
         sb.append(formatNewLine());
     }
 
     @Override
-    public void startMetadata(MappingMetadata metadata, int depth) {
+    public void startMappingRule(MappingMetadata metadata, int depth) {
         switch (metadata.type()) {
             case SINGLE_MAPPING:
                 sb.append(formatCurrentIndent());
@@ -130,7 +131,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(MappingMetadata metadata, int depth) {
+    public void visitMappingRule(MappingMetadata metadata, int depth) {
         switch (metadata.type()) {
             case MAPPING_INPUT:
                 sb.append(formatCurrentIndent());
@@ -164,8 +165,8 @@ public class AstTextVisitor extends AbstractAstVisitor {
         return super.getCurrentIndentSize();
     }
 
-    protected String formatLeafMetadata(LeafMetadata metadata) {
-        return metadata.stream().map(e -> {
+    protected String formatLeafMetadata(LeafPredicateMetadata metadata) {
+        return metadata.elements().stream().map(e -> {
             switch (e.getType()) {
                 case OPERATOR:
                     return bundle.get((Operator) e.getReadable(), locale);

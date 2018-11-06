@@ -1,28 +1,12 @@
-/*
- * Copyright 2017 Courtanet
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- */
 package io.doov.core.dsl.impl;
-
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
-
-import java.util.Locale;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.*;
 
-public class DefaultValidationRule implements ValidationRule {
+public class DefaultValidationRule extends AbstractDSLBuilder implements ValidationRule {
 
+    private final RuleMetadata metadata;
     private final StepWhen stepWhen;
     private final boolean shortCircuit;
 
@@ -31,6 +15,7 @@ public class DefaultValidationRule implements ValidationRule {
     }
 
     public DefaultValidationRule(StepWhen stepWhen, boolean shortCircuit) {
+        this.metadata = RuleMetadata.rule(stepWhen.metadata());
         this.stepWhen = stepWhen;
         this.shortCircuit = shortCircuit;
     }
@@ -50,7 +35,7 @@ public class DefaultValidationRule implements ValidationRule {
 
     @Override
     public Result executeOn(DslModel model) {
-        return executeOn(model, new DefaultContext(shortCircuit, stepWhen.stepCondition().getMetadata()));
+        return executeOn(model, new DefaultContext(shortCircuit, stepWhen.stepCondition().metadata()));
     }
 
     @Override
@@ -66,25 +51,8 @@ public class DefaultValidationRule implements ValidationRule {
     }
 
     @Override
-    public String readable(Locale locale) {
-        return astToString(this, locale).trim();
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        visitor.start(this, depth);
-        stepWhen.accept(visitor, depth);
-        visitor.visit(this, depth);
-        visitor.end(this, depth);
-    }
-
-    @Override
-    public Metadata getRootMetadata() {
-        if (stepWhen == null)
-            return null;
-        if (stepWhen.stepCondition() == null)
-            return null;
-        return stepWhen.stepCondition().getMetadata();
+    public Metadata metadata() {
+        return metadata;
     }
 
 }

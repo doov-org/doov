@@ -1,22 +1,18 @@
 package io.doov.core.dsl.mapping.converter;
 
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
-
-import java.util.Locale;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.TypeConverter;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.ConverterMetadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.Metadata;
 
-public class DefaultTypeConverter<I, O> implements TypeConverter<I, O> {
+public class DefaultTypeConverter<I, O> extends AbstractDSLBuilder implements TypeConverter<I, O> {
 
-    private static final TypeConverter<?, ?> IDENTITY = new DefaultTypeConverter<>(
-            (context, i) -> i.orElse(null), ConverterMetadata.identity());
+    private static final TypeConverter<?, ?> IDENTITY = new DefaultTypeConverter<>((context, i) -> i.orElse(null),
+                    ConverterMetadata.identity());
 
     private final BiFunction<Context, Optional<I>, O> function;
     private final ConverterMetadata metadata;
@@ -40,18 +36,12 @@ public class DefaultTypeConverter<I, O> implements TypeConverter<I, O> {
     }
 
     @Override
+    public Metadata metadata() {
+        return metadata;
+    }
+
+    @Override
     public O convert(DslModel fieldModel, Context context, I input) {
         return function.apply(context, Optional.ofNullable(input));
     }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        metadata.accept(visitor, depth);
-    }
-
-    @Override
-    public String readable(Locale locale) {
-        return astToString(this, locale);
-    }
-
 }

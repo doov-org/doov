@@ -178,7 +178,7 @@ public class DOOVMappingTest {
         StringBuilder sb = new StringBuilder();
         AstMarkdownVisitor visitor = new AstMarkdownVisitor(sb, BUNDLE, Locale.getDefault());
         mappings.stream().forEach(m -> {
-            m.accept(visitor, 0);
+            m.metadata().accept(visitor, 0);
             sb.append("\n");
         });
         System.out.println(sb.toString());

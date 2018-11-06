@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.LeafMetadata.*;
+import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.*;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.time.temporal.ChronoUnit.YEARS;
@@ -27,7 +27,7 @@ import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.field.types.TemporalFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.PredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 import io.doov.core.dsl.time.TemporalAdjuster;
 
 /**

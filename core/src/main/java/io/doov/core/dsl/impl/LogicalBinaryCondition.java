@@ -15,22 +15,22 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.BinaryMetadata.andMetadata;
-import static io.doov.core.dsl.meta.BinaryMetadata.orMetadata;
+import static io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata.andMetadata;
+import static io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata.orMetadata;
 
 import java.util.function.BiPredicate;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
 
 /**
  * Implement logical conditions like and, or.
  */
 public class LogicalBinaryCondition extends AbstractStepCondition {
 
-    private LogicalBinaryCondition(BinaryMetadata metadata, BiPredicate<DslModel, Context> predicate) {
+    private LogicalBinaryCondition(BinaryPredicateMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         super(metadata, predicate);
     }
 
@@ -45,7 +45,7 @@ public class LogicalBinaryCondition extends AbstractStepCondition {
      * @return the binary condition
      */
     public static LogicalBinaryCondition and(StepCondition left, StepCondition right) {
-        return new LogicalBinaryCondition(andMetadata(left.getMetadata(), right.getMetadata()),
+        return new LogicalBinaryCondition(andMetadata(left.metadata(), right.metadata()),
                         (model, context) -> context.isShortCircuit()
                                         ? andShortCircuit(left, right, model, context)
                                         : and(left, right, model, context));
@@ -72,7 +72,7 @@ public class LogicalBinaryCondition extends AbstractStepCondition {
      * @return the binary condition
      */
     public static LogicalBinaryCondition or(StepCondition left, StepCondition right) {
-        return new LogicalBinaryCondition(orMetadata(left.getMetadata(), right.getMetadata()),
+        return new LogicalBinaryCondition(orMetadata(left.metadata(), right.metadata()),
                         (model, context) -> context.isShortCircuit()
                                         ? orShortCircuit(left, right, model, context)
                                         : or(left, right, model, context));

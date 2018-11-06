@@ -1,46 +1,21 @@
 /*
- * Copyright 2017 Courtanet
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Copyright (C) by Courtanet, All Rights Reserved.
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.count;
-import static io.doov.core.dsl.meta.DefaultOperator.match_all;
-import static io.doov.core.dsl.meta.DefaultOperator.match_any;
-import static io.doov.core.dsl.meta.DefaultOperator.sum;
-import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
-import static io.doov.core.dsl.meta.MetadataType.EMPTY;
-import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
-import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.Context;
-
-public class NaryMetadata extends PredicateMetadata {
+public class NaryMetadata extends AbstractMetadata {
     private final Operator operator;
     private final List<Metadata> values;
 
-    private NaryMetadata(Operator operator, List<Metadata> values) {
+    public NaryMetadata(Operator operator, List<Metadata> values) {
         this.operator = operator;
         this.values = values;
     }
@@ -49,60 +24,13 @@ public class NaryMetadata extends PredicateMetadata {
         return operator;
     }
 
-    public static NaryMetadata matchAnyMetadata(List<Metadata> values) {
-        return new NaryMetadata(DefaultOperator.match_any, values);
-    }
-
-    public static NaryMetadata matchAllMetadata(List<Metadata> values) {
-        return new NaryMetadata(DefaultOperator.match_all, values);
-    }
-
-    public static NaryMetadata matchNoneMetadata(List<Metadata> values) {
-        return new NaryMetadata(DefaultOperator.match_none, values);
-    }
-
-    public static NaryMetadata countMetadata(List<Metadata> values) {
-        return new NaryMetadata(DefaultOperator.count, values);
-    }
-
-    public static NaryMetadata sumMetadata(List<Metadata> values) {
-        return new NaryMetadata(DefaultOperator.sum, values);
-    }
-
-    public static NaryMetadata minMetadata(List<Metadata> values) {
-        return new NaryMetadata(DefaultOperator.min, values);
+    public List<Metadata> getValues() {
+        return values;
     }
 
     @Override
-    public String readable(Locale locale) {
-        return astToString(this, locale);
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        visitor.start(this, depth);
-        values.stream().filter(Objects::nonNull)
-                        .filter(md -> EMPTY != md.type())
-                        .forEach(v -> {
-                            v.accept(visitor, depth + 1);
-                            visitor.visit(this, depth);
-                        });
-        visitor.end(this, depth);
-    }
-
-    @Override
-    public PredicateMetadata merge(LeafMetadata other) {
-        final List<Element> elts = other.stream().collect(Collectors.toList());
-        if (elts.get(0).getType() == OPERATOR && (
-                elts.get(0).getReadable() == DefaultOperator.sum ||
-                        elts.get(0).getReadable() == DefaultOperator.min ||
-                        elts.get(0).getReadable() == DefaultOperator.count
-        )) {
-            // special case to build : count (predicate ...) operator value
-            return new BinaryMetadata(this, (Operator) elts.get(elts.size() - 2).getReadable(),
-                            new LeafMetadata(LEAF_PREDICATE).valueReadable(elts.get(elts.size() - 1).getReadable()));
-        }
-        return new NaryMetadata(new ComposeOperator(operator, other), values);
+    public MetadataType type() {
+        return NARY_PREDICATE;
     }
 
     @Override
@@ -114,85 +42,7 @@ public class NaryMetadata extends PredicateMetadata {
     }
 
     @Override
-    public List<Metadata> children() {
-        return Collections.unmodifiableList(values);
-    }
-
-    @Override
-    public MetadataType type() {
-        return NARY_PREDICATE;
-    }
-
-    @Override
-    public Metadata message(Context context) {
-        if (operator == match_all && context.isEvalFalse(this)) {
-            final List<Metadata> childMsgs = values.stream()
-                            .filter(md -> context.isEvalFalse(md))
-                            .map(md -> md.message(context))
-                            .filter(Objects::nonNull)
-                            .filter(md -> EMPTY != md.type())
-                            .collect(toList());
-            if (childMsgs.size() == 1)
-                return childMsgs.get(0);
-            return new NaryMetadata(operator, childMsgs);
-        }
-        if (operator == match_all && context.isEvalTrue(this)) {
-            return new EmptyMetadata();
-        } else if (operator == match_any) {
-            final List<Metadata> childMsgs = values.stream()
-                            .filter(md -> context.isEvalFalse(md))
-                            .map(md -> md.message(context))
-                            .filter(Objects::nonNull)
-                            .filter(md -> EMPTY != md.type())
-                            .collect(toList());
-            if (childMsgs.size() == 1)
-                return childMsgs.get(0);
-            return new NaryMetadata(operator, childMsgs);
-        } else if (operator == sum) {
-            return new NaryMetadata(sum, values.stream()
-                            .filter(md -> {
-                                if (md.type() != FIELD_PREDICATE)
-                                    return true;
-                                final List<Element> elements = md.flatten();
-                                if (elements.size() < 1)
-                                    return true;
-                                if (elements.get(0).getType() != FIELD)
-                                    return true;
-                                final Object value = context
-                                                .getEvalValue(((DslField) elements.get(0).getReadable()).id());
-                                if (value == null)
-                                    return false;
-                                try {
-                                    return Double.parseDouble(value.toString()) != 0;
-                                } catch (NumberFormatException e) {
-                                    return true;
-                                }
-                            }).map(md -> md.message(context))
-                            .filter(Objects::nonNull)
-                            .filter(md -> EMPTY != md.type())
-                            .collect(toList()));
-        } else if (operator == count) {
-            final List<Metadata> childMsgs = values.stream()
-                            .filter(md -> context.isEvalFalse(md))
-                            .map(md -> md.message(context))
-                            .filter(Objects::nonNull)
-                            .filter(md -> EMPTY != md.type())
-                            .collect(toList());
-            return rewriteCount(childMsgs);
-        }
-        return new NaryMetadata(operator, values.stream()
-                        .map(md -> md.message(context))
-                        .filter(Objects::nonNull)
-                        .filter(md -> EMPTY != md.type())
-                        .collect(toList()));
-    }
-
-    private static Metadata rewriteCount(List<Metadata> childMsgs) {
-        if (childMsgs.size() == 0)
-            return new EmptyMetadata();
-        if (childMsgs.size() == 1)
-            return childMsgs.get(0);
-        return new BinaryMetadata(childMsgs.get(0), and,
-                        rewriteCount(childMsgs.subList(1, childMsgs.size())));
+    public Stream<Metadata> right() {
+        return values.stream();
     }
 }

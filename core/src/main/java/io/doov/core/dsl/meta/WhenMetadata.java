@@ -3,45 +3,40 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
-import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.WHEN;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class UnaryMetadata extends AbstractMetadata {
-    private final Operator operator;
+public class WhenMetadata extends AbstractMetadata {
     private final Metadata value;
 
-    public UnaryMetadata(Operator operator, Metadata value) {
-        this.operator = operator;
+    private WhenMetadata(Metadata value) {
         this.value = value;
     }
 
-    public Operator getOperator() {
-        return operator;
-    }
-
-    public Metadata getValue() {
-        return value;
+    public static WhenMetadata when(Metadata value) {
+        return new WhenMetadata(value);
     }
 
     @Override
     public MetadataType type() {
-        return UNARY_PREDICATE;
+        return WHEN;
     }
 
     @Override
     public List<Element> flatten() {
         final List<Element> flatten = new ArrayList<>();
-        flatten.add(new Element(operator, OPERATOR));
+        flatten.add(new Element(when, OPERATOR));
         flatten.addAll(value.flatten());
         return flatten;
     }
 
     @Override
-    public Stream<Metadata> right() {
+    public Stream<Metadata> children() {
         return Stream.of(value);
     }
 }

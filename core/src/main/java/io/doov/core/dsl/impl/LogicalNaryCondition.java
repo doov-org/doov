@@ -15,10 +15,10 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.NaryMetadata.countMetadata;
-import static io.doov.core.dsl.meta.NaryMetadata.matchAllMetadata;
-import static io.doov.core.dsl.meta.NaryMetadata.matchAnyMetadata;
-import static io.doov.core.dsl.meta.NaryMetadata.matchNoneMetadata;
+import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.countMetadata;
+import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.matchAllMetadata;
+import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.matchAnyMetadata;
+import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.matchNoneMetadata;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
@@ -29,14 +29,14 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
 
 /**
  * Implements nary conditions like match any, all, none.
  */
 public class LogicalNaryCondition extends AbstractStepCondition {
 
-    private LogicalNaryCondition(NaryMetadata metadata, BiPredicate<DslModel, Context> predicate) {
+    private LogicalNaryCondition(NaryPredicateMetadata metadata, BiPredicate<DslModel, Context> predicate) {
         super(metadata, predicate);
     }
 
@@ -132,7 +132,7 @@ public class LogicalNaryCondition extends AbstractStepCondition {
     }
 
     private static List<Metadata> getMetadatas(List<StepCondition> steps) {
-        return steps.stream().map(StepCondition::getMetadata).collect(toList());
+        return steps.stream().map(StepCondition::metadata).collect(toList());
     }
 
 }

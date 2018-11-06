@@ -56,7 +56,7 @@ public enum DefaultOperator implements Operator {
     today_minus("today minus"),
     first_day_of_this_month("first day of this month"),
     first_day_of_this_year("first day of this year"),
-    last_day_of_this_month("last day of this month"), 
+    last_day_of_this_month("last day of this month"),
     last_day_of_this_year("last day of this year"),
     first_day_of_month("first day of month"),
     first_day_of_next_month("first day of next month"),

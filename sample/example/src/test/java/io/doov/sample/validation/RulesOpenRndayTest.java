@@ -1,11 +1,14 @@
 package io.doov.sample.validation;
 
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
-import static io.doov.sample.field.dsl.DslSampleModel.*;
+import static io.doov.sample.field.dsl.DslSampleModel.accountCompany;
+import static io.doov.sample.field.dsl.DslSampleModel.accountEmail;
+import static io.doov.sample.field.dsl.DslSampleModel.accountPhoneNumber;
+import static io.doov.sample.field.dsl.DslSampleModel.configurationMaxEmailSize;
+import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
 
 import java.util.Locale;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.assertions.Assertions;
@@ -13,7 +16,9 @@ import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.Result;
 import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.field.dsl.DslSampleModel.SampleModelRule;
-import io.doov.sample.model.*;
+import io.doov.sample.model.Company;
+import io.doov.sample.model.SampleModel;
+import io.doov.sample.model.SampleModels;
 
 public class RulesOpenRndayTest {
     SampleModel sample = SampleModels.sample();

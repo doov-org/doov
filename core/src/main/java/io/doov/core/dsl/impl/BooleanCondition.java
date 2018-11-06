@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.LeafMetadata.*;
+import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
@@ -24,13 +24,13 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.LogicalFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.PredicateMetadata;
+import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 /**
  * Base class for boolean conditions.
  * <p>
- * It contains a {@link DslField} to get the value from the model, a {@link LeafMetadata} to describe this node, and a
+ * It contains a {@link DslField} to get the value from the model, a {@link LeafPredicateMetadata} to describe this node, and a
  * {@link BiFunction} to take the value from the model and return an optional value.
  */
 public class BooleanCondition extends DefaultCondition<Boolean> {

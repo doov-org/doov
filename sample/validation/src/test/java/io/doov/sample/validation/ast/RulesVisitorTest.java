@@ -33,8 +33,8 @@ public class RulesVisitorTest {
     public void print_full_syntax_tree() {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
-                .peek(rule -> sb.append("--------------------------------").append("\n"))
-                .forEach(rule -> rule.accept(new AstFullVisitor(sb), 0));
+                        .peek(rule -> sb.append("--------------------------------").append("\n"))
+                        .forEach(rule -> rule.metadata().accept(new AstFullVisitor(sb), 0));
         System.out.println(sb.toString());
     }
 
@@ -42,8 +42,8 @@ public class RulesVisitorTest {
     public void print_line_syntax_tree() {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
-                .peek(rule -> sb.append("--------------------------------").append("\n"))
-                .forEach(rule -> rule.accept(new AstLineVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
+                        .peek(rule -> sb.append("--------------------------------").append("\n"))
+                        .forEach(rule -> rule.metadata().accept(new AstLineVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
         System.out.println(sb.toString());
     }
 
@@ -51,8 +51,8 @@ public class RulesVisitorTest {
     public void print_text_syntax_tree() {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
-                .peek(rule -> sb.append("--------------------------------").append("\n"))
-                .forEach(rule -> rule.accept(new AstTextVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
+                        .peek(rule -> sb.append("--------------------------------").append("\n"))
+                        .forEach(rule -> rule.metadata().accept(new AstTextVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
         System.out.println(sb.toString());
     }
 
@@ -60,8 +60,8 @@ public class RulesVisitorTest {
     public void print_markdown_syntax_tree() {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
-                .peek(rule -> sb.append("--------------------------------").append("\n"))
-                .forEach(rule -> rule.accept(new AstMarkdownVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
+                        .peek(rule -> sb.append("--------------------------------").append("\n"))
+                        .forEach(rule -> rule.metadata().accept(new AstMarkdownVisitor(sb, BUNDLE, Locale.ENGLISH), 0));
         System.out.println(sb.toString());
     }
 
@@ -69,14 +69,14 @@ public class RulesVisitorTest {
     public void print_html_syntax_tree() {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
         REGISTRY_DEFAULT.stream()
-                .peek(rule -> {
-                    try {
-                        ops.write("--------------------------------\n".getBytes());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                })
-                .forEach(rule -> rule.accept(new AstHtmlVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
+                        .peek(rule -> {
+                            try {
+                                ops.write("--------------------------------\n".getBytes());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        })
+                        .forEach(rule -> rule.metadata().accept(new AstHtmlVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
         System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
     }
 
@@ -91,7 +91,7 @@ public class RulesVisitorTest {
                         e.printStackTrace();
                     }
                 })
-                .forEach(rule -> rule.accept(new AstJavascriptVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
+                .forEach(rule -> rule.metadata().accept(new AstJavascriptVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
         System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
     }
 }

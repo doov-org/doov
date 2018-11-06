@@ -3,21 +3,15 @@
  */
 package io.doov.core.dsl.lang;
 
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
-
-import java.util.Locale;
-
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
  * Mapping input
  *
  * @param <T> input value type
  */
-public interface MappingInput<T> extends SyntaxTree {
+public interface MappingInput<T> extends DSLBuilder {
 
     /**
      * Reads the input value
@@ -35,16 +29,4 @@ public interface MappingInput<T> extends SyntaxTree {
      * @return true if the input can read a value from the model
      */
     boolean validate(FieldModel inModel);
-
-    /**
-     * Returns the metadata to describe this node.
-     *
-     * @return the metadata
-     */
-    Metadata getMetadata();
-
-    @Override
-    default String readable(Locale locale) {
-        return astToString(this, locale);
-    }
 }

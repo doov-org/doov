@@ -10,6 +10,7 @@ import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.WHEN;
 import static java.lang.Math.floor;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
+import io.doov.core.dsl.meta.predicate.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
@@ -50,19 +52,17 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected int insideNary = 0;
     protected int nbImbriBinary = 0;
     protected boolean rightSideOfBinary = false;
-    private boolean closeUn=false;
+    private boolean closeUn = false;
     private boolean insideSum = false;
     private boolean noExclusionNextLeaf = false;
 
-
-    private static final MessageFormat format_bar_not_available = new MessageFormat("<div class=''{0}''>"
-                    + "<div class=''percentage-value''> n/a</div><div class=''{1}''>"
-                    + "<div class=''{2}'' style=''width:0%;''>"
-                    + "</div></div></div>", Locale.US);
+    private static final MessageFormat format_bar_not_available = new MessageFormat(
+                    "<div class=''{0}''>" + "<div class=''percentage-value''> n/a</div><div class=''{1}''>"
+                                    + "<div class=''{2}'' style=''width:0%;''>" + "</div></div></div>",
+                    Locale.US);
     private static final MessageFormat format_bar_percentage = new MessageFormat("<div class=''{0}''>"
                     + "<div class=''percentage-value''>{1} %</div>"
-                    + "<div class=''{2}''><div class=''{3}'' style=''width:{4}%;''>"
-                    + "</div></div></div>", Locale.US);
+                    + "<div class=''{2}''><div class=''{3}'' style=''width:{4}%;''>" + "</div></div></div>", Locale.US);
 
     private String exclusionBar(PredicateMetadata metadata, ExclusionBar cssClass) {
         final int nbTrue = metadata.trueEvalCount();
@@ -73,13 +73,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         }
         final Double percentage = floor((nbTrue / ((double) nbTrue + nbFalse)) * 1000) / 10.0;
         return format_bar_percentage.format(new Object[] { cssClass.getWrapperClass(), percentage,
-                        cssClass.getBorderClass(), cssClass.getFillingClass(),
-                        percentage });
+                        cssClass.getBorderClass(), cssClass.getFillingClass(), percentage });
     }
 
     public String exclusionBar(ValidationRule rule, ExclusionBar cssClass) {
-        PredicateMetadata rm = rule.getRootMetadata() instanceof PredicateMetadata ? ((PredicateMetadata) rule
-                        .getRootMetadata()) : null;
+        PredicateMetadata rm = rule.metadata() instanceof PredicateMetadata ? ((PredicateMetadata) rule.metadata())
+                        : null;
         return exclusionBar(rm, cssClass);
     }
 
@@ -92,31 +91,31 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // step when
 
     @Override
-    public void startMetadata(StepWhen metadata, int depth) {
+    public void startWhen(WhenMetadata metadata, int depth) {
         write(BEG_UL);
     }
 
     @Override
-    public void visitMetadata(StepWhen metadata, int depth) {
+    public void visitWhen(WhenMetadata metadata, int depth) {
         htmlFormatSpan(CSS_CLASS_WHEN, formatWhen());
         write(BEG_UL);
     }
 
     @Override
-    public void endMetadata(StepWhen metadata, int depth) {
+    public void endWhen(WhenMetadata metadata, int depth) {
         write(END_UL);
     }
 
     // field metadata
     @Override
-    public void startMetadata(LeafMetadata metadata, int depth) {
+    public void startLeaf(LeafPredicateMetadata metadata, int depth) {
         if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
             write(BEG_LI);
         }
     }
 
     @Override
-    public void visitMetadata(LeafMetadata leaf, int depth) {
+    public void visitLeaf(LeafPredicateMetadata leaf, int depth) {
         if (!insideSum) {
             if (noExclusionNextLeaf) {
                 noExclusionNextLeaf = false;
@@ -124,7 +123,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
                 write(exclusionBar(leaf, ExclusionBar.SMALL));
             }
         }
-        leaf.stream().forEach(e -> {
+        leaf.elements().stream().forEach(e -> {
             switch (e.getType()) {
                 case PARENTHESIS_LEFT:
                 case PARENTHESIS_RIGHT:
@@ -153,7 +152,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endMetadata(LeafMetadata metadata, int depth) {
+    public void endLeaf(LeafPredicateMetadata metadata, int depth) {
         if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
             write(END_LI);
         }
@@ -161,7 +160,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // binary metadata
     @Override
-    public void startMetadata(BinaryMetadata metadata, int depth) {
+    public void startBinary(BinaryPredicateMetadata metadata, int depth) {
         Metadata leftChild = metadata.getLeft();
 
         if (NARY_PREDICATE == stackPeek() && (metadata.getOperator() != or && metadata.getOperator() != and)) {
@@ -183,7 +182,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(BinaryMetadata metadata, int depth) {
+    public void visitBinary(BinaryPredicateMetadata metadata, int depth) {
         if (metadata.getOperator() == and || metadata.getOperator() == or) {
             write("<br>");
         }
@@ -191,7 +190,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
         if (metadata.getRight().type() == UNARY_PREDICATE) {
             write(BEG_UL);
-            closeUn=true;
+            closeUn = true;
         }
         rightSideOfBinary = true;
 
@@ -201,7 +200,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endMetadata(BinaryMetadata metadata, int depth) {
+    public void endBinary(BinaryPredicateMetadata metadata, int depth) {
         if (nbImbriBinary > 0) {
             write(END_UL);
             nbImbriBinary--;
@@ -215,7 +214,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // nary metadata
     @Override
-    public void startMetadata(NaryMetadata metadata, int depth) {
+    public void startNary(NaryPredicateMetadata metadata, int depth) {
         if (metadata.getOperator() == sum || metadata.getOperator() == min) {
             insideSum = true;
         }
@@ -239,7 +238,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endMetadata(NaryMetadata metadata, int depth) {
+    public void endNary(NaryPredicateMetadata metadata, int depth) {
         write(END_OL);
         insideNary--;
         if (metadata.getOperator() == sum || metadata.getOperator() == min) {
@@ -249,21 +248,21 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // unary metadata
     @Override
-    public void visitMetadata(UnaryMetadata metadata, int depth) {
+    public void visitUnary(UnaryPredicateMetadata metadata, int depth) {
         write(BEG_LI);
         htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
-        if (metadata.children().get(0).type() != MetadataType.LEAF_PREDICATE) {
+        if (metadata.children().collect(toList()).get(0).type() != MetadataType.LEAF_PREDICATE) {
             write(BEG_UL);
             closeUnaryUL++;
         }
     }
 
     @Override
-    protected void endMetadata(UnaryMetadata metadata, int depth) {
+    public void endUnary(UnaryPredicateMetadata metadata, int depth) {
         if (closeUn) {
             write(END_UL);
-            closeUn=false;
+            closeUn = false;
         }
         if (closeUnaryUL > 0) {
             write(END_UL);
@@ -274,23 +273,23 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // validation rule
     @Override
-    public void startMetadata(ValidationRule metadata, int depth) {
+    public void startRule(RuleMetadata metadata, int depth) {
         formatDivStart(CSS_CLASS_VALIDATION_RULE);
     }
 
     @Override
-    public void visitMetadata(ValidationRule metadata, int depth) {
+    public void visitRule(RuleMetadata metadata, int depth) {
         htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate, locale));
     }
 
     @Override
-    public void endMetadata(ValidationRule metadata, int depth) {
+    public void endRule(RuleMetadata metadata, int depth) {
         write(END_DIV);
     }
 
     // metadata
     @Override
-    public void visitMetadata(Metadata metadata, int depth) {
+    public void visitDefault(Metadata metadata, int depth) {
         write(metadata.readable());
     }
 

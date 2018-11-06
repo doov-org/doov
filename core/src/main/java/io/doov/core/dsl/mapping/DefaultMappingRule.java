@@ -3,17 +3,13 @@
  */
 package io.doov.core.dsl.mapping;
 
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
-
-import java.util.Locale;
-
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.impl.ModelInterceptor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
-public class DefaultMappingRule<T> implements MappingRule {
+public class DefaultMappingRule<T> extends AbstractDSLBuilder implements MappingRule {
 
     private final MappingInput<T> input;
     private final MappingOutput<T> output;
@@ -26,13 +22,18 @@ public class DefaultMappingRule<T> implements MappingRule {
     }
 
     @Override
+    public Metadata metadata() {
+        return metadata;
+    }
+
+    @Override
     public boolean validate(FieldModel inModel, FieldModel outModel) {
         return input.validate(inModel) && output.validate(outModel);
     }
 
     @Override
     public Context executeOn(FieldModel inModel, FieldModel outModel) {
-        return this.executeOn(inModel, outModel, new DefaultContext(metadata));
+        return executeOn(inModel, outModel, new DefaultContext(metadata));
     }
 
     @Override
@@ -43,17 +44,12 @@ public class DefaultMappingRule<T> implements MappingRule {
         return context;
     }
 
-    @Override
+    @Deprecated
     public void accept(MetadataVisitor visitor, int depth) {
         visitor.start(metadata, depth);
-        input.accept(visitor, depth);
+        input.metadata().accept(visitor, depth);
         visitor.visit(metadata, depth);
-        output.accept(visitor, depth);
+        output.metadata().accept(visitor, depth);
         visitor.end(metadata, depth);
-    }
-
-    @Override
-    public String readable(Locale locale) {
-        return astToString(this, locale);
     }
 }

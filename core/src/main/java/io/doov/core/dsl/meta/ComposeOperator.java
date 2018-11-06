@@ -3,11 +3,13 @@
  */
 package io.doov.core.dsl.meta;
 
+import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
+
 public class ComposeOperator implements Operator {
     private final Operator operator;
-    private final LeafMetadata other;
+    private final LeafPredicateMetadata other;
 
-    public ComposeOperator(Operator operator, LeafMetadata other) {
+    public ComposeOperator(Operator operator, LeafPredicateMetadata other) {
         this.operator = operator;
         this.other = other;
     }
