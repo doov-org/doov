@@ -18,7 +18,7 @@ public class RuleMetadata extends AbstractMetadata {
     public RuleMetadata(Metadata value) {
         this.value = value;
     }
-    
+
     public static RuleMetadata rule(Metadata value) {
         return new RuleMetadata(value);
     }
@@ -29,21 +29,13 @@ public class RuleMetadata extends AbstractMetadata {
     }
 
     @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        visitor.start(this, depth);
-        value.accept(visitor, depth);
-        visitor.visit(this, depth);
-        visitor.end(this, depth);
-    }
-
-    @Override
     public List<Element> flatten() {
         final List<Element> flatten = new ArrayList<>();
         flatten.add(new Element(rule, OPERATOR));
         flatten.addAll(value.flatten());
         return flatten;
     }
-    
+
     @Override
     public Stream<Metadata> children() {
         return Stream.of(value);

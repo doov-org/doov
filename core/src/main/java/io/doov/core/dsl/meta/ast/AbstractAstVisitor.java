@@ -76,8 +76,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public final void visit(Metadata metadata, int depth) {
         switch (metadata.type()) {
             case WHEN:
-                visitWhen((WhenMetadata) metadata, depth);
-                break;
+                throw new IllegalStateException();
             case UNARY_PREDICATE:
                 visitUnary((UnaryPredicateMetadata) metadata, depth);
                 break;
@@ -101,8 +100,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 visitNary((NaryPredicateMetadata) metadata, depth);
                 break;
             case RULE:
-                visitRule((RuleMetadata) metadata, depth);
-                break;
+                throw new IllegalStateException();
             case TYPE_CONVERTER:
             case TYPE_CONVERTER_IDENTITY:
                 visitTypeConverter((ConverterMetadata) metadata, depth);
@@ -216,8 +214,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void startRule(RuleMetadata metadata, int depth) {
     }
 
-    public void visitRule(RuleMetadata metadata, int depth) {
-    }
+    // visit rule is impossible because there is only one child
 
     public void endRule(RuleMetadata metadata, int depth) {
     }
@@ -227,8 +224,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void startWhen(WhenMetadata metadata, int depth) {
     }
 
-    public void visitWhen(WhenMetadata metadata, int depth) {
-    }
+    // visit when is impossible because there is only one child
 
     public void endWhen(WhenMetadata metadata, int depth) {
     }
