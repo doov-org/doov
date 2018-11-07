@@ -16,6 +16,7 @@ import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Locale;
 
 import io.doov.core.dsl.lang.ValidationRule;
@@ -143,7 +144,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void endLeaf(LeafPredicateMetadata<?> metadata, int depth) {
-        if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
+        if (stackPeek() == WHEN || (insideNary > 0 && !isImmediateBinaryChild())) {
             write(END_LI);
         }
     }
@@ -331,5 +332,14 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    private boolean isImmediateBinaryChild() {
+        List<MetadataType> stack = stackSteam().collect(toList());
+        if (stack.size() > 1) {
+            return stack.get(1) == MetadataType.BINARY_PREDICATE;
+        } else {
+            return false;
+        }
     }
 }
