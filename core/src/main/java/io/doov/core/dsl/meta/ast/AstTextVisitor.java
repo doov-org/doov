@@ -50,7 +50,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitLeaf(LeafPredicateMetadata<?> metadata, int depth) {
+    public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatLeafMetadata(metadata));
         sb.append(formatNewLine());

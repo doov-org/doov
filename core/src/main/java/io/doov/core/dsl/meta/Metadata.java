@@ -28,16 +28,12 @@ public interface Metadata extends Readable {
 
     default void accept(MetadataVisitor visitor, int depth) {
         visitor.start(this, depth);
-        if (this.children().count() == 0)
-            visitor.visit(this, depth);
-        else {
-            Iterator<Metadata> it = this.children().iterator();
-            while (it.hasNext()) {
-                final Metadata v = it.next();
-                v.accept(visitor, depth + 1);
-                if (it.hasNext())
-                    visitor.visit(this, depth);
-            }
+        final Iterator<Metadata> it = this.children().iterator();
+        while (it.hasNext()) {
+            final Metadata v = it.next();
+            v.accept(visitor, depth + 1);
+            if (it.hasNext())
+                visitor.visit(this, depth);
         }
         visitor.end(this, depth);
     }

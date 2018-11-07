@@ -102,14 +102,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // field metadata
     @Override
-    public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
+    public void startLeaf(LeafPredicateMetadata<?> leaf, int depth) {
         if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
             write(BEG_LI);
         }
-    }
-
-    @Override
-    public void visitLeaf(LeafPredicateMetadata<?> leaf, int depth) {
         if (!insideSum) {
             if (noExclusionNextLeaf) {
                 noExclusionNextLeaf = false;
