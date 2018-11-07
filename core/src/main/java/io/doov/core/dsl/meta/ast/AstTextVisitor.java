@@ -86,7 +86,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitRule(RuleMetadata metadata, int depth) {
+    public void endRule(RuleMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatValidate());
         sb.append(formatNewLine());

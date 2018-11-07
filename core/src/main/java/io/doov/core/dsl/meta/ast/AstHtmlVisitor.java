@@ -56,28 +56,28 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private boolean noExclusionNextLeaf = false;
 
     private static final MessageFormat format_bar_not_available = new MessageFormat(
-                    "<div class=''{0}''>" + "<div class=''percentage-value''> n/a</div><div class=''{1}''>"
-                                    + "<div class=''{2}'' style=''width:0%;''>" + "</div></div></div>",
-                    Locale.US);
+            "<div class=''{0}''>" + "<div class=''percentage-value''> n/a</div><div class=''{1}''>"
+                    + "<div class=''{2}'' style=''width:0%;''>" + "</div></div></div>",
+            Locale.US);
     private static final MessageFormat format_bar_percentage = new MessageFormat("<div class=''{0}''>"
-                    + "<div class=''percentage-value''>{1} %</div>"
-                    + "<div class=''{2}''><div class=''{3}'' style=''width:{4}%;''>" + "</div></div></div>", Locale.US);
+            + "<div class=''percentage-value''>{1} %</div>"
+            + "<div class=''{2}''><div class=''{3}'' style=''width:{4}%;''>" + "</div></div></div>", Locale.US);
 
     private String exclusionBar(PredicateMetadata metadata, ExclusionBar cssClass) {
         final int nbTrue = metadata.trueEvalCount();
         final int nbFalse = metadata.falseEvalCount();
         if (nbTrue == 0 && nbFalse == 0) {
             return format_bar_not_available.format(new Object[] { cssClass.getWrapperClass(), cssClass.getBorderClass(),
-                            cssClass.getFillingClass() });
+                    cssClass.getFillingClass() });
         }
         final Double percentage = floor((nbTrue / ((double) nbTrue + nbFalse)) * 1000) / 10.0;
         return format_bar_percentage.format(new Object[] { cssClass.getWrapperClass(), percentage,
-                        cssClass.getBorderClass(), cssClass.getFillingClass(), percentage });
+                cssClass.getBorderClass(), cssClass.getFillingClass(), percentage });
     }
 
     public String exclusionBar(ValidationRule rule, ExclusionBar cssClass) {
         PredicateMetadata rm = rule.metadata() instanceof PredicateMetadata ? ((PredicateMetadata) rule.metadata())
-                        : null;
+                : null;
         return exclusionBar(rm, cssClass);
     }
 
@@ -91,11 +91,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void startWhen(WhenMetadata metadata, int depth) {
-        write(BEG_UL);
-    }
-
-    @Override
-    public void visitWhen(WhenMetadata metadata, int depth) {
         htmlFormatSpan(CSS_CLASS_WHEN, formatWhen());
         write(BEG_UL);
     }
@@ -219,7 +214,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         }
 
         if (insideNary == 0 && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() == count
-                        || metadata.getOperator() == min)) {
+                || metadata.getOperator() == min)) {
             write(BEG_LI);
         }
         if (stackPeek() == WHEN || stackPeek() != BINARY_PREDICATE) {
@@ -277,12 +272,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitRule(RuleMetadata metadata, int depth) {
-        htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate, locale));
-    }
-
-    @Override
     public void endRule(RuleMetadata metadata, int depth) {
+        htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate, locale));
         write(END_DIV);
     }
 
@@ -293,6 +284,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     // implementation
+
     protected String formatWhen() {
         return bundle.get(when, locale);
     }

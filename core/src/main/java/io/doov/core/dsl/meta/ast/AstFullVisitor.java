@@ -97,13 +97,6 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitRule(RuleMetadata metadata, int depth) {
-        sb.append(formatCurrentIndent());
-        sb.append("visit ValidationRule ").append(metadata).append(" = ").append("validate");
-        sb.append("\n");
-    }
-
-    @Override
     public void endRule(RuleMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("end ValidationRule ").append(metadata).append(" = ").append("validate");
@@ -114,13 +107,6 @@ public class AstFullVisitor extends AbstractAstVisitor {
     public void startWhen(WhenMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("start StepWhen ").append(metadata).append(" = ").append("when");
-        sb.append("\n");
-    }
-
-    @Override
-    public void visitWhen(WhenMetadata metadata, int depth) {
-        sb.append(formatCurrentIndent());
-        sb.append("visit StepWhen ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
