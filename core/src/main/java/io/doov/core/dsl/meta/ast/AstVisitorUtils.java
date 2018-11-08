@@ -22,13 +22,13 @@ public class AstVisitorUtils {
 
     public static String astToString(Metadata metadata, Locale locale) {
         StringBuilder stringBuilder = new StringBuilder();
-        metadata.accept(new AstLineVisitor(stringBuilder, BUNDLE, locale), 0);
+        new AstLineVisitor(stringBuilder, BUNDLE, locale).browse(metadata, 0);
         return stringBuilder.toString();
     }
 
     public static String astToMarkdown(Metadata metadata, Locale locale) {
         StringBuilder stringBuilder = new StringBuilder();
-        metadata.accept(new AstMarkdownVisitor(stringBuilder, BUNDLE, locale), 0);
+        new AstMarkdownVisitor(stringBuilder, BUNDLE, locale).browse(metadata, 0);
         return stringBuilder.toString();
     }
 

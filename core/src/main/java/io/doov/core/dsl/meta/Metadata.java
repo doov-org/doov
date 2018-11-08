@@ -26,18 +26,6 @@ import io.doov.core.dsl.meta.ast.AstVisitorUtils;
  */
 public interface Metadata extends Readable {
 
-    default void accept(MetadataVisitor visitor, int depth) {
-        visitor.start(this, depth);
-        final Iterator<Metadata> it = this.children().iterator();
-        while (it.hasNext()) {
-            final Metadata v = it.next();
-            v.accept(visitor, depth + 1);
-            if (it.hasNext())
-                visitor.visit(this, depth);
-        }
-        visitor.end(this, depth);
-    }
-
     /**
      * Returns the human readable version of this object.
      *
