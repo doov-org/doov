@@ -20,7 +20,9 @@ public interface MetadataVisitor {
 
     void start(Metadata metadata, int depth);
 
-    void visit(Metadata metadata, int depth);
+    void beforeChild(Metadata metadata, Metadata child, int depth);
+
+    void afterChild(Metadata metadata, Metadata child, boolean hasNext, int depth);
 
     void end(Metadata metadata, int depth);
     
@@ -28,10 +30,10 @@ public interface MetadataVisitor {
         start(root, depth);
         final Iterator<Metadata> it = root.children().iterator();
         while (it.hasNext()) {
-            final Metadata v = it.next();
-            browse(v, depth + 1);
-            if (it.hasNext())
-                visit(root, depth);
+            final Metadata child = it.next();
+            beforeChild(root, child, depth);
+            browse(child, depth + 1);
+            afterChild(root, child, it.hasNext(), depth);
         }
         end(root, depth);
     }
