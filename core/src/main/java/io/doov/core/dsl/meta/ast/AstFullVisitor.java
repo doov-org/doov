@@ -41,9 +41,9 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitUnary(UnaryPredicateMetadata metadata, int depth) {
+    public void startUnary(UnaryPredicateMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
-        sb.append("visit UnaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
+        sb.append("start UnaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
     }
 

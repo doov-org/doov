@@ -77,12 +77,10 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
         switch (metadata.type()) {
             case WHEN:
             case RULE:
+            case UNARY_PREDICATE:
                 throw new IllegalStateException("no visit : there is only one child");
             case LEAF_PREDICATE:
                 throw new IllegalStateException("no visit : there is no children");
-            case UNARY_PREDICATE:
-                visitUnary((UnaryPredicateMetadata) metadata, depth);
-                break;
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
             case BINARY_PREDICATE:
@@ -168,7 +166,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
     }
-    
+
     // visit leaf is impossible because there is no children
 
     public void endLeaf(LeafPredicateMetadata<?> metadata, int depth) {
@@ -176,9 +174,6 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     // UnaryMetadata
     public void startUnary(UnaryPredicateMetadata metadata, int depth) {
-    }
-
-    public void visitUnary(UnaryPredicateMetadata metadata, int depth) {
     }
 
     public void endUnary(UnaryPredicateMetadata metadata, int depth) {

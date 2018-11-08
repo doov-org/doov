@@ -57,7 +57,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitUnary(UnaryPredicateMetadata metadata, int depth) {
+    public void startUnary(UnaryPredicateMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
