@@ -14,6 +14,7 @@ package io.doov.core.dsl.meta.ast;
 
 import java.util.Locale;
 
+import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.RuleMetadata;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
@@ -42,10 +43,12 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void visitNary(NaryPredicateMetadata metadata, int depth) {
+    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
         super.visitNary(metadata, depth);
-        sb.delete(sb.length() - 1, sb.length());
-        sb.append(", ");
+        if (hasNext) {
+            sb.delete(sb.length() - 1, sb.length());
+            sb.append(", ");
+        }
     }
 
     @Override
@@ -62,9 +65,11 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void visitBinary(BinaryPredicateMetadata metadata, int depth) {
-        sb.append(bundle.get(metadata.getOperator(), locale));
-        sb.append(formatNewLine());
+    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+        if (hasNext) {
+            sb.append(bundle.get(metadata.getOperator(), locale));
+            sb.append(formatNewLine());
+        }
     }
 
     @Override

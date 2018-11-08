@@ -73,18 +73,24 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
         }
     }
 
-    public final void visit(Metadata metadata, int depth) {
+    @Override
+    public void beforeChild(Metadata metadata, Metadata child, int depth) {
         switch (metadata.type()) {
             case WHEN:
+                beforeChildWhen((WhenMetadata) metadata, child, depth);
+                break;
             case RULE:
+                beforeChildRule((RuleMetadata) metadata, child, depth);
+                break;
             case UNARY_PREDICATE:
-                throw new IllegalStateException("no visit : there is only one child");
+                beforeChildUnary((UnaryPredicateMetadata) metadata, child, depth);
+                break;
             case LEAF_PREDICATE:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
             case BINARY_PREDICATE:
-                visitBinary((BinaryPredicateMetadata) metadata, depth);
+                beforeChildBinary((BinaryPredicateMetadata) metadata, child, depth);
                 break;
             case MAPPING_INPUT:
             case MAPPING_LEAF:
@@ -92,17 +98,57 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
             case MULTIPLE_MAPPING:
             case THEN_MAPPING:
             case ELSE_MAPPING:
-                visitMappingRule(metadata, depth);
+                beforeChildMappingRule(metadata, child, depth);
                 break;
             case NARY_PREDICATE:
-                visitNary((NaryPredicateMetadata) metadata, depth);
+                beforeChildNary((NaryPredicateMetadata) metadata, child, depth);
                 break;
             case TYPE_CONVERTER:
             case TYPE_CONVERTER_IDENTITY:
-                visitTypeConverter((ConverterMetadata) metadata, depth);
+                beforeChildTypeConverter((ConverterMetadata) metadata, child, depth);
                 break;
             default:
-                visitDefault(metadata, depth);
+                beforeChildDefault(metadata, depth);
+                break;
+        }
+    }
+
+    @Override
+    public void afterChild(Metadata metadata, Metadata child, boolean hasNext, int depth) {
+        switch (metadata.type()) {
+            case WHEN:
+                afterChildWhen((WhenMetadata) metadata, child, hasNext, depth);
+                break;
+            case UNARY_PREDICATE:
+                afterChildUnary((UnaryPredicateMetadata) metadata, child, hasNext, depth);
+                break;
+            case RULE:
+                afterChildRule((RuleMetadata) metadata, child, hasNext, depth);
+                break;
+            case LEAF_PREDICATE:
+                throw new IllegalStateException("no visit : there is no children");
+            case FIELD_PREDICATE:
+            case FIELD_PREDICATE_MATCH_ANY:
+            case BINARY_PREDICATE:
+                afterChildBinary((BinaryPredicateMetadata) metadata, child, hasNext, depth);
+                break;
+            case MAPPING_INPUT:
+            case MAPPING_LEAF:
+            case SINGLE_MAPPING:
+            case MULTIPLE_MAPPING:
+            case THEN_MAPPING:
+            case ELSE_MAPPING:
+                afterChildMappingRule(metadata, child, hasNext, depth);
+                break;
+            case NARY_PREDICATE:
+                afterChildNary((NaryPredicateMetadata) metadata, child, hasNext, depth);
+                break;
+            case TYPE_CONVERTER:
+            case TYPE_CONVERTER_IDENTITY:
+                afterChildTypeConverter((ConverterMetadata) metadata, child, hasNext, depth);
+                break;
+            default:
+                afterChildDefault(metadata, child, hasNext, depth);
                 break;
         }
     }
@@ -156,7 +202,10 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void startDefault(Metadata metadata, int depth) {
     }
 
-    public void visitDefault(Metadata metadata, int depth) {
+    public void beforeChildDefault(Metadata metadata, int depth) {
+    }
+
+    public void afterChildDefault(Metadata metadata, Metadata child, boolean hasNext, int depth) {
     }
 
     public void endDefault(Metadata metadata, int depth) {
@@ -176,6 +225,12 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void startUnary(UnaryPredicateMetadata metadata, int depth) {
     }
 
+    public void beforeChildUnary(UnaryPredicateMetadata metadata, Metadata child, int depth) {
+    }
+
+    public void afterChildUnary(UnaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    }
+
     public void endUnary(UnaryPredicateMetadata metadata, int depth) {
     }
 
@@ -184,7 +239,10 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void startBinary(BinaryPredicateMetadata metadata, int depth) {
     }
 
-    public void visitBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void beforeChildBinary(BinaryPredicateMetadata metadata, Metadata child, int depth) {
+    }
+
+    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
     }
 
     public void endBinary(BinaryPredicateMetadata metadata, int depth) {
@@ -198,6 +256,12 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void visitNary(NaryPredicateMetadata metadata, int depth) {
     }
 
+    public void beforeChildNary(NaryPredicateMetadata metadata, Metadata child, int depth) {
+    }
+
+    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    }
+
     public void endNary(NaryPredicateMetadata metadata, int depth) {
     }
 
@@ -207,6 +271,11 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     // visit rule is impossible because there is only one child
+    public void beforeChildRule(RuleMetadata metadata, Metadata child, int depth) {
+    }
+
+    public void afterChildRule(RuleMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    }
 
     public void endRule(RuleMetadata metadata, int depth) {
     }
@@ -216,7 +285,11 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void startWhen(WhenMetadata metadata, int depth) {
     }
 
-    // visit when is impossible because there is only one child
+    public void beforeChildWhen(WhenMetadata metadata, Metadata child, int depth) {
+    }
+
+    public void afterChildWhen(WhenMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    }
 
     public void endWhen(WhenMetadata metadata, int depth) {
     }
@@ -226,7 +299,10 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void startTypeConverter(ConverterMetadata metadata, int depth) {
     }
 
-    public void visitTypeConverter(ConverterMetadata metadata, int depth) {
+    public void beforeChildTypeConverter(ConverterMetadata metadata, Metadata child, int depth) {
+    }
+
+    public void afterChildTypeConverter(ConverterMetadata metadata, Metadata child, boolean hasNext, int depth) {
     }
 
     public void endTypeConverter(ConverterMetadata metadata, int depth) {
@@ -237,7 +313,10 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void startMappingRule(Metadata metadata, int depth) {
     }
 
-    public void visitMappingRule(Metadata metadata, int depth) {
+    public void beforeChildMappingRule(Metadata metadata, Metadata child, int depth) {
+    }
+
+    public void afterChildMappingRule(Metadata metadata, Metadata child, boolean hasNext, int depth) {
     }
 
     public void endMappingRule(Metadata metadata, int depth) {

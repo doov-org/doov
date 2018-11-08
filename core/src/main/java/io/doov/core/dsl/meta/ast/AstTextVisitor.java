@@ -64,11 +64,13 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitBinary(BinaryPredicateMetadata metadata, int depth) {
-        sb.delete(getNewLineIndex(), sb.length());
-        sb.append(" ");
-        sb.append(bundle.get(metadata.getOperator(), locale));
-        sb.append(formatNewLine());
+    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+        if (hasNext) {
+            sb.delete(getNewLineIndex(), sb.length());
+            sb.append(" ");
+            sb.append(bundle.get(metadata.getOperator(), locale));
+            sb.append(formatNewLine());
+        }
     }
 
     @Override
@@ -107,7 +109,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitTypeConverter(ConverterMetadata metadata, int depth) {
+    public void endTypeConverter(ConverterMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatLeafMetadata(metadata));
         sb.append(formatNewLine());
@@ -131,13 +133,18 @@ public class AstTextVisitor extends AbstractAstVisitor {
                 sb.append(formatOperator(MappingOperator._else));
                 sb.append(formatNewLine());
                 break;
+            case MAPPING_LEAF:
+                sb.append(formatCurrentIndent());
+                sb.append(formatLeafMetadata((LeafMetadata<?>) metadata));
+                sb.append(formatNewLine());
+                break;
             default:
                 break;
         }
     }
 
     @Override
-    public void visitMappingRule(Metadata metadata, int depth) {
+    public void afterChildMappingRule(Metadata metadata, Metadata child, boolean hasNext, int depth) {
         switch (metadata.type()) {
             case MAPPING_LEAF:
                 sb.append(formatCurrentIndent());
@@ -145,9 +152,11 @@ public class AstTextVisitor extends AbstractAstVisitor {
                 sb.append(formatNewLine());
                 break;
             case SINGLE_MAPPING:
-                sb.append(formatCurrentIndent());
-                sb.append(formatOperator(MappingOperator.to));
-                sb.append(formatNewLine());
+                if (hasNext) {
+                    sb.append(formatCurrentIndent());
+                    sb.append(formatOperator(MappingOperator.to));
+                    sb.append(formatNewLine());
+                }
                 break;
             default:
                 break;
@@ -187,7 +196,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
         }).collect(joining(" "));
     }
 
-        protected String formatOperator(Operator operator) {
+    protected String formatOperator(Operator operator) {
         return operator == null ? null : operator.readable();
     }
 

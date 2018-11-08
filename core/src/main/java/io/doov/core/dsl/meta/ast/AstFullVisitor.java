@@ -26,7 +26,7 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitDefault(Metadata metadata, int depth) {
+    public void afterChildDefault(Metadata metadata, Metadata child, boolean hasNext, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit Metadata ").append(metadata);
         sb.append("\n");
@@ -55,7 +55,7 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit BinaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
@@ -76,7 +76,7 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitNary(NaryPredicateMetadata metadata, int depth) {
+    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit NaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");

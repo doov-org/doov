@@ -65,12 +65,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         final int nbTrue = metadata.trueEvalCount();
         final int nbFalse = metadata.falseEvalCount();
         if (nbTrue == 0 && nbFalse == 0) {
-            return format_bar_not_available.format(new Object[] { cssClass.getWrapperClass(), cssClass.getBorderClass(),
-                    cssClass.getFillingClass() });
+            return format_bar_not_available.format(new Object[]{cssClass.getWrapperClass(), cssClass.getBorderClass(),
+                    cssClass.getFillingClass()});
         }
         final Double percentage = floor((nbTrue / ((double) nbTrue + nbFalse)) * 1000) / 10.0;
-        return format_bar_percentage.format(new Object[] { cssClass.getWrapperClass(), percentage,
-                cssClass.getBorderClass(), cssClass.getFillingClass(), percentage });
+        return format_bar_percentage.format(new Object[]{cssClass.getWrapperClass(), percentage,
+                cssClass.getBorderClass(), cssClass.getFillingClass(), percentage});
     }
 
     public String exclusionBar(ValidationRule rule, ExclusionBar cssClass) {
@@ -170,20 +170,22 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitBinary(BinaryPredicateMetadata metadata, int depth) {
-        if (metadata.getOperator() == and || metadata.getOperator() == or) {
-            write("<br>");
-        }
-        htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
+    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+        if (hasNext) {
+            if (metadata.getOperator() == and || metadata.getOperator() == or) {
+                write("<br>");
+            }
+            htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
-        if (metadata.getRight().type() == UNARY_PREDICATE) {
-            write(BEG_UL);
-            closeUn = true;
-        }
-        rightSideOfBinary = true;
+            if (metadata.getRight().type() == UNARY_PREDICATE) {
+                write(BEG_UL);
+                closeUn = true;
+            }
+            rightSideOfBinary = true;
 
-        if (metadata.getOperator() != and && metadata.getOperator() != or) {
-            noExclusionNextLeaf = true;
+            if (metadata.getOperator() != and && metadata.getOperator() != or) {
+                noExclusionNextLeaf = true;
+            }
         }
     }
 
@@ -273,7 +275,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // metadata
     @Override
-    public void visitDefault(Metadata metadata, int depth) {
+    public void afterChildDefault(Metadata metadata, Metadata child, boolean hasNext, int depth) {
         write(metadata.readable());
     }
 
