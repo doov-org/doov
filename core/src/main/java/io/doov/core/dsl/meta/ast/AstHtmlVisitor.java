@@ -5,10 +5,7 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
-import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.WHEN;
+import static io.doov.core.dsl.meta.MetadataType.*;
 import static java.lang.Math.floor;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
@@ -243,7 +240,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         write(BEG_LI);
         htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
-        if (metadata.children().collect(toList()).get(0).type() != MetadataType.LEAF_PREDICATE) {
+        if (metadata.children().collect(toList()).get(0).type() != LEAF_PREDICATE) {
             write(BEG_UL);
             closeUnaryUL++;
         }
@@ -287,7 +284,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     protected void formatLeafOperator(Element e) {
-        htmlFormatSpan("dsl-token-operator", bundle.get((Operator) e.getReadable(), locale));
+        htmlFormatSpan("dsl-token-operator", escapeHtml4(bundle.get((Operator) e.getReadable(), locale)));
     }
 
     protected void formatTemporalUnit(Element e) {
@@ -304,14 +301,14 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     protected void formatLeafValue(Element e) {
         if (e.getType() == STRING_VALUE) {
-            htmlFormatSpan("dsl-token-value", "'" + bundle.get(e.getReadable().readable(), locale) + "'");
+            htmlFormatSpan("dsl-token-value", "'" + escapeHtml4(bundle.get(e.getReadable().readable(), locale)) + "'");
         } else {
-            htmlFormatSpan("dsl-token-value", bundle.get(e.getReadable().readable(), locale));
+            htmlFormatSpan("dsl-token-value", escapeHtml4(bundle.get(e.getReadable().readable(), locale)));
         }
     }
 
     protected void formatLeafUnknown(Element e) {
-        htmlFormatSpan("dsl-token-unknown", bundle.get(e.getReadable().readable(), locale));
+        htmlFormatSpan("dsl-token-unknown", escapeHtml4(bundle.get(e.getReadable().readable(), locale)));
     }
 
     protected void htmlFormatSpan(String cssClass, String content) {

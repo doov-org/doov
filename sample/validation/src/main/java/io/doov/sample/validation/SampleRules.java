@@ -159,7 +159,7 @@ public class SampleRules extends DefaultRuleRegistry {
         final File output = new File("validation_rule.html");
         final List<ValidationRule> rules = REGISTRY_DEFAULT.stream().collect(toList());
         try (FileOutputStream fos = new FileOutputStream(output)) {
-            IOUtils.write("<html><head><meta charset=\"UTF-8\"><style>"
+            IOUtils.write("<html><head><meta charset=\"UTF-8\"/><style>"
                             + IOUtils.toString(AstVisitorUtils.class.getResourceAsStream("rules.css"), defaultCharset())
                             + "</style></head><body>", fos, defaultCharset());
             IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());;
