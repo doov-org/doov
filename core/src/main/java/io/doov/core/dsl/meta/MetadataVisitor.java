@@ -12,6 +12,8 @@
  */
 package io.doov.core.dsl.meta;
 
+import java.util.Iterator;
+
 public interface MetadataVisitor {
 
     // Metadata
@@ -21,5 +23,17 @@ public interface MetadataVisitor {
     void visit(Metadata metadata, int depth);
 
     void end(Metadata metadata, int depth);
+    
+    default void browse(Metadata root, int depth) {
+        start(root, depth);
+        final Iterator<Metadata> it = root.children().iterator();
+        while (it.hasNext()) {
+            final Metadata v = it.next();
+            browse(v, depth + 1);
+            if (it.hasNext())
+                visit(root, depth);
+        }
+        end(root, depth);
+    }
 
 }

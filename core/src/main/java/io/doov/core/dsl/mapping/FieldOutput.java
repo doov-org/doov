@@ -37,7 +37,7 @@ public class FieldOutput<T> implements MappingOutput<T> {
     }
 
     public void accept(MetadataVisitor visitor, int depth) {
-        metadata.accept(visitor, depth);
+        visitor.browse(metadata, depth);
     }
 
 }

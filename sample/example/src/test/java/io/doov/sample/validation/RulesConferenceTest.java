@@ -47,7 +47,7 @@ public class RulesConferenceTest {
         StringBuilder sb = new StringBuilder();
         REGISTRY_DEFAULT.stream()
                         .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> rule.metadata().accept(new AstFullVisitor(sb), 0));
+                        .forEach(rule -> new AstFullVisitor(sb).browse(rule.metadata(), 0));
         System.out.println(sb.toString());
     }
 
