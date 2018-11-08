@@ -236,7 +236,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     // unary metadata
     @Override
-    public void visitUnary(UnaryPredicateMetadata metadata, int depth) {
+    public void startUnary(UnaryPredicateMetadata metadata, int depth) {
         write(BEG_LI);
         htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
