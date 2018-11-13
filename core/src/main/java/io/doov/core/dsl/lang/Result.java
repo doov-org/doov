@@ -42,7 +42,18 @@ public interface Result {
      * @param locale the desire locale for the failure cause
      * @return the failure cause, if failed
      */
-    String getFailureCause(Locale locale);
+    default String getFailureCause(Locale locale) {
+        if (isTrue())
+            return null;
+        return reduce(locale);
+    }
+
+    /**
+     * Returns the predicate reduction. This will reduce the syntax tree using execution values to output the minimum tree.
+     * @param locale the desire locale for the predicate reduction
+     * @return the reduce
+     */
+    String reduce(Locale locale);
 
     /**
      * Returns the failure cause of the failed predicate. This will reduce the syntax tree using execution values to output
@@ -52,6 +63,15 @@ public interface Result {
      */
     default String getFailureCause() {
         return getFailureCause(Locale.getDefault());
+    }
+
+    /**
+     * Returns the predicate reduction. This will reduce the syntax tree using execution values to output the minimum tree.
+     *
+     * @return the reduce
+     */
+    default String reduce() {
+        return reduce(Locale.getDefault());
     }
 
     /**

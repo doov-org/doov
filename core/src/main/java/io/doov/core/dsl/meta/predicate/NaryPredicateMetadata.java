@@ -75,11 +75,11 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
     public PredicateMetadata merge(LeafMetadata<?> other) {
         final List<Element> elts = other.elements().stream().collect(Collectors.toList());
         if (elts.get(0).getType() == OPERATOR && (elts.get(0).getReadable() == sum || elts.get(0).getReadable() == min
-                        || elts.get(0).getReadable() == count)) {
+                || elts.get(0).getReadable() == count)) {
             // special case to build : count (predicate ...) operator value
             return new BinaryPredicateMetadata(this, (Operator) elts.get(elts.size() - 2).getReadable(),
-                            new LeafPredicateMetadata<>(LEAF_PREDICATE)
-                                            .valueReadable(elts.get(elts.size() - 1).getReadable()));
+                    new LeafPredicateMetadata<>(LEAF_PREDICATE)
+                            .valueReadable(elts.get(elts.size() - 1).getReadable()));
         }
         return new NaryPredicateMetadata(new ComposeOperator(getOperator(), other), getValues());
     }
@@ -88,48 +88,56 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
     public Metadata message(Context context) {
         if (getOperator() == match_all && context.isEvalFalse(this)) {
             final List<Metadata> childMsgs = children().filter(md -> context.isEvalFalse(md))
-                            .map(md -> md.message(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
-                            .collect(toList());
+                    .map(md -> md.message(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
+                    .collect(toList());
             if (childMsgs.size() == 1)
                 return childMsgs.get(0);
             return new NaryPredicateMetadata(getOperator(), childMsgs);
         }
         if (getOperator() == match_all && context.isEvalTrue(this)) {
             return new EmptyMetadata();
-        } else if (getOperator() == match_any) {
+        } else if (getOperator() == match_any && context.isEvalTrue(this)) {
             final List<Metadata> childMsgs = children().filter(md -> context.isEvalFalse(md))
-                            .map(md -> md.message(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
-                            .collect(toList());
+                    .map(md -> md.message(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
+                    .collect(toList());
             if (childMsgs.size() == 1)
                 return childMsgs.get(0);
             return new NaryPredicateMetadata(getOperator(), childMsgs);
         } else if (getOperator() == sum) {
-            return new NaryPredicateMetadata(sum, children().filter(md -> {
-                if (md.type() != FIELD_PREDICATE)
-                    return true;
-                final List<Element> elements = md.flatten();
-                if (elements.size() < 1)
-                    return true;
-                if (elements.get(0).getType() != FIELD)
-                    return true;
-                final Object value = context.getEvalValue(((DslField<?>) elements.get(0).getReadable()).id());
-                if (value == null)
-                    return false;
-                try {
-                    return Double.parseDouble(value.toString()) != 0;
-                } catch (NumberFormatException e) {
-                    return true;
-                }
-            }).map(md -> md.message(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
-                            .collect(toList()));
+            return new NaryPredicateMetadata(sum, children().filter(md -> sumContentFilter(context, md))
+                    .map(md -> md.message(context))
+                    .filter(Objects::nonNull)
+                    .filter(md -> EMPTY != md.type())
+                    .collect(toList()));
         } else if (getOperator() == count) {
             final List<Metadata> childMsgs = children().filter(md -> context.isEvalFalse(md))
-                            .map(md -> md.message(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
-                            .collect(toList());
+                    .map(md -> md.message(context))
+                    .filter(Objects::nonNull)
+                    .filter(md -> EMPTY != md.type())
+                    .collect(toList());
             return rewriteCount(childMsgs);
         }
         return new NaryPredicateMetadata(getOperator(), children().map(md -> md.message(context))
-                        .filter(Objects::nonNull).filter(md -> EMPTY != md.type()).collect(toList()));
+                .filter(Objects::nonNull).filter(md -> EMPTY != md.type()).collect(toList()));
+    }
+
+    private static boolean sumContentFilter(Context context, Metadata md) {
+        if (md.type() != FIELD_PREDICATE)
+            return true;
+        final List<Element> elements = md.flatten();
+        if (elements.size() < 1)
+            return true;
+        if (elements.get(0).getType() != FIELD)
+            return true;
+        final Object value = context.getEvalValue(((DslField<?>) elements.get(0).getReadable()).id());
+        if (value == null)
+            return false;
+        try {
+            return Double.parseDouble(value.toString()) != 0;
+        } catch (NumberFormatException e) {
+            return true;
+        }
+
     }
 
     private static Metadata rewriteCount(List<Metadata> childMsgs) {

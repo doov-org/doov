@@ -4,7 +4,11 @@
 package io.doov.sample.validation;
 
 import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.core.dsl.DOOV.*;
+import static io.doov.core.dsl.DOOV.alwaysFalse;
+import static io.doov.core.dsl.DOOV.alwaysTrue;
+import static io.doov.core.dsl.DOOV.matchAll;
+import static io.doov.core.dsl.DOOV.matchAny;
+import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
@@ -22,8 +26,11 @@ import io.doov.core.BaseFieldModel;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.predicate.*;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.model.Country;
 
@@ -31,7 +38,17 @@ public class CanonicalMessageTest {
     private final FieldModel model = new BaseFieldModel(emptyList());
 
     @Test
-    void matchAny_values() {
+    public void _issue_1() {
+        model.set(SampleFieldId.CONFIGURATION_EMAIL_MAX_SIZE, 1);
+        final Result result = DOOV
+                .when(matchAny(sum(configurationMaxEmailSize).greaterThan(100)))
+                .validate().withShortCircuit(false).executeOn(model);
+        assertThat(result).isFalse();
+        System.out.println(result.getFailureCause());
+    }
+
+    @Test
+    public void matchAny_values() {
         model.set(SampleFieldId.COUNTRY, Country.FR);
         final Result result = DOOV.when(accountCountry.anyMatch(Country.FR, Country.CAN)).validate()
                 .withShortCircuit(false).executeOn(model);
@@ -58,8 +75,10 @@ public class CanonicalMessageTest {
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
-        assertThat(result.getContext().getRootMetadata().children()).element(0).isInstanceOf(BinaryPredicateMetadata.class);
-        assertThat(result.getContext().getRootMetadata().children()).element(1).isInstanceOf(BinaryPredicateMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).element(0)
+                .isInstanceOf(BinaryPredicateMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).element(1)
+                .isInstanceOf(BinaryPredicateMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         System.out.println(">> " + msg.readable());
@@ -112,8 +131,10 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
         assertThat(msg).isInstanceOf(UnaryPredicateMetadata.class);
         assertThat(msg.children()).element(0).isInstanceOf(BinaryPredicateMetadata.class);
-        assertThat(msg.children().collect(toList()).get(0).children()).element(0).isInstanceOf(BinaryPredicateMetadata.class);
-        assertThat(msg.children().collect(toList()).get(0).children()).element(1).isInstanceOf(BinaryPredicateMetadata.class);
+        assertThat(msg.children().collect(toList()).get(0).children()).element(0)
+                .isInstanceOf(BinaryPredicateMetadata.class);
+        assertThat(msg.children().collect(toList()).get(0).children()).element(1)
+                .isInstanceOf(BinaryPredicateMetadata.class);
         System.out.println(">> " + msg.readable());
     }
 
@@ -215,7 +236,8 @@ public class CanonicalMessageTest {
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
-        assertThat(result.getContext().getRootMetadata().children()).element(1).isInstanceOf(BinaryPredicateMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).element(1)
+                .isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(1).children()).hasSize(2);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
@@ -235,7 +257,8 @@ public class CanonicalMessageTest {
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
-        assertThat(result.getContext().getRootMetadata().children()).element(1).isInstanceOf(BinaryPredicateMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).element(1)
+                .isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(1).children()).hasSize(2);
 
         final Metadata msg = result.getContext().getRootMetadata().message(result.getContext());
@@ -279,7 +302,8 @@ public class CanonicalMessageTest {
         assertThat(msg.children().collect(toList()).get(0).children()).hasSize(1);
         assertThat(msg.children()).element(0).isInstanceOf(NaryPredicateMetadata.class);
         assertThat(((NaryPredicateMetadata) msg.children().collect(toList()).get(0)).getOperator()).isEqualTo(sum);
-        assertThat(msg.children().collect(toList()).get(0).children()).element(0).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(msg.children().collect(toList()).get(0).children()).element(0)
+                .isInstanceOf(LeafPredicateMetadata.class);
     }
 
     @Test
@@ -293,10 +317,12 @@ public class CanonicalMessageTest {
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
-        assertThat(result.getContext().getRootMetadata().children()).element(0).isInstanceOf(NaryPredicateMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).element(0)
+                .isInstanceOf(NaryPredicateMetadata.class);
         assertThat(((NaryPredicateMetadata) result.getContext().getRootMetadata().children().collect(toList()).get(0))
                 .getOperator()).isEqualTo(sum);
-        assertThat(result.getContext().getRootMetadata().children()).element(1).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).element(1)
+                .isInstanceOf(LeafPredicateMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).hasSize(2);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(0)
                 .isInstanceOf(LeafPredicateMetadata.class);
@@ -325,7 +351,8 @@ public class CanonicalMessageTest {
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(result.getContext().getRootMetadata().children()).hasSize(2);
-        assertThat(result.getContext().getRootMetadata().children()).element(0).isInstanceOf(NaryPredicateMetadata.class);
+        assertThat(result.getContext().getRootMetadata().children()).element(0)
+                .isInstanceOf(NaryPredicateMetadata.class);
         assertThat(((NaryPredicateMetadata) result.getContext().getRootMetadata().children().collect(toList()).get(0))
                 .getOperator()).isEqualTo(count);
         assertThat(result.getContext().getRootMetadata().children()).element(1)
