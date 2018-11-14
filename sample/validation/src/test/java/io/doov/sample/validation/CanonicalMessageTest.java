@@ -38,13 +38,23 @@ public class CanonicalMessageTest {
     private final FieldModel model = new BaseFieldModel(emptyList());
 
     @Test
-    public void _issue_1() {
+    public void matchAny_sum() {
         model.set(SampleFieldId.CONFIGURATION_EMAIL_MAX_SIZE, 1);
         final Result result = DOOV
                 .when(matchAny(sum(configurationMaxEmailSize).greaterThan(100)))
                 .validate().withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse();
         System.out.println(result.getFailureCause());
+    }
+
+    @Test
+    public void matchAny_sum_reduce() {
+        model.set(SampleFieldId.CONFIGURATION_EMAIL_MAX_SIZE, 200);
+        final Result result = DOOV
+                .when(matchAny(sum(configurationMaxEmailSize).greaterThan(100)))
+                .validate().withShortCircuit(false).executeOn(model);
+        assertThat(result).isTrue();
+        System.out.println(result.reduce());
     }
 
     @Test

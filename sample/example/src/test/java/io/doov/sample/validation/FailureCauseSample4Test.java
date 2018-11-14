@@ -34,7 +34,7 @@ public class FailureCauseSample4Test {
 
     private final SampleModelRule rule = DslSampleModel.when(accountCountry.anyMatch(CAN, FR)).validate();
 
-    private final Locale locale = Locale.FRENCH;
+    private final Locale locale = Locale.FRANCE;
     private final SampleModel model = new SampleModel();
 
     @BeforeEach
@@ -50,7 +50,9 @@ public class FailureCauseSample4Test {
     @Test
     public void getFailureCause_setup_0() {
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
+        assertThat(result)
+                .hasFailureCause("le pays != null", locale)
+                .isFalse();
         System.out.println("> " + result.getFailureCause(locale));
     }
 
@@ -59,7 +61,9 @@ public class FailureCauseSample4Test {
         model.getAccount().setCountry(UK);
 
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
+        assertThat(result)
+                .hasFailureCause("le pays != UK", locale)
+                .isFalse();
         System.out.println("> " + result.getFailureCause(locale));
     }
 
@@ -68,7 +72,7 @@ public class FailureCauseSample4Test {
         model.getAccount().setCountry(CAN);
 
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isTrue();
+        assertThat(result).hasFailureCause(null).isTrue();
         System.out.println("> " + result.getFailureCause(locale));
     }
 

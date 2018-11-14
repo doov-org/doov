@@ -52,13 +52,17 @@ public class FailureCauseSample1Test {
 
     @AfterEach
     public void blankline() {
-        System.out.println("");
+        System.out.println();
     }
 
     @Test
     public void getFailureCause_setup_1() {
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
+        assertThat(result)
+                .isFalse()
+                .hasFailureCause("(account email length is < 20 and (user birthdate age at today > 18 and account " +
+                                "country = FR)) and (account country = FR and account phone number starts with '+33')",
+                        locale);
         System.out.println("> " + result.getFailureCause(locale));
     }
 
@@ -67,8 +71,10 @@ public class FailureCauseSample1Test {
         model.getAccount().setEmail("test@test.org");
 
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
-
+        assertThat(result)
+                .isFalse()
+                .hasFailureCause("(user birthdate age at today > 18 and account country = FR) and (account country = " +
+                        "FR and account phone number starts with '+33')", locale);
         System.out.println("> " + result.getFailureCause(locale));
     }
 
@@ -78,7 +84,10 @@ public class FailureCauseSample1Test {
         model.getUser().setBirthDate(LocalDate.now().minusYears(19));
 
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
+        assertThat(result)
+                .isFalse()
+                .hasFailureCause("account country = FR and (account country = FR and account phone number starts with" +
+                        " '+33')", locale);
 
         System.out.println("> " + result.getFailureCause(locale));
     }
@@ -90,7 +99,9 @@ public class FailureCauseSample1Test {
         model.getAccount().setCountry(Country.FR);
 
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
+        assertThat(result)
+                .isFalse()
+                .hasFailureCause("account phone number starts with '+33'", locale);
 
         System.out.println("> " + result.getFailureCause(locale));
     }
@@ -103,7 +114,7 @@ public class FailureCauseSample1Test {
         model.getAccount().setPhoneNumber("+33 1 23 45 67 89");
 
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isTrue();
+        assertThat(result).isTrue().hasFailureCause(null);
 
         System.out.println("> " + result.getFailureCause(locale));
     }
