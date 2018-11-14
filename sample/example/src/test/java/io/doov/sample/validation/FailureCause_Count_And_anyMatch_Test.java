@@ -34,7 +34,7 @@ import io.doov.sample.model.SampleModel;
 public class FailureCause_Count_And_anyMatch_Test {
     private final SampleModelRule rule = when(alwaysFalse().and(accountCountry.anyMatch(FR))).validate();
 
-    private final Locale locale = Locale.FRENCH;
+    private final Locale locale = Locale.FRANCE;
     private final SampleModel model = new SampleModel();
 
     @BeforeEach
@@ -44,13 +44,13 @@ public class FailureCause_Count_And_anyMatch_Test {
 
     @AfterEach
     public void blankline() {
-        System.out.println("");
+        System.out.println();
     }
 
     @Test
     public void getFailureCause_0() {
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
+        assertThat(result).hasFailureCause("toujours faux et le pays != null", locale).isFalse();
         System.out.println("> " + result.getFailureCause(locale));
     }
 }
