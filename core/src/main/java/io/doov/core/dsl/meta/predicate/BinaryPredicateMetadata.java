@@ -49,17 +49,17 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
     }
 
     @Override
-    public Metadata message(Context context) {
+    public Metadata reduce(Context context) {
         if (getOperator() == or && context.isEvalTrue(getLeft()) && context.isEvalFalse(getRight()))
-            return getLeft().message(context);
+            return getLeft().reduce(context);
         else if (getOperator() == or && context.isEvalFalse(getLeft()) && context.isEvalTrue(getRight()))
-            return getRight().message(context);
+            return getRight().reduce(context);
         else if (getOperator() == and && context.isEvalTrue(getLeft()) && context.isEvalFalse(getRight()))
-            return getRight().message(context);
+            return getRight().reduce(context);
         else if (getOperator() == and && context.isEvalFalse(getLeft()) && context.isEvalTrue(getRight()))
-            return getLeft().message(context);
+            return getLeft().reduce(context);
         else if (getLeft().type() == NARY_PREDICATE && ((NaryPredicateMetadata) getLeft()).getOperator() == count)
-            return getLeft().message(context);
-        return new BinaryPredicateMetadata(getLeft().message(context), getOperator(), getRight().message(context));
+            return getLeft().reduce(context);
+        return new BinaryPredicateMetadata(getLeft().reduce(context), getOperator(), getRight().reduce(context));
     }
 }

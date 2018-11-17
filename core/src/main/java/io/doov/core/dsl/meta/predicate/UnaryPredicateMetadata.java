@@ -46,9 +46,9 @@ public class UnaryPredicateMetadata extends UnaryMetadata implements PredicateMe
      * https://en.wikipedia.org/wiki/Boolean_satisfiability_problem
      */
     @Override
-    public Metadata message(Context context) {
+    public Metadata reduce(Context context) {
         if (getOperator() == not)
             return this;
-        return new UnaryPredicateMetadata(getOperator(), getValue().message(context));
+        return new UnaryPredicateMetadata(getOperator(), getValue().reduce(context));
     }
 }

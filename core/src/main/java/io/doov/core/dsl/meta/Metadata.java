@@ -94,13 +94,13 @@ public interface Metadata extends Readable {
     MetadataType type();
 
     /**
-     * Returns the failure message from the given context. The message is returned in its shortest form by pruning
-     * branches in the evaluated syntax tree that are not needed for the failure message.
+     * Returns the reduce metadata tree from the given context. The metadata tree is returned in its shortest form by pruning
+     * branches in the evaluated syntax tree.
      *
      * @param context the evaluated context
      * @return the metadata
      */
-    default Metadata message(Context context) {
+    default Metadata reduce(Context context) {
         return this;
     }
 }

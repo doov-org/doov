@@ -87,7 +87,7 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
     }
 
     @Override
-    public Metadata message(Context context) {
+    public Metadata reduce(Context context) {
         if (type() == FIELD_PREDICATE_MATCH_ANY) {
             final DslField<?> field = (DslField<?>) elements().getFirst().getReadable();
             return new LeafPredicateMetadata<M>(FIELD_PREDICATE).field(field).operator(not_equals)
