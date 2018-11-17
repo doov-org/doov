@@ -43,8 +43,8 @@ public class DefaultResult implements Result {
 
     @Override
     public String reduce(Locale locale) {
-        if (context.getRootMetadata().message(context) == null)
+        if (context.getRootMetadata().reduce(context) == null)
             return null;
-        return context.getRootMetadata().message(context).readable(locale).trim();
+        return context.getRootMetadata().reduce(context).readable(locale).trim();
     }
 }

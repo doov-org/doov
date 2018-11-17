@@ -85,10 +85,10 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
     }
 
     @Override
-    public Metadata message(Context context) {
+    public Metadata reduce(Context context) {
         if (getOperator() == match_all && context.isEvalFalse(this)) {
             final List<Metadata> childMsgs = children().filter(md -> context.isEvalFalse(md))
-                    .map(md -> md.message(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
+                    .map(md -> md.reduce(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
                     .collect(toList());
             if (childMsgs.size() == 1)
                 return childMsgs.get(0);
@@ -98,26 +98,26 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
             return new EmptyMetadata();
         } else if (getOperator() == match_any && context.isEvalTrue(this)) {
             final List<Metadata> childMsgs = children().filter(md -> context.isEvalFalse(md))
-                    .map(md -> md.message(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
+                    .map(md -> md.reduce(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
                     .collect(toList());
             if (childMsgs.size() == 1)
                 return childMsgs.get(0);
             return new NaryPredicateMetadata(getOperator(), childMsgs);
         } else if (getOperator() == sum) {
             return new NaryPredicateMetadata(sum, children().filter(md -> sumContentFilter(context, md))
-                    .map(md -> md.message(context))
+                    .map(md -> md.reduce(context))
                     .filter(Objects::nonNull)
                     .filter(md -> EMPTY != md.type())
                     .collect(toList()));
         } else if (getOperator() == count) {
             final List<Metadata> childMsgs = children().filter(md -> context.isEvalFalse(md))
-                    .map(md -> md.message(context))
+                    .map(md -> md.reduce(context))
                     .filter(Objects::nonNull)
                     .filter(md -> EMPTY != md.type())
                     .collect(toList());
             return rewriteCount(childMsgs);
         }
-        return new NaryPredicateMetadata(getOperator(), children().map(md -> md.message(context))
+        return new NaryPredicateMetadata(getOperator(), children().map(md -> md.reduce(context))
                 .filter(Objects::nonNull).filter(md -> EMPTY != md.type()).collect(toList()));
     }
 
