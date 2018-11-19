@@ -114,9 +114,14 @@ public class FailureCauseSample1Test {
         model.getAccount().setPhoneNumber("+33 1 23 45 67 89");
 
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isTrue().hasFailureCause(null);
 
-        System.out.println("> " + result.getFailureCause(locale));
+        assertThat(result)
+                .isTrue()
+                .hasNoFailureCause()
+                .hasReduceMessage("(account email length is < 20 and (user birthdate age at today > 18 and account " +
+                        "country = FR)) and (account country = FR and account phone number starts with '+33')", locale);
+
+        System.out.println("> " + result.reduce(locale));
     }
 
 }

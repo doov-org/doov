@@ -51,8 +51,8 @@ public class FailureCauseSample4Test {
     public void getFailureCause_setup_0() {
         Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result)
-                .hasFailureCause("le pays != null", locale)
-                .isFalse();
+                .isFalse()
+                .hasFailureCause("le pays != null", locale);
         System.out.println("> " + result.getFailureCause(locale));
     }
 
@@ -62,8 +62,8 @@ public class FailureCauseSample4Test {
 
         Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result)
-                .hasFailureCause("le pays != UK", locale)
-                .isFalse();
+                .isFalse()
+                .hasFailureCause("le pays != UK", locale);
         System.out.println("> " + result.getFailureCause(locale));
     }
 
@@ -72,8 +72,12 @@ public class FailureCauseSample4Test {
         model.getAccount().setCountry(CAN);
 
         Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).hasFailureCause(null).isTrue();
-        System.out.println("> " + result.getFailureCause(locale));
+        assertThat(result)
+                .isTrue()
+                .hasNoFailureCause()
+                .hasReduceMessage("le pays != CAN", locale);
+
+        System.out.println("> " + result.reduce(locale));
     }
 
 }
