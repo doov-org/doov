@@ -15,6 +15,7 @@ package io.doov.core.dsl.impl;
 import java.util.Locale;
 
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.lang.Result;
 
 public class DefaultResult implements Result {
@@ -42,9 +43,9 @@ public class DefaultResult implements Result {
     }
 
     @Override
-    public String reduce(Locale locale) {
-        if (context.getRootMetadata().reduce(context) == null)
+    public String reduce(Locale locale, ReduceType type) {
+        if (context.getRootMetadata().reduce(context, type) == null)
             return null;
-        return context.getRootMetadata().reduce(context).readable(locale).trim();
+        return context.getRootMetadata().reduce(context, type).readable(locale).trim();
     }
 }

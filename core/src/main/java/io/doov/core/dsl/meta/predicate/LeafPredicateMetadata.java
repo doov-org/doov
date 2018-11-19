@@ -12,22 +12,37 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.DefaultOperator.always_false;
+import static io.doov.core.dsl.meta.DefaultOperator.always_true;
+import static io.doov.core.dsl.meta.DefaultOperator.equals;
+import static io.doov.core.dsl.meta.DefaultOperator.is_not_null;
+import static io.doov.core.dsl.meta.DefaultOperator.is_null;
+import static io.doov.core.dsl.meta.DefaultOperator.match_all;
+import static io.doov.core.dsl.meta.DefaultOperator.match_any;
+import static io.doov.core.dsl.meta.DefaultOperator.match_none;
+import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
+import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.Element.leftParenthesis;
 import static io.doov.core.dsl.meta.Element.rightParenthesis;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Deque;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
 
 public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends LeafMetadata<M>
         implements PredicateMetadata {
@@ -87,7 +102,7 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
     }
 
     @Override
-    public Metadata reduce(Context context) {
+    public Metadata reduce(Context context, ReduceType type) {
         if (type() == FIELD_PREDICATE_MATCH_ANY) {
             final DslField<?> field = (DslField<?>) elements().getFirst().getReadable();
             return new LeafPredicateMetadata<M>(FIELD_PREDICATE).field(field).operator(not_equals)

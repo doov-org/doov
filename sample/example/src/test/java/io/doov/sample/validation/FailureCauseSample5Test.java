@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.*;
 
+import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.lang.Result;
 import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.field.dsl.DslSampleModel.SampleModelRule;
@@ -80,7 +81,7 @@ public class FailureCauseSample5Test {
                 .hasNoFailureCause()
                 .hasReduceMessage("");
 
-        System.out.println("> " + result.reduce(locale));
+        System.out.println("> " + result.reduce(locale, ReduceType.FAILURE));
     }
 
     @Test
@@ -95,7 +96,7 @@ public class FailureCauseSample5Test {
                 .hasNoFailureCause()
                 .hasReduceMessage("la date de naissance âge à la date du jour > 18", locale);
 
-        System.out.println("> " + result.reduce(locale));
+        System.out.println("> " + result.reduce(locale, ReduceType.FAILURE));
     }
 
     @Test

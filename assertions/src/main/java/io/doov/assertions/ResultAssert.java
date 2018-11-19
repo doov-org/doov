@@ -14,11 +14,14 @@ package io.doov.assertions;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import org.assertj.core.api.AbstractAssert;
 
 import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.meta.Metadata;
 
@@ -120,9 +123,9 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert hasReduceMessage(String message, Locale locale) {
-        if (!Objects.equals(actual.reduce(locale), message)) {
+        if (!Objects.equals(actual.reduce(locale, ReduceType.SUCCESS), message)) {
             failWithMessage("Expected result reduce to have message '" + message + "' but was '" +
-                    actual.reduce(locale) + "'");
+                    actual.reduce(locale, ReduceType.SUCCESS) + "'");
         }
         return this;
     }
@@ -133,8 +136,8 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert hasNoReduceMessage() {
-        if (actual.reduce() != null) {
-            failWithMessage("Expected result to null reduce message but was " + actual.reduce());
+        if (actual.reduce(ReduceType.SUCCESS) != null) {
+            failWithMessage("Expected result to null reduce message but was " + actual.reduce(ReduceType.SUCCESS));
         }
         return this;
     }
