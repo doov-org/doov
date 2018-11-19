@@ -84,6 +84,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
         }
         return this;
     }
+
     /**
      * Verifies that the result message is null.
      *
@@ -92,6 +93,48 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
     public ResultAssert hasNoFailureCause() {
         if (actual.getFailureCause() != null) {
             failWithMessage("Expected result to null message but was " + actual.getFailureCause());
+        }
+        return this;
+    }
+
+    /**
+     * Verifies that the reduce message is equal to the given one.
+     * <b>Beware : </b>only use this version if you do not use l10n feature
+     * otherwise your tests will be locale dependant
+     * <br>
+     * If you use l10n, please use #hasReduceMessage(String message, Locale locale)
+     *
+     * @param message the reduce message
+     * @return self
+     */
+    public ResultAssert hasReduceMessage(String message) {
+        return hasReduceMessage(message, Locale.getDefault());
+    }
+
+    /**
+     * Verifies that the reduce message is equal to the given one.
+     * Locale control to make tests independent from system locale
+     *
+     * @param message the reduce message
+     * @param locale locale
+     * @return self
+     */
+    public ResultAssert hasReduceMessage(String message, Locale locale) {
+        if (!Objects.equals(actual.reduce(locale), message)) {
+            failWithMessage("Expected result reduce to have message '" + message + "' but was '" +
+                    actual.reduce(locale) + "'");
+        }
+        return this;
+    }
+
+    /**
+     * Verifies that the result message is null.
+     *
+     * @return self
+     */
+    public ResultAssert hasNoReduceMessage() {
+        if (actual.reduce() != null) {
+            failWithMessage("Expected result to null reduce message but was " + actual.reduce());
         }
         return this;
     }

@@ -26,6 +26,7 @@ import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
 import java.time.LocalDate;
 import java.util.Locale;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 
 import io.doov.core.dsl.lang.Result;
@@ -67,11 +68,11 @@ public class FailureCauseSample3Test {
     public void getFailureCause_setup_1() {
         Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result)
+                .isFalse()
                 .hasFailureCause("correspond à au moins un [correspond à tous [la date de naissance âge à la date du " +
                         "jour > 18, le pays = FR, le numéro de téléphone commence par '+33'], correspond à tous [la " +
                         "date de naissance âge à la date du jour > 21, le pays = CAN, le numéro de téléphone commence" +
-                        " par '+1']]", locale)
-                .isFalse();
+                        " par '+1']]", locale);
         System.out.println("> " + result.getFailureCause(locale));
     }
 
@@ -81,10 +82,10 @@ public class FailureCauseSample3Test {
 
         Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result)
+                .isFalse()
                 .hasFailureCause("correspond à au moins un [correspond à tous [le pays = FR, le numéro de téléphone " +
                         "commence par '+33'], correspond à tous [le pays = CAN, le numéro de téléphone commence par " +
-                        "'+1']]", locale)
-                .isFalse();
+                        "'+1']]", locale);
 
         System.out.println("> " + result.getFailureCause(locale));
     }
@@ -96,9 +97,9 @@ public class FailureCauseSample3Test {
 
         Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result)
+                .isFalse()
                 .hasFailureCause("correspond à au moins un [le numéro de téléphone commence par '+33', correspond à " +
-                        "tous [le pays = CAN, le numéro de téléphone commence par '+1']]", locale)
-                .isFalse();
+                        "tous [le pays = CAN, le numéro de téléphone commence par '+1']]", locale);
 
         System.out.println("> " + result.getFailureCause(locale));
     }
@@ -111,9 +112,11 @@ public class FailureCauseSample3Test {
 
         Result result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result)
-                .hasFailureCause(null)
-                .isTrue();
+                .isTrue()
+                .hasNoFailureCause()
+                .hasReduceMessage("correspond à tous [la date de naissance âge à la date du jour > 18, le " +
+                "pays = FR, le numéro de téléphone commence par '+33']", locale);
 
-        System.out.println("> " + result.getFailureCause(locale));
+        System.out.println("> " + result.reduce(locale));
     }
 }
