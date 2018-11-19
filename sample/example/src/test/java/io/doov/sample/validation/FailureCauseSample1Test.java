@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.*;
 
+import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.lang.Result;
 import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.field.dsl.DslSampleModel.SampleModelRule;
@@ -121,7 +122,7 @@ public class FailureCauseSample1Test {
                 .hasReduceMessage("(account email length is < 20 and (user birthdate age at today > 18 and account " +
                         "country = FR)) and (account country = FR and account phone number starts with '+33')", locale);
 
-        System.out.println("> " + result.reduce(locale));
+        System.out.println("> " + result.reduce(locale, ReduceType.FAILURE));
     }
 
 }

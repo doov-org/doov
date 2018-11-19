@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.*;
 
+import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.lang.Result;
 import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.field.dsl.DslSampleModel.SampleModelRule;
@@ -77,7 +78,7 @@ public class FailureCauseSample4Test {
                 .hasNoFailureCause()
                 .hasReduceMessage("le pays != CAN", locale);
 
-        System.out.println("> " + result.reduce(locale));
+        System.out.println("> " + result.reduce(locale, ReduceType.FAILURE));
     }
 
 }

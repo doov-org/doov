@@ -14,11 +14,14 @@ package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 /**
@@ -98,9 +101,10 @@ public interface Metadata extends Readable {
      * branches in the evaluated syntax tree.
      *
      * @param context the evaluated context
+     * @param type the type of reduction
      * @return the metadata
      */
-    default Metadata reduce(Context context) {
+    default Metadata reduce(Context context, ReduceType type) {
         return this;
     }
 }

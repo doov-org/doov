@@ -20,7 +20,10 @@ import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.lang.ReduceType;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.Operator;
 
 public class BinaryPredicateMetadata extends BinaryMetadata implements PredicateMetadata {
     private final AtomicInteger evalTrue = new AtomicInteger();
@@ -49,17 +52,17 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
     }
 
     @Override
-    public Metadata reduce(Context context) {
+    public Metadata reduce(Context context, ReduceType type) {
         if (getOperator() == or && context.isEvalTrue(getLeft()) && context.isEvalFalse(getRight()))
-            return getLeft().reduce(context);
+            return getLeft().reduce(context, type);
         else if (getOperator() == or && context.isEvalFalse(getLeft()) && context.isEvalTrue(getRight()))
-            return getRight().reduce(context);
+            return getRight().reduce(context, type);
         else if (getOperator() == and && context.isEvalTrue(getLeft()) && context.isEvalFalse(getRight()))
-            return getRight().reduce(context);
+            return getRight().reduce(context, type);
         else if (getOperator() == and && context.isEvalFalse(getLeft()) && context.isEvalTrue(getRight()))
-            return getLeft().reduce(context);
+            return getLeft().reduce(context, type);
         else if (getLeft().type() == NARY_PREDICATE && ((NaryPredicateMetadata) getLeft()).getOperator() == count)
-            return getLeft().reduce(context);
-        return new BinaryPredicateMetadata(getLeft().reduce(context), getOperator(), getRight().reduce(context));
+            return getLeft().reduce(context, type);
+        return new BinaryPredicateMetadata(getLeft().reduce(context, type), getOperator(), getRight().reduce(context, type));
     }
 }

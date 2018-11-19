@@ -12,7 +12,13 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.count;
+import static io.doov.core.dsl.meta.DefaultOperator.match_all;
+import static io.doov.core.dsl.meta.DefaultOperator.match_any;
+import static io.doov.core.dsl.meta.DefaultOperator.match_none;
+import static io.doov.core.dsl.meta.DefaultOperator.min;
+import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.EMPTY;
@@ -27,7 +33,14 @@ import java.util.stream.Collectors;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.lang.ReduceType;
+import io.doov.core.dsl.meta.ComposeOperator;
+import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.EmptyMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.Operator;
 
 public class NaryPredicateMetadata extends NaryMetadata implements PredicateMetadata {
     private final AtomicInteger evalTrue = new AtomicInteger();
@@ -85,10 +98,10 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
     }
 
     @Override
-    public Metadata reduce(Context context) {
+    public Metadata reduce(Context context, ReduceType type) {
         if (getOperator() == match_all && context.isEvalFalse(this)) {
             final List<Metadata> children = children().filter(md -> context.isEvalFalse(md))
-                    .map(md -> md.reduce(context)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
+                    .map(md -> md.reduce(context, type)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
                     .collect(toList());
             if (children.size() == 1)
                 return children.get(0);
@@ -106,19 +119,19 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
             return new NaryPredicateMetadata(getOperator(), children);
         } else if (getOperator() == sum) {
             return new NaryPredicateMetadata(sum, children().filter(md -> sumContentFilter(context, md))
-                    .map(md -> md.reduce(context))
+                    .map(md -> md.reduce(context, type))
                     .filter(Objects::nonNull)
                     .filter(md -> EMPTY != md.type())
                     .collect(toList()));
         } else if (getOperator() == count) {
             final List<Metadata> children = children().filter(md -> context.isEvalFalse(md))
-                    .map(md -> md.reduce(context))
+                    .map(md -> md.reduce(context, type))
                     .filter(Objects::nonNull)
                     .filter(md -> EMPTY != md.type())
                     .collect(toList());
             return rewriteCount(children);
         }
-        return new NaryPredicateMetadata(getOperator(), children().map(md -> md.reduce(context))
+        return new NaryPredicateMetadata(getOperator(), children().map(md -> md.reduce(context, type))
                 .filter(Objects::nonNull).filter(md -> EMPTY != md.type()).collect(toList()));
     }
 

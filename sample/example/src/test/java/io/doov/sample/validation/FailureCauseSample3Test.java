@@ -29,6 +29,7 @@ import java.util.Locale;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 
+import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.lang.Result;
 import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.field.dsl.DslSampleModel.SampleModelRule;
@@ -117,6 +118,6 @@ public class FailureCauseSample3Test {
                 .hasReduceMessage("correspond à tous [la date de naissance âge à la date du jour > 18, le " +
                 "pays = FR, le numéro de téléphone commence par '+33']", locale);
 
-        System.out.println("> " + result.reduce(locale));
+        System.out.println("> " + result.reduce(locale, ReduceType.FAILURE));
     }
 }
