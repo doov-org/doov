@@ -106,7 +106,7 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
             if (children.size() == 1)
                 return children.get(0);
             return new NaryPredicateMetadata(getOperator(), children);
-        } else if (getOperator() == match_all && context.isEvalTrue(this)) {
+        } else if (getOperator() == match_all && context.isEvalTrue(this) && ReduceType.FAILURE == type) {
             return new EmptyMetadata();
         } else if (getOperator() == match_any && context.isEvalTrue(this)) {
             final List<Metadata> children = children().filter(md -> context.isEvalTrue(md))
