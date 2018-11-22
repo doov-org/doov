@@ -9,6 +9,7 @@ import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.sum;
+import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
 import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
@@ -298,7 +299,7 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(1)
                 .isInstanceOf(LeafPredicateMetadata.class);
 
-        final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
+        final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), SUCCESS);
         System.out.println(">> " + msg.readable());
 
         assertThat(msg).isInstanceOf(BinaryPredicateMetadata.class);
@@ -334,7 +335,7 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(1)
                 .isInstanceOf(LeafPredicateMetadata.class);
 
-        final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
+        final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), SUCCESS);
         System.out.println(">> " + msg.readable());
 
         assertThat(msg).isInstanceOf(BinaryPredicateMetadata.class);
@@ -371,7 +372,7 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(2)
                 .isInstanceOf(LeafPredicateMetadata.class);
 
-        final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
+        final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), SUCCESS);
         System.out.println(">> " + msg.readable());
 
         assertThat(msg).isInstanceOf(LeafPredicateMetadata.class);
