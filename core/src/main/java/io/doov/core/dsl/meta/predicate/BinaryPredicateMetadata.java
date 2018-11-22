@@ -51,17 +51,16 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
 
     @Override
     public Metadata reduce(Context context, ReduceType type) {
+        boolean result = context.isEvalTrue(this) || !context.isEvalFalse(this);
+        if (!result && type == ReduceType.SUCCESS) {
+            return new EmptyMetadata();
+        }
+        if (result && type == ReduceType.FAILURE) {
+            return new EmptyMetadata();
+        }
         boolean left = context.isEvalTrue(getLeft()) || !context.isEvalFalse(getLeft());
         boolean right = context.isEvalTrue(getRight()) || !context.isEvalFalse(getRight());
-
         if (getOperator() == and) {
-            boolean result = left && right;
-            if (!result && type == ReduceType.SUCCESS) {
-                return new EmptyMetadata();
-            }
-            if (result && type == ReduceType.FAILURE) {
-                return new EmptyMetadata();
-            }
             if (!right && left) {
                 return getRight().reduce(context, type);
             }
@@ -69,18 +68,11 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
                 return getLeft().reduce(context, type);
             }
         } else if (getOperator() == or) {
-            boolean result = left || right;
-            if (!result && type == ReduceType.SUCCESS) {
-                return new EmptyMetadata();
-            }
-            if (result && type == ReduceType.FAILURE) {
-                return new EmptyMetadata();
-            }
-            if (right && !left) {
-                return getRight().reduce(context, type);
-            }
-            if (left && !right) {
+            if (!right && left) {
                 return getLeft().reduce(context, type);
+            }
+            if (!left && right) {
+                return getRight().reduce(context, type);
             }
         } else if (getLeft().type() == NARY_PREDICATE && ((NaryPredicateMetadata) getLeft()).getOperator() == count) {
             return getLeft().reduce(context, type);
