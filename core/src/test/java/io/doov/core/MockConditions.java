@@ -37,7 +37,7 @@ class MockConditions {
     }
 
     public static StepCondition falseCondition(String readable) {
-        return new DefaultStepCondition(LeafPredicateMetadata.trueMetadata().valueReadable(() -> readable), (model, context) -> false);
+        return new DefaultStepCondition(LeafPredicateMetadata.falseMetadata().valueReadable(() -> readable), (model, context) -> false);
     }
 
     private static <T> RuntimeField<Object, T> runtimeModel(T value, String readable) {
