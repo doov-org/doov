@@ -43,6 +43,7 @@ import io.doov.core.dsl.meta.NaryMetadata;
 import io.doov.core.dsl.meta.Operator;
 
 public class NaryPredicateMetadata extends NaryMetadata implements PredicateMetadata {
+
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
 
@@ -99,24 +100,35 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
 
     @Override
     public Metadata reduce(Context context, ReduceType type) {
-        if (getOperator() == match_all && context.isEvalFalse(this)) {
-            final List<Metadata> children = children().filter(md -> context.isEvalFalse(md))
-                    .map(md -> md.reduce(context, type)).filter(Objects::nonNull).filter(md -> EMPTY != md.type())
-                    .collect(toList());
-            if (children.size() == 1)
-                return children.get(0);
-            return new NaryPredicateMetadata(getOperator(), children);
-        } else if (getOperator() == match_all && context.isEvalTrue(this) && ReduceType.FAILURE == type) {
-            return new EmptyMetadata();
-        } else if (getOperator() == match_any && context.isEvalTrue(this)) {
-            final List<Metadata> children = children().filter(md -> context.isEvalTrue(md))
-                    .filter(Objects::nonNull).filter(md -> EMPTY != md.type())
-                    .collect(toList());
-            if (children.size() == 1)
-                return children.get(0);
-            if (children.size() == 0)
+        if (getOperator() == match_all || getOperator() == match_any) {
+            boolean result = context.isEvalTrue(this) || !context.isEvalFalse(this);
+            if (!result && type == ReduceType.SUCCESS) {
                 return new EmptyMetadata();
-            return new NaryPredicateMetadata(getOperator(), children);
+            }
+            if (result && type == ReduceType.FAILURE) {
+                return new EmptyMetadata();
+            }
+            if (getOperator() == match_all && context.isEvalFalse(this)) {
+                final List<Metadata> children = children()
+                        .filter(md -> context.isEvalFalse(md))
+                        .map(md -> md.reduce(context, type))
+                        .filter(Objects::nonNull)
+                        .filter(md -> EMPTY != md.type())
+                        .collect(toList());
+                if (children.size() == 1)
+                    return children.get(0);
+                return new NaryPredicateMetadata(getOperator(), children);
+            } else if (getOperator() == match_any && context.isEvalTrue(this)) {
+                final List<Metadata> children = children()
+                        .filter(md -> context.isEvalTrue(md))
+                        .filter(Objects::nonNull).filter(md -> EMPTY != md.type())
+                        .collect(toList());
+                if (children.size() == 1)
+                    return children.get(0);
+                if (children.size() == 0)
+                    return new EmptyMetadata();
+                return new NaryPredicateMetadata(getOperator(), children);
+            }
         } else if (getOperator() == sum) {
             return new NaryPredicateMetadata(sum, children().filter(md -> sumContentFilter(context, md))
                     .map(md -> md.reduce(context, type))
@@ -124,7 +136,8 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
                     .filter(md -> EMPTY != md.type())
                     .collect(toList()));
         } else if (getOperator() == count) {
-            final List<Metadata> children = children().filter(md -> context.isEvalFalse(md))
+            final List<Metadata> children = children()
+                    .filter(md -> context.isEvalFalse(md))
                     .map(md -> md.reduce(context, type))
                     .filter(Objects::nonNull)
                     .filter(md -> EMPTY != md.type())

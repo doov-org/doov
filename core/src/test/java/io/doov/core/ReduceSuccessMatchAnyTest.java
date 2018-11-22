@@ -21,7 +21,6 @@ import static io.doov.core.MockConditions.trueCondition;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
@@ -37,8 +36,6 @@ public class ReduceSuccessMatchAnyTest {
     private StepCondition conditionB;
     private StepCondition conditionC;
 
-    // TODO should be empty
-    @Disabled
     @Test
     void matchAny_false_false_false_success() {
         conditionA = falseCondition("A");
