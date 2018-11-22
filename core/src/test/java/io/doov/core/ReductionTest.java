@@ -15,9 +15,11 @@
  */
 package io.doov.core;
 
+import static io.doov.core.MockConditions.collectMetadata;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +29,6 @@ import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.field.types.IterableFieldInfo;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class ReductionTest {
 
@@ -83,33 +84,6 @@ public class ReductionTest {
         Result result = rule.withShortCircuit(false).executeOn(MockConditions.model());
         assertThat(result.isFalse()).isTrue();
         System.out.println(result.getFailureCause());
-    }
-
-    private Set<Metadata> collectMetadata(Metadata root) {
-        HashSet<Metadata> metadatas = new HashSet<>();
-        MetadataVisitor visitor = new MetadataVisitor() {
-            @Override
-            public void start(Metadata metadata, int depth) {
-                metadatas.add(metadata);
-            }
-
-            @Override
-            public void beforeChild(Metadata metadata, Metadata child, int depth) {
-
-            }
-
-            @Override
-            public void afterChild(Metadata metadata, Metadata child, boolean hasNext, int depth) {
-
-            }
-
-            @Override
-            public void end(Metadata metadata, int depth) {
-
-            }
-        };
-        visitor.browse(root, 0);
-        return metadatas;
     }
 
 }
