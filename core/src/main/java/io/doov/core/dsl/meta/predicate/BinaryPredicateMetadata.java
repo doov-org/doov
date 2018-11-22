@@ -21,9 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.ReduceType;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.*;
 
 public class BinaryPredicateMetadata extends BinaryMetadata implements PredicateMetadata {
     private final AtomicInteger evalTrue = new AtomicInteger();
@@ -53,16 +51,40 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
 
     @Override
     public Metadata reduce(Context context, ReduceType type) {
-        if (getOperator() == or && context.isEvalTrue(getLeft()) && context.isEvalFalse(getRight()))
+        boolean left = context.isEvalTrue(getLeft()) || !context.isEvalFalse(getLeft());
+        boolean right = context.isEvalTrue(getRight()) || !context.isEvalFalse(getRight());
+
+        if (getOperator() == and) {
+            boolean result = left && right;
+            if (!result && type == ReduceType.SUCCESS) {
+                return new EmptyMetadata();
+            }
+            if (result && type == ReduceType.FAILURE) {
+                return new EmptyMetadata();
+            }
+            if (!right && left) {
+                return getRight().reduce(context, type);
+            }
+            if (!left && right) {
+                return getLeft().reduce(context, type);
+            }
+        } else if (getOperator() == or) {
+            boolean result = left || right;
+            if (!result && type == ReduceType.SUCCESS) {
+                return new EmptyMetadata();
+            }
+            if (result && type == ReduceType.FAILURE) {
+                return new EmptyMetadata();
+            }
+            if (right && !left) {
+                return getRight().reduce(context, type);
+            }
+            if (left && !right) {
+                return getLeft().reduce(context, type);
+            }
+        } else if (getLeft().type() == NARY_PREDICATE && ((NaryPredicateMetadata) getLeft()).getOperator() == count) {
             return getLeft().reduce(context, type);
-        else if (getOperator() == or && context.isEvalFalse(getLeft()) && context.isEvalTrue(getRight()))
-            return getRight().reduce(context, type);
-        else if (getOperator() == and && context.isEvalTrue(getLeft()) && context.isEvalFalse(getRight()))
-            return getRight().reduce(context, type);
-        else if (getOperator() == and && context.isEvalFalse(getLeft()) && context.isEvalTrue(getRight()))
-            return getLeft().reduce(context, type);
-        else if (getLeft().type() == NARY_PREDICATE && ((NaryPredicateMetadata) getLeft()).getOperator() == count)
-            return getLeft().reduce(context, type);
+        }
         return new BinaryPredicateMetadata(getLeft().reduce(context, type), getOperator(), getRight().reduce(context, type));
     }
 }

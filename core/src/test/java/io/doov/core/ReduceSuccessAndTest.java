@@ -20,7 +20,6 @@ import static io.doov.core.MockConditions.falseCondition;
 import static io.doov.core.MockConditions.trueCondition;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
@@ -34,8 +33,6 @@ public class ReduceSuccessAndTest {
     private StepCondition conditionA;
     private StepCondition conditionB;
 
-    // TODO should return empty
-    @Disabled
     @Test
     void and_false_false_success() {
         conditionA = falseCondition("A");
@@ -49,8 +46,6 @@ public class ReduceSuccessAndTest {
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
-    // TODO should return empty
-    @Disabled
     @Test
     void and_true_false_success() {
         conditionA = trueCondition("A");
@@ -64,8 +59,6 @@ public class ReduceSuccessAndTest {
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
-    // TODO should return empty
-    @Disabled
     @Test
     void and_false_true_success() {
         conditionA = falseCondition("A");
