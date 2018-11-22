@@ -18,13 +18,14 @@ package io.doov.core;
 import static io.doov.core.dsl.runtime.FieldChainBuilder.from;
 
 import java.time.*;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.impl.DefaultStepCondition;
 import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
 import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 import io.doov.core.dsl.runtime.*;
 
@@ -98,5 +99,32 @@ class MockConditions {
 
     public static DslModel model() {
         return new RuntimeModel<>(FIELDS, new Object());
+    }
+
+    public static Set<Metadata> collectMetadata(Metadata root) {
+        HashSet<Metadata> metadatas = new HashSet<>();
+        MetadataVisitor visitor = new MetadataVisitor() {
+            @Override
+            public void start(Metadata metadata, int depth) {
+                metadatas.add(metadata);
+            }
+
+            @Override
+            public void beforeChild(Metadata metadata, Metadata child, int depth) {
+
+            }
+
+            @Override
+            public void afterChild(Metadata metadata, Metadata child, boolean hasNext, int depth) {
+
+            }
+
+            @Override
+            public void end(Metadata metadata, int depth) {
+
+            }
+        };
+        visitor.browse(root, 0);
+        return metadatas;
     }
 }
