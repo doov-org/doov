@@ -28,6 +28,7 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.meta.EmptyMetadata;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
@@ -95,10 +96,7 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(BinaryPredicateMetadata.class);
-        assertThat(msg.children()).hasSize(2);
-        assertThat(msg.children()).element(0).isInstanceOf(LeafPredicateMetadata.class);
-        assertThat(msg.children()).element(1).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(msg).isInstanceOf(EmptyMetadata.class);
     }
 
     @Test
@@ -234,8 +232,7 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(LeafPredicateMetadata.class);
-        assertThat(msg.children()).isEmpty();
+        assertThat(msg).isInstanceOf(EmptyMetadata.class);
     }
 
     @Test
@@ -255,8 +252,7 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(LeafPredicateMetadata.class);
-        assertThat(msg.children()).isEmpty();
+        assertThat(msg).isInstanceOf(EmptyMetadata.class);
     }
 
     @Test
@@ -276,10 +272,7 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(BinaryPredicateMetadata.class);
-        assertThat(msg.children()).hasSize(2);
-        assertThat(msg.children()).element(0).isInstanceOf(LeafPredicateMetadata.class);
-        assertThat(msg.children()).element(1).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(msg).isInstanceOf(EmptyMetadata.class);
     }
 
     @Test
