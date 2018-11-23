@@ -130,14 +130,15 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
                 return new NaryPredicateMetadata(getOperator(), children);
             }
         } else if (getOperator() == sum) {
-            return new NaryPredicateMetadata(sum, children().filter(md -> sumContentFilter(context, md))
+            return new NaryPredicateMetadata(sum, children()
+                    .filter(md -> sumContentFilter(context, md))
                     .map(md -> md.reduce(context, type))
                     .filter(Objects::nonNull)
                     .filter(md -> EMPTY != md.type())
                     .collect(toList()));
         } else if (getOperator() == count) {
             final List<Metadata> children = children()
-                    .filter(md -> context.isEvalFalse(md))
+                    .filter(md -> countFilter(context, type, md))
                     .map(md -> md.reduce(context, type))
                     .filter(Objects::nonNull)
                     .filter(md -> EMPTY != md.type())
@@ -146,6 +147,11 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
         }
         return new NaryPredicateMetadata(getOperator(), children().map(md -> md.reduce(context, type))
                 .filter(Objects::nonNull).filter(md -> EMPTY != md.type()).collect(toList()));
+    }
+
+    private boolean countFilter(Context context, ReduceType type, Metadata md) {
+        return type == ReduceType.FAILURE && context.isEvalFalse(md) ||
+                type == ReduceType.SUCCESS && context.isEvalTrue(md);
     }
 
     private static boolean sumContentFilter(Context context, Metadata md) {
