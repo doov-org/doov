@@ -118,6 +118,6 @@ public class FailureCauseSample3Test {
                 .hasReduceMessage("correspond à tous [la date de naissance âge à la date du jour > 18, le " +
                 "pays = FR, le numéro de téléphone commence par '+33']", locale);
 
-        System.out.println("> " + result.reduce(locale, ReduceType.SUCCESS));
+        System.out.println("> " + result.reduceMessage(locale, ReduceType.SUCCESS));
     }
 }
