@@ -18,14 +18,18 @@ public interface MetadataVisitor {
 
     // Metadata
 
-    void start(Metadata metadata, int depth);
+    default void start(Metadata metadata, int depth) {
+    }
 
-    void beforeChild(Metadata metadata, Metadata child, int depth);
+    default void beforeChild(Metadata metadata, Metadata child, int depth) {
+    }
 
-    void afterChild(Metadata metadata, Metadata child, boolean hasNext, int depth);
+    default void afterChild(Metadata metadata, Metadata child, boolean hasNext, int depth) {
+    }
 
-    void end(Metadata metadata, int depth);
-    
+    default void end(Metadata metadata, int depth) {
+    }
+
     default void browse(Metadata root, int depth) {
         start(root, depth);
         final Iterator<Metadata> it = root.children().iterator();
