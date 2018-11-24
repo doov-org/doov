@@ -108,21 +108,6 @@ class MockConditions {
             public void start(Metadata metadata, int depth) {
                 metadatas.add(metadata);
             }
-
-            @Override
-            public void beforeChild(Metadata metadata, Metadata child, int depth) {
-
-            }
-
-            @Override
-            public void afterChild(Metadata metadata, Metadata child, boolean hasNext, int depth) {
-
-            }
-
-            @Override
-            public void end(Metadata metadata, int depth) {
-
-            }
         };
         visitor.browse(root, 0);
         return metadatas;
