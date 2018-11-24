@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core;
+package io.doov.core.dsl.meta.predicate;
 
 import static io.doov.core.dsl.runtime.FieldChainBuilder.from;
 
@@ -31,77 +31,86 @@ import io.doov.core.dsl.runtime.*;
 
 class MockConditions {
 
-    private static RuntimeFieldRegistry FIELDS = new RuntimeFieldRegistry(Arrays.asList());
+    static RuntimeFieldRegistry FIELDS = new RuntimeFieldRegistry(Arrays.asList());
 
-    public static StepCondition trueCondition(String readable) {
-        return new DefaultStepCondition(LeafPredicateMetadata.trueMetadata().valueReadable(() -> readable), (model, context) -> true);
+    static void reset() {
+        FIELDS = new RuntimeFieldRegistry(Arrays.asList());
     }
 
-    public static StepCondition falseCondition(String readable) {
-        return new DefaultStepCondition(LeafPredicateMetadata.falseMetadata().valueReadable(() -> readable), (model, context) -> false);
+    static StepCondition alwaysTrue(String readable) {
+        return new DefaultStepCondition(LeafPredicateMetadata.trueMetadata().valueReadable(() -> readable),
+                (model, context) -> true);
+    }
+
+    static StepCondition alwaysFalse(String readable) {
+        return new DefaultStepCondition(LeafPredicateMetadata.falseMetadata().valueReadable(() -> readable),
+                (model, context) -> false);
     }
 
     private static <T> RuntimeField<Object, T> runtimeModel(T value, String readable) {
-        RuntimeField<Object, T> field = from(Object.class, () -> readable).readable(readable).field(o -> value, (o, v) -> { }, (Class<T>) value.getClass());
+        RuntimeField<Object, T> field = from(Object.class, () -> readable).readable(readable).field(o -> value,
+                (o, v) ->
+                {
+                }, (Class<T>) value.getClass());
         List<RuntimeField> list = FIELDS.runtimeFields();
         list.add(field);
         FIELDS = new RuntimeFieldRegistry(list);
         return field;
     }
 
-    public static BooleanFieldInfo booleanField(boolean value, String readable) {
+    static BooleanFieldInfo booleanField(boolean value, String readable) {
         return new BooleanFieldInfo(runtimeModel(value, readable));
     }
 
-    public static CharacterFieldInfo charField(char value, String readable) {
+    static CharacterFieldInfo charField(char value, String readable) {
         return new CharacterFieldInfo(runtimeModel(value, readable));
     }
 
-    public static DoubleFieldInfo doubleField(double value, String readable) {
+    static DoubleFieldInfo doubleField(double value, String readable) {
         return new DoubleFieldInfo(runtimeModel(value, readable));
     }
 
-    public static <E extends Enum<E>> EnumFieldInfo<E> enumField(E value, String readable) {
+    static <E extends Enum<E>> EnumFieldInfo<E> enumField(E value, String readable) {
         return new EnumFieldInfo<>(runtimeModel(value, readable));
     }
 
-    public static FloatFieldInfo floatField(float value, String readable) {
+    static FloatFieldInfo floatField(float value, String readable) {
         return new FloatFieldInfo(runtimeModel(value, readable));
     }
 
-    public static IntegerFieldInfo intField(int value, String readable) {
+    static IntegerFieldInfo intField(int value, String readable) {
         return new IntegerFieldInfo(runtimeModel(value, readable));
     }
 
-    public static LocalDateFieldInfo localDateField(LocalDate value, String readable) {
+    static LocalDateFieldInfo localDateField(LocalDate value, String readable) {
         return new LocalDateFieldInfo(runtimeModel(value, readable));
     }
 
-    public static LocalDateTimeFieldInfo lodalDateTimeField(LocalDateTime value, String readable) {
+    static LocalDateTimeFieldInfo localDateTimeField(LocalDateTime value, String readable) {
         return new LocalDateTimeFieldInfo(runtimeModel(value, readable));
     }
 
-    public static LocalTimeFieldInfo localTimeField(LocalTime value, String readable) {
+    static LocalTimeFieldInfo localTimeField(LocalTime value, String readable) {
         return new LocalTimeFieldInfo(runtimeModel(value, readable));
     }
 
-    public static LongFieldInfo longField(long value, String readable) {
+    static LongFieldInfo longField(long value, String readable) {
         return new LongFieldInfo(runtimeModel(value, readable));
     }
 
-    public static StringFieldInfo stringField(String value, String readable) {
+    static StringFieldInfo stringField(String value, String readable) {
         return new StringFieldInfo(runtimeModel(value, readable));
     }
 
-    public static <T, C extends Iterable<T>> IterableFieldInfo<T, C> iterableField(C value, String readable) {
+    static <T, C extends Iterable<T>> IterableFieldInfo<T, C> iterableField(C value, String readable) {
         return new IterableFieldInfo<>(runtimeModel(value, readable));
     }
 
-    public static DslModel model() {
+    static DslModel model() {
         return new RuntimeModel<>(FIELDS, new Object());
     }
 
-    public static Set<Metadata> collectMetadata(Metadata root) {
+    static Set<Metadata> collectMetadata(Metadata root) {
         HashSet<Metadata> metadatas = new HashSet<>();
         MetadataVisitor visitor = new MetadataVisitor() {
             @Override

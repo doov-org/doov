@@ -122,7 +122,7 @@ public class FailureCauseSample1Test {
                 .hasReduceMessage("(account email length is < 20 and (user birthdate age at today > 18 and account " +
                         "country = FR)) and (account country = FR and account phone number starts with '+33')", locale);
 
-        System.out.println("> " + result.reduce(locale, ReduceType.SUCCESS));
+        System.out.println("> " + result.reduceMessage(locale, ReduceType.SUCCESS));
     }
 
 }

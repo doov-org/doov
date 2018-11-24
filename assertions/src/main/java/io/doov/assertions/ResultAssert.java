@@ -52,7 +52,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert isFalse() {
-        if (!actual.isFalse()) {
+        if (actual.isTrue()) {
             failWithMessage("Expected result to be false (invalidated nodes: " + getInvalidatedMetadata() + ")");
         }
         return this;
@@ -123,9 +123,9 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert hasReduceMessage(String message, Locale locale) {
-        if (!Objects.equals(actual.reduce(locale, ReduceType.SUCCESS), message)) {
+        if (!Objects.equals(actual.reduceMessage(locale, ReduceType.SUCCESS), message)) {
             failWithMessage("Expected result reduce to have message '" + message + "' but was '" +
-                    actual.reduce(locale, ReduceType.SUCCESS) + "'");
+                    actual.reduceMessage(locale, ReduceType.SUCCESS) + "'");
         }
         return this;
     }

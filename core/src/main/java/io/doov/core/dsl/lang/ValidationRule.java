@@ -23,6 +23,16 @@ public interface ValidationRule extends DSLBuilder {
      * @return the validation rule
      */
     ValidationRule withShortCircuit(boolean shortCircuit);
+    
+    
+    /**
+     * Executes the validation rule on a null model.
+     *
+     * @return the result
+     */
+    default Result execute() {
+        return executeOn(null);
+    }
 
     /**
      * Executes the validation rule on the given model.

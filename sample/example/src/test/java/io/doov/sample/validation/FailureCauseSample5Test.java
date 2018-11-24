@@ -81,7 +81,7 @@ public class FailureCauseSample5Test {
                 .hasNoFailureCause()
                 .hasReduceMessage("");
 
-        System.out.println("> " + result.reduce(locale, ReduceType.SUCCESS));
+        System.out.println("> " + result.reduceMessage(locale, ReduceType.SUCCESS));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class FailureCauseSample5Test {
                 .hasNoFailureCause()
                 .hasReduceMessage("la date de naissance âge à la date du jour > 18", locale);
 
-        System.out.println("> " + result.reduce(locale, ReduceType.SUCCESS));
+        System.out.println("> " + result.reduceMessage(locale, ReduceType.SUCCESS));
     }
 
     @Test

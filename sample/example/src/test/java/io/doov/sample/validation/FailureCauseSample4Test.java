@@ -78,7 +78,7 @@ public class FailureCauseSample4Test {
                 .hasNoFailureCause()
                 .hasReduceMessage("le pays != CAN", locale);
 
-        System.out.println("> " + result.reduce(locale, ReduceType.SUCCESS));
+        System.out.println("> " + result.reduceMessage(locale, ReduceType.SUCCESS));
     }
 
 }
