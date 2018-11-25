@@ -79,7 +79,7 @@ public class FailureCauseSample5Test {
         assertThat(result)
                 .isTrue()
                 .hasNoFailureCause()
-                .hasReduceMessage("");
+                .hasReduceMessage("user birthdate age at today > 18 and (account country = FR and account phone number starts with '+33')");
 
         System.out.println("> " + result.reduceMessage(locale, ReduceType.SUCCESS));
     }
@@ -94,7 +94,7 @@ public class FailureCauseSample5Test {
         assertThat(result)
                 .isTrue()
                 .hasNoFailureCause()
-                .hasReduceMessage("la date de naissance âge à la date du jour > 18", locale);
+                .hasReduceMessage("le pays = FR et le numéro de téléphone commence par '+33'", locale);
 
         System.out.println("> " + result.reduceMessage(locale, ReduceType.SUCCESS));
     }
