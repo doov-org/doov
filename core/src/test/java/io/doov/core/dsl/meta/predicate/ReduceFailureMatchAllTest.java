@@ -15,13 +15,9 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.DOOV.matchAll;
-import static io.doov.core.dsl.DOOV.when;
+import static io.doov.core.dsl.DOOV.*;
 import static io.doov.core.dsl.lang.ReduceType.FAILURE;
-import static io.doov.core.dsl.meta.predicate.MockConditions.alwaysFalse;
-import static io.doov.core.dsl.meta.predicate.MockConditions.alwaysTrue;
-import static io.doov.core.dsl.meta.predicate.MockConditions.collectMetadata;
-import static io.doov.core.dsl.meta.predicate.MockConditions.reset;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.collectMetadata;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -72,8 +68,7 @@ public class ReduceFailureMatchAllTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.isTrue());
-        assertThat(collectMetadata(reduce)).contains(B.metadata(), C.metadata())
-                .doesNotContain(A.metadata());
+        assertThat(collectMetadata(reduce)).contains(B.metadata(), C.metadata()).doesNotContain(A.metadata());
     }
 
     @Test
@@ -91,6 +86,5 @@ public class ReduceFailureMatchAllTest {
     @AfterEach
     void afterEach() {
         System.out.println("> " + reduce);
-        reset();
     }
 }

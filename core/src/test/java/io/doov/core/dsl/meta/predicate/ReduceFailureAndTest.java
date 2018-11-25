@@ -15,12 +15,9 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.DOOV.when;
+import static io.doov.core.dsl.DOOV.*;
 import static io.doov.core.dsl.lang.ReduceType.FAILURE;
-import static io.doov.core.dsl.meta.predicate.MockConditions.alwaysFalse;
-import static io.doov.core.dsl.meta.predicate.MockConditions.alwaysTrue;
-import static io.doov.core.dsl.meta.predicate.MockConditions.collectMetadata;
-import static io.doov.core.dsl.meta.predicate.MockConditions.reset;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.collectMetadata;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,7 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.EmptyMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
@@ -70,7 +68,6 @@ public class ReduceFailureAndTest {
         assertThat(collectMetadata(reduce)).containsOnly(A.metadata());
     }
 
-    // TODO should return empty
     @Test
     void and_true_true_failure() {
         A = alwaysTrue("A");
@@ -85,6 +82,5 @@ public class ReduceFailureAndTest {
     @AfterEach
     void afterEach() {
         System.out.println("> " + reduce);
-        reset();
     }
 }

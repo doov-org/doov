@@ -14,9 +14,12 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class AstVisitorUtils {
 
@@ -32,4 +35,14 @@ public class AstVisitorUtils {
         return stringBuilder.toString();
     }
 
+    public static Set<Metadata> collectMetadata(Metadata root) {
+        HashSet<Metadata> metadatas = new HashSet<>();
+        new MetadataVisitor() {
+            @Override
+            public void start(Metadata metadata, int depth) {
+                metadatas.add(metadata);
+            }
+        }.browse(root, 0);
+        return metadatas;
+    }
 }
