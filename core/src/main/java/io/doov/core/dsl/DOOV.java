@@ -26,6 +26,9 @@ import io.doov.core.dsl.impl.num.*;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.MappingRegistry;
 import io.doov.core.dsl.mapping.builder.*;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 
 /**
  * Entry point of the DSL.
@@ -65,12 +68,34 @@ public class DOOV {
     }
 
     /**
+     * Returns a condition that is always true.
+     *
+     * @param readable that describes the condition
+     * @return the step condition
+     */
+    public static StepCondition alwaysTrue(String readable) {
+        return new DefaultStepCondition(trueMetadata().valueReadable(() -> readable),
+                (model, context) -> true);
+    }
+
+    /**
      * Returns a condition that is always false.
      *
      * @return the step condition
      */
     public static StepCondition alwaysFalse() {
         return new DefaultStepCondition(falseMetadata(), (model, context) -> false);
+    }
+
+    /**
+     * Returns a condition that is always false.
+     *
+     * @param readable that describes the condition
+     * @return the step condition
+     */
+    public static StepCondition alwaysFalse(String readable) {
+        return new DefaultStepCondition(falseMetadata().valueReadable(() -> readable),
+                (model, context) -> false);
     }
 
     /**
