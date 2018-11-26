@@ -42,7 +42,7 @@ public class ReduceFailureAndTest {
         result = when(A.and(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());
     }
 
@@ -53,7 +53,7 @@ public class ReduceFailureAndTest {
         result = when(A.and(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(collectMetadata(reduce)).containsOnly(B.metadata());
     }
 
@@ -64,7 +64,7 @@ public class ReduceFailureAndTest {
         result = when(A.and(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(collectMetadata(reduce)).containsOnly(A.metadata());
     }
 
@@ -75,7 +75,7 @@ public class ReduceFailureAndTest {
         result = when(A.and(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 

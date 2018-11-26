@@ -62,7 +62,7 @@ public class ReductionTest {
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(B.metadata());
         assertThat(collectMetadata(reduce)).contains(C.metadata());
     }
@@ -74,7 +74,7 @@ public class ReductionTest {
         result = when(A.and(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(B.metadata());
     }
 
@@ -82,21 +82,21 @@ public class ReductionTest {
     void reduce_zeroInt() {
         result = when(zeroField.notEq(0)).validate().withShortCircuit(false).executeOn(model);
         reduce = result.reduce(FAILURE);
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
     }
 
     @Test
     void reduce_list() {
         result = when(iterableField.contains("c")).validate().withShortCircuit(false).executeOn(model);
         reduce = result.reduce(FAILURE);
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
     }
 
     @Test
     void reduce_null() {
         result = when(enumField.isNull()).validate().withShortCircuit(false).executeOn(model);
         reduce = result.reduce(FAILURE);
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
     }
 
     @AfterEach

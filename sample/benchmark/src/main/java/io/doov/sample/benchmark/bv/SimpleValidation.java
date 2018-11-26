@@ -73,7 +73,7 @@ public class SimpleValidation {
     public void testSimpleBeanValidation(ValidationState state, Blackhole blackHole) {
         DriverSetup driverSetup = new DriverSetup(state);
         Result result = state.rule.executeOn(driverSetup.model);
-        assertThat(result.isTrue()).isEqualTo(driverSetup.expectedResult);
+        assertThat(result.value()).isEqualTo(driverSetup.expectedResult);
         blackHole.consume(result);
     }
 

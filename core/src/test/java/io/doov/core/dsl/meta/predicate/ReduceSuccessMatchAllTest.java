@@ -43,7 +43,7 @@ public class ReduceSuccessMatchAllTest {
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class);
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata(), C.metadata());
     }
@@ -56,7 +56,7 @@ public class ReduceSuccessMatchAllTest {
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
@@ -68,7 +68,7 @@ public class ReduceSuccessMatchAllTest {
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
@@ -80,7 +80,7 @@ public class ReduceSuccessMatchAllTest {
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 

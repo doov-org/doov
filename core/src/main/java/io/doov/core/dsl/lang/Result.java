@@ -27,7 +27,7 @@ public interface Result {
      *
      * @return true if true predicate
      */
-    boolean isTrue();
+    boolean value();
 
     /**
      * Returns the predicate reduction. This will reduce the syntax tree using execution values to output the minimum tree.
@@ -45,7 +45,7 @@ public interface Result {
      * @return the failure cause, if failed
      */
     default String getFailureCause(Locale locale) {
-        if (isTrue())
+        if (value())
             return null;
         return reduceMessage(locale, ReduceType.FAILURE);
     }

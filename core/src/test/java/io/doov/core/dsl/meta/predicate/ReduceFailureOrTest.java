@@ -42,7 +42,7 @@ public class ReduceFailureOrTest {
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());
     }
 
@@ -54,7 +54,7 @@ public class ReduceFailureOrTest {
         result = when(A.or(B.and(C))).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());
     }
@@ -66,7 +66,7 @@ public class ReduceFailureOrTest {
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
@@ -77,7 +77,7 @@ public class ReduceFailureOrTest {
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
@@ -88,7 +88,7 @@ public class ReduceFailureOrTest {
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 

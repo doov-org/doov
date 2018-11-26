@@ -40,7 +40,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert isTrue() {
-        if (!actual.isTrue()) {
+        if (!actual.value()) {
             failWithMessage("Expected result to be true (invalidated nodes: " + getInvalidatedMetadata() + ")");
         }
         return this;
@@ -52,7 +52,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert isFalse() {
-        if (actual.isTrue()) {
+        if (actual.value()) {
             failWithMessage("Expected result to be false (invalidated nodes: " + getInvalidatedMetadata() + ")");
         }
         return this;

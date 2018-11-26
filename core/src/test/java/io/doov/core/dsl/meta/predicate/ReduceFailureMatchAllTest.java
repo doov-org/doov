@@ -43,7 +43,7 @@ public class ReduceFailureMatchAllTest {
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
@@ -55,7 +55,7 @@ public class ReduceFailureMatchAllTest {
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(collectMetadata(reduce)).containsExactly(C.metadata());
     }
 
@@ -67,7 +67,7 @@ public class ReduceFailureMatchAllTest {
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(B.metadata(), C.metadata()).doesNotContain(A.metadata());
     }
 
@@ -79,7 +79,7 @@ public class ReduceFailureMatchAllTest {
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata(), C.metadata());
     }
 
