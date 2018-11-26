@@ -30,15 +30,15 @@ public class RulesCodeOneTest {
      *      io.doov.sample.model.Configuration)
      */
     SampleModelRule demoRule = DslSampleModel
-                    .when(DOOV.matchAll(
-                                    userBirthdate.ageAt(today()).greaterOrEquals(18),
-                                    accountEmail.length().lesserOrEquals(configurationMaxEmailSize),
-                                    accountCompany.eq(Company.LES_FURETS),
-                                    accountPhoneNumber.startsWith("+33")))
-                    .validate();
+            .when(DOOV.matchAll(
+                    userBirthdate.ageAt(today()).greaterOrEquals(18),
+                    accountEmail.length().lesserOrEquals(configurationMaxEmailSize),
+                    accountCompany.eq(Company.LES_FURETS),
+                    accountPhoneNumber.startsWith("+33")))
+            .validate();
 
     @Test
-    public void test_account() {
+    void test_account() {
         Result result = demoRule.executeOn(sample);
 
         Assertions.assertThat(result).isTrue();
@@ -47,29 +47,25 @@ public class RulesCodeOneTest {
     }
 
     @Test
-    public void test_account_failure_cause() {
+    void test_account_failure_cause() {
         sample.getAccount().setPhoneNumber("+1 12 34 56 78");
 
         Result result = demoRule.executeOn(sample);
 
-        Assertions.assertThat(result)
-                .isFalse()
-                .hasFailureCause("account phone number starts with '+33'",
-                        Locale.US);
+        Assertions.assertThat(result).isFalse()
+                .hasFailureCause("account phone number starts with '+33'", Locale.US);
     }
 
     @Test
-    public void test_account_failure_cause_2() {
+    void test_account_failure_cause_2() {
         sample.getAccount().setPhoneNumber("+1 12 34 56 78");
         sample.getAccount().setCompany(Company.BLABLACAR);
 
         Result result = demoRule.withShortCircuit(false).executeOn(sample);
 
-        Assertions.assertThat(result)
-                .isFalse()
+        Assertions.assertThat(result).isFalse()
                 .hasFailureCause("match all [" +
                         "account company = LES_FURETS, " +
-                        "account phone number starts with '+33']",
-                        Locale.US);
+                        "account phone number starts with '+33']", Locale.US);
     }
 }
