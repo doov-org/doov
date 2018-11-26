@@ -87,73 +87,21 @@ public class RulesVisitorTest {
 
 
     /*Problème avec moment js. si On ajoute un mois au 31 du mois de départ (par exemple mai) alors la différence
-    en mois ne sera pas égale à 1*/
+    en mois ne sera pas égale à 1
+    ex : difference entre 31 mai et 31 mai plus 1 mois = 0,96...
+    */
     @Test
     public void print_javascript_syntax_tree() {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        // TODO add moment.min.js in libraries and redirect the inputstreamreader
-        // ou <script src="https://unpkg.com/moment" />
-
-//        REGISTRY_DEFAULT.stream()
-//                .peek(rule -> {
-//                    try {
-//                        ops.write("--------------------------------\n".getBytes());
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                })
-//                .forEach(rule -> rule.accept(new AstProceduralJSVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
-//        System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
-
-        ScriptEngineManager sem = new ScriptEngineManager();            // creation of an engine manager
-        ScriptEngine engine = sem.getEngineByName("nashorn");        // engine creation based on nashorn
-        final int[] index = new int[1];                                 // index as a tab, usage in lambda expression
-        index[0]=0;
-        String mockValue = "var configuration = { max:{email:{size:24}}, min:{age:18}};\n"
-                +"\tvar account = {email:\"potato@tomato.fr\", " +
-                "creation: {date : \"2012-10-10\"}, country:\"FR\","
-                +" phone:{number:\"+334567890120\"}};\n"
-                +"\tvar user = {id:\"notnull\", birthdate:\"1993-08-09\"," +
-                "first:{name:\"french\"}, last:{name:\"FRIES\"} };\n";  // creation of the mock values
-
-        System.out.println("Evaluation of the rules :");
-        System.out.println("    Mock value : ");
-        System.out.println("    "+mockValue);
-        try{
-            InputStreamReader momentJS = new InputStreamReader(new FileInputStream(new File("/home/jru/moment.min.js")));
-            engine.eval(momentJS);              // evaluating moment.js
-            engine.eval(mockValue);             // evaluating the mock values for testing purpose
-        }catch(ScriptException se){
-            se.printStackTrace();
-        }catch(FileNotFoundException fnfe){
-            fnfe.printStackTrace();
-        }
-        REGISTRY_DEFAULT.stream().forEach(rule -> {
-            ops.reset();
-            try {
-                index[0]++;
-                System.out.println("--------------------------------\n");
-                rule.accept(new AstProceduralJSVisitor(ops, BUNDLE, Locale.ENGLISH), 0);
-                String request = new String(ops.toByteArray(), Charset.forName("UTF-8"));
-                try {
-                    if(index[0]!=8 && index[0]!=14 && index[0]!=15 && index[0]!=16) { // excluding some rules for now (lambda expression)
-                        Object obj = engine.eval(request);                            // evaluating the current rule to test
-                        ops.write(("\n Rules n°"+index[0]).getBytes("UTF-8"));
-                        ops.write(("\n    Starting engine checking of : "+ rule.readable() +"\n").getBytes("UTF-8"));
-                        ops.write(("\t\t-"+obj.toString()+"-\n").getBytes("UTF-8"));
-                        ops.write(("    Ending engine checking.\n").getBytes("UTF-8"));
-                    }else{
-                        ops.write(("    Passing engine checking because of mapping issue. Rule n°"+index[0]+"\n").getBytes("UTF-8"));
+        REGISTRY_DEFAULT.stream()
+                .peek(rule -> {
+                    try {
+                        ops.write("--------------------------------\n".getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (final ScriptException se) {
-                    throw new RuntimeException(se);
-                }
-                System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-
-
+                })
+                .forEach(rule -> rule.accept(new AstJavascriptVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
+        System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
     }
 }

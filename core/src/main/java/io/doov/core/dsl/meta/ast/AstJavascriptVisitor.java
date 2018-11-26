@@ -4,11 +4,10 @@
 package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
-
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
-
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
@@ -16,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class AstJavascriptVisitor extends AbstractAstVisitor {
 
-    protected final OutputStream ops;
+    private final OutputStream ops;
     protected final ResourceProvider bundle;
     protected final Locale locale;
 
@@ -67,7 +66,6 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
             case not_equals:
                 write(" != ");
                 break;
-
         }
     }
 
@@ -129,19 +127,19 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     @Override
     public void visitMetadata(LeafMetadata metadata, int depth) {
         if(metadata.flatten().size()>3) {
-            ArrayDeque<Element> date_field = new ArrayDeque<>();    //using arrayDeque to store the fields
-            ArrayDeque<Element> date_operator = new ArrayDeque<>(); //using arrayDeque to store the operators
-            ArrayDeque<Element> date_value = new ArrayDeque<>();    //using arrayDeque to store the values
+            ArrayDeque<Element> dateField = new ArrayDeque<>();    //using arrayDeque to store the fields
+            ArrayDeque<Element> dateOperator = new ArrayDeque<>(); //using arrayDeque to store the operators
+            ArrayDeque<Element> dateValue = new ArrayDeque<>();    //using arrayDeque to store the values
             metadata.stream().forEach(element ->{
                 switch(element.getType()){
                     case FIELD:
-                        date_field.add(element);
+                        dateField.add(element);
                         break;
                     case OPERATOR:
-                        date_operator.add(element);
+                        dateOperator.add(element);
                         break;
                     case VALUE:
-                        date_value.add(element);
+                        dateValue.add(element);
                         break;
                     case STRING_VALUE:
                     case UNKNOWN:
@@ -149,14 +147,13 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                     case PARENTHESIS_RIGHT:
                         break;
                     case TEMPORAL_UNIT:
-                        date_operator.add(element);
+                        dateOperator.add(element);
                         break;
                 }
             });
-            while(date_operator.size()>0){
-                manageOperator((DefaultOperator)date_operator.pollFirst().getReadable(),
-                        date_field,date_operator,date_value);       // calling a method to manage the LeafMD with the deques
-
+            while(dateOperator.size()>0){
+                manageOperator((DefaultOperator)dateOperator.pollFirst().getReadable(),
+                        dateField,dateOperator,dateValue);       // calling a method to manage the LeafMD with the deques
             }
         }else {
             metadata.stream().forEach(element -> {
@@ -215,8 +212,15 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
         }
     }
 
-    public void manageOperator(DefaultOperator element,ArrayDeque<Element> deque_field, ArrayDeque<Element> deque_ope,
-                               ArrayDeque<Element> deque_value){
+    /**
+     * managing method for most of the operators in a LeafMetaData context
+     * @param element the default operator of the LeafMetadata
+     * @param dequeField a deque of the LeafMetadata fields
+     * @param dequeOpe a deque of the LeafMetadata intern operators
+     * @param dequeValue a deque of the LeafMetadata values
+     * */
+    private void manageOperator(DefaultOperator element,ArrayDeque<Element> dequeField, ArrayDeque<Element> dequeOpe,
+                               ArrayDeque<Element> dequeValue){
         switch(element){
             case rule:
             case validate:
@@ -240,18 +244,18 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 break;
             case equals:
                 write(" === ");
-                if(deque_value!=null){
-                    write(deque_value.pollFirst().toString());
-                }else if(deque_field!=null){
-                    write(deque_field.pollFirst().toString());
+                if(dequeValue!=null){
+                    write(dequeValue.pollFirst().toString());
+                }else if(dequeField!=null){
+                    write(dequeField.pollFirst().toString());
                 }
                 break;
             case not_equals:
                 write(" !== ");
-                if(deque_value!=null){
-                    write(deque_value.pollFirst().toString());
-                }else if(deque_field!=null){
-                    write(deque_field.pollFirst().toString());
+                if(dequeValue!=null){
+                    write(dequeValue.pollFirst().toString());
+                }else if(dequeField!=null){
+                    write(dequeField.pollFirst().toString());
                 }
                 break;
             case is_null:
@@ -261,47 +265,47 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 write(" !== ( null || undefined || \"\" ) ");
                 break;
             case minus:
-                write(".subtract("+deque_value.pollFirst()+"," +
-                        "\'"+deque_ope.pollFirst().toString()+"\')");
+                write(".subtract("+dequeValue.pollFirst()+"," +
+                        "\'"+dequeOpe.pollFirst().toString()+"\')");
                 break;
             case plus:
-                write(".add("+deque_value.pollFirst()+"," +
-                        "\'"+deque_ope.pollFirst().toString()+"\')");
+                write(".add("+dequeValue.pollFirst()+"," +
+                        "\'"+dequeOpe.pollFirst().toString()+"\')");
                 break;
             case after:
-                write("moment("+deque_field.pollFirst().toString()+"" +
-                        ").isAfter(moment("+deque_field.pollFirst().toString()+")");
+                write("moment("+dequeField.pollFirst().toString()+"" +
+                        ").isAfter(moment("+dequeField.pollFirst().toString()+")");
                 parenthese_depth++;
                 break;
             case after_or_equals:
-                write("moment("+deque_field.pollFirst().toString()+"" +
-                        ").isSameOrAfter(moment("+deque_field.pollFirst().toString()+")");
+                write("moment("+dequeField.pollFirst().toString()+"" +
+                        ").isSameOrAfter(moment("+dequeField.pollFirst().toString()+")");
                 parenthese_depth++;
                 break;
             case age_at:
-                write("Math.abs(moment("+deque_field.pollFirst()+").diff(");//Math.abs so the date order doesn't matter
-                if(deque_field.size()>0){
+                write("Math.abs(moment("+dequeField.pollFirst()+").diff(");//Math.abs so the date order doesn't matter
+                if(dequeField.size()>0){
                     write("moment(");
-                    write(deque_field.pollFirst().toString());
-                    if((DefaultOperator)deque_ope.getFirst().getReadable()==with){
-                        deque_ope.pollFirst();
-                        manageOperator((DefaultOperator)deque_ope.pollFirst().getReadable(),null,
+                    write(dequeField.pollFirst().toString());
+                    if((DefaultOperator)dequeOpe.getFirst().getReadable()==with){
+                        dequeOpe.pollFirst();
+                        manageOperator((DefaultOperator)dequeOpe.pollFirst().getReadable(),null,
                                 null,null);
                     }
                 }else {
-                    manageOperator((DefaultOperator) deque_ope.pollFirst().getReadable(), null,
+                    manageOperator((DefaultOperator) dequeOpe.pollFirst().getReadable(), null,
                             null, null);
                 }
                 write("), \'years\'))");
                 break;
             case before:
-                write("moment("+deque_field.pollFirst().toString()+"" +
-                        ").isBefore("+deque_field.pollFirst().toString());
+                write("moment("+dequeField.pollFirst().toString()+"" +
+                        ").isBefore("+dequeField.pollFirst().toString());
                 parenthese_depth++;
                 break;
             case before_or_equals:
-                write("moment("+deque_field.pollFirst().toString()+"" +
-                        ").isSameOrBefore("+deque_field.pollFirst().toString());
+                write("moment("+dequeField.pollFirst().toString()+"" +
+                        ").isSameOrBefore("+dequeField.pollFirst().toString());
                 parenthese_depth++;
                 break;
             case matches:
@@ -329,18 +333,18 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 break;
             case greater_than:
                 write(" > ");
-                if(deque_value!=null){
-                    write(deque_value.pollFirst().toString());
-                }else if(deque_field!=null){
-                    write(deque_field.pollFirst().toString());
+                if(dequeValue!=null){
+                    write(dequeValue.pollFirst().toString());
+                }else if(dequeField!=null){
+                    write(dequeField.pollFirst().toString());
                 }
                 break;
             case greater_or_equals:
                 write(" >= ");
-                if(deque_value!=null){
-                    write(deque_value.pollFirst().toString());
-                }else if(deque_field!=null){
-                    write(deque_field.pollFirst().toString());
+                if(dequeValue!=null){
+                    write(dequeValue.pollFirst().toString());
+                }else if(dequeField!=null){
+                    write(dequeField.pollFirst().toString());
                 }
                 break;
             case is:
@@ -348,18 +352,18 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 break;
             case lesser_than:
                 write(" < ");
-                if(deque_value!=null){
-                    write(deque_value.pollFirst().toString());
-                }else if(deque_field!=null){
-                    write(deque_field.pollFirst().toString());
+                if(dequeValue!=null){
+                    write(dequeValue.pollFirst().toString());
+                }else if(dequeField!=null){
+                    write(dequeField.pollFirst().toString());
                 }
                 break;
             case lesser_or_equals:
                 write(" <= ");
-                if(deque_value!=null && deque_value.size()>0){
-                    write(deque_value.pollFirst().toString());
-                }else if(deque_field!=null){
-                    write(deque_field.pollFirst().toString());
+                if(dequeValue!=null && dequeValue.size()>0){
+                    write(dequeValue.pollFirst().toString());
+                }else if(dequeField!=null){
+                    write(dequeField.pollFirst().toString());
                 }
                 break;
             case has_not_size:
@@ -375,8 +379,8 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 write(".length != 0");
                 break;
             case length_is:
-                if(deque_field!=null){
-                    write(deque_field.pollFirst().toString()+".length");
+                if(dequeField!=null){
+                    write(dequeField.pollFirst().toString()+".length");
                 }else{
                     write(".length");
                 }
@@ -426,9 +430,11 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
 
     /**
      * manage the XOR operator construction
+     * @param leftMD left Metadata of the XOR predicate
+     * @param rightMD right Metadata of the XOR predicate
      * */
-    public void manageXOR(Metadata left, Metadata right){
-        write("(!"+left+" && "+right+") || ("+left+" && !"+right+")");
+    private void manageXOR(Metadata leftMD, Metadata rightMD){
+        write("(!"+leftMD+" && "+rightMD+") || ("+leftMD+" && !"+rightMD+")");
     }
 
     @Override
@@ -439,7 +445,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     @Override
     public void endMetadata(StepWhen metadata,int depth){
         while(parenthese_depth>0){
-            write(")");
+            write(")");                 //closing parenthesis for each opened
             parenthese_depth--;
         }
         write("){ true;}else{ false;}\n");
@@ -447,7 +453,8 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
 
     /**
      * replace in a String object the special characters like |, ., ^, $, (, ), [, ], -, {, }, ?, *, + and /.
-     *
+     * @param reg the String to format for usage as a regular expression
+     * @return the formatted String
      */
     private String formatRegexp(String reg){
         reg=reg.replace("|","\\|");
@@ -470,7 +477,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
 
     protected void write(String str) {
         try {
-            ops.write(str.getBytes("UTF-8"));
+            ops.write(str.getBytes(StandardCharsets.UTF_8));
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
