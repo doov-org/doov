@@ -181,7 +181,9 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                                 tmp = formatRegexp(tmp);
                             }
                             write(tmp);
-                            if (start_with_count > 0 && end_with_count==0) { //peut buguer si imbrecation de start et end
+                            // peut buguer si imbrecation de start et end
+                            // ne va pas arriver -> start_with AND end_with, deux predicats separés
+                            if (start_with_count > 0 && end_with_count==0) {
                                 write(".*");
                                 start_with_count--;
                             }else if(end_with_count > 0){
@@ -283,7 +285,8 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 parenthese_depth++;
                 break;
             case age_at:
-                write("Math.abs(moment("+dequeField.pollFirst()+").diff(");//Math.abs so the date order doesn't matter
+                // TODO utilisation de Math.round(...) ? diff(31mai,31mai + 1mois) = 0.96
+                write("Math.round(Math.abs(moment("+dequeField.pollFirst()+").diff(");//Math.abs so the date order doesn't matter
                 if(dequeField.size()>0){
                     write("moment(");
                     write(dequeField.pollFirst().toString());
@@ -296,7 +299,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                     manageOperator((DefaultOperator) dequeOpe.pollFirst().getReadable(), null,
                             null, null);
                 }
-                write("), \'years\'))");
+                write("), \'years\')))");
                 break;
             case before:
                 write("moment("+dequeField.pollFirst().toString()+"" +

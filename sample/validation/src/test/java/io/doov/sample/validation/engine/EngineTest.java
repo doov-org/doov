@@ -22,9 +22,6 @@ public class EngineTest {
     @Test
     public void print_javascript_syntax_tree() {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        // TODO add moment.min.js in libraries and redirect the inputstreamreader
-        // ou <script src="https://unpkg.com/moment" />
-
         ScriptEngineManager sem = new ScriptEngineManager();            // creation of an engine manager
         ScriptEngine engine = sem.getEngineByName("nashorn");        // engine creation based on nashorn
         final int[] index = new int[1];                                 // index as a tab, usage in lambda expression
