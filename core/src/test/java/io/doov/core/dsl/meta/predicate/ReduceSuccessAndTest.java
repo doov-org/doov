@@ -42,7 +42,7 @@ public class ReduceSuccessAndTest {
         result = when(A.and(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
@@ -53,7 +53,7 @@ public class ReduceSuccessAndTest {
         result = when(A.and(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
@@ -64,7 +64,7 @@ public class ReduceSuccessAndTest {
         result = when(A.and(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
@@ -75,7 +75,7 @@ public class ReduceSuccessAndTest {
         result = when(A.and(B)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());
     }

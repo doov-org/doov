@@ -61,7 +61,7 @@ public class BenchmarkRule {
 
     @Benchmark
     public void valid_email(Blackhole blackhole) {
-        boolean valid = EMAIL.executeOn(MODEL).isTrue();
+        boolean valid = EMAIL.executeOn(MODEL).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -69,42 +69,42 @@ public class BenchmarkRule {
 
     @Benchmark
     public void valid_country(Blackhole blackhole) {
-        boolean valid = COUNTRY.executeOn(MODEL).isTrue();
+        boolean valid = COUNTRY.executeOn(MODEL).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
     }
 
     public void valid_country_20(Blackhole blackhole) {
-        boolean valid = ACCOUNT_VALID_COUNTRY_20.executeOn(MODEL).isTrue();
+        boolean valid = ACCOUNT_VALID_COUNTRY_20.executeOn(MODEL).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
     }
 
     public void valid_country_40(Blackhole blackhole) {
-        boolean valid = ACCOUNT_VALID_COUNTRY_40.executeOn(MODEL).isTrue();
+        boolean valid = ACCOUNT_VALID_COUNTRY_40.executeOn(MODEL).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
     }
 
     public void valid_country_60(Blackhole blackhole) {
-        boolean valid = ACCOUNT_VALID_COUNTRY_60.executeOn(MODEL).isTrue();
+        boolean valid = ACCOUNT_VALID_COUNTRY_60.executeOn(MODEL).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
     }
 
     public void valid_country_80(Blackhole blackhole) {
-        boolean valid = ACCOUNT_VALID_COUNTRY_80.executeOn(MODEL).isTrue();
+        boolean valid = ACCOUNT_VALID_COUNTRY_80.executeOn(MODEL).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
     }
 
     public void valid_country_100(Blackhole blackhole) {
-        boolean valid = ACCOUNT_VALID_COUNTRY_100.executeOn(MODEL).isTrue();
+        boolean valid = ACCOUNT_VALID_COUNTRY_100.executeOn(MODEL).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }

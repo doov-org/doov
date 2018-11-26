@@ -37,7 +37,7 @@ public class BenchmarkRuleRewrite {
 
     @Benchmark
     public void test_account(Blackhole blackhole) {
-        boolean valid = benchRule1.withShortCircuit(false).executeOn(sample).isTrue();
+        boolean valid = benchRule1.withShortCircuit(false).executeOn(sample).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -45,7 +45,7 @@ public class BenchmarkRuleRewrite {
 
     @Benchmark
     public void test_account_short_circuit(Blackhole blackhole) {
-        boolean valid = benchRule1.executeOn(sample).isTrue();
+        boolean valid = benchRule1.executeOn(sample).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -53,7 +53,7 @@ public class BenchmarkRuleRewrite {
 
     @Benchmark
     public void test_account_2(Blackhole blackhole) {
-        boolean valid = benchRule2.withShortCircuit(false).executeOn(sample).isTrue();
+        boolean valid = benchRule2.withShortCircuit(false).executeOn(sample).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -61,7 +61,7 @@ public class BenchmarkRuleRewrite {
 
     @Benchmark
     public void test_account_2_short_circuit(Blackhole blackhole) {
-        boolean valid = benchRule2.executeOn(sample).isTrue();
+        boolean valid = benchRule2.executeOn(sample).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -69,7 +69,7 @@ public class BenchmarkRuleRewrite {
 
     @Benchmark
     public void test_account_3(Blackhole blackhole) {
-        boolean valid = benchRule3.withShortCircuit(false).executeOn(sample).isTrue();
+        boolean valid = benchRule3.withShortCircuit(false).executeOn(sample).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -77,7 +77,7 @@ public class BenchmarkRuleRewrite {
 
     @Benchmark
     public void test_account_3_short_circuit(Blackhole blackhole) {
-        boolean valid = benchRule3.executeOn(sample).isTrue();
+        boolean valid = benchRule3.executeOn(sample).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -85,7 +85,7 @@ public class BenchmarkRuleRewrite {
 
     @Benchmark
     public void test_account_4(Blackhole blackhole) {
-        boolean valid = benchRule4.withShortCircuit(false).executeOn(sample).isTrue();
+        boolean valid = benchRule4.withShortCircuit(false).executeOn(sample).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -93,7 +93,7 @@ public class BenchmarkRuleRewrite {
 
     @Benchmark
     public void test_account_4_short_circuit(Blackhole blackhole) {
-        boolean valid = benchRule4.executeOn(sample).isTrue();
+        boolean valid = benchRule4.executeOn(sample).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -101,7 +101,7 @@ public class BenchmarkRuleRewrite {
 
     @Benchmark
     public void test_account_5(Blackhole blackhole) {
-        boolean valid = benchRule5.withShortCircuit(false).executeOn(sample).isTrue();
+        boolean valid = benchRule5.withShortCircuit(false).executeOn(sample).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }
@@ -109,7 +109,7 @@ public class BenchmarkRuleRewrite {
 
     @Benchmark
     public void test_account_5_short_circuit(Blackhole blackhole) {
-        boolean valid = benchRule5.executeOn(sample).isTrue();
+        boolean valid = benchRule5.executeOn(sample).value();
         if (blackhole != null) {
             blackhole.consume(valid);
         }

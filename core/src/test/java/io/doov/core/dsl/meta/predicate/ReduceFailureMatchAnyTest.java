@@ -43,7 +43,7 @@ public class ReduceFailureMatchAnyTest {
         result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class);
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata(), C.metadata());
     }
@@ -57,7 +57,7 @@ public class ReduceFailureMatchAnyTest {
         result = when(matchAny(A, B, C.and(D))).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class);
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata(), D.metadata());
     }
@@ -70,7 +70,7 @@ public class ReduceFailureMatchAnyTest {
         result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
@@ -82,7 +82,7 @@ public class ReduceFailureMatchAnyTest {
         result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 
@@ -94,7 +94,7 @@ public class ReduceFailureMatchAnyTest {
         result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 

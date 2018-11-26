@@ -63,7 +63,7 @@ public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements
 
     @Override
     public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
-        if (validationRule.executeOn(inModel, context).isTrue()) {
+        if (validationRule.executeOn(inModel, context).value()) {
             mappingRules.executeOn(inModel, outModel, context);
         } else if (!elseMappingRules.isEmpty()) {
             elseMappingRules.executeOn(inModel, outModel, context);

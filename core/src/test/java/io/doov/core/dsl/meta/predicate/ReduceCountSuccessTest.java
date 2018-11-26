@@ -42,7 +42,7 @@ public class ReduceCountSuccessTest {
         result = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());
     }
 
@@ -53,7 +53,7 @@ public class ReduceCountSuccessTest {
         result = when(count(A, B).greaterOrEquals(1)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertTrue(result.isTrue());
+        assertTrue(result.value());
         assertThat(reduce).isEqualTo(A.metadata());
     }
 
@@ -64,7 +64,7 @@ public class ReduceCountSuccessTest {
         result = when(count(A, B).greaterOrEquals(1)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(SUCCESS);
 
-        assertFalse(result.isTrue());
+        assertFalse(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }
 

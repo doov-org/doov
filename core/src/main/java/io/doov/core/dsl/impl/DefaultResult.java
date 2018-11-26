@@ -25,7 +25,7 @@ public class DefaultResult implements Result {
     }
 
     @Override
-    public boolean isTrue() {
+    public boolean value() {
         return validated;
     }
 

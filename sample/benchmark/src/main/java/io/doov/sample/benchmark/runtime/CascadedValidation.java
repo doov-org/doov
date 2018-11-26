@@ -76,7 +76,7 @@ public class CascadedValidation {
     public void testCascadedValidation(CascadedValidationState state, Blackhole blackhole) {
         DriverSetup driverSetup = new DriverSetup();
         Result result = state.rule.executeOn(driverSetup.model);
-        assertThat(result.isTrue()).isTrue();
+        assertThat(result.value()).isTrue();
         blackhole.consume(result);
     }
 

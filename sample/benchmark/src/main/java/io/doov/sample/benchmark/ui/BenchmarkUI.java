@@ -102,7 +102,7 @@ public class BenchmarkUI {
         public void run() {
             for (;;) {
                 final FieldModel model = SampleModels.wrapper();
-                BenchmarkRule.COUNTRY.executeOn(model).isTrue();
+                BenchmarkRule.COUNTRY.executeOn(model).value();
                 hits.incrementAndGet();
             }
         }
