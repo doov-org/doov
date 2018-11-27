@@ -3,6 +3,7 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
+import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.lang.ReduceType.FAILURE;
 import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
@@ -17,13 +18,16 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.*;
 
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.EnumFieldInfo;
 import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 
 public class ReduceAnyMatchTest {
-    private static final Locale LOCALE = Locale.FRANCE;
+    private static final Locale LOCALE = Locale.US;
+    private StepCondition A;
     private Result result;
     private Metadata reduce;
     private GenericModel model;
@@ -54,7 +58,57 @@ public class ReduceAnyMatchTest {
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
-                .isEqualTo(new String[] { "enumField != VAL1" });
+                .isEqualTo(new String[] { "enumField = VAL1" });
+    }
+
+    @Test
+    void and_combined_anyMatch_success() {
+        A = DOOV.alwaysTrue("A");
+        result = when(A.and(enumField.anyMatch(VAL1, VAL2, VAL3))).validate().executeOn(model);
+        reduce = result.reduce(SUCCESS);
+
+        assertTrue(result.value());
+        assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class)
+                .extracting(m -> m.readable(LOCALE))
+                .isEqualTo(new String[] { "always true A and enumField = VAL1" });
+    }
+
+    @Test
+    void and_combined_anyMatch_failure() {
+        A = DOOV.alwaysTrue("A");
+        result = when(A.and(enumField.anyMatch(VAL2, VAL3))).validate().executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class)
+                .extracting(m -> m.readable(LOCALE))
+                .isEqualTo(new String[] { "enumField = VAL1" });
+    }
+
+    @Test
+    //FIXME
+    void matchAny_combined_anyMatch_success() {
+        A = DOOV.alwaysTrue("A");
+        result = when(matchAny(A, enumField.anyMatch(VAL1, VAL2, VAL3))).validate().withShortCircuit(false)
+                .executeOn(model);
+        reduce = result.reduce(SUCCESS);
+
+        assertTrue(result.value());
+        assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class)
+                .extracting(m -> m.readable(LOCALE))
+                .isEqualTo(new String[] { "match any [always true A, enumField match any  : VAL1, VAL2, VAL3]" });
+    }
+
+    @Test
+    void matchAny_combined_anyMatch_failure() {
+        A = DOOV.alwaysFalse("A");
+        result = when(matchAny(A, enumField.anyMatch(VAL2, VAL3))).validate().executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class)
+                .extracting(m -> m.readable(LOCALE))
+                .isEqualTo(new String[] { "match any [always false A, enumField = VAL1]" });
     }
 
     @AfterEach

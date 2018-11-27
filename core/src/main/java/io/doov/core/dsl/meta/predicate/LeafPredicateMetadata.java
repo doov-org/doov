@@ -12,8 +12,6 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.lang.ReduceType.FAILURE;
-import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.Element.leftParenthesis;
 import static io.doov.core.dsl.meta.Element.rightParenthesis;
@@ -89,11 +87,7 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
 
     @Override
     public Metadata reduce(Context context, ReduceType type) {
-        if (type() == FIELD_PREDICATE_MATCH_ANY && FAILURE == type) {
-            final DslField<?> field = (DslField<?>) elements().getFirst().getReadable();
-            return new LeafPredicateMetadata<M>(FIELD_PREDICATE).field(field).operator(not_equals)
-                    .valueObject(context.getEvalValue(field.id()));
-        } else if (type() == FIELD_PREDICATE_MATCH_ANY && SUCCESS == type) {
+        if (type() == FIELD_PREDICATE_MATCH_ANY) {
             final DslField<?> field = (DslField<?>) elements().getFirst().getReadable();
             return new LeafPredicateMetadata<M>(FIELD_PREDICATE).field(field).operator(equals)
                     .valueObject(context.getEvalValue(field.id()));
