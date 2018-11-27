@@ -41,7 +41,7 @@ public class FailureCause_Count_And_anyMatch_Test {
     public void getFailureCause_0() {
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("toujours faux et le pays != null", Locale.FRANCE);
+                .hasFailureCause("toujours faux et le pays = null", Locale.FRANCE);
     }
 
     @AfterEach

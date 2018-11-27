@@ -43,7 +43,7 @@ public class FailureCauseSample4Test {
     void getFailureCause_setup_0() {
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("le pays != null", LOCALE);
+                .hasFailureCause("le pays = null", LOCALE);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class FailureCauseSample4Test {
 
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("le pays != UK", LOCALE);
+                .hasFailureCause("le pays = UK", LOCALE);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class FailureCauseSample4Test {
 
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isTrue().hasNoFailureCause()
-                .hasReduceMessage("le pays != CAN", LOCALE);
+                .hasReduceMessage("le pays = CAN", LOCALE);
     }
 
     @AfterEach

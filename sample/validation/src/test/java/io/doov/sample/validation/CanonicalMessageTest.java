@@ -118,7 +118,7 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), SUCCESS);
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(BinaryPredicateMetadata.class);
+        assertThat(msg).isInstanceOf(LeafPredicateMetadata.class);
     }
 
     @Test

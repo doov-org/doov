@@ -69,8 +69,8 @@ public class ReduceSuccessMatchAnyTest {
         reduce = result.reduce(SUCCESS);
 
         assertTrue(result.value());
-        assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class);
-        assertThat(collectMetadata(reduce)).contains(A.metadata(), D.metadata());
+        assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(reduce).isEqualTo(A.metadata());
     }
 
     @Test

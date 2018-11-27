@@ -86,7 +86,6 @@ public class ReduceAnyMatchTest {
     }
 
     @Test
-    //FIXME
     void matchAny_combined_anyMatch_success() {
         A = DOOV.alwaysTrue("A");
         result = when(matchAny(A, enumField.anyMatch(VAL1, VAL2, VAL3))).validate().withShortCircuit(false)
@@ -96,7 +95,7 @@ public class ReduceAnyMatchTest {
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
-                .isEqualTo(new String[] { "match any [always true A, enumField match any  : VAL1, VAL2, VAL3]" });
+                .isEqualTo(new String[] { "match any [always true A, enumField = VAL1]" });
     }
 
     @Test
