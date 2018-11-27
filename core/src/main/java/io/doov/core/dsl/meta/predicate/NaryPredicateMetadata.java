@@ -121,6 +121,7 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
             } else if (getOperator() == match_any && context.isEvalTrue(this)) {
                 final List<Metadata> children = children()
                         .filter(md -> context.isEvalTrue(md))
+                        .map(md -> md.reduce(context, type))
                         .filter(Objects::nonNull)
                         .filter(md -> EMPTY != md.type())
                         .collect(toList());
