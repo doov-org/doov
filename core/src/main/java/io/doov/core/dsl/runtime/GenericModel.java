@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.doov.core.FieldId;
@@ -25,32 +26,32 @@ import io.doov.core.dsl.field.types.StringFieldInfo;
 
 public final class GenericModel implements DslModel {
 
-    private final List<RuntimeField<Object, Object>> fields;
+    private final List<RuntimeField<GenericModel, Object>> fields;
+    private final HashMap<FieldId, Object> valueMap;
 
     public GenericModel() {
         this.fields = new ArrayList<>();
+        this.valueMap = new HashMap<>();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T get(FieldId id) {
-        return (T) fields.stream()
-                .filter(field -> field.id() == id)
-                .findFirst()
-                .map(field -> field.get(this))
-                .orElse(null);
+        return (T) valueMap.get(id);
     }
 
     @Override
-    public <T> void set(FieldId fieldId, T value) {
-        throw new UnsupportedOperationException("Set not supported on Generic Model");
+    public <T> void set(FieldId id, T value) {
+        valueMap.put(id, value);
     }
 
     @SuppressWarnings("unchecked")
-    private <T> RuntimeField<Object, T> runtimeField(T value, String readable) {
-        return from(Object.class, () -> readable)
+    private <T> RuntimeField<GenericModel, T> runtimeField(T value, String readable) {
+        FieldId fieldId = () -> readable;
+        this.set(fieldId, value);
+        return from(GenericModel.class, fieldId)
                 .readable(readable)
-                .field(o -> value, (o, v) -> { /* */ }, (Class<T>) (value == null ?  Void.TYPE : value.getClass()))
+                .field(o -> o.get(fieldId), (o, v) -> o.set(fieldId, v), (Class<T>) (value == null ?  Void.TYPE : value.getClass()))
                 .register(fields);
     }
 
