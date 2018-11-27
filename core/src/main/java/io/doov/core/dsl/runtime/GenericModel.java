@@ -31,6 +31,7 @@ public final class GenericModel implements DslModel {
         this.fields = new ArrayList<>();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T get(FieldId id) {
         return (T) fields.stream()
@@ -45,6 +46,7 @@ public final class GenericModel implements DslModel {
         throw new UnsupportedOperationException("Set not supported on Generic Model");
     }
 
+    @SuppressWarnings("unchecked")
     private <T> RuntimeField<Object, T> runtimeField(T value, String readable) {
         return from(Object.class, () -> readable)
                 .readable(readable)
