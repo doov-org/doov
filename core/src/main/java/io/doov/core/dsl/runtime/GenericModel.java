@@ -37,7 +37,7 @@ public final class GenericModel implements DslModel {
         return (T) fields.stream()
                 .filter(field -> field.id() == id)
                 .findFirst()
-                .map(field -> field.get(null))
+                .map(field -> field.get(this))
                 .orElse(null);
     }
 
