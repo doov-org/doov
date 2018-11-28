@@ -3,26 +3,23 @@
  */
 package io.doov.core.dsl.mapping;
 
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.DefaultContext;
-import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.MappingRule;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
 /**
  * Immutable, ordered, composable container for {@link MappingRule}s
  */
-public class MappingRegistry implements MappingRule {
-
-    private static final MappingMetadata REGISTRY_METADATA = MappingMetadata.mappings(MappingOperator.mappings);
+public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
 
     private final List<MappingRule> mappingRules;
+    private final MappingRegistryMetadata metadata;
 
     public static MappingRegistry mappings(MappingRule... mappingRules) {
         return new MappingRegistry(mappingRules);
@@ -30,6 +27,13 @@ public class MappingRegistry implements MappingRule {
 
     private MappingRegistry(MappingRule... mappingRules) {
         this.mappingRules = Arrays.stream(mappingRules).flatMap(MappingRule::stream).collect(Collectors.toList());
+        // TODO
+        this.metadata = MappingRegistryMetadata.mappings(stream().map(MappingRule::metadata).collect(Collectors.toList()));
+    }
+
+    @Override
+    public Metadata metadata() {
+        return metadata;
     }
 
     /**
@@ -39,28 +43,28 @@ public class MappingRegistry implements MappingRule {
      * @return new mapping registry
      */
     public MappingRegistry with(MappingRule... rulestoAdd) {
-        return new MappingRegistry(Stream.concat(mappingRules.stream(), Arrays.stream(rulestoAdd))
-                .toArray(MappingRule[]::new));
+        return new MappingRegistry(
+                        Stream.concat(mappingRules.stream(), Arrays.stream(rulestoAdd)).toArray(MappingRule[]::new));
     }
 
     /**
      * Validate and execute rules in this registry with contained order on given models
      *
-     * @param inModel  in model
+     * @param inModel in model
      * @param outModel out model
      * @return context
      */
     public Context validateAndExecute(FieldModel inModel, FieldModel outModel) {
-        DefaultContext context = new DefaultContext(REGISTRY_METADATA);
+        DefaultContext context = new DefaultContext(metadata());
         mappingRules.stream().filter(m -> m.validate(inModel, outModel))
-                .forEach(m -> m.executeOn(inModel, outModel, context));
+                        .forEach(m -> m.executeOn(inModel, outModel, context));
         return context;
     }
 
     /**
      * Validate and execute rules in this registry with contained order on given models
      *
-     * @param inModel  in model
+     * @param inModel in model
      * @param outModel out model
      * @param context context
      * @param <C> context type
@@ -68,7 +72,7 @@ public class MappingRegistry implements MappingRule {
      */
     public <C extends Context> C validateAndExecute(FieldModel inModel, FieldModel outModel, C context) {
         mappingRules.stream().filter(m -> m.validate(inModel, outModel))
-                .forEach(m -> m.executeOn(inModel, outModel, context));
+                        .forEach(m -> m.executeOn(inModel, outModel, context));
         return context;
     }
 
@@ -92,7 +96,7 @@ public class MappingRegistry implements MappingRule {
 
     @Override
     public Context executeOn(FieldModel inModel, FieldModel outModel) {
-        return this.executeOn(inModel, outModel, new DefaultContext(REGISTRY_METADATA));
+        return this.executeOn(inModel, outModel, new DefaultContext(metadata()));
     }
 
     @Override
@@ -100,16 +104,4 @@ public class MappingRegistry implements MappingRule {
         return mappingRules.stream();
     }
 
-    @Override
-    public String readable(Locale locale) {
-        return astToString(this, locale);
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        visitor.start(REGISTRY_METADATA, depth);
-        visitor.visit(REGISTRY_METADATA, depth);
-        mappingRules.forEach(m -> m.accept(visitor, depth + 1));
-        visitor.end(REGISTRY_METADATA, depth);
-    }
 }

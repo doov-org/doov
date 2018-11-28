@@ -1,32 +1,20 @@
 /*
- * Copyright 2017 Courtanet
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Copyright (C) by Courtanet, All Rights Reserved.
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
-import io.doov.core.dsl.lang.Context;
-
-public class UnaryMetadata extends PredicateMetadata {
-
+public class UnaryMetadata extends AbstractMetadata {
     private final Operator operator;
     private final Metadata value;
 
-    private UnaryMetadata(Operator operator, Metadata value) {
+    public UnaryMetadata(Operator operator, Metadata value) {
         this.operator = operator;
         this.value = value;
     }
@@ -35,20 +23,13 @@ public class UnaryMetadata extends PredicateMetadata {
         return operator;
     }
 
-    public static UnaryMetadata notMetadata(Metadata value) {
-        return new UnaryMetadata(DefaultOperator.not, value);
+    public Metadata getValue() {
+        return value;
     }
 
     @Override
-    public String readable(Locale locale) {
-        return astToString(this, locale);
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        visitor.visit(this, depth);
-        value.accept(visitor, depth + 1);
-        visitor.end(this, depth);
+    public MetadataType type() {
+        return UNARY_PREDICATE;
     }
 
     @Override
@@ -60,23 +41,7 @@ public class UnaryMetadata extends PredicateMetadata {
     }
 
     @Override
-    public List<Metadata> children() {
-        return Arrays.asList(value);
-    }
-
-    @Override
-    public MetadataType type() {
-        return UNARY_PREDICATE;
-    }
-
-    /**
-     * Be carrefull about the <em>boolean satisfiability problem</em> when we use the <b>not</b> operator
-     * https://en.wikipedia.org/wiki/Boolean_satisfiability_problem
-     */
-    @Override
-    public Metadata message(Context context) {
-        if (operator == not)
-            return this;
-        return new UnaryMetadata(operator, value.message(context));
+    public Stream<Metadata> right() {
+        return Stream.of(value);
     }
 }

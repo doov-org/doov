@@ -34,5 +34,4 @@ public interface DslField<T> extends Readable {
      * @return the default condition
      */
     DefaultCondition<T> getDefaultCondition();
-
 }

@@ -14,6 +14,8 @@ package io.doov.sample.validation;
 
 import static io.doov.assertions.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.alwaysFalse;
+import static io.doov.core.dsl.lang.ReduceType.FAILURE;
+import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
 import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
 import static io.doov.sample.field.dsl.DslSampleModel.when;
 import static io.doov.sample.model.Country.FR;
@@ -21,7 +23,6 @@ import static io.doov.sample.model.Country.FR;
 import java.util.Locale;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.lang.Result;
@@ -33,24 +34,20 @@ import io.doov.sample.model.SampleModel;
  */
 public class FailureCause_Count_And_anyMatch_Test {
     private final SampleModelRule rule = when(alwaysFalse().and(accountCountry.anyMatch(FR))).validate();
-
-    private final Locale locale = Locale.FRENCH;
     private final SampleModel model = new SampleModel();
-
-    @BeforeEach
-    public void plaintText() {
-        System.out.println(rule.readable(locale));
-    }
-
-    @AfterEach
-    public void blankline() {
-        System.out.println("");
-    }
+    private Result result;
 
     @Test
     public void getFailureCause_0() {
-        Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
-        System.out.println("> " + result.getFailureCause(locale));
+        result = rule.withShortCircuit(false).executeOn(model);
+        assertThat(result).isFalse()
+                .hasFailureCause("toujours faux et le pays = null", Locale.FRANCE);
+    }
+
+    @AfterEach
+    void afterEach() {
+        System.out.println(rule + " is " + result.value());
+        System.out.println("SUCCESS> " + result.reduce(SUCCESS));
+        System.out.println("FAILURE> " + result.reduce(FAILURE));
     }
 }

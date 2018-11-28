@@ -19,7 +19,7 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.PredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.model.Country;
 

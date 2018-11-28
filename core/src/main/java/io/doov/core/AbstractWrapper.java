@@ -3,7 +3,7 @@
  */
 package io.doov.core;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Base class for Wrapper implementation.

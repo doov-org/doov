@@ -16,8 +16,8 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
-import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.impl.NumericCondition;
+import io.doov.core.dsl.impl.num.NumericCondition;
+import io.doov.core.dsl.impl.num.NumericFunction;
 import io.doov.core.dsl.lang.StepCondition;
 
 /**
@@ -142,24 +142,35 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
     }
 
     /**
-     * See {@link NumericCondition#times(int)}
+     * See {@link NumericFunction#times(int)}
      *
      * @param multiplier the multiplier
-     * @return the step condition
-     * @see NumericCondition#times(int)
+     * @return the numeric function
+     * @see NumericFunction#times(int)
      */
-    default NumericCondition<N> times(int multiplier) {
+    default NumericFunction<N> times(int multiplier) {
         return getNumericCondition().times(multiplier);
+    }
+    
+    /**
+     * See {@link NumericFunction#plus(NumericFieldInfo)}
+     *
+     * @param field another field to sum
+     * @return the numeric function
+     * @see NumericFunction#plus(NumericFieldInfo)
+     */
+    default NumericFunction<N> plus(NumericFieldInfo<N> field) {
+        return getNumericCondition().plus(field);
     }
 
     /**
-     * See {@link NumericCondition#when(StepCondition)}
+     * See {@link NumericFunction#when(StepCondition)}
      *
      * @param condition the condition to evaluate
-     * @return the step condition
-     * @see NumericCondition#when(StepCondition)
+     * @return the numeric function
+     * @see NumericFunction#when(StepCondition)
      */
-    default NumericCondition<N> when(StepCondition condition) {
+    default NumericFunction<N> when(StepCondition condition) {
         return getNumericCondition().when(condition);
     }
 
@@ -168,10 +179,10 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      *
      * @return the numeric condition
      */
-    NumericCondition<N> getNumericCondition();
+    NumericFunction<N> getNumericCondition();
 
     @Override
-    default NumericCondition<N> getDefaultCondition() {
+    default NumericFunction<N> getDefaultCondition() {
         return getNumericCondition();
     }
 }

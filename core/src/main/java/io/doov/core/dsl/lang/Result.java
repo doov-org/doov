@@ -15,6 +15,7 @@ package io.doov.core.dsl.lang;
 import java.util.Locale;
 
 import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Interface for the execution result after a call to {@link ValidationRule#executeOn(DslModel)}.
@@ -26,14 +27,15 @@ public interface Result {
      *
      * @return true if true predicate
      */
-    boolean isTrue();
+    boolean value();
 
     /**
-     * Returns true if the predicate evaluates to false.
-     *
-     * @return true if false predicate
+     * Returns the predicate reduction. This will reduce the syntax tree using execution values to output the minimum tree.
+     * 
+     * @param type the type of reduction
+     * @return the reduce metadata
      */
-    boolean isFalse();
+    Metadata reduce(ReduceType type);
 
     /**
      * Returns the failure cause of the failed predicate. This will reduce the syntax tree using execution values to output
@@ -42,7 +44,11 @@ public interface Result {
      * @param locale the desire locale for the failure cause
      * @return the failure cause, if failed
      */
-    String getFailureCause(Locale locale);
+    default String getFailureCause(Locale locale) {
+        if (value())
+            return null;
+        return reduceMessage(locale, ReduceType.FAILURE);
+    }
 
     /**
      * Returns the failure cause of the failed predicate. This will reduce the syntax tree using execution values to output
@@ -52,6 +58,28 @@ public interface Result {
      */
     default String getFailureCause() {
         return getFailureCause(Locale.getDefault());
+    }
+
+    /**
+     * Returns the predicate reduction. This will reduce the syntax tree using execution values to output the minimum tree.
+     * @param locale the desire locale for the predicate reduction
+     * @param type the type of reduction
+     * @return the reduce
+     */
+    default String reduceMessage(Locale locale, ReduceType type) {
+        final Metadata metadata = reduce(type);
+        if (metadata == null)
+            return null;
+        return metadata.readable(locale).trim();
+    }
+
+    /**
+     * Returns the predicate reduction. This will reduce the syntax tree using execution values to output the minimum tree.
+     * @param type the type of reduction
+     * @return the reduce
+     */
+    default String reduceMessage(ReduceType type) {
+        return reduceMessage(Locale.getDefault(), type);
     }
 
     /**

@@ -1,8 +1,6 @@
 package io.doov.core.dsl.runtime;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public class SimplePathMethod<T, R> implements PathMethod<T, R> {
 

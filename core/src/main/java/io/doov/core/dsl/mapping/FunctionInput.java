@@ -7,12 +7,10 @@ import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.MappingInput;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
 
-public class FunctionInput<T> implements MappingInput<T> {
+public class FunctionInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
 
     private final BiFunction<DslModel, Context, T> valueFunction;
     private final MappingMetadata metadata;
@@ -32,17 +30,12 @@ public class FunctionInput<T> implements MappingInput<T> {
     }
 
     @Override
-    public MappingMetadata getMetadata() {
+    public MappingMetadata metadata() {
         return metadata;
     }
 
     @Override
     public T read(DslModel inModel, Context context) {
         return valueFunction.apply(inModel, context);
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        metadata.accept(visitor, depth);
     }
 }

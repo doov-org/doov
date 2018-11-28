@@ -24,7 +24,9 @@ import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.Condition;
-import io.doov.core.dsl.impl.*;
+import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.StringFunction;
+import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.StepCondition;
 
 /**
@@ -221,7 +223,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @return the step condition
      * @see DefaultCondition#mapToInt(Function)
      */
-    default IntegerCondition mapToInt(Function<T, Integer> mapper) {
+    default IntegerFunction mapToInt(Function<T, Integer> mapper) {
         return getDefaultCondition().mapToInt(mapper);
     }
 
@@ -231,7 +233,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @param mapper mapper function to apply
      * @return string condition
      */
-    default StringCondition mapToString(Function<T, String> mapper) {
+    default StringFunction mapToString(Function<T, String> mapper) {
         return getDefaultCondition().mapToString(mapper);
     }
 

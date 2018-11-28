@@ -13,6 +13,8 @@
 package io.doov.sample.validation;
 
 import static io.doov.assertions.Assertions.assertThat;
+import static io.doov.core.dsl.lang.ReduceType.FAILURE;
+import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
 import static io.doov.sample.field.dsl.DslSampleModel.accountEmail;
@@ -22,7 +24,8 @@ import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
 import java.time.LocalDate;
 import java.util.Locale;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.lang.Result;
 import io.doov.sample.field.dsl.DslSampleModel;
@@ -36,76 +39,76 @@ import io.doov.sample.model.SampleModel;
  * their country is France when their phone number starts with '+33'
  */
 public class FailureCauseSample1Test {
+    private static final Locale LOCALE = Locale.US;
 
     private final SampleModelRule rule = DslSampleModel.when(accountEmail.length().lesserThan(20)
             .and(userBirthdate.ageAt(today()).greaterThan(18).and(accountCountry.eq(Country.FR)))
             .and(accountCountry.eq(Country.FR).and(accountPhoneNumber.startsWith("+33"))))
             .validate();
 
-    private final Locale locale = Locale.US;
     private final SampleModel model = new SampleModel();
+    private Result result;
 
-    @BeforeEach
-    public void plaintText() {
-        System.out.println(rule.readable(locale));
-    }
-
-    @AfterEach
-    public void blankline() {
-        System.out.println("");
+    @Test
+    void getFailureCause_setup_1() {
+        result = rule.withShortCircuit(false).executeOn(model);
+        assertThat(result).isFalse()
+                .hasFailureCause("(account email length is < 20 and (user birthdate age at today > 18 and account " +
+                        "country = FR)) and (account country = FR and account phone number starts with '+33')",
+                        LOCALE);
     }
 
     @Test
-    public void getFailureCause_setup_1() {
-        Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
-        System.out.println("> " + result.getFailureCause(locale));
-    }
-
-    @Test
-    public void getFailureCause_setup_2() {
+    void getFailureCause_setup_2() {
         model.getAccount().setEmail("test@test.org");
 
-        Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
-
-        System.out.println("> " + result.getFailureCause(locale));
+        result = rule.withShortCircuit(false).executeOn(model);
+        assertThat(result).isFalse()
+                .hasFailureCause("(user birthdate age at today > 18 and account country = FR) and (account country = " +
+                        "FR and account phone number starts with '+33')", LOCALE);
     }
 
     @Test
-    public void getFailureCause_setup_3() {
+    void getFailureCause_setup_3() {
         model.getAccount().setEmail("test@test.org");
         model.getUser().setBirthDate(LocalDate.now().minusYears(19));
+        result = rule.withShortCircuit(false).executeOn(model);
+        assertThat(result).isFalse()
+                .hasFailureCause("account country = FR and (account country = FR and account phone number starts with" +
+                        " '+33')", LOCALE);
 
-        Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
-
-        System.out.println("> " + result.getFailureCause(locale));
     }
 
     @Test
-    public void getFailureCause_setup_4() {
+    void getFailureCause_setup_4() {
         model.getAccount().setEmail("test@test.org");
         model.getUser().setBirthDate(LocalDate.now().minusYears(19));
         model.getAccount().setCountry(Country.FR);
 
-        Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
-
-        System.out.println("> " + result.getFailureCause(locale));
+        result = rule.withShortCircuit(false).executeOn(model);
+        assertThat(result).isFalse()
+                .hasFailureCause("account phone number starts with '+33'", LOCALE);
     }
 
     @Test
-    public void getFailureCause_setup_5() {
+    void getFailureCause_setup_5() {
         model.getAccount().setEmail("test@test.org");
         model.getUser().setBirthDate(LocalDate.now().minusYears(19));
         model.getAccount().setCountry(Country.FR);
         model.getAccount().setPhoneNumber("+33 1 23 45 67 89");
 
-        Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isTrue();
+        result = rule.withShortCircuit(false).executeOn(model);
 
-        System.out.println("> " + result.getFailureCause(locale));
+        assertThat(result).isTrue()
+                .hasNoFailureCause()
+                .hasReduceMessage("(account email length is < 20 and (user birthdate age at today > 18 and account " +
+                        "country = FR)) and (account country = FR and account phone number starts with '+33')", LOCALE);
     }
 
+    @AfterEach
+    void afterEach() {
+        System.out.println(rule + " is " + result.value());
+        System.out.println("SUCCESS> " + result.reduce(SUCCESS));
+        System.out.println("FAILURE> " + result.reduce(FAILURE));
+    }
 }

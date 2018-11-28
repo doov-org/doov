@@ -16,6 +16,8 @@
 package io.doov.sample.validation;
 
 import static io.doov.assertions.Assertions.assertThat;
+import static io.doov.core.dsl.lang.ReduceType.FAILURE;
+import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
 import static io.doov.sample.field.dsl.DslSampleModel.accountPhoneNumber;
@@ -24,7 +26,8 @@ import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
 import java.time.LocalDate;
 import java.util.Locale;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.lang.Result;
 import io.doov.sample.field.dsl.DslSampleModel;
@@ -38,6 +41,8 @@ import io.doov.sample.model.SampleModel;
  * has at least 21 years when their country is Canadian and their phone number starts with '+1'<br>
  */
 public class FailureCauseSample2Test {
+    private static final Locale LOCALE = Locale.FRANCE;
+
     private final SampleModelRule rule = DslSampleModel
             .when(userBirthdate.ageAt(today()).greaterThan(18)
                     .and(accountCountry.eq(Country.FR).and(accountPhoneNumber.startsWith("+33")))
@@ -46,56 +51,57 @@ public class FailureCauseSample2Test {
                                     .and(accountPhoneNumber.startsWith("+1")))))
             .validate();
 
-    private final Locale locale = Locale.FRENCH;
     private final SampleModel model = new SampleModel();
+    private Result result;
 
-    @BeforeEach
-    public void plaintText() {
-        System.out.println(rule.readable(locale));
-    }
-
-    @AfterEach
-    public void blankline() {
-        System.out.println("");
+    @Test
+    void getFailureCause_setup_1() {
+        result = rule.withShortCircuit(false).executeOn(model);
+        assertThat(result).isFalse()
+                .hasFailureCause("(la date de naissance âge à la date du jour > 18 et (le pays = FR et le numéro de " +
+                        "téléphone commence par '+33')) ou (la date de naissance âge à la date du jour > 21 et (le " +
+                        "pays = CAN et le numéro de téléphone commence par '+1'))", LOCALE);
     }
 
     @Test
-    public void getFailureCause_setup_1() {
-        Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
-        System.out.println("> " + result.getFailureCause(locale));
-    }
-
-    @Test
-    public void getFailureCause_setup_3() {
+    void getFailureCause_setup_3() {
         model.getUser().setBirthDate(LocalDate.now().minusYears(22));
 
-        Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
+        result = rule.withShortCircuit(false).executeOn(model);
+        assertThat(result).isFalse()
+                .hasFailureCause("(le pays = FR et le numéro de téléphone commence par '+33') ou (le pays = CAN et le" +
+                        " numéro de téléphone commence par '+1')", LOCALE);
 
-        System.out.println("> " + result.getFailureCause(locale));
+        System.out.println("> " + result.getFailureCause(LOCALE));
     }
 
     @Test
-    public void getFailureCause_setup_4() {
+    void getFailureCause_setup_4() {
         model.getUser().setBirthDate(LocalDate.now().minusYears(22));
         model.getAccount().setCountry(Country.FR);
 
-        Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isFalse();
-
-        System.out.println("> " + result.getFailureCause(locale));
+        result = rule.withShortCircuit(false).executeOn(model);
+        assertThat(result).isFalse()
+                .hasFailureCause("le numéro de téléphone commence par '+33' ou (le pays = CAN et le numéro de " +
+                        "téléphone commence par '+1')", LOCALE);
     }
 
     @Test
-    public void getFailureCause_setup_5() {
+    void getFailureCause_setup_5() {
         model.getUser().setBirthDate(LocalDate.now().minusYears(22));
         model.getAccount().setCountry(Country.FR);
         model.getAccount().setPhoneNumber("+33 1 23 45 67 89");
 
-        Result result = rule.withShortCircuit(false).executeOn(model);
-        assertThat(result).isTrue();
+        result = rule.withShortCircuit(false).executeOn(model);
+        assertThat(result).isTrue().hasNoFailureCause()
+                .hasReduceMessage("la date de naissance âge à la date du jour > 18 et (le pays = FR et le numéro de " +
+                        "téléphone commence par '+33')", LOCALE);
+    }
 
-        System.out.println("> " + result.getFailureCause(locale));
+    @AfterEach
+    void afterEach() {
+        System.out.println(rule + " is " + result.value());
+        System.out.println("SUCCESS> " + result.reduce(SUCCESS));
+        System.out.println("FAILURE> " + result.reduce(FAILURE));
     }
 }

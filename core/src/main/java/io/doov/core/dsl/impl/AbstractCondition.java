@@ -14,18 +14,16 @@ package io.doov.core.dsl.impl;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.Condition;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 abstract class AbstractCondition<N> implements Condition<N> {
 
-    static <T> Optional<T> valueModel(DslModel model, DslField<T> field) {
+    protected static <T> Optional<T> valueModel(DslModel model, DslField<T> field) {
         return Optional.ofNullable(model.get(field.id()));
     }
 
@@ -41,18 +39,12 @@ abstract class AbstractCondition<N> implements Condition<N> {
         return function.apply(model, context);
     }
 
-    protected final StepCondition predicate(LeafMetadata metadata, Function<N, Boolean> predicate) {
-        return new PredicateStepCondition<>(this.metadata.merge(metadata), function, predicate);
+    public PredicateMetadata getMetadata() {
+        return metadata;
     }
 
-    protected final StepCondition predicate(LeafMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> value,
-            BiFunction<N, N, Boolean> predicate) {
-        return new PredicateStepCondition<>(this.metadata.merge(metadata), function, value, predicate);
-    }
-    
-    public Metadata getMetadata() {
-        return metadata;
+    public BiFunction<DslModel, Context, Optional<N>> getFunction() {
+        return function;
     }
 
     @Override

@@ -14,22 +14,35 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
-import io.doov.core.dsl.meta.SyntaxTree;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class AstVisitorUtils {
 
-    public static String astToString(SyntaxTree syntaxTree, Locale locale) {
+    public static String astToString(Metadata metadata, Locale locale) {
         StringBuilder stringBuilder = new StringBuilder();
-        syntaxTree.accept(new AstLineVisitor(stringBuilder, BUNDLE, locale), 0);
+        new AstLineVisitor(stringBuilder, BUNDLE, locale).browse(metadata, 0);
         return stringBuilder.toString();
     }
 
-    public static String astToMarkdown(SyntaxTree syntaxTree, Locale locale) {
+    public static String astToMarkdown(Metadata metadata, Locale locale) {
         StringBuilder stringBuilder = new StringBuilder();
-        syntaxTree.accept(new AstMarkdownVisitor(stringBuilder, BUNDLE, locale), 0);
+        new AstMarkdownVisitor(stringBuilder, BUNDLE, locale).browse(metadata, 0);
         return stringBuilder.toString();
     }
 
+    public static Set<Metadata> collectMetadata(Metadata root) {
+        HashSet<Metadata> metadatas = new HashSet<>();
+        new MetadataVisitor() {
+            @Override
+            public void start(Metadata metadata, int depth) {
+                metadatas.add(metadata);
+            }
+        }.browse(root, 0);
+        return metadatas;
+    }
 }

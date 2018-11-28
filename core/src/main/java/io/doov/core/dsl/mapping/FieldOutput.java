@@ -9,7 +9,6 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.MappingOutput;
 import io.doov.core.dsl.meta.MappingMetadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class FieldOutput<T> implements MappingOutput<T> {
 
@@ -27,18 +26,13 @@ public class FieldOutput<T> implements MappingOutput<T> {
     }
 
     @Override
-    public MappingMetadata getMetadata() {
+    public MappingMetadata metadata() {
         return metadata;
     }
 
     @Override
     public void write(DslModel outModel, Context context, T value) {
         outModel.set(field, value);
-    }
-
-    @Override
-    public void accept(MetadataVisitor visitor, int depth) {
-        metadata.accept(visitor, depth);
     }
 
 }

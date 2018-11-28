@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.field.types;
 
-import static io.doov.core.dsl.meta.LeafMetadata.fieldMetadata;
+import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.fieldMetadata;
 import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
 import java.time.LocalTime;
@@ -21,7 +21,7 @@ import java.util.Optional;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.LocalTimeCondition;
+import io.doov.core.dsl.impl.time.LocalTimeFunction;
 
 public class TimeIsoFieldInfo extends DelegatingFieldInfoImpl implements TemporalFieldInfo<LocalTime> {
 
@@ -30,13 +30,13 @@ public class TimeIsoFieldInfo extends DelegatingFieldInfoImpl implements Tempora
     }
 
     @Override
-    public TimeIsoCondition getTemporalCondition() {
-        return new TimeIsoCondition(this);
+    public TimeIsoFunction getTemporalFunction() {
+        return new TimeIsoFunction(this);
     }
 
-    private class TimeIsoCondition extends LocalTimeCondition {
+    private class TimeIsoFunction extends LocalTimeFunction {
 
-        private TimeIsoCondition(DslField field) {
+        private TimeIsoFunction(DslField<?> field) {
             super(fieldMetadata(field),
                     ((model, context) -> Optional.ofNullable(model.<String>get(field.id()))
                             .map(v -> LocalTime.parse(v, BASIC_ISO_DATE))));

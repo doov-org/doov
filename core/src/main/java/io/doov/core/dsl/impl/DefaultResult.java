@@ -12,13 +12,10 @@
  */
 package io.doov.core.dsl.impl;
 
-import java.util.Locale;
-
-import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultResult implements Result {
-
     private final boolean validated;
     private final Context context;
 
@@ -28,13 +25,8 @@ public class DefaultResult implements Result {
     }
 
     @Override
-    public boolean isTrue() {
+    public boolean value() {
         return validated;
-    }
-
-    @Override
-    public boolean isFalse() {
-        return !validated;
     }
 
     @Override
@@ -43,14 +35,7 @@ public class DefaultResult implements Result {
     }
 
     @Override
-    public String getFailureCause(Locale locale) {
-        if (validated) {
-            return null;
-        }
-        if (context.getRootMetadata().message(context) == null) {
-            return null;
-        }
-        return context.getRootMetadata().message(context).readable(locale).trim();
+    public Metadata reduce(ReduceType type) {
+        return context.getRootMetadata().reduce(context, type);
     }
-
 }

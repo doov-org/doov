@@ -16,10 +16,12 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.assertj.core.api.AbstractAssert;
 
 import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.meta.Metadata;
 
@@ -28,8 +30,8 @@ import io.doov.core.dsl.meta.Metadata;
  */
 public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
 
-    ResultAssert(Result actual, Class<?> selfType) {
-        super(actual, selfType);
+    ResultAssert(Result result, Class<?> selfType) {
+        super(result, selfType);
     }
 
     /**
@@ -38,7 +40,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert isTrue() {
-        if (!actual.isTrue()) {
+        if (!actual.value()) {
             failWithMessage("Expected result to be true (invalidated nodes: " + getInvalidatedMetadata() + ")");
         }
         return this;
@@ -50,7 +52,7 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert isFalse() {
-        if (!actual.isFalse()) {
+        if (actual.value()) {
             failWithMessage("Expected result to be false (invalidated nodes: " + getInvalidatedMetadata() + ")");
         }
         return this;
@@ -79,12 +81,13 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
      * @return self
      */
     public ResultAssert hasFailureCause(String message, Locale locale) {
-        if (!actual.getFailureCause(locale).equals(message)) {
+        if (!Objects.equals(actual.getFailureCause(locale), message)) {
             failWithMessage("Expected result to have message '" + message
-                    + "' but was '" + actual.getFailureCause() + "'");
+                    + "' but was '" + actual.getFailureCause(locale) + "'");
         }
         return this;
     }
+
     /**
      * Verifies that the result message is null.
      *
@@ -93,6 +96,48 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result> {
     public ResultAssert hasNoFailureCause() {
         if (actual.getFailureCause() != null) {
             failWithMessage("Expected result to null message but was " + actual.getFailureCause());
+        }
+        return this;
+    }
+
+    /**
+     * Verifies that the reduce message is equal to the given one.
+     * <b>Beware : </b>only use this version if you do not use l10n feature
+     * otherwise your tests will be locale dependant
+     * <br>
+     * If you use l10n, please use #hasReduceMessage(String message, Locale locale)
+     *
+     * @param message the reduce message
+     * @return self
+     */
+    public ResultAssert hasReduceMessage(String message) {
+        return hasReduceMessage(message, Locale.getDefault());
+    }
+
+    /**
+     * Verifies that the reduce message is equal to the given one.
+     * Locale control to make tests independent from system locale
+     *
+     * @param message the reduce message
+     * @param locale locale
+     * @return self
+     */
+    public ResultAssert hasReduceMessage(String message, Locale locale) {
+        if (!Objects.equals(actual.reduceMessage(locale, ReduceType.SUCCESS), message)) {
+            failWithMessage("Expected result reduce to have message '" + message + "' but was '" +
+                    actual.reduceMessage(locale, ReduceType.SUCCESS) + "'");
+        }
+        return this;
+    }
+
+    /**
+     * Verifies that the result message is null.
+     *
+     * @return self
+     */
+    public ResultAssert hasNoReduceMessage() {
+        if (actual.reduce(ReduceType.SUCCESS) != null) {
+            failWithMessage("Expected result to null reduce message but was " + actual.reduce(ReduceType.SUCCESS));
         }
         return this;
     }

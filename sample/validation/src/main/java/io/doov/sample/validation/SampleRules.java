@@ -19,7 +19,20 @@ import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
-import static io.doov.sample.field.dsl.DslSampleModel.*;
+import static io.doov.sample.field.dsl.DslSampleModel.accountCompany;
+import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
+import static io.doov.sample.field.dsl.DslSampleModel.accountCreationDate;
+import static io.doov.sample.field.dsl.DslSampleModel.accountEmail;
+import static io.doov.sample.field.dsl.DslSampleModel.accountPhoneNumber;
+import static io.doov.sample.field.dsl.DslSampleModel.accountTimezone;
+import static io.doov.sample.field.dsl.DslSampleModel.configurationMaxEmailSize;
+import static io.doov.sample.field.dsl.DslSampleModel.configurationMinAge;
+import static io.doov.sample.field.dsl.DslSampleModel.favoriteSiteName1;
+import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
+import static io.doov.sample.field.dsl.DslSampleModel.userFirstName;
+import static io.doov.sample.field.dsl.DslSampleModel.userId;
+import static io.doov.sample.field.dsl.DslSampleModel.userLastName;
+import static io.doov.sample.model.Company.BLABLACAR;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;
@@ -28,7 +41,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +52,6 @@ import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.AstHtmlVisitor;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
-import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.model.Country;
 import io.doov.sample.model.Timezone;
 
@@ -138,21 +149,26 @@ public class SampleRules extends DefaultRuleRegistry {
                     .when(accountTimezone.mapToString(Timezone::getDescription).contains("00:00"))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
+    
+    public static final ValidationRule RULE_COMPANY_NOT_LESFURETS = DOOV
+                    .when(accountCompany.eq(BLABLACAR).not())
+                    .validate()
+                    .registerOn(REGISTRY_DEFAULT);
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         final File output = new File("validation_rule.html");
         final List<ValidationRule> rules = REGISTRY_DEFAULT.stream().collect(toList());
         try (FileOutputStream fos = new FileOutputStream(output)) {
-            IOUtils.write("<html><head><meta charset=\"UTF-8\"><style>"
+            IOUtils.write("<html><head><meta charset=\"UTF-8\"/><style>"
                             + IOUtils.toString(AstVisitorUtils.class.getResourceAsStream("rules.css"), defaultCharset())
                             + "</style></head><body>", fos, defaultCharset());
             IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());;
             for (ValidationRule r : rules) {
-                r.accept(new AstHtmlVisitor(fos, BUNDLE, Locale.FRANCE), 0);
-                IOUtils.write("<hr/>", fos, Charset.defaultCharset());
+                new AstHtmlVisitor(fos, BUNDLE, Locale.FRANCE).browse(r.metadata(), 0);
+                IOUtils.write("<hr/>", fos, defaultCharset());
             }
-            IOUtils.write("</div>", fos, Charset.defaultCharset());
-            IOUtils.write("</body></html>", fos, Charset.defaultCharset());
+            IOUtils.write("</div>", fos, defaultCharset());
+            IOUtils.write("</body></html>", fos, defaultCharset());
         }
         System.out.println("written " + output.getAbsolutePath());
         System.exit(1);

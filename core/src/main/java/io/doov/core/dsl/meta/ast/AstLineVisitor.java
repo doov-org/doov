@@ -14,10 +14,11 @@ package io.doov.core.dsl.meta.ast;
 
 import java.util.Locale;
 
-import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.RuleMetadata;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
 
 public class AstLineVisitor extends AstTextVisitor {
 
@@ -36,48 +37,52 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void startMetadata(NaryMetadata metadata, int depth) {
-        super.startMetadata(metadata, depth);
+    public void startNary(NaryPredicateMetadata metadata, int depth) {
+        super.startNary(metadata, depth);
         sb.append("[");
     }
 
     @Override
-    public void visitMetadata(NaryMetadata metadata, int depth) {
-        super.visitMetadata(metadata, depth);
-        sb.delete(sb.length() - 1, sb.length());
-        sb.append(", ");
+    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+        super.visitNary(metadata, depth);
+        if (hasNext) {
+            sb.delete(sb.length() - 1, sb.length());
+            sb.append(", ");
+        }
     }
 
     @Override
-    protected void endMetadata(NaryMetadata metadata, int depth) {
-        super.endMetadata(metadata, depth);
-        sb.delete(sb.length() - 2, sb.length());
+    public void endNary(NaryPredicateMetadata metadata, int depth) {
+        super.endNary(metadata, depth);
+        sb.delete(sb.length() - 1, sb.length());
         sb.append("] ");
     }
 
     @Override
-    protected void startMetadata(BinaryMetadata metadata, int depth) {
-        super.startMetadata(metadata, depth);
+    public void startBinary(BinaryPredicateMetadata metadata, int depth) {
+        super.startBinary(metadata, depth);
         sb.append(depth > 0 ? "(" : "");
     }
 
     @Override
-    public void visitMetadata(BinaryMetadata metadata, int depth) {
-        sb.append(bundle.get(metadata.getOperator(), locale));
-        sb.append(formatNewLine());
+    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+        if (hasNext) {
+            sb.append(bundle.get(metadata.getOperator(), locale));
+            sb.append(formatNewLine());
+        }
     }
 
     @Override
-    protected void endMetadata(BinaryMetadata metadata, int depth) {
-        super.endMetadata(metadata, depth);
+    public void endBinary(BinaryPredicateMetadata metadata, int depth) {
+        super.endBinary(metadata, depth);
         sb.delete(sb.length() - 1, sb.length());
         sb.append(depth > 0 ? ") " : " ");
     }
 
     @Override
-    protected void endMetadata(ValidationRule metadata, int depth) {
-        super.endMetadata(metadata, depth);
-        sb.append("\n");
+    public void endRule(RuleMetadata metadata, int depth) {
+        super.endRule(metadata, depth);
+        formatNewLine();
     }
 
 }

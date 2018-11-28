@@ -13,7 +13,7 @@ public class Element {
     private final Readable readable;
     private final ElementType type;
 
-    Element(Readable readable, ElementType type) {
+    public Element(Readable readable, ElementType type) {
         this.readable = readable;
         this.type = type;
     }
@@ -31,11 +31,11 @@ public class Element {
         return readable.readable();
     }
 
-    static Element leftParenthesis() {
+    public static Element leftParenthesis() {
         return new Element(() -> "(", PARENTHESIS_LEFT);
     }
 
-    static Element rightParenthesis() {
+    public static Element rightParenthesis() {
         return new Element(() -> ")", PARENTHESIS_RIGHT);
     }
 

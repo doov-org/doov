@@ -17,15 +17,13 @@ import java.util.function.BiPredicate;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.impl.LogicalBinaryCondition;
 import io.doov.core.dsl.impl.LogicalUnaryCondition;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.SyntaxTree;
 
 /**
  * Interface for the condition which corresponds to a node in the syntax tree.
  * <p>
- * A condition is represented by a predicate {@link #predicate()} and a {@link #getMetadata()} describing the node.
+ * A condition is represented by a predicate {@link #predicate()} and a {@link #metadata()} describing the node.
  */
-public interface StepCondition extends SyntaxTree {
+public interface StepCondition extends DSLBuilder {
 
     /**
      * Returns the predicate for this node value.
@@ -33,13 +31,6 @@ public interface StepCondition extends SyntaxTree {
      * @return the predicate
      */
     BiPredicate<DslModel, Context> predicate();
-
-    /**
-     * Returns the metadata to describe this node.
-     *
-     * @return the metadata
-     */
-    Metadata getMetadata();
 
     /**
      * Returns a condition checking if the node predicate and the given condition predicate evaluate to true.

@@ -12,23 +12,72 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Stream;
 
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.ReduceType;
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 /**
  * Interface for the description of a node in the syntax tree.
  */
-public interface Metadata extends SyntaxTree {
+public interface Metadata extends Readable {
 
     /**
-     * Merges the node with the given node.
+     * Returns the human readable version of this object.
      *
-     * @param other the other metadata to merge
-     * @return the merged metadata
+     * @param locale the locale to use
+     * @return the readable string
+     * @see #readable()
      */
-    default PredicateMetadata merge(LeafMetadata other) {
-        throw new UnsupportedOperationException();
+    default String readable(Locale locale) {
+        return astToString(this, locale).trim();
+    }
+
+    @Override
+    default String readable() {
+        return readable(Locale.getDefault());
+    }
+
+    default String markdown() {
+        return markdown(Locale.getDefault());
+    }
+
+    default String markdown(Locale locale) {
+        return AstVisitorUtils.astToMarkdown(this, locale);
+    }
+
+    /**
+     * Returns the direct left children of this node in a flat list.
+     *
+     * @return the list of metadata
+     */
+    default Stream<Metadata> left() {
+        return Stream.empty();
+    }
+
+    /**
+     * Returns the direct right children of this node in a flat list.
+     *
+     * @return the list of metadata
+     */
+    default Stream<Metadata> right() {
+        return Stream.empty();
+    }
+
+    /**
+     * Returns the direct children of this node in a flat list.
+     *
+     * @return the list of metadata
+     */
+    default Stream<Metadata> children() {
+        return Stream.concat(left(), right());
     }
 
     /**
@@ -36,14 +85,9 @@ public interface Metadata extends SyntaxTree {
      *
      * @return the list of elements
      */
-    List<Element> flatten();
-
-    /**
-     * Returns the direct children of this node in a flat list.
-     *
-     * @return the list of metadata
-     */
-    List<Metadata> children();
+    default List<Element> flatten() {
+        return Collections.emptyList();
+    }
 
     /**
      * Returns the metadata type.
@@ -53,12 +97,14 @@ public interface Metadata extends SyntaxTree {
     MetadataType type();
 
     /**
-     * Returns the failure message from the given context. The message is returned in its shortest form by pruning
-     * branches in the evaluated syntax tree that are not needed for the failure message.
+     * Returns the reduce metadata tree from the given context. The metadata tree is returned in its shortest form by pruning
+     * branches in the evaluated syntax tree.
      *
      * @param context the evaluated context
+     * @param type the type of reduction
      * @return the metadata
      */
-    Metadata message(Context context);
-
+    default Metadata reduce(Context context, ReduceType type) {
+        return this;
+    }
 }

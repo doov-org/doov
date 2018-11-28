@@ -15,13 +15,9 @@
  */
 package io.doov.core.dsl.field.types;
 
-import java.util.Optional;
-
-import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 
-public interface Condition<T> extends Readable {
+public interface Condition<T> extends ContextAccessor<T>, Readable {
 
-    Optional<T> value(DslModel model, Context context);
+
 }
