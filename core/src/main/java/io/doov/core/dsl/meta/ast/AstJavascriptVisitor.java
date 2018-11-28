@@ -135,19 +135,17 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                     case FIELD:
                         dateField.add(element);
                         break;
+                    case TEMPORAL_UNIT:
                     case OPERATOR:
                         dateOperator.add(element);
                         break;
+                    case STRING_VALUE:
                     case VALUE:
                         dateValue.add(element);
                         break;
-                    case STRING_VALUE:
                     case UNKNOWN:
                     case PARENTHESIS_LEFT:
                     case PARENTHESIS_RIGHT:
-                        break;
-                    case TEMPORAL_UNIT:
-                        dateOperator.add(element);
                         break;
                 }
             });
@@ -181,8 +179,6 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                                 tmp = formatRegexp(tmp);
                             }
                             write(tmp);
-                            // peut buguer si imbrecation de start et end
-                            // ne va pas arriver -> start_with AND end_with, deux predicats separés
                             if (start_with_count > 0 && end_with_count==0) {
                                 write(".*");
                                 start_with_count--;
@@ -227,10 +223,20 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
             case rule:
             case validate:
             case empty:
-            case as_a_number:
-            case as_string:
             case as:
             case with:
+                break;
+            case as_a_number:
+                if(dequeField.size()>0) {
+                    write("parseInt(");
+                    write(dequeField.pollFirst().toString());
+                    write(")");
+                }
+                break;
+            case as_string:
+                if(dequeField.size()>0){
+                    write("String("+dequeField.pollFirst().toString()+")");
+                }
                 break;
             case not:
                 write("!");
@@ -318,9 +324,9 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 is_match=1;
                 break;
             case contains:
-                write(".contains(/");
-                parenthese_depth++;
-                use_regexp = 1;
+                write(".contains(\'");
+                write(dequeValue.pollFirst().toString());
+                write("\')");
                 break;
             case starts_with:
                 write(".match(/^");

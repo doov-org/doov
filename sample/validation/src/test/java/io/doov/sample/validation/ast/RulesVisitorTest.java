@@ -14,16 +14,11 @@ package io.doov.sample.validation.ast;
 
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
-
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Locale;
-
-import javax.script.*;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import io.doov.core.dsl.meta.ast.*;
 import io.doov.sample.validation.SampleRules;
 
@@ -85,11 +80,6 @@ public class RulesVisitorTest {
         System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
     }
 
-
-    /*Problème avec moment js. si On ajoute un mois au 31 du mois de départ (par exemple mai) alors la différence
-    en mois ne sera pas égale à 1
-    ex : difference entre 31 mai et 31 mai plus 1 mois = 0,96...
-    */
     @Test
     public void print_javascript_syntax_tree() {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();

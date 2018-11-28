@@ -9,6 +9,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
@@ -38,7 +39,8 @@ public class EngineTest {
         System.out.println("    "+mockValue);
         try{
 
-            InputStream stream = this.getClass().getResourceAsStream("/META-INF/resources/webjars/momentjs/2.10.3/min/moment.min.js");
+            InputStream stream = this.getClass().getResourceAsStream("/META-INF/resources/webjars/" +
+                    "momentjs/2.10.3/min/moment.min.js");
             InputStreamReader momentJS = new InputStreamReader(stream);
             engine.eval(momentJS);              // evaluating moment.js
             engine.eval(mockValue);             // evaluating the mock values for testing purpose
@@ -53,14 +55,16 @@ public class EngineTest {
                 rule.accept(new AstJavascriptVisitor(ops, BUNDLE, Locale.ENGLISH), 0);
                 String request = new String(ops.toByteArray(), Charset.forName("UTF-8"));
                 try {
-                    if(index[0]!=8 && index[0]!=14 && index[0]!=15 && index[0]!=16) { // excluding some rules for now (lambda expression)
-                        Object obj = engine.eval(request);                            // evaluating the current rule to test
-                        ops.write(("\n Rules n°"+index[0]).getBytes("UTF-8"));
-                        ops.write(("\n    Starting engine checking of : "+ rule.readable() +"\n").getBytes("UTF-8"));
-                        ops.write(("\t\t-"+obj.toString()+"-\n").getBytes("UTF-8"));
-                        ops.write(("    Ending engine checking.\n").getBytes("UTF-8"));
+                    if( index[0]!=14 ) {                                // excluding some rules for now (lambda expression)
+                        Object obj = engine.eval(request);              // evaluating the current rule to test
+                        ops.write(("\n Rules n°"+index[0]).getBytes(StandardCharsets.UTF_8));
+                        ops.write(("\n    Starting engine checking of : "+ rule.readable() +"\n")
+                                .getBytes(StandardCharsets.UTF_8));
+                        ops.write(("\t\t-"+obj.toString()+"-\n").getBytes(StandardCharsets.UTF_8));
+                        ops.write(("    Ending engine checking.\n").getBytes(StandardCharsets.UTF_8));
                     }else{
-                        ops.write(("    Passing engine checking because of mapping issue. Rule n°"+index[0]+"\n").getBytes("UTF-8"));
+                        ops.write(("    Passing engine checking because of mapping issue. Rule n°"+index[0]+"\n")
+                                .getBytes(StandardCharsets.UTF_8));
                     }
                 } catch (final ScriptException se) {
                     throw new RuntimeException(se);
