@@ -3,13 +3,17 @@ io.doov.core.dsl
 io.doov.core.dsl.field
 io.doov.core.dsl.field.types
 io.doov.core.dsl.impl
+io.doov.core.dsl.impl.num
+io.doov.core.dsl.impl.time
 io.doov.core.dsl.lang
 io.doov.core.dsl.mapping
 io.doov.core.dsl.mapping.builder
 io.doov.core.dsl.mapping.converter
 io.doov.core.dsl.meta
 io.doov.core.dsl.meta.ast
+io.doov.core.dsl.meta.function
 io.doov.core.dsl.meta.i18n
+io.doov.core.dsl.meta.predicate
 io.doov.core.dsl.path
 io.doov.core.dsl.runtime
 io.doov.core.dsl.time
