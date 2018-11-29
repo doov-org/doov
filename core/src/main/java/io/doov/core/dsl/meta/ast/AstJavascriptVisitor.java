@@ -8,9 +8,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 import org.apache.commons.lang3.StringUtils;
 
 public class AstJavascriptVisitor extends AbstractAstVisitor {
@@ -33,85 +36,90 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startMetadata(BinaryMetadata metadata,int depth){
+    public void startBinary(BinaryPredicateMetadata metadata, int depth){
         write("(");
     }
 
     @Override
-    public void visitMetadata(BinaryMetadata metadata,int depth){
-        switch((DefaultOperator)metadata.getOperator()){
-            case and:
-                write(" && ");
-                break;
-            case or:
-                write(" || ");
-                break;
-            case xor:
-                manageXOR(metadata.getLeft(),metadata.getRight());
-                break;
-            case greater_than:
-                write(" > ");
-                break;
-            case greater_or_equals:
-                write(" >= ");
-                break;
-            case lesser_than:
-                write(" < ");
-                break;
-            case lesser_or_equals:
-                write(" <= ");
-            case equals:
-                write(" == ");
-                break;
-            case not_equals:
-                write(" != ");
-                break;
-        }
-    }
-
-    @Override
-    public void endMetadata(BinaryMetadata metadata,int depth){
-        write(")");
-    }
-
-    @Override
-    public void startMetadata(NaryMetadata metadata,int depth){
-        if(metadata.getOperator()==match_none) {
-            write("!");                             // for predicate [a,b,c] will translate as (!a && !b && !c)
-        }
-        if(metadata.getOperator()==count || metadata.getOperator()==sum){
-            write("[");                             // opening a list to use count or sum on
-        }
-        if(metadata.getOperator()==min){
-            write("Math.min.apply(null,[");         // using JS Math module to apply min on a list, opening the list
-        }
-    }
-
-    @Override
-    public void visitMetadata(NaryMetadata metadata,int depth){
-        nary_args_count++;                                      // denying access to the children.size element of a Nary
-        if(nary_args_count!=metadata.children().size()) {       // expression, which doesn't exists
-            switch((DefaultOperator)metadata.getOperator()){
-                case match_any:
-                    write(" || ");                          // using 'or' operator to match any of the predicate given
+    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth)
+    {
+        if(hasNext) {
+            switch ((DefaultOperator) metadata.getOperator()) {
+                case and:
+                    write(" && ");
                     break;
-                case match_all:
-                    write(" && ");                          // using 'and' operator for match all
+                case or:
+                    write(" || ");
                     break;
-                case match_none:
-                    write(" && !");                         // 'and not' for match none
+                case xor:
+                    manageXOR(metadata.getLeft(), metadata.getRight());
                     break;
-                case min:
-                case sum:
-                case count:
-                    write(", ");                            // separating the list values
+                case greater_than:
+                    write(" > ");
+                    break;
+                case greater_or_equals:
+                    write(" >= ");
+                    break;
+                case lesser_than:
+                    write(" < ");
+                    break;
+                case lesser_or_equals:
+                    write(" <= ");
+                case equals:
+                    write(" == ");
+                    break;
+                case not_equals:
+                    write(" != ");
                     break;
             }
         }
     }
 
     @Override
-    public void endMetadata(NaryMetadata metadata,int depth){
+    public void endBinary(BinaryPredicateMetadata metadata,int depth){
+        write(")");
+    }
+
+    @Override
+    public void startNary(NaryPredicateMetadata metadata, int depth){
+        if (metadata.getOperator() == match_none) {
+            write("!");                             // for predicate [a,b,c] will translate as (!a && !b && !c)
+        }
+        if (metadata.getOperator() == count || metadata.getOperator() == sum) {
+            write("[");                             // opening a list to use count or sum on
+        }
+        if (metadata.getOperator() == min) {
+            write("Math.min.apply(null,[");         // using JS Math module to apply min on a list, opening the list
+        }
+    }
+
+    @Override
+    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child,boolean hasNext, int depth){
+        if(hasNext) {
+            nary_args_count++;                                      // denying access to the children.size element of a Nary
+            if (nary_args_count != metadata.children().count()) {       // expression, which doesn't exists
+                switch ((DefaultOperator) metadata.getOperator()) {
+                    case match_any:
+                        write(" || ");                          // using 'or' operator to match any of the predicate given
+                        break;
+                    case match_all:
+                        write(" && ");                          // using 'and' operator for match all
+                        break;
+                    case match_none:
+                        write(" && !");                         // 'and not' for match none
+                        break;
+                    case min:
+                    case sum:
+                    case count:
+                        write(", ");                            // separating the list values
+                        break;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void endNary(NaryPredicateMetadata metadata,int depth){
         nary_args_count = 0 ;
         if(metadata.getOperator()==count){
             write("].reduce(function(acc,val){if(val){return acc+1;}return acc;},0)");
@@ -125,12 +133,12 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void visitMetadata(LeafMetadata metadata, int depth) {
+    public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
         if(metadata.flatten().size()>3) {
             ArrayDeque<Element> dateField = new ArrayDeque<>();    //using arrayDeque to store the fields
             ArrayDeque<Element> dateOperator = new ArrayDeque<>(); //using arrayDeque to store the operators
             ArrayDeque<Element> dateValue = new ArrayDeque<>();    //using arrayDeque to store the values
-            metadata.stream().forEach(element ->{
+            metadata.flatten().forEach(element ->{
                 switch(element.getType()){
                     case FIELD:
                         dateField.add(element);
@@ -144,8 +152,11 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                         dateValue.add(element);
                         break;
                     case UNKNOWN:
+                        write("/* Unknown " + element.toString() + "*/");
+                        break;
                     case PARENTHESIS_LEFT:
                     case PARENTHESIS_RIGHT:
+                        write("/*"+element.toString()+"*/");
                         break;
                 }
             });
@@ -154,7 +165,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                         dateField,dateOperator,dateValue);       // calling a method to manage the LeafMD with the deques
             }
         }else {
-            metadata.stream().forEach(element -> {
+            metadata.flatten().forEach(element -> {
                 switch (element.getType()) {
                     case FIELD:
                         write(element.toString());
@@ -195,10 +206,10 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                     case PARENTHESIS_LEFT:
                     case PARENTHESIS_RIGHT:
                     case TEMPORAL_UNIT:
-                        write(element.toString());
+                        write("/*" + element.toString() + "*/");
                         break;
                     case UNKNOWN:
-                        write("Unknown " + element.toString());
+                        write("/* Unknown " + element.toString() + "*/");
                         break;
                 }
             });
@@ -210,6 +221,17 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
         }
     }
 
+    @Override
+    public void beforeChildUnary(UnaryPredicateMetadata metadata, Metadata child, int depth){
+        manageOperator((DefaultOperator)metadata.getOperator(),null,null,null);
+
+    }
+
+    @Override
+    public void endUnary(UnaryPredicateMetadata metadata, int depth){
+        write(")");
+    }
+
     /**
      * managing method for most of the operators in a LeafMetaData context
      * @param element the default operator of the LeafMetadata
@@ -218,7 +240,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
      * @param dequeValue a deque of the LeafMetadata values
      * */
     private void manageOperator(DefaultOperator element,ArrayDeque<Element> dequeField, ArrayDeque<Element> dequeOpe,
-                               ArrayDeque<Element> dequeValue){
+                                ArrayDeque<Element> dequeValue){
         switch(element){
             case rule:
             case validate:
@@ -239,7 +261,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 }
                 break;
             case not:
-                write("!");
+                write("!(");
                 break;
             case always_true:
                 write("true");
@@ -291,7 +313,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 parenthese_depth++;
                 break;
             case age_at:
-                // TODO utilisation de Math.round(...) ? diff(31mai,31mai + 1mois) = 0.96
+                // using Math.round(...) -> ex : diff(31may,31may + 1month) = 0.96
                 write("Math.round(Math.abs(moment("+dequeField.pollFirst()+").diff(");//Math.abs so the date order doesn't matter
                 if(dequeField.size()>0){
                     write("moment(");
@@ -447,12 +469,12 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startMetadata(StepWhen metadata, int depth){
+    public void startWhen(WhenMetadata metadata, int depth){
         write("if(");
     }
 
     @Override
-    public void endMetadata(StepWhen metadata,int depth){
+    public void endWhen(WhenMetadata metadata,int depth){
         while(parenthese_depth>0){
             write(")");                 //closing parenthesis for each opened
             parenthese_depth--;
