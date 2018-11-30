@@ -178,6 +178,7 @@ wrapper {
 
 nexusStaging {
     delayBetweenRetriesInMillis = 5000
+    numberOfRetries = 50
 }
 
 // Deploy tasks
