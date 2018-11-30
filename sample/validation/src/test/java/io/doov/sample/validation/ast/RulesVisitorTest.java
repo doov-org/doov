@@ -91,7 +91,7 @@ public class RulesVisitorTest {
                         e.printStackTrace();
                     }
                 })
-                .forEach(rule -> rule.metadata().accept(new AstJavascriptVisitor(ops, BUNDLE, Locale.ENGLISH), 0));
+                .forEach(rule -> new AstJavascriptVisitor(ops, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
         System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
     }
 }

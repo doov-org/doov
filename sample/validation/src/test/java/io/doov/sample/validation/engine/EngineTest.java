@@ -26,7 +26,9 @@ public class EngineTest {
         ScriptEngineManager sem = new ScriptEngineManager();            // creation of an engine manager
         ScriptEngine engine = sem.getEngineByName("nashorn");        // engine creation based on nashorn
         final int[] index = new int[1];                                 // index as a tab, usage in lambda expression
+        final int[] counter = new int[1];
         index[0]=0;
+        counter[0]=0;
         String mockValue = "var configuration = { max:{email:{size:24}}, min:{age:18}};\n"
                 +"\tvar account = {email:\"potato@tomato.fr\", "
                 +"creation: {date : \"2012-10-10\"}, country:\"FR\", company:\"LESFURETS.COM\","
@@ -61,9 +63,12 @@ public class EngineTest {
                         ops.write(("\n    Starting engine checking of : "+ rule.readable() +"\n")
                                 .getBytes(StandardCharsets.UTF_8));
                         ops.write(("\t\t-"+obj.toString()+"-\n").getBytes(StandardCharsets.UTF_8));
+                        if(obj.toString().equals("true")){
+                            counter[0]++;
+                        }
                         ops.write(("    Ending engine checking.\n").getBytes(StandardCharsets.UTF_8));
                     }else{
-                        ops.write(("    Passing engine checking because of mapping issue. Rule n°"+index[0]+"\n")
+                        ops.write(("    Skipping engine checking because of mapping issue. Rule n°"+index[0]+"\n")
                                 .getBytes(StandardCharsets.UTF_8));
                     }
                 } catch (final ScriptException se) {
@@ -74,7 +79,6 @@ public class EngineTest {
                 e.printStackTrace();
             }
         });
-
-
+        System.out.println("Passing "+counter[0]+" out of "+index[0]+" tests with true value.");
     }
 }
