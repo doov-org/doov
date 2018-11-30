@@ -38,7 +38,6 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -50,8 +49,7 @@ import org.apache.commons.io.IOUtils;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.ast.AstHtmlVisitor;
-import io.doov.core.dsl.meta.ast.AstVisitorUtils;
+import io.doov.core.dsl.meta.ast.*;
 import io.doov.sample.model.Country;
 import io.doov.sample.model.Timezone;
 
@@ -155,16 +153,19 @@ public class SampleRules extends DefaultRuleRegistry {
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws IOException {
         final File output = new File("validation_rule.html");
         final List<ValidationRule> rules = REGISTRY_DEFAULT.stream().collect(toList());
         try (FileOutputStream fos = new FileOutputStream(output)) {
             IOUtils.write("<html><head><meta charset=\"UTF-8\"/><style>"
                             + IOUtils.toString(AstVisitorUtils.class.getResourceAsStream("rules.css"), defaultCharset())
                             + "</style></head><body>", fos, defaultCharset());
-            IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());;
+            IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());
+            AstHtmlVisitor visitor = new AstHtmlVisitor(fos, BUNDLE, Locale.FRANCE);
             for (ValidationRule r : rules) {
-                new AstHtmlVisitor(fos, BUNDLE, Locale.FRANCE).browse(r.metadata(), 0);
+                IOUtils.write(r.readable(Locale.FRANCE), fos, defaultCharset());
+                IOUtils.write(visitor.exclusionBar(r, ExclusionBar.BIG), fos, defaultCharset());
+                visitor.browse(r.metadata(), 0);
                 IOUtils.write("<hr/>", fos, defaultCharset());
             }
             IOUtils.write("</div>", fos, defaultCharset());

@@ -74,9 +74,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     public String exclusionBar(ValidationRule rule, ExclusionBar cssClass) {
-        PredicateMetadata rm = rule.metadata() instanceof PredicateMetadata ? ((PredicateMetadata) rule.metadata())
-                : null;
-        return exclusionBar(rm, cssClass);
+        Metadata conditionMetadata = rule.getStepWhen().stepCondition().metadata();
+        if (conditionMetadata instanceof PredicateMetadata) {
+            return exclusionBar((PredicateMetadata) conditionMetadata, cssClass);
+        } else {
+            return "";
+        }
     }
 
     public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
