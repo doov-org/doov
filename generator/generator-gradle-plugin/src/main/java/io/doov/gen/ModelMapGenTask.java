@@ -196,10 +196,17 @@ public class ModelMapGenTask extends DefaultTask {
                     TypeAdapterRegistry.class, TypeAdapters.class, classLoader);
             FieldTypeProvider typeProvider = loadClassWithType(fieldInfoTypesProperty,
                     FieldTypeProvider.class, FieldTypes.class, classLoader).newInstance();
+
+            cleanOutputDirectories();
             generateModels(fieldClazz, modelClazz, baseClazz, typeAdapterClazz, typeProvider, fieldPaths);
         } catch (Exception e) {
             throw new GradleException(e.getMessage(), e);
         }
+    }
+
+    private void cleanOutputDirectories() {
+        outputResourceDirectory.map(File::delete).getOrNull();
+        outputDirectory.map(File::delete).getOrNull();
     }
 
     private <T> Class<? extends T> loadClassWithType(Property<String> className,
