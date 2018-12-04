@@ -2,6 +2,8 @@ dependencies {
     compile project(':doov-sample-generated')
     compile group: 'io.doov', name: 'doov-core'
     compile group: 'io.doov', name: 'doov-assertions'
+    compile group: 'io.doov', name: 'doov-js-extension'
     compile group: 'commons-io', name:'commons-io'
+    compile group: 'org.webjars', name: 'momentjs', version: '2.10.3'
 }
 
