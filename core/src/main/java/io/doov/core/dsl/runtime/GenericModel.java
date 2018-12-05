@@ -2,36 +2,30 @@ package io.doov.core.dsl.runtime;
 
 import static io.doov.core.dsl.runtime.FieldChainBuilder.from;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.*;
+import java.util.*;
+import java.util.stream.Stream;
 
-import io.doov.core.FieldId;
-import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.field.types.BooleanFieldInfo;
-import io.doov.core.dsl.field.types.CharacterFieldInfo;
-import io.doov.core.dsl.field.types.DoubleFieldInfo;
-import io.doov.core.dsl.field.types.EnumFieldInfo;
-import io.doov.core.dsl.field.types.FloatFieldInfo;
-import io.doov.core.dsl.field.types.IntegerFieldInfo;
-import io.doov.core.dsl.field.types.IterableFieldInfo;
-import io.doov.core.dsl.field.types.LocalDateFieldInfo;
-import io.doov.core.dsl.field.types.LocalDateTimeFieldInfo;
-import io.doov.core.dsl.field.types.LocalTimeFieldInfo;
-import io.doov.core.dsl.field.types.LongFieldInfo;
-import io.doov.core.dsl.field.types.StringFieldInfo;
+import io.doov.core.*;
+import io.doov.core.dsl.field.types.*;
+import io.doov.core.serial.TypeAdapterRegistry;
+import io.doov.core.serial.TypeAdapters;
 
-public final class GenericModel implements DslModel {
+public final class GenericModel implements FieldModel {
 
     private final List<RuntimeField<GenericModel, Object>> fields;
-    private final HashMap<FieldId, Object> valueMap;
+    private final Map<FieldId, Object> valueMap;
+
+    private final TypeAdapterRegistry adapterRegistry;
 
     public GenericModel() {
+        this(TypeAdapters.INSTANCE);
+    }
+
+    public GenericModel(TypeAdapterRegistry adapterRegistry) {
         this.fields = new ArrayList<>();
         this.valueMap = new HashMap<>();
+        this.adapterRegistry = adapterRegistry;
     }
 
     @SuppressWarnings("unchecked")
@@ -45,13 +39,44 @@ public final class GenericModel implements DslModel {
         valueMap.put(id, value);
     }
 
+    @Override
+    public Stream<Map.Entry<FieldId, Object>> stream() {
+        return valueMap.entrySet().stream();
+    }
+
+    @Override
+    public Iterator<Map.Entry<FieldId, Object>> iterator() {
+        return valueMap.entrySet().iterator();
+    }
+
+    @Override
+    public Spliterator<Map.Entry<FieldId, Object>> spliterator() {
+        return valueMap.entrySet().spliterator();
+    }
+
+    @Override
+    public Stream<Map.Entry<FieldId, Object>> parallelStream() {
+        return valueMap.entrySet().parallelStream();
+    }
+
+    @Override
+    public List<FieldInfo> getFieldInfos() {
+        return new ArrayList<>(fields);
+    }
+
+    @Override
+    public TypeAdapterRegistry getTypeAdapterRegistry() {
+        return adapterRegistry;
+    }
+
     @SuppressWarnings("unchecked")
-    private <T> RuntimeField<GenericModel, T> runtimeField(T value, String readable) {
+    private <T> RuntimeField<GenericModel, T> runtimeField(T value, String readable, Class<?>... genericTypes) {
         FieldId fieldId = () -> readable;
         this.set(fieldId, value);
         return from(GenericModel.class, fieldId)
                 .readable(readable)
-                .field(o -> o.get(fieldId), (o, v) -> o.set(fieldId, v), (Class<T>) (value == null ?  Void.TYPE : value.getClass()))
+                .field(o -> o.get(fieldId), (o, v) -> o.set(fieldId, v),
+                        (Class<T>) (value == null ? Void.TYPE : value.getClass()), genericTypes)
                 .register(fields);
     }
 
