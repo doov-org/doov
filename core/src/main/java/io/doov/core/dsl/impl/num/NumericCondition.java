@@ -47,9 +47,6 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
         super(metadata, value);
     }
 
-    protected abstract NumericCondition<N> numericFunction(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> value);
-
     /**
      * Returns a step condition checking if the node value is lesser than the given value.
      *

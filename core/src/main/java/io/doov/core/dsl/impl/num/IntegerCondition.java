@@ -37,11 +37,4 @@ public class IntegerCondition extends NumericCondition<Integer> implements Integ
         this(condition.getMetadata(),
                         (model, context) -> condition.getFunction().apply(model, context).map(Long::intValue));
     }
-
-    @Override
-    protected NumericCondition<Integer> numericFunction(PredicateMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<Integer>> value) {
-        return new IntegerCondition(metadata, value);
-    }
-
 }

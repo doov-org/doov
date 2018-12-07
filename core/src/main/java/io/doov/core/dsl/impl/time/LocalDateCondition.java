@@ -36,10 +36,4 @@ public class LocalDateCondition extends TemporalCondition<LocalDate> implements 
     public LocalDateCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<LocalDate>> value) {
         super(metadata, value);
     }
-
-    @Override
-    protected TemporalCondition<LocalDate> temporalCondition(PredicateMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<LocalDate>> value) {
-        return new LocalDateCondition(metadata, value);
-    }
 }

@@ -33,12 +33,6 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
         super(metadata, value);
     }
 
-    @Override
-    protected final TemporalFunction<N> temporalCondition(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> value) {
-        return temporalFunction(metadata, value);
-    }
-
     protected abstract TemporalFunction<N> temporalFunction(PredicateMetadata metadata,
             BiFunction<DslModel, Context, Optional<N>> value);
 
@@ -49,7 +43,7 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
      * @return the temporal function
      */
     public final TemporalFunction<N> with(TemporalAdjuster adjuster) {
-        return temporalCondition(withMetadata(metadata, adjuster.getMetadata()), (model,
+        return temporalFunction(withMetadata(metadata, adjuster.getMetadata()), (model,
                 context) -> value(model, context).map(v -> withFunction(adjuster.getAdjuster()).apply(v)));
     }
 
@@ -61,7 +55,7 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
      * @return the temporal function
      */
     public final TemporalFunction<N> minus(int value, TemporalUnit unit) {
-        return temporalCondition(minusMetadata(metadata, value, unit),
+        return temporalFunction(minusMetadata(metadata, value, unit),
                 (model, context) -> value(model, context).map(v -> minusFunction(value, unit).apply(v)));
     }
 
@@ -73,7 +67,7 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
      * @return the temporal function
      */
     public final TemporalFunction<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
-        return temporalCondition(minusMetadata(metadata, value, unit),
+        return temporalFunction(minusMetadata(metadata, value, unit),
                 (model, context) -> value(model, context)
                         .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
                                 .map(r -> minusFunction(r, unit).apply(l))));
@@ -87,7 +81,7 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
      * @return the temporal function
      */
     public final TemporalFunction<N> plus(int value, TemporalUnit unit) {
-        return temporalCondition(plusMetadata(metadata, value, unit),
+        return temporalFunction(plusMetadata(metadata, value, unit),
                 (model, context) -> value(model, context).map(v -> plusFunction(value, unit).apply(v)));
     }
 
@@ -99,7 +93,7 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
      * @return the temporal function
      */
     public final TemporalFunction<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
-        return temporalCondition(plusMetadata(metadata, value, unit),
+        return temporalFunction(plusMetadata(metadata, value, unit),
                 (model, context) -> value(model, context)
                         .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
                                 .map(r -> plusFunction(r, unit).apply(l))));

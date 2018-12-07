@@ -21,7 +21,7 @@ import io.doov.core.dsl.field.types.Function;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
-abstract class AbstractFunction<N, M extends Metadata> implements Function<N> {
+public class DefaultFunction<N, M extends Metadata> implements Function<N> {
 
     protected static <T> Optional<T> valueModel(DslModel model, DslField<T> field) {
         return Optional.ofNullable(model.get(field.id()));
@@ -30,7 +30,7 @@ abstract class AbstractFunction<N, M extends Metadata> implements Function<N> {
     protected final M metadata;
     protected final BiFunction<DslModel, Context, Optional<N>> function;
 
-    protected AbstractFunction(M metadata, BiFunction<DslModel, Context, Optional<N>> function) {
+    protected DefaultFunction(M metadata, BiFunction<DslModel, Context, Optional<N>> function) {
         this.metadata = metadata;
         this.function = function;
     }
