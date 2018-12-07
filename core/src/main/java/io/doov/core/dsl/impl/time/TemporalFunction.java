@@ -18,13 +18,12 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.field.types.TemporalFieldInfo;
-import io.doov.core.dsl.impl.DSLFunction;
 import io.doov.core.dsl.impl.num.*;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 import io.doov.core.dsl.time.TemporalAdjuster;
 
-public abstract class TemporalFunction<N extends Temporal> extends TemporalCondition<N> implements DSLFunction {
+public abstract class TemporalFunction<N extends Temporal> extends TemporalCondition<N> {
 
     protected TemporalFunction(DslField<N> field) {
         super(field);
@@ -36,12 +35,12 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
 
     @Override
     protected final TemporalFunction<N> temporalCondition(PredicateMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<N>> value) {
+            BiFunction<DslModel, Context, Optional<N>> value) {
         return temporalFunction(metadata, value);
     }
 
     protected abstract TemporalFunction<N> temporalFunction(PredicateMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<N>> value);
+            BiFunction<DslModel, Context, Optional<N>> value);
 
     /**
      * Returns a temporal function that returns the node value with given temporal adjuster applied.
@@ -50,8 +49,8 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
      * @return the temporal function
      */
     public final TemporalFunction<N> with(TemporalAdjuster adjuster) {
-        return temporalCondition(metadata.merge(withMetadata(metadata, adjuster.getMetadata())), (model,
-                        context) -> value(model, context).map(v -> withFunction(adjuster.getAdjuster()).apply(v)));
+        return temporalCondition(withMetadata(metadata, adjuster.getMetadata()), (model,
+                context) -> value(model, context).map(v -> withFunction(adjuster.getAdjuster()).apply(v)));
     }
 
     /**
@@ -62,8 +61,8 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
      * @return the temporal function
      */
     public final TemporalFunction<N> minus(int value, TemporalUnit unit) {
-        return temporalCondition(metadata.merge(minusMetadata(metadata, value, unit)),
-                        (model, context) -> value(model, context).map(v -> minusFunction(value, unit).apply(v)));
+        return temporalCondition(minusMetadata(metadata, value, unit),
+                (model, context) -> value(model, context).map(v -> minusFunction(value, unit).apply(v)));
     }
 
     /**
@@ -74,10 +73,10 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
      * @return the temporal function
      */
     public final TemporalFunction<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
-        return temporalCondition(metadata.merge(minusMetadata(metadata, value, unit)),
-                        (model, context) -> value(model, context)
-                                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
-                                                        .map(r -> minusFunction(r, unit).apply(l))));
+        return temporalCondition(minusMetadata(metadata, value, unit),
+                (model, context) -> value(model, context)
+                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
+                                .map(r -> minusFunction(r, unit).apply(l))));
     }
 
     /**
@@ -88,8 +87,8 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
      * @return the temporal function
      */
     public final TemporalFunction<N> plus(int value, TemporalUnit unit) {
-        return temporalCondition(metadata.merge(plusMetadata(metadata, value, unit)),
-                        (model, context) -> value(model, context).map(v -> plusFunction(value, unit).apply(v)));
+        return temporalCondition(plusMetadata(metadata, value, unit),
+                (model, context) -> value(model, context).map(v -> plusFunction(value, unit).apply(v)));
     }
 
     /**
@@ -100,10 +99,10 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
      * @return the temporal function
      */
     public final TemporalFunction<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
-        return temporalCondition(metadata.merge(plusMetadata(metadata, value, unit)),
-                        (model, context) -> value(model, context)
-                                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
-                                                        .map(r -> plusFunction(r, unit).apply(l))));
+        return temporalCondition(plusMetadata(metadata, value, unit),
+                (model, context) -> value(model, context)
+                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
+                                .map(r -> plusFunction(r, unit).apply(l))));
     }
 
     /**
@@ -268,24 +267,24 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, N value) {
         return new LongFunction(metadata, (model, context) -> value(model, context)
-                        .flatMap(l -> Optional.ofNullable(value).map(r -> betweenFunction(unit).apply(l, r))));
+                .flatMap(l -> Optional.ofNullable(value).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
-                    TemporalFieldInfo<N> value) {
+            TemporalFieldInfo<N> value) {
         return new LongFunction(metadata, (model, context) -> value(model, context)
-                        .flatMap(l -> valueModel(model, value).map(r -> betweenFunction(unit).apply(l, r))));
+                .flatMap(l -> valueModel(model, value).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
-                    TemporalCondition<N> value) {
+            TemporalCondition<N> value) {
         return new LongFunction(metadata, (model, context) -> value(model, context).flatMap(
-                        l -> value.getFunction().apply(model, context).map(r -> betweenFunction(unit).apply(l, r))));
+                l -> value.getFunction().apply(model, context).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, Supplier<N> value) {
         return new LongFunction(metadata, (model, context) -> value(model, context)
-                        .flatMap(l -> Optional.ofNullable(value.get()).map(r -> betweenFunction(unit).apply(l, r))));
+                .flatMap(l -> Optional.ofNullable(value.get()).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
 }

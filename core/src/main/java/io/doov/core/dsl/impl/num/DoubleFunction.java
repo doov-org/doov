@@ -22,7 +22,7 @@ public class DoubleFunction extends NumericFunction<Double> implements DoubleOpe
     }
 
     @Override
-    protected DoubleFunction numericCondition(PredicateMetadata metadata,
+    protected DoubleFunction numericFunction(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Double>> value) {
         return new DoubleFunction(metadata, value);
     }

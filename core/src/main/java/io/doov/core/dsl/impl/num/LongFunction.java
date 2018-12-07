@@ -22,7 +22,7 @@ public class LongFunction extends NumericFunction<Long> implements LongOperators
     }
 
     @Override
-    protected LongFunction numericCondition(PredicateMetadata metadata,
+    protected LongFunction numericFunction(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Long>> value) {
         return new LongFunction(metadata, value);
     }

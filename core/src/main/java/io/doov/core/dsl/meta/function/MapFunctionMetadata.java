@@ -8,17 +8,19 @@ import static io.doov.core.dsl.meta.DefaultOperator.as_a_number;
 import static io.doov.core.dsl.meta.DefaultOperator.as_string;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 
+import java.util.ArrayDeque;
+
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class MapFunctionMetadata extends LeafPredicateMetadata<MapFunctionMetadata> {
-    public MapFunctionMetadata(Metadata metadata) {
-        super(metadata);
+public class MapFunctionMetadata extends LeafMetadata<MapFunctionMetadata> implements PredicateMetadata {
+    private MapFunctionMetadata(Metadata metadata) {
+        super(new ArrayDeque<>(metadata.flatten()), metadata.type());
     }
 
-    public MapFunctionMetadata(Metadata metadata, MetadataType type) {
-        super(metadata, type);
+    private MapFunctionMetadata(Metadata metadata, MetadataType type) {
+        super(new ArrayDeque<>(metadata.flatten()), type);
     }
 
     public static MapFunctionMetadata mapToIntMetadata(Metadata metadata) {

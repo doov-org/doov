@@ -17,7 +17,7 @@ package io.doov.core.dsl.field.types;
 
 import io.doov.core.dsl.lang.Readable;
 
-public interface Condition<T> extends ContextAccessor<T>, Readable {
+public interface Function<T> extends ContextAccessor<T>, Readable {
 
 
 }

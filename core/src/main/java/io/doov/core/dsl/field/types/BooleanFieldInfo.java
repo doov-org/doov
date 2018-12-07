@@ -17,7 +17,7 @@ package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.BooleanCondition;
+import io.doov.core.dsl.impl.BooleanFunction;
 
 public class BooleanFieldInfo extends DelegatingFieldInfoImpl implements LogicalFieldInfo {
 
@@ -26,8 +26,8 @@ public class BooleanFieldInfo extends DelegatingFieldInfoImpl implements Logical
     }
 
     @Override
-    public BooleanCondition getBooleanCondition() {
-        return new BooleanCondition(this);
+    public BooleanFunction getBooleanFunction() {
+        return new BooleanFunction(this);
     }
 
 }

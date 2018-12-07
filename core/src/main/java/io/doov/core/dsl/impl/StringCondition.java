@@ -12,7 +12,6 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.impl.LeafStepCondition.predicate;
 import static io.doov.core.dsl.meta.function.StringFunctionMetadata.containsMetadata;
 import static io.doov.core.dsl.meta.function.StringFunctionMetadata.endsWithMetadata;
 import static io.doov.core.dsl.meta.function.StringFunctionMetadata.matchesMetadata;
@@ -51,7 +50,7 @@ public class StringCondition extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition contains(String value) {
-        return predicate(this, containsMetadata(metadata, value), value, String::contains);
+        return LeafStepCondition.stepCondition(containsMetadata(metadata, value), getFunction(), value, String::contains);
     }
 
     /**
@@ -61,7 +60,7 @@ public class StringCondition extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition matches(String value) {
-        return predicate(this, matchesMetadata(metadata, value), value, String::matches);
+        return LeafStepCondition.stepCondition(matchesMetadata(metadata, value), getFunction(), value, String::matches);
     }
 
     /**
@@ -71,7 +70,7 @@ public class StringCondition extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition startsWith(String value) {
-        return predicate(this, startsWithMetadata(metadata, value), value, String::startsWith);
+        return LeafStepCondition.stepCondition(startsWithMetadata(metadata, value), getFunction(), value, String::startsWith);
     }
 
     /**
@@ -81,7 +80,7 @@ public class StringCondition extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition endsWith(String value) {
-        return predicate(this, endsWithMetadata(metadata, value), value, String::endsWith);
+        return LeafStepCondition.stepCondition(endsWithMetadata(metadata, value), getFunction(), value, String::endsWith);
     }
 
 }

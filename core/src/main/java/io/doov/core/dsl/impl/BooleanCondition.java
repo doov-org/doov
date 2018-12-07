@@ -12,7 +12,6 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.impl.LeafStepCondition.predicate;
 import static io.doov.core.dsl.meta.function.BooleanFunctionMetadata.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -50,7 +49,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition not() {
-        return predicate(this, notMetadata(metadata), value -> !value);
+        return LeafStepCondition.stepCondition(notMetadata(metadata), getFunction(), value -> !value);
     }
 
     /**
@@ -60,7 +59,8 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition and(boolean value) {
-        return predicate(this, andMetadata(metadata, value), value, Boolean::logicalAnd);
+        return LeafStepCondition.stepCondition(andMetadata(metadata, value), getFunction(), value,
+                Boolean::logicalAnd);
     }
 
     /**
@@ -70,7 +70,8 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition and(LogicalFieldInfo value) {
-        return predicate(this, andMetadata(metadata, value), value, Boolean::logicalAnd);
+        return LeafStepCondition.stepCondition(andMetadata(metadata, value), getFunction(), value,
+                Boolean::logicalAnd);
     }
 
     /**
@@ -80,7 +81,8 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition or(boolean value) {
-        return predicate(this, orMetadata(metadata, value), value, Boolean::logicalOr);
+        return LeafStepCondition.stepCondition(orMetadata(metadata, value), getFunction(), value,
+                Boolean::logicalOr);
     }
 
     /**
@@ -90,27 +92,8 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition or(LogicalFieldInfo value) {
-        return predicate(this, orMetadata(metadata, value), value, Boolean::logicalOr);
-    }
-
-    /**
-     * Returns a step condition checking if the node value or exclusive the given value is true.
-     *
-     * @param value the right value
-     * @return the step condition
-     */
-    public final StepCondition xor(boolean value) {
-        return predicate(this, xorMetadata(metadata, value), value, Boolean::logicalXor);
-    }
-
-    /**
-     * Returns a step condition checking if the node value or exclusive the given field value is true.
-     *
-     * @param value the right field value
-     * @return the step condition
-     */
-    public final StepCondition xor(LogicalFieldInfo value) {
-        return predicate(this, xorMetadata(metadata, value), value, Boolean::logicalXor);
+        return LeafStepCondition.stepCondition(orMetadata(metadata, value), getFunction(), value,
+                Boolean::logicalOr);
     }
 
     /**
@@ -119,7 +102,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition isTrue() {
-        return predicate(this, isMetadata(metadata, true), TRUE, Boolean::equals);
+        return LeafStepCondition.stepCondition(isMetadata(metadata, true), getFunction(), TRUE, Boolean::equals);
     }
 
     /**
@@ -128,7 +111,8 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition isFalse() {
-        return predicate(this, isMetadata(metadata, false), FALSE, Boolean::equals);
+        return LeafStepCondition.stepCondition(isMetadata(metadata, false), getFunction(), FALSE,
+                Boolean::equals);
     }
 
 }

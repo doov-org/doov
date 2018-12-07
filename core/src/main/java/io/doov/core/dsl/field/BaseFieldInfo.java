@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.field.types.Condition;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.StringFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
@@ -35,7 +34,7 @@ import io.doov.core.dsl.lang.StepCondition;
  * It contains default methods for common checks, which are calls to methods on {@link DefaultCondition}.
  *
  * @param <T> the type of the field value
- * @see #getDefaultCondition()
+ * @see #getDefaultFunction()
  */
 public interface BaseFieldInfo<T> extends DslField<T> {
 
@@ -46,7 +45,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#isNull()
      */
     default StepCondition isNull() {
-        return getDefaultCondition().isNull();
+        return getDefaultFunction().isNull();
     }
 
     /**
@@ -56,7 +55,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#isNotNull()
      */
     default StepCondition isNotNull() {
-        return getDefaultCondition().isNotNull();
+        return getDefaultFunction().isNotNull();
     }
 
     /**
@@ -67,7 +66,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#eq(Object)
      */
     default StepCondition eq(T value) {
-        return getDefaultCondition().eq(value);
+        return getDefaultFunction().eq(value);
     }
 
     /**
@@ -78,18 +77,18 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#eq(BaseFieldInfo)
      */
     default StepCondition eq(BaseFieldInfo<T> value) {
-        return getDefaultCondition().eq(value);
+        return getDefaultFunction().eq(value);
     }
 
     /**
      * See {@link DefaultCondition#eq(Supplier)}
      *
-     * @param value the right side value
+     * @param supplier the right side value supplier
      * @return the step condition
      * @see DefaultCondition#eq(Supplier)
      */
-    default StepCondition eq(Supplier<T> value) {
-        return getDefaultCondition().eq(value);
+    default StepCondition eq(Supplier<T> supplier) {
+        return getDefaultFunction().eq(supplier);
     }
 
     /**
@@ -100,7 +99,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#notEq(Object)
      */
     default StepCondition notEq(T value) {
-        return getDefaultCondition().notEq(value);
+        return getDefaultFunction().notEq(value);
     }
 
     /**
@@ -111,7 +110,18 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#notEq(BaseFieldInfo)
      */
     default StepCondition notEq(BaseFieldInfo<T> value) {
-        return getDefaultCondition().notEq(value);
+        return getDefaultFunction().notEq(value);
+    }
+
+    /**
+     * See {@link DefaultCondition#eq(Supplier)}
+     *
+     * @param supplier the right side value supplier
+     * @return the step condition
+     * @see DefaultCondition#eq(Supplier)
+     */
+    default StepCondition notEq(Supplier<T> supplier) {
+        return getDefaultFunction().notEq(supplier);
     }
 
     /**
@@ -122,7 +132,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#anyMatch(List)
      */
     default StepCondition anyMatch(Predicate<T> value) {
-        return getDefaultCondition().anyMatch(singletonList(value));
+        return getDefaultFunction().anyMatch(singletonList(value));
     }
 
     /**
@@ -134,7 +144,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      */
     @SuppressWarnings("unchecked")
     default StepCondition anyMatch(T... values) {
-        return getDefaultCondition().anyMatch(asList(values));
+        return getDefaultFunction().anyMatch(asList(values));
     }
 
     /**
@@ -145,7 +155,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#anyMatch(Collection)
      */
     default StepCondition anyMatch(Collection<T> values) {
-        return getDefaultCondition().anyMatch(values);
+        return getDefaultFunction().anyMatch(values);
     }
 
     /**
@@ -156,7 +166,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#allMatch(List)
      */
     default StepCondition allMatch(Predicate<T> value) {
-        return getDefaultCondition().allMatch(singletonList(value));
+        return getDefaultFunction().allMatch(singletonList(value));
     }
 
     /**
@@ -168,7 +178,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      */
     @SuppressWarnings("unchecked")
     default StepCondition allMatch(T... values) {
-        return getDefaultCondition().allMatch(asList(values));
+        return getDefaultFunction().allMatch(asList(values));
     }
 
     /**
@@ -179,7 +189,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#allMatch(Collection)
      */
     default StepCondition allMatch(Collection<T> values) {
-        return getDefaultCondition().allMatch(values);
+        return getDefaultFunction().allMatch(values);
     }
 
     /**
@@ -190,7 +200,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#noneMatch(List)
      */
     default StepCondition noneMatch(Predicate<T> value) {
-        return getDefaultCondition().noneMatch(singletonList(value));
+        return getDefaultFunction().noneMatch(singletonList(value));
     }
 
     /**
@@ -202,7 +212,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      */
     @SuppressWarnings("unchecked")
     default StepCondition noneMatch(T... values) {
-        return getDefaultCondition().noneMatch(asList(values));
+        return getDefaultFunction().noneMatch(asList(values));
     }
 
     /**
@@ -213,7 +223,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#noneMatch(Collection)
      */
     default StepCondition noneMatch(Collection<T> values) {
-        return getDefaultCondition().noneMatch(values);
+        return getDefaultFunction().noneMatch(values);
     }
 
     /**
@@ -224,7 +234,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultCondition#mapToInt(Function)
      */
     default IntegerFunction mapToInt(Function<T, Integer> mapper) {
-        return getDefaultCondition().mapToInt(mapper);
+        return getDefaultFunction().mapToInt(mapper);
     }
 
     /**
@@ -234,7 +244,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @return string condition
      */
     default StringFunction mapToString(Function<T, String> mapper) {
-        return getDefaultCondition().mapToString(mapper);
+        return getDefaultFunction().mapToString(mapper);
     }
 
     /**
@@ -246,11 +256,11 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @return condition with target type
      */
     default <R> DefaultCondition<R> map(String readable, Function<T, R> mapper) {
-        return getDefaultCondition().map(readable, mapper);
+        return getDefaultFunction().map(readable, mapper);
     }
 
     /**
-     * See {@link DefaultCondition#mapUsing(String, Condition, BiFunction)}
+     * See {@link DefaultCondition#mapUsing(String, io.doov.core.dsl.field.types.Function, BiFunction)}
      *
      * @param readable description
      * @param condition condition
@@ -261,8 +271,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      */
     default <U, R> DefaultCondition<R> mapUsing(String readable, DslField<U> condition,
             BiFunction<T, U, R> mapper) {
-        return getDefaultCondition().mapUsing(readable, condition.getDefaultCondition(), mapper);
+        return getDefaultFunction().mapUsing(readable, condition.getDefaultFunction(), mapper);
     }
-
 
 }

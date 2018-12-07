@@ -595,13 +595,13 @@ public class SampleRuleI18nTest {
                         .isEqualTo(DefaultOperator.class);
         assertThat(elts).extracting(Element::getType).element(0).isEqualTo(ElementType.FIELD);
         assertThat(elts).extracting(Element::getType).element(1).isEqualTo(ElementType.OPERATOR);
-        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.UNKNOWN);
+        assertThat(elts).extracting(Element::getType).element(2).isEqualTo(ElementType.VALUE);
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(0)
                         .isEqualTo("favorite.site.name.1");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(1)
                         .isEqualTo("match any");
         assertThat(elts).extracting(Element::getReadable).extracting(Readable::readable).element(2)
-                        .isEqualTo("-function- -function-");
+                        .isEqualTo("-function-");
         System.out.println(RULE_DOUBLE_LAMBDA);
     }
 

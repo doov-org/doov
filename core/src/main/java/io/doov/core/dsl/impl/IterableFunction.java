@@ -11,7 +11,7 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class IterableFunction<T, C extends Iterable<T>> extends IterableCondition<T, C> implements DSLFunction {
+public class IterableFunction<T, C extends Iterable<T>> extends IterableCondition<T, C> {
 
     public IterableFunction(DslField<C> field) {
         super(field);

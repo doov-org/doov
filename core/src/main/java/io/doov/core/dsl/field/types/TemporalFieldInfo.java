@@ -182,6 +182,17 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
     }
 
     /**
+     * See {@link TemporalCondition#beforeOrEq(Temporal)}
+     *
+     * @param value the right side value
+     * @return the step condition
+     * @see TemporalCondition#beforeOrEq(Temporal)
+     */
+    default StepCondition beforeOrEq(TemporalFieldInfo<N> value) {
+        return getTemporalFunction().beforeOrEq(value);
+    }
+    
+    /**
      * See {@link TemporalCondition#beforeOrEq(Supplier)}
      *
      * @param value the right side value
@@ -256,6 +267,17 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      */
     default StepCondition afterOrEq(N value) {
         return getTemporalFunction().afterOrEq(value);
+    }
+    
+    /**
+     * See {@link TemporalCondition#afterOrEq(Temporal)}
+     *
+     * @param field the right side value
+     * @return the step condition
+     * @see TemporalCondition#afterOrEq(TemporalFieldInfo)
+     */
+    default StepCondition afterOrEq(TemporalFieldInfo<N> field) {
+        return getTemporalFunction().afterOrEq(field);
     }
 
     /**
@@ -500,7 +522,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
     TemporalFunction<N> getTemporalFunction();
 
     @Override
-    default TemporalFunction<N> getDefaultCondition() {
+    default TemporalFunction<N> getDefaultFunction() {
         return getTemporalFunction();
     }
 }

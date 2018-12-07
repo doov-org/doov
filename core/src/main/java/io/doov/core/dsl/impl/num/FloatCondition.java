@@ -34,7 +34,7 @@ public class FloatCondition extends NumericCondition<Float> implements FloatOper
     }
 
     @Override
-    protected NumericCondition<Float> numericCondition(PredicateMetadata metadata,
+    protected NumericCondition<Float> numericFunction(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Float>> value) {
         return new FloatCondition(metadata, value);
     }

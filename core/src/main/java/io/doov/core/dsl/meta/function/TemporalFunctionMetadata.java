@@ -8,36 +8,22 @@ import static io.doov.core.dsl.meta.ElementType.TEMPORAL_UNIT;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayDeque;
 import java.util.function.Supplier;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 
 public class TemporalFunctionMetadata extends LeafPredicateMetadata<TemporalFunctionMetadata> {
-    private final AtomicInteger evalTrue = new AtomicInteger();
-    private final AtomicInteger evalFalse = new AtomicInteger();
 
-    public TemporalFunctionMetadata(MetadataType type) {
-        super(type);
+    private TemporalFunctionMetadata(MetadataType type) {
+        super(new ArrayDeque<>(), type);
     }
 
-    public TemporalFunctionMetadata(Metadata metadata, MetadataType type) {
-        super(metadata, type);
-    }
-
-    @Override
-    public AtomicInteger evalTrue() {
-        return evalTrue;
-    }
-
-    @Override
-    public AtomicInteger evalFalse() {
-        return evalFalse;
+    private TemporalFunctionMetadata(Metadata metadata, MetadataType type) {
+        super(new ArrayDeque<>(metadata.flatten()), type);
     }
 
     // minus
@@ -152,6 +138,12 @@ public class TemporalFunctionMetadata extends LeafPredicateMetadata<TemporalFunc
                 .valueObject(value);
     }
 
+    public static TemporalFunctionMetadata afterOrEqTemporalFieldMetadata(DefaultCondition<?> condition,
+            DslField<?> field) {
+        return new TemporalFunctionMetadata(FIELD_PREDICATE).valueCondition(condition).operator(after_or_equals)
+                .field(field);
+    }
+
     public static TemporalFunctionMetadata afterOrEqualsSupplierMetadata(DefaultCondition<?> condition,
             Supplier<?> value) {
         return new TemporalFunctionMetadata(FIELD_PREDICATE).valueCondition(condition).operator(after_or_equals)
@@ -192,6 +184,12 @@ public class TemporalFunctionMetadata extends LeafPredicateMetadata<TemporalFunc
             Object value) {
         return new TemporalFunctionMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before_or_equals)
                 .valueObject(value);
+    }
+
+    public static TemporalFunctionMetadata beforeOrEqTemporalFieldMetadata(DefaultCondition<?> condition,
+            DslField<?> field) {
+        return new TemporalFunctionMetadata(FIELD_PREDICATE).valueCondition(condition).operator(before_or_equals)
+                .field(field);
     }
 
     public static TemporalFunctionMetadata beforeOrEqualsSupplierMetadata(DefaultCondition<?> condition,

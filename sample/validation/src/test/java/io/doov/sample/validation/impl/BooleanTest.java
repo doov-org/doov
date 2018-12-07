@@ -81,27 +81,4 @@ public class BooleanTest {
         configuration.setMailingCampaign(true);
         assertThat(accountAcceptEmail.or(configurationMailingCampaign)).validates(model);
     }
-
-    @Test
-    public void should_logical_xor_works_like_java() {
-        assertThat(accountAcceptEmail.xor(false)).doesNotValidate(model);
-        assertThat(accountAcceptEmail.xor(true)).validates(model);
-
-        account.setAcceptEmail(true);
-        assertThat(accountAcceptEmail.xor(false)).validates(model);
-        assertThat(accountAcceptEmail.xor(true)).doesNotValidate(model);
-
-        account.setAcceptEmail(false);
-        assertThat(accountAcceptEmail.xor(configurationMailingCampaign)).doesNotValidate(model);
-
-        account.setAcceptEmail(true);
-        assertThat(accountAcceptEmail.xor(configurationMailingCampaign)).validates(model);
-
-        configuration.setMailingCampaign(false);
-        assertThat(accountAcceptEmail.xor(configurationMailingCampaign)).validates(model);
-
-        configuration.setMailingCampaign(true);
-        assertThat(accountAcceptEmail.xor(configurationMailingCampaign)).doesNotValidate(model);
-    }
-
 }

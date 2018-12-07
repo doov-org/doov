@@ -11,7 +11,7 @@ import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class BooleanFunction extends BooleanCondition implements DSLFunction {
+public class BooleanFunction extends BooleanCondition {
 
     public BooleanFunction(DslField<Boolean> field) {
         super(field);

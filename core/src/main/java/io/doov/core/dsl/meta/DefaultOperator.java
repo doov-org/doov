@@ -40,7 +40,6 @@ public enum DefaultOperator implements Operator {
     starts_with("starts with"), //
     ends_with("ends with"), //
     greater_than(">"), greater_or_equals(">="), //
-    xor("xor"), //
     is("is"), //
     lesser_than("<"), //
     lesser_or_equals("<="), //
@@ -49,6 +48,7 @@ public enum DefaultOperator implements Operator {
     is_empty("is empty"), //
     is_not_empty("is not empty"), //
     length_is("length is"), //
+    lambda("-function-"), //
 
     // TemporalAdjuster
     today("today"), //

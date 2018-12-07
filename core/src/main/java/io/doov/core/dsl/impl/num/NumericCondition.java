@@ -12,12 +12,10 @@
  */
 package io.doov.core.dsl.impl.num;
 
-import static io.doov.core.dsl.impl.LeafStepCondition.predicate;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.greaterOrEqualsMetadata;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.greaterThanMetadata;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.lesserOrEqualsMetadata;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.lesserThanMetadata;
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.whenMetadata;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -26,6 +24,7 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.LeafStepCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
@@ -48,7 +47,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
         super(metadata, value);
     }
 
-    protected abstract NumericCondition<N> numericCondition(PredicateMetadata metadata,
+    protected abstract NumericCondition<N> numericFunction(PredicateMetadata metadata,
             BiFunction<DslModel, Context, Optional<N>> value);
 
     /**
@@ -58,7 +57,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
      * @return the step condition
      */
     public final StepCondition lesserThan(N value) {
-        return predicate(this, lesserThanMetadata(metadata, value), value,
+        return LeafStepCondition.stepCondition(merge(lesserThanMetadata(metadata, value)), getFunction(), value,
                 (l, r) -> lesserThanFunction().apply(l, r));
     }
 
@@ -69,7 +68,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
      * @return the step condition
      */
     public final StepCondition lesserThan(NumericFieldInfo<N> value) {
-        return predicate(this, lesserThanMetadata(metadata, value), value,
+        return LeafStepCondition.stepCondition(merge(lesserThanMetadata(metadata, value)), getFunction(), value,
                 (l, r) -> lesserThanFunction().apply(l, r));
     }
 
@@ -80,7 +79,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
      * @return the step condition
      */
     public final StepCondition lesserOrEquals(N value) {
-        return predicate(this, lesserOrEqualsMetadata(metadata, value), value,
+        return LeafStepCondition.stepCondition(merge(lesserOrEqualsMetadata(metadata, value)), getFunction(), value,
                 (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
@@ -91,7 +90,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
      * @return the step condition
      */
     public final StepCondition lesserOrEquals(NumericFieldInfo<N> value) {
-        return predicate(this, lesserOrEqualsMetadata(metadata, value), value,
+        return LeafStepCondition.stepCondition(merge(lesserOrEqualsMetadata(metadata, value)), getFunction(), value,
                 (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
@@ -102,7 +101,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
      * @return the step condition
      */
     public final StepCondition greaterThan(N value) {
-        return predicate(this, greaterThanMetadata(metadata, value), value,
+        return LeafStepCondition.stepCondition(merge(greaterThanMetadata(metadata, value)), getFunction(), value,
                 (l, r) -> greaterThanFunction().apply(l, r));
     }
 
@@ -113,7 +112,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
      * @return the step condition
      */
     public final StepCondition greaterThan(NumericFieldInfo<N> value) {
-        return predicate(this, greaterThanMetadata(metadata, value), value,
+        return LeafStepCondition.stepCondition(merge(greaterThanMetadata(metadata, value)), getFunction(), value,
                 (l, r) -> greaterThanFunction().apply(l, r));
     }
 
@@ -124,7 +123,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
      * @return the step condition
      */
     public final StepCondition greaterOrEquals(N value) {
-        return predicate(this, greaterOrEqualsMetadata(metadata, value), value,
+        return LeafStepCondition.stepCondition(merge(greaterOrEqualsMetadata(metadata, value)), getFunction(), value,
                 (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
@@ -135,7 +134,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
      * @return the step condition
      */
     public final StepCondition greaterOrEquals(NumericFieldInfo<N> value) {
-        return predicate(this, greaterOrEqualsMetadata(metadata, value), value,
+        return LeafStepCondition.stepCondition(greaterOrEqualsMetadata(metadata, value), getFunction(), value,
                 (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 

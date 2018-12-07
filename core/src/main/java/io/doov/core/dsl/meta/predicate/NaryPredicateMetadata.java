@@ -86,6 +86,7 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
     }
 
     @Override
+    @Deprecated
     public PredicateMetadata merge(LeafMetadata<?> other) {
         final List<Element> elts = other.elements().stream().collect(Collectors.toList());
         if (elts.get(0).getType() == OPERATOR && (elts.get(0).getReadable() == sum || elts.get(0).getReadable() == min

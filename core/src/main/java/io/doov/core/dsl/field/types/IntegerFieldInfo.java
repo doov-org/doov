@@ -26,7 +26,7 @@ public class IntegerFieldInfo extends DelegatingFieldInfoImpl implements Numeric
     }
 
     @Override
-    public IntegerFunction getNumericCondition() {
+    public IntegerFunction getNumericFunction() {
         return new IntegerFunction(this);
     }
 

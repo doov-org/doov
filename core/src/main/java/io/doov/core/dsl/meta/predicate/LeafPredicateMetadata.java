@@ -34,16 +34,12 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
 
-    private LeafPredicateMetadata(Deque<Element> elements, MetadataType type) {
+    public LeafPredicateMetadata(Deque<Element> elements, MetadataType type) {
         super(elements, type);
     }
 
-    public LeafPredicateMetadata(MetadataType type) {
+    LeafPredicateMetadata(MetadataType type) {
         this(new ArrayDeque<>(), type);
-    }
-
-    public LeafPredicateMetadata(Metadata metadata) {
-        this(new ArrayDeque<>(metadata.flatten()), metadata.type());
     }
 
     public LeafPredicateMetadata(Metadata metadata, MetadataType type) {
@@ -61,6 +57,7 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
     }
 
     @Override
+    @Deprecated
     public LeafPredicateMetadata<M> merge(LeafMetadata<?> other) {
         removeDuplicate(elements(), other.elements());
         final Deque<Element> merge = new ArrayDeque<>(elements());
@@ -126,8 +123,8 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
         return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(equals).valueObject(value);
     }
 
-    public static <M extends LeafPredicateMetadata<M>> M equalsMetadata(Metadata metadata, Supplier<?> value) {
-        return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(equals).valueUnknown("-function-");
+    public static <M extends LeafPredicateMetadata<M>> M equalsMetadata(Metadata metadata, Supplier<?> supplier) {
+        return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(equals).valueReadable(lambda);
     }
 
     public static <M extends LeafPredicateMetadata<M>> M equalsMetadata(Metadata metadata, Readable value) {
@@ -143,8 +140,8 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
         return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(not_equals).valueObject(value);
     }
 
-    public static <M extends LeafPredicateMetadata<M>> M notEqualsMetadata(Metadata metadata, Supplier<?> value) {
-        return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(not_equals).valueUnknown("-function-");
+    public static <M extends LeafPredicateMetadata<M>> M notEqualsMetadata(Metadata metadata, Supplier<?> supplier) {
+        return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(not_equals).valueReadable(lambda);
     }
 
     public static <M extends LeafPredicateMetadata<M>> M notEqualsMetadata(Metadata metadata, Readable value) {
@@ -165,7 +162,7 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
 
     public static <M extends LeafPredicateMetadata<M>> M matchAnyMetadata(Metadata metadata) {
         return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE_MATCH_ANY).operator(match_any)
-                .valueUnknown("-function-");
+                .valueReadable(lambda);
     }
 
     public static <M extends LeafPredicateMetadata<M>> M matchAnyMetadata(Metadata metadata, Collection<?> values) {
@@ -174,7 +171,7 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
     }
 
     public static <M extends LeafPredicateMetadata<M>> M matchAllMetadata(Metadata metadata) {
-        return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(match_all).valueUnknown("-function-");
+        return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(match_all).valueReadable(lambda);
     }
 
     public static <M extends LeafPredicateMetadata<M>> M matchAllMetadata(Metadata metadata, Collection<?> values) {
@@ -182,7 +179,7 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
     }
 
     public static <M extends LeafPredicateMetadata<M>> M matchNoneMetadata(Metadata metadata) {
-        return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(match_none).valueUnknown("-function-");
+        return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(match_none).valueReadable(lambda);
     }
 
     public static <M extends LeafPredicateMetadata<M>> M matchNoneMetadata(Metadata metadata, Collection<?> values) {

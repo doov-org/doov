@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.util.Locale;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.StringFieldInfo;
@@ -74,8 +73,8 @@ public class DefaultConditionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A = -function- -function- validate");
-        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A = -function- -function-");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A = -function- validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A = -function-");
     }
 
     @Test
@@ -100,9 +99,7 @@ public class DefaultConditionTest {
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A != 'value'");
     }
 
-/*
     @Test
-    @Disabled
     void notEq_supplier() {
         rule = when(A.notEq(() -> "value")).validate();
         result = rule.executeOn(model);
@@ -112,7 +109,6 @@ public class DefaultConditionTest {
         assertThat(rule.readable(LOCALE)).isEqualTo("rule when A != -function- validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A != -function-");
     }
-*/
 
     @Test
     void notEq_field() {
@@ -143,7 +139,7 @@ public class DefaultConditionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match any -function- -function- validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match any -function- validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A = 'value'");
     }
 
@@ -176,8 +172,8 @@ public class DefaultConditionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match all -function- -function- validate");
-        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match all -function- -function-");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match all -function- validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match all -function-");
     }
     
     @Test
@@ -209,8 +205,8 @@ public class DefaultConditionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match none -function- -function- validate");
-        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match none -function- -function-");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match none -function- validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match none -function-");
     }
 
 

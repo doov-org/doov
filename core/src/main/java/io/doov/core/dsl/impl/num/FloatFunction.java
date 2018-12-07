@@ -22,7 +22,7 @@ public class FloatFunction extends NumericFunction<Float> implements FloatOperat
     }
 
     @Override
-    protected FloatFunction numericCondition(PredicateMetadata metadata,
+    protected FloatFunction numericFunction(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Float>> value) {
         return new FloatFunction(metadata, value);
     }
