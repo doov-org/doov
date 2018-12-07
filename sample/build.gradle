@@ -16,6 +16,7 @@ subprojects {
     apply plugin: 'maven'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
+    apply plugin: 'jacoco'
 
     dependencies {
         constraints {
@@ -56,6 +57,20 @@ subprojects {
     test {
         useJUnitPlatform()
     }
+
+    jacoco {
+        toolVersion = "0.8.2"
+    }
+
+    jacocoTestReport {
+        reports {
+            csv.enabled false
+            xml.enabled true
+            html.enabled true
+        }
+    }
+
+    check.dependsOn(jacocoTestReport)
 }
 
 wrapper {
