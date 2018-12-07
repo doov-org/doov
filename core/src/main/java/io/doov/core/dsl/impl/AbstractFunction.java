@@ -17,20 +17,20 @@ import java.util.function.BiFunction;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
-import io.doov.core.dsl.field.types.Condition;
+import io.doov.core.dsl.field.types.Function;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.predicate.PredicateMetadata;
+import io.doov.core.dsl.meta.Metadata;
 
-abstract class AbstractCondition<N> implements Condition<N> {
+abstract class AbstractFunction<N, M extends Metadata> implements Function<N> {
 
     protected static <T> Optional<T> valueModel(DslModel model, DslField<T> field) {
         return Optional.ofNullable(model.get(field.id()));
     }
 
-    protected final PredicateMetadata metadata;
+    protected final M metadata;
     protected final BiFunction<DslModel, Context, Optional<N>> function;
 
-    protected AbstractCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<N>> function) {
+    protected AbstractFunction(M metadata, BiFunction<DslModel, Context, Optional<N>> function) {
         this.metadata = metadata;
         this.function = function;
     }
@@ -39,7 +39,7 @@ abstract class AbstractCondition<N> implements Condition<N> {
         return function.apply(model, context);
     }
 
-    public PredicateMetadata getMetadata() {
+    public M getMetadata() {
         return metadata;
     }
 

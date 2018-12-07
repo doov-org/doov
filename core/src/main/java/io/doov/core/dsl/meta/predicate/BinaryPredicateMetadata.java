@@ -12,8 +12,8 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.count;
+import static io.doov.core.dsl.meta.DefaultOperator.equals;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 
@@ -39,6 +39,14 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
     @Override
     public AtomicInteger evalFalse() {
         return evalFalse;
+    }
+    
+    public static BinaryPredicateMetadata equalsMetadata(Metadata left, Metadata right) {
+        return new BinaryPredicateMetadata(left, equals, right);
+    }
+    
+    public static BinaryPredicateMetadata notEqualsMetadata(Metadata left, Metadata right) {
+        return new BinaryPredicateMetadata(left, not_equals, right);
     }
 
     public static BinaryPredicateMetadata andMetadata(Metadata left, Metadata right) {

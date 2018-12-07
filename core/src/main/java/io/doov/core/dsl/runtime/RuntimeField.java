@@ -63,7 +63,7 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     }
 
     @Override
-    public DefaultCondition<R> getDefaultCondition() {
+    public DefaultCondition<R> getDefaultFunction() {
         return new DefaultCondition<>(this);
     }
 

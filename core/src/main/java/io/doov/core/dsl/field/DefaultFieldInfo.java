@@ -94,7 +94,7 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
     }
 
     @Override
-    public DefaultCondition<T> getDefaultCondition() {
+    public DefaultCondition<T> getDefaultFunction() {
         return new DefaultCondition<>(this);
     }
 

@@ -34,7 +34,7 @@ public class LongCondition extends NumericCondition<Long> implements LongOperato
     }
 
     @Override
-    protected NumericCondition<Long> numericCondition(PredicateMetadata metadata,
+    protected NumericCondition<Long> numericFunction(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Long>> value) {
         return new LongCondition(metadata, value);
     }

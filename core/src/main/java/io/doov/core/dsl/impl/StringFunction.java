@@ -14,7 +14,7 @@ import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class StringFunction extends StringCondition implements DSLFunction {
+public class StringFunction extends StringCondition {
 
     public StringFunction(DslField<String> field) {
         super(field);

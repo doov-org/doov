@@ -36,7 +36,7 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
      * @see StringCondition#contains(String)
      */
     default StepCondition contains(String string) {
-        return getStringCondition().contains(string);
+        return getStringFunction().contains(string);
     }
 
     /**
@@ -47,7 +47,7 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
      * @see StringCondition#matches(String)
      */
     default StepCondition matches(String regex) {
-        return getStringCondition().matches(regex);
+        return getStringFunction().matches(regex);
     }
 
     /**
@@ -58,7 +58,7 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
      * @see StringCondition#startsWith(String)
      */
     default StepCondition startsWith(String prefix) {
-        return getStringCondition().startsWith(prefix);
+        return getStringFunction().startsWith(prefix);
     }
 
     /**
@@ -69,7 +69,7 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
      * @see StringCondition#endsWith(String)
      */
     default StepCondition endsWith(String suffix) {
-        return getStringCondition().endsWith(suffix);
+        return getStringFunction().endsWith(suffix);
     }
 
     /**
@@ -79,7 +79,7 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
      * @see StringFunction#length()
      */
     default IntegerFunction length() {
-        return getStringCondition().length();
+        return getStringFunction().length();
     }
 
     /**
@@ -89,7 +89,7 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
      * @see StringFunction#parseInt()
      */
     default IntegerFunction parseInt() {
-        return getStringCondition().parseInt();
+        return getStringFunction().parseInt();
     }
 
     /**
@@ -97,11 +97,11 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
      *
      * @return the step condition
      */
-    StringFunction getStringCondition();
+    StringFunction getStringFunction();
 
     @Override
-    default StringCondition getDefaultCondition() {
-        return getStringCondition();
+    default StringCondition getDefaultFunction() {
+        return getStringFunction();
     }
 
 }

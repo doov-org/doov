@@ -35,7 +35,7 @@ public class DoubleCondition extends NumericCondition<Double> implements DoubleO
     }
 
     @Override
-    protected NumericCondition<Double> numericCondition(PredicateMetadata metadata,
+    protected NumericCondition<Double> numericFunction(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Double>> value) {
         return new DoubleCondition(metadata, value);
     }

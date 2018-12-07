@@ -17,7 +17,7 @@ public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingField
     }
 
     @Override
-    public DefaultCondition<C> getDefaultCondition() {
+    public DefaultCondition<C> getDefaultFunction() {
         return new DefaultCondition<>(this);
     }
 

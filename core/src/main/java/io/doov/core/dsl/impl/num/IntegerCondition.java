@@ -39,7 +39,7 @@ public class IntegerCondition extends NumericCondition<Integer> implements Integ
     }
 
     @Override
-    protected NumericCondition<Integer> numericCondition(PredicateMetadata metadata,
+    protected NumericCondition<Integer> numericFunction(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Integer>> value) {
         return new IntegerCondition(metadata, value);
     }

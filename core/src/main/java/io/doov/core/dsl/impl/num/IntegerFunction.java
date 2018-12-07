@@ -27,7 +27,7 @@ public class IntegerFunction extends NumericFunction<Integer> implements Integer
     }
 
     @Override
-    protected IntegerFunction numericCondition(PredicateMetadata metadata,
+    protected IntegerFunction numericFunction(PredicateMetadata metadata,
                     BiFunction<DslModel, Context, Optional<Integer>> value) {
         return new IntegerFunction(metadata, value);
     }

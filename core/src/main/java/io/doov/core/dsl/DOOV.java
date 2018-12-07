@@ -16,19 +16,35 @@ import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.falseMetadat
 import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.trueMetadata;
 import static java.util.Arrays.asList;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import io.doov.core.dsl.field.types.NumericFieldInfo;
-import io.doov.core.dsl.impl.*;
-import io.doov.core.dsl.impl.num.*;
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.DefaultStepCondition;
+import io.doov.core.dsl.impl.DefaultStepWhen;
+import io.doov.core.dsl.impl.LogicalNaryCondition;
+import io.doov.core.dsl.impl.LogicalUnaryCondition;
+import io.doov.core.dsl.impl.num.IntegerFunction;
+import io.doov.core.dsl.impl.num.NumericFunction;
+import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.MappingInput;
+import io.doov.core.dsl.lang.MappingRule;
+import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.mapping.MappingRegistry;
-import io.doov.core.dsl.mapping.builder.*;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
-import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
+import io.doov.core.dsl.mapping.builder.BiStepMap;
+import io.doov.core.dsl.mapping.builder.ContextawareStepMap;
+import io.doov.core.dsl.mapping.builder.NaryStepMap;
+import io.doov.core.dsl.mapping.builder.SimpleStepMap;
+import io.doov.core.dsl.mapping.builder.StaticStepMap;
 
 /**
  * Entry point of the DSL.
@@ -138,7 +154,7 @@ public class DOOV {
      */
     public static StepCondition matchAny(Stream<? extends DslField<?>> dslFields,
                     Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
-        return LogicalNaryCondition.matchAny(dslFields.filter(Objects::nonNull).map(DslField::getDefaultCondition)
+        return LogicalNaryCondition.matchAny(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                         .map(stepConditionFunction).collect(Collectors.toList()));
     }
 
@@ -162,7 +178,7 @@ public class DOOV {
      */
     public static StepCondition matchAll(Stream<? extends DslField<?>> dslFields,
                     Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
-        return LogicalNaryCondition.matchAll(dslFields.filter(Objects::nonNull).map(DslField::getDefaultCondition)
+        return LogicalNaryCondition.matchAll(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                         .map(stepConditionFunction).collect(Collectors.toList()));
     }
 
@@ -186,7 +202,7 @@ public class DOOV {
      */
     public static StepCondition matchNone(Stream<? extends DslField<?>> dslFields,
                     Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
-        return LogicalNaryCondition.matchNone(dslFields.filter(Objects::nonNull).map(DslField::getDefaultCondition)
+        return LogicalNaryCondition.matchNone(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                         .map(stepConditionFunction).collect(Collectors.toList()));
     }
 
@@ -364,7 +380,7 @@ public class DOOV {
      */
     @SafeVarargs
     public static <N extends Number> NumericFunction<N> min(NumericFieldInfo<N>... fields) {
-        return Arrays.stream(fields).filter(Objects::nonNull).findFirst().map(NumericFieldInfo::getNumericCondition)
+        return Arrays.stream(fields).filter(Objects::nonNull).findFirst().map(NumericFieldInfo::getNumericFunction)
                         .map(c -> c.min(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
     }
 
@@ -377,8 +393,8 @@ public class DOOV {
      * @see NumericFunction#sum(List)
      */
     @SafeVarargs
-    public static <N extends Number> NumericCondition<N> sum(NumericFieldInfo<N>... fields) {
-        return Arrays.stream(fields).filter(Objects::nonNull).findFirst().map(NumericFieldInfo::getNumericCondition)
+    public static <N extends Number> NumericFunction<N> sum(NumericFieldInfo<N>... fields) {
+        return Arrays.stream(fields).filter(Objects::nonNull).findFirst().map(NumericFieldInfo::getNumericFunction)
                         .map(c -> c.sum(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
     }
 

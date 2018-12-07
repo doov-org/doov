@@ -37,7 +37,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericCondition#lesserThan(Number)
      */
     default StepCondition lesserThan(N value) {
-        return getNumericCondition().lesserThan(value);
+        return getNumericFunction().lesserThan(value);
     }
 
     /**
@@ -48,7 +48,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericCondition#lesserThan(NumericFieldInfo)
      */
     default StepCondition lesserThan(NumericFieldInfo<N> value) {
-        return getNumericCondition().lesserThan(value);
+        return getNumericFunction().lesserThan(value);
     }
 
     /**
@@ -59,7 +59,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericCondition#lesserOrEquals(Number)
      */
     default StepCondition lesserOrEquals(N value) {
-        return getNumericCondition().lesserOrEquals(value);
+        return getNumericFunction().lesserOrEquals(value);
     }
 
     /**
@@ -70,7 +70,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericCondition#lesserOrEquals(NumericFieldInfo)
      */
     default StepCondition lesserOrEquals(NumericFieldInfo<N> value) {
-        return getNumericCondition().lesserOrEquals(value);
+        return getNumericFunction().lesserOrEquals(value);
     }
 
     /**
@@ -81,7 +81,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericCondition#greaterThan(Number)
      */
     default StepCondition greaterThan(N value) {
-        return getNumericCondition().greaterThan(value);
+        return getNumericFunction().greaterThan(value);
     }
 
     /**
@@ -92,7 +92,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericCondition#greaterThan(NumericFieldInfo)
      */
     default StepCondition greaterThan(NumericFieldInfo<N> value) {
-        return getNumericCondition().greaterThan(value);
+        return getNumericFunction().greaterThan(value);
     }
 
     /**
@@ -103,7 +103,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericCondition#greaterOrEquals(Number)
      */
     default StepCondition greaterOrEquals(N value) {
-        return getNumericCondition().greaterOrEquals(value);
+        return getNumericFunction().greaterOrEquals(value);
     }
 
     /**
@@ -114,7 +114,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericCondition#greaterOrEquals(NumericFieldInfo)
      */
     default StepCondition greaterOrEquals(NumericFieldInfo<N> value) {
-        return getNumericCondition().greaterOrEquals(value);
+        return getNumericFunction().greaterOrEquals(value);
     }
 
     /**
@@ -126,7 +126,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericCondition#between(Number, Number)
      */
     default StepCondition between(N minIncluded, N maxExcluded) {
-        return getNumericCondition().between(minIncluded, maxExcluded);
+        return getNumericFunction().between(minIncluded, maxExcluded);
     }
 
     /**
@@ -138,7 +138,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericCondition#between(NumericFieldInfo, NumericFieldInfo)
      */
     default StepCondition between(NumericFieldInfo<N> minIncluded, NumericFieldInfo<N> maxExcluded) {
-        return getNumericCondition().between(minIncluded, maxExcluded);
+        return getNumericFunction().between(minIncluded, maxExcluded);
     }
 
     /**
@@ -149,7 +149,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericFunction#times(int)
      */
     default NumericFunction<N> times(int multiplier) {
-        return getNumericCondition().times(multiplier);
+        return getNumericFunction().times(multiplier);
     }
     
     /**
@@ -160,7 +160,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericFunction#plus(NumericFieldInfo)
      */
     default NumericFunction<N> plus(NumericFieldInfo<N> field) {
-        return getNumericCondition().plus(field);
+        return getNumericFunction().plus(field);
     }
 
     /**
@@ -171,18 +171,18 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      * @see NumericFunction#when(StepCondition)
      */
     default NumericFunction<N> when(StepCondition condition) {
-        return getNumericCondition().when(condition);
+        return getNumericFunction().when(condition);
     }
 
     /**
      * Returns a new numeric condition that will use this as a value.
      *
-     * @return the numeric condition
+     * @return the numeric function
      */
-    NumericFunction<N> getNumericCondition();
+    NumericFunction<N> getNumericFunction();
 
     @Override
-    default NumericFunction<N> getDefaultCondition() {
-        return getNumericCondition();
+    default NumericFunction<N> getDefaultFunction() {
+        return getNumericFunction();
     }
 }

@@ -26,7 +26,7 @@ public class FloatFieldInfo extends DelegatingFieldInfoImpl implements NumericFi
     }
 
     @Override
-    public FloatFunction getNumericCondition() {
+    public FloatFunction getNumericFunction() {
         return new FloatFunction(this);
     }
 

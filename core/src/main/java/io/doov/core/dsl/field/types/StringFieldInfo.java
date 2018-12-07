@@ -26,7 +26,7 @@ public class StringFieldInfo extends DelegatingFieldInfoImpl implements TextFiel
     }
 
     @Override
-    public StringFunction getStringCondition() {
+    public StringFunction getStringFunction() {
         return new StringFunction(this);
     }
 

@@ -17,6 +17,7 @@ package io.doov.core.dsl.field.types;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.impl.BooleanCondition;
+import io.doov.core.dsl.impl.BooleanFunction;
 import io.doov.core.dsl.lang.StepCondition;
 
 /**
@@ -33,7 +34,7 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
      * @see BooleanCondition#not()
      */
     default StepCondition not() {
-        return getBooleanCondition().not();
+        return getBooleanFunction().not();
     }
 
     /**
@@ -44,7 +45,7 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
      * @see BooleanCondition#and(boolean)
      */
     default StepCondition and(boolean value) {
-        return getBooleanCondition().and(value);
+        return getBooleanFunction().and(value);
     }
 
     /**
@@ -55,7 +56,7 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
      * @see BooleanCondition#and(LogicalFieldInfo)
      */
     default StepCondition and(LogicalFieldInfo value) {
-        return getBooleanCondition().and(value);
+        return getBooleanFunction().and(value);
     }
 
     /**
@@ -66,7 +67,7 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
      * @see BooleanCondition#or(boolean)
      */
     default StepCondition or(boolean value) {
-        return getBooleanCondition().or(value);
+        return getBooleanFunction().or(value);
     }
 
     /**
@@ -77,29 +78,7 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
      * @see BooleanCondition#or(LogicalFieldInfo)
      */
     default StepCondition or(LogicalFieldInfo value) {
-        return getBooleanCondition().or(value);
-    }
-
-    /**
-     * See {@link BooleanCondition#xor(boolean)}
-     *
-     * @param value the right value
-     * @return the step condition
-     * @see BooleanCondition#xor(boolean)
-     */
-    default StepCondition xor(boolean value) {
-        return getBooleanCondition().xor(value);
-    }
-
-    /**
-     * See {@link BooleanCondition#xor(LogicalFieldInfo)}
-     *
-     * @param value the right field value
-     * @return the step condition
-     * @see BooleanCondition#xor(LogicalFieldInfo)
-     */
-    default StepCondition xor(LogicalFieldInfo value) {
-        return getBooleanCondition().xor(value);
+        return getBooleanFunction().or(value);
     }
 
     /**
@@ -109,7 +88,7 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
      * @see BooleanCondition#isTrue()
      */
     default StepCondition isTrue() {
-        return getBooleanCondition().isTrue();
+        return getBooleanFunction().isTrue();
     }
 
     /**
@@ -119,7 +98,7 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
      * @see BooleanCondition#isFalse()
      */
     default StepCondition isFalse() {
-        return getBooleanCondition().isFalse();
+        return getBooleanFunction().isFalse();
     }
 
     /**
@@ -127,11 +106,11 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
      *
      * @return the boolean condition
      */
-    BooleanCondition getBooleanCondition();
+    BooleanFunction getBooleanFunction();
 
     @Override
-    default BooleanCondition getDefaultCondition() {
-        return getBooleanCondition();
+    default BooleanFunction getDefaultFunction() {
+        return getBooleanFunction();
     }
 
 }

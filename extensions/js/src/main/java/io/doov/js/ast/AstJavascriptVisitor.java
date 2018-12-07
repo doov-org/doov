@@ -25,11 +25,11 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     protected final ResourceProvider bundle;
     protected final Locale locale;
 
-    private int parenthese_depth = 0;   // define the number of parenthesis to close before ending the rule rewriting
-    private int start_with_count = 0;   // define the number of 'start_with' rule used for closing parenthesis purpose
-    private int end_with_count = 0;     // define the number of 'start_with' rule used for closing parenthesis purpose
-    private int use_regexp = 0;         // boolean as an int to know if we are in a regexp for closing parenthesis purpose
-    private int is_match = 0;             // boolean as an int to know if we are in a matching rule for closing parenthesis purpose
+    private int parenthese_depth = 0; // define the number of parenthesis to close before ending the rule rewriting
+    private int start_with_count = 0; // define the number of 'start_with' rule used for closing parenthesis purpose
+    private int end_with_count = 0; // define the number of 'start_with' rule used for closing parenthesis purpose
+    private int use_regexp = 0; // boolean as an int to know if we are in a regexp for closing parenthesis purpose
+    private int is_match = 0; // boolean as an int to know if we are in a matching rule for closing parenthesis purpose
 
     public AstJavascriptVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
         this.ops = ops;
@@ -51,9 +51,6 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                     break;
                 case or:
                     write(" || ");
-                    break;
-                case xor:
-                    manageXOR(metadata.getLeft(), metadata.getRight());
                     break;
                 case greater_than:
                     write(" > ");
@@ -84,13 +81,13 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     @Override
     public void startNary(NaryPredicateMetadata metadata, int depth) {
         if (metadata.getOperator() == match_none) {
-            write("!");                             // for predicate [a,b,c] will translate as (!a && !b && !c)
+            write("!"); // for predicate [a,b,c] will translate as (!a && !b && !c)
         }
         if (metadata.getOperator() == count || metadata.getOperator() == sum) {
-            write("[");                             // opening a list to use count or sum on
+            write("["); // opening a list to use count or sum on
         }
         if (metadata.getOperator() == min) {
-            write("Math.min.apply(null,[");         // using JS Math module to apply min on a list, opening the list
+            write("Math.min.apply(null,["); // using JS Math module to apply min on a list, opening the list
         }
     }
 
@@ -99,18 +96,18 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
         if (hasNext) {
             switch ((DefaultOperator) metadata.getOperator()) {
                 case match_any:
-                    write(" || ");                       // using 'or' operator to match any of the predicate given
+                    write(" || "); // using 'or' operator to match any of the predicate given
                     break;
                 case match_all:
-                    write(" && ");                       // using 'and' operator for match all
+                    write(" && "); // using 'and' operator for match all
                     break;
                 case match_none:
-                    write(" && !");                      // 'and not' for match none
+                    write(" && !"); // 'and not' for match none
                     break;
                 case min:
                 case sum:
                 case count:
-                    write(", ");                         // separating the list values
+                    write(", "); // separating the list values
                     break;
             }
         }
@@ -120,23 +117,23 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     public void endNary(NaryPredicateMetadata metadata, int depth) {
         if (metadata.getOperator() == count) {
             write("].reduce(function(acc,val){if(val){return acc+1;}return acc;},0)");
-        }                                                       // using reduce method to count with an accumulator
+        } // using reduce method to count with an accumulator
         if (metadata.getOperator() == min) {
-            write("])");                                    // closing the value list
+            write("])"); // closing the value list
         }
         if (metadata.getOperator() == sum) {
             write("].reduce(function(acc,val){ return acc+val;},0)");
-        }                                                       // using reduce method to sum the value
+        } // using reduce method to sum the value
     }
 
     @Override
     public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
-        ArrayDeque<Element> stack = new ArrayDeque<>();    //using arrayDeque to store the fields
+        ArrayDeque<Element> stack = new ArrayDeque<>(); //using arrayDeque to store the fields
         metadata.elements().forEach(element -> {
             switch (element.getType()) {
                 case OPERATOR:
                     if (element.getReadable() == age_at
-                            || element.getReadable() == as_a_number                       // checking for special cases
+                            || element.getReadable() == as_a_number // checking for special cases
                             || element.getReadable() == as_string || element.getReadable() == before
                             || element.getReadable() == before_or_equals || element.getReadable() == after
                             || element.getReadable() == after_or_equals) {
@@ -177,7 +174,6 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     public void endUnary(UnaryPredicateMetadata metadata, int depth) {
         write(")");
     }
-
 
     /**
      * This function manage the different parameters of the predicate
@@ -310,11 +306,11 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 parenthese_depth++;
                 break;
             case age_at:
-                write("Math.round(Math.abs(moment(");               // using Math.round(...)
-                stackTmp.add(stack.pollFirst());                        // ex : diff(31may,31may + 1month) = 0.96
+                write("Math.round(Math.abs(moment("); // using Math.round(...)
+                stackTmp.add(stack.pollFirst()); // ex : diff(31may,31may + 1month) = 0.96
                 manageStack(stackTmp);
                 formatAgeAtOperator(stack);
-                write(").diff(");                                   //Math.abs so the date order doesn't matter
+                write(").diff("); //Math.abs so the date order doesn't matter
                 write("moment(");
                 stackTmp.add(stack.pollFirst());
                 manageStack(stackTmp);
@@ -440,7 +436,6 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
 
     }
 
-
     /**
      * age_at operator specials cases for the parameter in moment.js
      *
@@ -454,9 +449,9 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 stack.pollFirst();
                 stackTmp.add(stack.pollFirst());
                 manageStack(stackTmp);
-            } else {                                      // working on plus and minus operators
-                Element ope = stack.pollFirst();        // need the three first elements of the stack to manage
-                Element duration = stack.pollFirst();   // these operators
+            } else { // working on plus and minus operators
+                Element ope = stack.pollFirst(); // need the three first elements of the stack to manage
+                Element duration = stack.pollFirst(); // these operators
                 Element unit = stack.pollFirst();
                 stackTmp.add(ope);
                 stackTmp.add(duration);
@@ -464,17 +459,6 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 manageStack(stackTmp);
             }
         }
-    }
-
-
-    /**
-     * XOR operator construction and writing
-     *
-     * @param leftMD  left Metadata of the XOR predicate
-     * @param rightMD right Metadata of the XOR predicate
-     */
-    private void manageXOR(Metadata leftMD, Metadata rightMD) {
-        write("(!" + leftMD + " && " + rightMD + ") || (" + leftMD + " && !" + rightMD + ")");
     }
 
     @Override
@@ -485,7 +469,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     @Override
     public void endWhen(WhenMetadata metadata, int depth) {
         while (parenthese_depth > 0) {
-            write(")");                 //closing parenthesis
+            write(")"); //closing parenthesis
             parenthese_depth--;
         }
         write("){ true;}else{ false;}\n");

@@ -6,20 +6,22 @@ package io.doov.core.dsl.meta.function;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 
+import java.util.ArrayDeque;
+
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataType;
 import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 
-public class NumericFunctionMetadata extends LeafPredicateMetadata<NumericFunctionMetadata> {
+public class NumericFunctionMetadata extends LeafPredicateMetadata<NumericFunctionMetadata>  {
 
-    public NumericFunctionMetadata(Metadata metadata) {
-        super(metadata);
+    private NumericFunctionMetadata(Metadata metadata) {
+        super(new ArrayDeque<>(metadata.flatten()), metadata.type());
     }
 
-    public NumericFunctionMetadata(Metadata metadata, MetadataType type) {
-        super(metadata, type);
+    private NumericFunctionMetadata(Metadata metadata, MetadataType type) {
+        super(new ArrayDeque<>(metadata.flatten()), type);
     }
 
     // times

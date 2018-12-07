@@ -10,18 +10,23 @@ import io.doov.core.dsl.meta.Metadata;
 
 public interface PredicateMetadata extends Metadata {
 
-    AtomicInteger evalTrue();
+    default AtomicInteger evalTrue() {
+        throw new UnsupportedOperationException(getClass().getName());
+    }
 
-    AtomicInteger evalFalse();
-
+    default AtomicInteger evalFalse() {
+        throw new UnsupportedOperationException(getClass().getName());
+    }
+ 
     /**
      * Merges the node with the given node.
      *
      * @param other the other metadata to merge
      * @return the merged metadata
      */
+    @Deprecated
     default PredicateMetadata merge(LeafMetadata<?> other) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(getClass().getName());
     }
 
     default int incTrueEval() {

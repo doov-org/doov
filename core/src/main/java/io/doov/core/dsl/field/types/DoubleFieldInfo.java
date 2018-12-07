@@ -26,7 +26,7 @@ public class DoubleFieldInfo extends DelegatingFieldInfoImpl implements NumericF
     }
 
     @Override
-    public DoubleFunction getNumericCondition() {
+    public DoubleFunction getNumericFunction() {
         return new DoubleFunction(this);
     }
 

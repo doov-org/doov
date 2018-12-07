@@ -6,6 +6,7 @@ package io.doov.core.dsl.meta.function;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 
+import java.util.ArrayDeque;
 import java.util.Collection;
 
 import io.doov.core.dsl.meta.Metadata;
@@ -14,12 +15,12 @@ import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 
 public class IterableFunctionMetadata extends LeafPredicateMetadata<IterableFunctionMetadata> {
 
-    public IterableFunctionMetadata(Metadata metadata) {
-        super(metadata);
+    private IterableFunctionMetadata(Metadata metadata) {
+        super(new ArrayDeque<>(metadata.flatten()), metadata.type());
     }
 
-    public IterableFunctionMetadata(Metadata metadata, MetadataType type) {
-        super(metadata, type);
+    private IterableFunctionMetadata(Metadata metadata, MetadataType type) {
+        super(new ArrayDeque<>(metadata.flatten()), type);
     }
 
     public static IterableFunctionMetadata containsMetadata(Metadata metadata, Object value) {
@@ -29,7 +30,7 @@ public class IterableFunctionMetadata extends LeafPredicateMetadata<IterableFunc
     public static IterableFunctionMetadata containsMetadata(Metadata metadata, Collection<Object> values) {
         return new IterableFunctionMetadata(metadata, FIELD_PREDICATE).operator(contains).valueListObject(values);
     }
-    
+
     // empty
 
     public static IterableFunctionMetadata isEmptyMetadata(Metadata metadata) {
