@@ -21,6 +21,7 @@ import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
@@ -125,6 +126,10 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
         return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(equals).valueObject(value);
     }
 
+    public static <M extends LeafPredicateMetadata<M>> M equalsMetadata(Metadata metadata, Supplier<?> value) {
+        return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(equals).valueUnknown("-function-");
+    }
+
     public static <M extends LeafPredicateMetadata<M>> M equalsMetadata(Metadata metadata, Readable value) {
         return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(equals).valueReadable(value);
     }
@@ -136,6 +141,10 @@ public class LeafPredicateMetadata<M extends LeafPredicateMetadata<M>> extends L
 
     public static <M extends LeafPredicateMetadata<M>> M notEqualsMetadata(Metadata metadata, Object value) {
         return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(not_equals).valueObject(value);
+    }
+
+    public static <M extends LeafPredicateMetadata<M>> M notEqualsMetadata(Metadata metadata, Supplier<?> value) {
+        return new LeafPredicateMetadata<M>(metadata, FIELD_PREDICATE).operator(not_equals).valueUnknown("-function-");
     }
 
     public static <M extends LeafPredicateMetadata<M>> M notEqualsMetadata(Metadata metadata, Readable value) {

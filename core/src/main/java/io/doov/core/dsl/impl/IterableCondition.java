@@ -9,6 +9,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -36,7 +37,7 @@ public class IterableCondition<T, C extends Iterable<T>> extends DefaultConditio
 
     @SafeVarargs
     public final StepCondition containsAll(T... values) {
-        return predicate(this, containsMetadata(metadata, (Object[]) values),
+        return predicate(this, containsMetadata(metadata, Arrays.asList(values)),
                 iterable -> stream(iterable.spliterator(), false)
                         .collect(toSet()).containsAll(asList(values)));
     }

@@ -4,7 +4,10 @@ jdk:
   - oraclejdk8
 
 script:
-  ./gradlew test && ./gradlew -p sample test
+  ./gradlew check && ./gradlew -p sample check
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 branches:
   only:
