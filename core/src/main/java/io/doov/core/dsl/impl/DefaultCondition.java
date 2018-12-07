@@ -42,7 +42,7 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
  *
  * @param <T> the type of the field value
  */
-public class DefaultCondition<T> extends AbstractFunction<T, PredicateMetadata> {
+public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
 
     public DefaultCondition(DslField<T> field) {
         this(fieldMetadata(field), (model, context) -> valueModel(model, field));

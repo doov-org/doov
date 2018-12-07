@@ -34,10 +34,4 @@ public class LocalTimeCondition extends TemporalCondition<LocalTime> implements 
                     BiFunction<DslModel, Context, Optional<LocalTime>> value) {
         super(metadata, value);
     }
-
-    @Override
-    protected TemporalCondition<LocalTime> temporalCondition(PredicateMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<LocalTime>> value) {
-        return new LocalTimeCondition(metadata, value);
-    }
 }

@@ -47,9 +47,6 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         super(metadata, value);
     }
 
-    abstract TemporalCondition<N> temporalCondition(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> value);
-
     /**
      * Returns a condition checking if the node value is equal to the given condition value.
      *
@@ -127,7 +124,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         return LeafStepCondition.stepCondition(beforeOrEqTemporalFieldMetadata(this, value), getFunction(), value,
                 (l, r) -> beforeOrEqualsFunction().apply(l, r));
     }
-    
+
     /**
      * Returns a condition checking if the node value is before or equals the supplier value.
      *
@@ -215,7 +212,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         return LeafStepCondition.stepCondition(afterOrEqTemporalFieldMetadata(this, value), getFunction(), value,
                 (l, r) -> afterOrEqualsFunction().apply(l, r));
     }
-    
+
     /**
      * Returns a condition checking if the node value is after or equals the supplier value.
      *
