@@ -28,3 +28,10 @@ doovCodeGen {
         enumFieldInfo = false
     }
 }
+
+idea {
+    module {
+        sourceDirs += file("$buildDir/doov/doovMapGenSample")
+        sourceDirs += file("$buildDir/doov/doovMapGenSample2")
+    }
+}
