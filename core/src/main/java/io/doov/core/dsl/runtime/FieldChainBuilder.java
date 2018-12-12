@@ -77,6 +77,15 @@ public class FieldChainBuilder<B, T, R> {
         return new FieldChainBuilder<>(this.rootType, this.chain, id, readable, siblings, isTransient);
     }
 
+    @SuppressWarnings("unchecked")
+    public <O> FieldChainBuilder<B, R, O> list(Function<R, List<O>> readMethod,
+                                               BiConsumer<R, List<O>> writeMethod,
+                                               Supplier<O> supplier, int positionInList) {
+        PathMethod<R, O> method = new ListPathMethod<>(supplier, readMethod, writeMethod, positionInList);
+        chain.add((PathMethod) method);
+        return new FieldChainBuilder<>(this.rootType, this.chain, id, readable, siblings, isTransient);
+    }
+
     /**
      * Terminal method that builds the RuntimeField
      *
