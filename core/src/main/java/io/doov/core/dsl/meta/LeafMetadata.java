@@ -15,7 +15,7 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.Readable;
 
-public class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMetadata {
+public abstract class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMetadata {
     private static final Collector<CharSequence, ?, String> COLLECTOR_LIST = joining(", ", " : ", "");
     private final MetadataType type;
     private final Deque<Element> elements;

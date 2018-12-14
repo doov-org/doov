@@ -14,10 +14,6 @@ import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 
 public class StringFunctionMetadata extends LeafPredicateMetadata<StringFunctionMetadata>  {
 
-    private StringFunctionMetadata(Metadata metadata) {
-        super(new ArrayDeque<>(metadata.flatten()), metadata.type());
-    }
-
     private StringFunctionMetadata(Metadata metadata, MetadataType type) {
         super(new ArrayDeque<>(metadata.flatten()), type);
     }
