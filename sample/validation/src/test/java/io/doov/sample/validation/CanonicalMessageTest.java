@@ -30,9 +30,9 @@ import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.meta.EmptyMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 import io.doov.sample.field.SampleFieldId;
@@ -69,13 +69,13 @@ public class CanonicalMessageTest {
         System.out.println(result.getContext().getRootMetadata().readable());
         assertThat(result).isTrue();
         assertThat(result.getContext().getEvalValue(SampleFieldId.COUNTRY)).isEqualTo(Country.FR);
-        assertThat(result.getContext().getRootMetadata()).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(result.getContext().getRootMetadata()).isInstanceOf(LeafMetadata.class);
         assertThat(result.getContext().getRootMetadata().type()).isEqualTo(FIELD_PREDICATE_MATCH_ANY);
 
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(msg).isInstanceOf(LeafMetadata.class);
         assertThat(msg.type()).isEqualTo(FIELD_PREDICATE);
     }
 
@@ -113,12 +113,12 @@ public class CanonicalMessageTest {
         assertThat(result.getContext().getRootMetadata().children()).element(0)
                 .isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(1))
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), SUCCESS);
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(msg).isInstanceOf(LeafMetadata.class);
     }
 
     @Test
@@ -159,7 +159,7 @@ public class CanonicalMessageTest {
 
         assertThat(result.getContext().getRootMetadata()).isInstanceOf(UnaryPredicateMetadata.class);
         assertThat(result.getContext().getRootMetadata().children()).element(0)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
         System.out.println(">> " + msg.readable());
@@ -181,7 +181,7 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(msg).isInstanceOf(LeafMetadata.class);
     }
 
     @Test
@@ -215,7 +215,7 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(msg).isInstanceOf(LeafMetadata.class);
         assertThat(msg.children()).isEmpty();
     }
 
@@ -292,12 +292,12 @@ public class CanonicalMessageTest {
         assertThat(((NaryPredicateMetadata) result.getContext().getRootMetadata().children().collect(toList()).get(0))
                 .getOperator()).isEqualTo(sum);
         assertThat(result.getContext().getRootMetadata().children()).element(1)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).hasSize(2);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(0)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(1)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), SUCCESS);
         System.out.println(">> " + msg.readable());
@@ -309,7 +309,7 @@ public class CanonicalMessageTest {
         assertThat(msg.children()).element(0).isInstanceOf(NaryPredicateMetadata.class);
         assertThat(((NaryPredicateMetadata) msg.children().collect(toList()).get(0)).getOperator()).isEqualTo(sum);
         assertThat(msg.children().collect(toList()).get(0).children()).element(0)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
     }
 
     @Test
@@ -328,12 +328,12 @@ public class CanonicalMessageTest {
         assertThat(((NaryPredicateMetadata) result.getContext().getRootMetadata().children().collect(toList()).get(0))
                 .getOperator()).isEqualTo(sum);
         assertThat(result.getContext().getRootMetadata().children()).element(1)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).hasSize(2);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(0)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(1)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), SUCCESS);
         System.out.println(">> " + msg.readable());
@@ -345,7 +345,7 @@ public class CanonicalMessageTest {
         assertThat(msg.children()).element(0).isInstanceOf(NaryPredicateMetadata.class);
         assertThat(((NaryPredicateMetadata) msg.children().collect(toList()).get(0)).getOperator()).isEqualTo(sum);
         assertThat(msg.children().collect(toList()).get(0).children()).element(0)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
     }
 
     @Test
@@ -362,15 +362,15 @@ public class CanonicalMessageTest {
         assertThat(((NaryPredicateMetadata) result.getContext().getRootMetadata().children().collect(toList()).get(0))
                 .getOperator()).isEqualTo(count);
         assertThat(result.getContext().getRootMetadata().children()).element(1)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList())
                 .get(0).children()).hasSize(3);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(0)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(1)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
         assertThat(result.getContext().getRootMetadata().children().collect(toList()).get(0).children()).element(2)
-                .isInstanceOf(LeafPredicateMetadata.class);
+                .isInstanceOf(LeafMetadata.class);
 
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), SUCCESS);
         System.out.println(">> " + msg.readable());

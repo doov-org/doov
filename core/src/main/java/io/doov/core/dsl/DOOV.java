@@ -12,8 +12,8 @@
  */
 package io.doov.core.dsl;
 
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.falseMetadata;
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.trueMetadata;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.falseMetadata;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.trueMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.Arrays;

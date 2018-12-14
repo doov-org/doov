@@ -14,7 +14,6 @@ import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.ast.AbstractAstVisitor;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 import org.apache.commons.lang3.StringUtils;
@@ -127,7 +126,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
+    public void startLeaf(LeafMetadata<?> metadata, int depth) {
         ArrayDeque<Element> stack = new ArrayDeque<>(); //using arrayDeque to store the fields
         metadata.elements().forEach(element -> {
             switch (element.getType()) {

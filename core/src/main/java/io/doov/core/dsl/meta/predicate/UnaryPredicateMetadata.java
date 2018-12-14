@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.meta.DefaultOperator.not;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -42,6 +42,32 @@ public class UnaryPredicateMetadata extends UnaryMetadata implements PredicateMe
 
     public static UnaryPredicateMetadata notMetadata(Metadata value) {
         return new UnaryPredicateMetadata(not, value);
+    }
+
+    // empty
+
+    public static UnaryPredicateMetadata isEmptyMetadata(Metadata metadata) {
+        return new UnaryPredicateMetadata(is_empty, metadata);
+    }
+
+    public static UnaryPredicateMetadata isNotEmptyMetadata(Metadata metadata) {
+        return new UnaryPredicateMetadata(is_not_empty, metadata);
+    }
+
+    // length
+
+    public static UnaryPredicateMetadata lengthIsMetadata(Metadata metadata) {
+        return new UnaryPredicateMetadata(length_is, metadata);
+    }
+
+    // null
+
+    public static UnaryPredicateMetadata nullMetadata(Metadata metadata) {
+        return new UnaryPredicateMetadata(is_null, metadata);
+    }
+
+    public static UnaryPredicateMetadata notNullMetadata(Metadata metadata) {
+        return new UnaryPredicateMetadata(is_not_null, metadata);
     }
 
     /**

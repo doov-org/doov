@@ -34,8 +34,13 @@ public class BinaryMetadata extends AbstractMetadata {
     }
 
     @Override
-    public Stream<Metadata> children() {
-        return Stream.of(left, right);
+    public Stream<Metadata> left() {
+        return Stream.of(left);
+    }
+
+    @Override
+    public Stream<Metadata> right() {
+        return Stream.of(right);
     }
 
     @Override

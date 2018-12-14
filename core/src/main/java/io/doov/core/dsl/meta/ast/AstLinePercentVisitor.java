@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.WhenMetadata;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.*;
@@ -51,11 +52,13 @@ public class AstLinePercentVisitor extends AstLineVisitor {
     }
 
     @Override
-    protected String formatLeafMetadata(LeafPredicateMetadata<?> metadata) {
+    protected String formatLeafMetadata(LeafMetadata<?> metadata) {
         if (stackPeek() == BINARY_PREDICATE) {
             return super.formatLeafMetadata(metadata);
         }
-        return percentage(metadata) + super.formatLeafMetadata(metadata);
+        return
+//                percentage(metadata) +
+                super.formatLeafMetadata(metadata);
     }
 
     private String percentage(PredicateMetadata metadata) {

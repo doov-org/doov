@@ -50,7 +50,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
+    public void startLeaf(LeafMetadata<?> metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatLeafMetadata(metadata));
         sb.append(formatNewLine());
@@ -175,10 +175,6 @@ public class AstTextVisitor extends AbstractAstVisitor {
                     getIndentSize();
         }
         return super.getCurrentIndentSize();
-    }
-
-    protected String formatLeafMetadata(LeafPredicateMetadata<?> metadata) {
-        return this.formatLeafMetadata((LeafMetadata<?>) metadata);
     }
 
     protected String formatLeafMetadata(LeafMetadata<?> metadata) {

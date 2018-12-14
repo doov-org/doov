@@ -42,7 +42,7 @@ import io.doov.core.dsl.field.types.BooleanFieldInfo;
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.runtime.RuntimeModel;
 
 /*
@@ -128,7 +128,7 @@ public class SimpleValidationWithoutShortCircuit {
 
     private static int getActualViolationCount(Result result) {
         return (int) result.getContext().getEvalFalse().stream()
-                        .filter(metadata -> metadata instanceof LeafPredicateMetadata)
+                        .filter(metadata -> metadata instanceof LeafMetadata)
                         .count();
     }
 

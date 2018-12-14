@@ -11,7 +11,7 @@ import java.util.ArrayDeque;
 public class ConverterMetadata extends LeafMetadata<ConverterMetadata> {
 
     public ConverterMetadata(MetadataType type) {
-        super(new ArrayDeque<>(), type);
+        super(type);
     }
 
     public static ConverterMetadata metadata(String description) {

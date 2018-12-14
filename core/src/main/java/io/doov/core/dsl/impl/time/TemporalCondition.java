@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.impl.time;
 
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.equalsMetadata;
+import static io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata.equalsMetadata;
 
 import java.time.temporal.Temporal;
 import java.util.Optional;

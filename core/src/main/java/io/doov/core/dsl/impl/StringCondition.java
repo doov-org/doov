@@ -24,13 +24,13 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
+import io.doov.core.dsl.meta.function.StringFunctionMetadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 /**
  * Base class for string conditions.
  * <p>
- * It contains a {@link DslField} to get the value from the model, a {@link LeafPredicateMetadata} to describe this node, and a
+ * It contains a {@link DslField} to get the value from the model, a {@link StringFunctionMetadata} to describe this node, and a
  * {@link BiFunction} to take the value from the model and return an optional value.
  */
 public class StringCondition extends DefaultCondition<String> {

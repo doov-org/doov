@@ -172,7 +172,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // field metadata
 
     @Override
-    public void startLeaf(LeafPredicateMetadata<?> leaf, int depth) {
+    public void startLeaf(LeafMetadata<?> leaf, int depth) {
         if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
             write(beginLi(CSS_CLASS_LI_LEAF));
         }
@@ -180,7 +180,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             if (noExclusionNextLeaf) {
                 noExclusionNextLeaf = false;
             } else {
-                write(exclusionBar(leaf, ExclusionBar.SMALL));
+                //write(exclusionBar(leaf, ExclusionBar.SMALL));
             }
         }
         leaf.elements().stream().forEach(e -> {
@@ -212,7 +212,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endLeaf(LeafPredicateMetadata<?> metadata, int depth) {
+    public void endLeaf(LeafMetadata<?> metadata, int depth) {
         if (stackPeek() == WHEN || (insideNary > 0 && !isImmediateBinaryChild())) {
             write(endLi());
         }

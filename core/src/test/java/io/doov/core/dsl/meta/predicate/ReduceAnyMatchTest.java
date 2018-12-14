@@ -51,7 +51,7 @@ public class ReduceAnyMatchTest {
                 .isEqualTo("rule when enumField match any  : VAL1, VAL2, VAL3 validate");
 
         assertTrue(result.value());
-        assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class)
+        assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
                 .containsExactly("enumField = VAL1");
     }
@@ -66,7 +66,7 @@ public class ReduceAnyMatchTest {
                 .isEqualTo("rule when enumField match any  : VAL2, VAL3 validate");
 
         assertFalse(result.value());
-        assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class)
+        assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
                 .containsExactly("enumField = VAL1");
     }
@@ -90,7 +90,7 @@ public class ReduceAnyMatchTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class)
+        assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
                 .containsExactly("enumField = VAL1");
     }
