@@ -3,48 +3,40 @@
  */
 package io.doov.core.dsl.meta.function;
 
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.is;
-import static io.doov.core.dsl.meta.DefaultOperator.not;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
-
-import java.util.ArrayDeque;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
+import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
 
-public class BooleanFunctionMetadata extends LeafPredicateMetadata<BooleanFunctionMetadata> {
+public class BooleanFunctionMetadata extends BinaryPredicateMetadata {
 
-    private BooleanFunctionMetadata(Metadata metadata, MetadataType type) {
-        super(new ArrayDeque<>(metadata.flatten()), type);
+    public BooleanFunctionMetadata(Metadata left, Operator operator, Metadata right) {
+        super(left, operator, right);
     }
 
     // boolean
 
-    public static BooleanFunctionMetadata notMetadata(Metadata metadata) {
-        return new BooleanFunctionMetadata(metadata, FIELD_PREDICATE).operator(not);
-    }
-
     public static BooleanFunctionMetadata andMetadata(Metadata metadata, boolean value) {
-        return new BooleanFunctionMetadata(metadata, FIELD_PREDICATE).operator(and).valueObject(value);
+        return new BooleanFunctionMetadata(metadata, and, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
     }
 
     public static BooleanFunctionMetadata andMetadata(Metadata metadata, Readable value) {
-        return new BooleanFunctionMetadata(metadata, FIELD_PREDICATE).operator(and).valueReadable(value);
+        return new BooleanFunctionMetadata(metadata, and, new ValuePredicateMetadata(LEAF_PREDICATE).valueReadable(value));
     }
 
     public static BooleanFunctionMetadata orMetadata(Metadata metadata, boolean value) {
-        return new BooleanFunctionMetadata(metadata, FIELD_PREDICATE).operator(or).valueObject(value);
+        return new BooleanFunctionMetadata(metadata, or, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
     }
 
     public static BooleanFunctionMetadata orMetadata(Metadata metadata, Readable value) {
-        return new BooleanFunctionMetadata(metadata, FIELD_PREDICATE).operator(or).valueReadable(value);
+        return new BooleanFunctionMetadata(metadata, or, new ValuePredicateMetadata(LEAF_PREDICATE).valueReadable(value));
     }
 
     public static BooleanFunctionMetadata isMetadata(Metadata metadata, boolean value) {
-        return new BooleanFunctionMetadata(metadata, FIELD_PREDICATE).operator(is).valueObject(value);
+        return new BooleanFunctionMetadata(metadata, is, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
     }
 }

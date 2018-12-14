@@ -4,22 +4,15 @@
 package io.doov.core.dsl.meta.function;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 
-import java.util.ArrayDeque;
+import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
 
-import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.predicate.PredicateMetadata;
+public class TemporalAdjusterMetadata extends ValuePredicateMetadata<TemporalAdjusterMetadata> {
 
-public class TemporalAdjusterMetadata extends LeafMetadata<TemporalAdjusterMetadata> implements PredicateMetadata {
-
-    private TemporalAdjusterMetadata(MetadataType type) {
-        super(new ArrayDeque<>(), type);
-    }
-
-    private TemporalAdjusterMetadata(Metadata metadata, MetadataType type) {
-        super(new ArrayDeque<>(metadata.flatten()), type);
+    public TemporalAdjusterMetadata(MetadataType type) {
+        super(type);
     }
 
     public static TemporalAdjusterMetadata firstDayOfMonthMetadata() {
@@ -50,10 +43,4 @@ public class TemporalAdjusterMetadata extends LeafMetadata<TemporalAdjusterMetad
         return new TemporalAdjusterMetadata(LEAF_PREDICATE).valueUnknown(value);
     }
 
-    // with
-
-    public static TemporalAdjusterMetadata withMetadata(Metadata metadata, TemporalAdjusterMetadata adjuster) {
-        return new TemporalAdjusterMetadata(metadata, FIELD_PREDICATE).operator(with)
-                .add(adjuster.elements().getFirst());
-    }
 }

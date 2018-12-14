@@ -88,7 +88,8 @@ public class LocalDateSuppliers {
      * @return the temporal condition
      */
     public static TemporalFunction<LocalDate> today() {
-        return new LocalDateFunction(todayMetadata(), (model, context) -> Optional.of(LocalDate.now(getClock())));
+        return new LocalDateFunction(todayMetadata(),
+                (model, context) -> Optional.of(LocalDate.now(getClock())));
     }
 
     /**

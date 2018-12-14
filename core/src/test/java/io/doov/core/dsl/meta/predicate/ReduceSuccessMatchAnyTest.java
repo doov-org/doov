@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.EmptyMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
 public class ReduceSuccessMatchAnyTest {
@@ -82,7 +83,7 @@ public class ReduceSuccessMatchAnyTest {
                         "validate");
 
         assertTrue(result.value());
-        assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class);
+        assertThat(reduce).isInstanceOf(LeafMetadata.class);
         assertThat(reduce).isEqualTo(A.metadata());
     }
 

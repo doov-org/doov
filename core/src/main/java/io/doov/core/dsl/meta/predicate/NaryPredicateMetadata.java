@@ -86,20 +86,6 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
     }
 
     @Override
-    @Deprecated
-    public PredicateMetadata merge(LeafMetadata<?> other) {
-        final List<Element> elts = other.elements().stream().collect(Collectors.toList());
-        if (elts.get(0).getType() == OPERATOR && (elts.get(0).getReadable() == sum || elts.get(0).getReadable() == min
-                || elts.get(0).getReadable() == count)) {
-            // special case to build : count (predicate ...) operator value
-            return new BinaryPredicateMetadata(this, (Operator) elts.get(elts.size() - 2).getReadable(),
-                    new LeafPredicateMetadata<>(LEAF_PREDICATE)
-                            .valueReadable(elts.get(elts.size() - 1).getReadable()));
-        }
-        return new NaryPredicateMetadata(new ComposeOperator(getOperator(), other), getValues());
-    }
-
-    @Override
     public Metadata reduce(Context context, ReduceType type) {
         if (getOperator() == match_all || getOperator() == match_any) {
             boolean result = context.isEvalTrue(this) || !context.isEvalFalse(this);

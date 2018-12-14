@@ -5,7 +5,7 @@ package io.doov.core.dsl.impl.num;
 
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.plusMetadata;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.timesMetadata;
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.whenMetadata;
+import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.whenMetadata;
 import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.minMetadata;
 import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.sumMetadata;
 import static java.util.stream.Collectors.toList;

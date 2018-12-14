@@ -3,7 +3,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.meta.function.StringFunctionMetadata.lengthIsMetadata;
+import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.lengthIsMetadata;
 
 import java.util.Optional;
 import java.util.function.BiFunction;

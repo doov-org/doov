@@ -33,7 +33,7 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
+    public void startLeaf(LeafMetadata<?> metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("start FieldMetadata ").append(metadata).append(" = ");
         metadata.elements().stream().map(Element::getReadable).forEach(sb::append);

@@ -12,7 +12,7 @@
  */
 package io.doov.core.dsl.field.types;
 
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.fieldMetadata;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.fieldMetadata;
 import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
 import java.time.LocalDate;

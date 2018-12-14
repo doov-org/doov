@@ -41,7 +41,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case FIELD_PREDICATE:
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
-                    startLeaf((LeafPredicateMetadata<?>) metadata, depth);
+                    startLeaf((LeafMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
                     startBinary((BinaryPredicateMetadata) metadata, depth);
@@ -165,7 +165,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case FIELD_PREDICATE:
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
-                    endLeaf((LeafPredicateMetadata<?>) metadata, depth);
+                    endLeaf((LeafMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
                     endBinary((BinaryPredicateMetadata) metadata, depth);
@@ -213,12 +213,12 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     // LeafMetadata
 
-    public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
+    public void startLeaf(LeafMetadata<?> metadata, int depth) {
     }
 
     // visit leaf is impossible because there is no children
 
-    public void endLeaf(LeafPredicateMetadata<?> metadata, int depth) {
+    public void endLeaf(LeafMetadata<?> metadata, int depth) {
     }
 
     // UnaryMetadata

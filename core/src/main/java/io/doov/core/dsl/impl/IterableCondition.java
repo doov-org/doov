@@ -4,6 +4,8 @@
 package io.doov.core.dsl.impl;
 
 import static io.doov.core.dsl.meta.function.IterableFunctionMetadata.*;
+import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.isEmptyMetadata;
+import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.isNotEmptyMetadata;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;

@@ -7,19 +7,17 @@ import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.TEMPORAL_UNIT;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 
-import java.util.ArrayDeque;
-
 import io.doov.core.dsl.meta.Element;
 import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
 
-public class TemporalFunctionMetadata extends LeafPredicateMetadata<TemporalFunctionMetadata> {
+public class TemporalFunctionMetadata extends ValuePredicateMetadata<TemporalFunctionMetadata> {
 
-    private TemporalFunctionMetadata(MetadataType type) {
-        super(new ArrayDeque<>(), type);
+    public TemporalFunctionMetadata(MetadataType type) {
+        super(type);
     }
 
-    private TemporalFunctionMetadata temporalUnit(Object unit) {
+    public TemporalFunctionMetadata temporalUnit(Object unit) {
         return add(unit == null ? null : new Element(() -> unit.toString().toLowerCase(), TEMPORAL_UNIT));
     }
 

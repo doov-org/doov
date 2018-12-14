@@ -15,7 +15,7 @@ import io.doov.core.dsl.DslField;
 public class MappingMetadata extends LeafMetadata<MappingMetadata> {
 
     private MappingMetadata(MetadataType type) {
-        super(new ArrayDeque<>(), type);
+        super(type);
     }
 
     public static MappingMetadata mappings(MappingOperator operator) {
