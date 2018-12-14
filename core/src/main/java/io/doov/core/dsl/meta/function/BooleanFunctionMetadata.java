@@ -18,10 +18,6 @@ import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 
 public class BooleanFunctionMetadata extends LeafPredicateMetadata<BooleanFunctionMetadata> {
 
-    private BooleanFunctionMetadata(Metadata metadata) {
-        super(new ArrayDeque<>(metadata.flatten()), metadata.type());
-    }
-
     private BooleanFunctionMetadata(Metadata metadata, MetadataType type) {
         super(new ArrayDeque<>(metadata.flatten()), type);
     }

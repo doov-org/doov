@@ -16,10 +16,6 @@ import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 
 public class NumericFunctionMetadata extends LeafPredicateMetadata<NumericFunctionMetadata>  {
 
-    private NumericFunctionMetadata(Metadata metadata) {
-        super(new ArrayDeque<>(metadata.flatten()), metadata.type());
-    }
-
     private NumericFunctionMetadata(Metadata metadata, MetadataType type) {
         super(new ArrayDeque<>(metadata.flatten()), type);
     }
