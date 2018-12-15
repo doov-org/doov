@@ -11,11 +11,14 @@ import java.util.function.Supplier;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
 
+// TODO should be BinaryMetadata
 public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
 
     public TemporalBiFunctionMetadata(Metadata left, Operator operator, Metadata right) {
@@ -172,4 +175,8 @@ public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
                 .add(adjuster.elements().getFirst()));
     }
 
+    @Override
+    public Metadata reduce(Context context, ReduceType type) {
+        return this;
+    }
 }
