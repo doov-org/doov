@@ -42,7 +42,7 @@ public class TemporalFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A with first day of year = 0001-01-01 validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (A with first day of year) = 0001-01-01 validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A with first day of year = 0001-01-01");
     }
 
@@ -53,7 +53,7 @@ public class TemporalFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A minus 1 day(s) = 0001-01-01 validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (A minus 1 day(s)) = 0001-01-01 validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A minus 1 day(s) = 0001-01-01");
     }
 
@@ -64,7 +64,7 @@ public class TemporalFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A minus B day(s) = 0001-01-01 validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (A minus B day(s)) = 0001-01-01 validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A minus B day(s) = 0001-01-01");
     }
 
@@ -75,7 +75,7 @@ public class TemporalFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A + 1 day(s) = 0001-01-01 validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (A + 1 day(s)) = 0001-01-01 validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A + 1 day(s) = 0001-01-01");
     }
 
@@ -86,7 +86,7 @@ public class TemporalFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A + B day(s) = 0001-01-01 validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (A + B day(s)) = 0001-01-01 validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A + B day(s) = 0001-01-01");
     }
 
