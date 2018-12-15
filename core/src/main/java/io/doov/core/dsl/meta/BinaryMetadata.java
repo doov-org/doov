@@ -3,11 +3,8 @@
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 public class BinaryMetadata extends AbstractMetadata {
@@ -47,13 +44,5 @@ public class BinaryMetadata extends AbstractMetadata {
     public MetadataType type() {
         return BINARY_PREDICATE;
     }
-    
 
-    @Override
-    public List<Element> flatten() {
-        final List<Element> flatten = new ArrayList<>(left.flatten());
-        flatten.add(new Element(operator, OPERATOR));
-        flatten.addAll(right.flatten());
-        return flatten;
-    }
 }

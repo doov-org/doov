@@ -5,7 +5,6 @@ package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.ElementType.*;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -39,11 +38,6 @@ public abstract class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMe
     }
 
     public List<Element> elementsAsList() {
-        return elements.stream().collect(toList());
-    }
-
-    @Override
-    public List<Element> flatten() {
         return new ArrayList<>(elements);
     }
 

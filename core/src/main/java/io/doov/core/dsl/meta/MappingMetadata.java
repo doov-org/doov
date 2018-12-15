@@ -73,8 +73,8 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
     private MappingMetadata mergeMetadata(Metadata... metadata) {
         Iterator<Metadata> iterator = Arrays.asList(metadata).iterator();
         while (iterator.hasNext()) {
-            Metadata m = iterator.next();
-            m.flatten().forEach(this::add);
+            MappingMetadata m = (MappingMetadata) iterator.next();
+            m.elements().forEach(this::add);
             if (iterator.hasNext()) {
                 this.operator(MappingOperator.and);
             }

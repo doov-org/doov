@@ -81,15 +81,6 @@ public interface Metadata extends Readable {
     }
 
     /**
-     * Returns the tree of elements under this node in a flat list.
-     *
-     * @return the list of elements
-     */
-    default List<Element> flatten() {
-        return Collections.emptyList();
-    }
-
-    /**
      * Returns the metadata type.
      *
      * @return the type

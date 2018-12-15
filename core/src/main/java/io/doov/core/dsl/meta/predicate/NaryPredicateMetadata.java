@@ -12,35 +12,21 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.count;
-import static io.doov.core.dsl.meta.DefaultOperator.match_all;
-import static io.doov.core.dsl.meta.DefaultOperator.match_any;
-import static io.doov.core.dsl.meta.DefaultOperator.match_none;
-import static io.doov.core.dsl.meta.DefaultOperator.min;
-import static io.doov.core.dsl.meta.DefaultOperator.sum;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
-import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.EMPTY;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.ReduceType;
-import io.doov.core.dsl.meta.ComposeOperator;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.EmptyMetadata;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.*;
 
 public class NaryPredicateMetadata extends NaryMetadata implements PredicateMetadata {
 
@@ -146,7 +132,7 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
     private static boolean sumContentFilter(Context context, Metadata md) {
         if (md.type() != FIELD_PREDICATE)
             return true;
-        final List<Element> elements = md.flatten();
+        final List<Element> elements = new ArrayList<>(((LeafMetadata<?>) md).elements());
         if (elements.size() < 1)
             return true;
         if (elements.get(0).getType() != FIELD)

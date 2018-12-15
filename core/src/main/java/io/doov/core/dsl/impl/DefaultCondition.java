@@ -31,7 +31,6 @@ import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 

@@ -3,11 +3,8 @@
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 public class UnaryMetadata extends AbstractMetadata {
@@ -30,14 +27,6 @@ public class UnaryMetadata extends AbstractMetadata {
     @Override
     public MetadataType type() {
         return UNARY_PREDICATE;
-    }
-
-    @Override
-    public List<Element> flatten() {
-        final List<Element> flatten = new ArrayList<>();
-        flatten.add(new Element(operator, OPERATOR));
-        flatten.addAll(value.flatten());
-        return flatten;
     }
 
     @Override

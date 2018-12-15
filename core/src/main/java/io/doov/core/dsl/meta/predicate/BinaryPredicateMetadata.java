@@ -15,8 +15,7 @@ package io.doov.core.dsl.meta.predicate;
 import static io.doov.core.dsl.meta.DefaultOperator.equals;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.*;
 
 import java.util.Collection;
 import java.util.Deque;
@@ -98,13 +97,11 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
     }
 
     public static BinaryPredicateMetadata matchAnyMetadata(Metadata metadata) {
-        return new BinaryPredicateMetadata(metadata, match_any, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueReadable(lambda));
+        return new BinaryPredicateMetadata(metadata, match_any, new ValuePredicateMetadata<>(FIELD_PREDICATE_MATCH_ANY).valueReadable(lambda));
     }
 
     public static BinaryPredicateMetadata matchAnyMetadata(Metadata metadata, Collection<?> values) {
-        return new BinaryPredicateMetadata(metadata, match_any, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueListObject(values));
+        return new BinaryPredicateMetadata(metadata, match_any, new ValuePredicateMetadata<>(FIELD_PREDICATE_MATCH_ANY).valueListObject(values));
     }
 
     public static BinaryPredicateMetadata matchAllMetadata(Metadata metadata) {
