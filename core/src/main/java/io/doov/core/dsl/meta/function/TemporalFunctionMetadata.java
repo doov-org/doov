@@ -7,17 +7,33 @@ import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.TEMPORAL_UNIT;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class TemporalFunctionMetadata extends ValuePredicateMetadata<TemporalFunctionMetadata> {
+public class TemporalFunctionMetadata extends LeafMetadata<TemporalFunctionMetadata> implements PredicateMetadata {
 
-    public TemporalFunctionMetadata(MetadataType type) {
+    private final AtomicInteger evalTrue = new AtomicInteger();
+    private final AtomicInteger evalFalse = new AtomicInteger();
+
+    TemporalFunctionMetadata(MetadataType type) {
         super(type);
     }
 
-    public TemporalFunctionMetadata temporalUnit(Object unit) {
+    @Override
+    public AtomicInteger evalTrue() {
+        return evalTrue;
+    }
+
+    @Override
+    public AtomicInteger evalFalse() {
+        return evalFalse;
+    }
+
+    TemporalFunctionMetadata temporalUnit(Object unit) {
         return add(unit == null ? null : new Element(() -> unit.toString().toLowerCase(), TEMPORAL_UNIT));
     }
 

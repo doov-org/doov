@@ -1,14 +1,16 @@
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.meta.DefaultOperator.always_false;
-import static io.doov.core.dsl.meta.DefaultOperator.always_true;
-import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.MetadataType.*;
 
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataType;
 
 public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends LeafMetadata<M> implements PredicateMetadata {
@@ -16,7 +18,7 @@ public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
 
-    public ValuePredicateMetadata(MetadataType type) {
+    private ValuePredicateMetadata(MetadataType type) {
         super(type);
     }
 
@@ -44,6 +46,44 @@ public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends
 
     public static <M extends ValuePredicateMetadata<M>> M falseMetadata() {
         return new ValuePredicateMetadata<M>(LEAF_PREDICATE).operator(always_false);
+    }
+
+    // values
+
+    public static <M extends ValuePredicateMetadata<M>> M valueMetadata(Supplier<?> value) {
+        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueSupplier(value);
+    }
+
+    public static <M extends ValuePredicateMetadata<M>> M valueMetadata(Object value) {
+        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueObject(value);
+    }
+
+    public static <M extends ValuePredicateMetadata<M>> M readableMetadata(Readable readable) {
+        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueReadable(readable);
+    }
+
+    public static <M extends ValuePredicateMetadata<M>> M stringMetadata(String value) {
+        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueString(value);
+    }
+
+    public static <M extends ValuePredicateMetadata<M>> M unknownMetadata(String value) {
+        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueUnknown(value);
+    }
+
+    // list values
+
+    public static <M extends ValuePredicateMetadata<M>> M valueListMetadata(Collection<?> values) {
+        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueListObject(values);
+    }
+
+    // any match
+
+    public static <M extends ValuePredicateMetadata<M>> M anyMatchMetadata(Collection<?> values) {
+        return new ValuePredicateMetadata<M>(FIELD_PREDICATE_MATCH_ANY).valueListObject(values);
+    }
+
+    public static <M extends ValuePredicateMetadata<M>> M anyMatchMetadata(Metadata metadata) {
+        return new ValuePredicateMetadata<M>(FIELD_PREDICATE_MATCH_ANY).valueReadable(lambda);
     }
 
 }

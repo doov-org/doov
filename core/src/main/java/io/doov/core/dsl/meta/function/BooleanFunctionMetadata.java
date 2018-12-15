@@ -4,7 +4,8 @@
 package io.doov.core.dsl.meta.function;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.readableMetadata;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
 
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.Metadata;
@@ -21,27 +22,22 @@ public class BooleanFunctionMetadata extends BinaryPredicateMetadata {
     // boolean
 
     public static BooleanFunctionMetadata andMetadata(Metadata metadata, boolean value) {
-        return new BooleanFunctionMetadata(metadata, and,
-                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
+        return new BooleanFunctionMetadata(metadata, and, valueMetadata(value));
     }
 
     public static BooleanFunctionMetadata andMetadata(Metadata metadata, Readable value) {
-        return new BooleanFunctionMetadata(metadata, and,
-                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(value));
+        return new BooleanFunctionMetadata(metadata, and, readableMetadata(value));
     }
 
     public static BooleanFunctionMetadata orMetadata(Metadata metadata, boolean value) {
-        return new BooleanFunctionMetadata(metadata, or,
-                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
+        return new BooleanFunctionMetadata(metadata, or, valueMetadata(value));
     }
 
     public static BooleanFunctionMetadata orMetadata(Metadata metadata, Readable value) {
-        return new BooleanFunctionMetadata(metadata, or,
-                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(value));
+        return new BooleanFunctionMetadata(metadata, or, readableMetadata(value));
     }
 
     public static BooleanFunctionMetadata isMetadata(Metadata metadata, boolean value) {
-        return new BooleanFunctionMetadata(metadata, is,
-                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
+        return new BooleanFunctionMetadata(metadata, is, valueMetadata(value));
     }
 }

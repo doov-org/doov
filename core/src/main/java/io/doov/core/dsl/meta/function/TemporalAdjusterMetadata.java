@@ -6,14 +6,31 @@ package io.doov.core.dsl.meta.function;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class TemporalAdjusterMetadata extends ValuePredicateMetadata<TemporalAdjusterMetadata> {
+public class TemporalAdjusterMetadata extends LeafMetadata<TemporalAdjusterMetadata> implements PredicateMetadata {
 
-    public TemporalAdjusterMetadata(MetadataType type) {
+    private final AtomicInteger evalTrue = new AtomicInteger();
+    private final AtomicInteger evalFalse = new AtomicInteger();
+
+    private TemporalAdjusterMetadata(MetadataType type) {
         super(type);
     }
+
+    @Override
+    public AtomicInteger evalTrue() {
+        return evalTrue;
+    }
+
+    @Override
+    public AtomicInteger evalFalse() {
+        return evalFalse;
+    }
+
 
     public static TemporalAdjusterMetadata firstDayOfMonthMetadata() {
         return new TemporalAdjusterMetadata(LEAF_PREDICATE).operator(first_day_of_month);

@@ -19,13 +19,13 @@ public abstract class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMe
     private final MetadataType type;
     private final Deque<Element> elements;
 
-    public LeafMetadata(Deque<Element> elements, MetadataType type) {
-        this.elements = elements;
-        this.type = type;
-    }
-
     public LeafMetadata(MetadataType type) {
         this(new ArrayDeque<>(), type);
+    }
+
+    private LeafMetadata(Deque<Element> elements, MetadataType type) {
+        this.elements = elements;
+        this.type = type;
     }
 
     @Override
