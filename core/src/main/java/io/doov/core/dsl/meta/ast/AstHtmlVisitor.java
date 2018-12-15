@@ -179,8 +179,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         if (!insideSum) {
             if (noExclusionNextLeaf) {
                 noExclusionNextLeaf = false;
-            } else {
-                //write(exclusionBar(leaf, ExclusionBar.SMALL));
+            } else if (leaf instanceof PredicateMetadata) {
+                write(exclusionBar((PredicateMetadata) leaf, ExclusionBar.SMALL));
             }
         }
         leaf.elements().stream().forEach(e -> {
