@@ -6,14 +6,13 @@ package io.doov.core.dsl.meta.ast;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.*;
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.lang.Math.floor;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
-import java.io.*;
-import java.text.NumberFormat;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,17 +30,16 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected static final String CSS_CLASS_NARY = "dsl-token-nary";
     protected static final String CSS_CLASS_WHEN = "dsl-token-when";
 
-    protected static final String CSS_CLASS_LI_LEAF = "dsl-li-leaf";
-    protected static final String CSS_CLASS_LI_BINARY = "dsl-li-binary";
-    protected static final String CSS_CLASS_LI_UNARY = "dsl-li-unary";
-    protected static final String CSS_CLASS_LI_NARY = "dsl-li-nary";
+    protected static final String END_DIV = "</div>";
 
-    protected static final String CSS_CLASS_UL_WHEN = "dsl-ul-when";
-    protected static final String CSS_CLASS_UL_BINARY = "dsl-ul-binary";
-    protected static final String CSS_CLASS_UL_BINARY_CHILD = "dsl-ul-binary-child";
-    protected static final String CSS_CLASS_UL_UNARY = "dsl-ul-unary";
+    protected static final String BEG_LI = "<li>";
+    protected static final String END_LI = "</li>";
 
-    protected static final String CSS_CLASS_OL_NARY = "dsl-ol-nary";
+    protected static final String BEG_OL = "<ol>";
+    protected static final String END_OL = "</ol>";
+
+    protected static final String BEG_UL = "<ul>";
+    protected static final String END_UL = "</ul>";
 
     protected final OutputStream ops;
     protected final ResourceProvider bundle;
@@ -55,91 +53,24 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private boolean insideSum = false;
     private boolean noExclusionNextLeaf = false;
 
-    public static String astToHtml(Metadata metadata, Locale locale) {
-        ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        new AstHtmlVisitor(ops, BUNDLE, locale).browse(metadata, 0);
-        return new String(ops.toByteArray(), UTF_8);
-    }
-
-    private static String beginElement(String elementType, String... classes) {
-        return "<" + elementType
-                + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
-                + ">";
-    }
-
-    private static String beginElementWithStyle(String elementType, String style, String... classes) {
-        return "<" + elementType
-                + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
-                + (style != null ? " style='" + style + "'" : "")
-                + ">";
-    }
-
-    private static String endElement(String elementType) {
-        return "</" + elementType + ">";
-    }
-
-    private static String beginLi(String... classes) {
-        return beginElement("li", classes);
-    }
-
-    private static String endLi() {
-        return endElement("li");
-    }
-
-    private static String beginUl(String... classes) {
-        return beginElement("ul", classes);
-    }
-
-    private static String endUl() {
-        return endElement("ul");
-    }
-
-    private static String beginOl(String... classes) {
-        return beginElement("ol", classes);
-    }
-
-    private static String endOl() {
-        return endElement("ol");
-    }
-
-    private static String beginDiv(String... classes) {
-        return beginElement("div", classes);
-    }
-
-    private static String beginDivWithStyle(String style, String... classes) {
-        return beginElementWithStyle("div", style, classes);
-    }
-
-    private static String endDiv() {
-        return endElement("div");
-    }
+    private static final MessageFormat format_bar_not_available = new MessageFormat(
+            "<div class=''{0}''>" + "<div class=''percentage-value''> n/a</div><div class=''{1}''>"
+                    + "<div class=''{2}'' style=''width:0%;''>" + "</div></div></div>",
+            Locale.US);
+    private static final MessageFormat format_bar_percentage = new MessageFormat("<div class=''{0}''>"
+            + "<div class=''percentage-value''>{1} %</div>"
+            + "<div class=''{2}''><div class=''{3}'' style=''width:{4}%;''>" + "</div></div></div>", Locale.US);
 
     private String exclusionBar(PredicateMetadata metadata, ExclusionBar cssClass) {
         final int nbTrue = metadata.trueEvalCount();
         final int nbFalse = metadata.falseEvalCount();
         if (nbTrue == 0 && nbFalse == 0) {
-            return formatExclusionBar(cssClass);
+            return format_bar_not_available.format(new Object[]{cssClass.getWrapperClass(), cssClass.getBorderClass(),
+                    cssClass.getFillingClass()});
         }
-        final double percentage = floor((nbTrue / ((double) nbTrue + nbFalse)) * 1000) / 10.0;
-        return formatExclusionBar(cssClass, percentage);
-    }
-
-    private String formatExclusionBar(ExclusionBar cssClass) {
-        return beginDiv(cssClass.getWrapperClass()) +
-                beginDiv("percentage-value") + " n/a" + endDiv() +
-                beginDiv(cssClass.getBorderClass()) +
-                beginDivWithStyle("width:0%;", cssClass.getFillingClass()) + endDiv() +
-                endDiv() +
-                endDiv();
-    }
-
-    private String formatExclusionBar(ExclusionBar cssClass, double percentage) {
-        return beginDiv(cssClass.getWrapperClass()) +
-                beginDiv("percentage-value") + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv() +
-                beginDiv(cssClass.getBorderClass()) +
-                beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv() +
-                endDiv() +
-                endDiv();
+        final Double percentage = floor((nbTrue / ((double) nbTrue + nbFalse)) * 1000) / 10.0;
+        return format_bar_percentage.format(new Object[]{cssClass.getWrapperClass(), percentage,
+                cssClass.getBorderClass(), cssClass.getFillingClass(), percentage});
     }
 
     public String exclusionBar(ValidationRule rule, ExclusionBar cssClass) {
@@ -160,21 +91,21 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // step when
 
     @Override
-    public void startWhen(WhenMetadata metadata, int depth) {
+    public void startWhen(Metadata metadata, int depth) {
         htmlFormatSpan(CSS_CLASS_WHEN, formatWhen());
-        write(beginUl(CSS_CLASS_UL_WHEN));
+        write(BEG_UL);
     }
 
     @Override
-    public void endWhen(WhenMetadata metadata, int depth) {
-        write(endUl());
+    public void endWhen(Metadata metadata, int depth) {
+        write(END_UL);
     }
-    // field metadata
 
+    // field metadata
     @Override
     public void startLeaf(LeafMetadata<?> leaf, int depth) {
         if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
-            write(beginLi(CSS_CLASS_LI_LEAF));
+            write(BEG_LI);
         }
         if (!insideSum) {
             if (noExclusionNextLeaf) {
@@ -214,7 +145,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void endLeaf(LeafMetadata<?> metadata, int depth) {
         if (stackPeek() == WHEN || (insideNary > 0 && !isImmediateBinaryChild())) {
-            write(endLi());
+            write(END_LI);
         }
     }
 
@@ -224,16 +155,16 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         Metadata leftChild = metadata.getLeft();
 
         if (NARY_PREDICATE == stackPeek() && (metadata.getOperator() != or && metadata.getOperator() != and)) {
-            write(beginLi(CSS_CLASS_LI_BINARY));
+            write(BEG_LI);
             closeSum = true;
         }
         if (rightSideOfBinary && leftChild.type() != NARY_PREDICATE) {
-            write(beginUl(CSS_CLASS_UL_BINARY));
+            write(BEG_UL);
             nbImbriBinary++;
             rightSideOfBinary = false;
         }
         if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
-            write(beginLi(CSS_CLASS_LI_BINARY));
+            write(BEG_LI);
         }
 
         if (metadata.getOperator() != and && metadata.getOperator() != or) {
@@ -250,7 +181,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
             if (metadata.getRight().type() == UNARY_PREDICATE) {
-                write(beginUl(CSS_CLASS_UL_BINARY_CHILD));
+                write(BEG_UL);
                 closeUn = true;
             }
             rightSideOfBinary = true;
@@ -264,11 +195,11 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void endBinary(BinaryPredicateMetadata metadata, int depth) {
         if (nbImbriBinary > 0) {
-            write(endUl());
+            write(END_UL);
             nbImbriBinary--;
         }
         if (closeSum) {
-            write(endLi());
+            write(END_LI);
             closeSum = false;
         }
         rightSideOfBinary = false;
@@ -283,10 +214,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
         if (insideNary == 0 && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() == count
                 || metadata.getOperator() == min)) {
-            write(beginLi(CSS_CLASS_LI_NARY));
+            write(BEG_LI);
         }
         if (stackPeek() == WHEN || stackPeek() != BINARY_PREDICATE) {
-            write(beginLi(CSS_CLASS_LI_NARY));
+            write(BEG_LI);
         }
 
         if (metadata.getOperator() != count && metadata.getOperator() != sum && metadata.getOperator() != min) {
@@ -295,13 +226,13 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
         rightSideOfBinary = false;
-        write(beginOl(CSS_CLASS_OL_NARY));
+        write(BEG_OL);
         insideNary++;
     }
 
     @Override
     public void endNary(NaryPredicateMetadata metadata, int depth) {
-        write(endOl());
+        write(END_OL);
         insideNary--;
         if (metadata.getOperator() == sum || metadata.getOperator() == min) {
             insideSum = false;
@@ -311,11 +242,11 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // unary metadata
     @Override
     public void startUnary(UnaryPredicateMetadata metadata, int depth) {
-        write(beginLi(CSS_CLASS_LI_UNARY));
+        write(BEG_LI);
         htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
         if (metadata.children().collect(toList()).get(0).type() != LEAF_PREDICATE) {
-            write(beginUl(CSS_CLASS_UL_UNARY));
+            write(BEG_UL);
             closeUnaryUL++;
         }
     }
@@ -323,26 +254,26 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void endUnary(UnaryPredicateMetadata metadata, int depth) {
         if (closeUn) {
-            write(endUl());
+            write(END_UL);
             closeUn = false;
         }
         if (closeUnaryUL > 0) {
-            write(endUl());
+            write(END_UL);
             closeUnaryUL--;
         }
-        write(endLi());
+        write(END_LI);
     }
 
     // validation rule
     @Override
-    public void startRule(RuleMetadata metadata, int depth) {
+    public void startRule(Metadata metadata, int depth) {
         formatDivStart(CSS_CLASS_VALIDATION_RULE);
     }
 
     @Override
-    public void endRule(RuleMetadata metadata, int depth) {
+    public void endRule(Metadata metadata, int depth) {
         htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate, locale));
-        write(endDiv());
+        write(END_DIV);
     }
 
     // metadata

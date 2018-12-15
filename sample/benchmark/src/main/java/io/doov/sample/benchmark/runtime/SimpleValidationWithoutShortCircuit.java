@@ -14,28 +14,16 @@ package io.doov.sample.benchmark.runtime;
 
 import static io.doov.benchmark.model.RuntimePaths.age;
 import static io.doov.benchmark.model.RuntimePaths.drivingLicense;
-import static io.doov.benchmark.model.dsl.DslBenchmarkModel.*;
+import static io.doov.benchmark.model.dsl.DslBenchmarkModel.name;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Threads;
-import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
-import io.doov.benchmark.model.BenchmarkModel;
-import io.doov.benchmark.model.BenchmarkModelWrapper;
-import io.doov.benchmark.model.Driver;
-import io.doov.benchmark.model.RuntimePaths;
+import io.doov.benchmark.model.*;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.BooleanFieldInfo;

@@ -80,7 +80,7 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void endRule(RuleMetadata metadata, int depth) {
+    public void endRule(Metadata metadata, int depth) {
         super.endRule(metadata, depth);
         formatNewLine();
     }
