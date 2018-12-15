@@ -56,9 +56,8 @@ public class AstLinePercentVisitor extends AstLineVisitor {
         if (stackPeek() == BINARY_PREDICATE) {
             return super.formatLeafMetadata(metadata);
         }
-        return
-//                percentage(metadata) +
-                super.formatLeafMetadata(metadata);
+        return (metadata instanceof PredicateMetadata) ? percentage((PredicateMetadata) metadata) : ""
+                + super.formatLeafMetadata(metadata);
     }
 
     private String percentage(PredicateMetadata metadata) {
