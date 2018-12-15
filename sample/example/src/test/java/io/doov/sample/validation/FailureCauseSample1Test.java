@@ -53,8 +53,8 @@ public class FailureCauseSample1Test {
     void getFailureCause_setup_1() {
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("(account email length is < 20 and (user birthdate age at today > 18 and account " +
-                        "country = FR)) and (account country = FR and account phone number starts with '+33')",
+                .hasFailureCause("account email length is < 20 and ((user birthdate age at today) > 18) and (account " +
+                                "country = FR) and account country = FR and account phone number starts with '+33'",
                         LOCALE);
     }
 
@@ -64,8 +64,8 @@ public class FailureCauseSample1Test {
 
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("(user birthdate age at today > 18 and account country = FR) and (account country = " +
-                        "FR and account phone number starts with '+33')", LOCALE);
+                .hasFailureCause("(user birthdate age at today) > 18 and account country = FR and account country = " +
+                        "FR and account phone number starts with '+33'", LOCALE);
     }
 
     @Test
@@ -74,8 +74,8 @@ public class FailureCauseSample1Test {
         model.getUser().setBirthDate(LocalDate.now().minusYears(19));
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("account country = FR and (account country = FR and account phone number starts with" +
-                        " '+33')", LOCALE);
+                .hasFailureCause("account country = FR and account country = FR and account phone number starts " +
+                        "with '+33'", LOCALE);
 
     }
 
@@ -101,8 +101,8 @@ public class FailureCauseSample1Test {
 
         assertThat(result).isTrue()
                 .hasNoFailureCause()
-                .hasReduceMessage("(account email length is < 20 and (user birthdate age at today > 18 and account " +
-                        "country = FR)) and (account country = FR and account phone number starts with '+33')", LOCALE);
+                .hasReduceMessage("account email length is < 20 and ((user birthdate age at today) > 18) and (account " +
+                        "country = FR) and account country = FR and account phone number starts with '+33'", LOCALE);
     }
 
     @AfterEach

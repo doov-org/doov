@@ -58,9 +58,9 @@ public class FailureCauseSample2Test {
     void getFailureCause_setup_1() {
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("(la date de naissance âge à la date du jour > 18 et (le pays = FR et le numéro de " +
-                        "téléphone commence par '+33')) ou (la date de naissance âge à la date du jour > 21 et (le " +
-                        "pays = CAN et le numéro de téléphone commence par '+1'))", LOCALE);
+                .hasFailureCause("(la date de naissance âge à la date du jour) > 18 et (le pays = FR) et (le numéro de " +
+                        "téléphone commence par '+33') ou (la date de naissance âge à la date du jour) > 21 et (le pays = CAN) et " +
+                        "(le numéro de téléphone commence par '+1')", LOCALE);
     }
 
     @Test
@@ -69,8 +69,8 @@ public class FailureCauseSample2Test {
 
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("(le pays = FR et le numéro de téléphone commence par '+33') ou (le pays = CAN et le" +
-                        " numéro de téléphone commence par '+1')", LOCALE);
+                .hasFailureCause("le pays = FR et le numéro de téléphone commence par '+33' ou le pays = CAN et le " +
+                        "numéro de téléphone commence par '+1'", LOCALE);
 
         System.out.println("> " + result.getFailureCause(LOCALE));
     }
@@ -82,8 +82,8 @@ public class FailureCauseSample2Test {
 
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("le numéro de téléphone commence par '+33' ou (le pays = CAN et le numéro de " +
-                        "téléphone commence par '+1')", LOCALE);
+                .hasFailureCause("le numéro de téléphone commence par '+33' ou le pays = CAN et le numéro de téléphone " +
+                        "commence par '+1'", LOCALE);
     }
 
     @Test
@@ -94,8 +94,8 @@ public class FailureCauseSample2Test {
 
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isTrue().hasNoFailureCause()
-                .hasReduceMessage("la date de naissance âge à la date du jour > 18 et (le pays = FR et le numéro de " +
-                        "téléphone commence par '+33')", LOCALE);
+                .hasReduceMessage("la date de naissance âge à la date du jour > 18 et le pays = FR et le numéro de " +
+                        "téléphone commence par '+33'", LOCALE);
     }
 
     @AfterEach
