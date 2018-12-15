@@ -81,35 +81,35 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startRule(RuleMetadata metadata, int depth) {
+    public void startRule(Metadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatRule());
         sb.append(formatNewLine());
     }
 
     @Override
-    public void endRule(RuleMetadata metadata, int depth) {
+    public void endRule(Metadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatValidate());
         sb.append(formatNewLine());
     }
 
     @Override
-    public void startWhen(WhenMetadata metadata, int depth) {
+    public void startWhen(Metadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatWhen());
         sb.append(formatNewLine());
     }
 
     @Override
-    public void startTypeConverter(ConverterMetadata metadata, int depth) {
+    public void startTypeConverter(LeafMetadata<?> metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatUsing());
         sb.append(formatNewLine());
     }
 
     @Override
-    public void endTypeConverter(ConverterMetadata metadata, int depth) {
+    public void endTypeConverter(LeafMetadata<?> metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatLeafMetadata(metadata));
         sb.append(formatNewLine());

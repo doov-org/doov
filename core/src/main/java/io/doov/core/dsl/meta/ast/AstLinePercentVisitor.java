@@ -14,7 +14,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.WhenMetadata;
+import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.*;
 
@@ -27,7 +27,7 @@ public class AstLinePercentVisitor extends AstLineVisitor {
     }
 
     @Override
-    public void startWhen(WhenMetadata metadata, int depth) {
+    public void startWhen(Metadata metadata, int depth) {
         sb.append(percentage((PredicateMetadata) metadata.children().findFirst().orElse(null)) + " ");
         super.startWhen(metadata, depth);
     }

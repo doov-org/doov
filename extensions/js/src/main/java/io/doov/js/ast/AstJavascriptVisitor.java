@@ -68,6 +68,8 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 case not_equals:
                     write(" != ");
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -107,6 +109,8 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 case sum:
                 case count:
                     write(", "); // separating the list values
+                    break;
+                default:
                     break;
             }
         }
@@ -221,6 +225,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
                 case PARENTHESIS_LEFT:
                 case PARENTHESIS_RIGHT:
                 case UNKNOWN:
+                default:
                     break;
             }
         }
@@ -431,6 +436,8 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
             case last_day_of_year:
                 write(".endOf('year')");
                 break;
+            default:
+                break;
         }
 
     }
@@ -461,12 +468,12 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startWhen(WhenMetadata metadata, int depth) {
+    public void startWhen(Metadata metadata, int depth) {
         write("if(");
     }
 
     @Override
-    public void endWhen(WhenMetadata metadata, int depth) {
+    public void endWhen(Metadata metadata, int depth) {
         while (parenthese_depth > 0) {
             write(")"); //closing parenthesis
             parenthese_depth--;
