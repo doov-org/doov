@@ -16,6 +16,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.equals;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.MetadataType.*;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.*;
 
 import java.util.Collection;
 import java.util.Deque;
@@ -65,19 +66,19 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
     }
 
     public static BinaryPredicateMetadata matchNoneMetadata(Metadata metadata, Collection<?> values) {
-        return new BinaryPredicateMetadata(metadata, match_none, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueListObject(values));
+        return new BinaryPredicateMetadata(metadata, match_none, valueListMetadata(values));
     }
 
     public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, Object value) {
-        return new BinaryPredicateMetadata(metadata, equals, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
+        return new BinaryPredicateMetadata(metadata, equals, valueMetadata(value));
     }
 
     public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, Supplier<?> supplier) {
-        return new BinaryPredicateMetadata(metadata, equals, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(lambda));
+        return new BinaryPredicateMetadata(metadata, equals, readableMetadata(lambda));
     }
 
     public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, Readable value) {
-        return new BinaryPredicateMetadata(metadata, equals, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(value));
+        return new BinaryPredicateMetadata(metadata, equals, readableMetadata(value));
     }
 
     public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, DefaultCondition<?> condition) {
@@ -85,35 +86,35 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
     }
 
     public static BinaryPredicateMetadata notEqualsMetadata(Metadata metadata, Object value) {
-        return new BinaryPredicateMetadata(metadata, not_equals, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
+        return new BinaryPredicateMetadata(metadata, not_equals, valueMetadata(value));
     }
 
     public static BinaryPredicateMetadata notEqualsMetadata(Metadata metadata, Supplier<?> supplier) {
-        return new BinaryPredicateMetadata(metadata, not_equals, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(lambda));
+        return new BinaryPredicateMetadata(metadata, not_equals, readableMetadata(lambda));
     }
 
     public static BinaryPredicateMetadata notEqualsMetadata(Metadata metadata, Readable value) {
-        return new BinaryPredicateMetadata(metadata, not_equals, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(value));
+        return new BinaryPredicateMetadata(metadata, not_equals, readableMetadata(value));
     }
 
     public static BinaryPredicateMetadata matchAnyMetadata(Metadata metadata) {
-        return new BinaryPredicateMetadata(metadata, match_any, new ValuePredicateMetadata<>(FIELD_PREDICATE_MATCH_ANY).valueReadable(lambda));
+        return new BinaryPredicateMetadata(metadata, match_any, anyMatchMetadata(metadata));
     }
 
     public static BinaryPredicateMetadata matchAnyMetadata(Metadata metadata, Collection<?> values) {
-        return new BinaryPredicateMetadata(metadata, match_any, new ValuePredicateMetadata<>(FIELD_PREDICATE_MATCH_ANY).valueListObject(values));
+        return new BinaryPredicateMetadata(metadata, match_any, anyMatchMetadata(values));
     }
 
     public static BinaryPredicateMetadata matchAllMetadata(Metadata metadata) {
-        return new BinaryPredicateMetadata(metadata, match_all, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(lambda));
+        return new BinaryPredicateMetadata(metadata, match_all, readableMetadata(lambda));
     }
 
     public static BinaryPredicateMetadata matchAllMetadata(Metadata metadata, Collection<?> values) {
-        return new BinaryPredicateMetadata(metadata, match_all, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueListObject(values));
+        return new BinaryPredicateMetadata(metadata, match_all, valueListMetadata(values));
     }
 
     public static BinaryPredicateMetadata matchNoneMetadata(Metadata metadata) {
-        return new BinaryPredicateMetadata(metadata, match_none, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(lambda));
+        return new BinaryPredicateMetadata(metadata, match_none, readableMetadata(lambda));
     }
 
     @Override
@@ -152,7 +153,7 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
                         .map(DslField::id)
                         .orElse(null);
                 return new BinaryPredicateMetadata(getLeft().reduce(context, type), equals,
-                        new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(context.getEvalValue(fieldId)));
+                        ValuePredicateMetadata.valueMetadata(context.getEvalValue(fieldId)));
             }
         }
         return new BinaryPredicateMetadata(getLeft().reduce(context, type), getOperator(), getRight().reduce(context, type));
