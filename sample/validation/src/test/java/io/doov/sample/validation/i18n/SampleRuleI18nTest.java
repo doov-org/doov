@@ -173,7 +173,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(RULE_USER_ADULT);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        final List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(5);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(LocalDateFieldInfo.class);
@@ -196,7 +196,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(RULE_USER_ADULT_FIRSTDAY);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        final List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(7);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(LocalDateFieldInfo.class);
@@ -228,7 +228,7 @@ public class SampleRuleI18nTest {
         assertThat(predicate.children()).hasSize(1);
         assertThat(predicate.children()).element(0).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.children()).extracting(Metadata::type).element(0).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts = ((LeafMetadata) predicate.children().collect(toList()).get(0))
+        final List<Element> elts = ((LeafMetadata<?>) predicate.children().collect(toList()).get(0))
                         .elementsAsList();
         assertThat(elts).hasSize(5);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
@@ -251,7 +251,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(RULE_ID);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        final List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(2);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(LongFieldInfo.class);
@@ -267,7 +267,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(RULE_AGE_2);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        final List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(6);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(LocalDateFieldInfo.class);
@@ -304,10 +304,10 @@ public class SampleRuleI18nTest {
                         .isInstanceOf(LeafMetadata.class);
         assertThat(predicate.children().collect(toList()).get(0).children()).extracting(Metadata::type).element(1)
                         .isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts0 = ((LeafMetadata) predicate.children().collect(toList()).get(0).children()
+        final List<Element> elts0 = ((LeafMetadata<?>) predicate.children().collect(toList()).get(0).children()
                         .collect(toList()).get(0)).elementsAsList();
         assertThat(elts0).hasSize(3);
-        final List<Element> elts1 = ((LeafMetadata) predicate.children().collect(toList()).get(0).children()
+        final List<Element> elts1 = ((LeafMetadata<?>) predicate.children().collect(toList()).get(0).children()
                         .collect(toList()).get(1)).elementsAsList();
         assertThat(elts1).hasSize(3);
         System.out.println(RULE_SUM);
@@ -331,10 +331,10 @@ public class SampleRuleI18nTest {
                         .isInstanceOf(LeafMetadata.class);
         assertThat(predicate.children().collect(toList()).get(0).children().collect(toList()).get(1).type())
                         .isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts0 = ((LeafMetadata) predicate.children().collect(toList()).get(0).children()
+        final List<Element> elts0 = ((LeafMetadata<?>) predicate.children().collect(toList()).get(0).children()
                         .collect(toList()).get(0)).elementsAsList();
         assertThat(elts0).hasSize(1);
-        final List<Element> elts1 = ((LeafMetadata) predicate.children().collect(toList()).get(0).children()
+        final List<Element> elts1 = ((LeafMetadata<?>) predicate.children().collect(toList()).get(0).children()
                         .collect(toList()).get(1)).elementsAsList();
         assertThat(elts1).hasSize(1);
         System.out.println(RULE_MIN);
@@ -347,7 +347,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(rule);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        final List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(9);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(LocalDateFieldInfo.class);
@@ -388,10 +388,10 @@ public class SampleRuleI18nTest {
         assertThat(predicate.children()).extracting(Metadata::type).element(0).isEqualTo(FIELD_PREDICATE);
         assertThat(predicate.children()).element(1).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.children()).extracting(Metadata::type).element(1).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts0 = ((LeafMetadata) predicate.children().collect(toList()).get(0))
+        final List<Element> elts0 = ((LeafMetadata<?>) predicate.children().collect(toList()).get(0))
                         .elementsAsList();
         assertThat(elts0).hasSize(3);
-        final List<Element> elts1 = ((LeafMetadata) predicate.children().collect(toList()).get(1))
+        final List<Element> elts1 = ((LeafMetadata<?>) predicate.children().collect(toList()).get(1))
                         .elementsAsList();
         assertThat(elts1).hasSize(3);
         System.out.println(rule);
@@ -418,10 +418,10 @@ public class SampleRuleI18nTest {
                         .isInstanceOf(LeafMetadata.class);
         assertThat(predicate.children().collect(toList()).get(0).children().collect(toList()).get(1).type())
                         .isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts0 = ((LeafMetadata) predicate.children().collect(toList()).get(0).children()
+        final List<Element> elts0 = ((LeafMetadata<?>) predicate.children().collect(toList()).get(0).children()
                         .collect(toList()).get(0)).elementsAsList();
         assertThat(elts0).hasSize(3);
-        final List<Element> elts1 = ((LeafMetadata) predicate.children().collect(toList()).get(0).children()
+        final List<Element> elts1 = ((LeafMetadata<?>) predicate.children().collect(toList()).get(0).children()
                         .collect(toList()).get(1)).elementsAsList();
         assertThat(elts1).hasSize(3);
         System.out.println(rule);
@@ -435,7 +435,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(rule);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        final List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(9);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(IntegerFieldInfo.class);
@@ -480,7 +480,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(rule);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        final List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(6);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(LocalDateFieldInfo.class);
@@ -512,7 +512,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(rule);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        final List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(3);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(LocalDateFieldInfo.class);
@@ -535,7 +535,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(rule);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        final List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        final List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(6);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(LocalDateFieldInfo.class);
@@ -562,7 +562,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(RULE_AGE);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(5);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(LocalDateFieldInfo.class);
@@ -587,7 +587,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(RULE_DOUBLE_LAMBDA);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE_MATCH_ANY);
-        List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(3);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(StringFieldInfo.class);
@@ -610,7 +610,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(RULE_BORN_1980);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(5);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(LocalDateFieldInfo.class);
@@ -635,7 +635,7 @@ public class SampleRuleI18nTest {
         final Metadata predicate = predicate(RULE_ACCOUNT_TIME_CONTAINS);
         assertThat(predicate).isInstanceOf(LeafMetadata.class);
         assertThat(predicate.type()).isEqualTo(FIELD_PREDICATE);
-        List<Element> elts = ((LeafMetadata) predicate).elementsAsList();
+        List<Element> elts = ((LeafMetadata<?>) predicate).elementsAsList();
         assertThat(elts).hasSize(5);
         assertThat(elts).extracting(Element::getReadable).extracting(Object::getClass).element(0)
                         .isEqualTo(EnumFieldInfo.class);

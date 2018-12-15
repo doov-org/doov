@@ -18,19 +18,23 @@ public class StringFunctionMetadata extends BinaryPredicateMetadata {
     }
 
     public static StringFunctionMetadata matchesMetadata(Metadata metadata, String value) {
-        return new StringFunctionMetadata(metadata, matches, new ValuePredicateMetadata(LEAF_PREDICATE).valueString(value));
+        return new StringFunctionMetadata(metadata, matches,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueString(value));
     }
 
     public static StringFunctionMetadata containsMetadata(Metadata metadata, String value) {
-        return new StringFunctionMetadata(metadata, contains, new ValuePredicateMetadata(LEAF_PREDICATE).valueString(value));
+        return new StringFunctionMetadata(metadata, contains,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueString(value));
     }
 
     public static StringFunctionMetadata startsWithMetadata(Metadata metadata, String value) {
-        return new StringFunctionMetadata(metadata, starts_with, new ValuePredicateMetadata(LEAF_PREDICATE).valueString(value));
+        return new StringFunctionMetadata(metadata, starts_with,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueString(value));
     }
 
     public static StringFunctionMetadata endsWithMetadata(Metadata metadata, String value) {
-        return new StringFunctionMetadata(metadata, ends_with, new ValuePredicateMetadata(LEAF_PREDICATE).valueString(value));
+        return new StringFunctionMetadata(metadata, ends_with,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueString(value));
     }
 
 }

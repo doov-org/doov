@@ -14,8 +14,6 @@ package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 

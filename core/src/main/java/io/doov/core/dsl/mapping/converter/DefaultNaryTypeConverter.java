@@ -12,20 +12,20 @@ import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultNaryTypeConverter<O> extends AbstractDSLBuilder implements NaryTypeConverter<O> {
 
-    private final TriFunction<DslModel, Context, List<DslField>, O> function;
+    private final TriFunction<DslModel, Context, List<DslField<?>>, O> function;
     private final ConverterMetadata metadata;
 
-    public DefaultNaryTypeConverter(TriFunction<DslModel, Context, List<DslField>, O> function,
+    public DefaultNaryTypeConverter(TriFunction<DslModel, Context, List<DslField<?>>, O> function,
                     ConverterMetadata metadata) {
         this.function = function;
         this.metadata = metadata;
     }
 
-    public DefaultNaryTypeConverter(TriFunction<DslModel, Context, List<DslField>, O> function, String description) {
+    public DefaultNaryTypeConverter(TriFunction<DslModel, Context, List<DslField<?>>, O> function, String description) {
         this(function, ConverterMetadata.metadata(description));
     }
 
-    public DefaultNaryTypeConverter(BiFunction<DslModel, List<DslField>, O> function, String description) {
+    public DefaultNaryTypeConverter(BiFunction<DslModel, List<DslField<?>>, O> function, String description) {
         this((m, c, f) -> function.apply(m, f), description);
     }
 
@@ -35,7 +35,7 @@ public class DefaultNaryTypeConverter<O> extends AbstractDSLBuilder implements N
     }
 
     @Override
-    public O convert(DslModel dslModel, Context context, DslField... fieldInfos) {
+    public O convert(DslModel dslModel, Context context, DslField<?>... fieldInfos) {
         return function.apply(dslModel, context, Arrays.asList(fieldInfos));
     }
 }

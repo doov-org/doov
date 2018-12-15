@@ -21,22 +21,27 @@ public class BooleanFunctionMetadata extends BinaryPredicateMetadata {
     // boolean
 
     public static BooleanFunctionMetadata andMetadata(Metadata metadata, boolean value) {
-        return new BooleanFunctionMetadata(metadata, and, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
+        return new BooleanFunctionMetadata(metadata, and,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
     }
 
     public static BooleanFunctionMetadata andMetadata(Metadata metadata, Readable value) {
-        return new BooleanFunctionMetadata(metadata, and, new ValuePredicateMetadata(LEAF_PREDICATE).valueReadable(value));
+        return new BooleanFunctionMetadata(metadata, and,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(value));
     }
 
     public static BooleanFunctionMetadata orMetadata(Metadata metadata, boolean value) {
-        return new BooleanFunctionMetadata(metadata, or, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
+        return new BooleanFunctionMetadata(metadata, or,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
     }
 
     public static BooleanFunctionMetadata orMetadata(Metadata metadata, Readable value) {
-        return new BooleanFunctionMetadata(metadata, or, new ValuePredicateMetadata(LEAF_PREDICATE).valueReadable(value));
+        return new BooleanFunctionMetadata(metadata, or,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(value));
     }
 
     public static BooleanFunctionMetadata isMetadata(Metadata metadata, boolean value) {
-        return new BooleanFunctionMetadata(metadata, is, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
+        return new BooleanFunctionMetadata(metadata, is,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
     }
 }

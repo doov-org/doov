@@ -30,7 +30,7 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         return new MappingMetadata(MAPPING_LEAF).valueSupplier(supplier);
     }
 
-    public static MappingMetadata fieldsInput(List<DslField> fields) {
+    public static MappingMetadata fieldsInput(List<DslField<?>> fields) {
         return new MappingMetadata(MAPPING_LEAF).fields(fields);
     }
 
@@ -38,7 +38,7 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         return new MappingMetadata(MAPPING_LEAF).function();
     }
 
-    public static MappingMetadata fieldInput(DslField field) {
+    public static MappingMetadata fieldInput(DslField<?> field) {
         return new MappingMetadata(MAPPING_LEAF).field(field);
     }
 
@@ -50,7 +50,7 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         return new MappingMetadata(MAPPING_LEAF).valueReadable(() -> readable);
     }
 
-    public static MappingMetadata fieldOutput(DslField field) {
+    public static MappingMetadata fieldOutput(DslField<?> field) {
         return new MappingMetadata(MAPPING_LEAF).field(field);
     }
 
@@ -58,10 +58,10 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         return new MappingMetadata(MAPPING_LEAF).function();
     }
 
-    private MappingMetadata fields(List<DslField> fields) {
-        Iterator<DslField> iterator = fields.iterator();
+    private MappingMetadata fields(List<DslField<?>> fields) {
+        Iterator<DslField<?>> iterator = fields.iterator();
         while (iterator.hasNext()) {
-            DslField f = iterator.next();
+            DslField<?> f = iterator.next();
             this.field(f);
             if (iterator.hasNext()) {
                 this.operator(MappingOperator.and);
