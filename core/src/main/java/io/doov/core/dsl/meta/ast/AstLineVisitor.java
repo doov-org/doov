@@ -61,7 +61,7 @@ public class AstLineVisitor extends AstTextVisitor {
     @Override
     public void startBinary(BinaryPredicateMetadata metadata, int depth) {
         super.startBinary(metadata, depth);
-        sb.append(depth > 0 ? "(" : "");
+        sb.append(depth > 2 ? "(" : "");
     }
 
     @Override
@@ -76,7 +76,7 @@ public class AstLineVisitor extends AstTextVisitor {
     public void endBinary(BinaryPredicateMetadata metadata, int depth) {
         super.endBinary(metadata, depth);
         sb.delete(sb.length() - 1, sb.length());
-        sb.append(depth > 0 ? ") " : " ");
+        sb.append(depth > 2 ? ") " : " ");
     }
 
     @Override
