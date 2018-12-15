@@ -61,7 +61,7 @@ public class TypeContextConverters {
      * @param <O>         output type
      * @return type converter
      */
-    public static <O> NaryTypeConverter<O> nConverter(TriFunction<DslModel, Context, List<DslField>, O> function,
+    public static <O> NaryTypeConverter<O> nConverter(TriFunction<DslModel, Context, List<DslField<?>>, O> function,
             String description) {
         return new DefaultNaryTypeConverter<>(function, description);
     }

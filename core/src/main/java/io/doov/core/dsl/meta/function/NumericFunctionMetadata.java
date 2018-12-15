@@ -29,7 +29,8 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
     // times
 
     public static NumericFunctionMetadata timesMetadata(Metadata metadata, int multiplier) {
-        return new NumericFunctionMetadata(metadata, times, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(multiplier));
+        return new NumericFunctionMetadata(metadata, times,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(multiplier));
     }
 
     // plus
@@ -41,11 +42,13 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
     // lesser
 
     public static NumericFunctionMetadata lesserThanMetadata(Metadata metadata, Object value) {
-        return new NumericFunctionMetadata(metadata, lesser_than, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
+        return new NumericFunctionMetadata(metadata, lesser_than,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
     }
 
     public static NumericFunctionMetadata lesserThanMetadata(Metadata metadata, Readable field2) {
-        return new NumericFunctionMetadata(metadata, lesser_than, new ValuePredicateMetadata(LEAF_PREDICATE).valueReadable(field2));
+        return new NumericFunctionMetadata(metadata, lesser_than,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(field2));
     }
 
     public static NumericFunctionMetadata lesserThanMetadata(Metadata metadata, DslField<?> field2) {
@@ -53,7 +56,8 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
     }
 
     public static NumericFunctionMetadata lesserOrEqualsMetadata(Metadata metadata, Object value) {
-        return new NumericFunctionMetadata(metadata, lesser_or_equals, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
+        return new NumericFunctionMetadata(metadata, lesser_or_equals,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
     }
 
     public static NumericFunctionMetadata lesserOrEqualsMetadata(Metadata metadata, DslField<?> field2) {
@@ -63,11 +67,13 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
     // lesser
 
     public static NumericFunctionMetadata greaterThanMetadata(Metadata metadata, Object value) {
-        return new NumericFunctionMetadata(metadata, greater_than, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
+        return new NumericFunctionMetadata(metadata, greater_than,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
     }
 
     public static NumericFunctionMetadata greaterThanMetadata(Metadata metadata, Readable field2) {
-        return new NumericFunctionMetadata(metadata, greater_than, new ValuePredicateMetadata(LEAF_PREDICATE).valueReadable(field2));
+        return new NumericFunctionMetadata(metadata, greater_than,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(field2));
     }
 
     public static NumericFunctionMetadata greaterThanMetadata(Metadata metadata, DslField<?> field2) {
@@ -75,11 +81,12 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
     }
 
     public static NumericFunctionMetadata greaterOrEqualsMetadata(Metadata metadata, Object value) {
-        return new NumericFunctionMetadata(metadata, greater_or_equals, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
+        return new NumericFunctionMetadata(metadata, greater_or_equals,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
     }
 
     public static NumericFunctionMetadata greaterOrEqualsMetadata(Metadata metadata, Readable field2) {
-        return new NumericFunctionMetadata(metadata, greater_or_equals, new ValuePredicateMetadata(LEAF_PREDICATE)
+        return new NumericFunctionMetadata(metadata, greater_or_equals, new ValuePredicateMetadata<>(LEAF_PREDICATE)
                 .valueReadable(field2));
     }
 

@@ -18,11 +18,11 @@ import io.doov.core.dsl.meta.Metadata;
 
 public class NaryConverterInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
 
-    private final List<DslField> fields;
+    private final List<DslField<?>> fields;
     private final NaryTypeConverter<T> converter;
     private final MappingInputMetadata metadata;
 
-    public NaryConverterInput(List<DslField> fields, NaryTypeConverter<T> converter) {
+    public NaryConverterInput(List<DslField<?>> fields, NaryTypeConverter<T> converter) {
         this.fields = fields;
         this.metadata = inputMetadata(metadataInput(fieldsInput(fields)), converter.metadata());
         this.converter = converter;

@@ -19,20 +19,24 @@ public class MapFunctionMetadata extends BinaryPredicateMetadata {
     }
 
     public static MapFunctionMetadata mapToIntMetadata(Metadata metadata) {
-        return new MapFunctionMetadata(metadata, as_a_number, new ValuePredicateMetadata(LEAF_PREDICATE).valueUnknown(""));
+        return new MapFunctionMetadata(metadata, as_a_number,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueUnknown(""));
     }
 
     public static MapFunctionMetadata mapToStringMetadata(Metadata metadata) {
-        return new MapFunctionMetadata(metadata, as_string, new ValuePredicateMetadata(LEAF_PREDICATE).valueUnknown(""));
+        return new MapFunctionMetadata(metadata, as_string,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueUnknown(""));
     }
 
     public static MapFunctionMetadata mapAsMetadata(Metadata metadata, String readable) {
-        return new MapFunctionMetadata(metadata, as, new ValuePredicateMetadata(LEAF_PREDICATE).valueReadable(() -> readable));
+        return new MapFunctionMetadata(metadata, as,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(() -> readable));
     }
 
     public static MapFunctionMetadata mapUsingMetadata(Metadata metadata, String readable, Readable condition) {
         return new MapFunctionMetadata(
-                new MapFunctionMetadata(metadata, as, new ValuePredicateMetadata(LEAF_PREDICATE).valueReadable(() -> readable)),
-                with, new ValuePredicateMetadata(LEAF_PREDICATE).valueReadable(condition));
+                new MapFunctionMetadata(metadata, as,
+                        new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(() -> readable)),
+                with, new ValuePredicateMetadata<>(LEAF_PREDICATE).valueReadable(condition));
     }
 }

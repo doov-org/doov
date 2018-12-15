@@ -13,9 +13,9 @@ import io.doov.core.dsl.mapping.*;
  */
 public class NaryStepMap {
 
-    private final List<DslField> fieldInfos;
+    private final List<DslField<?>> fieldInfos;
 
-    public NaryStepMap(List<DslField> fieldInfos) {
+    public NaryStepMap(List<DslField<?>> fieldInfos) {
         this.fieldInfos = fieldInfos;
     }
 
@@ -40,7 +40,7 @@ public class NaryStepMap {
 
         private final NaryConverterInput<O> input;
 
-        private NaryStepMapping(List<DslField> fieldInfos, NaryTypeConverter<O> typeConverter) {
+        private NaryStepMapping(List<DslField<?>> fieldInfos, NaryTypeConverter<O> typeConverter) {
             this.input = new NaryConverterInput<>(fieldInfos, typeConverter);
         }
 

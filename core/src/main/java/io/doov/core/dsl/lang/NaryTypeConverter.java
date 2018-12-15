@@ -17,5 +17,5 @@ public interface NaryTypeConverter<O> extends DSLBuilder {
      * @param ins in fields
      * @return out value
      */
-    O convert(DslModel fieldModel, Context context, DslField... ins);
+    O convert(DslModel fieldModel, Context context, DslField<?>... ins);
 }

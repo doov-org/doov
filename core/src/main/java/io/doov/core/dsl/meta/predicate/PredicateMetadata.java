@@ -5,7 +5,6 @@ package io.doov.core.dsl.meta.predicate;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
 public interface PredicateMetadata extends Metadata {

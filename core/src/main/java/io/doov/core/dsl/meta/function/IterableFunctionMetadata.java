@@ -20,21 +20,25 @@ public class IterableFunctionMetadata extends BinaryPredicateMetadata {
     }
 
     public static IterableFunctionMetadata containsMetadata(Metadata metadata, Object value) {
-        return new IterableFunctionMetadata(metadata, contains, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(value));
+        return new IterableFunctionMetadata(metadata, contains,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(value));
     }
 
     public static IterableFunctionMetadata containsMetadata(Metadata metadata, Collection<Object> values) {
-        return new IterableFunctionMetadata(metadata, contains, new ValuePredicateMetadata(LEAF_PREDICATE).valueListObject(values));
+        return new IterableFunctionMetadata(metadata, contains,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueListObject(values));
     }
 
     // size
 
     public static IterableFunctionMetadata hasSizeMetadata(Metadata metadata, int size) {
-        return new IterableFunctionMetadata(metadata, has_size, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(size));
+        return new IterableFunctionMetadata(metadata, has_size,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(size));
     }
 
     public static IterableFunctionMetadata hasNotSizeMetadata(Metadata metadata, int size) {
-        return new IterableFunctionMetadata(metadata, has_not_size, new ValuePredicateMetadata(LEAF_PREDICATE).valueObject(size));
+        return new IterableFunctionMetadata(metadata, has_not_size,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE).valueObject(size));
     }
 
 }

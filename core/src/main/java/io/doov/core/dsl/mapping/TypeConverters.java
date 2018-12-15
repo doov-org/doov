@@ -64,6 +64,7 @@ public class TypeConverters {
      * @return type converter that returns the object value from String representation.
      * @throws IllegalStateException if no type adapter is found for the given field
      */
+    @SuppressWarnings("unchecked")
     public static <O, T extends DslField<O> & FieldInfo> TypeConverter<String, O> fromString(T fieldInfo,
             TypeAdapterRegistry typeAdapters) {
         final TypeAdapter adapter = typeAdapters.stream()
@@ -154,7 +155,7 @@ public class TypeConverters {
      * @param <O>         output type
      * @return type converter
      */
-    public static <O> NaryTypeConverter<O> nConverter(BiFunction<DslModel, List<DslField>, O> function,
+    public static <O> NaryTypeConverter<O> nConverter(BiFunction<DslModel, List<DslField<?>>, O> function,
             String description) {
         return new DefaultNaryTypeConverter<>(function, description);
     }

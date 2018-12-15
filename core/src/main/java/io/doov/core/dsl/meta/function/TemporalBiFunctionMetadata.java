@@ -52,126 +52,141 @@ public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
     // age at
 
     public static TemporalBiFunctionMetadata ageAtValueMetadata(DefaultCondition<?> condition, Object value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), age_at, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueObject(value));
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), age_at,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE)
+                        .valueObject(value));
     }
 
     public static TemporalBiFunctionMetadata ageAtTemporalFieldMetadata(DefaultCondition<?> condition,
-                                                                        DslField<?> field) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), age_at, new ValuePredicateMetadata<>(FIELD_PREDICATE)
-                .field(field));
+            DslField<?> field) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), age_at,
+                new ValuePredicateMetadata<>(FIELD_PREDICATE)
+                        .field(field));
     }
 
     public static TemporalBiFunctionMetadata ageAtTemporalConditionMetadata(DefaultCondition<?> c1,
-                                                                            DefaultCondition<?> c2) {
+            DefaultCondition<?> c2) {
         return new TemporalBiFunctionMetadata(c1.getMetadata(), age_at, c2.getMetadata());
     }
 
-    public static TemporalBiFunctionMetadata ageAtSupplierMetadata(DefaultCondition<?> condition, Supplier<?> supplier) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), age_at, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueSupplier(supplier));
+    public static TemporalBiFunctionMetadata ageAtSupplierMetadata(DefaultCondition<?> condition,
+            Supplier<?> supplier) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), age_at,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE)
+                        .valueSupplier(supplier));
     }
 
     // after
 
     public static TemporalBiFunctionMetadata afterValueMetadata(DefaultCondition<?> condition,
-                                                                Object value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueObject(value));
+            Object value) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), after,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE)
+                        .valueObject(value));
     }
 
     public static TemporalBiFunctionMetadata afterTemporalFieldMetadata(DefaultCondition<?> condition,
-                                                                        DslField<?> field) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after, new ValuePredicateMetadata<>(FIELD_PREDICATE)
-                .field(field));
+            DslField<?> field) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), after,
+                new ValuePredicateMetadata<>(FIELD_PREDICATE)
+                        .field(field));
     }
 
     public static TemporalBiFunctionMetadata afterTemporalConditionMetadata(DefaultCondition<?> c1,
-                                                                            DefaultCondition<?> c2) {
+            DefaultCondition<?> c2) {
         return new TemporalBiFunctionMetadata(c1.getMetadata(), after, c2.getMetadata());
     }
 
     public static TemporalBiFunctionMetadata afterSupplierMetadata(DefaultCondition<?> condition,
-                                                                   Supplier<?> value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueSupplier(value));
+            Supplier<?> value) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), after,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE)
+                        .valueSupplier(value));
     }
 
     public static TemporalBiFunctionMetadata afterOrEqualsValueMetadata(DefaultCondition<?> condition,
-                                                                        Object value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after_or_equals, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueObject(value));
+            Object value) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), after_or_equals,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE)
+                        .valueObject(value));
     }
 
     public static TemporalBiFunctionMetadata afterOrEqTemporalFieldMetadata(DefaultCondition<?> condition,
-                                                                            DslField<?> field) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after_or_equals, new ValuePredicateMetadata<>(FIELD_PREDICATE)
-                .field(field));
+            DslField<?> field) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), after_or_equals,
+                new ValuePredicateMetadata<>(FIELD_PREDICATE)
+                        .field(field));
     }
 
     public static TemporalBiFunctionMetadata afterOrEqualsSupplierMetadata(DefaultCondition<?> condition,
-                                                                           Supplier<?> value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after_or_equals, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueSupplier(value));
+            Supplier<?> value) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), after_or_equals,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE)
+                        .valueSupplier(value));
     }
 
     public static TemporalBiFunctionMetadata afterOrEqualsTemporalConditionMetadata(DefaultCondition<?> c1,
-                                                                                    DefaultCondition<?> c2) {
+            DefaultCondition<?> c2) {
         return new TemporalBiFunctionMetadata(c1.getMetadata(), after_or_equals, c2.getMetadata());
     }
 
     // before
 
     public static TemporalBiFunctionMetadata beforeValueMetadata(DefaultCondition<?> condition,
-                                                                 Object value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueObject(value));
+            Object value) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), before,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE)
+                        .valueObject(value));
     }
 
     public static TemporalBiFunctionMetadata beforeTemporalFieldMetadata(DefaultCondition<?> condition,
-                                                                         DslField<?> field) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before, new ValuePredicateMetadata<>(FIELD_PREDICATE)
-                .field(field));
+            DslField<?> field) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), before,
+                new ValuePredicateMetadata<>(FIELD_PREDICATE)
+                        .field(field));
     }
 
     public static TemporalBiFunctionMetadata beforeTemporalConditionMetadata(DefaultCondition<?> c1,
-                                                                             DefaultCondition<?> c2) {
+            DefaultCondition<?> c2) {
         return new TemporalBiFunctionMetadata(c1.getMetadata(), before, c2.getMetadata());
     }
 
     public static TemporalBiFunctionMetadata beforeSupplierMetadata(DefaultCondition<?> condition,
-                                                                    Supplier<?> value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueSupplier(value));
+            Supplier<?> value) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), before,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE)
+                        .valueSupplier(value));
     }
 
     public static TemporalBiFunctionMetadata beforeOrEqualsValueMetadata(DefaultCondition<?> condition,
-                                                                         Object value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before_or_equals, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueObject(value));
+            Object value) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), before_or_equals,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE)
+                        .valueObject(value));
     }
 
     public static TemporalBiFunctionMetadata beforeOrEqTemporalFieldMetadata(DefaultCondition<?> condition,
-                                                                             DslField<?> field) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before_or_equals, new ValuePredicateMetadata<>(FIELD_PREDICATE)
-                .field(field));
+            DslField<?> field) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), before_or_equals,
+                new ValuePredicateMetadata<>(FIELD_PREDICATE)
+                        .field(field));
     }
 
     public static TemporalBiFunctionMetadata beforeOrEqualsSupplierMetadata(DefaultCondition<?> condition,
-                                                                            Supplier<?> value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before_or_equals, new ValuePredicateMetadata<>(LEAF_PREDICATE)
-                .valueSupplier(value));
+            Supplier<?> value) {
+        return new TemporalBiFunctionMetadata(condition.getMetadata(), before_or_equals,
+                new ValuePredicateMetadata<>(LEAF_PREDICATE)
+                        .valueSupplier(value));
     }
 
     public static TemporalBiFunctionMetadata beforeOrEqualsTemporalConditionMetadata(DefaultCondition<?> c1,
-                                                                                     DefaultCondition<?> c2) {
+            DefaultCondition<?> c2) {
         return new TemporalBiFunctionMetadata(c1.getMetadata(), before_or_equals, c2.getMetadata());
     }
 
-
     // with
     public static TemporalBiFunctionMetadata withMetadata(Metadata metadata, TemporalAdjusterMetadata adjuster) {
-        return new TemporalBiFunctionMetadata(metadata, with, new ValuePredicateMetadata(LEAF_PREDICATE)
+        return new TemporalBiFunctionMetadata(metadata, with, new ValuePredicateMetadata<>(LEAF_PREDICATE)
                 .add(adjuster.elements().getFirst()));
     }
 
