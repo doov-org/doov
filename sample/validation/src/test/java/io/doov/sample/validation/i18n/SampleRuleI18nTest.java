@@ -419,30 +419,21 @@ public class SampleRuleI18nTest {
         final ValidationRule rule = DOOV
                 .when(count(accountEmail.startsWith("a"), accountEmail.startsWith("b")).greaterThan(2))
                 .validate();
-        final Metadata predicate = predicate(rule);
-        assertThat(predicate).isInstanceOf(BinaryPredicateMetadata.class);
-        assertThat(predicate.type()).isEqualTo(BINARY_PREDICATE);
-        assertThat(predicate.children()).element(0).isInstanceOf(NaryPredicateMetadata.class);
-        assertThat(predicate.children()).extracting(Metadata::type).element(0).isEqualTo(NARY_PREDICATE);
-        assertThat(predicate.children()).element(1).isInstanceOf(LeafMetadata.class);
-        assertThat(predicate.children()).extracting(Metadata::type).element(1).isEqualTo(LEAF_PREDICATE);
-        assertThat(predicate.children().collect(toList()).get(0).children()).hasSize(2);
-        assertThat(predicate.children().collect(toList()).get(0).children()).element(0)
-                .isInstanceOf(StringFunctionMetadata.class);
-        assertThat(predicate.children().collect(toList()).get(0).children()).extracting(Metadata::type).element(0)
-                .isEqualTo(BINARY_PREDICATE);
-        assertThat(predicate.children().collect(toList()).get(0).children()).element(1)
-                .isInstanceOf(StringFunctionMetadata.class);
-        assertThat(predicate.children().collect(toList()).get(0).children()).extracting(Metadata::type).element(1)
-                .isEqualTo(BINARY_PREDICATE);
-        assertThat(predicate.children().collect(toList()).get(0).children().collect(toList()).get(0).children())
-                .element(0).isInstanceOf(ValuePredicateMetadata.class);
-        assertThat(predicate.children().collect(toList()).get(0).children().collect(toList()).get(0).children())
-                .extracting(Metadata::type).element(0).isEqualTo(FIELD_PREDICATE);
-        assertThat(predicate.children().collect(toList()).get(0).children().collect(toList()).get(1).children())
-                .element(0).isInstanceOf(ValuePredicateMetadata.class);
-        assertThat(predicate.children().collect(toList()).get(0).children().collect(toList()).get(1).children())
-                .extracting(Metadata::type).element(0).isEqualTo(FIELD_PREDICATE);
+        final Metadata root = predicate(rule);
+        assertThat(root).isInstanceOf(BinaryPredicateMetadata.class)
+                .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
+        assertThat(root.childAt(0)).isInstanceOf(NaryPredicateMetadata.class)
+                .extracting(Metadata::type).containsExactly(NARY_PREDICATE);
+        assertThat(root.childAt(0, 0)).isInstanceOf(StringFunctionMetadata.class)
+                .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
+        assertThat(root.childAt(0, 0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+                .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
+        assertThat(root.childAt(0, 0, 1)).isInstanceOf(ValuePredicateMetadata.class)
+                .extracting(Metadata::type).containsExactly(LEAF_PREDICATE);
+        assertThat(root.childAt(0, 1)).isInstanceOf(StringFunctionMetadata.class)
+                .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
+        assertThat(root.childAt(1)).isInstanceOf(LeafMetadata.class)
+                .extracting(Metadata::type).containsExactly(LEAF_PREDICATE);
         System.out.println(rule);
     }
 

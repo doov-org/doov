@@ -13,7 +13,9 @@
 package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+import static java.util.stream.Collectors.toList;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
@@ -76,6 +78,22 @@ public interface Metadata extends Readable {
      */
     default Stream<Metadata> children() {
         return Stream.concat(left(), right());
+    }
+
+    default Metadata childAt(int... positions) {
+        if (positions == null)
+            return null;
+        if (positions.length == 0)
+            return null;
+        return childAt(positions, 0);
+    }
+
+    default Metadata childAt(int[] positions, int level) {
+        final List<Metadata> childrens = children().collect(toList());
+        final Metadata child = childrens.get(positions[level]);
+        if (level < positions.length - 1)
+            return child.childAt(positions, level + 1);
+        return child;
     }
 
     /**
