@@ -10,7 +10,7 @@ import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
 import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.EMPTY;
 import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
 import static io.doov.sample.field.dsl.DslSampleModel.configurationMaxEmailSize;
 import static io.doov.sample.field.dsl.DslSampleModel.configurationMinAge;
@@ -56,9 +56,7 @@ public class CanonicalMessageTest {
     }
 
     @Test
-    @Disabled
-    //FIXME probably a reduce issue
-    public void matchAny_values() {
+    public void matchAny_valuesmatchAny_values() {
         model.set(SampleFieldId.COUNTRY, Country.FR);
         final Result result = DOOV.when(accountCountry.anyMatch(Country.FR, Country.CAN)).validate()
                 .withShortCircuit(false).executeOn(model);
@@ -71,8 +69,27 @@ public class CanonicalMessageTest {
         final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
         System.out.println(">> " + msg.readable());
 
-        assertThat(msg).isInstanceOf(LeafMetadata.class);
-        assertThat(msg.type()).isEqualTo(FIELD_PREDICATE);
+        assertThat(msg).isInstanceOf(EmptyMetadata.class);
+        assertThat(msg.type()).isEqualTo(EMPTY);
+    }
+
+    @Test
+    public void matchAny_valuesmatchAny_values_failure() {
+        model.set(SampleFieldId.COUNTRY, Country.UK);
+        final Result result = DOOV.when(accountCountry.anyMatch(Country.FR, Country.CAN)).validate()
+                .withShortCircuit(false).executeOn(model);
+
+        System.out.println(result.getContext().getRootMetadata().readable());
+        assertThat(result).isFalse();
+        assertThat(result.getContext().getEvalValue(SampleFieldId.COUNTRY)).isEqualTo(Country.UK);
+        assertThat(result.getContext().getRootMetadata()).isInstanceOf(BinaryPredicateMetadata.class);
+        assertThat(result.getContext().getRootMetadata().type()).isEqualTo(BINARY_PREDICATE);
+
+        final Metadata msg = result.getContext().getRootMetadata().reduce(result.getContext(), FAILURE);
+        System.out.println(">> " + msg.readable());
+
+        assertThat(msg).isInstanceOf(BinaryPredicateMetadata.class);
+        assertThat(msg.type()).isEqualTo(BINARY_PREDICATE);
     }
 
     @Test
