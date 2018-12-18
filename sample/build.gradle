@@ -23,8 +23,8 @@ subprojects {
             compile group: 'io.doov', name: 'doov-core', version: '1.0-SNAPSHOT'
             compile group: 'io.doov', name: 'doov-assertions', version: '1.0-SNAPSHOT'
             compile group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
-            compile group: 'com.datastax.cassandra', name: 'cassandra-driver-extras', version: '3.1.0'
-            compile group: 'com.datastax.cassandra', name: 'cassandra-driver-core', version: '3.1.0'
+            compile group: 'com.datastax.cassandra', name: 'cassandra-driver-extras', version: '3.6.0'
+            compile group: 'com.datastax.cassandra', name: 'cassandra-driver-core', version: '3.6.0'
             compile group: 'commons-io', name:'commons-io', version: commonsIoVersion
             compile group: 'org.openjdk.jmh', name: 'jmh-core', version: jmhVersion
             compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: jmhVersion

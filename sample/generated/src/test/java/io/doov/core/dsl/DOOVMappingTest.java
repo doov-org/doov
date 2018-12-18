@@ -82,7 +82,10 @@ public class DOOVMappingTest {
                                 map(() -> false).to(configurationMailingCampaign)),
 
                 mapRange(1, 4, i ->
-                        map(favoriteSiteName(i)).to(favoriteSiteName(i))),
+                        map(favoriteSiteUrl(i)).to(favoriteSiteUrl(i))),
+
+                mapWithIndex(favoriteSiteName(), (field, index) ->
+                        map(field).to(favoriteSiteName(index + 1))),
 
                 map(favoriteSiteName())
                         .using(counter("email size"))
@@ -150,6 +153,10 @@ public class DOOVMappingTest {
         assertThat(copy.getModel().getConfiguration().isMailingCampaign()).isTrue();
         assertThat(copy.getModel().getAccount().getTimezone()).isNull();
         assertThat(copy.getModel().getUser().getTel()).isEqualTo("ETC_GMT");
+        assertThat(copy.getModel().getAccount().getTop3WebSite())
+                .extracting(FavoriteWebsite::getName)
+                .containsExactly("Google", "Bing", "Yahoo");
+        assertThat(copy.getModel().getAccount().getTop3WebSite()).hasSize(3);
     }
 
     @Test
