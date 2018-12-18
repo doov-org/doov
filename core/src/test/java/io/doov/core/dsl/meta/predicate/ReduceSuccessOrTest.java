@@ -22,15 +22,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Locale;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.EmptyMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
 public class ReduceSuccessOrTest {
+
+    private static final Locale LOCALE = Locale.US;
+
     private StepCondition A, B, C;
     private Result result;
     private Metadata reduce;
@@ -39,8 +43,12 @@ public class ReduceSuccessOrTest {
     void or_false_false_success() {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
-        result = when(A.or(B)).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(A.or(B)).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(SUCCESS);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when (always false A or always false B) validate");
 
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
@@ -62,8 +70,12 @@ public class ReduceSuccessOrTest {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
         C = alwaysTrue("C");
-        result = when(A.or(B.or(C))).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(A.or(B.or(C))).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(SUCCESS);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when (always true A or (always false B or always true C)) validate");
 
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class);
@@ -86,8 +98,12 @@ public class ReduceSuccessOrTest {
         A = alwaysFalse("A");
         B = alwaysTrue("B");
         C = alwaysTrue("C");
-        result = when(A.or(B.and(C))).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(A.or(B.and(C))).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(SUCCESS);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when (always false A or (always true B and always true C)) validate");
 
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class);
@@ -105,7 +121,6 @@ public class ReduceSuccessOrTest {
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class);
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());
     }
-    
 
     @AfterEach
     void afterEach() {

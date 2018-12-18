@@ -22,15 +22,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Locale;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.EmptyMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
 public class ReduceSuccessMatchAnyTest {
+
+    private static final Locale LOCALE = Locale.US;
+
     private StepCondition A, B, C, D;
     private Result result;
     private Metadata reduce;
@@ -40,8 +44,12 @@ public class ReduceSuccessMatchAnyTest {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
         C = alwaysFalse("C");
-        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(matchAny(A, B, C)).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(SUCCESS);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when match any [always false A, always false B, always false C] validate");
 
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
@@ -65,8 +73,13 @@ public class ReduceSuccessMatchAnyTest {
         B = alwaysFalse("B");
         C = alwaysFalse("C");
         D = alwaysFalse("D");
-        result = when(matchAny(A.or(D), B, C)).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(matchAny(A.or(D), B, C)).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(SUCCESS);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when match any [(always true A or always false D), always false B, always false C] " +
+                        "validate");
 
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class);
@@ -92,8 +105,13 @@ public class ReduceSuccessMatchAnyTest {
         B = alwaysTrue("B");
         C = alwaysTrue("C");
         D = alwaysTrue("D");
-        result = when(matchAny(A, B, C.and(D))).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(matchAny(A, B, C.and(D))).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(SUCCESS);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when match any [always false A, always true B, (always true C and always true D)] " +
+                        "validate");
 
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class);

@@ -22,16 +22,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Locale;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.EmptyMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
 public class ReduceCountFailureTest {
+    private static final Locale LOCALE = Locale.US;
+
     private StepCondition A, B;
+    private ValidationRule rule;
     private Result result;
     private Metadata reduce;
 
@@ -39,9 +43,13 @@ public class ReduceCountFailureTest {
     void count_false_false_failure() {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
-        result = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false).execute();
+        rule = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(FAILURE);
         
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when (count [always false A, always false B] > 1) validate");
+
         assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());
     }
@@ -52,7 +60,7 @@ public class ReduceCountFailureTest {
         B = alwaysFalse("B");
         result = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
-        
+
         assertFalse(result.value());
         assertThat(reduce).isEqualTo(B.metadata());
     }
@@ -63,7 +71,7 @@ public class ReduceCountFailureTest {
         B = alwaysTrue("B");
         result = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false).execute();
         reduce = result.reduce(FAILURE);
-        
+
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
     }

@@ -22,15 +22,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Locale;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.EmptyMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
 public class ReduceFailureOrTest {
+
+    private static final Locale LOCALE = Locale.US;
+
     private StepCondition A, B, C;
     private Result result;
     private Metadata reduce;
@@ -39,8 +43,12 @@ public class ReduceFailureOrTest {
     void or_false_false_failure() {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
-        result = when(A.or(B)).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(A.or(B)).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(FAILURE);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when (always false A or always false B) validate");
 
         assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());
@@ -51,8 +59,12 @@ public class ReduceFailureOrTest {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
         C = alwaysTrue("C");
-        result = when(A.or(B.and(C))).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(A.or(B.and(C))).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(FAILURE);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when (always false A or (always false B and always true C)) validate");
 
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class);

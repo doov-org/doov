@@ -20,13 +20,15 @@ import org.junit.jupiter.api.*;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.EnumFieldInfo;
-import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 
 public class ReduceAnyMatchTest {
+
     private static final Locale LOCALE = Locale.US;
+
+    private ValidationRule rule;
     private StepCondition A;
     private Result result;
     private Metadata reduce;
@@ -41,24 +43,32 @@ public class ReduceAnyMatchTest {
 
     @Test
     void anyMatch_success() {
-        result = when(enumField.anyMatch(VAL1, VAL2, VAL3)).validate().executeOn(model);
+        rule = when(enumField.anyMatch(VAL1, VAL2, VAL3)).validate();
+        result = rule.executeOn(model);
         reduce = result.reduce(SUCCESS);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when enumField match any  : VAL1, VAL2, VAL3 validate");
 
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
-                .isEqualTo(new String[] { "enumField = VAL1" });
+                .containsExactly("enumField = VAL1");
     }
 
     @Test
     void anyMatch_failure() {
-        result = when(enumField.anyMatch(VAL2, VAL3)).validate().executeOn(model);
+        rule = when(enumField.anyMatch(VAL2, VAL3)).validate();
+        result = rule.executeOn(model);
         reduce = result.reduce(FAILURE);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when enumField match any  : VAL2, VAL3 validate");
 
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
-                .isEqualTo(new String[] { "enumField = VAL1" });
+                .containsExactly("enumField = VAL1");
     }
 
     @Test
@@ -70,7 +80,7 @@ public class ReduceAnyMatchTest {
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
-                .isEqualTo(new String[] { "always true A and enumField = VAL1" });
+                .containsExactly("always true A and enumField = VAL1");
     }
 
     @Test
@@ -82,7 +92,7 @@ public class ReduceAnyMatchTest {
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(LeafPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
-                .isEqualTo(new String[] { "enumField = VAL1" });
+                .containsExactly("enumField = VAL1");
     }
 
     @Test
@@ -95,7 +105,7 @@ public class ReduceAnyMatchTest {
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
-                .isEqualTo(new String[] { "match any [always true A, enumField = VAL1]" });
+                .containsExactly("match any [always true A, enumField = VAL1]");
     }
 
     @Test
@@ -107,7 +117,7 @@ public class ReduceAnyMatchTest {
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class)
                 .extracting(m -> m.readable(LOCALE))
-                .isEqualTo(new String[] { "match any [always false A, enumField = VAL1]" });
+                .containsExactly("match any [always false A, enumField = VAL1]");
     }
 
     @AfterEach

@@ -22,15 +22,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Locale;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.EmptyMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
 public class ReduceCountSuccessTest {
+
+    private static final Locale LOCALE = Locale.US;
+
     private StepCondition A, B;
     private Result result;
     private Metadata reduce;
@@ -39,8 +43,12 @@ public class ReduceCountSuccessTest {
     void count_true_true_succes() {
         A = alwaysTrue("A");
         B = alwaysTrue("B");
-        result = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(SUCCESS);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when (count [always true A, always true B] > 1) validate");
 
         assertTrue(result.value());
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());

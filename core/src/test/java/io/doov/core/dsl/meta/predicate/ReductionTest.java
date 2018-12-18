@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,13 +33,16 @@ import org.junit.jupiter.api.Test;
 import io.doov.core.dsl.field.types.EnumFieldInfo;
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.field.types.IterableFieldInfo;
-import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 
 public class ReductionTest {
+
+    private static final Locale LOCALE = Locale.US;
+
     private StepCondition A, B, C;
+    private ValidationRule rule;
     private Result result;
     private Metadata reduce;
     private GenericModel model;
@@ -59,9 +63,12 @@ public class ReductionTest {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
         C = alwaysFalse("C");
-        result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
+        rule = when(matchAll(A, B, C)).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(FAILURE);
 
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when match all [always true A, always false B, always false C] validate");
         assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(B.metadata());
         assertThat(collectMetadata(reduce)).contains(C.metadata());
@@ -71,31 +78,45 @@ public class ReductionTest {
     void reduce_and() {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
-        result = when(A.and(B)).validate().withShortCircuit(false).execute();
+        rule = when(A.and(B)).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(FAILURE);
 
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when (always true A and always false B) validate");
         assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(B.metadata());
     }
 
     @Test
     void reduce_zeroInt() {
-        result = when(zeroField.notEq(0)).validate().withShortCircuit(false).executeOn(model);
+        rule = when(zeroField.notEq(0)).validate().withShortCircuit(false);
+        result = rule.executeOn(model);
         reduce = result.reduce(FAILURE);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when zero != 0 validate");
         assertFalse(result.value());
     }
 
     @Test
     void reduce_list() {
-        result = when(iterableField.contains("c")).validate().withShortCircuit(false).executeOn(model);
+        rule = when(iterableField.contains("c")).validate().withShortCircuit(false);
+        result = rule.executeOn(model);
         reduce = result.reduce(FAILURE);
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when list contains 'c' validate");
         assertFalse(result.value());
     }
 
     @Test
     void reduce_null() {
-        result = when(enumField.isNull()).validate().withShortCircuit(false).executeOn(model);
+        rule = when(enumField.isNull()).validate().withShortCircuit(false);
+        result = rule.executeOn(model);
         reduce = result.reduce(FAILURE);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when enum is null validate");
         assertTrue(result.value());
     }
 

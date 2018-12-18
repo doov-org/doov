@@ -24,16 +24,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Locale;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 
 public class SumFunctionTest {
+
+    private static Locale LOCALE = Locale.US;
+
+    private ValidationRule rule;
     private Result result;
     private Metadata reduce;
     private GenericModel model;
@@ -48,20 +55,28 @@ public class SumFunctionTest {
 
     @Test
     void reduce_sum_success() {
-        result = when(sum(oneField, twoField).eq(3)).validate().withShortCircuit(false).executeOn(model);
+        rule = when(sum(oneField, twoField).eq(3)).validate().withShortCircuit(false);
+        result = rule.executeOn(model);
         reduce = result.reduce(SUCCESS);
 
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when (sum [1, 2] = 3) validate");
+
         assertTrue(result.value());
-        assertThat(collectMetadata(reduce));
+        assertThat(reduce.readable(LOCALE)).isEqualTo("sum [1, 2] = 3");
     }
 
     @Test
     void reduce_sum_failure() {
-        result = when(sum(oneField, twoField).eq(4)).validate().withShortCircuit(false).executeOn(model);
+        rule = when(sum(oneField, twoField).eq(4)).validate().withShortCircuit(false);
+        result = rule.executeOn(model);
         reduce = result.reduce(FAILURE);
 
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when (sum [1, 2] = 4) validate");
+
         assertFalse(result.value());
-        assertThat(collectMetadata(reduce));
+        assertThat(reduce.readable(LOCALE)).isEqualTo("sum [1, 2] = 4");
     }
 
     @AfterEach

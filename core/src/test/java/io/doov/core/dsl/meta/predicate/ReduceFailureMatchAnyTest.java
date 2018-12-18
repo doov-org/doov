@@ -22,15 +22,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Locale;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.EmptyMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
 public class ReduceFailureMatchAnyTest {
+
+    private static final Locale LOCALE = Locale.US;
+
     private StepCondition A, B, C, D;
     private Result result;
     private Metadata reduce;
@@ -40,8 +44,12 @@ public class ReduceFailureMatchAnyTest {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
         C = alwaysFalse("C");
-        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(matchAny(A, B, C)).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(FAILURE);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when match any [always false A, always false B, always false C] validate");
 
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class);
@@ -54,8 +62,13 @@ public class ReduceFailureMatchAnyTest {
         B = alwaysFalse("B");
         C = alwaysTrue("C");
         D = alwaysFalse("D");
-        result = when(matchAny(A, B, C.and(D))).validate().withShortCircuit(false).execute();
+        ValidationRule rule = when(matchAny(A, B, C.and(D))).validate().withShortCircuit(false);
+        result = rule.execute();
         reduce = result.reduce(FAILURE);
+
+        assertThat(rule.readable(LOCALE))
+                .isEqualTo("rule when match any [always false A, always false B, (always true C and always false D)] " +
+                        "validate");
 
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(NaryPredicateMetadata.class);
