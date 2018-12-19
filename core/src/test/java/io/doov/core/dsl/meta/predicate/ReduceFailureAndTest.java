@@ -48,7 +48,7 @@ public class ReduceFailureAndTest {
         reduce = result.reduce(FAILURE);
 
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when (always false A and always false B) validate");
+                .isEqualTo("rule when always false A and always false B validate");
 
         assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());
