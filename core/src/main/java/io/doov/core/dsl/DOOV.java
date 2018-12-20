@@ -20,8 +20,6 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
-import com.google.common.collect.Streams;
-
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.impl.num.*;
@@ -320,6 +318,7 @@ public class DOOV {
      *
      * @param fieldStream field stream
      * @param mappingRuleFunction field to mapping rule function
+     * @param <T> field info type
      * @return mapping registry containing rules
      */
     public static <T extends DslField<?>> MappingRegistry mapFor(Stream<T> fieldStream,
@@ -332,14 +331,14 @@ public class DOOV {
      * Create an array of mapping rules from a stream of fields with index
      *
      * @param fieldStream field stream
-     * @param mappingRuleFunction field to mapping rule function with index in long
+     * @param mappingRuleFunction field to mapping rule function with index in integer
+     * @param <T> field info type
      * @return mapping registry containing rules
      */
     public static <T extends DslField<?>> MappingRegistry mapWithIndex(Stream<T> fieldStream,
             BiFunction<T, Integer, MappingRule> mappingRuleFunction) {
         return MappingRegistry.mappings(Streams.mapWithIndex(fieldStream,
-                (from, index) -> mappingRuleFunction.apply(from, Long.valueOf(index).intValue()))
-                .toArray(MappingRule[]::new));
+                (f, l) -> mappingRuleFunction.apply(f, l.intValue())).toArray(MappingRule[]::new));
     }
 
     /**

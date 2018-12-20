@@ -8,8 +8,6 @@ import static io.doov.core.dsl.meta.MetadataType.TYPE_CONVERTER_IDENTITY;
 
 import java.util.ArrayDeque;
 
-import com.google.common.base.Strings;
-
 public class ConverterMetadata extends LeafMetadata<ConverterMetadata> {
 
     public ConverterMetadata(MetadataType type) {
@@ -17,7 +15,7 @@ public class ConverterMetadata extends LeafMetadata<ConverterMetadata> {
     }
 
     public static ConverterMetadata metadata(String description) {
-        if (Strings.isNullOrEmpty(description)) {
+        if (description == null || description.isEmpty()) {
             return new ConverterMetadata(TYPE_CONVERTER).valueUnknown(description);
         } else {
             return new ConverterMetadata(TYPE_CONVERTER).valueString(description);
