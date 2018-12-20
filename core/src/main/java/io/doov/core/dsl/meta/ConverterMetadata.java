@@ -6,8 +6,6 @@ package io.doov.core.dsl.meta;
 import static io.doov.core.dsl.meta.MetadataType.TYPE_CONVERTER;
 import static io.doov.core.dsl.meta.MetadataType.TYPE_CONVERTER_IDENTITY;
 
-import java.util.ArrayDeque;
-
 public class ConverterMetadata extends LeafMetadata<ConverterMetadata> {
 
     public ConverterMetadata(MetadataType type) {
