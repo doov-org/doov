@@ -13,6 +13,7 @@ ext {
     javaxElVersion = '2.2.6'
     javaxElApiVersion = '3.0.0'
     hibernateValidatorVersion = '6.0.7.Final'
+    jsoupVersion = '1.11.3'
 
     gradleMavenPluginBuilderVersion = '1.2.1'
     gradleJmhPluginVersion = '0.4.5'
