@@ -45,9 +45,18 @@ public class HtmlFailureAndTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
-        assertThat(doc.select("div.percentage-value"))
-                .extracting(Element::text)
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("always false", "always false");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("A", "B");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .containsExactly("and");
     }
 
     @Test
@@ -58,9 +67,18 @@ public class HtmlFailureAndTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
-        assertThat(doc.select("div.percentage-value"))
-                .extracting(Element::text)
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("always true", "always false");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("A", "B");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .containsExactly("and");
     }
 
     @Test
@@ -71,9 +89,18 @@ public class HtmlFailureAndTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
-        assertThat(doc.select("div.percentage-value"))
-                .extracting(Element::text)
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("always false", "always true");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("A", "B");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .containsExactly("and");
     }
 
     @Test
@@ -84,9 +111,18 @@ public class HtmlFailureAndTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("div.percentage-value"))
-                .extracting(Element::text)
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("always true", "always true");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("A", "B");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .containsExactly("and");
     }
 
     @AfterEach

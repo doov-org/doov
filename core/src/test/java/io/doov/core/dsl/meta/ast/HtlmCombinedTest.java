@@ -63,6 +63,10 @@ public class HtlmCombinedTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %","100 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -82,6 +86,10 @@ public class HtlmCombinedTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -98,6 +106,10 @@ public class HtlmCombinedTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -114,6 +126,10 @@ public class HtlmCombinedTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -130,6 +146,10 @@ public class HtlmCombinedTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
