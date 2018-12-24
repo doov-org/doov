@@ -14,9 +14,9 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.Charset;
+import java.util.*;
 
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
@@ -33,6 +33,12 @@ public class AstVisitorUtils {
         StringBuilder stringBuilder = new StringBuilder();
         new AstMarkdownVisitor(stringBuilder, BUNDLE, locale).browse(metadata, 0);
         return stringBuilder.toString();
+    }
+
+    public static String astToHtml(Metadata metadata, Locale locale) {
+        ByteArrayOutputStream ops = new ByteArrayOutputStream();
+        new AstHtmlVisitor(ops, BUNDLE, Locale.ENGLISH).browse(metadata, 0);
+        return new String(ops.toByteArray(), Charset.forName("UTF-8"));
     }
 
     public static Set<Metadata> collectMetadata(Metadata root) {
