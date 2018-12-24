@@ -20,10 +20,12 @@ import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.documentOf;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.format;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,8 +43,11 @@ public class HtmlSuccessOrTest {
         B = alwaysFalse("B");
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
         doc = documentOf(result);
-        
+
         assertFalse(result.value());
+        assertThat(doc.select("div.percentage-value"))
+                .extracting(Element::text)
+                .containsExactly("0 %", "0 %");
     }
 
     @Test
@@ -51,8 +56,11 @@ public class HtmlSuccessOrTest {
         B = alwaysFalse("B");
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
         doc = documentOf(result);
-        
+
         assertTrue(result.value());
+        assertThat(doc.select("div.percentage-value"))
+                .extracting(Element::text)
+                .containsExactly("100 %", "0 %");
     }
 
     @Test
@@ -62,8 +70,11 @@ public class HtmlSuccessOrTest {
         C = alwaysTrue("C");
         result = when(A.or(B.or(C))).validate().withShortCircuit(false).execute();
         doc = documentOf(result);
-        
+
         assertTrue(result.value());
+        assertThat(doc.select("div.percentage-value"))
+                .extracting(Element::text)
+                .containsExactly("100 %", "0 %", "100 %");
     }
 
     @Test
@@ -72,8 +83,11 @@ public class HtmlSuccessOrTest {
         B = alwaysTrue("B");
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
         doc = documentOf(result);
-        
+
         assertTrue(result.value());
+        assertThat(doc.select("div.percentage-value"))
+                .extracting(Element::text)
+                .containsExactly("0 %", "100 %");
     }
 
     @Test
@@ -83,8 +97,11 @@ public class HtmlSuccessOrTest {
         C = alwaysTrue("C");
         result = when(A.or(B.and(C))).validate().withShortCircuit(false).execute();
         doc = documentOf(result);
-        
+
         assertTrue(result.value());
+        assertThat(doc.select("div.percentage-value"))
+                .extracting(Element::text)
+                .containsExactly("0 %", "100 %", "100 %");
     }
 
     @Test
@@ -93,10 +110,12 @@ public class HtmlSuccessOrTest {
         B = alwaysTrue("B");
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
         doc = documentOf(result);
-        
+
         assertTrue(result.value());
+        assertThat(doc.select("div.percentage-value"))
+                .extracting(Element::text)
+                .containsExactly("100 %", "100 %");
     }
-    
 
     @AfterEach
     void afterEach() {

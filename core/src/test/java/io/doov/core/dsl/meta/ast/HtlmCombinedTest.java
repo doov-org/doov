@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.*;
 
 import io.doov.core.dsl.field.types.*;
@@ -60,8 +61,17 @@ public class HtlmCombinedTest {
         C = alwaysFalse("C");
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
         doc = documentOf(result);
-        
+
         assertFalse(result.value());
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("0 %","100 %", "0 %", "0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("always true", "always false", "always false");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("A", "B", "C");
+        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
+                .containsExactly("match all");
+
     }
 
     @Test
@@ -72,33 +82,60 @@ public class HtlmCombinedTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
-        assertThat(doc.select("div.percentage-value")).hasSize(2);
-        assertThat(doc.select("div.percentage-value").get(0).text()).isEqualTo("100 %");
-        assertThat(doc.select("div.percentage-value").get(1).text()).isEqualTo("0 %");
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("100 %", "0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("always true", "always false");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("A", "B");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .containsExactly("and");
     }
 
     @Test
     void reduce_zeroInt() {
         result = when(zeroField.notEq(0)).validate().withShortCircuit(false).executeOn(model);
         doc = documentOf(result);
-        
+
         assertFalse(result.value());
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("!=");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("0");
+        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
+                .containsExactly("zero");
     }
 
     @Test
     void reduce_list() {
         result = when(iterableField.contains("c")).validate().withShortCircuit(false).executeOn(model);
         doc = documentOf(result);
-        
+
         assertFalse(result.value());
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("contains");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("'c'");
+        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
+                .containsExactly("list");
     }
 
     @Test
     void reduce_null() {
         result = when(enumField.isNull()).validate().withShortCircuit(false).executeOn(model);
         doc = documentOf(result);
-        
+
         assertTrue(result.value());
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("is null");
+        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
+                .containsExactly("enum");
     }
 
     @AfterEach
