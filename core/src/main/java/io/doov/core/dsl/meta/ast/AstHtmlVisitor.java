@@ -32,6 +32,18 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected static final String CSS_CLASS_NARY = "dsl-token-nary";
     protected static final String CSS_CLASS_WHEN = "dsl-token-when";
 
+    protected static final String CSS_CLASS_LI_LEAF = "dsl-li-leaf";
+    protected static final String CSS_CLASS_LI_BINARY = "dsl-li-binary";
+    protected static final String CSS_CLASS_LI_UNARY = "dsl-li-unary";
+    protected static final String CSS_CLASS_LI_NARY = "dsl-li-nary";
+
+    protected static final String CSS_CLASS_UL_WHEN = "dsl-ul-when";
+    protected static final String CSS_CLASS_UL_BINARY = "dsl-ul-binary";
+    protected static final String CSS_CLASS_UL_BINARY_CHILD = "dsl-ul-binary-child";
+    protected static final String CSS_CLASS_UL_UNARY = "dsl-ul-unary";
+
+    protected static final String CSS_CLASS_OL_NARY = "dsl-ol-nary";
+
     protected final OutputStream ops;
     protected final ResourceProvider bundle;
     protected Locale locale;
@@ -145,7 +157,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void startWhen(WhenMetadata metadata, int depth) {
         htmlFormatSpan(CSS_CLASS_WHEN, formatWhen());
-        write(beginUl());
+        write(beginUl(CSS_CLASS_UL_WHEN));
     }
 
     @Override
@@ -157,7 +169,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void startLeaf(LeafPredicateMetadata<?> leaf, int depth) {
         if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
-            write(beginLi());
+            write(beginLi(CSS_CLASS_LI_LEAF));
         }
         if (!insideSum) {
             if (noExclusionNextLeaf) {
@@ -207,16 +219,16 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         Metadata leftChild = metadata.getLeft();
 
         if (NARY_PREDICATE == stackPeek() && (metadata.getOperator() != or && metadata.getOperator() != and)) {
-            write(beginLi());
+            write(beginLi(CSS_CLASS_LI_BINARY));
             closeSum = true;
         }
         if (rightSideOfBinary && leftChild.type() != NARY_PREDICATE) {
-            write(beginUl());
+            write(beginUl(CSS_CLASS_UL_BINARY));
             nbImbriBinary++;
             rightSideOfBinary = false;
         }
         if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
-            write(beginLi());
+            write(beginLi(CSS_CLASS_LI_BINARY));
         }
 
         if (metadata.getOperator() != and && metadata.getOperator() != or) {
@@ -233,7 +245,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             htmlFormatSpan(CSS_CLASS_BINARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
             if (metadata.getRight().type() == UNARY_PREDICATE) {
-                write(beginUl());
+                write(beginUl(CSS_CLASS_UL_BINARY_CHILD));
                 closeUn = true;
             }
             rightSideOfBinary = true;
@@ -266,10 +278,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
         if (insideNary == 0 && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() == count
                 || metadata.getOperator() == min)) {
-            write(beginLi());
+            write(beginLi(CSS_CLASS_LI_NARY));
         }
         if (stackPeek() == WHEN || stackPeek() != BINARY_PREDICATE) {
-            write(beginLi());
+            write(beginLi(CSS_CLASS_LI_NARY));
         }
 
         if (metadata.getOperator() != count && metadata.getOperator() != sum && metadata.getOperator() != min) {
@@ -278,7 +290,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
         rightSideOfBinary = false;
-        write(beginOl());
+        write(beginOl(CSS_CLASS_OL_NARY));
         insideNary++;
     }
 
@@ -294,11 +306,11 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // unary metadata
     @Override
     public void startUnary(UnaryPredicateMetadata metadata, int depth) {
-        write(beginLi());
+        write(beginLi(CSS_CLASS_LI_UNARY));
         htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
         if (metadata.children().collect(toList()).get(0).type() != LEAF_PREDICATE) {
-            write(beginUl());
+            write(beginUl(CSS_CLASS_UL_UNARY));
             closeUnaryUL++;
         }
     }
