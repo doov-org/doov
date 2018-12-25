@@ -1,0 +1,108 @@
+<!-- always true A and always true B  -->
+<html>
+
+<head></head>
+
+<body>
+  <li class="dsl-li-binary">
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">and</span>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">B</span>
+  </li>
+</body>
+
+</html>
+<!-- always true A and always false B  -->
+<html>
+
+<head></head>
+
+<body>
+  <li class="dsl-li-binary">
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">and</span>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        0 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+      </div>
+    </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">B</span>
+  </li>
+</body>
+
+</html>
+<!-- always false A and always false B  -->
+<html>
+
+<head></head>
+
+<body>
+  <li class="dsl-li-binary">
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        0 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+      </div>
+    </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">and</span>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        0 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+      </div>
+    </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">B</span>
+  </li>
+</body>
+
+</html>
+<!-- always false A and always true B  -->
+<html>
+
+<head></head>
+
+<body>
+  <li class="dsl-li-binary">
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        0 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+      </div>
+    </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">and</span>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">B</span>
+  </li>
+</body>
+
+</html>
