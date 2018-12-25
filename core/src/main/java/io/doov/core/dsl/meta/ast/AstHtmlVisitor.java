@@ -98,7 +98,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void endWhen(Metadata metadata, int depth) {
-        write(END_UL);
+        write(endUl());
     }
 
     // field metadata
