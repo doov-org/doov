@@ -51,6 +51,10 @@ public class HtmlFailureMatchAnyTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "0 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -75,6 +79,10 @@ public class HtmlFailureMatchAnyTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "0 %", "0 %", "100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -98,6 +106,10 @@ public class HtmlFailureMatchAnyTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -121,6 +133,10 @@ public class HtmlFailureMatchAnyTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -144,6 +160,10 @@ public class HtmlFailureMatchAnyTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)

@@ -42,6 +42,8 @@ public class HtlmCombinedTest {
     private Result result;
     private Document doc;
     private GenericModel model;
+    private StringFieldInfo stringField;
+    private StringFieldInfo stringField2;
     private IntegerFieldInfo zeroField;
     private IterableFieldInfo<String, List<String>> iterableField;
     private EnumFieldInfo<?> enumField;
@@ -50,6 +52,8 @@ public class HtlmCombinedTest {
     void beforeEach() {
         this.model = new GenericModel();
         this.zeroField = model.intField(0, "zero");
+        this.stringField = model.stringField("some string", "string field 1");
+        this.stringField2 = model.stringField("other string", "string field 2");
         this.iterableField = model.iterableField(asList("a", "b"), "list");
         this.enumField = model.enumField(null, "enum");
     }
@@ -67,6 +71,10 @@ public class HtlmCombinedTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %","100 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -90,6 +98,10 @@ public class HtlmCombinedTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -110,6 +122,10 @@ public class HtlmCombinedTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -130,6 +146,10 @@ public class HtlmCombinedTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
@@ -150,12 +170,39 @@ public class HtlmCombinedTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("is null");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("enum");
+    }
+
+    @Test
+    void matches_regexp() {
+        result = when(stringField.matches("^some.*")
+                .or(stringField2.matches("^other.*"))).validate().withShortCircuit(false).executeOn(model);
+        doc = documentOf(result);
+
+        assertTrue(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("100 %", "100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("matches", "matches");
+        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
+                .containsExactly("string field 1", "string field 2");
     }
 
     @AfterEach
