@@ -419,6 +419,17 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("as a number", "=");
+        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
+                .containsExactly("user.birthdate");
+        assertThat(doc.select("span.dsl-token-unknown")).extracting(Element::text)
+                .containsExactly("-function-");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("1980");
     }
 
     @Test
@@ -435,6 +446,17 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("as a string", "contains");
+        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
+                .containsExactly("account.timezone");
+        assertThat(doc.select("span.dsl-token-unknown")).extracting(Element::text)
+                .containsExactly("-function-");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("'00:00'");
     }
 
     @Test
