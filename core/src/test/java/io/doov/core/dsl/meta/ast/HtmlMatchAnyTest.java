@@ -25,13 +25,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.runtime.GenericModel;
+import io.doov.core.dsl.time.LocalDateSuppliers;
 
 public class HtmlMatchAnyTest {
     private StepCondition A, B, C, D;
@@ -228,6 +233,39 @@ public class HtmlMatchAnyTest {
                 .containsExactly("always true", "always true", "always true");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B", "C");
+        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
+                .containsExactly("match any");
+    }
+
+    @Test
+    void matchAny_field_true_true_true_failure() {
+        GenericModel model = new GenericModel();
+        IntegerFieldInfo zero = model.intField(0, "zero");
+        LocalDateFieldInfo yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
+        StringFieldInfo something = model.stringField("something", "string field");
+        A = zero.lesserThan(4);
+        B = yesterday.before(LocalDateSuppliers.today());
+        C = something.matches("^some.*");
+        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).executeOn(model);
+        doc = documentOf(result);
+
+        assertTrue(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("100 %", "100 %", "100 %", "100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("<", "before", "today", "matches");
+        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
+                .containsExactly("zero", "yesterday", "string field");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("4", "'^some.*'");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("match any");
     }
