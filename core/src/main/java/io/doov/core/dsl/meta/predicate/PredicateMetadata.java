@@ -42,6 +42,6 @@ public interface PredicateMetadata extends Metadata {
     
     default void resetCounters() {
         evalTrue().set(0);
-        evalTrue().set(0);
+        evalFalse().set(0);
     }
 }
