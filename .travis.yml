@@ -4,8 +4,8 @@ jdk:
   - oraclejdk8
 
 script:
-  - ./gradlew check
-  - ./gradlew -p sample check
+  - ./gradlew check --info
+  - ./gradlew -p sample check --info
   - ./gradlew codeCoverageReport
 
 after_success:
