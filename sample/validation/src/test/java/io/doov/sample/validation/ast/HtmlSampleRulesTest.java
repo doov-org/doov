@@ -4,6 +4,7 @@
 package io.doov.sample.validation.ast;
 
 import static io.doov.core.dsl.meta.ast.AstHtmlVisitor.astToHtml;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.resetEvalCount;
 import static io.doov.sample.validation.SampleRules.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jsoup.Jsoup.parseBodyFragment;
@@ -36,6 +37,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_EMAIL() {
+        resetEvalCount(RULE_EMAIL.metadata());
         result = RULE_EMAIL.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -63,6 +65,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ACCOUNT() {
+        resetEvalCount(RULE_ACCOUNT.metadata());
         result = RULE_ACCOUNT.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
         assertTrue(result.value());
@@ -91,6 +94,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ACCOUNT_2() {
+        resetEvalCount(RULE_ACCOUNT_2.metadata());
         result = RULE_ACCOUNT_2.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -119,6 +123,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER() {
+        resetEvalCount(RULE_USER.metadata());
         result = RULE_USER.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -148,6 +153,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER_2() {
+        resetEvalCount(RULE_USER_2.metadata());
         result = RULE_USER_2.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -180,6 +186,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER_ADULT() {
+        resetEvalCount(RULE_USER_ADULT.metadata());
         result = RULE_USER_ADULT.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
         assertTrue(result.value());
@@ -205,6 +212,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER_ADULT_FIRSTDAY() {
+        resetEvalCount(RULE_USER_ADULT_FIRSTDAY.metadata());
         result = RULE_USER_ADULT_FIRSTDAY.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -230,6 +238,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_FIRST_NAME() {
+        resetEvalCount(RULE_FIRST_NAME.metadata());
         result = RULE_FIRST_NAME.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -259,6 +268,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ID() {
+        resetEvalCount(RULE_ID.metadata());
         result = RULE_ID.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -282,6 +292,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_AGE() {
+        resetEvalCount(RULE_AGE.metadata());
         result = RULE_AGE.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -307,6 +318,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_AGE_2() {
+        resetEvalCount(RULE_AGE_2.metadata());
         result = RULE_AGE_2.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -332,6 +344,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_SUM() {
+        resetEvalCount(RULE_SUM.metadata());
         result = RULE_SUM.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -361,6 +374,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_MIN() {
+        resetEvalCount(RULE_MIN.metadata());
         result = RULE_MIN.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -388,6 +402,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_DOUBLE_LAMBDA() {
+        resetEvalCount(RULE_DOUBLE_LAMBDA.metadata());
         result = RULE_DOUBLE_LAMBDA.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -413,6 +428,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_BORN_1980() {
+        resetEvalCount(RULE_BORN_1980.metadata());
         result = RULE_BORN_1980.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -440,6 +456,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ACCOUNT_TIME_CONTAINS() {
+        resetEvalCount(RULE_ACCOUNT_TIME_CONTAINS.metadata());
         result = RULE_ACCOUNT_TIME_CONTAINS.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
@@ -467,6 +484,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_COMPANY_NOT_LESFURETS() {
+        resetEvalCount(RULE_COMPANY_NOT_LESFURETS.metadata());
         result = RULE_COMPANY_NOT_LESFURETS.withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 

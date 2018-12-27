@@ -19,6 +19,7 @@ import java.util.Set;
 
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class AstVisitorUtils {
 
@@ -43,5 +44,17 @@ public class AstVisitorUtils {
             }
         }.browse(root, 0);
         return metadatas;
+    }
+
+    public static void resetEvalCount(Metadata root) {
+        new MetadataVisitor() {
+            @Override
+            public void start(Metadata metadata, int depth) {
+                if (metadata instanceof PredicateMetadata) {
+                    PredicateMetadata predicateMetadata = (PredicateMetadata) metadata;
+                    predicateMetadata.resetEvalCount();
+                }
+            }
+        }.browse(root, 0);
     }
 }
