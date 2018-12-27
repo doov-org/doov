@@ -1,6 +1,8 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 /**
  * Interface for the validation rule that encapsulates the validation algorithm and data.
@@ -23,8 +25,7 @@ public interface ValidationRule extends DSLBuilder {
      * @return the validation rule
      */
     ValidationRule withShortCircuit(boolean shortCircuit);
-    
-    
+
     /**
      * Executes the validation rule on a null model.
      *
@@ -58,5 +59,16 @@ public interface ValidationRule extends DSLBuilder {
      * @return the validation rule
      */
     ValidationRule registerOn(RuleRegistry registry);
+
+    default ValidationRule resetCounters() {
+        resetCounters(getStepWhen().metadata());
+        return this;
+    }
+
+    default void resetCounters(Metadata metadata) {
+        if (PredicateMetadata.class.isAssignableFrom(metadata.getClass()))
+            ((PredicateMetadata) metadata).resetCounters();
+        metadata.children().forEach(m -> resetCounters(m));
+    }
 
 }

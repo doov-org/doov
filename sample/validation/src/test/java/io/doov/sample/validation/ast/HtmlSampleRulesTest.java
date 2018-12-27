@@ -12,9 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Locale;
 
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document.OutputSettings;
-import org.junit.jupiter.api.*;
+import org.jsoup.nodes.Element;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
@@ -25,18 +26,13 @@ public class HtmlSampleRulesTest {
 
     private static final Locale LOCALE = Locale.US;
 
-    private DslModel sample;
+    private final DslModel sample = SampleModels.wrapper();
     private Result result;
     private Document doc;
 
-    @BeforeEach
-    void setUp() {
-        sample = SampleModels.wrapper();
-    }
-
     @Test
     void RULE_EMAIL() {
-        result = RULE_EMAIL.withShortCircuit(false).executeOn(sample);
+        result = RULE_EMAIL.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -63,7 +59,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ACCOUNT() {
-        result = RULE_ACCOUNT.withShortCircuit(false).executeOn(sample);
+        result = RULE_ACCOUNT.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
         assertTrue(result.value());
 
@@ -91,7 +87,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ACCOUNT_2() {
-        result = RULE_ACCOUNT_2.withShortCircuit(false).executeOn(sample);
+        result = RULE_ACCOUNT_2.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -119,7 +115,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER() {
-        result = RULE_USER.withShortCircuit(false).executeOn(sample);
+        result = RULE_USER.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -148,7 +144,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER_2() {
-        result = RULE_USER_2.withShortCircuit(false).executeOn(sample);
+        result = RULE_USER_2.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -180,7 +176,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER_ADULT() {
-        result = RULE_USER_ADULT.withShortCircuit(false).executeOn(sample);
+        result = RULE_USER_ADULT.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
         assertTrue(result.value());
 
@@ -205,7 +201,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER_ADULT_FIRSTDAY() {
-        result = RULE_USER_ADULT_FIRSTDAY.withShortCircuit(false).executeOn(sample);
+        result = RULE_USER_ADULT_FIRSTDAY.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -230,7 +226,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_FIRST_NAME() {
-        result = RULE_FIRST_NAME.withShortCircuit(false).executeOn(sample);
+        result = RULE_FIRST_NAME.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -259,7 +255,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ID() {
-        result = RULE_ID.withShortCircuit(false).executeOn(sample);
+        result = RULE_ID.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -282,7 +278,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_AGE() {
-        result = RULE_AGE.withShortCircuit(false).executeOn(sample);
+        result = RULE_AGE.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -307,7 +303,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_AGE_2() {
-        result = RULE_AGE_2.withShortCircuit(false).executeOn(sample);
+        result = RULE_AGE_2.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -332,7 +328,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_SUM() {
-        result = RULE_SUM.withShortCircuit(false).executeOn(sample);
+        result = RULE_SUM.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -361,7 +357,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_MIN() {
-        result = RULE_MIN.withShortCircuit(false).executeOn(sample);
+        result = RULE_MIN.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -388,7 +384,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_DOUBLE_LAMBDA() {
-        result = RULE_DOUBLE_LAMBDA.withShortCircuit(false).executeOn(sample);
+        result = RULE_DOUBLE_LAMBDA.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -413,7 +409,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_BORN_1980() {
-        result = RULE_BORN_1980.withShortCircuit(false).executeOn(sample);
+        result = RULE_BORN_1980.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -440,7 +436,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ACCOUNT_TIME_CONTAINS() {
-        result = RULE_ACCOUNT_TIME_CONTAINS.withShortCircuit(false).executeOn(sample);
+        result = RULE_ACCOUNT_TIME_CONTAINS.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -467,7 +463,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_COMPANY_NOT_LESFURETS() {
-        result = RULE_COMPANY_NOT_LESFURETS.withShortCircuit(false).executeOn(sample);
+        result = RULE_COMPANY_NOT_LESFURETS.resetCounters().withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
