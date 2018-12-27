@@ -14,8 +14,7 @@ import java.util.Locale;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document.OutputSettings;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
@@ -23,10 +22,17 @@ import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 import io.doov.sample.model.SampleModels;
 
 public class HtmlSampleRulesTest {
+
     private static final Locale LOCALE = Locale.US;
-    private static final DslModel sample = SampleModels.wrapper();
+
+    private DslModel sample;
     private Result result;
     private Document doc;
+
+    @BeforeEach
+    void setUp() {
+        sample = SampleModels.wrapper();
+    }
 
     @Test
     void RULE_EMAIL() {
