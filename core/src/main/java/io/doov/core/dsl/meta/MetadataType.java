@@ -6,6 +6,7 @@ package io.doov.core.dsl.meta;
 public enum MetadataType {
     RULE, //
     WHEN, //
+    LEAF_VALUE, //
     BINARY_PREDICATE, //
     LEAF_PREDICATE, //
     FIELD_PREDICATE, //

@@ -51,29 +51,29 @@ public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends
     // values
 
     public static <M extends ValuePredicateMetadata<M>> M valueMetadata(Supplier<?> value) {
-        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueSupplier(value);
+        return new ValuePredicateMetadata<M>(LEAF_VALUE).valueSupplier(value);
     }
 
     public static <M extends ValuePredicateMetadata<M>> M valueMetadata(Object value) {
-        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueObject(value);
+        return new ValuePredicateMetadata<M>(LEAF_VALUE).valueObject(value);
     }
 
     public static <M extends ValuePredicateMetadata<M>> M readableMetadata(Readable readable) {
-        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueReadable(readable);
+        return new ValuePredicateMetadata<M>(LEAF_VALUE).valueReadable(readable);
     }
 
     public static <M extends ValuePredicateMetadata<M>> M stringMetadata(String value) {
-        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueString(value);
+        return new ValuePredicateMetadata<M>(LEAF_VALUE).valueString(value);
     }
 
     public static <M extends ValuePredicateMetadata<M>> M unknownMetadata(String value) {
-        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueUnknown(value);
+        return new ValuePredicateMetadata<M>(LEAF_VALUE).valueUnknown(value);
     }
 
     // list values
 
     public static <M extends ValuePredicateMetadata<M>> M valueListMetadata(Collection<?> values) {
-        return new ValuePredicateMetadata<M>(LEAF_PREDICATE).valueListObject(values);
+        return new ValuePredicateMetadata<M>(LEAF_VALUE).valueListObject(values);
     }
 
     // any match

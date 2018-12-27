@@ -5,7 +5,7 @@ package io.doov.core.dsl.meta.function;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.fieldMetadata;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
 
@@ -35,14 +35,14 @@ public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
 
     public static TemporalBiFunctionMetadata minusMetadata(Metadata metadata, int value, Object unit) {
         return new TemporalBiFunctionMetadata(metadata, minus,
-                new TemporalFunctionMetadata(LEAF_PREDICATE).valueObject(value).temporalUnit(unit));
+                new TemporalFunctionMetadata(LEAF_VALUE).valueObject(value).temporalUnit(unit));
     }
 
     // plus
 
     public static TemporalBiFunctionMetadata plusMetadata(Metadata metadata, int value, Object unit) {
         return new TemporalBiFunctionMetadata(metadata, plus,
-                new TemporalFunctionMetadata(LEAF_PREDICATE).valueObject(value).temporalUnit(unit));
+                new TemporalFunctionMetadata(LEAF_VALUE).valueObject(value).temporalUnit(unit));
     }
 
     public static TemporalBiFunctionMetadata plusMetadata(Metadata metadata, DslField<?> field2, Object unit) {
@@ -158,7 +158,7 @@ public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
     // with
     public static TemporalBiFunctionMetadata withMetadata(Metadata metadata, TemporalAdjusterMetadata adjuster) {
         return new TemporalBiFunctionMetadata(metadata, with,
-                new TemporalFunctionMetadata(LEAF_PREDICATE).add(adjuster.elements().getFirst()));
+                new TemporalFunctionMetadata(LEAF_VALUE).add(adjuster.elements().getFirst()));
     }
 
     @Override
