@@ -1,0 +1,140 @@
+<!-- always true A and always false B  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">and</span>
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">B</span> </li>
+  </body>
+</html>
+<!-- match all [always true A, always false B, always false C]  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-nary">
+      <div class="percentage-wrapper-big">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-big">
+          <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-nary">match all</span>
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">B</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">C</span> </li>
+      </ol></li>
+  </body>
+</html>
+<!-- zero != 0  -->
+<html>
+  <head></head>
+  <body>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        0 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">zero</span>
+    <span class="dsl-token-operator">!=</span>
+    <span class="dsl-token-value">0</span>
+  </body>
+</html>
+<!-- list contains 'c'  -->
+<html>
+  <head></head>
+  <body>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        0 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">list</span>
+    <span class="dsl-token-operator">contains</span>
+    <span class="dsl-token-value">'c'</span>
+  </body>
+</html>
+<!-- enum is null  -->
+<html>
+  <head></head>
+  <body>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">enum</span>
+    <span class="dsl-token-operator">is null</span>
+  </body>
+</html>
+<!-- string field 1 matches '^some.*' or string field 2 matches '^other.*'  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">string field 1</span> <span class="dsl-token-operator">matches</span> <span class="dsl-token-value">'^some.*'</span> <br><span class="dsl-token-binary">or</span>
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">string field 2</span> <span class="dsl-token-operator">matches</span> <span class="dsl-token-value">'^other.*'</span> </li>
+  </body>
+</html>

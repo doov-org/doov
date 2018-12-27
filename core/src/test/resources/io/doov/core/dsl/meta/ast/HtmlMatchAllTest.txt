@@ -1,0 +1,220 @@
+<!-- match all [always true A, always true B, always false C]  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-nary">
+      <div class="percentage-wrapper-big">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-big">
+          <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-nary">match all</span>
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">B</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">C</span> </li>
+      </ol></li>
+  </body>
+</html>
+<!-- match all [always false A, always false B, always false C]  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-nary">
+      <div class="percentage-wrapper-big">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-big">
+          <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-nary">match all</span>
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">A</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">B</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">C</span> </li>
+      </ol></li>
+  </body>
+</html>
+<!-- match all [always true A, always true B, always true C]  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-nary">
+      <div class="percentage-wrapper-big">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-big">
+          <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-nary">match all</span>
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">B</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">C</span> </li>
+      </ol></li>
+  </body>
+</html>
+<!-- match all [always true A, always false B, always false C]  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-nary">
+      <div class="percentage-wrapper-big">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-big">
+          <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-nary">match all</span>
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">B</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">C</span> </li>
+      </ol></li>
+  </body>
+</html>
+<!-- match all [zero > 4, yesterday after today, string field matches '^other.*']  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-nary">
+      <div class="percentage-wrapper-big">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-big">
+          <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-nary">match all</span>
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">zero</span> <span class="dsl-token-operator">&gt;</span> <span class="dsl-token-value">4</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">yesterday</span> <span class="dsl-token-operator">after</span> <span class="dsl-token-operator">today</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">string field</span> <span class="dsl-token-operator">matches</span> <span class="dsl-token-value">'^other.*'</span> </li>
+      </ol></li>
+  </body>
+</html>
