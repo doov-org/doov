@@ -24,8 +24,6 @@ import io.doov.core.dsl.meta.predicate.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
-    private static final NumberFormat US_NUMBER_FORMAT = NumberFormat.getInstance(Locale.US);
-
     protected static final String CSS_CLASS_VALIDATION_RULE = "dsl-validation-rule";
     protected static final String CSS_CLASS_VALIDATE = "dsl-token-validate";
     protected static final String CSS_CLASS_BINARY = "dsl-token-binary";
@@ -137,7 +135,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     private String formatExclusionBar(ExclusionBar cssClass, double percentage) {
         return beginDiv(cssClass.getWrapperClass()) +
-                beginDiv("percentage-value") + US_NUMBER_FORMAT.format(percentage) + " %" + endDiv() +
+                beginDiv("percentage-value") + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv() +
                 beginDiv(cssClass.getBorderClass()) +
                 beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv() +
                 endDiv() +
