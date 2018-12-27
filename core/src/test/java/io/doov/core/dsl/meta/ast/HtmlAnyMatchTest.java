@@ -5,7 +5,7 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToHtml;
+import static io.doov.core.dsl.meta.ast.AstHtmlVisitor.astToHtml;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL1;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL2;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL3;

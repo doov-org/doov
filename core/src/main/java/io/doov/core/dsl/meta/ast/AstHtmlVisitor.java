@@ -6,12 +6,13 @@ package io.doov.core.dsl.meta.ast;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.*;
+import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.lang.Math.floor;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +56,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     private boolean closeUn = false;
     private boolean insideSum = false;
     private boolean noExclusionNextLeaf = false;
+
+    public static String astToHtml(Metadata metadata, Locale locale) {
+        ByteArrayOutputStream ops = new ByteArrayOutputStream();
+        new AstHtmlVisitor(ops, BUNDLE, locale).browse(metadata, 0);
+        return new String(ops.toByteArray(), UTF_8);
+    }
 
     private static String beginElement(String elementType, String... classes) {
         return "<" + elementType

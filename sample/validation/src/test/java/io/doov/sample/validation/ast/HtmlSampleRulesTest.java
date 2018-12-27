@@ -3,7 +3,7 @@
  */
 package io.doov.sample.validation.ast;
 
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToHtml;
+import static io.doov.core.dsl.meta.ast.AstHtmlVisitor.astToHtml;
 import static io.doov.sample.validation.SampleRules.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jsoup.Jsoup.parseBodyFragment;
