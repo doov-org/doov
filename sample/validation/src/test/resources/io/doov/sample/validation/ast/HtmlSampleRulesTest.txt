@@ -1,0 +1,601 @@
+<!-- user id is not null  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-small">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-small">
+      <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <span class="dsl-token-field">user.id</span>
+  <span class="dsl-token-operator">is not null</span>
+</body>
+
+</html>
+<!-- user birthdate age at account creation date >= 18  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-small">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-small">
+      <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <span class="dsl-token-field">user.birthdate</span>
+  <span class="dsl-token-operator">age at</span>
+  <span class="dsl-token-field">account.creation.date</span>
+  <span class="dsl-token-operator">&gt;=</span>
+  <span class="dsl-token-value">18</span>
+</body>
+
+</html>
+<!-- user birthdate age at account creation date with first day of year >= 18  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-small">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-small">
+      <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <span class="dsl-token-field">user.birthdate</span>
+  <span class="dsl-token-operator">age at</span>
+  <span class="dsl-token-field">account.creation.date</span>
+  <span class="dsl-token-operator">with</span>
+  <span class="dsl-token-operator">first day of year</span>
+  <span class="dsl-token-operator">&gt;=</span>
+  <span class="dsl-token-value">18</span>
+</body>
+
+</html>
+<!-- not account company = BLABLACAR  -->
+<html>
+
+<head></head>
+
+<body>
+  <li class="dsl-li-unary"><span class="dsl-token-unary">not</span>
+    <ul class="dsl-ul-unary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div>
+      <span class="dsl-token-field">account.company</span>
+      <span class="dsl-token-operator">=</span>
+      <span class="dsl-token-value">BLABLACAR</span>
+    </ul>
+  </li>
+</body>
+
+</html>
+<!-- match all [user birthdate age at today >= 18, account email length is <= configuration max email size, (account country = FR and account phone number starts with '+33')]  -->
+<html>
+
+<head></head>
+
+<body>
+  <li class="dsl-li-nary">
+    <div class="percentage-wrapper-big">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-big">
+        <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+      </div>
+    </div><span class="dsl-token-nary">match all</span>
+    <ol class="dsl-ol-nary">
+      <li class="dsl-li-leaf">
+        <div class="percentage-wrapper-small">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-small">
+            <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+          </div>
+        </div>
+        <span class="dsl-token-field">user.birthdate</span>
+        <span class="dsl-token-operator">age at</span>
+        <span class="dsl-token-operator">today</span>
+        <span class="dsl-token-operator">&gt;=</span>
+        <span class="dsl-token-value">18</span>
+      </li>
+      <li class="dsl-li-leaf">
+        <div class="percentage-wrapper-small">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-small">
+            <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+          </div>
+        </div>
+        <span class="dsl-token-field">account.email</span>
+        <span class="dsl-token-operator">length is</span>
+        <span class="dsl-token-operator">&lt;=</span>
+        <span class="dsl-token-field">configuration.max.email.size</span>
+      </li>
+      <li class="dsl-li-binary">
+        <div class="percentage-wrapper-small">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-small">
+            <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+          </div>
+        </div>
+        <span class="dsl-token-field">account.country</span>
+        <span class="dsl-token-operator">=</span>
+        <span class="dsl-token-value">FR</span>
+        <br>
+        <span class="dsl-token-binary">and</span>
+        <div class="percentage-wrapper-small">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-small">
+            <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+          </div>
+        </div>
+        <span class="dsl-token-field">account.phone.number</span>
+        <span class="dsl-token-operator">starts with</span>
+        <span class="dsl-token-value">'+33'</span>
+      </li>
+    </ol>
+  </li>
+</body>
+
+</html>
+<!-- ((user birthdate age at today >= 18 and account email length is <= configuration max email size) and account country = FR) and account phone number starts with '+33'  -->
+<html>
+
+<head></head>
+
+<body>
+  <li class="dsl-li-binary">
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">user.birthdate</span>
+    <span class="dsl-token-operator">age at</span>
+    <span class="dsl-token-operator">today</span>
+    <span class="dsl-token-operator">&gt;=</span>
+    <span class="dsl-token-value">18</span>
+    <br>
+    <span class="dsl-token-binary">and</span>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">account.email</span>
+    <span class="dsl-token-operator">length is</span>
+    <span class="dsl-token-operator">&lt;=</span>
+    <span class="dsl-token-field">configuration.max.email.size</span>
+    <br>
+    <span class="dsl-token-binary">and</span>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">account.country</span>
+    <span class="dsl-token-operator">=</span>
+    <span class="dsl-token-value">FR</span>
+    <br>
+    <span class="dsl-token-binary">and</span>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">account.phone.number</span>
+    <span class="dsl-token-operator">starts with</span>
+    <span class="dsl-token-value">'+33'</span>
+  </li>
+</body>
+
+</html>
+<!-- match all [user first name as a number -function-  = 1]  -->
+<html>
+
+<head></head>
+
+<body>
+  <li class="dsl-li-nary">
+    <div class="percentage-wrapper-big">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-big">
+        <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+      </div>
+    </div><span class="dsl-token-nary">match all</span>
+    <ol class="dsl-ol-nary">
+      <li class="dsl-li-leaf">
+        <div class="percentage-wrapper-small">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-small">
+            <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+          </div>
+        </div>
+        <span class="dsl-token-field">user.first.name</span>
+        <span class="dsl-token-operator">as a number</span>
+        <span class="dsl-token-unknown">-function- </span>
+        <span class="dsl-token-operator">=</span>
+        <span class="dsl-token-value">1</span>
+      </li>
+    </ol>
+  </li>
+</body>
+
+</html>
+<!-- user last name is not null and (user last name matches '[A-Z]+' and (count [account phone number is not null, account email is not null] > 0))  -->
+<html>
+
+<head></head>
+
+<body>
+  <li class="dsl-li-binary">
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">user.last.name</span>
+    <span class="dsl-token-operator">is not null</span>
+    <br>
+    <span class="dsl-token-binary">and</span>
+    <ul class="dsl-ul-binary">
+      <li class="dsl-li-binary">
+        <div class="percentage-wrapper-small">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-small">
+            <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+          </div>
+        </div>
+        <span class="dsl-token-field">user.last.name</span>
+        <span class="dsl-token-operator">matches</span>
+        <span class="dsl-token-value">'[A-Z]+'</span>
+        <br>
+        <span class="dsl-token-binary">and</span>
+        <div class="percentage-wrapper-big">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-big">
+            <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+          </div>
+        </div><span class="dsl-token-nary">count</span>
+        <ol class="dsl-ol-nary">
+          <li class="dsl-li-leaf">
+            <div class="percentage-wrapper-small">
+              <div class="percentage-value">
+                100 %
+              </div>
+              <div class="exclusion-border-small">
+                <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+              </div>
+            </div>
+            <span class="dsl-token-field">account.phone.number</span>
+            <span class="dsl-token-operator">is not null</span>
+          </li>
+          <li class="dsl-li-leaf">
+            <div class="percentage-wrapper-small">
+              <div class="percentage-value">
+                100 %
+              </div>
+              <div class="exclusion-border-small">
+                <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+              </div>
+            </div>
+            <span class="dsl-token-field">account.email</span>
+            <span class="dsl-token-operator">is not null</span>
+          </li>
+        </ol>
+        <span class="dsl-token-binary">&gt;</span>
+        <span class="dsl-token-value">0</span>
+      </li>
+    </ul>
+  </li>
+</body>
+
+</html>
+<!-- favorite site name 1 match any -function- -function-  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-small">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-small">
+      <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <span class="dsl-token-field">favorite.site.name.1</span>
+  <span class="dsl-token-operator">match any</span>
+  <span class="dsl-token-unknown">-function- -function-</span>
+</body>
+
+</html>
+<!-- count [user first name is not null, (user last name is not null and user last name matches '[A-Z]+')] >= 0  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-big">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-big">
+      <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <li class="dsl-li-nary"><span class="dsl-token-nary">count</span>
+    <ol class="dsl-ol-nary">
+      <li class="dsl-li-leaf">
+        <div class="percentage-wrapper-small">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-small">
+            <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+          </div>
+        </div>
+        <span class="dsl-token-field">user.first.name</span>
+        <span class="dsl-token-operator">is not null</span>
+      </li>
+      <li class="dsl-li-binary">
+        <div class="percentage-wrapper-small">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-small">
+            <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+          </div>
+        </div>
+        <span class="dsl-token-field">user.last.name</span>
+        <span class="dsl-token-operator">is not null</span>
+        <br>
+        <span class="dsl-token-binary">and</span>
+        <div class="percentage-wrapper-small">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-small">
+            <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+          </div>
+        </div>
+        <span class="dsl-token-field">user.last.name</span>
+        <span class="dsl-token-operator">matches</span>
+        <span class="dsl-token-value">'[A-Z]+'</span>
+      </li>
+    </ol><span class="dsl-token-binary">&gt;=</span> <span class="dsl-token-value">0</span>
+  </li>
+</body>
+
+</html>
+<!-- user birthdate after user birthdate minus 1 day(s)  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-small">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-small">
+      <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <span class="dsl-token-field">user.birthdate</span>
+  <span class="dsl-token-operator">after</span>
+  <span class="dsl-token-field">user.birthdate</span>
+  <span class="dsl-token-operator">minus</span>
+  <span class="dsl-token-value">1</span>
+  <span class="dsl-token-operator">day(s)</span>
+</body>
+
+</html>
+<!-- account email matches '\w+[@]\w+\.com' or account email matches '\w+[@]\w+\.fr'  -->
+<html>
+
+<head></head>
+
+<body>
+  <li class="dsl-li-binary">
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">account.email</span>
+    <span class="dsl-token-operator">matches</span>
+    <span class="dsl-token-value">'\w+[@]\w+\.com'</span>
+    <br>
+    <span class="dsl-token-binary">or</span>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        0 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">account.email</span>
+    <span class="dsl-token-operator">matches</span>
+    <span class="dsl-token-value">'\w+[@]\w+\.fr'</span>
+  </li>
+</body>
+
+</html>
+<!-- user birthdate age at today >= 18  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-small">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-small">
+      <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <span class="dsl-token-field">user.birthdate</span>
+  <span class="dsl-token-operator">age at</span>
+  <span class="dsl-token-operator">today</span>
+  <span class="dsl-token-operator">&gt;=</span>
+  <span class="dsl-token-value">18</span>
+</body>
+
+</html>
+<!-- min [configuration min age, configuration max email size] >= 0  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-big">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-big">
+      <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <li class="dsl-li-nary"><span class="dsl-token-nary">min</span>
+    <ol class="dsl-ol-nary">
+      <li class="dsl-li-leaf"><span class="dsl-token-field">configuration.min.age</span> </li>
+      <li class="dsl-li-leaf"><span class="dsl-token-field">configuration.max.email.size</span> </li>
+    </ol>
+    <span class="dsl-token-binary">&gt;=</span>
+    <span class="dsl-token-value">0</span>
+  </li>
+</body>
+
+</html>
+<!-- sum [configuration min age x 0, configuration max email size x 1] >= 0  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-big">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-big">
+      <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <li class="dsl-li-nary"><span class="dsl-token-nary">sum</span>
+    <ol class="dsl-ol-nary">
+      <li class="dsl-li-leaf">
+        <span class="dsl-token-field">configuration.min.age</span>
+        <span class="dsl-token-operator">x</span>
+        <span class="dsl-token-value">0</span>
+      </li>
+      <li class="dsl-li-leaf">
+        <span class="dsl-token-field">configuration.max.email.size</span>
+        <span class="dsl-token-operator">x</span>
+        <span class="dsl-token-value">1</span>
+      </li>
+    </ol>
+    <span class="dsl-token-binary">&gt;=</span>
+    <span class="dsl-token-value">0</span>
+  </li>
+</body>
+
+</html>
+<!-- user birthdate as a number -function-  = 1980  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-small">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-small">
+      <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <span class="dsl-token-field">user.birthdate</span>
+  <span class="dsl-token-operator">as a number</span>
+  <span class="dsl-token-unknown">-function- </span>
+  <span class="dsl-token-operator">=</span>
+  <span class="dsl-token-value">1980</span>
+</body>
+
+</html>
+<!-- account timezone as a string -function-  contains '00:00'  -->
+<html>
+
+<head></head>
+
+<body>
+  <div class="percentage-wrapper-small">
+    <div class="percentage-value">
+      100 %
+    </div>
+    <div class="exclusion-border-small">
+      <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+    </div>
+  </div>
+  <span class="dsl-token-field">account.timezone</span>
+  <span class="dsl-token-operator">as a string</span>
+  <span class="dsl-token-unknown">-function- </span>
+  <span class="dsl-token-operator">contains</span>
+  <span class="dsl-token-value">'00:00'</span>
+</body>
+
+</html>

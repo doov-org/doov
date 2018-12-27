@@ -13,7 +13,6 @@
 package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
-
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;

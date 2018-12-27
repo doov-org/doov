@@ -1,0 +1,217 @@
+<!-- always true A or always true B  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">or</span>
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">B</span> </li>
+  </body>
+</html>
+<!-- always false A or always false B  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">or</span>
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">B</span> </li>
+  </body>
+</html>
+<!-- always false A or (always true B and always true C)  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">or</span>
+      <ul class="dsl-ul-binary">
+        <li class="dsl-li-binary">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">B</span> <br><span class="dsl-token-binary">and</span>
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">C</span> </li>
+      </ul></li>
+  </body>
+</html>
+<!-- always false A or (always false B and always true C)  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">or</span>
+      <ul class="dsl-ul-binary">
+        <li class="dsl-li-binary">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">B</span> <br><span class="dsl-token-binary">and</span>
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">C</span> </li>
+      </ul></li>
+  </body>
+</html>
+<!-- zero < 4 or yesterday before today  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">zero</span> <span class="dsl-token-operator">&lt;</span> <span class="dsl-token-value">4</span> <br><span class="dsl-token-binary">or</span>
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">yesterday</span> <span class="dsl-token-operator">before</span> <span class="dsl-token-operator">today</span> </li>
+  </body>
+</html>
+<!-- always true A or always false B  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">or</span>
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">B</span> </li>
+  </body>
+</html>
+<!-- always false A or always true B  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">or</span>
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">B</span> </li>
+  </body>
+</html>
+<!-- always true A or (always false B or always true C)  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">or</span>
+      <ul class="dsl-ul-binary">
+        <li class="dsl-li-binary">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">B</span> <br><span class="dsl-token-binary">or</span>
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">C</span> </li>
+      </ul></li>
+  </body>
+</html>

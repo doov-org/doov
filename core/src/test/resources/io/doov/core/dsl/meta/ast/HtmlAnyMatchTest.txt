@@ -1,0 +1,150 @@
+<!-- match any [always false A, enumField match any  : VAL2, VAL3]  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-nary">
+      <div class="percentage-wrapper-big">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-big">
+          <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-nary">match any</span>
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always false</span> <span class="dsl-token-value">A</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">enumField</span> <span class="dsl-token-operator">match any</span> <span class="dsl-token-value"> : VAL2, VAL3</span> </li>
+      </ol></li>
+  </body>
+</html>
+<!-- enumField match any  : VAL1, VAL2, VAL3  -->
+<html>
+  <head></head>
+  <body>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">enumField</span>
+    <span class="dsl-token-operator">match any</span>
+    <span class="dsl-token-value"> : VAL1, VAL2, VAL3</span>
+  </body>
+</html>
+<!-- enumField match any  : VAL2, VAL3  -->
+<html>
+  <head></head>
+  <body>
+    <div class="percentage-wrapper-small">
+      <div class="percentage-value">
+        0 %
+      </div>
+      <div class="exclusion-border-small">
+        <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+      </div>
+    </div>
+    <span class="dsl-token-field">enumField</span>
+    <span class="dsl-token-operator">match any</span>
+    <span class="dsl-token-value"> : VAL2, VAL3</span>
+  </body>
+</html>
+<!-- always true A and enumField match any  : VAL1, VAL2, VAL3  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">and</span>
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">enumField</span> <span class="dsl-token-operator">match any</span> <span class="dsl-token-value"> : VAL1, VAL2, VAL3</span> </li>
+  </body>
+</html>
+<!-- always true A and enumField match any  : VAL2, VAL3  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> <br><span class="dsl-token-binary">and</span>
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">enumField</span> <span class="dsl-token-operator">match any</span> <span class="dsl-token-value"> : VAL2, VAL3</span> </li>
+  </body>
+</html>
+<!-- match any [always true A, enumField match any  : VAL1, VAL2, VAL3]  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-nary">
+      <div class="percentage-wrapper-big">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-big">
+          <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-nary">match any</span>
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">A</span> </li>
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">enumField</span> <span class="dsl-token-operator">match any</span> <span class="dsl-token-value"> : VAL1, VAL2, VAL3</span> </li>
+      </ol></li>
+  </body>
+</html>
