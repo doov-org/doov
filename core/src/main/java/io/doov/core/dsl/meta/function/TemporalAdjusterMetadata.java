@@ -4,7 +4,7 @@
 package io.doov.core.dsl.meta.function;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,31 +33,31 @@ public class TemporalAdjusterMetadata extends LeafMetadata<TemporalAdjusterMetad
 
 
     public static TemporalAdjusterMetadata firstDayOfMonthMetadata() {
-        return new TemporalAdjusterMetadata(LEAF_PREDICATE).operator(first_day_of_month);
+        return new TemporalAdjusterMetadata(LEAF_VALUE).operator(first_day_of_month);
     }
 
     public static TemporalAdjusterMetadata firstDayOfNextMonthMetadata() {
-        return new TemporalAdjusterMetadata(LEAF_PREDICATE).operator(first_day_of_next_month);
+        return new TemporalAdjusterMetadata(LEAF_VALUE).operator(first_day_of_next_month);
     }
 
     public static TemporalAdjusterMetadata firstDayOfYearMetadata() {
-        return new TemporalAdjusterMetadata(LEAF_PREDICATE).operator(first_day_of_year);
+        return new TemporalAdjusterMetadata(LEAF_VALUE).operator(first_day_of_year);
     }
 
     public static TemporalAdjusterMetadata firstDayOfNextYearMetadata() {
-        return new TemporalAdjusterMetadata(LEAF_PREDICATE).operator(first_day_of_next_year);
+        return new TemporalAdjusterMetadata(LEAF_VALUE).operator(first_day_of_next_year);
     }
 
     public static TemporalAdjusterMetadata lastDayOfMonthMetadata() {
-        return new TemporalAdjusterMetadata(LEAF_PREDICATE).operator(last_day_of_month);
+        return new TemporalAdjusterMetadata(LEAF_VALUE).operator(last_day_of_month);
     }
 
     public static TemporalAdjusterMetadata lastDayOfYearMetadata() {
-        return new TemporalAdjusterMetadata(LEAF_PREDICATE).operator(last_day_of_year);
+        return new TemporalAdjusterMetadata(LEAF_VALUE).operator(last_day_of_year);
     }
 
     public static TemporalAdjusterMetadata unknownMetadata(String value) {
-        return new TemporalAdjusterMetadata(LEAF_PREDICATE).valueUnknown(value);
+        return new TemporalAdjusterMetadata(LEAF_VALUE).valueUnknown(value);
     }
 
 }

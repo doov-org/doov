@@ -5,7 +5,7 @@ package io.doov.core.dsl.meta.function;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.TEMPORAL_UNIT;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,35 +40,35 @@ public class TemporalFunctionMetadata extends LeafMetadata<TemporalFunctionMetad
     // local date suppliers
 
     public static TemporalFunctionMetadata todayMetadata() {
-        return new TemporalFunctionMetadata(LEAF_PREDICATE).operator(today);
+        return new TemporalFunctionMetadata(LEAF_VALUE).operator(today);
     }
 
     public static TemporalFunctionMetadata todayPlusMetadata(int value, Object unit) {
-        return new TemporalFunctionMetadata(LEAF_PREDICATE).operator(today_plus).valueObject(value).temporalUnit(unit);
+        return new TemporalFunctionMetadata(LEAF_VALUE).operator(today_plus).valueObject(value).temporalUnit(unit);
     }
 
     public static TemporalFunctionMetadata todayMinusMetadata(int value, Object unit) {
-        return new TemporalFunctionMetadata(LEAF_PREDICATE).operator(today_minus).valueObject(value).temporalUnit(unit);
+        return new TemporalFunctionMetadata(LEAF_VALUE).operator(today_minus).valueObject(value).temporalUnit(unit);
     }
 
     public static TemporalFunctionMetadata firstDayOfThisMonthMetadata() {
-        return new TemporalFunctionMetadata(LEAF_PREDICATE).operator(first_day_of_this_month);
+        return new TemporalFunctionMetadata(LEAF_VALUE).operator(first_day_of_this_month);
     }
 
     public static TemporalFunctionMetadata firstDayOfThisYearMetadata() {
-        return new TemporalFunctionMetadata(LEAF_PREDICATE).operator(first_day_of_this_year);
+        return new TemporalFunctionMetadata(LEAF_VALUE).operator(first_day_of_this_year);
     }
 
     public static TemporalFunctionMetadata lastDayOfThisMonthMetadata() {
-        return new TemporalFunctionMetadata(LEAF_PREDICATE).operator(last_day_of_this_month);
+        return new TemporalFunctionMetadata(LEAF_VALUE).operator(last_day_of_this_month);
     }
 
     public static TemporalFunctionMetadata lastDayOfThisYearMetadata() {
-        return new TemporalFunctionMetadata(LEAF_PREDICATE).operator(last_day_of_this_year);
+        return new TemporalFunctionMetadata(LEAF_VALUE).operator(last_day_of_this_year);
     }
 
     public static TemporalFunctionMetadata dateMetadata(Object date) {
-        return new TemporalFunctionMetadata(LEAF_PREDICATE).valueString(date.toString());
+        return new TemporalFunctionMetadata(LEAF_VALUE).valueString(date.toString());
     }
 
 }

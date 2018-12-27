@@ -41,6 +41,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case FIELD_PREDICATE:
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
+                case LEAF_VALUE:
                     startLeaf((LeafMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
@@ -86,6 +87,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 beforeChildUnary((UnaryPredicateMetadata) metadata, child, depth);
                 break;
             case LEAF_PREDICATE:
+            case LEAF_VALUE:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
@@ -126,6 +128,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 afterChildRule(metadata, child, hasNext, depth);
                 break;
             case LEAF_PREDICATE:
+            case LEAF_VALUE:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
@@ -165,6 +168,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case FIELD_PREDICATE:
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
+                case LEAF_VALUE:
                     endLeaf((LeafMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
