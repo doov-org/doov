@@ -33,67 +33,13 @@ import org.junit.jupiter.api.Test;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 
-public class HtmlSuccessMatchAnyTest {
+public class HtmlMatchAnyTest {
     private StepCondition A, B, C, D;
     private Result result;
     private Document doc;
 
     @Test
-    void matchAny_false_false_false_success() {
-        A = alwaysFalse("A");
-        B = alwaysFalse("B");
-        C = alwaysFalse("C");
-        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
-        doc = documentOf(result);
-
-        assertFalse(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %", "0 %", "0 %", "0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always false", "always false", "always false");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", "B", "C");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match any");
-    }
-
-    @Test
-    void matchAny_true_false_false_success() {
-        A = alwaysTrue("A");
-        B = alwaysFalse("B");
-        C = alwaysFalse("C");
-        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
-        doc = documentOf(result);
-
-        assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %", "100 %", "0 %", "0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always false", "always false");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", "B", "C");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match any");
-    }
-
-    @Test
-    void matchAny_true_false_false_complex_success() {
+    void matchAny_true_false_false_complex() {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
         C = alwaysFalse("C");
@@ -123,34 +69,7 @@ public class HtmlSuccessMatchAnyTest {
     }
 
     @Test
-    void matchAny_false_true_true_success() {
-        A = alwaysFalse("A");
-        B = alwaysTrue("B");
-        C = alwaysTrue("C");
-        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
-        doc = documentOf(result);
-
-        assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %", "0 %", "100 %", "100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always false", "always true", "always true");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", "B", "C");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match any");
-    }
-
-    @Test
-    void matchAny_false_true_true_complex_success() {
+    void matchAny_false_true_true_complex() {
         A = alwaysFalse("A");
         B = alwaysTrue("B");
         C = alwaysTrue("C");
@@ -178,7 +97,116 @@ public class HtmlSuccessMatchAnyTest {
     }
 
     @Test
-    void matchAny_true_true_true_success() {
+    void matchAny_false_false_false() {
+        A = alwaysFalse("A");
+        B = alwaysFalse("B");
+        C = alwaysFalse("C");
+        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
+        doc = documentOf(result);
+
+        assertFalse(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("0 %", "0 %", "0 %", "0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("always false", "always false", "always false");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("A", "B", "C");
+        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
+                .containsExactly("match any");
+    }
+
+    @Test
+    void matchAny_false_false_false_complex() {
+        A = alwaysFalse("A");
+        B = alwaysFalse("B");
+        C = alwaysTrue("C");
+        D = alwaysFalse("D");
+        result = when(matchAny(A, B, C.and(D))).validate().withShortCircuit(false).execute();
+        doc = documentOf(result);
+
+        assertFalse(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("0 %", "0 %", "0 %", "100 %", "0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("always false", "always false", "always true", "always false");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("A", "B", "C", "D");
+        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
+                .containsExactly("match any");
+    }
+
+    @Test
+    void matchAny_true_false_false() {
+        A = alwaysTrue("A");
+        B = alwaysFalse("B");
+        C = alwaysFalse("C");
+        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
+        doc = documentOf(result);
+
+        assertTrue(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("100 %", "100 %", "0 %", "0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("always true", "always false", "always false");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("A", "B", "C");
+        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
+                .containsExactly("match any");
+    }
+
+    @Test
+    void matchAny_false_true_true() {
+        A = alwaysFalse("A");
+        B = alwaysTrue("B");
+        C = alwaysTrue("C");
+        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
+        doc = documentOf(result);
+
+        assertTrue(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("100 %", "0 %", "100 %", "100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("always false", "always true", "always true");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("A", "B", "C");
+        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
+                .containsExactly("match any");
+    }
+
+    @Test
+    void matchAny_true_true_true() {
         A = alwaysTrue("A");
         B = alwaysTrue("B");
         C = alwaysTrue("C");
@@ -190,6 +218,10 @@ public class HtmlSuccessMatchAnyTest {
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)

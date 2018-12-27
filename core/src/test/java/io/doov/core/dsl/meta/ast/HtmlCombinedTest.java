@@ -37,7 +37,7 @@ import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.runtime.GenericModel;
 
-public class HtlmCombinedTest {
+public class HtmlCombinedTest {
     private StepCondition A, B, C;
     private Result result;
     private Document doc;
