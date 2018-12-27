@@ -274,8 +274,6 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void RULE_ID() {
         result = resetCounters(RULE_ID).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
@@ -292,7 +290,7 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+        assertThat(doc.select("span.dsl-token-unary")).extracting(Element::text)
                 .containsExactly("is not null");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("user.id");
