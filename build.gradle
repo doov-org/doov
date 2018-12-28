@@ -204,13 +204,14 @@ task codeCoverageReport(type: JacocoReport) {
 
     reports {
         xml.enabled true
+        xml.destination file("$buildDir/reports/jacoco/codeCoverageReport/jacocoCoverageReport.xml")
         csv.enabled false
         html.enabled true
     }
 }
 
 codeCoverageReport.dependsOn {
-    subprojects*.test
+    subprojects*.check
 }
 
 wrapper {
