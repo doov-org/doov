@@ -19,7 +19,10 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.lang.ValidationRule;
+import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 import io.doov.sample.model.SampleModels;
 
 public class HtmlSampleRulesTest {
@@ -32,7 +35,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_EMAIL() {
-        result = RULE_EMAIL.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_EMAIL).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -59,7 +62,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ACCOUNT() {
-        result = RULE_ACCOUNT.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_ACCOUNT).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
         assertTrue(result.value());
 
@@ -87,7 +90,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ACCOUNT_2() {
-        result = RULE_ACCOUNT_2.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_ACCOUNT_2).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -115,7 +118,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER() {
-        result = RULE_USER.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_USER).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -144,7 +147,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER_2() {
-        result = RULE_USER_2.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_USER_2).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -176,7 +179,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER_ADULT() {
-        result = RULE_USER_ADULT.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_USER_ADULT).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
         assertTrue(result.value());
 
@@ -201,7 +204,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_USER_ADULT_FIRSTDAY() {
-        result = RULE_USER_ADULT_FIRSTDAY.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_USER_ADULT_FIRSTDAY).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -226,7 +229,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_FIRST_NAME() {
-        result = RULE_FIRST_NAME.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_FIRST_NAME).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -255,7 +258,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ID() {
-        result = RULE_ID.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_ID).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -278,7 +281,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_AGE() {
-        result = RULE_AGE.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_AGE).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -303,7 +306,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_AGE_2() {
-        result = RULE_AGE_2.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_AGE_2).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -328,7 +331,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_SUM() {
-        result = RULE_SUM.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_SUM).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -357,7 +360,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_MIN() {
-        result = RULE_MIN.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_MIN).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -384,7 +387,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_DOUBLE_LAMBDA() {
-        result = RULE_DOUBLE_LAMBDA.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_DOUBLE_LAMBDA).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -409,7 +412,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_BORN_1980() {
-        result = RULE_BORN_1980.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_BORN_1980).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -436,7 +439,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_ACCOUNT_TIME_CONTAINS() {
-        result = RULE_ACCOUNT_TIME_CONTAINS.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_ACCOUNT_TIME_CONTAINS).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -463,7 +466,7 @@ public class HtmlSampleRulesTest {
 
     @Test
     void RULE_COMPANY_NOT_LESFURETS() {
-        result = RULE_COMPANY_NOT_LESFURETS.resetCounters().withShortCircuit(false).executeOn(sample);
+        result = resetCounters(RULE_COMPANY_NOT_LESFURETS).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -499,6 +502,17 @@ public class HtmlSampleRulesTest {
     static String format(Result result, Document doc) {
         return "<!-- " + AstVisitorUtils.astToString(result.getContext().getRootMetadata(), LOCALE) + " -->\n"
                 + doc.outputSettings(new OutputSettings().prettyPrint(true).indentAmount(2)).toString();
+    }
+
+    static ValidationRule resetCounters(ValidationRule rule) {
+        resetCounters(rule.getStepWhen().metadata());
+        return rule;
+    }
+
+    static void resetCounters(Metadata metadata) {
+        if (PredicateMetadata.class.isAssignableFrom(metadata.getClass()))
+            ((PredicateMetadata) metadata).resetCounters();
+        metadata.children().forEach(m -> resetCounters(m));
     }
 
     @AfterEach
