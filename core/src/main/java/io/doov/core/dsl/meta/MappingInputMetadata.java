@@ -15,6 +15,8 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.MetadataType.MAPPING_INPUT;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,7 +40,7 @@ public class MappingInputMetadata extends AbstractMetadata {
 
     @Override
     public MetadataType type() {
-        return MetadataType.MAPPING_INPUT;
+        return MAPPING_INPUT;
     }
 
 }

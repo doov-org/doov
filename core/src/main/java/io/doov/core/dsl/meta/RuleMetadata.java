@@ -3,6 +3,7 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.DefaultOperator.rule;
 import static io.doov.core.dsl.meta.MetadataType.RULE;
 
 import java.util.stream.Stream;
@@ -19,6 +20,11 @@ public class RuleMetadata extends AbstractMetadata {
         return new RuleMetadata(value);
     }
 
+    @Override
+    public Operator getOperator() {
+        return rule;
+    }
+    
     @Override
     public MetadataType type() {
         return RULE;
