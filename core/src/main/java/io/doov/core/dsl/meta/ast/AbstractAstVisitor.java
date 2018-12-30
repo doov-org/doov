@@ -20,12 +20,17 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.predicate.*;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 
 public abstract class AbstractAstVisitor implements MetadataVisitor {
 
-    private final Deque<MetadataType> stack = new ArrayDeque<>();
+    private final Deque<Metadata> stack = new ArrayDeque<>();
 
     // Metadata
 
@@ -70,7 +75,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     break;
             }
         } finally {
-            stack.push(metadata.type());
+            stack.push(metadata);
         }
     }
 
@@ -348,12 +353,19 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     protected String formatNewLine() {
         return "\n";
     }
-
-    protected MetadataType stackPeek() {
+    
+    protected Metadata stackPeek() {
         return stack.peek();
     }
 
-    protected final Stream<MetadataType> stackSteam() {
+    protected MetadataType stackPeekType() {
+        final Metadata metadata = stack.peek();
+        if (metadata == null)
+            return null;
+        return metadata.type();
+    }
+
+    protected final Stream<Metadata> stackSteam() {
         return stack.stream();
     }
 

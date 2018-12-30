@@ -53,7 +53,7 @@ public class AstLinePercentVisitor extends AstLineVisitor {
 
     @Override
     protected String formatLeafMetadata(LeafMetadata<?> metadata) {
-        if (stackPeek() == BINARY_PREDICATE) {
+        if (stackPeekType() == BINARY_PREDICATE) {
             return super.formatLeafMetadata(metadata);
         }
         return (metadata instanceof PredicateMetadata) ? percentage((PredicateMetadata) metadata) : ""

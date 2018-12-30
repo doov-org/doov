@@ -9,12 +9,10 @@ import static io.doov.core.dsl.meta.MetadataType.*;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.lang.Math.floor;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.*;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.Locale;
 
 import io.doov.core.dsl.lang.ValidationRule;
@@ -46,14 +44,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected final OutputStream ops;
     protected final ResourceProvider bundle;
     protected Locale locale;
-    protected boolean closeSum = false;
-    protected int closeUnaryUL = 0;
-    protected int insideNary = 0;
-    protected int nbImbriBinary = 0;
-    protected boolean rightSideOfBinary = false;
-    private boolean closeUn = false;
-    private boolean insideSum = false;
-    private boolean noExclusionNextLeaf = false;
 
     public static String astToHtml(Metadata metadata, Locale locale) {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
@@ -61,17 +51,39 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         return new String(ops.toByteArray(), UTF_8);
     }
 
+    private long closeUnaryUL() {
+        return stackSteam().map(Metadata::type).filter(t -> t == UNARY_PREDICATE).count();
+    }
+
+    private boolean rightSideOfBinary(Metadata metadata) {
+        return BINARY_PREDICATE == stackPeekType() && stackPeek().childAt(1) == metadata;
+    }
+
+    private long nbImbriBinary() {
+        return stackSteam().map(Metadata::getOperator).filter(op -> op == and || op == or).count();
+    }
+
+    private boolean isNextLeafPredicate() {
+        return stackPeek().type() != BINARY_PREDICATE
+                        || stackPeek().getOperator() == or
+                        || stackPeek().getOperator() == and;
+    }
+
+    private boolean insideNary() {
+        return stackSteam().map(Metadata::type).filter(t -> t == NARY_PREDICATE).findFirst().isPresent();
+    }
+
+    private final boolean insideSum() {
+        return stackSteam().map(Metadata::getOperator).filter(op -> op == sum || op == min).findFirst().isPresent();
+    }
+
     private static String beginElement(String elementType, String... classes) {
-        return "<" + elementType
-                + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
-                + ">";
+        return "<" + elementType + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "") + ">";
     }
 
     private static String beginElementWithStyle(String elementType, String style, String... classes) {
-        return "<" + elementType
-                + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
-                + (style != null ? " style='" + style + "'" : "")
-                + ">";
+        return "<" + elementType + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
+                        + (style != null ? " style='" + style + "'" : "") + ">";
     }
 
     private static String endElement(String elementType) {
@@ -125,21 +137,17 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     private String formatExclusionBar(ExclusionBar cssClass) {
-        return beginDiv(cssClass.getWrapperClass()) +
-                beginDiv("percentage-value") + " n/a" + endDiv() +
-                beginDiv(cssClass.getBorderClass()) +
-                beginDivWithStyle("width:0%;", cssClass.getFillingClass()) + endDiv() +
-                endDiv() +
-                endDiv();
+        return beginDiv(cssClass.getWrapperClass()) + beginDiv("percentage-value") + " n/a" + endDiv()
+                        + beginDiv(cssClass.getBorderClass())
+                        + beginDivWithStyle("width:0%;", cssClass.getFillingClass()) + endDiv() + endDiv() + endDiv();
     }
 
     private String formatExclusionBar(ExclusionBar cssClass, double percentage) {
-        return beginDiv(cssClass.getWrapperClass()) +
-                beginDiv("percentage-value") + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv() +
-                beginDiv(cssClass.getBorderClass()) +
-                beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv() +
-                endDiv() +
-                endDiv();
+        return beginDiv(cssClass.getWrapperClass()) + beginDiv("percentage-value")
+                        + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv()
+                        + beginDiv(cssClass.getBorderClass())
+                        + beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv()
+                        + endDiv() + endDiv();
     }
 
     public String exclusionBar(ValidationRule rule, ExclusionBar cssClass) {
@@ -166,20 +174,30 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
+    public void beforeChildWhen(Metadata metadata, Metadata child, int depth) {
+        if (isLeaf(child.type())) {
+            write(beginLi(CSS_CLASS_LI_LEAF));
+        }
+    }
+
+    @Override
+    public void afterChildWhen(Metadata metadata, Metadata child, boolean hasNext, int depth) {
+        if (isLeaf(child.type())) {
+            write(endLi());
+        }
+    }
+
+    @Override
     public void endWhen(Metadata metadata, int depth) {
         write(endUl());
     }
+
     // field metadata
 
     @Override
     public void startLeaf(LeafMetadata<?> leaf, int depth) {
-        if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
-            write(beginLi(CSS_CLASS_LI_LEAF));
-        }
-        if (!insideSum) {
-            if (noExclusionNextLeaf) {
-                noExclusionNextLeaf = false;
-            } else if (leaf.type() == LEAF_PREDICATE) {
+        if (!insideSum()) {
+            if (isNextLeafPredicate() && leaf.type() == LEAF_PREDICATE) {
                 write(exclusionBar((PredicateMetadata) leaf, ExclusionBar.SMALL));
             }
         }
@@ -211,32 +229,21 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         });
     }
 
-    @Override
-    public void endLeaf(LeafMetadata<?> metadata, int depth) {
-        if (stackPeek() == WHEN || (insideNary > 0 && !isImmediateBinaryChild())) {
-            write(endLi());
-        }
-    }
-
     // binary metadata
     @Override
     public void startBinary(BinaryPredicateMetadata metadata, int depth) {
         Metadata leftChild = metadata.getLeft();
 
-        if (NARY_PREDICATE == stackPeek() && (metadata.getOperator() != or && metadata.getOperator() != and)) {
+        if (NARY_PREDICATE == stackPeekType() && (metadata.getOperator() != or && metadata.getOperator() != and)) {
             write(beginLi(CSS_CLASS_LI_BINARY));
-            closeSum = true;
+        } else if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
+            write(beginLi(CSS_CLASS_LI_BINARY));
         }
-        if (rightSideOfBinary && leftChild.type() != NARY_PREDICATE) {
+        if (rightSideOfBinary(metadata) && leftChild.type() != NARY_PREDICATE) {
             write(beginUl(CSS_CLASS_UL_BINARY));
-            nbImbriBinary++;
-            rightSideOfBinary = false;
         }
-        if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
-            write(beginLi(CSS_CLASS_LI_BINARY));
-        }
-
-        if (metadata.getOperator() != and && metadata.getOperator() != or) {
+        if ((metadata.getOperator() != and && metadata.getOperator() != or) && stackPeekType() != UNARY_PREDICATE
+                        && !isFunctionOperator(metadata.getOperator())) {
             write(exclusionBar(metadata, ExclusionBar.BIG));
         }
     }
@@ -251,41 +258,26 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
             if (metadata.getRight().type() == UNARY_PREDICATE) {
                 write(beginUl(CSS_CLASS_UL_BINARY_CHILD));
-                closeUn = true;
-            }
-            rightSideOfBinary = true;
-
-            if (metadata.getOperator() != and && metadata.getOperator() != or) {
-                noExclusionNextLeaf = true;
             }
         }
     }
 
     @Override
     public void endBinary(BinaryPredicateMetadata metadata, int depth) {
-        if (nbImbriBinary > 0) {
+        if (nbImbriBinary() > 0) {
             write(endUl());
-            nbImbriBinary--;
         }
-        if (closeSum) {
-            write(endLi());
-            closeSum = false;
-        }
-        rightSideOfBinary = false;
+        write(endLi());
     }
 
     // nary metadata
     @Override
     public void startNary(NaryPredicateMetadata metadata, int depth) {
-        if (metadata.getOperator() == sum || metadata.getOperator() == min) {
-            insideSum = true;
-        }
-
-        if (insideNary == 0 && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() == count
-                || metadata.getOperator() == min)) {
+        if (!insideNary() && !rightSideOfBinary(metadata) && (metadata.getOperator() == sum
+                        || metadata.getOperator() == count || metadata.getOperator() == min)) {
             write(beginLi(CSS_CLASS_LI_NARY));
         }
-        if (stackPeek() == WHEN || stackPeek() != BINARY_PREDICATE) {
+        if (stackPeekType() == WHEN || stackPeekType() != BINARY_PREDICATE) {
             write(beginLi(CSS_CLASS_LI_NARY));
         }
 
@@ -294,18 +286,26 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         }
         htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
-        rightSideOfBinary = false;
         write(beginOl(CSS_CLASS_OL_NARY));
-        insideNary++;
+    }
+
+    @Override
+    public void beforeChildNary(NaryPredicateMetadata metadata, Metadata child, int depth) {
+        if (isLeaf(child.type())) {
+            write(beginLi(CSS_CLASS_LI_LEAF));
+        }
+    }
+
+    @Override
+    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+        if (isLeaf(child.type())) {
+            write(endLi());
+        }
     }
 
     @Override
     public void endNary(NaryPredicateMetadata metadata, int depth) {
         write(endOl());
-        insideNary--;
-        if (metadata.getOperator() == sum || metadata.getOperator() == min) {
-            insideSum = false;
-        }
     }
 
     // unary metadata
@@ -313,34 +313,29 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     public void startUnary(UnaryPredicateMetadata metadata, int depth) {
         write(beginLi(CSS_CLASS_LI_UNARY));
         MetadataType childType = metadata.childAt(0).type();
-        if (childType != LEAF_PREDICATE && childType != LEAF_VALUE && childType != FIELD_PREDICATE) {
+        if (!isLeaf(childType)) {
             htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         }
-        if (childType != LEAF_PREDICATE && childType != LEAF_VALUE && childType != FIELD_PREDICATE) {
+        if (!isLeaf(childType)) {
             write(beginUl(CSS_CLASS_UL_UNARY));
-            closeUnaryUL++;
         }
     }
 
     @Override
     public void endUnary(UnaryPredicateMetadata metadata, int depth) {
         MetadataType childType = metadata.childAt(0).type();
-        if (childType == LEAF_PREDICATE || childType == LEAF_VALUE || childType == FIELD_PREDICATE) {
+        if (isLeaf(childType)) {
             htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         }
         write(exclusionBar(metadata, ExclusionBar.SMALL));
-        if (closeUn) {
+        if (closeUnaryUL() > 0) {
             write(endUl());
-            closeUn = false;
-        }
-        if (closeUnaryUL > 0) {
-            write(endUl());
-            closeUnaryUL--;
         }
         write(endLi());
     }
 
     // validation rule
+
     @Override
     public void startRule(Metadata metadata, int depth) {
         formatDivStart(CSS_CLASS_VALIDATION_RULE);
@@ -353,13 +348,13 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     // metadata
+
     @Override
     public void afterChildDefault(Metadata metadata, Metadata child, boolean hasNext, int depth) {
         write(metadata.readable());
     }
 
     // implementation
-
     protected String formatWhen() {
         return bundle.get(when, locale);
     }
@@ -402,7 +397,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     protected void write(String s) {
         try {
-            ops.write(s.getBytes("UTF-8"));
+            ops.write(s.getBytes(UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -412,12 +407,13 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         this.locale = locale;
     }
 
-    private boolean isImmediateBinaryChild() {
-        List<MetadataType> stack = stackSteam().collect(toList());
-        if (stack.size() > 1) {
-            return stack.get(1) == MetadataType.BINARY_PREDICATE;
-        } else {
-            return false;
-        }
+    private boolean isLeaf(MetadataType childType) {
+        return childType == LEAF_PREDICATE || childType == LEAF_VALUE || childType == FIELD_PREDICATE;
+    }
+
+    private boolean isFunctionOperator(Operator operator) {
+        return operator == times || operator == as_string || operator == as || operator == as_a_number
+                        || operator == plus || operator == minus || operator == today_plus || operator == today_minus
+                        || operator == age_at;
     }
 }

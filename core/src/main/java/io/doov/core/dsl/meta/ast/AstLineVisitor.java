@@ -15,7 +15,6 @@ package io.doov.core.dsl.meta.ast;
 import java.util.Locale;
 
 import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.RuleMetadata;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;

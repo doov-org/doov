@@ -148,7 +148,6 @@ public class HtmlAndTest {
 
     @Test
     @Disabled
-    // FIXME broken since leaf metadata refactoring
     void and_field_true_true_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");

@@ -151,8 +151,6 @@ public class HtmlMatchAllTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void matchAll_field_false_false_false_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");
@@ -166,9 +164,9 @@ public class HtmlMatchAllTest {
 
         assertFalse(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(3);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
@@ -176,7 +174,9 @@ public class HtmlMatchAllTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "0 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly(">", "after", "today", "matches");
+                .containsExactly("today");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .containsExactly(">", "after", "matches");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("zero", "yesterday", "string field");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
