@@ -17,6 +17,7 @@ public class NaryMetadata extends AbstractMetadata {
         this.values = values;
     }
 
+    @Override
     public Operator getOperator() {
         return operator;
     }

@@ -4,6 +4,7 @@
 package io.doov.core.dsl.meta;
 
 public enum DefaultOperator implements Operator {
+    no_operator("no operator"), //
     rule("rule"), //
     validate("validate"), //
     empty("empty"), //

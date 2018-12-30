@@ -16,6 +16,7 @@ public class UnaryMetadata extends AbstractMetadata {
         this.value = value;
     }
 
+    @Override
     public Operator getOperator() {
         return operator;
     }

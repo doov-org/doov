@@ -3,6 +3,7 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.MetadataType.WHEN;
 
 import java.util.stream.Stream;
@@ -21,6 +22,11 @@ public class WhenMetadata extends AbstractMetadata {
     @Override
     public MetadataType type() {
         return WHEN;
+    }
+    
+    @Override
+    public Operator getOperator() {
+        return when;
     }
 
     @Override

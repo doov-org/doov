@@ -12,6 +12,7 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.DefaultOperator.no_operator;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 import static java.util.stream.Collectors.toList;
 
@@ -28,6 +29,10 @@ import io.doov.core.dsl.meta.ast.AstVisitorUtils;
  * Interface for the description of a node in the syntax tree.
  */
 public interface Metadata extends Readable {
+    
+    default Operator getOperator() {
+        return no_operator;
+    }
 
     /**
      * Returns the human readable version of this object.
