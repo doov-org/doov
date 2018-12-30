@@ -48,13 +48,21 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected final OutputStream ops;
     protected final ResourceProvider bundle;
     protected Locale locale;
+    @Deprecated
     protected boolean closeSum = false;
+    @Deprecated
     protected int closeUnaryUL = 0;
+    @Deprecated
     protected int insideNary = 0;
+    @Deprecated
     protected int nbImbriBinary = 0;
+    @Deprecated
     protected boolean rightSideOfBinary = false;
+    @Deprecated
     private boolean closeUn = false;
+    @Deprecated
     private boolean insideSum = false;
+    @Deprecated
     private boolean noExclusionNextLeaf = false;
 
     public static String astToHtml(Metadata metadata, Locale locale) {
