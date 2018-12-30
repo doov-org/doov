@@ -17,6 +17,8 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
@@ -173,7 +175,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void startLeaf(LeafMetadata<?> leaf, int depth) {
-        if (stackPeek() == WHEN || (insideNary > 0 && stackPeek() != BINARY_PREDICATE)) {
+        if (stackPeekType() == WHEN || (insideNary > 0 && stackPeekType() != BINARY_PREDICATE)) {
             write(beginLi(CSS_CLASS_LI_LEAF));
         }
         if (!insideSum) {
@@ -213,7 +215,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void endLeaf(LeafMetadata<?> metadata, int depth) {
-        if (stackPeek() == WHEN || (insideNary > 0 && !isImmediateBinaryChild())) {
+        if (stackPeekType() == WHEN || (insideNary > 0 && !isImmediateBinaryChild())) {
             write(endLi());
         }
     }
@@ -223,7 +225,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     public void startBinary(BinaryPredicateMetadata metadata, int depth) {
         Metadata leftChild = metadata.getLeft();
 
-        if (NARY_PREDICATE == stackPeek() && (metadata.getOperator() != or && metadata.getOperator() != and)) {
+        if (NARY_PREDICATE == stackPeekType() && (metadata.getOperator() != or && metadata.getOperator() != and)) {
             write(beginLi(CSS_CLASS_LI_BINARY));
             closeSum = true;
         }
@@ -285,7 +287,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
                 || metadata.getOperator() == min)) {
             write(beginLi(CSS_CLASS_LI_NARY));
         }
-        if (stackPeek() == WHEN || stackPeek() != BINARY_PREDICATE) {
+        if (stackPeekType() == WHEN || stackPeekType() != BINARY_PREDICATE) {
             write(beginLi(CSS_CLASS_LI_NARY));
         }
 
@@ -413,7 +415,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     private boolean isImmediateBinaryChild() {
-        List<MetadataType> stack = stackSteam().collect(toList());
+        List<MetadataType> stack = stackSteam().map(Pair::getLeft).collect(toList());
         if (stack.size() > 1) {
             return stack.get(1) == MetadataType.BINARY_PREDICATE;
         } else {

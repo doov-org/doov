@@ -19,13 +19,15 @@ import java.util.Deque;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.predicate.*;
 
 public abstract class AbstractAstVisitor implements MetadataVisitor {
 
-    private final Deque<MetadataType> stack = new ArrayDeque<>();
+    private final Deque<Pair<MetadataType, Operator>> stack = new ArrayDeque<>();
 
     // Metadata
 
@@ -70,7 +72,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     break;
             }
         } finally {
-            stack.push(metadata.type());
+            stack.push(Pair.of(metadata.type(), metadata.getOperator()));
         }
     }
 
@@ -349,11 +351,18 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
         return "\n";
     }
 
-    protected MetadataType stackPeek() {
+    protected Pair<MetadataType, Operator> stackPeek() {
         return stack.peek();
     }
+    
+    protected MetadataType stackPeekType() {
+        Pair<MetadataType, Operator> pair = stack.peek();
+        if (pair == null)
+            return null;
+        return pair.getLeft();
+    }
 
-    protected final Stream<MetadataType> stackSteam() {
+    protected final Stream<Pair<MetadataType, Operator>> stackSteam() {
         return stack.stream();
     }
 
