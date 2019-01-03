@@ -189,15 +189,13 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void RULE_USER_ADULT() {
         result = resetCounters(RULE_USER_ADULT).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
         assertTrue(result.value());
 
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
@@ -208,6 +206,8 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly();
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
                 .containsExactly("age at", ">=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("18");
@@ -243,17 +243,15 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void RULE_FIRST_NAME() {
         result = resetCounters(RULE_FIRST_NAME).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(2);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
@@ -262,6 +260,8 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly();
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
                 .containsExactly("as a number", "=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("1");
@@ -297,15 +297,13 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void RULE_AGE() {
         result = resetCounters(RULE_AGE).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
@@ -316,7 +314,9 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("age at", "today", ">=");
+                .containsExactly("today");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .containsExactly("age at", ">=");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("user.birthdate");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
@@ -351,17 +351,15 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void RULE_SUM() {
         result = resetCounters(RULE_SUM).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(2);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
@@ -374,9 +372,9 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("sum");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("x", "x");
+                .containsExactly();
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">=");
+                .containsExactly("x", "x", ">=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("0", "1", "0");
     }
@@ -409,15 +407,13 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void RULE_DOUBLE_LAMBDA() {
         result = resetCounters(RULE_DOUBLE_LAMBDA).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
@@ -428,23 +424,25 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly();
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
                 .containsExactly("match any");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("favorite.site.name.1");
         assertThat(doc.select("span.dsl-token-unknown")).extracting(Element::text)
-                .containsExactly("-function- -function-");
+                .containsExactly();
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("-function-");
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void RULE_BORN_1980() {
         result = resetCounters(RULE_BORN_1980).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
@@ -455,6 +453,8 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly();
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
                 .containsExactly("as a number", "=");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("user.birthdate");
@@ -465,15 +465,13 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void RULE_ACCOUNT_TIME_CONTAINS() {
         result = resetCounters(RULE_ACCOUNT_TIME_CONTAINS).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
@@ -484,6 +482,8 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly();
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
                 .containsExactly("as a string", "contains");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("account.timezone");
@@ -494,15 +494,13 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void RULE_COMPANY_NOT_LESFURETS() {
         result = resetCounters(RULE_COMPANY_NOT_LESFURETS).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("li.dsl-li-unary")).hasSize(1);
@@ -513,8 +511,10 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(1);
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %");
+                .containsExactly("100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly();
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
                 .containsExactly("=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("BLABLACAR");
@@ -523,7 +523,7 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("span.dsl-token-unary")).extracting(Element::text)
                 .containsExactly("not");
         assertThat(doc.select("ul.dsl-ul-unary")).extracting(Element::text)
-                .containsExactly("0 % account.company = BLABLACAR");
+                .containsExactly("account.company = BLABLACAR 100 %");
     }
 
     static Document documentOf(Result result) {

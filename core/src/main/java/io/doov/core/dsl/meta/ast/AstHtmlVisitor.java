@@ -9,15 +9,12 @@ import static io.doov.core.dsl.meta.MetadataType.*;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.lang.Math.floor;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.*;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.lang3.tuple.Pair;
 
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
@@ -176,16 +173,28 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
+    public void beforeChildWhen(Metadata metadata, Metadata child, int depth) {
+        if (isLeaf(child.type())) {
+            write(beginLi(CSS_CLASS_LI_LEAF));
+        }
+    }
+
+    @Override
+    public void afterChildWhen(Metadata metadata, Metadata child, boolean hasNext, int depth) {
+        if (isLeaf(child.type())) {
+            write(endLi());
+        }
+    }
+
+    @Override
     public void endWhen(Metadata metadata, int depth) {
         write(endUl());
     }
+
     // field metadata
 
     @Override
     public void startLeaf(LeafMetadata<?> leaf, int depth) {
-        if (stackPeekType() == WHEN || (insideNary > 0 && stackPeekType() != BINARY_PREDICATE)) {
-            write(beginLi(CSS_CLASS_LI_LEAF));
-        }
         if (!insideSum) {
             if (noExclusionNextLeaf) {
                 noExclusionNextLeaf = false;
@@ -221,13 +230,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         });
     }
 
-    @Override
-    public void endLeaf(LeafMetadata<?> metadata, int depth) {
-        if (stackPeekType() == WHEN || (insideNary > 0 && !isImmediateBinaryChild())) {
-            write(endLi());
-        }
-    }
-
     // binary metadata
     @Override
     public void startBinary(BinaryPredicateMetadata metadata, int depth) {
@@ -236,17 +238,18 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         if (NARY_PREDICATE == stackPeekType() && (metadata.getOperator() != or && metadata.getOperator() != and)) {
             write(beginLi(CSS_CLASS_LI_BINARY));
             closeSum = true;
+        } else if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
+            write(beginLi(CSS_CLASS_LI_BINARY));
         }
         if (rightSideOfBinary && leftChild.type() != NARY_PREDICATE) {
             write(beginUl(CSS_CLASS_UL_BINARY));
             nbImbriBinary++;
             rightSideOfBinary = false;
         }
-        if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
-            write(beginLi(CSS_CLASS_LI_BINARY));
-        }
 
-        if (metadata.getOperator() != and && metadata.getOperator() != or) {
+        if ((metadata.getOperator() != and && metadata.getOperator() != or)
+                && stackPeekType() != UNARY_PREDICATE
+                && !isFunctionOperator(metadata.getOperator())) {
             write(exclusionBar(metadata, ExclusionBar.BIG));
         }
     }
@@ -310,6 +313,20 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     @Override
+    public void beforeChildNary(NaryPredicateMetadata metadata, Metadata child, int depth) {
+        if (isLeaf(child.type())) {
+            write(beginLi(CSS_CLASS_LI_LEAF));
+        }
+    }
+
+    @Override
+    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+        if (isLeaf(child.type())) {
+            write(endLi());
+        }
+    }
+
+    @Override
     public void endNary(NaryPredicateMetadata metadata, int depth) {
         write(endOl());
         insideNary--;
@@ -323,10 +340,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     public void startUnary(UnaryPredicateMetadata metadata, int depth) {
         write(beginLi(CSS_CLASS_LI_UNARY));
         MetadataType childType = metadata.childAt(0).type();
-        if (childType != LEAF_PREDICATE && childType != LEAF_VALUE && childType != FIELD_PREDICATE) {
+        if (!isLeaf(childType)) {
             htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         }
-        if (childType != LEAF_PREDICATE && childType != LEAF_VALUE && childType != FIELD_PREDICATE) {
+        if (!isLeaf(childType)) {
             write(beginUl(CSS_CLASS_UL_UNARY));
             closeUnaryUL++;
         }
@@ -335,7 +352,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void endUnary(UnaryPredicateMetadata metadata, int depth) {
         MetadataType childType = metadata.childAt(0).type();
-        if (childType == LEAF_PREDICATE || childType == LEAF_VALUE || childType == FIELD_PREDICATE) {
+        if (isLeaf(childType)) {
             htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         }
         write(exclusionBar(metadata, ExclusionBar.SMALL));
@@ -351,11 +368,11 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     // validation rule
+
     @Override
     public void startRule(Metadata metadata, int depth) {
         formatDivStart(CSS_CLASS_VALIDATION_RULE);
     }
-
     @Override
     public void endRule(Metadata metadata, int depth) {
         htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate, locale));
@@ -363,13 +380,13 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     // metadata
+
     @Override
     public void afterChildDefault(Metadata metadata, Metadata child, boolean hasNext, int depth) {
         write(metadata.readable());
     }
 
     // implementation
-
     protected String formatWhen() {
         return bundle.get(when, locale);
     }
@@ -422,12 +439,21 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         this.locale = locale;
     }
 
-    private boolean isImmediateBinaryChild() {
-        List<MetadataType> stack = stackSteam().map(Pair::getLeft).collect(toList());
-        if (stack.size() > 1) {
-            return stack.get(1) == MetadataType.BINARY_PREDICATE;
-        } else {
-            return false;
-        }
+    private boolean isLeaf(MetadataType childType) {
+        return childType == LEAF_PREDICATE || childType == LEAF_VALUE || childType == FIELD_PREDICATE;
+    }
+
+
+    private boolean isFunctionOperator(Operator operator) {
+        return operator == times
+                || operator == as_string
+                || operator == as
+                || operator == as_a_number
+                || operator == plus
+                || operator == minus
+                || operator == today_plus
+                || operator == today_minus
+                || operator == age_at
+                ;
     }
 }
