@@ -11,15 +11,25 @@ import static java.lang.Math.floor;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import org.apache.commons.lang3.tuple.Pair;
 
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.*;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
+import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
@@ -49,8 +59,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected boolean closeSum = false;
     @Deprecated
     protected int closeUnaryUL = 0;
-    @Deprecated
-    protected int insideNary = 0;
     @Deprecated
     protected int nbImbriBinary = 0;
     @Deprecated
@@ -287,6 +295,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         rightSideOfBinary = false;
     }
 
+    private boolean insideNary() {
+        return stackSteam().map(Pair::getLeft).filter(t -> t == MetadataType.NARY_PREDICATE).findFirst().isPresent();
+    }
+
     // nary metadata
     @Override
     public void startNary(NaryPredicateMetadata metadata, int depth) {
@@ -294,7 +306,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             insideSum = true;
         }
 
-        if (insideNary == 0 && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() == count
+        if (!insideNary() && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() == count
                 || metadata.getOperator() == min)) {
             write(beginLi(CSS_CLASS_LI_NARY));
         }
@@ -309,7 +321,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
         rightSideOfBinary = false;
         write(beginOl(CSS_CLASS_OL_NARY));
-        insideNary++;
     }
 
     @Override
@@ -329,7 +340,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void endNary(NaryPredicateMetadata metadata, int depth) {
         write(endOl());
-        insideNary--;
         if (metadata.getOperator() == sum || metadata.getOperator() == min) {
             insideSum = false;
         }
@@ -373,6 +383,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     public void startRule(Metadata metadata, int depth) {
         formatDivStart(CSS_CLASS_VALIDATION_RULE);
     }
+
     @Override
     public void endRule(Metadata metadata, int depth) {
         htmlFormatSpan(CSS_CLASS_VALIDATE, bundle.get(validate, locale));
@@ -429,7 +440,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     protected void write(String s) {
         try {
-            ops.write(s.getBytes("UTF-8"));
+            ops.write(s.getBytes(UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -443,7 +454,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         return childType == LEAF_PREDICATE || childType == LEAF_VALUE || childType == FIELD_PREDICATE;
     }
 
-
     private boolean isFunctionOperator(Operator operator) {
         return operator == times
                 || operator == as_string
@@ -453,7 +463,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
                 || operator == minus
                 || operator == today_plus
                 || operator == today_minus
-                || operator == age_at
-                ;
+                || operator == age_at;
     }
 }
