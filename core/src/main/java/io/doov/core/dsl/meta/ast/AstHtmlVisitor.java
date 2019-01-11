@@ -59,7 +59,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected boolean closeSum = false;
     @Deprecated
     protected int closeUnaryUL = 0;
-    @Deprecated
     protected int nbImbriBinary = 0;
     @Deprecated
     protected boolean rightSideOfBinary = false;
@@ -72,6 +71,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
         new AstHtmlVisitor(ops, BUNDLE, locale).browse(metadata, 0);
         return new String(ops.toByteArray(), UTF_8);
+    }
+    
+    private long nbImbriBinary() {
+        return stackSteam().map(Pair::getLeft).filter(t -> t == BINARY_PREDICATE).count();
     }
 
     private boolean insideNary() {
