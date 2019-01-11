@@ -80,8 +80,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected int closeUnaryUL = 0;
     protected int nbImbriBinary = 0;
     @Deprecated
-    protected boolean rightSideOfBinary = false;
-    @Deprecated
     private boolean closeUn = false;
     @Deprecated
     private boolean noExclusionNextLeaf = false;
@@ -90,6 +88,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
         new AstHtmlVisitor(ops, BUNDLE, locale).browse(metadata, 0);
         return new String(ops.toByteArray(), UTF_8);
+    }
+
+    private boolean rightSideOfBinary(Metadata metadata) {
+        return BINARY_PREDICATE == stackPeekType() && stackPeek().childAt(1) == metadata;
     }
 
     private long nbImbriBinary() {
@@ -277,10 +279,9 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         } else if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
             write(beginLi(CSS_CLASS_LI_BINARY));
         }
-        if (rightSideOfBinary && leftChild.type() != NARY_PREDICATE) {
+        if (rightSideOfBinary(metadata) && leftChild.type() != NARY_PREDICATE) {
             write(beginUl(CSS_CLASS_UL_BINARY));
             nbImbriBinary++;
-            rightSideOfBinary = false;
         }
 
         if ((metadata.getOperator() != and && metadata.getOperator() != or)
@@ -302,7 +303,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
                 write(beginUl(CSS_CLASS_UL_BINARY_CHILD));
                 closeUn = true;
             }
-            rightSideOfBinary = true;
 
             if (metadata.getOperator() != and && metadata.getOperator() != or) {
                 noExclusionNextLeaf = true;
@@ -320,14 +320,14 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             write(endLi());
             closeSum = false;
         }
-        rightSideOfBinary = false;
     }
 
     // nary metadata
     @Override
     public void startNary(NaryPredicateMetadata metadata, int depth) {
-        if (!insideNary() && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() == count
-                || metadata.getOperator() == min)) {
+        if (!insideNary() && !rightSideOfBinary(metadata)
+                && (metadata.getOperator() == sum || metadata.getOperator() == count
+                        || metadata.getOperator() == min)) {
             write(beginLi(CSS_CLASS_LI_NARY));
         }
         if (stackPeekType() == WHEN || stackPeekType() != BINARY_PREDICATE) {
@@ -339,7 +339,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         }
         htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
-        rightSideOfBinary = false;
         write(beginOl(CSS_CLASS_OL_NARY));
     }
 
