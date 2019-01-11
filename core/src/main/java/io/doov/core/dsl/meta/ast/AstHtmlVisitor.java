@@ -66,14 +66,20 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Deprecated
     private boolean closeUn = false;
     @Deprecated
-    private boolean insideSum = false;
-    @Deprecated
     private boolean noExclusionNextLeaf = false;
 
     public static String astToHtml(Metadata metadata, Locale locale) {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
         new AstHtmlVisitor(ops, BUNDLE, locale).browse(metadata, 0);
         return new String(ops.toByteArray(), UTF_8);
+    }
+
+    private boolean insideNary() {
+        return stackSteam().map(Pair::getLeft).filter(t -> t == NARY_PREDICATE).findFirst().isPresent();
+    }
+
+    private final boolean insideSum() {
+        return stackSteam().map(Pair::getRight).filter(op -> op == sum || op == min).findFirst().isPresent();
     }
 
     private static String beginElement(String elementType, String... classes) {
@@ -203,7 +209,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     @Override
     public void startLeaf(LeafMetadata<?> leaf, int depth) {
-        if (!insideSum) {
+        if (!insideSum()) {
             if (noExclusionNextLeaf) {
                 noExclusionNextLeaf = false;
             } else if (leaf.type() == LEAF_PREDICATE) {
@@ -295,17 +301,9 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         rightSideOfBinary = false;
     }
 
-    private boolean insideNary() {
-        return stackSteam().map(Pair::getLeft).filter(t -> t == MetadataType.NARY_PREDICATE).findFirst().isPresent();
-    }
-
     // nary metadata
     @Override
     public void startNary(NaryPredicateMetadata metadata, int depth) {
-        if (metadata.getOperator() == sum || metadata.getOperator() == min) {
-            insideSum = true;
-        }
-
         if (!insideNary() && !rightSideOfBinary && (metadata.getOperator() == sum || metadata.getOperator() == count
                 || metadata.getOperator() == min)) {
             write(beginLi(CSS_CLASS_LI_NARY));
@@ -340,9 +338,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void endNary(NaryPredicateMetadata metadata, int depth) {
         write(endOl());
-        if (metadata.getOperator() == sum || metadata.getOperator() == min) {
-            insideSum = false;
-        }
     }
 
     // unary metadata
