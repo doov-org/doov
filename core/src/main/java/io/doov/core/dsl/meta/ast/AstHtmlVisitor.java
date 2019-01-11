@@ -3,9 +3,30 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.DefaultOperator.age_at;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.as;
+import static io.doov.core.dsl.meta.DefaultOperator.as_a_number;
+import static io.doov.core.dsl.meta.DefaultOperator.as_string;
+import static io.doov.core.dsl.meta.DefaultOperator.count;
+import static io.doov.core.dsl.meta.DefaultOperator.min;
+import static io.doov.core.dsl.meta.DefaultOperator.minus;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.plus;
+import static io.doov.core.dsl.meta.DefaultOperator.sum;
+import static io.doov.core.dsl.meta.DefaultOperator.times;
+import static io.doov.core.dsl.meta.DefaultOperator.today_minus;
+import static io.doov.core.dsl.meta.DefaultOperator.today_plus;
+import static io.doov.core.dsl.meta.DefaultOperator.validate;
+import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
-import static io.doov.core.dsl.meta.MetadataType.*;
+import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
+import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.WHEN;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.lang.Math.floor;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -16,8 +37,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.util.Locale;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Element;
@@ -72,17 +91,17 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         new AstHtmlVisitor(ops, BUNDLE, locale).browse(metadata, 0);
         return new String(ops.toByteArray(), UTF_8);
     }
-    
+
     private long nbImbriBinary() {
-        return stackSteam().map(Pair::getLeft).filter(t -> t == BINARY_PREDICATE).count();
+        return stackSteam().map(Metadata::type).filter(t -> t == BINARY_PREDICATE).count();
     }
 
     private boolean insideNary() {
-        return stackSteam().map(Pair::getLeft).filter(t -> t == NARY_PREDICATE).findFirst().isPresent();
+        return stackSteam().map(Metadata::type).filter(t -> t == NARY_PREDICATE).findFirst().isPresent();
     }
 
     private final boolean insideSum() {
-        return stackSteam().map(Pair::getRight).filter(op -> op == sum || op == min).findFirst().isPresent();
+        return stackSteam().map(Metadata::getOperator).filter(op -> op == sum || op == min).findFirst().isPresent();
     }
 
     private static String beginElement(String elementType, String... classes) {

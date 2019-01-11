@@ -19,15 +19,18 @@ import java.util.Deque;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.predicate.*;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 
 public abstract class AbstractAstVisitor implements MetadataVisitor {
 
-    private final Deque<Pair<MetadataType, Operator>> stack = new ArrayDeque<>();
+    private final Deque<Metadata> stack = new ArrayDeque<>();
 
     // Metadata
 
@@ -72,7 +75,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     break;
             }
         } finally {
-            stack.push(Pair.of(metadata.type(), metadata.getOperator()));
+            stack.push(metadata);
         }
     }
 
@@ -350,19 +353,19 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     protected String formatNewLine() {
         return "\n";
     }
-
-    protected Pair<MetadataType, Operator> stackPeek() {
+    
+    protected Metadata stackPeek() {
         return stack.peek();
     }
-    
+
     protected MetadataType stackPeekType() {
-        Pair<MetadataType, Operator> pair = stack.peek();
-        if (pair == null)
+        final Metadata metadata = stack.peek();
+        if (metadata == null)
             return null;
-        return pair.getLeft();
+        return metadata.type();
     }
 
-    protected final Stream<Pair<MetadataType, Operator>> stackSteam() {
+    protected final Stream<Metadata> stackSteam() {
         return stack.stream();
     }
 

@@ -170,7 +170,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
 
     @Override
     protected int getCurrentIndentSize() {
-        if (BINARY_PREDICATE.equals(stackPeek())) {
+        if (BINARY_PREDICATE == stackPeekType()) {
             return (int) stackSteam().filter(e -> !BINARY_PREDICATE.equals(e)).count() *
                     getIndentSize();
         }
