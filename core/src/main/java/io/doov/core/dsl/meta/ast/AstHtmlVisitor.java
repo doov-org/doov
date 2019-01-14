@@ -3,52 +3,22 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.age_at;
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.as;
-import static io.doov.core.dsl.meta.DefaultOperator.as_a_number;
-import static io.doov.core.dsl.meta.DefaultOperator.as_string;
-import static io.doov.core.dsl.meta.DefaultOperator.count;
-import static io.doov.core.dsl.meta.DefaultOperator.min;
-import static io.doov.core.dsl.meta.DefaultOperator.minus;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.DefaultOperator.plus;
-import static io.doov.core.dsl.meta.DefaultOperator.sum;
-import static io.doov.core.dsl.meta.DefaultOperator.times;
-import static io.doov.core.dsl.meta.DefaultOperator.today_minus;
-import static io.doov.core.dsl.meta.DefaultOperator.today_plus;
-import static io.doov.core.dsl.meta.DefaultOperator.validate;
-import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
-import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
-import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.WHEN;
+import static io.doov.core.dsl.meta.MetadataType.*;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.lang.Math.floor;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.PredicateMetadata;
-import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
@@ -78,11 +48,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected boolean closeSum = false;
     @Deprecated
     protected int closeUnaryUL = 0;
+    @Deprecated
     protected int nbImbriBinary = 0;
     @Deprecated
     private boolean closeUn = false;
-    @Deprecated
-    private boolean noExclusionNextLeaf = false;
 
     public static String astToHtml(Metadata metadata, Locale locale) {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
@@ -95,7 +64,14 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     private long nbImbriBinary() {
-        return stackSteam().map(Metadata::type).filter(t -> t == BINARY_PREDICATE).count();
+        @SuppressWarnings("unused")
+        long value = stackSteam().map(Metadata::type).filter(t -> t == BINARY_PREDICATE).count();
+        return nbImbriBinary;
+    }
+
+    private boolean isNextLeafPredicate() {
+        return stackPeek().type() != BINARY_PREDICATE || stackPeek().getOperator() == or
+                || stackPeek().getOperator() == and;
     }
 
     private boolean insideNary() {
@@ -234,9 +210,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Override
     public void startLeaf(LeafMetadata<?> leaf, int depth) {
         if (!insideSum()) {
-            if (noExclusionNextLeaf) {
-                noExclusionNextLeaf = false;
-            } else if (leaf.type() == LEAF_PREDICATE) {
+            if (isNextLeafPredicate() && leaf.type() == LEAF_PREDICATE) {
                 write(exclusionBar((PredicateMetadata) leaf, ExclusionBar.SMALL));
             }
         }
@@ -303,16 +277,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
                 write(beginUl(CSS_CLASS_UL_BINARY_CHILD));
                 closeUn = true;
             }
-
-            if (metadata.getOperator() != and && metadata.getOperator() != or) {
-                noExclusionNextLeaf = true;
-            }
         }
     }
 
     @Override
     public void endBinary(BinaryPredicateMetadata metadata, int depth) {
-        if (nbImbriBinary > 0) {
+        if (nbImbriBinary() > 0) {
             write(endUl());
             nbImbriBinary--;
         }
