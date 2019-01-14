@@ -49,8 +49,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Deprecated
     protected int closeUnaryUL = 0;
     @Deprecated
-    protected int nbImbriBinary = 0;
-    @Deprecated
     private boolean closeUn = false;
 
     public static String astToHtml(Metadata metadata, Locale locale) {
@@ -64,9 +62,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     private long nbImbriBinary() {
-        @SuppressWarnings("unused")
-        long value = stackSteam().map(Metadata::type).filter(t -> t == BINARY_PREDICATE).count();
-        return nbImbriBinary;
+        return stackSteam().skip(1).map(Metadata::type).filter(t -> t == BINARY_PREDICATE).count();
     }
 
     private boolean isNextLeafPredicate() {
@@ -255,7 +251,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         }
         if (rightSideOfBinary(metadata) && leftChild.type() != NARY_PREDICATE) {
             write(beginUl(CSS_CLASS_UL_BINARY));
-            nbImbriBinary++;
         }
 
         if ((metadata.getOperator() != and && metadata.getOperator() != or)
@@ -284,7 +279,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     public void endBinary(BinaryPredicateMetadata metadata, int depth) {
         if (nbImbriBinary() > 0) {
             write(endUl());
-            nbImbriBinary--;
         }
         if (closeSum) {
             write(endLi());
