@@ -47,14 +47,16 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     @Deprecated
     protected boolean closeSum = false;
     @Deprecated
-    protected int closeUnaryUL = 0;
-    @Deprecated
     private boolean closeUn = false;
 
     public static String astToHtml(Metadata metadata, Locale locale) {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
         new AstHtmlVisitor(ops, BUNDLE, locale).browse(metadata, 0);
         return new String(ops.toByteArray(), UTF_8);
+    }
+    
+    private long closeUnaryUL() {
+        return stackSteam().map(Metadata::type).filter(t -> t == UNARY_PREDICATE).count();
     }
 
     private boolean rightSideOfBinary(Metadata metadata) {
@@ -335,7 +337,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         }
         if (!isLeaf(childType)) {
             write(beginUl(CSS_CLASS_UL_UNARY));
-            closeUnaryUL++;
         }
     }
 
@@ -350,9 +351,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             write(endUl());
             closeUn = false;
         }
-        if (closeUnaryUL > 0) {
+        if (closeUnaryUL() > 0) {
             write(endUl());
-            closeUnaryUL--;
         }
         write(endLi());
     }
