@@ -44,8 +44,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected final OutputStream ops;
     protected final ResourceProvider bundle;
     protected Locale locale;
-    @Deprecated
-    private boolean closeUn = false;
 
     public static String astToHtml(Metadata metadata, Locale locale) {
         ByteArrayOutputStream ops = new ByteArrayOutputStream();
@@ -268,7 +266,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
             if (metadata.getRight().type() == UNARY_PREDICATE) {
                 write(beginUl(CSS_CLASS_UL_BINARY_CHILD));
-                closeUn = true;
             }
         }
     }
@@ -340,10 +337,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
             htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         }
         write(exclusionBar(metadata, ExclusionBar.SMALL));
-        if (closeUn) {
-            write(endUl());
-            closeUn = false;
-        }
         if (closeUnaryUL() > 0) {
             write(endUl());
         }

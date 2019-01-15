@@ -19,16 +19,13 @@ import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.lang.ReduceType.FAILURE;
 import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
-import static io.doov.core.dsl.meta.ast.AstVisitorUtils.collectMetadata;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Locale;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.lang.Result;
