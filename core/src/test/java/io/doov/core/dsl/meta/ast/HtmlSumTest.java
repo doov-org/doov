@@ -96,6 +96,35 @@ public class HtmlSumTest {
                 .containsExactly(">");
     }
 
+    @Test
+    void sum_sum_1_sum_2_greaterThan_3() {
+        A = model.intField(1, "A");
+        B = model.intField(1, "B");
+        result = when(sum(sum(A), sum(B)).greaterThan(3)).validate().withShortCircuit(false).executeOn(model);
+        doc = documentOf(result);
+
+        assertFalse(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(3);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(3);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).isEmpty();
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("3");
+        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
+                .containsExactly("A", "B");
+        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
+                .containsExactly("sum", "sum", "sum");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .containsExactly(">");
+    }
+
     @AfterEach
     void afterEach() {
         System.out.println(format(result, doc));

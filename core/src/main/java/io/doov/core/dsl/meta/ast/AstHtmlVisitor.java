@@ -45,8 +45,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     protected final ResourceProvider bundle;
     protected Locale locale;
     @Deprecated
-    protected boolean closeSum = false;
-    @Deprecated
     private boolean closeUn = false;
 
     public static String astToHtml(Metadata metadata, Locale locale) {
@@ -54,11 +52,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         new AstHtmlVisitor(ops, BUNDLE, locale).browse(metadata, 0);
         return new String(ops.toByteArray(), UTF_8);
     }
-    
-    private boolean closeSum() {
-        return false;
-    }
-    
+
     private long closeUnaryUL() {
         return stackSteam().map(Metadata::type).filter(t -> t == UNARY_PREDICATE).count();
     }
@@ -251,14 +245,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
         if (NARY_PREDICATE == stackPeekType() && (metadata.getOperator() != or && metadata.getOperator() != and)) {
             write(beginLi(CSS_CLASS_LI_BINARY));
-            closeSum = true;
         } else if (leftChild.type() != BINARY_PREDICATE && leftChild.type() != NARY_PREDICATE) {
             write(beginLi(CSS_CLASS_LI_BINARY));
         }
         if (rightSideOfBinary(metadata) && leftChild.type() != NARY_PREDICATE) {
             write(beginUl(CSS_CLASS_UL_BINARY));
         }
-
         if ((metadata.getOperator() != and && metadata.getOperator() != or)
                 && stackPeekType() != UNARY_PREDICATE
                 && !isFunctionOperator(metadata.getOperator())) {
@@ -286,10 +278,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         if (nbImbriBinary() > 0) {
             write(endUl());
         }
-        if (closeSum()) {
-            write(endLi());
-            closeSum = false;
-        }
+        write(endLi());
     }
 
     // nary metadata
