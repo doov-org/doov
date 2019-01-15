@@ -105,4 +105,24 @@ public class FieldChainBuilder<B, T, R> {
         return new RuntimeField<>(this.chain, m, id, readable, siblings, type, genericTypes, isTransient);
     }
 
+    /**
+     * Terminal method that builds the RuntimeField for a field in list
+     *
+     * @param readMethod get method
+     * @param writeMethod set method
+     * @param type field type
+     * @param genericTypes generic types
+     * @param <O> field type
+     * @return the runtime field
+     */
+    @SuppressWarnings("unchecked")
+    public <O> RuntimeField<B, O> fieldInList(Function<R, List<O>> readMethod,
+                                              BiConsumer<R, List<O>> writeMethod,
+                                              Class<O> type,
+                                              Class<?>... genericTypes) {
+        PathMethod<R, O> method = new ListPathMethod<>(null, readMethod, writeMethod, id.position());
+        PathMethod<Object, O> m = (PathMethod<Object, O>) method;
+        return new RuntimeField<>(this.chain, m, id, readable, siblings, type, genericTypes, isTransient);
+    }
+
 }

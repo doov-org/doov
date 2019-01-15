@@ -18,6 +18,11 @@ public enum BenchmarkFieldId implements FieldId {
     FRIEND_NAME_8(8),
     FRIEND_NAME_9(9),
 
+    QUOTE_1(1),
+    QUOTE_2(2),
+    QUOTE_3(3),
+    QUOTE_4(4),
+
     //
     ;
 

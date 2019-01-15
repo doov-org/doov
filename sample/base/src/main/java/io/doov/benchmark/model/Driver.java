@@ -35,6 +35,8 @@ public class Driver {
 
     private List<Friend> friends = new ArrayList<>();
 
+    private List<Double> quotes = new ArrayList<>();
+
     public Driver() {
     }
 
@@ -79,6 +81,14 @@ public class Driver {
 
     public void setFriends(List<Friend> friends) {
         this.friends = friends;
+    }
+
+    public List<Double> getQuotes() {
+        return quotes;
+    }
+
+    public void setQuotes(List<Double> quotes) {
+        this.quotes = quotes;
     }
 
     @Override

@@ -93,6 +93,26 @@ public class RuntimePaths extends RuntimeFieldRegistry<BenchmarkModel> {
                     .field(Friend::getName, Friend::setName, String.class)
                     .register(ALL);
 
+    public static RuntimeField<BenchmarkModel, Double> quote_1 = from(BenchmarkModel.class, BenchmarkFieldId.QUOTE_1)
+                    .readable("quote 1")
+                    .get(BenchmarkModel::getDriver, BenchmarkModel::setDriver, Driver::new)
+                    .fieldInList(Driver::getQuotes, Driver::setQuotes, Double.class);
+
+    public static RuntimeField<BenchmarkModel, Double> quote_2 = from(BenchmarkModel.class, BenchmarkFieldId.QUOTE_3)
+                    .readable("quote 2")
+                    .get(BenchmarkModel::getDriver, BenchmarkModel::setDriver, Driver::new)
+                    .fieldInList(Driver::getQuotes, Driver::setQuotes, Double.class);
+
+    public static RuntimeField<BenchmarkModel, Double> quote_3 = from(BenchmarkModel.class, BenchmarkFieldId.QUOTE_3)
+                    .readable("quote 3")
+                    .get(BenchmarkModel::getDriver, BenchmarkModel::setDriver, Driver::new)
+                    .fieldInList(Driver::getQuotes, Driver::setQuotes, Double.class);
+
+    public static RuntimeField<BenchmarkModel, Double> quote_4 = from(BenchmarkModel.class, BenchmarkFieldId.QUOTE_4)
+                    .readable("quote 4")
+                    .get(BenchmarkModel::getDriver, BenchmarkModel::setDriver, Driver::new)
+                    .fieldInList(Driver::getQuotes, Driver::setQuotes, Double.class);
+
     public static RuntimePaths INSTANCE = new RuntimePaths();
 
     public RuntimePaths() {

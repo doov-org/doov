@@ -337,8 +337,8 @@ public class DOOV {
      */
     public static <T extends DslField<?>> MappingRegistry mapWithIndex(Stream<T> fieldStream,
             BiFunction<T, Integer, MappingRule> mappingRuleFunction) {
-        return MappingRegistry.mappings(Streams.mapWithIndex(fieldStream,
-                (f, l) -> mappingRuleFunction.apply(f, l.intValue())).toArray(MappingRule[]::new));
+        return MappingRegistry.mappings(Streams.mapWithIndex(fieldStream, (f, l) -> mappingRuleFunction.apply(f, l.intValue()))
+                        .toArray(MappingRule[]::new));
     }
 
     /**
