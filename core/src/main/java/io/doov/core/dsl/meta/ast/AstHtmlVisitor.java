@@ -55,6 +55,10 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         return new String(ops.toByteArray(), UTF_8);
     }
     
+    private boolean closeSum() {
+        return false;
+    }
+    
     private long closeUnaryUL() {
         return stackSteam().map(Metadata::type).filter(t -> t == UNARY_PREDICATE).count();
     }
@@ -282,7 +286,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         if (nbImbriBinary() > 0) {
             write(endUl());
         }
-        if (closeSum) {
+        if (closeSum()) {
             write(endLi());
             closeSum = false;
         }
