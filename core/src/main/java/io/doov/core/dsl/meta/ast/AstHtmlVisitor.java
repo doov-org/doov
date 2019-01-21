@@ -60,12 +60,13 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     private long nbImbriBinary() {
-        return stackSteam().skip(1).map(Metadata::type).filter(t -> t == BINARY_PREDICATE).count();
+        return stackSteam().map(Metadata::getOperator).filter(op -> op == and || op == or).count();
     }
 
     private boolean isNextLeafPredicate() {
-        return stackPeek().type() != BINARY_PREDICATE || stackPeek().getOperator() == or
-                || stackPeek().getOperator() == and;
+        return stackPeek().type() != BINARY_PREDICATE
+                        || stackPeek().getOperator() == or
+                        || stackPeek().getOperator() == and;
     }
 
     private boolean insideNary() {
@@ -77,16 +78,12 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     private static String beginElement(String elementType, String... classes) {
-        return "<" + elementType
-                + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
-                + ">";
+        return "<" + elementType + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "") + ">";
     }
 
     private static String beginElementWithStyle(String elementType, String style, String... classes) {
-        return "<" + elementType
-                + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
-                + (style != null ? " style='" + style + "'" : "")
-                + ">";
+        return "<" + elementType + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
+                        + (style != null ? " style='" + style + "'" : "") + ">";
     }
 
     private static String endElement(String elementType) {
@@ -140,21 +137,17 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     private String formatExclusionBar(ExclusionBar cssClass) {
-        return beginDiv(cssClass.getWrapperClass()) +
-                beginDiv("percentage-value") + " n/a" + endDiv() +
-                beginDiv(cssClass.getBorderClass()) +
-                beginDivWithStyle("width:0%;", cssClass.getFillingClass()) + endDiv() +
-                endDiv() +
-                endDiv();
+        return beginDiv(cssClass.getWrapperClass()) + beginDiv("percentage-value") + " n/a" + endDiv()
+                        + beginDiv(cssClass.getBorderClass())
+                        + beginDivWithStyle("width:0%;", cssClass.getFillingClass()) + endDiv() + endDiv() + endDiv();
     }
 
     private String formatExclusionBar(ExclusionBar cssClass, double percentage) {
-        return beginDiv(cssClass.getWrapperClass()) +
-                beginDiv("percentage-value") + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv() +
-                beginDiv(cssClass.getBorderClass()) +
-                beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv() +
-                endDiv() +
-                endDiv();
+        return beginDiv(cssClass.getWrapperClass()) + beginDiv("percentage-value")
+                        + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv()
+                        + beginDiv(cssClass.getBorderClass())
+                        + beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv()
+                        + endDiv() + endDiv();
     }
 
     public String exclusionBar(ValidationRule rule, ExclusionBar cssClass) {
@@ -249,9 +242,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         if (rightSideOfBinary(metadata) && leftChild.type() != NARY_PREDICATE) {
             write(beginUl(CSS_CLASS_UL_BINARY));
         }
-        if ((metadata.getOperator() != and && metadata.getOperator() != or)
-                && stackPeekType() != UNARY_PREDICATE
-                && !isFunctionOperator(metadata.getOperator())) {
+        if ((metadata.getOperator() != and && metadata.getOperator() != or) && stackPeekType() != UNARY_PREDICATE
+                        && !isFunctionOperator(metadata.getOperator())) {
             write(exclusionBar(metadata, ExclusionBar.BIG));
         }
     }
@@ -281,9 +273,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     // nary metadata
     @Override
     public void startNary(NaryPredicateMetadata metadata, int depth) {
-        if (!insideNary() && !rightSideOfBinary(metadata)
-                && (metadata.getOperator() == sum || metadata.getOperator() == count
-                        || metadata.getOperator() == min)) {
+        if (!insideNary() && !rightSideOfBinary(metadata) && (metadata.getOperator() == sum
+                        || metadata.getOperator() == count || metadata.getOperator() == min)) {
             write(beginLi(CSS_CLASS_LI_NARY));
         }
         if (stackPeekType() == WHEN || stackPeekType() != BINARY_PREDICATE) {
@@ -421,14 +412,8 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     }
 
     private boolean isFunctionOperator(Operator operator) {
-        return operator == times
-                || operator == as_string
-                || operator == as
-                || operator == as_a_number
-                || operator == plus
-                || operator == minus
-                || operator == today_plus
-                || operator == today_minus
-                || operator == age_at;
+        return operator == times || operator == as_string || operator == as || operator == as_a_number
+                        || operator == plus || operator == minus || operator == today_plus || operator == today_minus
+                        || operator == age_at;
     }
 }
