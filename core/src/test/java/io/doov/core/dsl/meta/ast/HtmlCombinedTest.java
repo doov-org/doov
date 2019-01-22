@@ -76,7 +76,7 @@ public class HtmlCombinedTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %","100 %", "0 %", "0 %");
+                .containsExactly("0 %", "100 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("always true", "always false", "always false");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
@@ -105,16 +105,12 @@ public class HtmlCombinedTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always false");
+                .containsExactly("always true", "and", "always false");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and");
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void reduce_zeroInt() {
         result = when(zeroField.notEq(0)).validate().withShortCircuit(false).executeOn(model);
         doc = documentOf(result);
@@ -139,8 +135,6 @@ public class HtmlCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void reduce_list() {
         result = when(iterableField.contains("c")).validate().withShortCircuit(false).executeOn(model);
         doc = documentOf(result);
@@ -165,8 +159,6 @@ public class HtmlCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void reduce_null() {
         result = when(enumField.isNull()).validate().withShortCircuit(false).executeOn(model);
         doc = documentOf(result);
@@ -189,8 +181,6 @@ public class HtmlCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void matches_regexp() {
         result = when(stringField.matches("^some.*")
                 .or(stringField2.matches("^other.*"))).validate().withShortCircuit(false).executeOn(model);
@@ -208,7 +198,7 @@ public class HtmlCombinedTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("matches", "matches");
+                .containsExactly("matches", "or", "matches");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("string field 1", "string field 2");
     }

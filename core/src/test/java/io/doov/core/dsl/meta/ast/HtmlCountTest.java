@@ -29,7 +29,8 @@ import java.time.LocalDate;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.field.types.LocalDateFieldInfo;
@@ -53,7 +54,7 @@ public class HtmlCountTest {
         assertFalse(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
@@ -62,13 +63,11 @@ public class HtmlCountTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always false", "always false");
+                .containsExactly("always false", "always false", ">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B", "1");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">");
     }
 
     @Test
@@ -81,7 +80,7 @@ public class HtmlCountTest {
         assertFalse(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
@@ -90,13 +89,11 @@ public class HtmlCountTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always false");
+                .containsExactly("always true", "always false", ">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B", "1");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">");
     }
 
     @Test
@@ -109,7 +106,7 @@ public class HtmlCountTest {
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
@@ -118,13 +115,11 @@ public class HtmlCountTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always false");
+                .containsExactly("always true", "always false", ">=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B", "1");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">=");
     }
 
     @Test
@@ -137,7 +132,7 @@ public class HtmlCountTest {
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
@@ -146,18 +141,14 @@ public class HtmlCountTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always true");
+                .containsExactly("always true", "always true", ">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B", "1");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">");
     }
 
     @Test
-    //@Disabled
-    // FIXME broken since leaf metadata refactoring
     void count_field_true_true_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");
@@ -170,7 +161,7 @@ public class HtmlCountTest {
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(2);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
@@ -179,15 +170,13 @@ public class HtmlCountTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("today");
+                .containsExactly("<", "before", "today", ">");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("zero", "yesterday");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("4", "1");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("<", "before", ">");
     }
 
     @AfterEach

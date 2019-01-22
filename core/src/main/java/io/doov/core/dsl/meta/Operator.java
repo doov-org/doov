@@ -8,5 +8,7 @@ import io.doov.core.dsl.lang.Readable;
 public interface Operator extends Readable {
 
     String name();
+    
+    ReturnType returnType();
 
 }

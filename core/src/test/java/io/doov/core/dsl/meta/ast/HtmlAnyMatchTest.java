@@ -5,7 +5,7 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.meta.ast.AstHtmlVisitor.astToHtml;
+import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.toHtml;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL1;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL2;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL3;
@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Locale;
 
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document.OutputSettings;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.*;
 
 import io.doov.core.dsl.DOOV;
@@ -36,7 +36,7 @@ public class HtmlAnyMatchTest {
     private EnumFieldInfo<EnumTest> enumField;
 
     static Document documentOf(Result result) {
-        return parseBodyFragment(astToHtml(result.getContext().getRootMetadata(), LOCALE));
+        return parseBodyFragment(toHtml(result.getContext().getRootMetadata(), LOCALE));
     }
 
     static String format(Result result, Document doc) {
@@ -51,8 +51,6 @@ public class HtmlAnyMatchTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void anyMatch_success() {
         result = when(enumField.anyMatch(VAL1, VAL2, VAL3)).validate().executeOn(model);
         doc = documentOf(result);
@@ -77,8 +75,6 @@ public class HtmlAnyMatchTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void anyMatch_failure() {
         result = when(enumField.anyMatch(VAL2, VAL3)).validate().executeOn(model);
         doc = documentOf(result);
@@ -103,8 +99,6 @@ public class HtmlAnyMatchTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void and_combined_anyMatch_success() {
         A = DOOV.alwaysTrue("A");
         result = when(A.and(enumField.anyMatch(VAL1, VAL2, VAL3))).validate().executeOn(model);
@@ -122,18 +116,14 @@ public class HtmlAnyMatchTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "match any");
+                .containsExactly("always true", "and", "match any");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", ": VAL1, VAL2, VAL3");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("enumField");
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void and_combined_anyMatch_failure() {
         A = DOOV.alwaysTrue("A");
         result = when(A.and(enumField.anyMatch(VAL2, VAL3))).validate().executeOn(model);
@@ -151,18 +141,14 @@ public class HtmlAnyMatchTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "match any");
+                .containsExactly("always true", "and", "match any");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", ": VAL2, VAL3");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("enumField");
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void matchAny_combined_anyMatch_success() {
         A = DOOV.alwaysTrue("A");
         result = when(matchAny(A, enumField.anyMatch(VAL1, VAL2, VAL3))).validate().withShortCircuit(false)
@@ -171,9 +157,9 @@ public class HtmlAnyMatchTest {
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(1);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
@@ -191,8 +177,6 @@ public class HtmlAnyMatchTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void matchAny_combined_anyMatch_failure() {
         A = DOOV.alwaysFalse("A");
         result = when(matchAny(A, enumField.anyMatch(VAL2, VAL3))).validate().executeOn(model);
@@ -200,9 +184,9 @@ public class HtmlAnyMatchTest {
 
         assertFalse(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(1);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);

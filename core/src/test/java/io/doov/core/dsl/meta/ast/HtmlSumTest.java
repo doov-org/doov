@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -48,23 +48,22 @@ public class HtmlSumTest {
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).isEmpty();
+                        .containsExactly("100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly(">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("1");
+                        .containsExactly("1");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("A", "B");
+                        .containsExactly("A", "B");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("sum");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">");
+                        .containsExactly("sum");
+
     }
 
     @Test
@@ -77,23 +76,21 @@ public class HtmlSumTest {
         assertFalse(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).isEmpty();
+                        .containsExactly("0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly(">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("3");
+                        .containsExactly("3");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("A", "B");
+                        .containsExactly("A", "B");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("sum");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">");
+                        .containsExactly("sum");
     }
 
     @Test
@@ -106,23 +103,21 @@ public class HtmlSumTest {
         assertFalse(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(3);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(3);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(2);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).isEmpty();
+                        .containsExactly("0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly(">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("3");
+                        .containsExactly("3");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("A", "B");
+                        .containsExactly("A", "B");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("sum", "sum", "sum");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">");
+                        .containsExactly("sum", "sum", "sum");
     }
 
     @AfterEach

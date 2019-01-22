@@ -17,7 +17,7 @@ public class TemporalAdjusterMetadata extends LeafMetadata<TemporalAdjusterMetad
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
 
-    private TemporalAdjusterMetadata(MetadataType type) {
+    public TemporalAdjusterMetadata(MetadataType type) {
         super(type);
     }
 
@@ -30,7 +30,6 @@ public class TemporalAdjusterMetadata extends LeafMetadata<TemporalAdjusterMetad
     public AtomicInteger evalFalse() {
         return evalFalse;
     }
-
 
     public static TemporalAdjusterMetadata firstDayOfMonthMetadata() {
         return new TemporalAdjusterMetadata(LEAF_VALUE).operator(first_day_of_month);
