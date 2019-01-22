@@ -3,7 +3,7 @@
  */
 package io.doov.sample.validation.ast;
 
-import static io.doov.core.dsl.meta.ast.AstHtmlVisitor.astToHtml;
+import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.astToHtml;
 import static io.doov.sample.validation.SampleRules.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jsoup.Jsoup.parseBodyFragment;
@@ -14,9 +14,7 @@ import java.util.Locale;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Document.OutputSettings;
 import org.jsoup.nodes.Element;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;

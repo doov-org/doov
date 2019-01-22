@@ -5,7 +5,7 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.meta.ast.AstHtmlVisitor.astToHtml;
+import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.astToHtml;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL1;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL2;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL3;
@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Locale;
 
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document.OutputSettings;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.*;
 
 import io.doov.core.dsl.DOOV;

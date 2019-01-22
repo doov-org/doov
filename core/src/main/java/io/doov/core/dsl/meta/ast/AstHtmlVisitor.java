@@ -6,49 +6,28 @@ package io.doov.core.dsl.meta.ast;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.*;
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
-import static java.lang.Math.floor;
+import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
-import java.io.*;
-import java.text.NumberFormat;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Locale;
 
-import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.*;
 
 public class AstHtmlVisitor extends AbstractAstVisitor {
 
-    protected static final String CSS_CLASS_VALIDATION_RULE = "dsl-validation-rule";
-    protected static final String CSS_CLASS_VALIDATE = "dsl-token-validate";
-    protected static final String CSS_CLASS_BINARY = "dsl-token-binary";
-    protected static final String CSS_CLASS_UNARY = "dsl-token-unary";
-    protected static final String CSS_CLASS_NARY = "dsl-token-nary";
-    protected static final String CSS_CLASS_WHEN = "dsl-token-when";
-
-    protected static final String CSS_CLASS_LI_LEAF = "dsl-li-leaf";
-    protected static final String CSS_CLASS_LI_BINARY = "dsl-li-binary";
-    protected static final String CSS_CLASS_LI_UNARY = "dsl-li-unary";
-    protected static final String CSS_CLASS_LI_NARY = "dsl-li-nary";
-
-    protected static final String CSS_CLASS_UL_WHEN = "dsl-ul-when";
-    protected static final String CSS_CLASS_UL_BINARY = "dsl-ul-binary";
-    protected static final String CSS_CLASS_UL_BINARY_CHILD = "dsl-ul-binary-child";
-    protected static final String CSS_CLASS_UL_UNARY = "dsl-ul-unary";
-
-    protected static final String CSS_CLASS_OL_NARY = "dsl-ol-nary";
-
     protected final OutputStream ops;
     protected final ResourceProvider bundle;
     protected Locale locale;
 
-    public static String astToHtml(Metadata metadata, Locale locale) {
-        ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        new AstHtmlVisitor(ops, BUNDLE, locale).browse(metadata, 0);
-        return new String(ops.toByteArray(), UTF_8);
+    public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
+        this.ops = ops;
+        this.bundle = bundle;
+        this.locale = locale;
     }
 
     private long closeUnaryUL() {
@@ -75,94 +54,6 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
 
     private final boolean insideSum() {
         return stackSteam().map(Metadata::getOperator).filter(op -> op == sum || op == min).findFirst().isPresent();
-    }
-
-    private static String beginElement(String elementType, String... classes) {
-        return "<" + elementType + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "") + ">";
-    }
-
-    private static String beginElementWithStyle(String elementType, String style, String... classes) {
-        return "<" + elementType + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
-                        + (style != null ? " style='" + style + "'" : "") + ">";
-    }
-
-    private static String endElement(String elementType) {
-        return "</" + elementType + ">";
-    }
-
-    private static String beginLi(String... classes) {
-        return beginElement("li", classes);
-    }
-
-    private static String endLi() {
-        return endElement("li");
-    }
-
-    private static String beginUl(String... classes) {
-        return beginElement("ul", classes);
-    }
-
-    private static String endUl() {
-        return endElement("ul");
-    }
-
-    private static String beginOl(String... classes) {
-        return beginElement("ol", classes);
-    }
-
-    private static String endOl() {
-        return endElement("ol");
-    }
-
-    private static String beginDiv(String... classes) {
-        return beginElement("div", classes);
-    }
-
-    private static String beginDivWithStyle(String style, String... classes) {
-        return beginElementWithStyle("div", style, classes);
-    }
-
-    private static String endDiv() {
-        return endElement("div");
-    }
-
-    private String exclusionBar(PredicateMetadata metadata, ExclusionBar cssClass) {
-        final int nbTrue = metadata.trueEvalCount();
-        final int nbFalse = metadata.falseEvalCount();
-        if (nbTrue == 0 && nbFalse == 0) {
-            return formatExclusionBar(cssClass);
-        }
-        final double percentage = floor((nbTrue / ((double) nbTrue + nbFalse)) * 1000) / 10.0;
-        return formatExclusionBar(cssClass, percentage);
-    }
-
-    private String formatExclusionBar(ExclusionBar cssClass) {
-        return beginDiv(cssClass.getWrapperClass()) + beginDiv("percentage-value") + " n/a" + endDiv()
-                        + beginDiv(cssClass.getBorderClass())
-                        + beginDivWithStyle("width:0%;", cssClass.getFillingClass()) + endDiv() + endDiv() + endDiv();
-    }
-
-    private String formatExclusionBar(ExclusionBar cssClass, double percentage) {
-        return beginDiv(cssClass.getWrapperClass()) + beginDiv("percentage-value")
-                        + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv()
-                        + beginDiv(cssClass.getBorderClass())
-                        + beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv()
-                        + endDiv() + endDiv();
-    }
-
-    public String exclusionBar(ValidationRule rule, ExclusionBar cssClass) {
-        Metadata conditionMetadata = rule.getStepWhen().stepCondition().metadata();
-        if (conditionMetadata instanceof PredicateMetadata) {
-            return exclusionBar((PredicateMetadata) conditionMetadata, cssClass);
-        } else {
-            return "";
-        }
-    }
-
-    public AstHtmlVisitor(OutputStream ops, ResourceProvider bundle, Locale locale) {
-        this.ops = ops;
-        this.bundle = bundle;
-        this.locale = locale;
     }
 
     // step when
@@ -198,7 +89,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
     public void startLeaf(LeafMetadata<?> leaf, int depth) {
         if (!insideSum()) {
             if (isNextLeafPredicate() && leaf.type() == LEAF_PREDICATE) {
-                write(exclusionBar((PredicateMetadata) leaf, ExclusionBar.SMALL));
+                write(exclusionBar((PredicateMetadata) leaf, ExclusionBar.SMALL, locale));
             }
         }
         leaf.elements().stream().forEach(e -> {
@@ -244,7 +135,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         }
         if ((metadata.getOperator() != and && metadata.getOperator() != or) && stackPeekType() != UNARY_PREDICATE
                         && !isFunctionOperator(metadata.getOperator())) {
-            write(exclusionBar(metadata, ExclusionBar.BIG));
+            write(exclusionBar(metadata, ExclusionBar.BIG, locale));
         }
     }
 
@@ -282,7 +173,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         }
 
         if (metadata.getOperator() != count && metadata.getOperator() != sum && metadata.getOperator() != min) {
-            write(exclusionBar(metadata, ExclusionBar.BIG));
+            write(exclusionBar(metadata, ExclusionBar.BIG, locale));
         }
         htmlFormatSpan(CSS_CLASS_NARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
 
@@ -327,7 +218,7 @@ public class AstHtmlVisitor extends AbstractAstVisitor {
         if (isLeaf(childType)) {
             htmlFormatSpan(CSS_CLASS_UNARY, escapeHtml4(bundle.get(metadata.getOperator(), locale)));
         }
-        write(exclusionBar(metadata, ExclusionBar.SMALL));
+        write(exclusionBar(metadata, ExclusionBar.SMALL, locale));
         if (closeUnaryUL() > 0) {
             write(endUl());
         }
