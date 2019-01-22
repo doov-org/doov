@@ -5,7 +5,7 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.astToHtml;
+import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.toHtml;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL1;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL2;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL3;
@@ -36,12 +36,12 @@ public class HtmlAnyMatchTest {
     private EnumFieldInfo<EnumTest> enumField;
 
     static Document documentOf(Result result) {
-        return parseBodyFragment(astToHtml(result.getContext().getRootMetadata(), LOCALE));
+        return parseBodyFragment(toHtml(result.getContext().getRootMetadata(), LOCALE));
     }
 
     static String format(Result result, Document doc) {
         return "<!-- " + AstVisitorUtils.astToString(result.getContext().getRootMetadata(), LOCALE) + " -->\n"
-                + doc.outputSettings(new OutputSettings().prettyPrint(true).indentAmount(2)).toString();
+                        + doc.outputSettings(new OutputSettings().prettyPrint(true).indentAmount(2)).toString();
     }
 
     @BeforeEach
@@ -52,7 +52,7 @@ public class HtmlAnyMatchTest {
 
     @Test
     @Disabled
-    // FIXME broken since leaf metadata refactoring
+    // FIXME AstHtmlRemderer
     void anyMatch_success() {
         result = when(enumField.anyMatch(VAL1, VAL2, VAL3)).validate().executeOn(model);
         doc = documentOf(result);
@@ -67,18 +67,18 @@ public class HtmlAnyMatchTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %");
+                        .containsExactly("100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("match any");
+                        .containsExactly("match any");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly(": VAL1, VAL2, VAL3");
+                        .containsExactly(": VAL1, VAL2, VAL3");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+                        .containsExactly("enumField");
     }
 
     @Test
     @Disabled
-    // FIXME broken since leaf metadata refactoring
+    // FIXME AstHtmlRemderer
     void anyMatch_failure() {
         result = when(enumField.anyMatch(VAL2, VAL3)).validate().executeOn(model);
         doc = documentOf(result);
@@ -93,18 +93,18 @@ public class HtmlAnyMatchTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %");
+                        .containsExactly("0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("match any");
+                        .containsExactly("match any");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly(": VAL2, VAL3");
+                        .containsExactly(": VAL2, VAL3");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+                        .containsExactly("enumField");
     }
 
     @Test
     @Disabled
-    // FIXME broken since leaf metadata refactoring
+    // FIXME AstHtmlRemderer
     void and_combined_anyMatch_success() {
         A = DOOV.alwaysTrue("A");
         result = when(A.and(enumField.anyMatch(VAL1, VAL2, VAL3))).validate().executeOn(model);
@@ -120,20 +120,20 @@ public class HtmlAnyMatchTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %", "100 %");
+                        .containsExactly("100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "match any");
+                        .containsExactly("always true", "match any");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", ": VAL1, VAL2, VAL3");
+                        .containsExactly("A", ": VAL1, VAL2, VAL3");
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and");
+                        .containsExactly("and");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+                        .containsExactly("enumField");
     }
 
     @Test
     @Disabled
-    // FIXME broken since leaf metadata refactoring
+    // FIXME AstHtmlRemderer
     void and_combined_anyMatch_failure() {
         A = DOOV.alwaysTrue("A");
         result = when(A.and(enumField.anyMatch(VAL2, VAL3))).validate().executeOn(model);
@@ -149,15 +149,15 @@ public class HtmlAnyMatchTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %", "0 %");
+                        .containsExactly("100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "match any");
+                        .containsExactly("always true", "match any");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", ": VAL2, VAL3");
+                        .containsExactly("A", ": VAL2, VAL3");
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and");
+                        .containsExactly("and");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+                        .containsExactly("enumField");
     }
 
     @Test
@@ -166,7 +166,7 @@ public class HtmlAnyMatchTest {
     void matchAny_combined_anyMatch_success() {
         A = DOOV.alwaysTrue("A");
         result = when(matchAny(A, enumField.anyMatch(VAL1, VAL2, VAL3))).validate().withShortCircuit(false)
-                .executeOn(model);
+                        .executeOn(model);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -179,20 +179,20 @@ public class HtmlAnyMatchTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %", "100 %", "100 %");
+                        .containsExactly("100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "match any");
+                        .containsExactly("always true", "match any");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", ": VAL1, VAL2, VAL3");
+                        .containsExactly("A", ": VAL1, VAL2, VAL3");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match any");
+                        .containsExactly("match any");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+                        .containsExactly("enumField");
     }
 
     @Test
     @Disabled
-    // FIXME broken since leaf metadata refactoring
+    // FIXME AstHtmlRemderer
     void matchAny_combined_anyMatch_failure() {
         A = DOOV.alwaysFalse("A");
         result = when(matchAny(A, enumField.anyMatch(VAL2, VAL3))).validate().executeOn(model);
@@ -208,15 +208,15 @@ public class HtmlAnyMatchTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %", "0 %", "0 %");
+                        .containsExactly("0 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always false", "match any");
+                        .containsExactly("always false", "match any");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", ": VAL2, VAL3");
+                        .containsExactly("A", ": VAL2, VAL3");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match any");
+                        .containsExactly("match any");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+                        .containsExactly("enumField");
     }
 
     @AfterEach

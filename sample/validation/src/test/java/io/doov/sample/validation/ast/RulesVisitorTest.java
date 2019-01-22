@@ -23,65 +23,70 @@ import java.util.Locale;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.meta.ast.*;
+import io.doov.core.dsl.meta.ast.AstFullVisitor;
+import io.doov.core.dsl.meta.ast.AstHtmlRenderer;
+import io.doov.core.dsl.meta.ast.AstLineVisitor;
+import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
+import io.doov.core.dsl.meta.ast.AstTextVisitor;
 import io.doov.sample.validation.SampleRules;
 
 public class RulesVisitorTest {
 
-    @BeforeAll
-    public static void init() {
-        new SampleRules();
-    }
+  @BeforeAll
+  public static void init() {
+    new SampleRules();
+  }
 
-    @Test
-    public void print_full_syntax_tree() {
-        StringBuilder sb = new StringBuilder();
-        REGISTRY_DEFAULT.stream()
-                        .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> new AstFullVisitor(sb).browse(rule.metadata(), 0));
-        System.out.println(sb.toString());
-    }
+  @Test
+  public void print_full_syntax_tree() {
+    StringBuilder sb = new StringBuilder();
+    REGISTRY_DEFAULT.stream()
+        .peek(rule -> sb.append("--------------------------------").append("\n"))
+        .forEach(rule -> new AstFullVisitor(sb).browse(rule.metadata(), 0));
+    System.out.println(sb.toString());
+  }
 
-    @Test
-    public void print_line_syntax_tree() {
-        StringBuilder sb = new StringBuilder();
-        REGISTRY_DEFAULT.stream()
-                        .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> new AstLineVisitor(sb, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
-        System.out.println(sb.toString());
-    }
+  @Test
+  public void print_line_syntax_tree() {
+    StringBuilder sb = new StringBuilder();
+    REGISTRY_DEFAULT.stream()
+        .peek(rule -> sb.append("--------------------------------").append("\n"))
+        .forEach(rule -> new AstLineVisitor(sb, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
+    System.out.println(sb.toString());
+  }
 
-    @Test
-    public void print_text_syntax_tree() {
-        StringBuilder sb = new StringBuilder();
-        REGISTRY_DEFAULT.stream()
-                        .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> new AstTextVisitor(sb, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
-        System.out.println(sb.toString());
-    }
+  @Test
+  public void print_text_syntax_tree() {
+    StringBuilder sb = new StringBuilder();
+    REGISTRY_DEFAULT.stream()
+        .peek(rule -> sb.append("--------------------------------").append("\n"))
+        .forEach(rule -> new AstTextVisitor(sb, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
+    System.out.println(sb.toString());
+  }
 
-    @Test
-    public void print_markdown_syntax_tree() {
-        StringBuilder sb = new StringBuilder();
-        REGISTRY_DEFAULT.stream()
-                        .peek(rule -> sb.append("--------------------------------").append("\n"))
-                        .forEach(rule -> new AstMarkdownVisitor(sb, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
-        System.out.println(sb.toString());
-    }
+  @Test
+  public void print_markdown_syntax_tree() {
+    StringBuilder sb = new StringBuilder();
+    REGISTRY_DEFAULT.stream()
+        .peek(rule -> sb.append("--------------------------------").append("\n"))
+        .forEach(rule -> new AstMarkdownVisitor(sb, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
+    System.out.println(sb.toString());
+  }
 
-    @Test
-    public void print_html_syntax_tree() {
-        ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        REGISTRY_DEFAULT.stream()
-                        .peek(rule -> {
-                            try {
-                                ops.write("--------------------------------\n".getBytes());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        })
-                        .forEach(rule -> new AstHtmlVisitor(ops, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
-        System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
-    }
+  @Test
+  public void print_html_syntax_tree() {
+    ByteArrayOutputStream ops = new ByteArrayOutputStream();
+    REGISTRY_DEFAULT.stream()
+        .peek(rule ->
+        {
+          try {
+            ops.write("--------------------------------\n".getBytes());
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        })
+        .forEach(rule -> System.out.println(AstHtmlRenderer.toHtml(rule.metadata(), Locale.ENGLISH)));
+    System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
+  }
 
 }

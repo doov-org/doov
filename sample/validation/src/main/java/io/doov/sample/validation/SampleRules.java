@@ -148,11 +148,10 @@ public class SampleRules extends DefaultRuleRegistry {
                             + IOUtils.toString(AstVisitorUtils.class.getResourceAsStream("rules.css"), defaultCharset())
                             + "</style></head><body>", fos, defaultCharset());
             IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());
-            AstHtmlVisitor visitor = new AstHtmlVisitor(fos, BUNDLE, Locale.FRANCE);
             for (ValidationRule r : rules) {
                 IOUtils.write(r.readable(Locale.FRANCE), fos, defaultCharset());
                 IOUtils.write(exclusionBar(r, ExclusionBar.BIG, Locale.FRANCE), fos, defaultCharset());
-                visitor.browse(r.metadata(), 0);
+                new AstHtmlRenderer(Locale.FRANCE, fos, BUNDLE).toHtml(r.metadata());
                 IOUtils.write("<hr/>", fos, defaultCharset());
             }
             IOUtils.write("</div>", fos, defaultCharset());
