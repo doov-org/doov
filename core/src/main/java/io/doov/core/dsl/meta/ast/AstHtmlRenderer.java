@@ -74,7 +74,7 @@ public class AstHtmlRenderer extends HtmlWriter {
     private void binaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (pmd.map(m -> m.type() == BINARY_PREDICATE).orElse(false)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
+            // @see io.doov.core.dsl.meta.ast.HtmlAndTest#and_field_true_true_failure()
             writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
             toHtml(metadata.childAt(0), parents);
             writeBeginSpan(CSS_OPERATOR);
@@ -113,7 +113,7 @@ public class AstHtmlRenderer extends HtmlWriter {
     private void fieldPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(2).findFirst();
         if (pmd.map(m -> m.type() != BINARY_PREDICATE).orElse(true)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
+            // @see io.doov.core.dsl.meta.ast.HtmlAndTest#and_field_true_true_failure()
             writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
         }
         for (Element e : ((LeafMetadata<?>) metadata).elements()) {

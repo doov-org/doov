@@ -13,19 +13,19 @@
 package io.doov.sample.validation.ast;
 
 import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
+import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.toHtml;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Locale.ENGLISH;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Locale;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.meta.ast.AstFullVisitor;
-import io.doov.core.dsl.meta.ast.AstHtmlRenderer;
 import io.doov.core.dsl.meta.ast.AstLineVisitor;
 import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
 import io.doov.core.dsl.meta.ast.AstTextVisitor;
@@ -52,7 +52,7 @@ public class RulesVisitorTest {
     StringBuilder sb = new StringBuilder();
     REGISTRY_DEFAULT.stream()
         .peek(rule -> sb.append("--------------------------------").append("\n"))
-        .forEach(rule -> new AstLineVisitor(sb, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
+        .forEach(rule -> new AstLineVisitor(sb, BUNDLE, ENGLISH).browse(rule.metadata(), 0));
     System.out.println(sb.toString());
   }
 
@@ -61,7 +61,7 @@ public class RulesVisitorTest {
     StringBuilder sb = new StringBuilder();
     REGISTRY_DEFAULT.stream()
         .peek(rule -> sb.append("--------------------------------").append("\n"))
-        .forEach(rule -> new AstTextVisitor(sb, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
+        .forEach(rule -> new AstTextVisitor(sb, BUNDLE, ENGLISH).browse(rule.metadata(), 0));
     System.out.println(sb.toString());
   }
 
@@ -70,12 +70,13 @@ public class RulesVisitorTest {
     StringBuilder sb = new StringBuilder();
     REGISTRY_DEFAULT.stream()
         .peek(rule -> sb.append("--------------------------------").append("\n"))
-        .forEach(rule -> new AstMarkdownVisitor(sb, BUNDLE, Locale.ENGLISH).browse(rule.metadata(), 0));
+        .forEach(rule -> new AstMarkdownVisitor(sb, BUNDLE, ENGLISH).browse(rule.metadata(), 0));
     System.out.println(sb.toString());
   }
 
   @Test
   @Disabled
+  // FIXME AstHtmlRemderer
   public void print_html_syntax_tree() {
     ByteArrayOutputStream ops = new ByteArrayOutputStream();
     REGISTRY_DEFAULT.stream()
@@ -87,8 +88,8 @@ public class RulesVisitorTest {
             throw new RuntimeException(e);
           }
         })
-        .forEach(rule -> System.out.println(AstHtmlRenderer.toHtml(rule.metadata(), Locale.ENGLISH)));
-    System.out.println(new String(ops.toByteArray(), Charset.forName("UTF-8")));
+        .forEach(rule -> System.out.println(toHtml(rule.metadata(), ENGLISH)));
+    System.out.println(new String(ops.toByteArray(), UTF_8));
   }
 
 }
