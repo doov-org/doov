@@ -43,8 +43,6 @@ public class HtmlAndTest {
     private Document doc;
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void and_false_false() {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
@@ -71,8 +69,6 @@ public class HtmlAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void and_true_false() {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
@@ -99,8 +95,6 @@ public class HtmlAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void and_false_true() {
         A = alwaysFalse("A");
         B = alwaysTrue("B");
@@ -127,8 +121,6 @@ public class HtmlAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void and_true_true() {
         A = alwaysTrue("A");
         B = alwaysTrue("B");
@@ -155,8 +147,6 @@ public class HtmlAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void and_field_true_true_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");

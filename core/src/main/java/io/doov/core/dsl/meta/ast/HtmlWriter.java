@@ -8,7 +8,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -19,24 +18,27 @@ import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class HtmlWriter {
-    static final String CSS_CLASS_VALIDATION_RULE = "dsl-validation-rule";
-    static final String CSS_CLASS_VALIDATE = "dsl-token-validate";
-    static final String CSS_CLASS_BINARY = "dsl-token-binary";
-    static final String CSS_CLASS_UNARY = "dsl-token-unary";
-    static final String CSS_CLASS_NARY = "dsl-token-nary";
-    static final String CSS_CLASS_WHEN = "dsl-token-when";
+    static final String CSS_VALIDATION_RULE = "dsl-validation-rule";
+    static final String CSS_VALIDATE = "dsl-token-validate";
+    static final String CSS_BINARY = "dsl-token-binary";
+    static final String CSS_UNARY = "dsl-token-unary";
+    static final String CSS_NARY = "dsl-token-nary";
+    static final String CSS_WHEN = "dsl-token-when";
+    static final String CSS_OPERATOR = "dsl-token-operator";
+    static final String CSS_VALUE = "dsl-token-value";
+    static final String CSS_FIELD = "dsl-token-field";
 
-    static final String CSS_CLASS_LI_LEAF = "dsl-li-leaf";
-    static final String CSS_CLASS_LI_BINARY = "dsl-li-binary";
-    static final String CSS_CLASS_LI_UNARY = "dsl-li-unary";
-    static final String CSS_CLASS_LI_NARY = "dsl-li-nary";
+    static final String CSS_LI_LEAF = "dsl-li-leaf";
+    static final String CSS_LI_BINARY = "dsl-li-binary";
+    static final String CSS_LI_UNARY = "dsl-li-unary";
+    static final String CSS_LI_NARY = "dsl-li-nary";
 
-    static final String CSS_CLASS_UL_WHEN = "dsl-ul-when";
-    static final String CSS_CLASS_UL_BINARY = "dsl-ul-binary";
-    static final String CSS_CLASS_UL_BINARY_CHILD = "dsl-ul-binary-child";
-    static final String CSS_CLASS_UL_UNARY = "dsl-ul-unary";
+    static final String CSS_UL_WHEN = "dsl-ul-when";
+    static final String CSS_UL_BINARY = "dsl-ul-binary";
+    static final String CSS_UL_BINARY_CHILD = "dsl-ul-binary-child";
+    static final String CSS_UL_UNARY = "dsl-ul-unary";
 
-    static final String CSS_CLASS_OL_NARY = "dsl-ol-nary";
+    static final String CSS_OL_NARY = "dsl-ol-nary";
 
     private final Locale locale;
     private final OutputStream os;
@@ -47,17 +49,25 @@ public class HtmlWriter {
         this.os = os;
         this.resources = resources;
     }
+    
+    public Locale getLocale() {
+        return locale;
+    }
 
-    private void write(String value) {
+    protected void write(String value) {
         try {
             os.write(value.getBytes(UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-    protected void writeOperator(Operator operator) {
+    
+    protected void writeFromBundle(Operator operator) {
         write(resources.get(operator, locale));
+    }
+
+    protected void writeFromBundle(String key) {
+        write(resources.get(key, locale));
     }
     
     protected void writeBeginLi(String... classes) {

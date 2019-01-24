@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.meta.ast.AstFullVisitor;
@@ -74,6 +75,7 @@ public class RulesVisitorTest {
   }
 
   @Test
+  @Disabled
   public void print_html_syntax_tree() {
     ByteArrayOutputStream ops = new ByteArrayOutputStream();
     REGISTRY_DEFAULT.stream()
