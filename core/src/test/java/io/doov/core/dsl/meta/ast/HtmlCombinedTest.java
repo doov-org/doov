@@ -89,8 +89,6 @@ public class HtmlCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void reduce_and() {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
@@ -169,8 +167,6 @@ public class HtmlCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void reduce_null() {
         result = when(enumField.isNull()).validate().withShortCircuit(false).executeOn(model);
         doc = documentOf(result);
@@ -193,8 +189,6 @@ public class HtmlCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void matches_regexp() {
         result = when(stringField.matches("^some.*")
                 .or(stringField2.matches("^other.*"))).validate().withShortCircuit(false).executeOn(model);
