@@ -17,6 +17,7 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
@@ -116,7 +117,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
             writeEndUl();
-        } else {
+        } else if (AND_OR.contains(metadata.getOperator())) {
             // FIXME writeBeginUl(CSS_UL_BINARY);
             writeBeginLi(CSS_LI_BINARY);
             toHtml(metadata.childAt(0), parents);
@@ -126,16 +127,24 @@ public class AstHtmlRenderer extends HtmlWriter {
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
             // FIXME writeEndUl();
+        } else {
+            // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
+            writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
+            toHtml(metadata.childAt(0), parents);
+            writeBeginSpan(CSS_OPERATOR);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
+            toHtml(metadata.childAt(1), parents);
         }
     }
 
     private void unaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
         writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
+        toHtml(metadata.childAt(0), parents);
         writeBeginSpan(CSS_OPERATOR);
         writeFromBundle(metadata.getOperator());
         writeEndSpan();
-        toHtml(metadata.childAt(0), parents);
     }
 
     private void leafPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
@@ -165,9 +174,11 @@ public class AstHtmlRenderer extends HtmlWriter {
         final Optional<Metadata> pmd1 = parents.stream().skip(1).findFirst();
         final Optional<Metadata> pmd2 = parents.stream().skip(2).findFirst();
         if (pmd2.map(m -> m.type() != BINARY_PREDICATE).orElse(true)
-                        && pmd1.map(m -> m.type() != UNARY_PREDICATE).orElse(true)) {
+                        && pmd1.map(m -> m.type() != UNARY_PREDICATE).orElse(true)
+                        && pmd1.map(m -> m.type() != BINARY_PREDICATE).orElse(true)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
+            // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
             writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
         }
         for (Element e : ((LeafMetadata<?>) metadata).elements()) {
@@ -205,7 +216,11 @@ public class AstHtmlRenderer extends HtmlWriter {
                 default:
                     throw new IllegalStateException(e.getType().name());
             }
+            if (e.getType() == STRING_VALUE)
+                write(APOS);
             writeFromBundle(e.getReadable().readable());
+            if (e.getType() == STRING_VALUE)
+                write(APOS);
             writeEndSpan();
         }
     }

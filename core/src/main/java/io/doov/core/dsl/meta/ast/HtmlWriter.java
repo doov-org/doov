@@ -31,6 +31,7 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class HtmlWriter {
     static final String SPACE = "&nbsp;";
+    static final String APOS = "&apos;";
     static final String CSS_VALIDATION_RULE = "dsl-validation-rule";
     static final String CSS_VALIDATE = "dsl-token-validate";
     static final String CSS_BINARY = "dsl-token-binary";

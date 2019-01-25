@@ -141,8 +141,6 @@ public class HtmlCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void reduce_list() {
         result = when(iterableField.contains("c")).validate().withShortCircuit(false).executeOn(model);
         doc = documentOf(result);
