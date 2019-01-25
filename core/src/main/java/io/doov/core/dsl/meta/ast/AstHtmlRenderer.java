@@ -15,23 +15,29 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.asList;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
 import io.doov.core.dsl.meta.Element;
 import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class AstHtmlRenderer extends HtmlWriter {
+    private final static List<Operator> AND_OR = asList(and, or);
 
     public static String toHtml(Metadata metadata, Locale locale) {
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
@@ -85,15 +91,29 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void binaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
-        if (pmd.map(m -> m.type() == BINARY_PREDICATE).orElse(false)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlAndTest#and_field_true_true_failure()
+        if (pmd.map(m -> m.type() == BINARY_PREDICATE && !AND_OR.contains(metadata.getOperator())).orElse(false)) {
+            // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
             writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
             toHtml(metadata.childAt(0), parents);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
             toHtml(metadata.childAt(1), parents);
+        } else if (pmd.map(m -> m.type() == BINARY_PREDICATE && AND_OR.contains(metadata.getOperator()))
+                        .orElse(false)) {
+            // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_true_false_complex()
+            writeBeginUl(CSS_UL_BINARY);
+            writeBeginLi(CSS_LI_BINARY);
+            toHtml(metadata.childAt(0), parents);
+            write(SPACE);
+            writeBeginSpan(CSS_BINARY);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
+            toHtml(metadata.childAt(1), parents);
+            writeEndLi();
+            writeEndUl();
         } else {
+            // FIXME writeBeginUl(CSS_UL_BINARY);
             writeBeginLi(CSS_LI_BINARY);
             toHtml(metadata.childAt(0), parents);
             writeBeginSpan(CSS_BINARY);
@@ -101,6 +121,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             writeEndSpan();
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
+            // FIXME writeEndUl();
         }
     }
 
@@ -112,6 +133,7 @@ public class AstHtmlRenderer extends HtmlWriter {
                     writeBeginSpan(CSS_OPERATOR);
                     break;
                 case VALUE:
+                    write(SPACE);
                     writeBeginSpan(CSS_VALUE);
                     break;
                 default:
@@ -125,7 +147,7 @@ public class AstHtmlRenderer extends HtmlWriter {
     private void fieldPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(2).findFirst();
         if (pmd.map(m -> m.type() != BINARY_PREDICATE).orElse(true)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlAndTest#and_field_true_true_failure()
+            // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
             writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
         }
         for (Element e : ((LeafMetadata<?>) metadata).elements()) {
