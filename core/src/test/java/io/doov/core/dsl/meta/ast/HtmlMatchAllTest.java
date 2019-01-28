@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,9 +29,12 @@ import java.time.LocalDate;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.field.types.*;
+import io.doov.core.dsl.field.types.IntegerFieldInfo;
+import io.doov.core.dsl.field.types.LocalDateFieldInfo;
+import io.doov.core.dsl.field.types.StringFieldInfo;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.runtime.GenericModel;
@@ -43,8 +46,6 @@ public class HtmlMatchAllTest {
     private Document doc;
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void matchAll_true_true_true() {
         A = alwaysTrue("A");
         B = alwaysTrue("B");
@@ -62,18 +63,16 @@ public class HtmlMatchAllTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %", "100 %", "100 %", "100 %");
+                        .containsExactly("100 %", "100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always true", "always true");
+                        .containsExactly("always true", "always true", "always true");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", "B", "C");
+                        .containsExactly("A", "B", "C");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match all");
+                        .containsExactly("match all");
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void matchAll_true_true_false() {
         A = alwaysTrue("A");
         B = alwaysTrue("B");
@@ -91,18 +90,16 @@ public class HtmlMatchAllTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %", "100 %", "100 %", "0 %");
+                        .containsExactly("0 %", "100 %", "100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always true", "always false");
+                        .containsExactly("always true", "always true", "always false");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", "B", "C");
+                        .containsExactly("A", "B", "C");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match all");
+                        .containsExactly("match all");
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void matchAll_true_false_false() {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
@@ -120,18 +117,16 @@ public class HtmlMatchAllTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %", "100 %", "0 %", "0 %");
+                        .containsExactly("0 %", "100 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always false", "always false");
+                        .containsExactly("always true", "always false", "always false");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", "B", "C");
+                        .containsExactly("A", "B", "C");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match all");
+                        .containsExactly("match all");
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void matchAll_false_false_false() {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
@@ -149,18 +144,16 @@ public class HtmlMatchAllTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %", "0 %", "0 %", "0 %");
+                        .containsExactly("0 %", "0 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always false", "always false", "always false");
+                        .containsExactly("always false", "always false", "always false");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", "B", "C");
+                        .containsExactly("A", "B", "C");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match all");
+                        .containsExactly("match all");
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void matchAll_field_false_false_false_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");
@@ -174,9 +167,9 @@ public class HtmlMatchAllTest {
 
         assertFalse(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(3);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(3);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
@@ -184,9 +177,7 @@ public class HtmlMatchAllTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "0 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("today");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">", "after", "matches");
+                .containsExactly(">", "after", "today", "matches");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("zero", "yesterday", "string field");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)

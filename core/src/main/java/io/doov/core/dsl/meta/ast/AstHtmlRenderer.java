@@ -77,12 +77,31 @@ public class AstHtmlRenderer extends HtmlWriter {
                 case UNARY_PREDICATE:
                     unaryPredicate(metadata, parents);
                     break;
+                case NARY_PREDICATE:
+                    naryPredicate(metadata, parents);
+                    break;
                 default:
                     throw new IllegalStateException(metadata.type().name());
             }
         } finally {
             parents.pop();
         }
+    }
+
+    private void naryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writeBeginLi(CSS_LI_NARY);
+        writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
+        writeBeginSpan(CSS_NARY);
+        writeFromBundle(metadata.getOperator());
+        writeEndSpan();
+        writeBeginOl(CSS_OL_NARY);
+        metadata.children().forEach(m -> {
+            writeBeginLi(CSS_LI_LEAF);
+            toHtml(m, parents);
+            writeEndLi();
+        });
+        writeEndOl();
+        writeEndLi();
     }
 
     private void rule(Metadata metadata, ArrayDeque<Metadata> parents) {

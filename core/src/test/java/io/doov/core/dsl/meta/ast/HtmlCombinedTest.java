@@ -59,8 +59,6 @@ public class HtmlCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void reduce_matchAll() {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
@@ -115,8 +113,6 @@ public class HtmlCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void reduce_zeroInt() {
         result = when(zeroField.notEq(0)).validate().withShortCircuit(false).executeOn(model);
         doc = documentOf(result);
