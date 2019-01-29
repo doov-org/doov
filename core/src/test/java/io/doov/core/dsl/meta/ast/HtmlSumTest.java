@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,8 +40,6 @@ public class HtmlSumTest {
     private Document doc;
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRenderer
     void sum_1_2_greaterThan_1() {
         A = model.intField(1, "A");
         B = model.intField(1, "B");
@@ -58,21 +56,19 @@ public class HtmlSumTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).isEmpty();
+                        .containsExactly("100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly(">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("1");
+                        .containsExactly("1");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("A", "B");
+                        .containsExactly("A", "B");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("sum");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">");
+                        .containsExactly("sum");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
+
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRenderer
     void sum_1_2_greaterThan_3() {
         A = model.intField(1, "A");
         B = model.intField(1, "B");
@@ -89,21 +85,19 @@ public class HtmlSumTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).isEmpty();
+                        .containsExactly("0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly(">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("3");
+                        .containsExactly("3");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("A", "B");
+                        .containsExactly("A", "B");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("sum");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">");
+                        .containsExactly("sum");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
+
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRenderer
     void sum_sum_1_sum_2_greaterThan_3() {
         A = model.intField(1, "A");
         B = model.intField(1, "B");
@@ -120,16 +114,16 @@ public class HtmlSumTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).isEmpty();
+                        .containsExactly("0 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly(">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("3");
+                        .containsExactly("3");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("A", "B");
+                        .containsExactly("A", "B");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("sum", "sum", "sum");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly(">");
+                        .containsExactly("sum", "sum", "sum");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
+
     }
 
     @AfterEach
