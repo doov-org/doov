@@ -122,10 +122,6 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void binaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
-        if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlCountTest.count_field_true_true_failure()
-            writeBeginLi(CSS_LI_LEAF);
-        }
         if (pmd.map(m -> m.type() == BINARY_PREDICATE && !AND_OR.contains(metadata.getOperator())).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
             writeExclusionBar((PredicateMetadata) metadata, SMALL);
@@ -160,6 +156,17 @@ public class AstHtmlRenderer extends HtmlWriter {
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
             // FIXME writeEndUl();
+        } else if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
+            // @see io.doov.core.dsl.meta.ast.HtmlCountTest.count_field_true_true_failure()
+            writeBeginLi(CSS_LI_BINARY);
+            writeExclusionBar((PredicateMetadata) metadata, SMALL);
+            toHtml(metadata.childAt(0), parents);
+            writeBeginSpan(CSS_OPERATOR);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
+            write(SPACE);
+            toHtml(metadata.childAt(1), parents);
+            writeEndLi();
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
             writeExclusionBar((PredicateMetadata) metadata, SMALL);
@@ -170,10 +177,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             write(SPACE);
             toHtml(metadata.childAt(1), parents);
         }
-        if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlCountTest.count_field_true_true_failure()
-            writeEndLi();
-        }
+
     }
 
     private void unaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
