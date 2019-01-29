@@ -63,8 +63,6 @@ public class HtmlAnyMatchTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void anyMatch_success() {
         result = when(enumField.anyMatch(VAL1, VAL2, VAL3)).validate().executeOn(model);
         doc = documentOf(result);
@@ -89,8 +87,6 @@ public class HtmlAnyMatchTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void anyMatch_failure() {
         result = when(enumField.anyMatch(VAL2, VAL3)).validate().executeOn(model);
         doc = documentOf(result);
@@ -115,8 +111,6 @@ public class HtmlAnyMatchTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void and_combined_anyMatch_success() {
         A = DOOV.alwaysTrue("A");
         result = when(A.and(enumField.anyMatch(VAL1, VAL2, VAL3))).validate().executeOn(model);
@@ -144,8 +138,6 @@ public class HtmlAnyMatchTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void and_combined_anyMatch_failure() {
         A = DOOV.alwaysTrue("A");
         result = when(A.and(enumField.anyMatch(VAL2, VAL3))).validate().executeOn(model);
@@ -173,8 +165,6 @@ public class HtmlAnyMatchTest {
     }
 
     @Test
-    @Disabled
-    // FIXME broken since leaf metadata refactoring
     void matchAny_combined_anyMatch_success() {
         A = DOOV.alwaysTrue("A");
         result = when(matchAny(A, enumField.anyMatch(VAL1, VAL2, VAL3))).validate().withShortCircuit(false)
@@ -183,9 +173,9 @@ public class HtmlAnyMatchTest {
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(1);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
@@ -203,8 +193,6 @@ public class HtmlAnyMatchTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void matchAny_combined_anyMatch_failure() {
         A = DOOV.alwaysFalse("A");
         result = when(matchAny(A, enumField.anyMatch(VAL2, VAL3))).validate().executeOn(model);
@@ -212,9 +200,9 @@ public class HtmlAnyMatchTest {
 
         assertFalse(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(1);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);

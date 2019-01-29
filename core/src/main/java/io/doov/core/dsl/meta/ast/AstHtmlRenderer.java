@@ -28,6 +28,7 @@ import static io.doov.core.dsl.meta.ast.ExclusionBar.SMALL;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
+import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -36,7 +37,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import io.doov.core.dsl.meta.DefaultOperator;
 import io.doov.core.dsl.meta.Element;
 import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
@@ -87,12 +87,23 @@ public class AstHtmlRenderer extends HtmlWriter {
                 case NARY_PREDICATE:
                     naryPredicate(metadata, parents);
                     break;
+                case FIELD_PREDICATE_MATCH_ANY:
+                    fieldMatchAny(metadata, parents);
+                    break;
                 default:
                     throw new IllegalStateException(metadata.type().name());
             }
         } finally {
             parents.pop();
         }
+    }
+
+    private void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writeBeginSpan(CSS_VALUE);
+        for (Element e : ((LeafMetadata<?>) metadata).elements()) {
+            writeFromBundle(escapeHtml4(e.getReadable().readable()));
+        }
+        writeEndSpan();
     }
 
     private void naryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
@@ -211,7 +222,7 @@ public class AstHtmlRenderer extends HtmlWriter {
                 default:
                     throw new IllegalStateException(e.getType().name());
             }
-            writeFromBundle(e.getReadable().readable());
+            writeFromBundle(escapeHtml4(e.getReadable().readable()));
             writeEndSpan();
         }
         if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
@@ -251,7 +262,7 @@ public class AstHtmlRenderer extends HtmlWriter {
                 default:
                     throw new IllegalStateException(e.getType().name());
             }
-            writeFromBundle(e.getReadable().readable());
+            writeFromBundle(escapeHtml4(e.getReadable().readable()));
             writeEndSpan();
             if (pmd1.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
                 // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
@@ -278,7 +289,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             }
             if (e.getType() == STRING_VALUE)
                 write(APOS);
-            writeFromBundle(e.getReadable().readable());
+            writeFromBundle(escapeHtml4(e.getReadable().readable()));
             if (e.getType() == STRING_VALUE)
                 write(APOS);
             writeEndSpan();
