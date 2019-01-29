@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,10 +16,13 @@
 package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.match_all;
+import static io.doov.core.dsl.meta.DefaultOperator.match_any;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
+import static io.doov.core.dsl.meta.ast.ExclusionBar.SMALL;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
@@ -40,6 +43,7 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class AstHtmlRenderer extends HtmlWriter {
     private final static List<Operator> AND_OR = asList(and, or);
+    private final static List<Operator> MATCH_ALL_ANY = asList(match_all, match_any);
 
     public static String toHtml(Metadata metadata, Locale locale) {
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
@@ -90,11 +94,14 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void naryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         writeBeginLi(CSS_LI_NARY);
-        writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
+        if (MATCH_ALL_ANY.contains(metadata.getOperator())) {
+            writeExclusionBar((PredicateMetadata) metadata, SMALL);
+        }
         writeBeginSpan(CSS_NARY);
         writeFromBundle(metadata.getOperator());
         writeEndSpan();
         writeBeginOl(CSS_OL_NARY);
+        write(SPACE);
         metadata.children().forEach(m -> {
             writeBeginLi(CSS_LI_LEAF);
             toHtml(m, parents);
@@ -109,6 +116,7 @@ public class AstHtmlRenderer extends HtmlWriter {
         writeBeginSpan(CSS_WHEN);
         writeFromBundle(metadata.getOperator());
         writeEndSpan();
+        write(SPACE);
         metadata.children().forEach(m -> toHtml(m, parents));
         writeEndDiv();
     }
@@ -117,11 +125,12 @@ public class AstHtmlRenderer extends HtmlWriter {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (pmd.map(m -> m.type() == BINARY_PREDICATE && !AND_OR.contains(metadata.getOperator())).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
-            writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
+            writeExclusionBar((PredicateMetadata) metadata, SMALL);
             toHtml(metadata.childAt(0), parents);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
+            write(SPACE);
             toHtml(metadata.childAt(1), parents);
         } else if (pmd.map(m -> m.type() == BINARY_PREDICATE && AND_OR.contains(metadata.getOperator()))
                         .orElse(false)) {
@@ -133,6 +142,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             writeBeginSpan(CSS_BINARY);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
+            write(SPACE);
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
             writeEndUl();
@@ -143,23 +153,25 @@ public class AstHtmlRenderer extends HtmlWriter {
             writeBeginSpan(CSS_BINARY);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
+            write(SPACE);
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
             // FIXME writeEndUl();
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
-            writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
+            writeExclusionBar((PredicateMetadata) metadata, SMALL);
             toHtml(metadata.childAt(0), parents);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
+            write(SPACE);
             toHtml(metadata.childAt(1), parents);
         }
     }
 
     private void unaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
-        writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
+        writeExclusionBar((PredicateMetadata) metadata, SMALL);
         toHtml(metadata.childAt(0), parents);
         writeBeginSpan(CSS_OPERATOR);
         writeFromBundle(metadata.getOperator());
@@ -170,7 +182,7 @@ public class AstHtmlRenderer extends HtmlWriter {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (pmd.map(m -> m.type() != UNARY_PREDICATE).orElse(true)) {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
-            writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
+            writeExclusionBar((PredicateMetadata) metadata, SMALL);
         }
         for (Element e : ((LeafMetadata<?>) metadata).elements()) {
             switch (e.getType()) {
@@ -198,7 +210,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
-            writeExclusionBar((PredicateMetadata) metadata, ExclusionBar.SMALL);
+            writeExclusionBar((PredicateMetadata) metadata, SMALL);
         }
         for (Element e : ((LeafMetadata<?>) metadata).elements()) {
             switch (e.getType()) {
