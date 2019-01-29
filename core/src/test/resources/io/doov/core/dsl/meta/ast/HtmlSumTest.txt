@@ -1,0 +1,38 @@
+<!-- sum [A, B] > 1  -->
+<html>
+  <head></head>
+  <body>
+    <div class="percentage-wrapper-big">
+      <div class="percentage-value">
+        100 %
+      </div>
+      <div class="exclusion-border-big">
+        <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+      </div>
+    </div>
+    <li class="dsl-li-nary"><span class="dsl-token-nary">sum</span> 
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf"><span class="dsl-token-field">A</span> </li>
+        <li class="dsl-li-leaf"><span class="dsl-token-field">B</span> </li>
+      </ol><span class="dsl-token-binary">&gt;</span> <span class="dsl-token-value">1</span> </li>
+  </body>
+</html>
+<!-- sum [A, B] > 3  -->
+<html>
+  <head></head>
+  <body>
+    <div class="percentage-wrapper-big">
+      <div class="percentage-value">
+        0 %
+      </div>
+      <div class="exclusion-border-big">
+        <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+      </div>
+    </div>
+    <li class="dsl-li-nary"><span class="dsl-token-nary">sum</span> 
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf"><span class="dsl-token-field">A</span> </li>
+        <li class="dsl-li-leaf"><span class="dsl-token-field">B</span> </li>
+      </ol><span class="dsl-token-binary">&gt;</span> <span class="dsl-token-value">3</span> </li>
+  </body>
+</html>
