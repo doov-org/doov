@@ -22,7 +22,6 @@ import static io.doov.core.dsl.meta.DefaultOperator.match_any;
 import static io.doov.core.dsl.meta.DefaultOperator.match_none;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
-import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.ExclusionBar.SMALL;
 import static java.lang.Math.floor;
