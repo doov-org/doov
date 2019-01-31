@@ -1,9 +1,13 @@
 package io.doov.core.dsl.mapping.builder;
 
+import java.util.Optional;
+import java.util.function.Function;
+
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
+import io.doov.core.dsl.mapping.converter.DefaultTypeConverter;
 
 /**
  * First step for creating mapping rule.
@@ -31,6 +35,21 @@ public class SimpleStepMap<I> {
      * @return the step mapping
      */
     public <O> SimpleStepMap<O> using(TypeConverter<I, O> typeConverter) {
+        return new SimpleStepMap<>(new ConverterInput<>(input, typeConverter));
+    }
+
+    /**
+     * Return the step mapping
+     *
+     * @param conversionOp conversion operation
+     * @param <O>           out type
+     * @return the step mapping
+     */
+    public <O> SimpleStepMap<O> using(Function<I, O> conversionOp) {
+
+        String repr = conversionOp.getClass().getSimpleName();
+
+        TypeConverter<I,O> typeConverter = TypeConverters.converter(conversionOp,repr);
         return new SimpleStepMap<>(new ConverterInput<>(input, typeConverter));
     }
 
