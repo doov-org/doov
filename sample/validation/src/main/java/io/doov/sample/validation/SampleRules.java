@@ -135,7 +135,7 @@ public class SampleRules extends DefaultRuleRegistry {
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
 
-    public static final ValidationRule RULE_COMPANY_NOT_LESFURETS = DOOV
+    public static final ValidationRule RULE_COMPANY_NOT_BLABLA = DOOV
                     .when(accountCompany.eq(BLABLACAR).not())
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);

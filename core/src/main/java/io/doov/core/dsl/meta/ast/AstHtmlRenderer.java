@@ -16,10 +16,12 @@
 package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
@@ -128,6 +130,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
             writeExclusionBar(metadata, parents);
             toHtml(metadata.childAt(0), parents);
+            write(SPACE);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
@@ -151,6 +154,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             // FIXME writeBeginUl(CSS_UL_BINARY);
             writeBeginLi(CSS_LI_BINARY);
             toHtml(metadata.childAt(0), parents);
+            write(SPACE);
             writeBeginSpan(CSS_BINARY);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
@@ -163,16 +167,30 @@ public class AstHtmlRenderer extends HtmlWriter {
             writeBeginLi(CSS_LI_BINARY);
             writeExclusionBar(metadata, parents);
             toHtml(metadata.childAt(0), parents);
+            write(SPACE);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
             write(SPACE);
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
+        } else if (pmd.map(m -> m.type() == UNARY_PREDICATE).orElse(false)) {
+            // @see io.doov.core.dsl.meta.ast.HtmlCountTest.count_field_true_true_failure()
+            writeBeginUl(CSS_UL_UNARY);
+            writeExclusionBar(metadata, parents);
+            toHtml(metadata.childAt(0), parents);
+            write(SPACE);
+            writeBeginSpan(CSS_OPERATOR);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
+            write(SPACE);
+            toHtml(metadata.childAt(1), parents);
+            writeEndUl();
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
             writeExclusionBar(metadata, parents);
             toHtml(metadata.childAt(0), parents);
+            write(SPACE);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
@@ -183,12 +201,21 @@ public class AstHtmlRenderer extends HtmlWriter {
     }
 
     private void unaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
-        // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
-        writeExclusionBar(metadata, parents);
-        toHtml(metadata.childAt(0), parents);
-        writeBeginSpan(CSS_OPERATOR);
-        writeFromBundle(metadata.getOperator());
-        writeEndSpan();
+        if (metadata.getOperator() == not) {
+            writeBeginLi(CSS_LI_UNARY);
+            writeBeginSpan(CSS_OPERATOR);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
+            toHtml(metadata.childAt(0), parents);
+            writeEndLi();
+        } else {
+            // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
+            writeExclusionBar(metadata, parents);
+            toHtml(metadata.childAt(0), parents);
+            writeBeginSpan(CSS_OPERATOR);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
+        }
     }
 
     private void leafPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {

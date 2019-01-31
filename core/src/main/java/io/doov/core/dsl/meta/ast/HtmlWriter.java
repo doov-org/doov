@@ -20,9 +20,9 @@ import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.match_all;
 import static io.doov.core.dsl.meta.DefaultOperator.match_any;
 import static io.doov.core.dsl.meta.DefaultOperator.match_none;
-import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.ExclusionBar.SMALL;
 import static java.lang.Math.floor;
@@ -142,8 +142,9 @@ public class HtmlWriter {
         write(endSpan());
     }
 
+    // don't add the 'not' operator, it will add a gauge for the not & the inner predicate
     private static final List<Operator> OP_BOOLEAN_PARAMS = asList(and, or, match_all, match_any, match_none, count,
-            not, when);
+            when);
 
     protected void writeExclusionBar(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
