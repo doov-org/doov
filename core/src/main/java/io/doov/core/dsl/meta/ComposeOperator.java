@@ -33,4 +33,9 @@ public class ComposeOperator implements Operator {
     public String name() {
         return operator.name();
     }
+
+    @Override
+    public ReturnType returnType() {
+        return ReturnType.OTHER;
+    }
 }

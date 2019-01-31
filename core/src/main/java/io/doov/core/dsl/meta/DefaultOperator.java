@@ -1,66 +1,67 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.core.dsl.meta;
+
+import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
+import static io.doov.core.dsl.meta.ReturnType.OTHER;
 
 public enum DefaultOperator implements Operator {
     no_operator("no operator"), //
     rule("rule"), //
     validate("validate"), //
     empty("empty"), //
-    and("and"), //
-    or("or"), //
-    match_any("match any"), //
-    match_all("match all"), //
-    match_none("match none"), //
+    and("and", BOOLEAN), //
+    or("or", BOOLEAN), //
+    match_any("match any", BOOLEAN), //
+    match_all("match all", BOOLEAN), //
+    match_none("match none", BOOLEAN), //
     count("count"), //
     sum("sum"), //
     min("min"), //
-    not("not"), //
-    always_true("always true"), //
-    always_false("always false"), //
+    not("not", BOOLEAN), //
+    always_true("always true", BOOLEAN), //
+    always_false("always false", BOOLEAN), //
     times("times"), //
     when("when"), //
-    equals("="), //
-    not_equals("!="), //
-    is_null("is null"), //
-    is_not_null("is not null"), //
+    equals("=", BOOLEAN), //
+    not_equals("!=", BOOLEAN), //
+    is_null("is null", BOOLEAN), //
+    is_not_null("is not null", BOOLEAN), //
     as_a_number("as a number"), //
     as_string("as a string"), //
     as("as"), //
     with("with"), //
     minus("minus"), //
     plus("plus"), //
-    after("after"), //
-    after_or_equals("after or equals"), //
+    after("after", BOOLEAN), //
+    after_or_equals("after or equals", BOOLEAN), //
     age_at("age at"), //
-    before("before"), //
-    before_or_equals("before or equals"), //
-    matches("matches"), //
-    contains("contains"), //
-    starts_with("starts with"), //
-    ends_with("ends with"), //
-    greater_than(">"), greater_or_equals(">="), //
-    is("is"), //
-    lesser_than("<"), //
-    lesser_or_equals("<="), //
-    has_not_size("has not size"), //
-    has_size("has size"), //
-    is_empty("is empty"), //
-    is_not_empty("is not empty"), //
-    length_is("length is"), //
+    before("before", BOOLEAN), //
+    before_or_equals("before or equals", BOOLEAN), //
+    matches("matches", BOOLEAN), //
+    contains("contains", BOOLEAN), //
+    starts_with("starts with", BOOLEAN), //
+    ends_with("ends with", BOOLEAN), //
+    greater_than(">", BOOLEAN), //
+    greater_or_equals(">=", BOOLEAN), //
+    is("is", BOOLEAN), //
+    lesser_than("<", BOOLEAN), //
+    lesser_or_equals("<=", BOOLEAN), //
+    has_not_size("has not size", BOOLEAN), //
+    has_size("has size", BOOLEAN), //
+    is_empty("is empty", BOOLEAN), //
+    is_not_empty("is not empty", BOOLEAN), //
+    length_is("length is", BOOLEAN), //
     lambda("-function-"), //
 
     // TemporalAdjuster
@@ -79,9 +80,20 @@ public enum DefaultOperator implements Operator {
     last_day_of_year("last day of year");
 
     private final String readable;
+    private final ReturnType returnType;
 
     DefaultOperator(String readable) {
+        this(readable, OTHER);
+    }
+
+    DefaultOperator(String readable, ReturnType returnType) {
         this.readable = readable;
+        this.returnType = returnType;
+    }
+
+    @Override
+    public ReturnType returnType() {
+        return returnType;
     }
 
     @Override

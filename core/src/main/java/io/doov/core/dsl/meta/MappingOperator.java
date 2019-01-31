@@ -15,6 +15,8 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.ReturnType.OTHER;
+
 public enum MappingOperator implements Operator {
     // other
     fields("fields"),
@@ -37,5 +39,10 @@ public enum MappingOperator implements Operator {
     @Override
     public String readable() {
         return readable;
+    }
+
+    @Override
+    public ReturnType returnType() {
+        return OTHER;
     }
 }
