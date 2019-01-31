@@ -15,11 +15,21 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
+import static io.doov.core.dsl.meta.DefaultOperator.all_match_values;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.any_match_values;
+import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.equals;
-import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.DefaultOperator.lambda;
+import static io.doov.core.dsl.meta.DefaultOperator.none_match_values;
+import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.MetadataType.*;
-import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.*;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
+import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.readableMetadata;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueListMetadata;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
 
 import java.util.Collection;
 import java.util.Deque;
@@ -32,7 +42,11 @@ import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.ReduceType;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.EmptyMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.Operator;
 
 public class BinaryPredicateMetadata extends BinaryMetadata implements PredicateMetadata {
     private final AtomicInteger evalTrue = new AtomicInteger();
@@ -68,8 +82,8 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
         return new BinaryPredicateMetadata(left, or, right);
     }
 
-    public static BinaryPredicateMetadata matchNoneMetadata(Metadata metadata, Collection<?> values) {
-        return new BinaryPredicateMetadata(metadata, match_none, valueListMetadata(values));
+    public static BinaryPredicateMetadata noneMatchMetadata(Metadata metadata, Collection<?> values) {
+        return new BinaryPredicateMetadata(metadata, none_match_values, valueListMetadata(values));
     }
 
     public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, Object value) {
@@ -100,24 +114,25 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
         return new BinaryPredicateMetadata(metadata, not_equals, readableMetadata(value));
     }
 
-    public static BinaryPredicateMetadata matchAnyMetadata(Metadata metadata) {
-        return new BinaryPredicateMetadata(metadata, match_any, anyMatchMetadata(metadata));
+    public static BinaryPredicateMetadata anyMatchMetadata(Metadata metadata) {
+        return new BinaryPredicateMetadata(metadata, any_match_values,
+                ValuePredicateMetadata.anyMatchMetadata(metadata));
     }
 
-    public static BinaryPredicateMetadata matchAnyMetadata(Metadata metadata, Collection<?> values) {
-        return new BinaryPredicateMetadata(metadata, match_any, anyMatchMetadata(values));
+    public static BinaryPredicateMetadata anyMatchMetadata(Metadata metadata, Collection<?> values) {
+        return new BinaryPredicateMetadata(metadata, any_match_values, ValuePredicateMetadata.anyMatchMetadata(values));
     }
 
-    public static BinaryPredicateMetadata matchAllMetadata(Metadata metadata) {
-        return new BinaryPredicateMetadata(metadata, match_all, readableMetadata(lambda));
+    public static BinaryPredicateMetadata allMatchMetadata(Metadata metadata) {
+        return new BinaryPredicateMetadata(metadata, all_match_values, readableMetadata(lambda));
     }
 
-    public static BinaryPredicateMetadata matchAllMetadata(Metadata metadata, Collection<?> values) {
-        return new BinaryPredicateMetadata(metadata, match_all, valueListMetadata(values));
+    public static BinaryPredicateMetadata allMatchMetadata(Metadata metadata, Collection<?> values) {
+        return new BinaryPredicateMetadata(metadata, all_match_values, valueListMetadata(values));
     }
 
     public static BinaryPredicateMetadata matchNoneMetadata(Metadata metadata) {
-        return new BinaryPredicateMetadata(metadata, match_none, readableMetadata(lambda));
+        return new BinaryPredicateMetadata(metadata, none_match_values, readableMetadata(lambda));
     }
 
     @Override
@@ -147,18 +162,16 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
             }
         } else if (getLeft().type() == NARY_PREDICATE && ((NaryPredicateMetadata) getLeft()).getOperator() == count) {
             return getLeft().reduce(context, type);
-        } else if (getOperator() == match_any) {
+        } else if (getOperator() == any_match_values) {
             if (getRight().type() == FIELD_PREDICATE_MATCH_ANY) {
                 FieldId fieldId = left().filter(m -> m.type() == FIELD_PREDICATE).findFirst()
-                        .map(m -> ((LeafMetadata<?>) m).elements())
-                        .map(Deque::getFirst)
-                        .map(e -> (DslField<?>) e.getReadable())
-                        .map(DslField::id)
-                        .orElse(null);
+                        .map(m -> ((LeafMetadata<?>) m).elements()).map(Deque::getFirst)
+                        .map(e -> (DslField<?>) e.getReadable()).map(DslField::id).orElse(null);
                 return new BinaryPredicateMetadata(getLeft().reduce(context, type), equals,
                         ValuePredicateMetadata.valueMetadata(context.getEvalValue(fieldId)));
             }
         }
-        return new BinaryPredicateMetadata(getLeft().reduce(context, type), getOperator(), getRight().reduce(context, type));
+        return new BinaryPredicateMetadata(getLeft().reduce(context, type), getOperator(),
+                getRight().reduce(context, type));
     }
 }

@@ -143,7 +143,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition anyMatch(Collection<T> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchAnyMetadata(metadata, values), function,
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.anyMatchMetadata(metadata, values), function,
                 value -> values.stream().anyMatch(value::equals));
     }
 
@@ -154,7 +154,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition anyMatch(List<Predicate<T>> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchAnyMetadata(metadata), function,
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.anyMatchMetadata(metadata), function,
                 value -> values.stream().anyMatch(v -> v.test(value)));
     }
 
@@ -166,7 +166,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     @SafeVarargs
     public final StepCondition allMatch(T... values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchAllMetadata(metadata, asList(values)), function,
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata, asList(values)), function,
                 value -> Arrays.stream(values).allMatch(value::equals));
     }
 
@@ -177,7 +177,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition allMatch(Collection<T> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchAllMetadata(metadata, values), function,
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata, values), function,
                 value -> values.stream().allMatch(value::equals));
     }
 
@@ -188,7 +188,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition allMatch(List<Predicate<T>> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchAllMetadata(metadata), function,
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata), function,
                 value -> values.stream().allMatch(v -> v.test(value)));
     }
 
@@ -200,7 +200,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     @SafeVarargs
     public final StepCondition noneMatch(T... values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchNoneMetadata(metadata, asList(values)), function,
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.noneMatchMetadata(metadata, asList(values)), function,
                 value -> Arrays.stream(values).noneMatch(value::equals));
     }
 
@@ -211,7 +211,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition noneMatch(Collection<T> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchNoneMetadata(metadata, values), function,
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.noneMatchMetadata(metadata, values), function,
                 value -> values.stream().noneMatch(value::equals));
     }
 

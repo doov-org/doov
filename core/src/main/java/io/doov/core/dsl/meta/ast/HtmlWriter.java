@@ -15,13 +15,27 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.count;
+import static io.doov.core.dsl.meta.DefaultOperator.match_all;
+import static io.doov.core.dsl.meta.DefaultOperator.match_any;
+import static io.doov.core.dsl.meta.DefaultOperator.match_none;
+import static io.doov.core.dsl.meta.DefaultOperator.not;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
+import static io.doov.core.dsl.meta.ast.ExclusionBar.SMALL;
 import static java.lang.Math.floor;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.asList;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.NumberFormat;
+import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Metadata;
@@ -63,7 +77,7 @@ public class HtmlWriter {
         this.os = os;
         this.resources = resources;
     }
-    
+
     public Locale getLocale() {
         return locale;
     }
@@ -75,7 +89,7 @@ public class HtmlWriter {
             throw new RuntimeException(e);
         }
     }
-    
+
     protected void writeFromBundle(Operator operator) {
         write(resources.get(operator, locale));
     }
@@ -83,7 +97,7 @@ public class HtmlWriter {
     protected void writeFromBundle(String key) {
         write(resources.get(key, locale));
     }
-    
+
     protected void writeBeginLi(String... classes) {
         write(beginLi(classes));
     }
@@ -128,6 +142,18 @@ public class HtmlWriter {
         write(endSpan());
     }
 
+    private static final List<Operator> OP_BOOLEAN_PARAMS = asList(and, or, match_all, match_any, match_none, count,
+            not, when);
+
+    protected void writeExclusionBar(Metadata metadata, ArrayDeque<Metadata> parents) {
+        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
+        if (metadata.getOperator().returnType() == BOOLEAN
+                || pmd.map(m -> OP_BOOLEAN_PARAMS.contains(m.getOperator())).orElse(false)) {
+            // LEAF_PREDICATE don't implements operator :-(
+            writeExclusionBar((PredicateMetadata) metadata, SMALL);
+        }
+    }
+
     protected void writeExclusionBar(PredicateMetadata metadata, ExclusionBar cssClass) {
         write(exclusionBar(metadata, cssClass, locale));
     }
@@ -150,7 +176,7 @@ public class HtmlWriter {
 
     static String beginElementWithStyle(String elementType, String style, String... classes) {
         return "<" + elementType + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
-                        + (style != null ? " style='" + style + "'" : "") + ">";
+                + (style != null ? " style='" + style + "'" : "") + ">";
     }
 
     static String endElement(String elementType) {
@@ -213,16 +239,16 @@ public class HtmlWriter {
 
     static String formatExclusionBar(ExclusionBar cssClass) {
         return beginDiv(cssClass.getWrapperClass()) + beginDiv("percentage-value") + " n/a" + endDiv()
-                        + beginDiv(cssClass.getBorderClass())
-                        + beginDivWithStyle("width:0%;", cssClass.getFillingClass()) + endDiv() + endDiv() + endDiv();
+                + beginDiv(cssClass.getBorderClass()) + beginDivWithStyle("width:0%;", cssClass.getFillingClass())
+                + endDiv() + endDiv() + endDiv();
     }
 
     static String formatExclusionBar(ExclusionBar cssClass, double percentage, Locale locale) {
         return beginDiv(cssClass.getWrapperClass()) + beginDiv("percentage-value")
-                        + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv()
-                        + beginDiv(cssClass.getBorderClass())
-                        + beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv()
-                        + endDiv() + endDiv();
+                + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv()
+                + beginDiv(cssClass.getBorderClass())
+                + beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv() + endDiv()
+                + endDiv();
     }
 
     public static String exclusionBar(ValidationRule rule, ExclusionBar cssClass, Locale locale) {

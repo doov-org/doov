@@ -25,6 +25,9 @@ public enum DefaultOperator implements Operator {
     match_any("match any", BOOLEAN), //
     match_all("match all", BOOLEAN), //
     match_none("match none", BOOLEAN), //
+    any_match_values("match any", BOOLEAN), //
+    all_match_values("match all", BOOLEAN), //
+    none_match_values("match none", BOOLEAN), //
     count("count"), //
     sum("sum"), //
     min("min"), //
@@ -61,7 +64,7 @@ public enum DefaultOperator implements Operator {
     has_size("has size", BOOLEAN), //
     is_empty("is empty", BOOLEAN), //
     is_not_empty("is not empty", BOOLEAN), //
-    length_is("length is", BOOLEAN), //
+    length_is("length is"), //
     lambda("-function-"), //
 
     // TemporalAdjuster

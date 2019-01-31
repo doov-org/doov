@@ -16,15 +16,10 @@
 package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.match_all;
-import static io.doov.core.dsl.meta.DefaultOperator.match_any;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
-import static io.doov.core.dsl.meta.ast.ExclusionBar.SMALL;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
@@ -42,11 +37,9 @@ import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class AstHtmlRenderer extends HtmlWriter {
     private final static List<Operator> AND_OR = asList(and, or);
-    private final static List<Operator> MATCH_ALL_ANY = asList(match_all, match_any);
 
     public static String toHtml(Metadata metadata, Locale locale) {
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
@@ -108,9 +101,7 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void naryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         writeBeginLi(CSS_LI_NARY);
-        if (MATCH_ALL_ANY.contains(metadata.getOperator())) {
-            writeExclusionBar((PredicateMetadata) metadata, SMALL);
-        }
+        writeExclusionBar(metadata, parents);
         writeBeginSpan(CSS_NARY);
         writeFromBundle(metadata.getOperator());
         writeEndSpan();
@@ -135,7 +126,7 @@ public class AstHtmlRenderer extends HtmlWriter {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (pmd.map(m -> m.type() == BINARY_PREDICATE && !AND_OR.contains(metadata.getOperator())).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
-            writeExclusionBar((PredicateMetadata) metadata, SMALL);
+            writeExclusionBar(metadata, parents);
             toHtml(metadata.childAt(0), parents);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
@@ -143,7 +134,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             write(SPACE);
             toHtml(metadata.childAt(1), parents);
         } else if (pmd.map(m -> m.type() == BINARY_PREDICATE && AND_OR.contains(metadata.getOperator()))
-                        .orElse(false)) {
+                .orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_true_false_complex()
             writeBeginUl(CSS_UL_BINARY);
             writeBeginLi(CSS_LI_BINARY);
@@ -170,7 +161,7 @@ public class AstHtmlRenderer extends HtmlWriter {
         } else if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlCountTest.count_field_true_true_failure()
             writeBeginLi(CSS_LI_BINARY);
-            writeExclusionBar((PredicateMetadata) metadata, SMALL);
+            writeExclusionBar(metadata, parents);
             toHtml(metadata.childAt(0), parents);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
@@ -180,7 +171,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             writeEndLi();
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
-            writeExclusionBar((PredicateMetadata) metadata, SMALL);
+            writeExclusionBar(metadata, parents);
             toHtml(metadata.childAt(0), parents);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
@@ -193,7 +184,7 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void unaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
-        writeExclusionBar((PredicateMetadata) metadata, SMALL);
+        writeExclusionBar(metadata, parents);
         toHtml(metadata.childAt(0), parents);
         writeBeginSpan(CSS_OPERATOR);
         writeFromBundle(metadata.getOperator());
@@ -201,11 +192,8 @@ public class AstHtmlRenderer extends HtmlWriter {
     }
 
     private void leafPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writeExclusionBar(metadata, parents);
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
-        if (pmd.map(m -> m.type() != UNARY_PREDICATE).orElse(true)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
-            writeExclusionBar((PredicateMetadata) metadata, SMALL);
-        }
         if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
             writeBeginLi(CSS_LI_LEAF);
@@ -232,19 +220,9 @@ public class AstHtmlRenderer extends HtmlWriter {
     }
 
     private void fieldPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
-        final Optional<Metadata> pmd1 = parents.stream().skip(1).findFirst();
-        final Optional<Metadata> pmd2 = parents.stream().skip(2).findFirst();
-        if (pmd2.map(m -> m.type() != BINARY_PREDICATE).orElse(true)
-                        && pmd1.map(m -> m.type() != UNARY_PREDICATE).orElse(true)
-                        && pmd1.map(m -> m.type() != BINARY_PREDICATE).orElse(true)
-                        && pmd1.map(m -> m.getOperator() != sum).orElse(true)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
-            // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
-            // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
-            // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
-            writeExclusionBar((PredicateMetadata) metadata, SMALL);
-        }
-        if (pmd1.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
+        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
+        writeExclusionBar(metadata, parents);
+        if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
             writeBeginLi(CSS_LI_LEAF);
         }
@@ -264,7 +242,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             }
             writeFromBundle(escapeHtml4(e.getReadable().readable()));
             writeEndSpan();
-            if (pmd1.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
+            if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
                 // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
                 writeEndLi();
             }

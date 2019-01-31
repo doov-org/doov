@@ -33,8 +33,6 @@ public class HtmlSampleRulesTest {
     private Document doc;
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void RULE_EMAIL() {
         result = resetCounters(RULE_EMAIL).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
@@ -54,7 +52,7 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("matches", "matches");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("account.email", "account.email");
+                .containsExactly("account email", "account email");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("'\\w+[@]\\w+\\.com'", "'\\w+[@]\\w+\\.fr'");
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
@@ -62,17 +60,15 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void RULE_ACCOUNT() {
         result = resetCounters(RULE_ACCOUNT).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
         assertTrue(result.value());
 
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(3);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
@@ -85,8 +81,8 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("18", "FR", "'+33'");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("user.birthdate", "account.email", "configuration.max.email.size",
-                        "account.country", "account.phone.number");
+                .containsExactly("user birthdate", "account email", "configuration max email size",
+                        "account country", "account phone number");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("match all");
     }
