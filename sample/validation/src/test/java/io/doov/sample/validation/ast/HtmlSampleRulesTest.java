@@ -318,8 +318,6 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void RULE_AGE_2() {
         result = resetCounters(RULE_AGE_2).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);

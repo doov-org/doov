@@ -292,6 +292,9 @@ public class AstHtmlRenderer extends HtmlWriter {
                 case UNKNOWN:
                     writeBeginSpan(CSS_UNKNOWN);
                     break;
+                case TEMPORAL_UNIT:
+                    writeBeginSpan(CSS_OPERATOR);
+                    break;
                 default:
                     throw new IllegalStateException(e.getType().name());
             }
