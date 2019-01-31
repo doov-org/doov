@@ -55,6 +55,7 @@ public class HtmlWriter {
     static final String CSS_OPERATOR = "dsl-token-operator";
     static final String CSS_VALUE = "dsl-token-value";
     static final String CSS_FIELD = "dsl-token-field";
+    static final String CSS_UNKNOWN = "dsl-token-unknown";
 
     static final String CSS_LI_LEAF = "dsl-li-leaf";
     static final String CSS_LI_BINARY = "dsl-li-binary";

@@ -291,15 +291,13 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void RULE_AGE() {
         result = resetCounters(RULE_AGE).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
@@ -309,10 +307,10 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("today");
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("age at", ">=");
+                .isEmpty();
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("age at", "today", ">=");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("user birthdate");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
@@ -434,15 +432,13 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void RULE_BORN_1980() {
         result = resetCounters(RULE_BORN_1980).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
@@ -452,12 +448,12 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .isEmpty();
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .isEmpty();
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("as a number", "=");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("user.birthdate");
+                .containsExactly("user birthdate");
         assertThat(doc.select("span.dsl-token-unknown")).extracting(Element::text)
                 .containsExactly("-function-");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
@@ -465,15 +461,13 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void RULE_ACCOUNT_TIME_CONTAINS() {
         result = resetCounters(RULE_ACCOUNT_TIME_CONTAINS).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
@@ -483,8 +477,8 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).isEmpty();
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("as a string", "contains");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("account timezone");

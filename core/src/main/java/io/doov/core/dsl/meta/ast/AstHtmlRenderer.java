@@ -289,6 +289,9 @@ public class AstHtmlRenderer extends HtmlWriter {
                 case FIELD:
                     writeBeginSpan(CSS_FIELD);
                     break;
+                case UNKNOWN:
+                    writeBeginSpan(CSS_UNKNOWN);
+                    break;
                 default:
                     throw new IllegalStateException(e.getType().name());
             }
