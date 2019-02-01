@@ -231,15 +231,13 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void RULE_FIRST_NAME() {
         result = resetCounters(RULE_FIRST_NAME).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(2);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
@@ -249,9 +247,9 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .isEmpty();
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .isEmpty();
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("as a number", "=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("1");
