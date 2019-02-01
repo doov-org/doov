@@ -64,6 +64,9 @@ public class AstHtmlRenderer extends HtmlWriter {
                 case RULE:
                     rule(metadata, parents);
                     break;
+                case WHEN:
+                    when(metadata, parents);
+                    break;
                 case BINARY_PREDICATE:
                     binaryPredicate(metadata, parents);
                     break;
@@ -91,6 +94,14 @@ public class AstHtmlRenderer extends HtmlWriter {
         } finally {
             parents.pop();
         }
+    }
+    
+    private void when(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writeBeginSpan(CSS_WHEN);
+        writeFromBundle(metadata.getOperator());
+        write(SPACE);
+        toHtml(metadata.childAt(0));
+        writeEndSpan();
     }
 
     private void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
