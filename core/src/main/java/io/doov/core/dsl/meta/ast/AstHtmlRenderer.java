@@ -108,7 +108,6 @@ public class AstHtmlRenderer extends HtmlWriter {
         writeFromBundle(metadata.getOperator());
         writeEndSpan();
         writeBeginOl(CSS_OL_NARY);
-        write(SPACE);
         metadata.children().forEach(m -> toHtml(m, parents));
         writeEndOl();
         writeEndLi();
@@ -201,17 +200,30 @@ public class AstHtmlRenderer extends HtmlWriter {
     }
 
     private void unaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
+        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (metadata.getOperator() == not) {
             writeBeginLi(CSS_LI_UNARY);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
+            write(SPACE);
             toHtml(metadata.childAt(0), parents);
+            writeEndLi();
+        } else if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
+            // @see io.doov.sample.validation.ast.HtmlSampleRulesTest.RULE_USER()
+            writeBeginLi(CSS_LI_LEAF);
+            writeExclusionBar(metadata, parents);
+            toHtml(metadata.childAt(0), parents);
+            write(SPACE);
+            writeBeginSpan(CSS_OPERATOR);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
             writeEndLi();
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
             writeExclusionBar(metadata, parents);
             toHtml(metadata.childAt(0), parents);
+            write(SPACE);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());
             writeEndSpan();
@@ -269,10 +281,10 @@ public class AstHtmlRenderer extends HtmlWriter {
             }
             writeFromBundle(escapeHtml4(e.getReadable().readable()));
             writeEndSpan();
-            if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
-                // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
-                writeEndLi();
-            }
+        }
+        if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
+            // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
+            writeEndLi();
         }
     }
 

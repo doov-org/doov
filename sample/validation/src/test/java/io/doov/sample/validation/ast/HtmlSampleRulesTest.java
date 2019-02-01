@@ -118,8 +118,6 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void RULE_USER() {
         result = resetCounters(RULE_USER).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
@@ -137,7 +135,7 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("is not null", "is not null", "matches");
+                .containsExactly("is not null", "is not null", "matches", ">=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("'[A-Z]+'", "0");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
@@ -145,12 +143,10 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and", ">=");
+                .containsExactly("and");
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void RULE_USER_2() {
         result = resetCounters(RULE_USER_2).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
@@ -158,7 +154,7 @@ public class HtmlSampleRulesTest {
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(2);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-binary")).hasSize(1);
@@ -168,7 +164,7 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("is not null", "matches", "is not null", "is not null");
+                .containsExactly("is not null", "matches", "is not null", "is not null", ">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("'[A-Z]+'", "0");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
@@ -176,10 +172,10 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and", "and", ">");
+                .containsExactly("and", "and");
         assertThat(doc.select("ul.dsl-ul-binary")).extracting(Element::text)
-                .containsExactly("100 % user.last.name matches '[A-Z]+' and 100 % count 100 % account.phone.number is"
-                        + " not null 100 % account.email is not null > 0");
+                .containsExactly("100 % user last name matches '[A-Z]+' and 100 % count 100 % account phone number is"
+                        + " not null 100 % account email is not null > 0");
     }
 
     @Test
