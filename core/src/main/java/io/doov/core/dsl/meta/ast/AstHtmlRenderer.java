@@ -41,7 +41,7 @@ import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class AstHtmlRenderer extends HtmlWriter {
-    private final static List<Operator> AND_OR = asList(and, or);
+    private static final List<Operator> AND_OR = asList(and, or);
 
     public static String toHtml(Metadata metadata, Locale locale) {
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
@@ -95,7 +95,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             parents.pop();
         }
     }
-    
+
     private void when(Metadata metadata, ArrayDeque<Metadata> parents) {
         writeBeginSpan(CSS_WHEN);
         writeFromBundle(metadata.getOperator());
@@ -136,7 +136,8 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void binaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
-        if (pmd.map(m -> m.type() == BINARY_PREDICATE && !AND_OR.contains(metadata.getOperator())).orElse(false)) {
+        if (pmd.map(m -> m.type() == BINARY_PREDICATE
+                && !AND_OR.contains(metadata.getOperator())).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
             writeExclusionBar(metadata, parents);
             toHtml(metadata.childAt(0), parents);
@@ -146,8 +147,8 @@ public class AstHtmlRenderer extends HtmlWriter {
             writeEndSpan();
             write(SPACE);
             toHtml(metadata.childAt(1), parents);
-        } else if (pmd.map(m -> m.type() == BINARY_PREDICATE && AND_OR.contains(metadata.getOperator()))
-                .orElse(false)) {
+        } else if (pmd.map(m -> m.type() == BINARY_PREDICATE
+                && AND_OR.contains(metadata.getOperator())).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_true_false_complex()
             writeBeginUl(CSS_UL_BINARY);
             writeBeginLi(CSS_LI_BINARY);
@@ -160,6 +161,19 @@ public class AstHtmlRenderer extends HtmlWriter {
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
             writeEndUl();
+        } else if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)
+                && AND_OR.contains(metadata.getOperator())) {
+            // @see io.doov.core.dsl.meta.ast.HtmlMatchAnyTest.matchAny_true_false_false_complex
+            writeBeginLi(CSS_LI_BINARY);
+            toHtml(metadata.childAt(0), parents);
+            write(SPACE);
+            write(BR);
+            writeBeginSpan(CSS_OPERATOR);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
+            write(SPACE);
+            toHtml(metadata.childAt(1), parents);
+            writeEndLi();
         } else if (AND_OR.contains(metadata.getOperator())) {
             // FIXME writeBeginUl(CSS_UL_BINARY);
             writeBeginLi(CSS_LI_BINARY);

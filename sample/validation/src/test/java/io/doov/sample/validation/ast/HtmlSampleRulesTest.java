@@ -77,7 +77,7 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("age at", "today", ">=", "length is", "<=", "=", "starts with");
+                .containsExactly("age at", "today", ">=", "length is", "<=", "=", "and", "starts with");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("18", "FR", "'+33'");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
@@ -135,7 +135,7 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("is not null", "is not null", "matches", ">=");
+                .containsExactly("is not null", "is not null", "and", "matches", ">=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("'[A-Z]+'", "0");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
@@ -143,7 +143,7 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and");
+                .isEmpty();
     }
 
     @Test
