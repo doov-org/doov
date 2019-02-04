@@ -31,7 +31,7 @@ public class TemporalFunctionMetadata extends LeafMetadata<TemporalFunctionMetad
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
 
-    TemporalFunctionMetadata(MetadataType type) {
+    public TemporalFunctionMetadata(MetadataType type) {
         super(type);
     }
 

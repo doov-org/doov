@@ -33,7 +33,7 @@ public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
 
-    protected ValuePredicateMetadata(MetadataType type) {
+    public ValuePredicateMetadata(MetadataType type) {
         super(type);
     }
 

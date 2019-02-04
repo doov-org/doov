@@ -24,7 +24,7 @@ import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
 
 public class StringFunctionMetadata extends BinaryPredicateMetadata {
 
-    private StringFunctionMetadata(Metadata left, Operator operator, Metadata right) {
+    public StringFunctionMetadata(Metadata left, Operator operator, Metadata right) {
         super(left, operator, right);
     }
 

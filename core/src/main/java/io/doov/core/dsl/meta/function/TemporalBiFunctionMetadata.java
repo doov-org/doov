@@ -34,7 +34,7 @@ import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
 // TODO should be BinaryMetadata
 public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
 
-    private TemporalBiFunctionMetadata(Metadata left, Operator operator, Metadata right) {
+    public TemporalBiFunctionMetadata(Metadata left, Operator operator, Metadata right) {
         super(left, operator, right);
     }
 
