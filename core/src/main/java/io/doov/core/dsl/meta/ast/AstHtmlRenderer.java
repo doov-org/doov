@@ -255,6 +255,23 @@ public class AstHtmlRenderer extends HtmlWriter {
         }
     }
 
+     // FIELD / véhicule / immatriculation du véhicule
+     // FIELD / véhicule / code antecedent du véhicule
+     // FIELD / véhicule / marque du véhicule
+     // FIELD / véhicule / genre du véhicule
+     // FIELD / véhicule / valeur du véhicule
+     // FIELD / véhicule / carosserie du véhicule
+     // FIELD / véhicule / groupe sra actuel du véhicule
+     // FIELD / véhicule / trois roues véhicule
+     // FIELD / véhicule / cylindree du véhicule
+     // FIELD / véhicule / category du véhicule
+     // FIELD / véhicule / clé pour AMV du véhicule
+     // FIELD / véhicule / clé pour EuroAssurance du véhicule
+     // UNKNOWN / -function- capitaux
+     // UNKNOWN / -function- codes postaux non acceptés par mba mutuelle
+     // UNKNOWN / -function- montant par emprunteur d'un prêt
+     // UNKNOWN / -function- montant par emprunteur de l'autre prêt
+     // UNKNOWN / -function- capitaux / -function- capitaux < 17000
     private void leafPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         writeExclusionBar(metadata, parents);
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
@@ -271,6 +288,12 @@ public class AstHtmlRenderer extends HtmlWriter {
                     write(SPACE);
                     writeBeginSpan(CSS_VALUE);
                     break;
+                case FIELD:
+                    writeBeginSpan(CSS_FIELD);
+                    break;
+                case UNKNOWN:
+                    writeBeginSpan(CSS_UNKNOWN);
+                    break;
                 default:
                     throw new IllegalStateException(e.getType().name());
             }
@@ -283,6 +306,8 @@ public class AstHtmlRenderer extends HtmlWriter {
         }
     }
 
+    // TEMPORAL_UNIT / months / durée du prêt 1 month(s)
+    // TEMPORAL_UNIT / months / durée du prêt 2 month(s)
     private void fieldPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         writeExclusionBar(metadata, parents);
@@ -300,6 +325,9 @@ public class AstHtmlRenderer extends HtmlWriter {
                     break;
                 case FIELD:
                     writeBeginSpan(CSS_FIELD);
+                    break;
+                case TEMPORAL_UNIT:
+                    writeBeginSpan(CSS_OPERATOR);
                     break;
                 default:
                     throw new IllegalStateException(e.getType().name());
