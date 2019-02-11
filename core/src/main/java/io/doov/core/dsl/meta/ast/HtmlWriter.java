@@ -22,7 +22,9 @@ import static io.doov.core.dsl.meta.DefaultOperator.match_any;
 import static io.doov.core.dsl.meta.DefaultOperator.match_none;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.MetadataType.WHEN;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
+import static io.doov.core.dsl.meta.ast.ExclusionBar.BIG;
 import static io.doov.core.dsl.meta.ast.ExclusionBar.SMALL;
 import static java.lang.Math.floor;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -152,24 +154,9 @@ public class HtmlWriter {
         if (metadata.getOperator().returnType() == BOOLEAN
                 || pmd.map(m -> OP_BOOLEAN_PARAMS.contains(m.getOperator())).orElse(false)) {
             // LEAF_PREDICATE don't implements operator :-(
-            writeExclusionBar((PredicateMetadata) metadata, SMALL);
+            final ExclusionBar barSize = pmd.map(m -> m.type() == WHEN ? BIG : SMALL).orElse(SMALL);
+            write(exclusionBar((PredicateMetadata) metadata, barSize, locale));
         }
-    }
-
-    protected void writeExclusionBar(PredicateMetadata metadata, ExclusionBar cssClass) {
-        write(exclusionBar(metadata, cssClass, locale));
-    }
-
-    protected void writeFormatExclusionBar(ExclusionBar cssClass) {
-        write(formatExclusionBar(cssClass));
-    }
-
-    protected void writeFormatExclusionBar(ExclusionBar cssClass, double percentage) {
-        write(formatExclusionBar(cssClass, percentage, locale));
-    }
-
-    protected void writeExclusionBar(ValidationRule rule, ExclusionBar cssClass) {
-        write(exclusionBar(rule, cssClass, locale));
     }
 
     static String beginElement(String elementType, String... classes) {

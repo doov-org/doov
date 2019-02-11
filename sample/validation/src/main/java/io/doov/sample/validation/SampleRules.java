@@ -149,8 +149,9 @@ public class SampleRules extends DefaultRuleRegistry {
                             + "</style></head><body>", fos, defaultCharset());
             IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());
             for (ValidationRule r : rules) {
+                IOUtils.write("<div>", fos, defaultCharset());
                 IOUtils.write(r.readable(Locale.FRANCE), fos, defaultCharset());
-                IOUtils.write(exclusionBar(r, ExclusionBar.BIG, Locale.FRANCE), fos, defaultCharset());
+                IOUtils.write("</div>", fos, defaultCharset());
                 new AstHtmlRenderer(Locale.FRANCE, fos, BUNDLE).toHtml(r.metadata());
                 IOUtils.write("<hr/>", fos, defaultCharset());
             }
