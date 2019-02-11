@@ -1,0 +1,137 @@
+<html><head><meta charset="UTF-8"/><style>* {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    box-sizing:border-box;
+    line-height: 1.5;
+}
+.percentage-wrapper-big {
+    width: 130px;
+    float: right;
+    margin-left: 10px;
+    margin-top: 4px;
+}
+
+.percentage-wrapper-small {
+    width: 100px;
+    float: right;
+    margin-left: 10px;
+    margin-top: 6px;
+}
+
+.percentage-value {
+    width: 40px;
+    float: right;
+    text-align: right;
+    font-size: 10px;
+}
+
+.exclusion-furets-blue-big {
+    color: #fff !important;
+    background-color: #020C7E !important;
+    -webkit-print-color-adjust: exact;
+    height: 10px;
+}
+
+.exclusion-furets-blue-small {
+    color: #fff !important;
+    background-color: #020C7E !important;
+    -webkit-print-color-adjust: exact;
+    height: 7px;
+}
+
+.exclusion-border-big {
+    border: 1px solid #ccc !important;
+    width: 90px;
+    float: left;
+}
+
+.exclusion-border-small {
+    border: 1px solid #ccc !important;
+    width: 60px;
+    float: left;
+}
+
+.token-class-class {
+    color: #983E77;
+}
+
+.token-class-name {
+    color: black;
+}
+
+.dsl-navigation-table {
+    color: black;
+    margin-bottom: 5px;
+}
+
+.dsl-navigation-table td, th {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 3px 9px;
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+    vertical-align: baseline;
+}
+
+.dsl-validation-rule {
+    color: black;
+}
+
+.dsl-validation-rule li {
+    display: list-item;
+}
+
+.dsl-validation-rule ul {
+    margin-bottom: 3px;
+    margin-top: 0;
+}
+
+.dsl-token-rule {
+    color: #983E77;
+}
+
+.dsl-token-when {
+    color: #983E77;
+}
+
+.dsl-token-validate {
+    color: #983E77;
+}
+
+.dsl-token-nary {
+    color: black;
+    font-weight: bold;
+}
+
+.dsl-token-unary {
+    font-weight: bold;
+}
+
+.dsl-token-binary {
+    color: black;
+    font-weight: bold;
+}
+
+.dsl-token-field {
+    color: #683E40;
+}
+
+.dsl-token-operator {
+    color: black;
+    font-weight: bold;
+}
+
+.dsl-token-value {
+    color: #020C7E;
+    font-style: italic;
+}
+
+.dsl-validation-message {
+    color: #020C7E;
+}
+
+.dsl-token-unknown {
+    color: red;
+}</style></head><body><div style='width:1024px; margin-left:20px;'>règle lorsque (l'émail correspond à '\w+[@]\w+\.com' ou l'émail correspond à '\w+[@]\w+\.fr') valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-binary'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.email</span> <span class="dsl-token-operator">correspond &agrave;</span> <span class="dsl-token-value">'\w+[@]\w+\.com'</span> <br><span class="dsl-token-binary">ou</span> <div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.email</span> <span class="dsl-token-operator">correspond &agrave;</span> <span class="dsl-token-value">'\w+[@]\w+\.fr'</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque correspond à tous [la date de naissance âge à la date du jour >= 18, l'émail a une longueur <= la taille maximum de l'émail, (le pays = FR et le numéro de téléphone commence par '+33')] valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-nary'><div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><span class="dsl-token-nary">correspond &agrave; tous</span> <ol class='dsl-ol-nary'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.birthdate</span> <span class="dsl-token-operator">&acirc;ge &agrave;</span> <span class="dsl-token-operator">la date du jour</span> <span class="dsl-token-operator">&gt;=</span> <span class="dsl-token-value">18</span> </li><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.email</span> <span class="dsl-token-operator">a une longueur</span> <span class="dsl-token-operator">&lt;=</span> <span class="dsl-token-field">configuration.max.email.size</span> </li><li class='dsl-li-binary'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.country</span> <span class="dsl-token-operator">=</span> <span class="dsl-token-value">FR</span> <br><span class="dsl-token-binary">et</span> <div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.phone.number</span> <span class="dsl-token-operator">commence par</span> <span class="dsl-token-value">'+33'</span> </ol></ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque (((la date de naissance âge à la date du jour >= 18 et l'émail a une longueur <= la taille maximum de l'émail) et le pays = FR) et le numéro de téléphone commence par '+33') valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-binary'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.birthdate</span> <span class="dsl-token-operator">&acirc;ge &agrave;</span> <span class="dsl-token-operator">la date du jour</span> <span class="dsl-token-operator">&gt;=</span> <span class="dsl-token-value">18</span> <br><span class="dsl-token-binary">et</span> <div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.email</span> <span class="dsl-token-operator">a une longueur</span> <span class="dsl-token-operator">&lt;=</span> <span class="dsl-token-field">configuration.max.email.size</span> <br><span class="dsl-token-binary">et</span> <div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.country</span> <span class="dsl-token-operator">=</span> <span class="dsl-token-value">FR</span> <br><span class="dsl-token-binary">et</span> <div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.phone.number</span> <span class="dsl-token-operator">commence par</span> <span class="dsl-token-value">'+33'</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque (nombre d'occurrence [le prénom existe, (le nom existe et le nom correspond à '[A-Z]+')] >= 0) valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><li class='dsl-li-nary'><span class="dsl-token-nary">nombre d'occurrence</span> <ol class='dsl-ol-nary'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.first.name</span> <span class="dsl-token-operator">existe</span> </li><li class='dsl-li-binary'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.last.name</span> <span class="dsl-token-operator">existe</span> <br><span class="dsl-token-binary">et</span> <div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.last.name</span> <span class="dsl-token-operator">correspond &agrave;</span> <span class="dsl-token-value">'[A-Z]+'</span> </ol><span class="dsl-token-binary">&gt;=</span> <span class="dsl-token-value">0</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque (le nom existe et (le nom correspond à '[A-Z]+' et (nombre d'occurrence [le numéro de téléphone existe, l'émail existe] > 0))) valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-binary'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.last.name</span> <span class="dsl-token-operator">existe</span> <br><span class="dsl-token-binary">et</span> <ul class='dsl-ul-binary'><li class='dsl-li-binary'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.last.name</span> <span class="dsl-token-operator">correspond &agrave;</span> <span class="dsl-token-value">'[A-Z]+'</span> <br><span class="dsl-token-binary">et</span> <div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><span class="dsl-token-nary">nombre d'occurrence</span> <ol class='dsl-ol-nary'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.phone.number</span> <span class="dsl-token-operator">existe</span> </li><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.email</span> <span class="dsl-token-operator">existe</span> </li></ol><span class="dsl-token-binary">&gt;</span> <span class="dsl-token-value">0</span> </ul></ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque la date de naissance âge à la date de création du compte >= 18 valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.birthdate</span> <span class="dsl-token-operator">&acirc;ge &agrave;</span> <span class="dsl-token-field">account.creation.date</span> <span class="dsl-token-operator">&gt;=</span> <span class="dsl-token-value">18</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque la date de naissance âge à la date de création du compte au premier jour de l'année >= 18 valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.birthdate</span> <span class="dsl-token-operator">&acirc;ge &agrave;</span> <span class="dsl-token-field">account.creation.date</span> <span class="dsl-token-operator">au</span> <span class="dsl-token-operator">premier jour de l'ann&eacute;e</span> <span class="dsl-token-operator">&gt;=</span> <span class="dsl-token-value">18</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque correspond à tous [le prénom valeur numérique -function-  = 1] valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-nary'><div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><span class="dsl-token-nary">correspond &agrave; tous</span> <ol class='dsl-ol-nary'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.first.name</span> <span class="dsl-token-operator">valeur num&eacute;rique</span> <span class="dsl-token-unknown">-function- </span> <span class="dsl-token-operator">=</span> <span class="dsl-token-value">1</span> </li></ol></ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque l'id utilisateur existe valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.id</span> <span class="dsl-token-operator">existe</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque la date de naissance âge à la date du jour >= 18 valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.birthdate</span> <span class="dsl-token-operator">&acirc;ge &agrave;</span> <span class="dsl-token-operator">la date du jour</span> <span class="dsl-token-operator">&gt;=</span> <span class="dsl-token-value">18</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque la date de naissance après la date de naissance moins 1 jour(s) valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.birthdate</span> <span class="dsl-token-operator">apr&egrave;s</span> <span class="dsl-token-field">user.birthdate</span> <span class="dsl-token-operator">moins</span> <span class="dsl-token-value">1</span> <span class="dsl-token-operator">jour(s)</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque (somme des [l'âge minimum x 0, la taille maximum de l'émail x 1] >= 0) valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><li class='dsl-li-nary'><span class="dsl-token-nary">somme des</span> <ol class='dsl-ol-nary'><li class='dsl-li-leaf'><span class="dsl-token-field">configuration.min.age</span> <span class="dsl-token-operator">x</span> <span class="dsl-token-value">0</span> </li><li class='dsl-li-leaf'><span class="dsl-token-field">configuration.max.email.size</span> <span class="dsl-token-operator">x</span> <span class="dsl-token-value">1</span> </li></ol><span class="dsl-token-binary">&gt;=</span> <span class="dsl-token-value">0</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque (min [l'âge minimum, la taille maximum de l'émail] >= 0) valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><li class='dsl-li-nary'><span class="dsl-token-nary">min</span> <ol class='dsl-ol-nary'><li class='dsl-li-leaf'><span class="dsl-token-field">configuration.min.age</span> </li><li class='dsl-li-leaf'><span class="dsl-token-field">configuration.max.email.size</span> </li></ol><span class="dsl-token-binary">&gt;=</span> <span class="dsl-token-value">0</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque le nom du site favori 1 correspond à au moins un -function- -function- valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">favorite.site.name.1</span> <span class="dsl-token-operator">correspond &agrave; au moins un</span> <span class="dsl-token-unknown">-function- -function-</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque la date de naissance valeur numérique -function-  = 1980 valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">user.birthdate</span> <span class="dsl-token-operator">valeur num&eacute;rique</span> <span class="dsl-token-unknown">-function- </span> <span class="dsl-token-operator">=</span> <span class="dsl-token-value">1980</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque la zone horaire as a string -function-  contient '00:00' valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-leaf'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.timezone</span> <span class="dsl-token-operator">as a string</span> <span class="dsl-token-unknown">-function- </span> <span class="dsl-token-operator">contient</span> <span class="dsl-token-value">'00:00'</span> </ul><span class="dsl-token-validate">valider</span> </div><hr/>règle lorsque non la société = BLABLACAR valider<div class='percentage-wrapper-big'><div class='percentage-value'> n/a</div><div class='exclusion-border-big'><div class='exclusion-furets-blue-big' style='width:0%;'></div></div></div><div class="dsl-validation-rule"><span class="dsl-token-when">lorsque</span> <ul class='dsl-ul-when'><li class='dsl-li-unary'><span class="dsl-token-unary">non</span> <ul class='dsl-ul-unary'><div class='percentage-wrapper-small'><div class='percentage-value'> n/a</div><div class='exclusion-border-small'><div class='exclusion-furets-blue-small' style='width:0%;'></div></div></div><span class="dsl-token-field">account.company</span> <span class="dsl-token-operator">=</span> <span class="dsl-token-value">BLABLACAR</span> </ul></li></ul><span class="dsl-token-validate">valider</span> </div><hr/></div></body></html>
