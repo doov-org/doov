@@ -18,6 +18,7 @@ package io.doov.core.dsl.meta.ast;
 import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.validate;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
@@ -101,8 +102,12 @@ public class AstHtmlRenderer extends HtmlWriter {
     private void when(Metadata metadata, ArrayDeque<Metadata> parents) {
         writeBeginSpan(CSS_WHEN);
         writeFromBundle(metadata.getOperator());
-        write(SPACE);
+        writeEndSpan();
+        writeBeginUl(CSS_UL_WHEN);
         toHtml(metadata.childAt(0), parents);
+        writeEndUl();
+        writeBeginSpan(CSS_VALIDATE);
+        writeFromBundle(validate);
         writeEndSpan();
     }
 
@@ -128,10 +133,6 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void rule(Metadata metadata, ArrayDeque<Metadata> parents) {
         writeBeginDiv(CSS_VALIDATION_RULE);
-        writeBeginSpan(CSS_WHEN);
-        writeFromBundle(metadata.getOperator());
-        writeEndSpan();
-        write(SPACE);
         metadata.children().forEach(m -> toHtml(m, parents));
         writeEndDiv();
     }
