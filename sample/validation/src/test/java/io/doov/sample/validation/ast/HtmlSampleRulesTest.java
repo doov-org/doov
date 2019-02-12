@@ -88,8 +88,6 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME AstHtmlRemderer
     void RULE_ACCOUNT_2() {
         result = resetCounters(RULE_ACCOUNT_2).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
@@ -107,14 +105,14 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("age at", "today", ">=", "length is", "<=", "=", "starts with");
+                .containsExactly("age at", "today", ">=", "and", "length is", "<=", "and", "=", "and", "starts with");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("18", "FR", "'+33'");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("user birthdate", "account email", "configuration max email size",
-                        "account.country", "account.phone.number");
+                        "account country", "account phone number");
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and", "and", "and");
+                .isEmpty();
     }
 
     @Test

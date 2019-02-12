@@ -16,7 +16,6 @@ import static io.doov.core.dsl.DOOV.count;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.min;
 import static io.doov.core.dsl.DOOV.sum;
-import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.exclusionBar;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
@@ -26,7 +25,9 @@ import static java.nio.charset.Charset.defaultCharset;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.toList;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +37,8 @@ import org.apache.commons.io.IOUtils;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.ast.*;
+import io.doov.core.dsl.meta.ast.AstHtmlRenderer;
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 import io.doov.sample.model.Country;
 import io.doov.sample.model.Timezone;
 
