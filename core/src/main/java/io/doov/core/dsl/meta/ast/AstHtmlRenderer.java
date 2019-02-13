@@ -24,6 +24,7 @@ import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
+import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
@@ -37,10 +38,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class AstHtmlRenderer extends HtmlWriter {
@@ -120,15 +118,27 @@ public class AstHtmlRenderer extends HtmlWriter {
     }
 
     private void naryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
-        writeBeginLi(CSS_LI_NARY);
-        writeExclusionBar(metadata, parents);
-        writeBeginSpan(CSS_NARY);
-        writeFromBundle(metadata.getOperator());
-        writeEndSpan();
-        writeBeginOl(CSS_OL_NARY);
-        metadata.children().forEach(m -> toHtml(m, parents));
-        writeEndOl();
-        writeEndLi();
+        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
+        if (pmd.map(m -> m.getOperator().returnType() == BOOLEAN).orElse(false)) {
+            // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_count()
+            writeExclusionBar(metadata, parents);
+            writeBeginSpan(CSS_NARY);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
+            writeBeginOl(CSS_OL_NARY);
+            metadata.children().forEach(m -> toHtml(m, parents));
+            writeEndOl();
+        } else {
+            writeBeginLi(CSS_LI_NARY);
+            writeExclusionBar(metadata, parents);
+            writeBeginSpan(CSS_NARY);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
+            writeBeginOl(CSS_OL_NARY);
+            metadata.children().forEach(m -> toHtml(m, parents));
+            writeEndOl();
+            writeEndLi();
+        }
     }
 
     private void rule(Metadata metadata, ArrayDeque<Metadata> parents) {
@@ -139,7 +149,7 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void binaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
-        if (metadata.getOperator() == and && metadata.childAt(0).getOperator() == and
+        if (metadata.getOperator() == and && metadata.childAt(0).getOperator().returnType() == BOOLEAN
                 && pmd.map(m -> m.getOperator() != and).orElse(true)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_and()
             writeBeginLi(CSS_LI_BINARY);
@@ -151,8 +161,8 @@ public class AstHtmlRenderer extends HtmlWriter {
             write(SPACE);
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
-        } else if ((metadata.getOperator() == and && metadata.childAt(0).getOperator() == and) ||
-                metadata.getOperator() == and && pmd.map(m -> m.getOperator() == and).orElse(false)){
+        } else if ((metadata.getOperator() == and && metadata.childAt(0).getOperator().returnType() == BOOLEAN) ||
+                metadata.getOperator() == and && pmd.map(m -> m.getOperator() == and).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_and()
             toHtml(metadata.childAt(0), parents);
             write(BR);
@@ -198,7 +208,6 @@ public class AstHtmlRenderer extends HtmlWriter {
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
         } else if (AND_OR.contains(metadata.getOperator())) {
-            // FIXME writeBeginUl(CSS_UL_BINARY);
             writeBeginLi(CSS_LI_BINARY);
             toHtml(metadata.childAt(0), parents);
             write(BR);
@@ -208,7 +217,6 @@ public class AstHtmlRenderer extends HtmlWriter {
             write(SPACE);
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
-            // FIXME writeEndUl();
         } else if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlCountTest.count_field_true_true_failure()
             writeBeginLi(CSS_LI_BINARY);
@@ -398,6 +406,7 @@ public class AstHtmlRenderer extends HtmlWriter {
                     writeBeginSpan(CSS_UNKNOWN);
                     break;
                 case TEMPORAL_UNIT:
+                    write(SPACE);
                     writeBeginSpan(CSS_OPERATOR);
                     break;
                 default:

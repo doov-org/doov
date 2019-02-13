@@ -4,7 +4,23 @@
 package io.doov.sample.validation.ast;
 
 import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.toHtml;
-import static io.doov.sample.validation.SampleRules.*;
+import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT;
+import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT_2;
+import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT_TIME_CONTAINS;
+import static io.doov.sample.validation.SampleRules.RULE_AGE;
+import static io.doov.sample.validation.SampleRules.RULE_AGE_2;
+import static io.doov.sample.validation.SampleRules.RULE_BORN_1980;
+import static io.doov.sample.validation.SampleRules.RULE_COMPANY_NOT_BLABLA;
+import static io.doov.sample.validation.SampleRules.RULE_DOUBLE_LAMBDA;
+import static io.doov.sample.validation.SampleRules.RULE_EMAIL;
+import static io.doov.sample.validation.SampleRules.RULE_FIRST_NAME;
+import static io.doov.sample.validation.SampleRules.RULE_ID;
+import static io.doov.sample.validation.SampleRules.RULE_MIN;
+import static io.doov.sample.validation.SampleRules.RULE_SUM;
+import static io.doov.sample.validation.SampleRules.RULE_USER;
+import static io.doov.sample.validation.SampleRules.RULE_USER_2;
+import static io.doov.sample.validation.SampleRules.RULE_USER_ADULT;
+import static io.doov.sample.validation.SampleRules.RULE_USER_ADULT_FIRSTDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jsoup.Jsoup.parseBodyFragment;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,7 +30,8 @@ import java.util.Locale;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Document.OutputSettings;
 import org.jsoup.nodes.Element;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
@@ -38,14 +55,14 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
         assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %");
@@ -68,11 +85,11 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(3);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %", "100 %");
@@ -93,14 +110,14 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
         assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %");
@@ -123,12 +140,12 @@ public class HtmlSampleRulesTest {
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(1);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %");
@@ -145,26 +162,24 @@ public class HtmlSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void RULE_USER_2() {
         result = resetCounters(RULE_USER_2).withShortCircuit(false).executeOn(sample);
         doc = documentOf(result);
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(2);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(1);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "100 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("is not null", "matches", "is not null", "is not null", ">");
+                .containsExactly("is not null", "and", "matches", "and", "is not null", "is not null", ">");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("'[A-Z]+'", "0");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
@@ -172,10 +187,12 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and", "and");
-        assertThat(doc.select("ul.dsl-ul-binary")).extracting(Element::text)
-                .containsExactly("100 % user last name matches '[A-Z]+' and 100 % count 100 % account phone number is"
-                        + " not null 100 % account email is not null > 0");
+                .isEmpty();
+        assertThat(doc.select("body")).extracting(Element::text)
+                .containsExactly("100 % user last name is not null and "
+                        + "100 % user last name matches '[A-Z]+' and "
+                        + "100 % count 100 % account phone number is not null "
+                        + "100 % account email is not null > 0");
     }
 
     @Test
@@ -184,14 +201,14 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
         assertTrue(result.value());
 
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-binary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
@@ -211,14 +228,14 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-binary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
@@ -239,11 +256,11 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
@@ -267,14 +284,14 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-binary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
@@ -290,14 +307,14 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-binary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
@@ -317,14 +334,14 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-binary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
@@ -344,12 +361,12 @@ public class HtmlSampleRulesTest {
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(2);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
@@ -371,13 +388,13 @@ public class HtmlSampleRulesTest {
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-binary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
@@ -398,14 +415,14 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-binary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
@@ -427,14 +444,14 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-binary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
@@ -456,14 +473,14 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-binary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
@@ -484,15 +501,15 @@ public class HtmlSampleRulesTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-binary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-nary")).isEmpty();
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
         assertThat(doc.select("li.dsl-li-unary")).hasSize(1);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(1);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
+        assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %");

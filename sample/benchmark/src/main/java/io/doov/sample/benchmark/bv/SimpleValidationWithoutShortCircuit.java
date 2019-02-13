@@ -23,12 +23,13 @@ import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
-import io.doov.benchmark.model.*;
+import io.doov.benchmark.model.BenchmarkModel;
+import io.doov.benchmark.model.BenchmarkModelWrapper;
+import io.doov.benchmark.model.Driver;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.LeafMetadata;
 
 /*
  * http://in.relation.to/2017/10/31/bean-validation-benchmark-revisited/
@@ -36,27 +37,27 @@ import io.doov.core.dsl.meta.LeafMetadata;
 public class SimpleValidationWithoutShortCircuit {
 
     private static final String[] names = {
-                    null,
-                    "Jacob",
-                    "Isabella",
-                    "Ethan",
-                    "Sophia",
-                    "Michael",
-                    "Emma",
-                    "Jayden",
-                    "Olivia",
-                    "William"
+            null,
+            "Jacob",
+            "Isabella",
+            "Ethan",
+            "Sophia",
+            "Michael",
+            "Emma",
+            "Jayden",
+            "Olivia",
+            "William"
     };
 
     @State(Scope.Benchmark)
     public static class ValidationState {
 
         volatile ValidationRule rule = DOOV
-                        .when(name.isNotNull()
-                                        .and(age.greaterOrEquals(18))
-                                        .and(drivingLicense.isTrue()))
-                        .validate()
-                        .withShortCircuit(false);
+                .when(name.isNotNull()
+                        .and(age.greaterOrEquals(18))
+                        .and(drivingLicense.isTrue()))
+                .validate()
+                .withShortCircuit(false);
 
         volatile Random random = new Random();
 
@@ -112,9 +113,7 @@ public class SimpleValidationWithoutShortCircuit {
     }
 
     private static int getActualViolationCount(Result result) {
-        return (int) result.getContext().getEvalFalse().stream()
-                        .filter(metadata -> metadata instanceof LeafMetadata)
-                        .count();
+        return (int) result.getContext().getEvalFalse().stream().count();
     }
 
 }
