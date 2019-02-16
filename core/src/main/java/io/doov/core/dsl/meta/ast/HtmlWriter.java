@@ -22,7 +22,6 @@ import static io.doov.core.dsl.meta.DefaultOperator.match_any;
 import static io.doov.core.dsl.meta.DefaultOperator.match_none;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
-import static io.doov.core.dsl.meta.MetadataType.WHEN;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.ExclusionBar.BIG;
 import static io.doov.core.dsl.meta.ast.ExclusionBar.SMALL;
@@ -147,14 +146,17 @@ public class HtmlWriter {
 
     // don't add the 'not' operator, it will add a gauge for the not & the inner predicate
     private static final List<Operator> OP_BOOLEAN_PARAMS = asList(and, or, match_all, match_any, match_none, count,
-            when);
+                    when);
+    private static final List<Operator> OP_BIG_BAR = asList(match_all, match_any, match_none);
 
     protected void writeExclusionBar(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (metadata.getOperator().returnType() == BOOLEAN
-                || pmd.map(m -> OP_BOOLEAN_PARAMS.contains(m.getOperator())).orElse(false)) {
+                        || pmd.map(m -> OP_BOOLEAN_PARAMS.contains(m.getOperator())).orElse(false)) {
             // LEAF_PREDICATE don't implements operator :-(
-            final ExclusionBar barSize = pmd.map(m -> m.type() == WHEN ? BIG : SMALL).orElse(SMALL);
+            final ExclusionBar barSize = pmd.map(m -> m.getOperator() == when ||
+                            OP_BIG_BAR.contains(metadata.getOperator()) ? BIG : SMALL)
+                            .orElse(SMALL);
             write(exclusionBar((PredicateMetadata) metadata, barSize, locale));
         }
     }
@@ -165,7 +167,7 @@ public class HtmlWriter {
 
     static String beginElementWithStyle(String elementType, String style, String... classes) {
         return "<" + elementType + (classes.length > 0 ? " class='" + String.join(" ", classes) + "'" : "")
-                + (style != null ? " style='" + style + "'" : "") + ">";
+                        + (style != null ? " style='" + style + "'" : "") + ">";
     }
 
     static String endElement(String elementType) {
@@ -228,16 +230,18 @@ public class HtmlWriter {
 
     static String formatExclusionBar(ExclusionBar cssClass) {
         return beginDiv(cssClass.getWrapperClass()) + beginDiv("percentage-value") + " n/a" + endDiv()
-                + beginDiv(cssClass.getBorderClass()) + beginDivWithStyle("width:0%;", cssClass.getFillingClass())
-                + endDiv() + endDiv() + endDiv();
+                        + beginDiv(cssClass.getBorderClass())
+                        + beginDivWithStyle("width:0%;", cssClass.getFillingClass())
+                        + endDiv() + endDiv() + endDiv();
     }
 
     static String formatExclusionBar(ExclusionBar cssClass, double percentage, Locale locale) {
         return beginDiv(cssClass.getWrapperClass()) + beginDiv("percentage-value")
-                + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv()
-                + beginDiv(cssClass.getBorderClass())
-                + beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv() + endDiv()
-                + endDiv();
+                        + NumberFormat.getInstance(locale).format(percentage) + " %" + endDiv()
+                        + beginDiv(cssClass.getBorderClass())
+                        + beginDivWithStyle("width:" + percentage + "%;", cssClass.getFillingClass()) + endDiv()
+                        + endDiv()
+                        + endDiv();
     }
 
     public static String exclusionBar(ValidationRule rule, ExclusionBar cssClass, Locale locale) {

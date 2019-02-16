@@ -19,8 +19,6 @@ import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.validate;
-import static io.doov.core.dsl.meta.ElementType.FIELD;
-import static io.doov.core.dsl.meta.ElementType.STRING_VALUE;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
@@ -33,12 +31,17 @@ import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.ElementType;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class AstHtmlRenderer extends HtmlWriter {
@@ -69,22 +72,18 @@ public class AstHtmlRenderer extends HtmlWriter {
                     when(metadata, parents);
                     break;
                 case BINARY_PREDICATE:
-                    binaryPredicate(metadata, parents);
+                    binary(metadata, parents);
                     break;
                 case LEAF_PREDICATE:
-                    leafPredicate(metadata, parents);
-                    break;
                 case FIELD_PREDICATE:
-                    fieldPredicate(metadata, parents);
-                    break;
                 case LEAF_VALUE:
-                    leafValue(metadata, parents);
+                    leaf(metadata, parents);
                     break;
                 case UNARY_PREDICATE:
-                    unaryPredicate(metadata, parents);
+                    unary(metadata, parents);
                     break;
                 case NARY_PREDICATE:
-                    naryPredicate(metadata, parents);
+                    nary(metadata, parents);
                     break;
                 case FIELD_PREDICATE_MATCH_ANY:
                     fieldMatchAny(metadata, parents);
@@ -117,7 +116,7 @@ public class AstHtmlRenderer extends HtmlWriter {
         writeEndSpan();
     }
 
-    private void naryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
+    private void nary(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (pmd.map(m -> m.getOperator().returnType() == BOOLEAN).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_count()
@@ -147,10 +146,10 @@ public class AstHtmlRenderer extends HtmlWriter {
         writeEndDiv();
     }
 
-    private void binaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
+    private void binary(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (metadata.getOperator() == and && metadata.childAt(0).getOperator().returnType() == BOOLEAN
-                && pmd.map(m -> m.getOperator() != and).orElse(true)) {
+                        && pmd.map(m -> m.getOperator() != and).orElse(true)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_and()
             writeBeginLi(CSS_LI_BINARY);
             toHtml(metadata.childAt(0), parents);
@@ -162,7 +161,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             toHtml(metadata.childAt(1), parents);
             writeEndLi();
         } else if ((metadata.getOperator() == and && metadata.childAt(0).getOperator().returnType() == BOOLEAN) ||
-                metadata.getOperator() == and && pmd.map(m -> m.getOperator() == and).orElse(false)) {
+                        metadata.getOperator() == and && pmd.map(m -> m.getOperator() == and).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_and()
             toHtml(metadata.childAt(0), parents);
             write(BR);
@@ -172,7 +171,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             write(SPACE);
             toHtml(metadata.childAt(1), parents);
         } else if (pmd.map(m -> m.type() == BINARY_PREDICATE && !AND_OR.contains(metadata.getOperator()))
-                .orElse(false)) {
+                        .orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
             writeExclusionBar(metadata, parents);
             toHtml(metadata.childAt(0), parents);
@@ -183,7 +182,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             write(SPACE);
             toHtml(metadata.childAt(1), parents);
         } else if (pmd.map(m -> m.type() == BINARY_PREDICATE && AND_OR.contains(metadata.getOperator()))
-                .orElse(false)) {
+                        .orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_true_false_complex()
             writeBeginUl(CSS_UL_BINARY);
             writeBeginLi(CSS_LI_BINARY);
@@ -255,7 +254,7 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     }
 
-    private void unaryPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
+    private void unary(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (metadata.getOperator() == not) {
             writeBeginLi(CSS_LI_UNARY);
@@ -286,93 +285,37 @@ public class AstHtmlRenderer extends HtmlWriter {
         }
     }
 
-    // FIELD / véhicule / immatriculation du véhicule
-    // FIELD / véhicule / code antecedent du véhicule
-    // FIELD / véhicule / marque du véhicule
-    // FIELD / véhicule / genre du véhicule
-    // FIELD / véhicule / valeur du véhicule
-    // FIELD / véhicule / carosserie du véhicule
-    // FIELD / véhicule / groupe sra actuel du véhicule
-    // FIELD / véhicule / trois roues véhicule
-    // FIELD / véhicule / cylindree du véhicule
-    // FIELD / véhicule / category du véhicule
-    // FIELD / véhicule / clé pour AMV du véhicule
-    // FIELD / véhicule / clé pour EuroAssurance du véhicule
-    // UNKNOWN / -function- capitaux
-    // UNKNOWN / -function- codes postaux non acceptés par mba mutuelle
-    // UNKNOWN / -function- montant par emprunteur d'un prêt
-    // UNKNOWN / -function- montant par emprunteur de l'autre prêt
-    // UNKNOWN / -function- capitaux / -function- capitaux < 17000
-    private void leafPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
+    private void leaf(Metadata metadata, ArrayDeque<Metadata> parents) {
         writeExclusionBar(metadata, parents);
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
             writeBeginLi(CSS_LI_LEAF);
         }
-        for (Element e : ((LeafMetadata<?>) metadata).elements()) {
+        final List<Element> elts = new ArrayList<Element>(((LeafMetadata<?>) metadata).elements());
+        for (Element e : elts) {
+            writeBeginSpan(spanClass(e.getType()));
             switch (e.getType()) {
                 case OPERATOR:
-                    writeBeginSpan(CSS_OPERATOR);
-                    break;
-                case VALUE:
-                    write(SPACE);
-                    writeBeginSpan(CSS_VALUE);
-                    break;
-                case FIELD:
-                    writeBeginSpan(CSS_FIELD);
-                    break;
-                case UNKNOWN:
-                    writeBeginSpan(CSS_UNKNOWN);
-                    break;
-                default:
-                    throw new IllegalStateException(e.getType().name());
-            }
-            if (e.getType() == FIELD) {
-                handleField((DslField<?>) e.getReadable());
-            } else {
-                writeFromBundle(escapeHtml4(e.getReadable().readable()));
-            }
-            writeEndSpan();
-        }
-        if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
-            writeEndLi();
-        }
-    }
-
-    // TEMPORAL_UNIT / months / durée du prêt 1 month(s)
-    // TEMPORAL_UNIT / months / durée du prêt 2 month(s)
-    private void fieldPredicate(Metadata metadata, ArrayDeque<Metadata> parents) {
-        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
-        writeExclusionBar(metadata, parents);
-        if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
-            writeBeginLi(CSS_LI_LEAF);
-        }
-        for (Element e : ((LeafMetadata<?>) metadata).elements()) {
-            switch (e.getType()) {
-                case OPERATOR:
-                    writeBeginSpan(CSS_OPERATOR);
-                    break;
-                case VALUE:
-                    writeBeginSpan(CSS_VALUE);
-                    break;
-                case FIELD:
-                    writeBeginSpan(CSS_FIELD);
+                    writeFromBundle((Operator) e.getReadable());
                     break;
                 case TEMPORAL_UNIT:
-                    writeBeginSpan(CSS_OPERATOR);
+                    writeFromBundle(e.getReadable().readable());
+                    break;
+                case FIELD:
+                    handleField((DslField<?>) e.getReadable());
+                    break;
+                case STRING_VALUE:
+                    write(APOS);
+                    write(escapeHtml4(e.getReadable().readable()));
+                    write(APOS);
                     break;
                 default:
-                    throw new IllegalStateException(e.getType().name());
-            }
-            if (e.getType() == FIELD) {
-                handleField((DslField<?>) e.getReadable());
-            } else {
-                writeFromBundle(escapeHtml4(e.getReadable().readable()));
+                    writeFromBundle(escapeHtml4(e.getReadable().readable()));
             }
             writeEndSpan();
+            if (elts.indexOf(e) != elts.size() - 1)
+                write(SPACE);
         }
         if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
@@ -389,40 +332,20 @@ public class AstHtmlRenderer extends HtmlWriter {
         writeFromBundle(escapeHtml4(field.readable()));
     }
 
-    private void leafValue(Metadata metadata, ArrayDeque<Metadata> parents) {
-        for (Element e : ((LeafMetadata<?>) metadata).elements()) {
-            switch (e.getType()) {
-                case OPERATOR:
-                    writeBeginSpan(CSS_OPERATOR);
-                    break;
-                case VALUE:
-                case STRING_VALUE:
-                    writeBeginSpan(CSS_VALUE);
-                    break;
-                case FIELD:
-                    writeBeginSpan(CSS_FIELD);
-                    break;
-                case UNKNOWN:
-                    writeBeginSpan(CSS_UNKNOWN);
-                    break;
-                case TEMPORAL_UNIT:
-                    write(SPACE);
-                    writeBeginSpan(CSS_OPERATOR);
-                    break;
-                default:
-                    throw new IllegalStateException(e.getType().name());
-            }
-            if (e.getType() == STRING_VALUE)
-                write(APOS);
-            if (e.getType() == FIELD) {
-                handleField((DslField<?>) e.getReadable());
-            } else {
-                writeFromBundle(escapeHtml4(e.getReadable().readable()));
-            }
-            if (e.getType() == STRING_VALUE)
-                write(APOS);
-            writeEndSpan();
+    private static String spanClass(ElementType type) {
+        switch (type) {
+            case OPERATOR:
+            case TEMPORAL_UNIT:
+                return CSS_OPERATOR;
+            case VALUE:
+            case STRING_VALUE:
+                return CSS_VALUE;
+            case FIELD:
+                return CSS_FIELD;
+            case UNKNOWN:
+                return CSS_UNKNOWN;
+            default:
+                throw new IllegalStateException(type.name());
         }
     }
-
 }
