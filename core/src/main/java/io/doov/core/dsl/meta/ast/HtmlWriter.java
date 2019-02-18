@@ -49,6 +49,7 @@ public class HtmlWriter {
     static final String BR = "<br>";
     static final String CSS_VALIDATION_RULE = "dsl-validation-rule";
     static final String CSS_VALIDATE = "dsl-token-validate";
+    @Deprecated
     static final String CSS_BINARY = "dsl-token-binary";
     static final String CSS_UNARY = "dsl-token-unary";
     static final String CSS_NARY = "dsl-token-nary";

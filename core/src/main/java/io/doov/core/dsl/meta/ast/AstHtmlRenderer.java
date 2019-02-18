@@ -41,6 +41,7 @@ import io.doov.core.dsl.meta.Element;
 import io.doov.core.dsl.meta.ElementType;
 import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
 import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
@@ -148,110 +149,89 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void binary(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
-        if (metadata.getOperator() == and && metadata.childAt(0).getOperator().returnType() == BOOLEAN
-                        && pmd.map(m -> m.getOperator() != and).orElse(true)) {
+        final MetadataType pmdType = pmd.map(Metadata::type).orElse(null);
+        final Operator pmdOperator = pmd.map(Metadata::getOperator).orElse(null);
+
+        if (metadata.getOperator() == and
+                && metadata.childAt(0).getOperator().returnType() == BOOLEAN
+                && pmdOperator != and) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_and()
             writeBeginLi(CSS_LI_BINARY);
-            toHtml(metadata.childAt(0), parents);
-            write(BR);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(1), parents);
+            binary_BR(metadata, parents);
             writeEndLi();
         } else if ((metadata.getOperator() == and && metadata.childAt(0).getOperator().returnType() == BOOLEAN) ||
-                        metadata.getOperator() == and && pmd.map(m -> m.getOperator() == and).orElse(false)) {
+                (metadata.getOperator() == and && pmdOperator == and)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_and()
-            toHtml(metadata.childAt(0), parents);
-            write(BR);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(1), parents);
-        } else if (pmd.map(m -> m.type() == BINARY_PREDICATE && !AND_OR.contains(metadata.getOperator()))
-                        .orElse(false)) {
-            // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
-            writeExclusionBar(metadata, parents);
-            toHtml(metadata.childAt(0), parents);
-            write(SPACE);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(1), parents);
-        } else if (pmd.map(m -> m.type() == BINARY_PREDICATE && AND_OR.contains(metadata.getOperator()))
-                        .orElse(false)) {
+            binary_BR(metadata, parents);
+        } else if (pmdType == BINARY_PREDICATE && AND_OR.contains(metadata.getOperator())) {
             // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_true_false_complex()
             writeBeginUl(CSS_UL_BINARY);
             writeBeginLi(CSS_LI_BINARY);
-            toHtml(metadata.childAt(0), parents);
-            write(BR);
-            writeBeginSpan(CSS_BINARY);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(1), parents);
+            binary_BR_BINARY(metadata, parents);
             writeEndLi();
             writeEndUl();
-        } else if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false) && AND_OR.contains(metadata.getOperator())) {
+        } else if (pmdType == BINARY_PREDICATE && !AND_OR.contains(metadata.getOperator())) {
+            // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
+            binary_SPACE(metadata, parents);
+        } else if (pmdType == NARY_PREDICATE && AND_OR.contains(metadata.getOperator())) {
             // @see io.doov.core.dsl.meta.ast.HtmlMatchAnyTest.matchAny_true_false_false_complex
             writeBeginLi(CSS_LI_BINARY);
-            toHtml(metadata.childAt(0), parents);
-            write(BR);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(1), parents);
+            binary_BR(metadata, parents);
             writeEndLi();
-        } else if (AND_OR.contains(metadata.getOperator())) {
-            writeBeginLi(CSS_LI_BINARY);
-            toHtml(metadata.childAt(0), parents);
-            write(BR);
-            writeBeginSpan(CSS_BINARY);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(1), parents);
-            writeEndLi();
-        } else if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
+        } else if (pmdType == NARY_PREDICATE && !AND_OR.contains(metadata.getOperator())) {
             // @see io.doov.core.dsl.meta.ast.HtmlCountTest.count_field_true_true_failure()
             writeBeginLi(CSS_LI_BINARY);
-            writeExclusionBar(metadata, parents);
-            toHtml(metadata.childAt(0), parents);
-            write(SPACE);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(1), parents);
+            binary_SPACE(metadata, parents);
             writeEndLi();
-        } else if (pmd.map(m -> m.type() == UNARY_PREDICATE).orElse(false)) {
+        } else if (pmdType == UNARY_PREDICATE) {
             // @see io.doov.core.dsl.meta.ast.HtmlCountTest.count_field_true_true_failure()
             writeBeginUl(CSS_UL_UNARY);
-            writeExclusionBar(metadata, parents);
-            toHtml(metadata.childAt(0), parents);
-            write(SPACE);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(1), parents);
+            binary_SPACE(metadata, parents);
             writeEndUl();
+        } else if (AND_OR.contains(metadata.getOperator())) {
+            writeBeginLi(CSS_LI_BINARY);
+            binary_BR_BINARY(metadata, parents);
+            writeEndLi();
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
-            writeExclusionBar(metadata, parents);
-            toHtml(metadata.childAt(0), parents);
-            write(SPACE);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(1), parents);
+            binary_SPACE(metadata, parents);
         }
 
+    }
+
+    /**
+     * Replace usage with {@link #binary_BR}
+     */
+    @Deprecated
+    private void binary_BR_BINARY(Metadata metadata, ArrayDeque<Metadata> parents) {
+        toHtml(metadata.childAt(0), parents);
+        write(BR);
+        writeBeginSpan(CSS_BINARY);
+        writeFromBundle(metadata.getOperator());
+        writeEndSpan();
+        write(SPACE);
+        toHtml(metadata.childAt(1), parents);
+    }
+
+    private void binary_BR(Metadata metadata, ArrayDeque<Metadata> parents) {
+        toHtml(metadata.childAt(0), parents);
+        write(BR);
+        writeBeginSpan(CSS_OPERATOR);
+        writeFromBundle(metadata.getOperator());
+        writeEndSpan();
+        write(SPACE);
+        toHtml(metadata.childAt(1), parents);
+    }
+
+    private void binary_SPACE(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writeExclusionBar(metadata, parents);
+        toHtml(metadata.childAt(0), parents);
+        write(SPACE);
+        writeBeginSpan(CSS_OPERATOR);
+        writeFromBundle(metadata.getOperator());
+        writeEndSpan();
+        write(SPACE);
+        toHtml(metadata.childAt(1), parents);
     }
 
     private void unary(Metadata metadata, ArrayDeque<Metadata> parents) {
