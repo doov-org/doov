@@ -261,6 +261,46 @@ public class HtmlAndTest {
                 .containsExactly("count");
     }
 
+    @Test
+    void and_or_and() {
+        GenericModel model = new GenericModel();
+        IntegerFieldInfo zero = model.intField(0, "zero");
+        LocalDateFieldInfo yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
+        StringFieldInfo bob = model.stringField("Bob", "name");
+        BooleanFieldInfo is_true = model.booleanField(false, "is True");
+        A = zero.lesserThan(4);
+        B = yesterday.before(LocalDateSuppliers.today());
+        C = bob.startsWith("B");
+        D = is_true.isFalse();
+
+        result = when(A.and(B)
+                .or(C.and(D)))
+                .validate().withShortCircuit(false).executeOn(model);
+        doc = documentOf(result);
+
+        assertTrue(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(2);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(1);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("100 %", "100 %", "100 %", "100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("<", "before", "today", "starts with", "is");
+        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
+                .containsExactly("zero", "yesterday", "name", "is True");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("4", "'B'", "false");
+        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
+                .containsExactly("and", "or", "and");
+        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
+                .isEmpty();
+    }
+
     @AfterEach
     void afterEach() {
         System.out.println(format(result, doc));
