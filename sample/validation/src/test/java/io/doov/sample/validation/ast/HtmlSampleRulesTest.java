@@ -67,13 +67,13 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("matches", "matches");
+                .containsExactly("matches", "or", "matches");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("account email", "account email");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("'\\w+[@]\\w+\\.com'", "'\\w+[@]\\w+\\.fr'");
         assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("or");
+                .isEmpty();
     }
 
     @Test

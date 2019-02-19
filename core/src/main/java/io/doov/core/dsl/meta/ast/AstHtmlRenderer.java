@@ -163,6 +163,17 @@ public class AstHtmlRenderer extends HtmlWriter {
                 (metadata.getOperator() == and && pmdOperator == and)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_and()
             binary_BR(metadata, parents);
+        } else if (metadata.getOperator() == or
+                && metadata.childAt(0).getOperator().returnType() == BOOLEAN
+                && pmdOperator != or) {
+            // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_or_or()
+            writeBeginLi(CSS_LI_BINARY);
+            binary_BR(metadata, parents);
+            writeEndLi();
+        } else if ((metadata.getOperator() == or && metadata.childAt(0).getOperator().returnType() == BOOLEAN) ||
+                (metadata.getOperator() == or && pmdOperator == or)) {
+            // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_or_or()
+            binary_BR(metadata, parents);
         } else if (pmdType == BINARY_PREDICATE && AND_OR.contains(metadata.getOperator())) {
             // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_true_false_complex()
             writeBeginUl(CSS_UL_BINARY);

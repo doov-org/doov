@@ -200,7 +200,7 @@ public class HtmlCombinedTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("matches", "matches");
+                .containsExactly("matches", "or", "matches");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("string field 1", "string field 2");
     }
