@@ -72,8 +72,6 @@ public class HtmlSampleRulesTest {
                 .containsExactly("account email", "account email");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("'\\w+[@]\\w+\\.com'", "'\\w+[@]\\w+\\.fr'");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .isEmpty();
     }
 
     @Test
@@ -128,8 +126,6 @@ public class HtmlSampleRulesTest {
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("user birthdate", "account email", "configuration max email size",
                         "account country", "account phone number");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .isEmpty();
     }
 
     @Test
@@ -157,8 +153,6 @@ public class HtmlSampleRulesTest {
                 .containsExactly("user first name", "user last name", "user last name");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .isEmpty();
     }
 
     @Test
@@ -186,8 +180,6 @@ public class HtmlSampleRulesTest {
                 .containsExactly("user last name", "user last name", "account phone number", "account email");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("count");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .isEmpty();
         assertThat(doc.select("body")).extracting(Element::text)
                 .containsExactly("100 % user last name is not null and "
                         + "100 % user last name matches '[A-Z]+' and "
@@ -214,8 +206,6 @@ public class HtmlSampleRulesTest {
                 .containsExactly("100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("age at", ">=");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .isEmpty();
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("18");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
@@ -264,8 +254,6 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .isEmpty();
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("as a number", "=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
@@ -318,8 +306,6 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .isEmpty();
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("age at", "today", ">=");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
@@ -376,7 +362,6 @@ public class HtmlSampleRulesTest {
                 .containsExactly("sum");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("x", "x", ">=");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("0", "1", "0");
     }
@@ -402,7 +387,6 @@ public class HtmlSampleRulesTest {
                 .containsExactly("configuration min age", "configuration max email size");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                 .containsExactly("min");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly(">=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
@@ -426,8 +410,6 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .isEmpty();
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("match any");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
@@ -455,8 +437,6 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .isEmpty();
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("as a number", "=");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
@@ -484,7 +464,6 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("as a string", "contains");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
@@ -515,8 +494,6 @@ public class HtmlSampleRulesTest {
                 .containsExactly("0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("not", "=");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .isEmpty();
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("BLABLACAR");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)

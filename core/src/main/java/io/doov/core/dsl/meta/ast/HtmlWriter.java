@@ -49,9 +49,6 @@ public class HtmlWriter {
     static final String BR = "<br>";
     static final String CSS_VALIDATION_RULE = "dsl-validation-rule";
     static final String CSS_VALIDATE = "dsl-token-validate";
-    @Deprecated
-    static final String CSS_BINARY = "dsl-token-binary";
-    static final String CSS_UNARY = "dsl-token-unary";
     static final String CSS_NARY = "dsl-token-nary";
     static final String CSS_WHEN = "dsl-token-when";
     static final String CSS_OPERATOR = "dsl-token-operator";
@@ -66,7 +63,6 @@ public class HtmlWriter {
 
     static final String CSS_UL_WHEN = "dsl-ul-when";
     static final String CSS_UL_BINARY = "dsl-ul-binary";
-    static final String CSS_UL_BINARY_CHILD = "dsl-ul-binary-child";
     static final String CSS_UL_UNARY = "dsl-ul-unary";
 
     static final String CSS_OL_NARY = "dsl-ol-nary";

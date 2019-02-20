@@ -178,7 +178,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_true_false_complex()
             writeBeginUl(CSS_UL_BINARY);
             writeBeginLi(CSS_LI_BINARY);
-            binary_BR_BINARY(metadata, parents);
+            binary_BR(metadata, parents);
             writeEndLi();
             writeEndUl();
         } else if (pmdType == BINARY_PREDICATE && !AND_OR.contains(metadata.getOperator())) {
@@ -201,27 +201,13 @@ public class AstHtmlRenderer extends HtmlWriter {
             writeEndUl();
         } else if (AND_OR.contains(metadata.getOperator())) {
             writeBeginLi(CSS_LI_BINARY);
-            binary_BR_BINARY(metadata, parents);
+            binary_BR(metadata, parents);
             writeEndLi();
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
             binary_SPACE(metadata, parents);
         }
 
-    }
-
-    /**
-     * Replace usage with {@link #binary_BR}
-     */
-    @Deprecated
-    private void binary_BR_BINARY(Metadata metadata, ArrayDeque<Metadata> parents) {
-        toHtml(metadata.childAt(0), parents);
-        write(BR);
-        writeBeginSpan(CSS_BINARY);
-        writeFromBundle(metadata.getOperator());
-        writeEndSpan();
-        write(SPACE);
-        toHtml(metadata.childAt(1), parents);
     }
 
     private void binary_BR(Metadata metadata, ArrayDeque<Metadata> parents) {

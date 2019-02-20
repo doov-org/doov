@@ -63,7 +63,6 @@ public class HtmlSumTest {
                         .containsExactly("A", "B");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                         .containsExactly("sum");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
 
     }
 
@@ -92,8 +91,6 @@ public class HtmlSumTest {
                         .containsExactly("A", "B");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                         .containsExactly("sum");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
-
     }
 
     @Test
@@ -121,8 +118,6 @@ public class HtmlSumTest {
                         .containsExactly("A", "B");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                         .containsExactly("sum", "sum", "sum");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
-
     }
 
     @AfterEach

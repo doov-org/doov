@@ -71,8 +71,6 @@ public class HtmlMatchAnyTest {
                         .containsExactly("A", "D", "B", "C");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
                         .containsExactly("match any");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                        .isEmpty();
     }
 
     @Test
@@ -266,7 +264,6 @@ public class HtmlMatchAnyTest {
                         .containsExactly("<", "before", "today", "matches");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                         .containsExactly("zero", "yesterday", "string field");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text).isEmpty();
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                         .containsExactly("4", "'^some.*'");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
