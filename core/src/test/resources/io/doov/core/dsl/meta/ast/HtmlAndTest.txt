@@ -183,6 +183,48 @@
       </div><span class="dsl-token-operator">always true</span> <span class="dsl-token-value">B</span> </li>
   </body>
 </html>
+<!-- (zero < 4 and yesterday before today) or (name starts with 'B' and is True is false)  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">zero</span> <span class="dsl-token-operator">&lt;</span> <span class="dsl-token-value">4</span> <br><span class="dsl-token-binary">and</span> 
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">yesterday</span> <span class="dsl-token-operator">before</span> <span class="dsl-token-operator">today</span> <br><span class="dsl-token-binary">or</span> 
+      <ul class="dsl-ul-binary">
+        <li class="dsl-li-binary">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">name</span> <span class="dsl-token-operator">starts with</span> <span class="dsl-token-value">'B'</span> <br><span class="dsl-token-binary">and</span> 
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">is True</span> <span class="dsl-token-operator">is</span> <span class="dsl-token-value">false</span> </li>
+      </ul></li>
+  </body>
+</html>
 <!-- zero < 4 and yesterday before today  -->
 <html>
   <head></head>
