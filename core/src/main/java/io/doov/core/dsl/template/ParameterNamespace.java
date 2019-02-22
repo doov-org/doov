@@ -7,16 +7,10 @@ import java.time.*;
 import java.util.*;
 import java.util.function.BiFunction;
 
-import io.doov.core.FieldInfo;
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.runtime.GenericModel;
 
 public class ParameterNamespace {
-
-    public interface ParamProvider<P,T extends FieldInfo & DslField<P>>
-            extends BiFunction<ParameterNamespace,String,T> {
-    }
 
     public static ParamProvider<Integer, IntegerFieldInfo> $Integer =
             (ns,name) -> ns.getOrCreate(Integer.class,(model,key) -> model.intField(0, key + name));
