@@ -10,7 +10,6 @@ import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.TriFunction;
-import io.doov.core.dsl.template.ParameterNamespace.ParamProvider;
 
 public class TemplateSpec {
 

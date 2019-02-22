@@ -26,10 +26,10 @@ public class TemplateRule {
             this.template = template;
         }
 
-        public BoundedRule bind(T1 dest) {
+        public BoundRule bind(T1 dest) {
             T1 wildcard1 = template.param1.apply(ns,dest.readable());
             StepCondition condition = ruleFunction.apply(wildcard1);
-            BoundedRule boundedRule = new BoundedRule(DOOV.when(condition));
+            BoundRule boundedRule = new BoundRule(DOOV.when(condition));
             boundedRule.bind(wildcard1.id(),dest.id());
             return boundedRule;
         }
@@ -50,11 +50,11 @@ public class TemplateRule {
             this.template = template;
         }
 
-        public BoundedRule bind(T1 p1, T2 p2) {
+        public BoundRule bind(T1 p1, T2 p2) {
             T1 wildcard1 = template.param1.apply(ns,p1.readable());
             T2 wildcard2 = template.param2.apply(ns,p2.readable());
             StepCondition condition = ruleFunction.apply(wildcard1,wildcard2);
-            BoundedRule boundedRule = new BoundedRule(DOOV.when(condition));
+            BoundRule boundedRule = new BoundRule(DOOV.when(condition));
             boundedRule.bind(wildcard1.id(),p1.id());
             boundedRule.bind(wildcard2.id(),p2.id());
             return boundedRule;
@@ -77,12 +77,12 @@ public class TemplateRule {
             this.template = template;
         }
 
-        public BoundedRule bind(T1 p1, T2 p2, T3 p3) {
+        public BoundRule bind(T1 p1, T2 p2, T3 p3) {
             T1 wildcard1 = template.param1.apply(ns,p1.readable());
             T2 wildcard2 = template.param2.apply(ns,p2.readable());
             T3 wildcard3 = template.param3.apply(ns,p3.readable());
             StepCondition condition = ruleFunction.apply(wildcard1,wildcard2,wildcard3);
-            BoundedRule boundedRule = new BoundedRule(DOOV.when(condition));
+            BoundRule boundedRule = new BoundRule(DOOV.when(condition));
             boundedRule.bind(wildcard1.id(),p1.id());
             boundedRule.bind(wildcard2.id(),p2.id());
             boundedRule.bind(wildcard3.id(),p3.id());

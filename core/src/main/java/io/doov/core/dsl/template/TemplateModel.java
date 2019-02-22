@@ -3,15 +3,17 @@
  */
 package io.doov.core.dsl.template;
 
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
 
-import io.doov.core.FieldId;
+import io.doov.core.*;
 import io.doov.core.dsl.DslModel;
+import io.doov.core.serial.TypeAdapterRegistry;
 
-public class TemplateModel implements DslModel {
+public class TemplateModel implements FieldModel {
 
-    private DslModel model;
-    private Map<FieldId,FieldId> resolutions;
+    private final DslModel model;
+    private final Map<FieldId,FieldId> resolutions;
 
     public TemplateModel(DslModel model, Map<FieldId,FieldId> resolutions) {
         this.model = model;
@@ -24,7 +26,37 @@ public class TemplateModel implements DslModel {
     }
 
     @Override
+    public TypeAdapterRegistry getTypeAdapterRegistry() {
+        return model.getTypeAdapterRegistry();
+    }
+
+    @Override
     public <T> void set(FieldId fieldId, T value) {
         model.set(resolutions.getOrDefault(fieldId,fieldId),value);
+    }
+
+    @Override
+    public Stream<Map.Entry<FieldId, Object>> stream() {
+        return model.stream();
+    }
+
+    @Override
+    public Iterator<Map.Entry<FieldId, Object>> iterator() {
+        return model.iterator();
+    }
+
+    @Override
+    public Spliterator<Map.Entry<FieldId, Object>> spliterator() {
+        return model.spliterator();
+    }
+
+    @Override
+    public Stream<Map.Entry<FieldId, Object>> parallelStream() {
+        return model.parallelStream();
+    }
+
+    @Override
+    public List<FieldInfo> getFieldInfos() {
+        return model.getFieldInfos();
     }
 }

@@ -49,8 +49,7 @@ import io.doov.core.dsl.mapping.builder.ContextawareStepMap;
 import io.doov.core.dsl.mapping.builder.NaryStepMap;
 import io.doov.core.dsl.mapping.builder.SimpleStepMap;
 import io.doov.core.dsl.mapping.builder.StaticStepMap;
-import io.doov.core.dsl.template.ParameterNamespace;
-import io.doov.core.dsl.template.ParameterNamespace.ParamProvider;
+import io.doov.core.dsl.template.ParamProvider;
 import io.doov.core.dsl.template.TemplateSpec;
 
 /**

@@ -12,11 +12,11 @@ import io.doov.core.dsl.impl.DefaultValidationRule;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepWhen;
 
-public class BoundedRule extends DefaultValidationRule {
+public class BoundRule extends DefaultValidationRule {
 
-    private Map<FieldId,FieldId> resolutions;
+    private final Map<FieldId,FieldId> resolutions;
 
-    BoundedRule(StepWhen stepWhen) {
+    BoundRule(StepWhen stepWhen) {
         super(stepWhen);
         this.resolutions = new HashMap<>();
     }
