@@ -3,7 +3,11 @@
  */
 package io.doov.core.dsl;
 
+import static io.doov.core.dsl.template.ParameterNamespace.$Enum;
 import static io.doov.core.dsl.template.ParameterNamespace.$Integer;
+
+import java.time.DayOfWeek;
+import java.time.Month;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,7 +18,7 @@ import io.doov.core.dsl.template.TemplateRule;
 import io.doov.core.dsl.template.TemplateRule.Rule1;
 import io.doov.core.dsl.template.TemplateRule.Rule2;
 
-public class TemplateTest {
+class TemplateTest {
 
     @Test
     void test1Param () {
@@ -66,6 +70,19 @@ public class TemplateTest {
                 );
 
         Assertions.assertTrue(template.bind(A,B,C).executeOn(model).value());
+
+    }
+
+    @Test
+    void testEnum () {
+
+        GenericModel model = new GenericModel();
+        EnumFieldInfo<Month> month = model.enumField(Month.DECEMBER,"");
+
+        Rule1<Month, EnumFieldInfo<Month>> december =
+                DOOV.template($Enum(Month.class)).with(present -> present.eq(Month.DECEMBER));
+
+        Assertions.assertTrue(december.bind(month).executeOn(model).value());
 
     }
 }

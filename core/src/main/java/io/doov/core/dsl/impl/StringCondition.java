@@ -25,6 +25,7 @@ import java.util.function.BiFunction;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.field.types.StringFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.function.StringFunctionMetadata;
@@ -54,6 +55,17 @@ public class StringCondition extends DefaultCondition<String> {
      */
     public final StepCondition contains(String value) {
         return LeafStepCondition.stepCondition(containsMetadata(metadata, value), getFunction(), value, String::contains);
+    }
+
+    /**
+     * Returns a condition checking if the node value contains the given value.
+     *
+     * @param value another StringCondition
+     * @return the step condition
+     */
+    public final StepCondition contains(StringCondition value) {
+        return LeafStepCondition.stepCondition(containsMetadata(metadata, value), getFunction(), value.getFunction(),
+                String::contains);
     }
 
     /**

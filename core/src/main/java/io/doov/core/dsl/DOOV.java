@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.DefaultStepCondition;
@@ -48,6 +49,9 @@ import io.doov.core.dsl.mapping.builder.ContextawareStepMap;
 import io.doov.core.dsl.mapping.builder.NaryStepMap;
 import io.doov.core.dsl.mapping.builder.SimpleStepMap;
 import io.doov.core.dsl.mapping.builder.StaticStepMap;
+import io.doov.core.dsl.template.ParameterNamespace;
+import io.doov.core.dsl.template.ParameterNamespace.ParamProvider;
+import io.doov.core.dsl.template.TemplateSpec;
 
 /**
  * Entry point of the DSL.
@@ -416,4 +420,32 @@ public class DOOV {
                         .orElseThrow(IllegalArgumentException::new);
     }
 
+    public static <P1,T1 extends FieldInfo & DslField<P1>> TemplateSpec.Template1<P1,T1> template(
+            ParamProvider<P1,T1> param1
+    ) {
+        return new TemplateSpec.Template1<>(param1);
+    }
+
+    public static <
+            P1,T1 extends FieldInfo & DslField<P1>,
+            P2,T2 extends FieldInfo & DslField<P2>
+            > TemplateSpec.Template2<P1,T1,P2,T2> template(
+            ParamProvider<P1,T1> param1,
+            ParamProvider<P2,T2> param2
+    ) {
+        return new TemplateSpec.Template2<>(param1,param2);
+    }
+
+    public static <
+            P1,T1 extends FieldInfo & DslField<P1>,
+            P2,T2 extends FieldInfo & DslField<P2>,
+            P3,T3 extends FieldInfo & DslField<P3>
+            > TemplateSpec.Template3<P1,T1,P2,T2,P3,T3>
+    template(
+            ParamProvider<P1,T1> param1,
+            ParamProvider<P2,T2> param2,
+            ParamProvider<P3,T3> param3
+    ) {
+        return new TemplateSpec.Template3<>(param1,param2,param3);
+    }
 }
