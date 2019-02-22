@@ -8,12 +8,12 @@ import java.util.Map;
 import io.doov.core.FieldId;
 import io.doov.core.dsl.DslModel;
 
-public class TemplatedModel implements DslModel {
+public class TemplateModel implements DslModel {
 
     private DslModel model;
     private Map<FieldId,FieldId> resolutions;
 
-    public TemplatedModel(DslModel model, Map<FieldId,FieldId> resolutions) {
+    public TemplateModel(DslModel model, Map<FieldId,FieldId> resolutions) {
         this.model = model;
         this.resolutions = resolutions;
     }
