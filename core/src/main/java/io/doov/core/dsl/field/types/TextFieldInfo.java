@@ -39,7 +39,17 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
     }
 
     /**
-     * See {@link StringFunction#matches(String)}
+     * See {@link StringCondition#contains(StringCondition)}
+     *
+     * @param string the string
+     * @return the step condition
+     * @see StringCondition#contains(String)
+     */
+    default StepCondition contains(StringCondition string) {
+        return getStringFunction().contains(string);
+    }
+
+    /**
      *
      * @param regex the regex
      * @return the step condition
