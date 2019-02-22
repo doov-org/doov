@@ -6,7 +6,6 @@ package io.doov.core.dsl.template;
 import java.time.*;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
@@ -51,6 +50,10 @@ public class ParameterNamespace {
 
     public static <T extends Enum<T>> ParamProvider<T, EnumFieldInfo<T>> $Enum(Class<T> cls) {
         return (ns,name) -> ns.getOrCreate(cls, (model, key) -> model.enumField(null,key + name));
+    }
+
+    public static <T,C extends Iterable<T>> ParamProvider<C, IterableFieldInfo<T,C>> $Iterable(Class<T> cls) {
+        return (ns,name) -> ns.getOrCreate(cls, (model, key) -> model.iterableField(null,key + name));
     }
 
     private class TypedKey<T> {
