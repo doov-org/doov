@@ -5,9 +5,11 @@ package io.doov.core.dsl;
 
 import static io.doov.core.dsl.template.ParameterNamespace.$Enum;
 import static io.doov.core.dsl.template.ParameterNamespace.$Integer;
+import static io.doov.core.dsl.template.ParameterNamespace.$Iterable;
 
-import java.time.DayOfWeek;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -83,6 +85,34 @@ class TemplateTest {
                 DOOV.template($Enum(Month.class)).with(present -> present.eq(Month.DECEMBER));
 
         Assertions.assertTrue(december.bind(month).executeOn(model).value());
+
+    }
+
+    @Test
+    void testIterable () {
+
+        GenericModel model = new GenericModel();
+
+        List<Integer> ls1 = new ArrayList<>();
+
+        ls1.add(1);
+        ls1.add(2);
+        ls1.add(3);
+
+        IterableFieldInfo<Integer, Iterable<Integer>> with1 = model.iterableField(ls1,"list");
+
+        List<Integer> ls2 = new ArrayList<>();
+
+        ls2.add(2);
+        ls2.add(3);
+
+        IterableFieldInfo<Integer, Iterable<Integer>> without1 = model.iterableField(ls2,"list");
+
+        Rule1<Iterable<Integer>, IterableFieldInfo<Integer, Iterable<Integer>>> has1 =
+                DOOV.template($Iterable(Integer.class)).with(it -> it.contains(1));
+
+        Assertions.assertTrue(has1.bind(with1).executeOn(model).value());
+        Assertions.assertFalse(has1.bind(without1).executeOn(model).value());
 
     }
 }
