@@ -228,6 +228,7 @@ public class AstHtmlRenderer extends HtmlWriter {
         if ((!leftChild || pmdOperator != or || metadata.getOperator() != and)
                 && (!leftChild || pmdOperator != and || metadata.getOperator() != or)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_or_and()
+            // @see io.doov.core.dsl.meta.ast.HtmlMoreCombinedTest.or_and_sum()
             writeExclusionBar(metadata, parents);
         }
         toHtml(metadata.childAt(0), parents);
@@ -241,7 +242,16 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void unary(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
-        if (metadata.getOperator() == not) {
+        final Operator pmdOperator = pmd.map(Metadata::getOperator).orElse(null);
+        if (AND_OR.contains(pmdOperator)  && metadata.getOperator() == not) {
+            // @see io.doov.core.dsl.meta.ast.HtmlMoreCombinedTest.and_and_and_match_any_and_and()
+            writeExclusionBar(metadata, parents);
+            writeBeginSpan(CSS_OPERATOR);
+            writeFromBundle(metadata.getOperator());
+            writeEndSpan();
+            write(SPACE);
+            toHtml(metadata.childAt(0), parents);
+        } else if (!AND_OR.contains(pmdOperator) && metadata.getOperator() == not) {
             writeBeginLi(CSS_LI_UNARY);
             writeBeginSpan(CSS_OPERATOR);
             writeFromBundle(metadata.getOperator());

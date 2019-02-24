@@ -71,8 +71,6 @@ public class HtmlMoreCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void and_and_and_match_any_and_and() {
         result = when(enumField.eq(AccessMode.WRITE)
                 .and(booleanField1.isFalse())
@@ -87,15 +85,15 @@ public class HtmlMoreCombinedTest {
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-binary")).hasSize(3);
         assertThat(doc.select("li.dsl-li-nary")).isEmpty();
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
         assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(1);
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty(); // hasSize(1);
         assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
         assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "100 %", "100 %", "0 %", "100 %", "100 %", "100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("=", "is", "is", "not", ">=", "<", "=");
+                .containsExactly("=", "and", "is", "and", "is", "not", "and", ">=", "and", "<", "and", "=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("WRITE", "false", "true", "0", "1", "1");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
