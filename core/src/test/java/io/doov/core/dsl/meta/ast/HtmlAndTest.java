@@ -30,13 +30,9 @@ import java.time.LocalDate;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.field.types.BooleanFieldInfo;
-import io.doov.core.dsl.field.types.IntegerFieldInfo;
-import io.doov.core.dsl.field.types.LocalDateFieldInfo;
-import io.doov.core.dsl.field.types.StringFieldInfo;
+import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.runtime.GenericModel;
