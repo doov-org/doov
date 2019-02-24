@@ -1,0 +1,163 @@
+<!-- ((enum = WRITE and boolean 1 is false) and match any [boolean 1 is true, (boolean 2 not and (zero >= 0 and zero < 1))]) and zero = 1  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">enum</span> <span class="dsl-token-operator">=</span> <span class="dsl-token-value">WRITE</span> <br><span class="dsl-token-binary">and</span> 
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">boolean 1</span> <span class="dsl-token-operator">is</span> <span class="dsl-token-value">false</span> <br><span class="dsl-token-binary">and</span> 
+      <div class="percentage-wrapper-big">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-big">
+          <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-nary">match any</span> 
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">boolean 1</span> <span class="dsl-token-operator">is</span> <span class="dsl-token-value">true</span> </li>
+        <li class="dsl-li-binary">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">boolean 2</span> <span class="dsl-token-operator">not</span> <br><span class="dsl-token-binary">and</span> 
+          <ul class="dsl-ul-binary">
+            <li class="dsl-li-binary">
+              <div class="percentage-wrapper-small">
+                <div class="percentage-value">
+                  100 %
+                </div>
+                <div class="exclusion-border-small">
+                  <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+                </div>
+              </div><span class="dsl-token-field">zero</span> <span class="dsl-token-operator">&gt;=</span> <span class="dsl-token-value">0</span> <br><span class="dsl-token-binary">and</span> 
+              <div class="percentage-wrapper-small">
+                <div class="percentage-value">
+                  100 %
+                </div>
+                <div class="exclusion-border-small">
+                  <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+                </div>
+              </div><span class="dsl-token-field">zero</span> <span class="dsl-token-operator">&lt;</span> <span class="dsl-token-value">1</span> </li>
+          </ul></li>
+      </ol><br><span class="dsl-token-binary">and</span> 
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">zero</span> <span class="dsl-token-operator">=</span> <span class="dsl-token-value">1</span> </li>
+  </body>
+</html>
+<!-- ((zero is null or zero = 0) and boolean 1 is false) and (date 1 age at date 2 < 0 and date 2 age at date 1 >= 0)  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">zero</span> <span class="dsl-token-operator">is null</span> <br><span class="dsl-token-binary">or</span> 
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">zero</span> <span class="dsl-token-operator">=</span> <span class="dsl-token-value">0</span> <br><span class="dsl-token-binary">and</span> 
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">boolean 1</span> <span class="dsl-token-operator">is</span> <span class="dsl-token-value">false</span> <br><span class="dsl-token-binary">and</span> 
+      <ul class="dsl-ul-binary">
+        <li class="dsl-li-binary">
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              0 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:0.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">date 1</span> <span class="dsl-token-operator">age at</span> <span class="dsl-token-field">date 2</span> <span class="dsl-token-operator">&lt;</span> <span class="dsl-token-value">0</span> <br><span class="dsl-token-binary">and</span> 
+          <div class="percentage-wrapper-small">
+            <div class="percentage-value">
+              100 %
+            </div>
+            <div class="exclusion-border-small">
+              <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+            </div>
+          </div><span class="dsl-token-field">date 2</span> <span class="dsl-token-operator">age at</span> <span class="dsl-token-field">date 1</span> <span class="dsl-token-operator">&gt;=</span> <span class="dsl-token-value">0</span> </li>
+      </ul></li>
+  </body>
+</html>
+<!-- (date 1 age at date 2 >= 0 or date 2 age at date 1 >= 0) and (sum [zero, zero] < 0)  -->
+<html>
+  <head></head>
+  <body>
+    <li class="dsl-li-binary">
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">date 1</span> <span class="dsl-token-operator">age at</span> <span class="dsl-token-field">date 2</span> <span class="dsl-token-operator">&gt;=</span> <span class="dsl-token-value">0</span> <br><span class="dsl-token-binary">or</span> 
+      <div class="percentage-wrapper-small">
+        <div class="percentage-value">
+          100 %
+        </div>
+        <div class="exclusion-border-small">
+          <div class="exclusion-furets-blue-small" style="width:100.0%;"></div>
+        </div>
+      </div><span class="dsl-token-field">date 2</span> <span class="dsl-token-operator">age at</span> <span class="dsl-token-field">date 1</span> <span class="dsl-token-operator">&gt;=</span> <span class="dsl-token-value">0</span> <br><span class="dsl-token-binary">and</span> 
+      <div class="percentage-wrapper-big">
+        <div class="percentage-value">
+          0 %
+        </div>
+        <div class="exclusion-border-big">
+          <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+        </div>
+      </div><span class="dsl-token-nary">sum</span> 
+      <ol class="dsl-ol-nary">
+        <li class="dsl-li-leaf"><span class="dsl-token-field">zero</span> </li>
+        <li class="dsl-li-leaf"><span class="dsl-token-field">zero</span> </li>
+      </ol><span class="dsl-token-binary">&lt;</span> <span class="dsl-token-value">0</span> </li>
+  </body>
+</html>
