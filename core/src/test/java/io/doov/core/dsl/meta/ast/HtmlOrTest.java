@@ -26,15 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 
-import io.doov.core.dsl.field.types.BooleanFieldInfo;
-import io.doov.core.dsl.field.types.StringFieldInfo;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import io.doov.core.dsl.field.types.IntegerFieldInfo;
-import io.doov.core.dsl.field.types.LocalDateFieldInfo;
+import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.runtime.GenericModel;
@@ -44,6 +40,19 @@ public class HtmlOrTest {
     private StepCondition A, B, C, D;
     private Result result;
     private Document doc;
+    GenericModel model = new GenericModel();
+    private IntegerFieldInfo zero;
+    private LocalDateFieldInfo yesterday;
+    private StringFieldInfo bob;
+    private BooleanFieldInfo is_true;
+
+    @BeforeEach
+    void beforeEach() {
+        zero = model.intField(0, "zero");
+        yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
+        bob = model.stringField("Bob", "name");
+        is_true = model.booleanField(false, "is True");
+    }
 
     @Test
     void or_true_false_complex() {
@@ -238,19 +247,12 @@ public class HtmlOrTest {
 
     @Test
     void or_or_or() {
-        GenericModel model = new GenericModel();
-        IntegerFieldInfo zero = model.intField(0, "zero");
-        LocalDateFieldInfo yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
-        StringFieldInfo bob = model.stringField("Bob", "name");
-        BooleanFieldInfo is_true = model.booleanField(false, "is True");
         A = zero.lesserThan(4);
         B = yesterday.before(LocalDateSuppliers.today());
         C = bob.startsWith("B");
         D = is_true.isFalse();
-
-        result = when(A.or(B)
-                .or(C)
-                .or(D)).validate().withShortCircuit(false).executeOn(model);
+        result = when(A.or(B).or(C).or(D)).validate()
+                .withShortCircuit(false).executeOn(model);
         doc = documentOf(result);
 
         assertTrue(result.value());
@@ -276,9 +278,6 @@ public class HtmlOrTest {
 
     @Test
     void or_field_true_true() {
-        GenericModel model = new GenericModel();
-        IntegerFieldInfo zero = model.intField(0, "zero");
-        LocalDateFieldInfo yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
         A = zero.lesserThan(4);
         B = yesterday.before(LocalDateSuppliers.today());
         result = when(A.or(B)).validate().withShortCircuit(false).executeOn(model);
