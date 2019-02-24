@@ -43,8 +43,6 @@ public class HtmlMoreCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void or_and_sum() {
         result = when((dateField1.ageAt(dateField2).greaterOrEquals(0)
                 .or(dateField2.ageAt(dateField1).greaterOrEquals(0)))
@@ -64,7 +62,7 @@ public class HtmlMoreCombinedTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("age at", ">=", "age at", ">=");
+                .containsExactly("age at", ">=", "or", "age at", ">=", "and", "<");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("0", "0", "0");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
