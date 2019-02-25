@@ -8,17 +8,21 @@ import java.util.function.Function;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.MappingRule;
+import io.doov.core.dsl.lang.TriFunction;
 
 public class TemplateMapping {
 
     public static class Map1<
             T1 extends FieldInfo & DslField<?>
             > {
-        private Function<T1, MappingRule> ruleFunction;
 
-        Map1(Function<T1, MappingRule> ruleFunction) {
+        private final Function<T1, MappingRule> ruleFunction;
+        private final TemplateSpec.Template1<T1> template;
+
+        Map1(Function<T1, MappingRule> ruleFunction, TemplateSpec.Template1<T1> template) {
             this.ruleFunction = ruleFunction;
+            this.template = template;
         }
 
         public MappingRule bind(T1 p1) {
@@ -31,14 +35,17 @@ public class TemplateMapping {
             T1 extends FieldInfo & DslField<?>,
             T2 extends FieldInfo & DslField<?>
             > {
-        private BiFunction<T1,T2,MappingRule> ruleFunction;
 
-        Map2(BiFunction<T1,T2, MappingRule> ruleFunction) {
+        private final BiFunction<T1, T2, MappingRule> ruleFunction;
+        private final TemplateSpec.Template2<T1, T2> template;
+
+        Map2(BiFunction<T1, T2, MappingRule> ruleFunction, TemplateSpec.Template2<T1, T2> template) {
             this.ruleFunction = ruleFunction;
+            this.template = template;
         }
 
         public MappingRule bind(T1 p1, T2 p2) {
-            return ruleFunction.apply(p1,p2);
+            return ruleFunction.apply(p1, p2);
         }
 
     }
@@ -48,14 +55,17 @@ public class TemplateMapping {
             T2 extends FieldInfo & DslField<?>,
             T3 extends FieldInfo & DslField<?>
             > {
-        private TriFunction<T1,T2,T3,MappingRule> ruleFunction;
 
-        Map3(TriFunction<T1,T2,T3, MappingRule> ruleFunction) {
+        private final TriFunction<T1, T2, T3, MappingRule> ruleFunction;
+        private final TemplateSpec.Template3<T1, T2, T3> template;
+
+        Map3(TriFunction<T1, T2, T3, MappingRule> ruleFunction, TemplateSpec.Template3<T1, T2, T3> template) {
             this.ruleFunction = ruleFunction;
+            this.template = template;
         }
 
         public MappingRule bind(T1 p1, T2 p2, T3 p3) {
-            return ruleFunction.apply(p1,p2,p3);
+            return ruleFunction.apply(p1, p2, p3);
         }
 
     }
