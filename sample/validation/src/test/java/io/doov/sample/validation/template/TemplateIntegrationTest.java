@@ -24,7 +24,7 @@ import io.doov.core.dsl.template.TemplateRule.Rule1;
 import io.doov.sample.model.SampleModels;
 
 public class TemplateIntegrationTest {
-
+    /*
     @Test
     void templateTest() {
         Rule1<String, StringFieldInfo> siteContainsGoogle =
@@ -55,6 +55,6 @@ public class TemplateIntegrationTest {
         }
 
     }
-
+    */
 
 }
