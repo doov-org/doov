@@ -9,84 +9,66 @@ import java.util.function.Function;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.*;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.template.TemplateSpec.*;
+import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.runtime.GenericModel;
 
 public class TemplateRule {
 
     public static class Rule1<
-            P1,T1 extends FieldInfo & DslField<P1>
-            > {
-        private ParameterNamespace ns;
-        private Function<T1,StepCondition> ruleFunction;
-        private Template1<P1,T1> template;
+            T1 extends FieldInfo & DslField<?>
+            > implements Readable {
+        private final Function<T1, ValidationRule> ruleFunction;
+        private final TemplateSpec.Template1<T1> template;
 
-        Rule1(Template1<P1, T1> template, Function<T1, StepCondition> ruleFunction) {
-            this.ns = new ParameterNamespace();
-            this.ruleFunction = ruleFunction;
+        Rule1(Function<T1, StepCondition> ruleFunction, TemplateSpec.Template1<T1> template) {
+            this.ruleFunction = ruleFunction.andThen(DOOV::when).andThen(StepWhen::validate);
             this.template = template;
         }
 
-        public BoundRule bind(T1 dest) {
-            T1 wildcard1 = template.param1.apply(ns,dest.readable());
-            StepCondition condition = ruleFunction.apply(wildcard1);
-            BoundRule boundedRule = new BoundRule(DOOV.when(condition));
-            boundedRule.bind(wildcard1.id(),dest.id());
-            return boundedRule;
+        public ValidationRule bind(T1 p1) {
+            return ruleFunction.apply(p1);
         }
 
+        @Override
+        public String readable() {
+            GenericModel mock = new GenericModel();
+            return ruleFunction.apply(template.param1.generator.apply(mock)).readable();
+        }
     }
 
     public static class Rule2<
-            P1,T1 extends FieldInfo & DslField<P1>,
-            P2,T2 extends FieldInfo & DslField<P2>
+            T1 extends FieldInfo & DslField<?>,
+            T2 extends FieldInfo & DslField<?>
             > {
-        private ParameterNamespace ns;
-        private BiFunction<T1,T2,StepCondition> ruleFunction;
-        private Template2<P1,T1,P2,T2> template;
+        private final BiFunction<T1,T2,ValidationRule> ruleFunction;
+        private final TemplateSpec.Template2<T1,T2> template;
 
-        Rule2(Template2<P1,T1,P2,T2> template, BiFunction<T1,T2, StepCondition> ruleFunction) {
-            this.ns = new ParameterNamespace();
-            this.ruleFunction = ruleFunction;
+        Rule2(BiFunction<T1, T2, StepCondition> ruleFunction, TemplateSpec.Template2<T1, T2> template) {
+            this.ruleFunction = ruleFunction.andThen(DOOV::when).andThen(StepWhen::validate);
             this.template = template;
         }
 
-        public BoundRule bind(T1 p1, T2 p2) {
-            T1 wildcard1 = template.param1.apply(ns,p1.readable());
-            T2 wildcard2 = template.param2.apply(ns,p2.readable());
-            StepCondition condition = ruleFunction.apply(wildcard1,wildcard2);
-            BoundRule boundedRule = new BoundRule(DOOV.when(condition));
-            boundedRule.bind(wildcard1.id(),p1.id());
-            boundedRule.bind(wildcard2.id(),p2.id());
-            return boundedRule;
+        public ValidationRule bind(T1 p1, T2 p2) {
+            return ruleFunction.apply(p1,p2);
         }
 
     }
 
     public static class Rule3<
-            P1,T1 extends FieldInfo & DslField<P1>,
-            P2,T2 extends FieldInfo & DslField<P2>,
-            P3,T3 extends FieldInfo & DslField<P3>
+            T1 extends FieldInfo & DslField<?>,
+            T2 extends FieldInfo & DslField<?>,
+            T3 extends FieldInfo & DslField<?>
             > {
-        private ParameterNamespace ns;
-        private TriFunction<T1,T2,T3,StepCondition> ruleFunction;
-        private Template3<P1,T1,P2,T2,P3,T3> template;
+        private final TriFunction<T1,T2,T3,ValidationRule> ruleFunction;
+        private final TemplateSpec.Template3<T1,T2,T3> template;
 
-        Rule3(Template3<P1,T1,P2,T2,P3,T3> template, TriFunction<T1,T2,T3, StepCondition> ruleFunction) {
-            this.ns = new ParameterNamespace();
-            this.ruleFunction = ruleFunction;
+        Rule3(TriFunction<T1, T2, T3, StepCondition> ruleFunction, TemplateSpec.Template3<T1, T2, T3> template) {
+            this.ruleFunction = ruleFunction.andThen(DOOV::when).andThen(StepWhen::validate);
             this.template = template;
         }
 
-        public BoundRule bind(T1 p1, T2 p2, T3 p3) {
-            T1 wildcard1 = template.param1.apply(ns,p1.readable());
-            T2 wildcard2 = template.param2.apply(ns,p2.readable());
-            T3 wildcard3 = template.param3.apply(ns,p3.readable());
-            StepCondition condition = ruleFunction.apply(wildcard1,wildcard2,wildcard3);
-            BoundRule boundedRule = new BoundRule(DOOV.when(condition));
-            boundedRule.bind(wildcard1.id(),p1.id());
-            boundedRule.bind(wildcard2.id(),p2.id());
-            boundedRule.bind(wildcard3.id(),p3.id());
-            return boundedRule;
+        public ValidationRule bind(T1 p1, T2 p2, T3 p3) {
+            return ruleFunction.apply(p1,p2,p3);
         }
 
     }
