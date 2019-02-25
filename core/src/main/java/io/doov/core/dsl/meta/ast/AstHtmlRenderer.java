@@ -243,41 +243,41 @@ public class AstHtmlRenderer extends HtmlWriter {
     private void unary(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         final Operator pmdOperator = pmd.map(Metadata::getOperator).orElse(null);
-        if (AND_OR.contains(pmdOperator)  && metadata.getOperator() == not) {
+        if (AND_OR.contains(pmdOperator) && metadata.getOperator() == not) {
             // @see io.doov.core.dsl.meta.ast.HtmlMoreCombinedTest.and_and_and_match_any_and_and()
             writeExclusionBar(metadata, parents);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(0), parents);
+            prefixUnary(metadata, parents);
         } else if (!AND_OR.contains(pmdOperator) && metadata.getOperator() == not) {
             writeBeginLi(CSS_LI_UNARY);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            write(SPACE);
-            toHtml(metadata.childAt(0), parents);
+            prefixUnary(metadata, parents);
             writeEndLi();
         } else if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
             // @see io.doov.sample.validation.ast.HtmlSampleRulesTest.RULE_USER()
             writeBeginLi(CSS_LI_LEAF);
             writeExclusionBar(metadata, parents);
-            toHtml(metadata.childAt(0), parents);
-            write(SPACE);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
+            postfixUnary(metadata, parents);
             writeEndLi();
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
             writeExclusionBar(metadata, parents);
-            toHtml(metadata.childAt(0), parents);
-            write(SPACE);
-            writeBeginSpan(CSS_OPERATOR);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
+            postfixUnary(metadata, parents);
         }
+    }
+
+    private void prefixUnary(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writeBeginSpan(CSS_OPERATOR);
+        writeFromBundle(metadata.getOperator());
+        writeEndSpan();
+        write(SPACE);
+        toHtml(metadata.childAt(0), parents);
+    }
+
+    private void postfixUnary(Metadata metadata, ArrayDeque<Metadata> parents) {
+        toHtml(metadata.childAt(0), parents);
+        write(SPACE);
+        writeBeginSpan(CSS_OPERATOR);
+        writeFromBundle(metadata.getOperator());
+        writeEndSpan();
     }
 
     private void leaf(Metadata metadata, ArrayDeque<Metadata> parents) {
