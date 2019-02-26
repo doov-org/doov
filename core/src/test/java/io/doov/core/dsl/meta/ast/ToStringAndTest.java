@@ -38,8 +38,6 @@ public class ToStringAndTest {
     private ValidationRule rule;
 
     @Test
-    @Disabled
-    // FIXME
     void and_false_false() {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
@@ -48,8 +46,6 @@ public class ToStringAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void and_true_false() {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
@@ -58,8 +54,6 @@ public class ToStringAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void and_false_true() {
         A = alwaysFalse("A");
         B = alwaysTrue("B");
@@ -68,8 +62,6 @@ public class ToStringAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void and_true_true() {
         A = alwaysTrue("A");
         B = alwaysTrue("B");
@@ -78,8 +70,6 @@ public class ToStringAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void and_field_true_true_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");
@@ -91,8 +81,6 @@ public class ToStringAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void and_and_and() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");
@@ -109,8 +97,6 @@ public class ToStringAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void and_and_count() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");
@@ -128,8 +114,6 @@ public class ToStringAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void and_or_and() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");

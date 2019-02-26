@@ -15,12 +15,14 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import java.util.Locale;
-
+import io.doov.core.dsl.meta.DefaultOperator;
 import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+
+import java.util.Locale;
 
 public class AstLineVisitor extends AstTextVisitor {
 
@@ -63,7 +65,10 @@ public class AstLineVisitor extends AstTextVisitor {
     @Override
     public void startBinary(BinaryPredicateMetadata metadata, int depth) {
         super.startBinary(metadata, depth);
-        sb.append(depth > 2 ? "(" : "");
+        if ((metadata.getOperator() == DefaultOperator.and || metadata.getOperator() == DefaultOperator.or)
+                || (metadata.getLeft().type() == MetadataType.NARY_PREDICATE)) {
+            sb.append(depth > 0 ? "(" : "");
+        }
     }
 
     @Override
@@ -78,7 +83,12 @@ public class AstLineVisitor extends AstTextVisitor {
     public void endBinary(BinaryPredicateMetadata metadata, int depth) {
         super.endBinary(metadata, depth);
         sb.delete(sb.length() - 1, sb.length());
-        sb.append(depth > 2 ? ") " : " ");
+        if ((metadata.getOperator() == DefaultOperator.and || metadata.getOperator() == DefaultOperator.or)
+                || (metadata.getLeft().type() == MetadataType.NARY_PREDICATE)) {
+            sb.append(depth > 0 ? ") " : " ");
+        } else {
+            sb.append(" ");
+        }
     }
 
     @Override

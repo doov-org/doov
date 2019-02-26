@@ -15,25 +15,22 @@
  */
 package io.doov.sample.validation;
 
-import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.core.dsl.lang.ReduceType.FAILURE;
-import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
-import static io.doov.core.dsl.time.LocalDateSuppliers.today;
-import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
-import static io.doov.sample.field.dsl.DslSampleModel.accountPhoneNumber;
-import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
+import io.doov.core.dsl.lang.Result;
+import io.doov.sample.field.dsl.DslSampleModel;
+import io.doov.sample.field.dsl.DslSampleModel.*;
+import io.doov.sample.model.Country;
+import io.doov.sample.model.SampleModel;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Locale;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-
-import io.doov.core.dsl.lang.Result;
-import io.doov.sample.field.dsl.DslSampleModel;
-import io.doov.sample.field.dsl.DslSampleModel.SampleModelRule;
-import io.doov.sample.model.Country;
-import io.doov.sample.model.SampleModel;
+import static io.doov.assertions.Assertions.assertThat;
+import static io.doov.core.dsl.lang.ReduceType.FAILURE;
+import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
+import static io.doov.core.dsl.time.LocalDateSuppliers.today;
+import static io.doov.sample.field.dsl.DslSampleModel.*;
 
 /**
  * Validate that a profile<br>
@@ -58,9 +55,9 @@ public class FailureCauseSample2Test {
     void getFailureCause_setup_1() {
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("(la date de naissance âge à la date du jour) > 18 et (le pays = FR) et (le numéro de " +
-                        "téléphone commence par '+33') ou (la date de naissance âge à la date du jour) > 21 et (le pays = CAN) et " +
-                        "(le numéro de téléphone commence par '+1')", LOCALE);
+                .hasFailureCause("(la date de naissance âge à la date du jour > 18 et (le pays = FR et le numéro de " +
+                        "téléphone commence par '+33')) ou (la date de naissance âge à la date du jour > 21 et (le pays = CAN et " +
+                        "le numéro de téléphone commence par '+1'))", LOCALE);
     }
 
     @Test
@@ -69,8 +66,8 @@ public class FailureCauseSample2Test {
 
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("le pays = FR et le numéro de téléphone commence par '+33' ou le pays = CAN et le " +
-                        "numéro de téléphone commence par '+1'", LOCALE);
+                .hasFailureCause("(le pays = FR et le numéro de téléphone commence par '+33') ou (le " +
+                        "pays = CAN et le numéro de téléphone commence par '+1')", LOCALE);
 
         System.out.println("> " + result.getFailureCause(LOCALE));
     }
@@ -82,8 +79,8 @@ public class FailureCauseSample2Test {
 
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("le numéro de téléphone commence par '+33' ou le pays = CAN et le numéro de téléphone " +
-                        "commence par '+1'", LOCALE);
+                .hasFailureCause("le numéro de téléphone commence par '+33' ou (le pays = CAN et le numéro de téléphone " +
+                        "commence par '+1')", LOCALE);
     }
 
     @Test
@@ -94,8 +91,8 @@ public class FailureCauseSample2Test {
 
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isTrue().hasNoFailureCause()
-                .hasReduceMessage("la date de naissance âge à la date du jour > 18 et le pays = FR et le numéro de " +
-                        "téléphone commence par '+33'", LOCALE);
+                .hasReduceMessage("la date de naissance âge à la date du jour > 18 et (le pays = FR et le numéro de " +
+                        "téléphone commence par '+33')", LOCALE);
     }
 
     @AfterEach

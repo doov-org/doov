@@ -111,8 +111,6 @@ public class ToStringMatchAnyTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void matchAny_field_true_true_true_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");

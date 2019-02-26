@@ -57,7 +57,7 @@ public class MinFunctionTest {
         reduce = result.reduce(SUCCESS);
 
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when min [0, 1] = 0 validate");
+                .isEqualTo("rule when (min [0, 1] = 0) validate");
 
         assertTrue(result.value());
         assertThat(reduce.readable(LOCALE)).isEqualTo("min [0, 1] = 0");
@@ -70,7 +70,7 @@ public class MinFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when min [0, 1] = 1 validate");
+                .isEqualTo("rule when (min [0, 1] = 1) validate");
 
         assertFalse(result.value());
         assertThat(reduce.readable(LOCALE)).isEqualTo("min [0, 1] = 1");

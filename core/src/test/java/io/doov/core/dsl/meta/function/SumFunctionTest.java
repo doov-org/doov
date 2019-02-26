@@ -57,7 +57,7 @@ public class SumFunctionTest {
         reduce = result.reduce(SUCCESS);
 
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when sum [1, 2] = 3 validate");
+                .isEqualTo("rule when (sum [1, 2] = 3) validate");
 
         assertTrue(result.value());
         assertThat(reduce.readable(LOCALE)).isEqualTo("sum [1, 2] = 3");
@@ -70,7 +70,7 @@ public class SumFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when sum [1, 2] = 4 validate");
+                .isEqualTo("rule when (sum [1, 2] = 4) validate");
 
         assertFalse(result.value());
         assertThat(reduce.readable(LOCALE)).isEqualTo("sum [1, 2] = 4");

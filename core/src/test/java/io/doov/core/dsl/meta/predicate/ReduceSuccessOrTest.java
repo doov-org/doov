@@ -48,7 +48,7 @@ public class ReduceSuccessOrTest {
         reduce = result.reduce(SUCCESS);
 
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when always false A or always false B validate");
+                .isEqualTo("rule when (always false A or always false B) validate");
 
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(EmptyMetadata.class);
@@ -75,7 +75,7 @@ public class ReduceSuccessOrTest {
         reduce = result.reduce(SUCCESS);
 
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when always true A or (always false B or always true C) validate");
+                .isEqualTo("rule when (always true A or (always false B or always true C)) validate");
 
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class);
@@ -103,7 +103,7 @@ public class ReduceSuccessOrTest {
         reduce = result.reduce(SUCCESS);
 
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when always false A or (always true B and always true C) validate");
+                .isEqualTo("rule when (always false A or (always true B and always true C)) validate");
 
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class);

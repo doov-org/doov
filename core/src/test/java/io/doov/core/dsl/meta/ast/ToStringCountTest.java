@@ -39,8 +39,6 @@ public class ToStringCountTest {
     private ValidationRule rule;
 
     @Test
-    @Disabled
-    // FIXME
     void count_false_false() {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
@@ -49,8 +47,6 @@ public class ToStringCountTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void count_true_false_greaterThan() {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
@@ -59,8 +55,6 @@ public class ToStringCountTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void count_true_false_greaterOrEquals() {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
@@ -69,8 +63,6 @@ public class ToStringCountTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void count_true_true() {
         A = alwaysTrue("A");
         B = alwaysTrue("B");
@@ -79,8 +71,6 @@ public class ToStringCountTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void count_field_true_true_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");

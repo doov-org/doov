@@ -54,7 +54,7 @@ public class CountFunctionTest {
 
         assertFalse(result.value());
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when count [always true A, always false B, always false C] > 1 validate");
+                .isEqualTo("rule when (count [always true A, always false B, always false C] > 1) validate");
 
         assertThat(reduce.readable(LOCALE)).isEqualTo("always false B and always false C");
 
@@ -74,7 +74,7 @@ public class CountFunctionTest {
 
         assertTrue(result.value());
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when count [always true A, always true B, always false C] >= 1 validate");
+                .isEqualTo("rule when (count [always true A, always true B, always false C] >= 1) validate");
 
         assertThat(reduce.readable(LOCALE)).isEqualTo("always true A and always true B");
 

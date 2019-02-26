@@ -48,7 +48,7 @@ public class ReduceCountFailureTest {
         reduce = result.reduce(FAILURE);
         
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when count [always false A, always false B] > 1 validate");
+                .isEqualTo("rule when (count [always false A, always false B] > 1) validate");
 
         assertFalse(result.value());
         assertThat(collectMetadata(reduce)).contains(A.metadata(), B.metadata());

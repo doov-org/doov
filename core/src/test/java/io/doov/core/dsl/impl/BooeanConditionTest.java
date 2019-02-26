@@ -62,7 +62,7 @@ public class BooeanConditionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A and false validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (A and false) validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A and false");
     }
 
@@ -73,7 +73,7 @@ public class BooeanConditionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A and B validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (A and B) validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A and B");
     }
 
@@ -84,7 +84,7 @@ public class BooeanConditionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when B or false validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (B or false) validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("B or false");
     }
 
@@ -95,7 +95,7 @@ public class BooeanConditionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when B or C validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (B or C) validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("B or C");
     }
 

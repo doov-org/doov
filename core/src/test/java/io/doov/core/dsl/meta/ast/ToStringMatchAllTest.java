@@ -78,8 +78,6 @@ public class ToStringMatchAllTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void matchAll_field_false_false_false_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");

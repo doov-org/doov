@@ -34,8 +34,6 @@ public class ToStringSumTest {
     private ValidationRule rule;
 
     @Test
-    @Disabled
-    // FIXME
     void sum_1_2_greaterThan_1() {
         A = model.intField(1, "A");
         B = model.intField(1, "B");
@@ -44,8 +42,6 @@ public class ToStringSumTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void sum_1_2_greaterThan_3() {
         A = model.intField(1, "A");
         B = model.intField(1, "B");
