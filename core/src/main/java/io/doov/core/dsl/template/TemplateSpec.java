@@ -9,6 +9,7 @@ import java.util.function.Function;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.mapping.MappingRegistry;
 
 public class TemplateSpec {
 
@@ -26,6 +27,10 @@ public class TemplateSpec {
 
         public TemplateMapping.Map1<T1> mapping(Function<T1, MappingRule> ruleFunction) {
             return new TemplateMapping.Map1<>(ruleFunction, this);
+        }
+
+        public TemplateMapping.Registry1<T1> mappings(Function<T1, MappingRegistry> registry) {
+            return new TemplateMapping.Registry1<>(registry, this);
         }
     }
 
@@ -51,6 +56,10 @@ public class TemplateSpec {
 
         public TemplateMapping.Map2<T1, T2> mapping(BiFunction<T1, T2,MappingRule> ruleFunction) {
             return new TemplateMapping.Map2<>(ruleFunction, this);
+        }
+
+        public TemplateMapping.Registry2<T1, T2> mappings(BiFunction<T1, T2, MappingRegistry> registry) {
+            return new TemplateMapping.Registry2<>(registry, this);
         }
     }
 
@@ -80,6 +89,10 @@ public class TemplateSpec {
 
         public TemplateMapping.Map3<T1, T2, T3> mapping(TriFunction<T1, T2, T3,MappingRule> ruleFunction) {
             return new TemplateMapping.Map3<>(ruleFunction, this);
+        }
+
+        public TemplateMapping.Registry3<T1, T2, T3> mappings(TriFunction<T1, T2, T3, MappingRegistry> registry) {
+            return new TemplateMapping.Registry3<>(registry, this);
         }
     }
 
