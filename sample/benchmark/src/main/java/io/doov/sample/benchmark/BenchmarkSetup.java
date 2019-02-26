@@ -76,8 +76,8 @@ public class BenchmarkSetup {
     }
 
     private static boolean isLeafBinaryPredicate(Metadata metadata) {
-        return metadata.type() == MetadataType.LEAF_PREDICATE
-                || metadata.type() == MetadataType.FIELD_PREDICATE
-                || metadata.type() == MetadataType.FIELD_PREDICATE_MATCH_ANY;
+        return metadata.children()
+                .flatMap(Metadata::children)
+                .noneMatch(m -> m.type() != MetadataType.LEAF_VALUE);
     }
 }
