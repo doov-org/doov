@@ -102,8 +102,6 @@ public class HtmlMoreCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME
     void or_and_and_and() {
         result = when(zeroField.isNull().or(zeroField.eq(0))
                 .and(booleanField1.isFalse())
@@ -114,17 +112,17 @@ public class HtmlMoreCombinedTest {
 
         assertFalse(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).isEmpty();
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(2);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).isEmpty();
         assertThat(doc.select("li.dsl-li-leaf")).isEmpty();
         assertThat(doc.select("ul.dsl-ul-when")).isEmpty();
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(1);
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
         assertThat(doc.select("ul.dsl-ul-binary-child")).isEmpty();
         assertThat(doc.select("ul.dsl-ul-unary")).isEmpty();
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "100 %", "100 %", "0 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("is null", "=", "is", "age at", "<", "age at", ">=");
+                .containsExactly("is null", "or", "=", "and", "is", "and", "age at", "<", "and", "age at", ">=");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("0", "false", "0", "0");
         assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)

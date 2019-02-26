@@ -173,7 +173,7 @@ public class AstHtmlRenderer extends HtmlWriter {
             binary_SPACE(metadata, parents);
         } else if (pmdOperator == and && metadata.getOperator() == or && leftChild) {
             // @see io.doov.core.dsl.meta.ast.HtmlMoreCombinedTest.or_and_sum()
-            binary_SPACE(metadata, parents);
+            binary_BR(metadata, parents);
         } else if (pmdType == BINARY_PREDICATE && AND_OR.contains(metadata.getOperator())) {
             // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_true_false_complex()
             writeBeginUl(CSS_UL_BINARY);
@@ -224,11 +224,8 @@ public class AstHtmlRenderer extends HtmlWriter {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         final Operator pmdOperator = pmd.map(Metadata::getOperator).orElse(null);
         final boolean leftChild = pmd.map(m -> m.childAt(0) == metadata).orElse(false);
-
-        if ((!leftChild || pmdOperator != or || metadata.getOperator() != and)
-                && (!leftChild || pmdOperator != and || metadata.getOperator() != or)) {
+        if ((!leftChild || pmdOperator != or || metadata.getOperator() != and)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_or_and()
-            // @see io.doov.core.dsl.meta.ast.HtmlMoreCombinedTest.or_and_sum()
             writeExclusionBar(metadata, parents);
         }
         toHtml(metadata.childAt(0), parents);
