@@ -26,7 +26,7 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
     }
 
     private MappingRegistry(MappingRule... mappingRules) {
-        this.mappingRules = Arrays.stream(mappingRules).flatMap(MappingRule::stream).collect(Collectors.toList());
+        this.mappingRules = Arrays.asList(mappingRules);
         // TODO
         this.metadata = MappingRegistryMetadata.mappings(stream().map(MappingRule::metadata).collect(Collectors.toList()));
     }
