@@ -12,59 +12,33 @@
  */
 package io.doov.sample.benchmark.runtime;
 
-import static io.doov.benchmark.model.RuntimePaths.age;
-import static io.doov.benchmark.model.RuntimePaths.drivingLicense;
-import static io.doov.benchmark.model.dsl.DslBenchmarkModel.*;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Threads;
-import org.openjdk.jmh.annotations.Warmup;
-import org.openjdk.jmh.infra.Blackhole;
-
-import io.doov.benchmark.model.BenchmarkModel;
-import io.doov.benchmark.model.BenchmarkModelWrapper;
-import io.doov.benchmark.model.Driver;
 import io.doov.benchmark.model.RuntimePaths;
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.BooleanFieldInfo;
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 import io.doov.core.dsl.runtime.RuntimeModel;
+import io.doov.sample.benchmark.BenchmarkSetup;
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import static io.doov.benchmark.model.RuntimePaths.age;
+import static io.doov.benchmark.model.RuntimePaths.drivingLicense;
+import static io.doov.benchmark.model.dsl.DslBenchmarkModel.name;
+import static io.doov.sample.benchmark.BenchmarkSetup.getActualViolationCount;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /*
  * http://in.relation.to/2017/10/31/bean-validation-benchmark-revisited/
  */
 public class SimpleValidationWithoutShortCircuit {
 
-    private static final String[] names = {
-                    null,
-                    "Jacob",
-                    "Isabella",
-                    "Ethan",
-                    "Sophia",
-                    "Michael",
-                    "Emma",
-                    "Jayden",
-                    "Olivia",
-                    "William"
-    };
-
     @State(Scope.Benchmark)
-    public static class ValidationState {
+    public static class ValidationState implements BenchmarkSetup.ValidationState {
 
         volatile ValidationRule rule = DOOV
                         .when(name.isNotNull()
@@ -75,6 +49,15 @@ public class SimpleValidationWithoutShortCircuit {
 
         volatile Random random = new Random();
 
+        @Override
+        public ValidationRule rule() {
+            return rule;
+        }
+
+        @Override
+        public Random random() {
+            return random;
+        }
     }
 
     @Benchmark
@@ -85,51 +68,10 @@ public class SimpleValidationWithoutShortCircuit {
     @Warmup(iterations = 5)
     @Measurement(iterations = 5)
     public void testSimpleBeanValidation(ValidationState state, Blackhole blackHole) {
-        DriverSetup driverSetup = new DriverSetup(state);
-        Result result = state.rule.executeOn(driverSetup.model);
-        assertThat(getActualViolationCount(result)).isEqualTo(driverSetup.expectedViolationCount);
+        BenchmarkSetup benchmarkSetup = new BenchmarkSetup(model -> new RuntimeModel<>(RuntimePaths.INSTANCE, model), state);
+        Result result = state.rule.executeOn(benchmarkSetup.model);
+        assertThat(getActualViolationCount(result)).isEqualTo(benchmarkSetup.expectedViolationCount);
         blackHole.consume(result);
-    }
-
-    private class DriverSetup {
-
-        private int expectedViolationCount;
-        private Driver driver;
-        private DslModel model;
-
-        DriverSetup(ValidationState state) {
-            expectedViolationCount = 0;
-
-            String name = names[state.random.nextInt(10)];
-            if (name == null) {
-                expectedViolationCount++;
-            }
-
-            int randomAge = state.random.nextInt(100);
-            if (randomAge < 18) {
-                expectedViolationCount++;
-            }
-
-            int rand = state.random.nextInt(2);
-            boolean hasLicense = rand == 1;
-            if (!hasLicense) {
-                expectedViolationCount++;
-            }
-
-            driver = new Driver(name, randomAge, hasLicense);
-
-            BenchmarkModel model = new BenchmarkModel();
-            model.setDriver(driver);
-
-            this.model = new RuntimeModel<>(RuntimePaths.INSTANCE, model);
-        }
-
-    }
-
-    private static int getActualViolationCount(Result result) {
-        return (int) result.getContext().getEvalFalse().stream()
-                        .filter(metadata -> metadata instanceof LeafPredicateMetadata)
-                        .count();
     }
 
 }
