@@ -3,10 +3,6 @@
  */
 package io.doov.core.dsl.template;
 
-import static io.doov.core.dsl.template.TemplateParam.$Enum;
-import static io.doov.core.dsl.template.TemplateParam.$Integer;
-import static io.doov.core.dsl.template.TemplateParam.$Iterable;
-
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +14,8 @@ import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.core.dsl.template.TemplateRule.Rule1;
+
+import static io.doov.core.dsl.template.TemplateParam.*;
 
 class TemplateValidationTest {
 
@@ -66,6 +64,22 @@ class TemplateValidationTest {
         TemplateRule.Rule3<IntegerFieldInfo, IntegerFieldInfo, IntegerFieldInfo> template =
                 DOOV.template($Integer, $Integer, $Integer).with(
                         (a, b, c) -> c.greaterThan(a).and(b.greaterThan(a))
+                );
+
+        Assertions.assertTrue(template.bind(A, B, C).executeOn(model).value());
+
+    }
+    @Test
+    void test3Params_different_types() {
+
+        GenericModel model = new GenericModel();
+        IntegerFieldInfo A = model.intField(3, "A");
+        StringFieldInfo B = model.stringField("5", "B");
+        BooleanFieldInfo C = model.booleanField(true, "C");
+
+        TemplateRule.Rule3<IntegerFieldInfo, StringFieldInfo, BooleanFieldInfo> template =
+                DOOV.template($Integer, $String, $Boolean).with(
+                        (a, b, c) -> c.isTrue().and(b.mapToInt(Integer::parseInt).greaterThan(a))
                 );
 
         Assertions.assertTrue(template.bind(A, B, C).executeOn(model).value());

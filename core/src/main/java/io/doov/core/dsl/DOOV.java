@@ -59,7 +59,7 @@ import io.doov.core.dsl.template.TemplateSpec;
  * either by referencing a {@link io.doov.core.FieldInfo} that you generated (in the example below it's
  * <code>userEmail</code>) or by using a composition method like {@link #matchAll(StepCondition...)}.
  * </p>
- * 
+ *
  * <pre>
  * <code class='java'>DOOV.when(userEmail().matches("...")).validate();</code>
  * </pre>
@@ -154,14 +154,14 @@ public class DOOV {
     /**
      * See {@link LogicalNaryCondition#matchAny(List)}
      *
-     * @param dslFields stream of fields
+     * @param dslFields             stream of fields
      * @param stepConditionFunction condition to apply
      * @return step condition
      */
     public static StepCondition matchAny(Stream<? extends DslField<?>> dslFields,
-                    Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+                                         Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchAny(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
-                        .map(stepConditionFunction).collect(Collectors.toList()));
+                .map(stepConditionFunction).collect(Collectors.toList()));
     }
 
     /**
@@ -178,14 +178,14 @@ public class DOOV {
     /**
      * See {@link LogicalNaryCondition#matchAll(List)}
      *
-     * @param dslFields stream of fields
+     * @param dslFields             stream of fields
      * @param stepConditionFunction condition to apply
      * @return step condition
      */
     public static StepCondition matchAll(Stream<? extends DslField<?>> dslFields,
-                    Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+                                         Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchAll(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
-                        .map(stepConditionFunction).collect(Collectors.toList()));
+                .map(stepConditionFunction).collect(Collectors.toList()));
     }
 
     /**
@@ -202,21 +202,21 @@ public class DOOV {
     /**
      * See {@link LogicalNaryCondition#matchNone(List)}
      *
-     * @param dslFields stream of fields
+     * @param dslFields             stream of fields
      * @param stepConditionFunction condition to apply
      * @return step condition
      */
     public static StepCondition matchNone(Stream<? extends DslField<?>> dslFields,
-                    Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+                                          Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchNone(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
-                        .map(stepConditionFunction).collect(Collectors.toList()));
+                .map(stepConditionFunction).collect(Collectors.toList()));
     }
 
     /**
      * Start defining a mapping
      *
      * @param inFieldInfo in field
-     * @param <I> in type
+     * @param <I>         in type
      * @return map step
      */
     public static <I> SimpleStepMap<I> map(DslField<I> inFieldInfo) {
@@ -226,10 +226,10 @@ public class DOOV {
     /**
      * Start defining a bi mapping
      *
-     * @param inFieldInfo in field
+     * @param inFieldInfo  in field
      * @param in2FieldInfo in field 2
-     * @param <I> in type
-     * @param <J> in type 2
+     * @param <I>          in type
+     * @param <J>          in type 2
      * @return bi map step
      */
     public static <I, J> BiStepMap<I, J> map(DslField<I> inFieldInfo, DslField<J> in2FieldInfo) {
@@ -260,7 +260,7 @@ public class DOOV {
      * Start defining a value mapping
      *
      * @param valueSupplier value supplier
-     * @param <I> value type
+     * @param <I>           value type
      * @return value map step
      */
     public static <I> StaticStepMap<I> map(Supplier<I> valueSupplier) {
@@ -271,7 +271,7 @@ public class DOOV {
      * Start defining a value mapping
      *
      * @param value value
-     * @param <I> value type
+     * @param <I>   value type
      * @return value step map
      */
     public static <I> StaticStepMap<I> map(I value) {
@@ -282,7 +282,7 @@ public class DOOV {
      * Start defining a value mapping with value null
      *
      * @param outFieldInfo output field
-     * @param <O> value type
+     * @param <O>          value type
      * @return value map step
      */
     public static <O> MappingRule mapNull(DslField<O> outFieldInfo) {
@@ -293,7 +293,7 @@ public class DOOV {
      * Start defining a context-aware value mapping
      *
      * @param valueFunction context dependent value function
-     * @param <I> value type
+     * @param <I>           value type
      * @return value map step
      */
     public static <I> ContextawareStepMap<I> map(BiFunction<FieldModel, Context, I> valueFunction) {
@@ -304,7 +304,7 @@ public class DOOV {
      * Start defining a context-aware value mapping
      *
      * @param input mapping input
-     * @param <I> value type
+     * @param <I>   value type
      * @return value map step
      */
     public static <I> ContextawareStepMap<I> map(MappingInput<I> input) {
@@ -324,62 +324,62 @@ public class DOOV {
     /**
      * Create an array of mapping rules from a range of index
      *
-     * @param startInclusive inclusive start index, inclusive
-     * @param endExclusive exclusive end index
+     * @param startInclusive      inclusive start index, inclusive
+     * @param endExclusive        exclusive end index
      * @param mappingRuleFunction index to mapping rule function
      * @return mapping registry containing rules
      */
     public static MappingRegistry mapRange(int startInclusive, int endExclusive,
-                    Function<Integer, MappingRule> mappingRuleFunction) {
+                                           Function<Integer, MappingRule> mappingRuleFunction) {
         return MappingRegistry.mappings(IntStream.range(startInclusive, endExclusive)
-                        .mapToObj(mappingRuleFunction::apply).toArray(MappingRule[]::new));
+                .mapToObj(mappingRuleFunction::apply).toArray(MappingRule[]::new));
     }
 
     /**
      * Create an array of mapping rules from a stream of fields
      *
-     * @param fieldStream field stream
+     * @param fieldStream         field stream
      * @param mappingRuleFunction field to mapping rule function
-     * @param <T> field info type
+     * @param <T>                 field info type
      * @return mapping registry containing rules
      */
     public static <T extends DslField<?>> MappingRegistry mapFor(Stream<T> fieldStream,
-                    Function<T, MappingRule> mappingRuleFunction) {
+                                                                 Function<T, MappingRule> mappingRuleFunction) {
         return MappingRegistry.mappings(fieldStream.filter(Objects::nonNull).map(mappingRuleFunction)
-                        .toArray(MappingRule[]::new));
+                .toArray(MappingRule[]::new));
     }
 
     /**
      * Create an array of mapping rules from a stream of fields with index
      *
-     * @param fieldStream field stream
+     * @param fieldStream         field stream
      * @param mappingRuleFunction field to mapping rule function with index in integer
-     * @param <T> field info type
+     * @param <T>                 field info type
      * @return mapping registry containing rules
      */
     public static <T extends DslField<?>> MappingRegistry mapWithIndex(Stream<T> fieldStream,
-            BiFunction<T, Integer, MappingRule> mappingRuleFunction) {
+                                                                       BiFunction<T, Integer, MappingRule> mappingRuleFunction) {
         return MappingRegistry.mappings(Streams.mapWithIndex(fieldStream, (f, l) -> mappingRuleFunction.apply(f, l.intValue()))
-                        .toArray(MappingRule[]::new));
+                .toArray(MappingRule[]::new));
     }
 
     /**
      * Returns the field in the position
      *
      * @param fieldStream field stream
-     * @param index field list position
-     * @param <T> field info type
+     * @param index       field list position
+     * @param <T>         field info type
      * @return field info
      */
     public static <T extends DslField<?>> T fieldInPosition(Stream<T> fieldStream, int index) {
         return fieldStream.filter(Objects::nonNull).filter(f -> f.id().position() == index).findFirst().orElseThrow(
-                        () -> new IllegalArgumentException("Field with position " + index + " not found."));
+                () -> new IllegalArgumentException("Field with position " + index + " not found."));
     }
 
     /**
      * See {@link NumericFunction#min(List)}
      *
-     * @param <N> the type of the field infos
+     * @param <N>    the type of the field infos
      * @param fields the fields to minimize
      * @return the numeric condition
      * @see NumericFunction#min(List)
@@ -387,13 +387,13 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericFunction<N> min(NumericFieldInfo<N>... fields) {
         return Arrays.stream(fields).filter(Objects::nonNull).findFirst().map(NumericFieldInfo::getNumericFunction)
-                        .map(c -> c.min(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
+                .map(c -> c.min(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
     }
 
     /**
      * See {@link NumericFunction#sum(List)}
      *
-     * @param <N> the type of the field infos
+     * @param <N>    the type of the field infos
      * @param fields the fields to sum
      * @return the numeric condition
      * @see NumericFunction#sum(List)
@@ -401,13 +401,13 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericFunction<N> sum(NumericFieldInfo<N>... fields) {
         return Arrays.stream(fields).filter(Objects::nonNull).findFirst().map(NumericFieldInfo::getNumericFunction)
-                        .map(c -> c.sum(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
+                .map(c -> c.sum(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
     }
 
     /**
      * See {@link NumericFunction#sum(List)}
      *
-     * @param <N> the type of the field infos
+     * @param <N>        the type of the field infos
      * @param conditions the conditions to sum
      * @return the numeric condition
      * @see NumericFunction#sum(List)
@@ -415,38 +415,31 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericFunction<N> sum(NumericFunction<N>... conditions) {
         return Arrays.stream(conditions).filter(Objects::nonNull).findFirst()
-                        .map(c -> c.sumConditions(Arrays.asList(conditions)))
-                        .orElseThrow(IllegalArgumentException::new);
+                .map(c -> c.sumConditions(Arrays.asList(conditions)))
+                .orElseThrow(IllegalArgumentException::new);
     }
 
-    public static <
-            T1 extends FieldInfo & DslField<?>
-            > TemplateSpec.Template1<T1> template(
-            TemplateParam<T1> param1
-    ) {
+    public static <T1 extends DslField<?>> TemplateSpec.Template1<T1> template(TemplateParam<T1> param1) {
         return new TemplateSpec.Template1<>(param1);
     }
 
     public static <
-            T1 extends FieldInfo & DslField<?>,
-            T2 extends FieldInfo & DslField<?>
-            > TemplateSpec.Template2<T1,T2> template(
+            T1 extends DslField<?>,
+            T2 extends DslField<?>
+            > TemplateSpec.Template2<T1, T2> template(
             TemplateParam<T1> param1,
-            TemplateParam<T2> param2
-    ) {
-        return new TemplateSpec.Template2<>(param1,param2);
+            TemplateParam<T2> param2) {
+        return new TemplateSpec.Template2<>(param1, param2);
     }
 
     public static <
-            T1 extends FieldInfo & DslField<?>,
-            T2 extends FieldInfo & DslField<?>,
-            T3 extends FieldInfo & DslField<?>
-            > TemplateSpec.Template3<T1,T2,T3>
-    template(
+            T1 extends DslField<?>,
+            T2 extends DslField<?>,
+            T3 extends DslField<?>
+            > TemplateSpec.Template3<T1, T2, T3> template(
             TemplateParam<T1> param1,
             TemplateParam<T2> param2,
-            TemplateParam<T3> param3
-    ) {
-        return new TemplateSpec.Template3<>(param1,param2,param3);
+            TemplateParam<T3> param3) {
+        return new TemplateSpec.Template3<>(param1, param2, param3);
     }
 }

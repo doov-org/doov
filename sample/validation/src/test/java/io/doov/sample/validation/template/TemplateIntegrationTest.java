@@ -3,14 +3,6 @@
  */
 package io.doov.sample.validation.template;
 
-import static io.doov.core.dsl.template.TemplateParam.$String;
-import static io.doov.sample.field.dsl.DslSampleModel.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.junit.jupiter.api.Test;
-
 import io.doov.assertions.Assertions;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
@@ -19,6 +11,14 @@ import io.doov.core.dsl.template.TemplateMapping;
 import io.doov.core.dsl.template.TemplateRule;
 import io.doov.core.dsl.template.TemplateRule.Rule1;
 import io.doov.sample.model.SampleModels;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static io.doov.core.dsl.template.TemplateParam.$String;
+import static io.doov.sample.field.dsl.DslSampleModel.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TemplateIntegrationTest {
     @Test
@@ -37,8 +37,8 @@ public class TemplateIntegrationTest {
     @Test
     void twoParamsTest() {
         TemplateRule.Rule2<StringFieldInfo, StringFieldInfo> validateSite =
-                DOOV.template($String,$String).rule(
-                        (url,name) -> url.contains(name.mapToString(String::toLowerCase))
+                DOOV.template($String, $String).rule(
+                        (url, name) -> url.contains(name.mapToString(String::toLowerCase))
                 );
 
         FieldModel model = SampleModels.wrapper();
@@ -46,22 +46,22 @@ public class TemplateIntegrationTest {
         List<StringFieldInfo> urls = favoriteSiteUrl().collect(Collectors.toList());
         List<StringFieldInfo> names = favoriteSiteName().collect(Collectors.toList());
 
-        for(int i = 0; i < 3; i++) {
-            Assertions.assertThat(validateSite.bind(urls.get(i),names.get(i))).validates(model);
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertThat(validateSite.bind(urls.get(i), names.get(i))).validates(model);
         }
 
     }
 
     @Test
     void mappingTemplateTest() {
-        TemplateMapping.Map2<StringFieldInfo,StringFieldInfo> emplace = DOOV.template($String,$String).mapping(
+        TemplateMapping.Map2<StringFieldInfo, StringFieldInfo> emplace = DOOV.template($String, $String).mapping(
                 (from, dest) -> DOOV.map(from).to(dest)
         );
 
         FieldModel model = SampleModels.wrapper();
 
-        emplace.bind(favoriteSiteName1,favoriteSiteName2).executeOn(model,model);
+        emplace.bind(favoriteSiteName1, favoriteSiteName2).executeOn(model, model);
 
-        org.junit.jupiter.api.Assertions.assertEquals(model.get(favoriteSiteName1),model.get(favoriteSiteName2));
+        assertThat(model.get(favoriteSiteName1)).isEqualTo(model.get(favoriteSiteName2));
     }
 }

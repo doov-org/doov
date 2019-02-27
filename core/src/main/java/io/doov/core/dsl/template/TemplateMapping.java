@@ -3,20 +3,20 @@
  */
 package io.doov.core.dsl.template;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.TriFunction;
 import io.doov.core.dsl.mapping.MappingRegistry;
 import io.doov.core.dsl.runtime.GenericModel;
+
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class TemplateMapping {
 
     public static class Map1<
-            T1 extends FieldInfo & DslField<?>
+            T1 extends DslField<?>
             > implements Readable {
 
         private final Function<T1, MappingRule> ruleFunction;
@@ -40,10 +40,7 @@ public class TemplateMapping {
         }
     }
 
-    public static class Map2<
-            T1 extends FieldInfo & DslField<?>,
-            T2 extends FieldInfo & DslField<?>
-            > implements Readable {
+    public static class Map2<T1 extends DslField<?>, T2 extends DslField<?>> implements Readable {
 
         private final BiFunction<T1, T2, MappingRule> ruleFunction;
         private final TemplateSpec.Template2<T1, T2> template;
@@ -68,9 +65,9 @@ public class TemplateMapping {
     }
 
     public static class Map3<
-            T1 extends FieldInfo & DslField<?>,
-            T2 extends FieldInfo & DslField<?>,
-            T3 extends FieldInfo & DslField<?>
+            T1 extends DslField<?>,
+            T2 extends DslField<?>,
+            T3 extends DslField<?>
             > implements Readable {
 
         private final TriFunction<T1, T2, T3, MappingRule> ruleFunction;
@@ -97,7 +94,7 @@ public class TemplateMapping {
     }
 
     public static class Registry1<
-            T1 extends FieldInfo & DslField<?>
+            T1 extends DslField<?>
             > {
 
         private final Function<T1, MappingRegistry> registryFunction;
@@ -115,8 +112,8 @@ public class TemplateMapping {
     }
 
     public static class Registry2<
-            T1 extends FieldInfo & DslField<?>,
-            T2 extends FieldInfo & DslField<?>
+            T1 extends DslField<?>,
+            T2 extends DslField<?>
             > {
 
         private final BiFunction<T1, T2, MappingRegistry> registryFunction;
@@ -134,9 +131,9 @@ public class TemplateMapping {
     }
 
     public static class Registry3<
-            T1 extends FieldInfo & DslField<?>,
-            T2 extends FieldInfo & DslField<?>,
-            T3 extends FieldInfo & DslField<?>
+            T1 extends DslField<?>,
+            T2 extends DslField<?>,
+            T3 extends DslField<?>
             > {
 
         private final TriFunction<T1, T2, T3, MappingRegistry> registryFunction;
