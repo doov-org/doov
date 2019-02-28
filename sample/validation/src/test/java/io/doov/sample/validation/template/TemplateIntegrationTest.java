@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.doov.core.dsl.template.TemplateParam.$String;
+import static io.doov.core.dsl.template.ParameterTypes.$String;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static org.assertj.core.api.Assertions.assertThat;
 

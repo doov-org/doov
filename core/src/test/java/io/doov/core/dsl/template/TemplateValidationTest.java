@@ -7,6 +7,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.doov.core.dsl.lang.ValidationRule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.core.dsl.template.TemplateRule.Rule1;
 
-import static io.doov.core.dsl.template.TemplateParam.*;
+import static io.doov.core.dsl.template.ParameterTypes.$Boolean;
 
 class TemplateValidationTest {
 
@@ -27,7 +28,7 @@ class TemplateValidationTest {
         IntegerFieldInfo B = model.intField(9, "B");
         IntegerFieldInfo C = model.intField(1, "C");
 
-        Rule1<IntegerFieldInfo> template = DOOV.template($Integer).rule(
+        Rule1<IntegerFieldInfo> template = DOOV.template(ParameterTypes.$Integer).rule(
                 A::greaterThan
         );
 
@@ -46,7 +47,7 @@ class TemplateValidationTest {
         IntegerFieldInfo B = model.intField(5, "B");
 
         TemplateRule.Rule2<IntegerFieldInfo, IntegerFieldInfo> template =
-                DOOV.template($Integer, $Integer).rule(NumericFieldInfo::greaterThan);
+                DOOV.template(ParameterTypes.$Integer, ParameterTypes.$Integer).rule(NumericFieldInfo::greaterThan);
 
         Assertions.assertTrue(template.bind(B, A).executeOn(model).value());
         Assertions.assertFalse(template.bind(A, B).executeOn(model).value());
@@ -62,13 +63,14 @@ class TemplateValidationTest {
         IntegerFieldInfo C = model.intField(5, "C");
 
         TemplateRule.Rule3<IntegerFieldInfo, IntegerFieldInfo, IntegerFieldInfo> template =
-                DOOV.template($Integer, $Integer, $Integer).with(
+                DOOV.template(ParameterTypes.$Integer, ParameterTypes.$Integer, ParameterTypes.$Integer).with(
                         (a, b, c) -> c.greaterThan(a).and(b.greaterThan(a))
                 );
 
         Assertions.assertTrue(template.bind(A, B, C).executeOn(model).value());
 
     }
+
     @Test
     void test3Params_different_types() {
 
@@ -78,7 +80,7 @@ class TemplateValidationTest {
         BooleanFieldInfo C = model.booleanField(true, "C");
 
         TemplateRule.Rule3<IntegerFieldInfo, StringFieldInfo, BooleanFieldInfo> template =
-                DOOV.template($Integer, $String, $Boolean).with(
+                DOOV.template(ParameterTypes.$Integer, ParameterTypes.$String, $Boolean).with(
                         (a, b, c) -> c.isTrue().and(b.mapToInt(Integer::parseInt).greaterThan(a))
                 );
 
@@ -93,7 +95,7 @@ class TemplateValidationTest {
         EnumFieldInfo<Month> month = model.enumField(Month.DECEMBER, "");
 
         Rule1<EnumFieldInfo<Month>> december =
-                DOOV.template($Enum(Month.class)).rule(present -> present.eq(Month.DECEMBER));
+                DOOV.template(ParameterTypes.$Enum(Month.class)).rule(present -> present.eq(Month.DECEMBER));
 
         Assertions.assertTrue(december.bind(month).executeOn(model).value());
 
@@ -120,10 +122,26 @@ class TemplateValidationTest {
         IterableFieldInfo<Integer, Iterable<Integer>> without1 = model.iterableField(ls2, "list");
 
         Rule1<IterableFieldInfo<Integer, Iterable<Integer>>> has1 =
-                DOOV.template($Iterable(Integer.class)).rule(it -> it.contains(1));
+                DOOV.template(ParameterTypes.$Iterable(Integer.class)).rule(it -> it.contains(1));
 
         Assertions.assertTrue(has1.bind(with1).executeOn(model).value());
         Assertions.assertFalse(has1.bind(without1).executeOn(model).value());
+
+    }
+
+    @Test
+    void testrebind_parameters() {
+        GenericModel model = new GenericModel();
+        BooleanFieldInfo _true = model.booleanField(true, "TrueField");
+        BooleanFieldInfo _false = model.booleanField(false, "FalseField");
+
+        Rule1<BooleanFieldInfo> templatedRule = DOOV.template($Boolean).rule(LogicalFieldInfo::isTrue);
+
+        ValidationRule rule = templatedRule.bind(_true);
+        Assertions.assertTrue(rule.executeOn(model).value());
+
+        templatedRule.bind(_false);
+        Assertions.assertFalse(rule.executeOn(model).value());
 
     }
 }

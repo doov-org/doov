@@ -419,17 +419,17 @@ public class DOOV {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public static <T1 extends DslField<?>> TemplateSpec.Template1<T1> template(TemplateParam<T1> param1) {
-        return new TemplateSpec.Template1<>(param1);
+    public static <T1 extends DslField<?>> TemplateSpec.Template1<T1> template(Supplier<TemplateParam<T1>> param1) {
+        return new TemplateSpec.Template1<>(param1.get());
     }
 
     public static <
             T1 extends DslField<?>,
             T2 extends DslField<?>
             > TemplateSpec.Template2<T1, T2> template(
-            TemplateParam<T1> param1,
-            TemplateParam<T2> param2) {
-        return new TemplateSpec.Template2<>(param1, param2);
+            Supplier<TemplateParam<T1>> param1,
+            Supplier<TemplateParam<T2>> param2) {
+        return new TemplateSpec.Template2<>(param1.get(), param2.get());
     }
 
     public static <
@@ -437,9 +437,9 @@ public class DOOV {
             T2 extends DslField<?>,
             T3 extends DslField<?>
             > TemplateSpec.Template3<T1, T2, T3> template(
-            TemplateParam<T1> param1,
-            TemplateParam<T2> param2,
-            TemplateParam<T3> param3) {
-        return new TemplateSpec.Template3<>(param1, param2, param3);
+            Supplier<TemplateParam<T1>> param1,
+            Supplier<TemplateParam<T2>> param2,
+            Supplier<TemplateParam<T3>> param3) {
+        return new TemplateSpec.Template3<>(param1.get(), param2.get(), param3.get());
     }
 }

@@ -4,63 +4,57 @@
 package io.doov.core.dsl.template;
 
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.lang.DSLBuilder;
 import io.doov.core.dsl.lang.MappingRule;
-import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.TriFunction;
 import io.doov.core.dsl.mapping.MappingRegistry;
-import io.doov.core.dsl.runtime.GenericModel;
+import io.doov.core.dsl.meta.Metadata;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class TemplateMapping {
 
-    public static class Map1<
-            T1 extends DslField<?>
-            > implements Readable {
+    public static class Map1<T1 extends DslField<?>> implements DSLBuilder {
 
-        private final Function<T1, MappingRule> ruleFunction;
         private final TemplateSpec.Template1<T1> template;
+        private final MappingRule mappingRule;
 
         Map1(Function<T1, MappingRule> ruleFunction, TemplateSpec.Template1<T1> template) {
-            this.ruleFunction = ruleFunction;
             this.template = template;
+            this.mappingRule = ruleFunction.apply(template.param1.create());
         }
 
         public MappingRule bind(T1 p1) {
-            return ruleFunction.apply(p1);
+            template.param1.bind(p1);
+            return mappingRule;
         }
 
         @Override
-        public String readable() {
-            GenericModel mock = new GenericModel();
-            return ruleFunction.apply(
-                    template.param1.generator.apply(mock)
-            ).readable();
+        public Metadata metadata() {
+            return mappingRule.metadata();
         }
     }
 
-    public static class Map2<T1 extends DslField<?>, T2 extends DslField<?>> implements Readable {
+    public static class Map2<T1 extends DslField<?>, T2 extends DslField<?>> implements DSLBuilder {
 
-        private final BiFunction<T1, T2, MappingRule> ruleFunction;
         private final TemplateSpec.Template2<T1, T2> template;
+        private MappingRule mappingRule;
 
         Map2(BiFunction<T1, T2, MappingRule> ruleFunction, TemplateSpec.Template2<T1, T2> template) {
-            this.ruleFunction = ruleFunction;
             this.template = template;
+            this.mappingRule = ruleFunction.apply(template.param1.create(), template.param2.create());
         }
 
         public MappingRule bind(T1 p1, T2 p2) {
-            return ruleFunction.apply(p1, p2);
+            template.param1.bind(p1);
+            template.param2.bind(p2);
+            return mappingRule;
         }
 
         @Override
-        public String readable() {
-            GenericModel mock = new GenericModel();
-            return ruleFunction.apply(
-                    template.param1.generator.apply(mock),
-                    template.param2.generator.apply(mock)
-            ).readable();
+        public Metadata metadata() {
+            return mappingRule.metadata();
         }
     }
 
@@ -68,88 +62,107 @@ public class TemplateMapping {
             T1 extends DslField<?>,
             T2 extends DslField<?>,
             T3 extends DslField<?>
-            > implements Readable {
+            > implements DSLBuilder {
 
-        private final TriFunction<T1, T2, T3, MappingRule> ruleFunction;
         private final TemplateSpec.Template3<T1, T2, T3> template;
+        private MappingRule mappingRule;
 
         Map3(TriFunction<T1, T2, T3, MappingRule> ruleFunction, TemplateSpec.Template3<T1, T2, T3> template) {
-            this.ruleFunction = ruleFunction;
             this.template = template;
+            this.mappingRule = ruleFunction.apply(template.param1.create(),
+                    template.param2.create(),
+                    template.param3.create());
         }
 
         public MappingRule bind(T1 p1, T2 p2, T3 p3) {
-            return ruleFunction.apply(p1, p2, p3);
+            template.param1.bind(p1);
+            template.param2.bind(p2);
+            template.param3.bind(p3);
+            return mappingRule;
         }
 
         @Override
-        public String readable() {
-            GenericModel mock = new GenericModel();
-            return ruleFunction.apply(
-                    template.param1.generator.apply(mock),
-                    template.param2.generator.apply(mock),
-                    template.param3.generator.apply(mock)
-            ).readable();
+        public Metadata metadata() {
+            return mappingRule.metadata();
         }
     }
 
     public static class Registry1<
             T1 extends DslField<?>
-            > {
+            > implements DSLBuilder {
 
-        private final Function<T1, MappingRegistry> registryFunction;
         private final TemplateSpec.Template1<T1> template;
+        private final MappingRegistry mappingRegistry;
 
         Registry1(Function<T1, MappingRegistry> registryFunction, TemplateSpec.Template1<T1> template) {
-            this.registryFunction = registryFunction;
             this.template = template;
+            mappingRegistry = registryFunction.apply(template.param1.create());
         }
 
         public MappingRegistry bind(T1 p1) {
-            return registryFunction.apply(p1);
+            template.param1.bind(p1);
+            return mappingRegistry;
         }
 
+        @Override
+        public Metadata metadata() {
+            return mappingRegistry.metadata();
+        }
     }
 
     public static class Registry2<
             T1 extends DslField<?>,
             T2 extends DslField<?>
-            > {
+            > implements DSLBuilder {
 
-        private final BiFunction<T1, T2, MappingRegistry> registryFunction;
         private final TemplateSpec.Template2<T1, T2> template;
+        private final MappingRegistry mappingRegistry;
 
         Registry2(BiFunction<T1, T2, MappingRegistry> registryFunction, TemplateSpec.Template2<T1, T2> template) {
-            this.registryFunction = registryFunction;
             this.template = template;
+            mappingRegistry = registryFunction.apply(template.param1.create(), template.param2.create());
         }
 
         public MappingRegistry bind(T1 p1, T2 p2) {
-            return registryFunction.apply(p1, p2);
+            template.param1.bind(p1);
+            template.param2.bind(p2);
+            return mappingRegistry;
         }
 
+        @Override
+        public Metadata metadata() {
+            return mappingRegistry.metadata();
+        }
     }
 
     public static class Registry3<
             T1 extends DslField<?>,
             T2 extends DslField<?>,
             T3 extends DslField<?>
-            > {
+            > implements DSLBuilder {
 
-        private final TriFunction<T1, T2, T3, MappingRegistry> registryFunction;
         private final TemplateSpec.Template3<T1, T2, T3> template;
+        private final MappingRegistry mappingRegistry;
 
         Registry3(
                 TriFunction<T1, T2, T3, MappingRegistry> registryFunction,
                 TemplateSpec.Template3<T1, T2, T3> template
         ) {
-            this.registryFunction = registryFunction;
             this.template = template;
+            mappingRegistry = registryFunction.apply(template.param1.create(),
+                    template.param2.create(), template.param3.create());
         }
 
         public MappingRegistry bind(T1 p1, T2 p2, T3 p3) {
-            return registryFunction.apply(p1, p2, p3);
+            template.param1.bind(p1);
+            template.param2.bind(p2);
+            template.param3.bind(p3);
+            return mappingRegistry;
         }
 
+        @Override
+        public Metadata metadata() {
+            return mappingRegistry.metadata();
+        }
     }
 }

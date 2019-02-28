@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
-import static io.doov.core.dsl.template.TemplateParam.$String;
+import static io.doov.core.dsl.template.ParameterTypes.$String;
 
 public class TemplateMappingTest {
 
