@@ -76,7 +76,7 @@ public class HtmlCombinedTest {
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %","100 %", "0 %", "0 %");
+                .containsExactly("0 %", "100 %", "0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
                 .containsExactly("always true", "always false", "always false");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
@@ -105,11 +105,9 @@ public class HtmlCombinedTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always false");
+                .containsExactly("always true", "and", "always false");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("and");
     }
 
     @Test
@@ -200,7 +198,7 @@ public class HtmlCombinedTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("matches", "matches");
+                .containsExactly("matches", "or", "matches");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("string field 1", "string field 2");
     }

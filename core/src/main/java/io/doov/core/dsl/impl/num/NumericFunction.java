@@ -1,11 +1,23 @@
 /*
- * Copyright (C) by Courtanet, All Rights Reserved.
+ * Copyright 2017 Courtanet
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.impl.num;
 
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.plusMetadata;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.timesMetadata;
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.whenMetadata;
+import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.whenMetadata;
 import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.minMetadata;
 import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.sumMetadata;
 import static java.util.stream.Collectors.toList;
@@ -18,13 +30,12 @@ import java.util.stream.Stream;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
-import io.doov.core.dsl.impl.DSLFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public abstract class NumericFunction<N extends Number> extends NumericCondition<N> implements DSLFunction {
+public abstract class NumericFunction<N extends Number> extends NumericCondition<N> {
 
     public NumericFunction(DslField<N> field) {
         super(field);
@@ -34,7 +45,7 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
         super(metadata, value);
     }
 
-    protected abstract NumericFunction<N> numericCondition(PredicateMetadata metadata,
+    protected abstract NumericFunction<N> numericFunction(PredicateMetadata metadata,
             BiFunction<DslModel, Context, Optional<N>> value);
 
     /**
@@ -44,7 +55,7 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
      * @return the numeric function
      */
     public final NumericFunction<N> times(int multiplier) {
-        return numericCondition(timesMetadata(metadata, multiplier),
+        return numericFunction(timesMetadata(metadata, multiplier),
                 (model, context) -> value(model, context).map(v -> timesFunction().apply(v, multiplier)));
     }
 
@@ -55,7 +66,7 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
      * @return the numeric function
      */
     public final NumericFunction<N> plus(NumericFieldInfo<N> field) {
-        return numericCondition(plusMetadata(metadata, field),
+        return numericFunction(plusMetadata(metadata, field),
                 (model, context) -> value(model, context)
                         .map(v -> sumFunction().apply(v,
                                 Optional.ofNullable(model.<N> get(field.id())).orElse(identity()))));
@@ -68,7 +79,7 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
      * @return the numeric function
      */
     public final NumericFunction<N> min(List<NumericFieldInfo<N>> fields) {
-        return numericCondition(minMetadata(getMetadataForFields(fields)),
+        return numericFunction(minMetadata(getMetadataForFields(fields)),
                 (model, context) -> fields.stream().map(f -> Optional.ofNullable(model.<N> get(f.id())))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
                         .reduce(minFunction()));
@@ -81,7 +92,7 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
      * @return the numeric function
      */
     public final NumericFunction<N> sum(List<NumericFieldInfo<N>> fields) {
-        return numericCondition(sumMetadata(getMetadataForFields(fields)), (model,
+        return numericFunction(sumMetadata(getMetadataForFields(fields)), (model,
                 context) -> Optional.of(fields.stream().map(f -> Optional.ofNullable(model.<N> get(f.id())))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
                         .reduce(identity(), sumFunction())));
@@ -94,14 +105,14 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
      * @return the numeric function
      */
     public final NumericFunction<N> sumConditions(List<NumericCondition<N>> conditions) {
-        return numericCondition(sumMetadata(getMetadataForConditions(conditions)),
+        return numericFunction(sumMetadata(getMetadataForConditions(conditions)),
                 (model, context) -> Optional.of(conditions.stream().map(c -> c.getFunction().apply(model, context))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
                         .reduce(identity(), sumFunction())));
     }
 
     private static <N extends Number> List<Metadata> getMetadataForFields(List<NumericFieldInfo<N>> fields) {
-        return fields.stream().map(field -> field.getNumericCondition().getMetadata()).collect(toList());
+        return fields.stream().map(field -> field.getNumericFunction().getMetadata()).collect(toList());
     }
 
     private static <N extends Number> List<Metadata> getMetadataForConditions(List<NumericCondition<N>> conditions) {
@@ -115,7 +126,7 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
      * @return the numeric condition
      */
     public final NumericFunction<N> when(StepCondition condition) {
-        return numericCondition(whenMetadata(metadata, condition),
+        return numericFunction(whenMetadata(metadata, condition),
                 (model, context) -> condition.predicate().test(model, context) ? value(model, context)
                         : Optional.empty());
     }

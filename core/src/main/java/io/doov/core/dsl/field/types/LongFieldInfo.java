@@ -26,7 +26,7 @@ public class LongFieldInfo extends DelegatingFieldInfoImpl implements NumericFie
     }
 
     @Override
-    public LongFunction getNumericCondition() {
+    public LongFunction getNumericFunction() {
         return new LongFunction(this);
     }
 

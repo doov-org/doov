@@ -42,7 +42,7 @@ public class SimpleValidation {
     public static class ValidationState implements BenchmarkSetup.ValidationState {
 
         volatile ValidationRule rule = DOOV
-                .when(name.getDefaultCondition().isNotNull()
+                .when(name.getDefaultFunction().isNotNull()
                         .and(new IntegerFieldInfo(age).greaterOrEquals(18))
                         .and(new BooleanFieldInfo(drivingLicense).isTrue()))
                 .validate();

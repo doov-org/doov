@@ -1,11 +1,22 @@
 /*
- * Copyright (C) by Courtanet, All Rights Reserved.
+ * Copyright 2017 Courtanet
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.meta;
 
 import static io.doov.core.dsl.meta.ElementType.*;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -15,18 +26,18 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.Readable;
 
-public class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMetadata {
+public abstract class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMetadata {
     private static final Collector<CharSequence, ?, String> COLLECTOR_LIST = joining(", ", " : ", "");
     private final MetadataType type;
     private final Deque<Element> elements;
 
-    public LeafMetadata(Deque<Element> elements, MetadataType type) {
-        this.elements = elements;
-        this.type = type;
-    }
-
     public LeafMetadata(MetadataType type) {
         this(new ArrayDeque<>(), type);
+    }
+
+    private LeafMetadata(Deque<Element> elements, MetadataType type) {
+        this.elements = elements;
+        this.type = type;
     }
 
     @Override
@@ -39,11 +50,6 @@ public class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMetadata {
     }
 
     public List<Element> elementsAsList() {
-        return elements.stream().collect(toList());
-    }
-
-    @Override
-    public List<Element> flatten() {
         return new ArrayList<>(elements);
     }
 

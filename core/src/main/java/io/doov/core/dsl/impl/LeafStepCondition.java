@@ -15,9 +15,9 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.impl.AbstractCondition.valueModel;
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.notNullMetadata;
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.nullMetadata;
+import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
+import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.notNullMetadata;
+import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.nullMetadata;
 
 import java.util.Optional;
 import java.util.function.*;
@@ -25,7 +25,6 @@ import java.util.function.*;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.predicate.LeafPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class LeafStepCondition<N> extends DefaultStepCondition {
@@ -68,42 +67,32 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
                 Optional::isPresent);
     }
 
-    public static <N> LeafStepCondition<N> predicate(AbstractCondition<N> condition,
-            LeafPredicateMetadata<?> mergeMetadata, Function<N, Boolean> predicate) {
-        return new LeafStepCondition<>(condition.getMetadata().merge(mergeMetadata),
-                condition.getFunction(), predicate);
+    public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
+            BiFunction<DslModel, Context, Optional<N>> left, Function<N, Boolean> predicate) {
+        return new LeafStepCondition<>(metadata, left, predicate);
     }
 
-    public static <N> LeafStepCondition<N> predicate(AbstractCondition<N> condition,
-            LeafPredicateMetadata<?> mergeMetadata, BaseFieldInfo<N> value, BiFunction<N, N, Boolean> predicate) {
-        return new LeafStepCondition<>(condition.getMetadata().merge(mergeMetadata),
-                condition.getFunction(),
-                (model, context) -> valueModel(model, value),
-                predicate);
+    public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
+            BiFunction<DslModel, Context, Optional<N>> left, BaseFieldInfo<N> right,
+            BiFunction<N, N, Boolean> predicate) {
+        return new LeafStepCondition<>(metadata, left, (model, context) -> valueModel(model, right), predicate);
     }
 
-    public static <N> LeafStepCondition<N> predicate(AbstractCondition<N> condition,
-            LeafPredicateMetadata<?> mergeMetadata, N value, BiFunction<N, N, Boolean> predicate) {
-        return new LeafStepCondition<>(condition.getMetadata().merge(mergeMetadata),
-                condition.getFunction(),
-                (model, context) -> Optional.ofNullable(value),
-                predicate);
+    public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
+            BiFunction<DslModel, Context, Optional<N>> left, N right, BiFunction<N, N, Boolean> predicate) {
+        return new LeafStepCondition<>(metadata, left, (model, context) -> Optional.ofNullable(right), predicate);
     }
 
-    public static <N> LeafStepCondition<N> predicate(AbstractCondition<N> condition,
-            LeafPredicateMetadata<?> mergeMetadata, Supplier<N> value, BiFunction<N, N, Boolean> predicate) {
-        return new LeafStepCondition<>(condition.getMetadata().merge(mergeMetadata),
-                condition.getFunction(),
-                (model, context) -> Optional.ofNullable(value.get()),
-                predicate);
+    public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
+            BiFunction<DslModel, Context, Optional<N>> left, Supplier<N> right,
+            BiFunction<N, N, Boolean> predicate) {
+        return new LeafStepCondition<>(metadata, left, (model, context) -> Optional.ofNullable(right.get()), predicate);
     }
 
-    public static <N> LeafStepCondition<N> predicate(AbstractCondition<N> condition,
-            LeafPredicateMetadata<?> mergeMetadata, AbstractCondition<N> value, BiFunction<N, N, Boolean> predicate) {
-        return new LeafStepCondition<>(condition.getMetadata().merge(mergeMetadata),
-                condition.getFunction(),
-                value.getFunction(),
-                predicate);
+    public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
+            BiFunction<DslModel, Context, Optional<N>> left, BiFunction<DslModel, Context, Optional<N>> right,
+            BiFunction<N, N, Boolean> predicate) {
+        return new LeafStepCondition<>(metadata, left, right, predicate);
     }
 
 }

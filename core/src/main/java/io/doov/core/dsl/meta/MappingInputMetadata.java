@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Courtanet
+ * Copyright 2017 Courtanet
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package io.doov.core.dsl.meta;
+
+import static io.doov.core.dsl.meta.MetadataType.MAPPING_INPUT;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +40,7 @@ public class MappingInputMetadata extends AbstractMetadata {
 
     @Override
     public MetadataType type() {
-        return MetadataType.MAPPING_INPUT;
+        return MAPPING_INPUT;
     }
 
 }

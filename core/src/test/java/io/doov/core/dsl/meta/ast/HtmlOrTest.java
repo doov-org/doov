@@ -26,11 +26,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 
+import io.doov.core.dsl.field.types.BooleanFieldInfo;
+import io.doov.core.dsl.field.types.StringFieldInfo;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.*;
 
-import io.doov.core.dsl.field.types.*;
+import io.doov.core.dsl.field.types.IntegerFieldInfo;
+import io.doov.core.dsl.field.types.LocalDateFieldInfo;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.runtime.GenericModel;
@@ -40,19 +43,6 @@ public class HtmlOrTest {
     private StepCondition A, B, C, D;
     private Result result;
     private Document doc;
-    GenericModel model = new GenericModel();
-    private IntegerFieldInfo zero;
-    private LocalDateFieldInfo yesterday;
-    private StringFieldInfo bob;
-    private BooleanFieldInfo is_true;
-
-    @BeforeEach
-    void beforeEach() {
-        zero = model.intField(0, "zero");
-        yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
-        bob = model.stringField("Bob", "name");
-        is_true = model.booleanField(false, "is True");
-    }
 
     @Test
     void or_true_false_complex() {
@@ -64,23 +54,21 @@ public class HtmlOrTest {
 
         assertTrue(result.value());
         assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(2);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
         assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
         assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(1);
+        assertThat(doc.select("ul.dsl-ul-binary")).isEmpty();
         assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
         assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always false", "always true");
+                .containsExactly("always true", "or", "always false", "or", "always true");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B", "C");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("or", "or");
-        assertThat(doc.select("ul.dsl-ul-binary")).extracting(Element::text)
-                .containsExactly("0 % always false B or 100 % always true C");
+        assertThat(doc.select("li.dsl-li-binary")).extracting(Element::text)
+                .containsExactly("100 % always true A or 0 % always false B or 100 % always true C");
     }
 
     @Test
@@ -103,11 +91,9 @@ public class HtmlOrTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always false", "always true", "always true");
+                .containsExactly("always false", "or", "always true", "and", "always true");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B", "C");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("or", "and");
         assertThat(doc.select("ul.dsl-ul-binary")).extracting(Element::text)
                 .containsExactly("100 % always true B and 100 % always true C");
     }
@@ -131,11 +117,9 @@ public class HtmlOrTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always false", "always false");
+                .containsExactly("always false", "or", "always false");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("or");
     }
 
     @Test
@@ -158,11 +142,9 @@ public class HtmlOrTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "0 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always false", "always false", "always true");
+                .containsExactly("always false", "or", "always false", "and", "always true");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B", "C");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("or", "and");
         assertThat(doc.select("ul.dsl-ul-binary")).extracting(Element::text)
                 .containsExactly("0 % always false B and 100 % always true C");
     }
@@ -186,11 +168,9 @@ public class HtmlOrTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "0 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always false");
+                .containsExactly("always true", "or", "always false");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("or");
     }
 
     @Test
@@ -212,11 +192,9 @@ public class HtmlOrTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("0 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always false", "always true");
+                .containsExactly("always false", "or", "always true");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("or");
     }
 
     @Test
@@ -238,46 +216,16 @@ public class HtmlOrTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "always true");
+                .containsExactly("always true", "or", "always true");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("A", "B");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("or");
-    }
-
-    @Test
-    void or_or_or() {
-        A = zero.lesserThan(4);
-        B = yesterday.before(LocalDateSuppliers.today());
-        C = bob.startsWith("B");
-        D = is_true.isFalse();
-        result = when(A.or(B).or(C).or(D)).validate()
-                .withShortCircuit(false).executeOn(model);
-        doc = documentOf(result);
-
-        assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %", "100 %", "100 %", "100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("<", "before", "today", "starts with", "is");
-        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("zero", "yesterday", "name", "is True");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("4", "'B'", "false");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("or", "or", "or");
     }
 
     @Test
     void or_field_true_true() {
+        GenericModel model = new GenericModel();
+        IntegerFieldInfo zero = model.intField(0, "zero");
+        LocalDateFieldInfo yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
         A = zero.lesserThan(4);
         B = yesterday.before(LocalDateSuppliers.today());
         result = when(A.or(B)).validate().withShortCircuit(false).executeOn(model);
@@ -295,13 +243,47 @@ public class HtmlOrTest {
         assertThat(doc.select("div.percentage-value")).extracting(Element::text)
                 .containsExactly("100 %", "100 %");
         assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("<", "before", "today");
+                .containsExactly("<", "or", "before", "today");
         assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
                 .containsExactly("zero", "yesterday");
         assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
                 .containsExactly("4");
-        assertThat(doc.select("span.dsl-token-binary")).extracting(Element::text)
-                .containsExactly("or");
+    }
+
+    @Test
+    void or_or_or() {
+        GenericModel model = new GenericModel();
+        IntegerFieldInfo zero = model.intField(0, "zero");
+        LocalDateFieldInfo yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
+        StringFieldInfo bob = model.stringField("Bob", "name");
+        BooleanFieldInfo is_true = model.booleanField(false, "is True");
+        A = zero.lesserThan(4);
+        B = yesterday.before(LocalDateSuppliers.today());
+        C = bob.startsWith("B");
+        D = is_true.isFalse();
+
+        result = when(A.or(B)
+                .or(C)
+                .or(D)).validate().withShortCircuit(false).executeOn(model);
+        doc = documentOf(result);
+
+        assertTrue(result.value());
+        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
+        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
+        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
+        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
+        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
+                .containsExactly("100 %", "100 %", "100 %", "100 %");
+        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+                .containsExactly("<", "or", "before", "today", "or", "starts with", "or", "is");
+        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
+                .containsExactly("zero", "yesterday", "name", "is True");
+        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
+                .containsExactly("4", "'B'", "false");
     }
 
     @AfterEach

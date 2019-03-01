@@ -1,14 +1,17 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.meta.ast;
 
@@ -20,12 +23,17 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.predicate.*;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.MetadataVisitor;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 
 public abstract class AbstractAstVisitor implements MetadataVisitor {
 
-    private final Deque<MetadataType> stack = new ArrayDeque<>();
+    private final Deque<Metadata> stack = new ArrayDeque<>();
 
     // Metadata
 
@@ -33,7 +41,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
         try {
             switch (metadata.type()) {
                 case WHEN:
-                    startWhen((WhenMetadata) metadata, depth);
+                    startWhen(metadata, depth);
                     break;
                 case UNARY_PREDICATE:
                     startUnary((UnaryPredicateMetadata) metadata, depth);
@@ -41,7 +49,8 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case FIELD_PREDICATE:
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
-                    startLeaf((LeafPredicateMetadata<?>) metadata, depth);
+                case LEAF_VALUE:
+                    startLeaf((LeafMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
                     startBinary((BinaryPredicateMetadata) metadata, depth);
@@ -58,18 +67,18 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     startNary((NaryPredicateMetadata) metadata, depth);
                     break;
                 case RULE:
-                    startRule((RuleMetadata) metadata, depth);
+                    startRule(metadata, depth);
                     break;
                 case TYPE_CONVERTER:
                 case TYPE_CONVERTER_IDENTITY:
-                    startTypeConverter((ConverterMetadata) metadata, depth);
+                    startTypeConverter((LeafMetadata<?>) metadata, depth);
                     break;
                 default:
                     startDefault(metadata, depth);
                     break;
             }
         } finally {
-            stack.push(metadata.type());
+            stack.push(metadata);
         }
     }
 
@@ -77,15 +86,16 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void beforeChild(Metadata metadata, Metadata child, int depth) {
         switch (metadata.type()) {
             case WHEN:
-                beforeChildWhen((WhenMetadata) metadata, child, depth);
+                beforeChildWhen(metadata, child, depth);
                 break;
             case RULE:
-                beforeChildRule((RuleMetadata) metadata, child, depth);
+                beforeChildRule(metadata, child, depth);
                 break;
             case UNARY_PREDICATE:
                 beforeChildUnary((UnaryPredicateMetadata) metadata, child, depth);
                 break;
             case LEAF_PREDICATE:
+            case LEAF_VALUE:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
@@ -105,7 +115,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 break;
             case TYPE_CONVERTER:
             case TYPE_CONVERTER_IDENTITY:
-                beforeChildTypeConverter((ConverterMetadata) metadata, child, depth);
+                beforeChildTypeConverter((LeafMetadata<?>) metadata, child, depth);
                 break;
             default:
                 beforeChildDefault(metadata, depth);
@@ -117,15 +127,16 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     public void afterChild(Metadata metadata, Metadata child, boolean hasNext, int depth) {
         switch (metadata.type()) {
             case WHEN:
-                afterChildWhen((WhenMetadata) metadata, child, hasNext, depth);
+                afterChildWhen(metadata, child, hasNext, depth);
                 break;
             case UNARY_PREDICATE:
                 afterChildUnary((UnaryPredicateMetadata) metadata, child, hasNext, depth);
                 break;
             case RULE:
-                afterChildRule((RuleMetadata) metadata, child, hasNext, depth);
+                afterChildRule(metadata, child, hasNext, depth);
                 break;
             case LEAF_PREDICATE:
+            case LEAF_VALUE:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
@@ -145,7 +156,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 break;
             case TYPE_CONVERTER:
             case TYPE_CONVERTER_IDENTITY:
-                afterChildTypeConverter((ConverterMetadata) metadata, child, hasNext, depth);
+                afterChildTypeConverter((LeafMetadata<?>) metadata, child, hasNext, depth);
                 break;
             default:
                 afterChildDefault(metadata, child, hasNext, depth);
@@ -157,7 +168,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
         try {
             switch (metadata.type()) {
                 case WHEN:
-                    endWhen((WhenMetadata) metadata, depth);
+                    endWhen(metadata, depth);
                     break;
                 case UNARY_PREDICATE:
                     endUnary((UnaryPredicateMetadata) metadata, depth);
@@ -165,7 +176,8 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case FIELD_PREDICATE:
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
-                    endLeaf((LeafPredicateMetadata<?>) metadata, depth);
+                case LEAF_VALUE:
+                    endLeaf((LeafMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
                     endBinary((BinaryPredicateMetadata) metadata, depth);
@@ -182,11 +194,11 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     endNary((NaryPredicateMetadata) metadata, depth);
                     break;
                 case RULE:
-                    endRule((RuleMetadata) metadata, depth);
+                    endRule(metadata, depth);
                     break;
                 case TYPE_CONVERTER:
                 case TYPE_CONVERTER_IDENTITY:
-                    endTypeConverter((ConverterMetadata) metadata, depth);
+                    endTypeConverter((LeafMetadata<?>) metadata, depth);
                     break;
                 default:
                     endDefault(metadata, depth);
@@ -213,12 +225,12 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     // LeafMetadata
 
-    public void startLeaf(LeafPredicateMetadata<?> metadata, int depth) {
+    public void startLeaf(LeafMetadata<?> metadata, int depth) {
     }
 
     // visit leaf is impossible because there is no children
 
-    public void endLeaf(LeafPredicateMetadata<?> metadata, int depth) {
+    public void endLeaf(LeafMetadata<?> metadata, int depth) {
     }
 
     // UnaryMetadata
@@ -267,45 +279,45 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     // ValidationRule
 
-    public void startRule(RuleMetadata metadata, int depth) {
+    public void startRule(Metadata metadata, int depth) {
     }
 
     // visit rule is impossible because there is only one child
-    public void beforeChildRule(RuleMetadata metadata, Metadata child, int depth) {
+    public void beforeChildRule(Metadata metadata, Metadata child, int depth) {
     }
 
-    public void afterChildRule(RuleMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildRule(Metadata metadata, Metadata child, boolean hasNext, int depth) {
     }
 
-    public void endRule(RuleMetadata metadata, int depth) {
+    public void endRule(Metadata metadata, int depth) {
     }
 
     // StepWhen
 
-    public void startWhen(WhenMetadata metadata, int depth) {
+    public void startWhen(Metadata metadata, int depth) {
     }
 
-    public void beforeChildWhen(WhenMetadata metadata, Metadata child, int depth) {
+    public void beforeChildWhen(Metadata metadata, Metadata child, int depth) {
     }
 
-    public void afterChildWhen(WhenMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildWhen(Metadata metadata, Metadata child, boolean hasNext, int depth) {
     }
 
-    public void endWhen(WhenMetadata metadata, int depth) {
+    public void endWhen(Metadata metadata, int depth) {
     }
 
     // TypeConverter
 
-    public void startTypeConverter(ConverterMetadata metadata, int depth) {
+    public void startTypeConverter(LeafMetadata<?> metadata, int depth) {
     }
 
-    public void beforeChildTypeConverter(ConverterMetadata metadata, Metadata child, int depth) {
+    public void beforeChildTypeConverter(LeafMetadata<?> metadata, Metadata child, int depth) {
     }
 
-    public void afterChildTypeConverter(ConverterMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildTypeConverter(LeafMetadata<?> metadata, Metadata child, boolean hasNext, int depth) {
     }
 
-    public void endTypeConverter(ConverterMetadata metadata, int depth) {
+    public void endTypeConverter(LeafMetadata<?> metadata, int depth) {
     }
 
     // Mapping Rule
@@ -344,12 +356,19 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     protected String formatNewLine() {
         return "\n";
     }
-
-    protected MetadataType stackPeek() {
+    
+    protected Metadata stackPeek() {
         return stack.peek();
     }
 
-    protected final Stream<MetadataType> stackSteam() {
+    protected MetadataType stackPeekType() {
+        final Metadata metadata = stack.peek();
+        if (metadata == null)
+            return null;
+        return metadata.type();
+    }
+
+    protected final Stream<Metadata> stackSteam() {
         return stack.stream();
     }
 

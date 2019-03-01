@@ -1,5 +1,17 @@
 /*
- * Copyright (C) by Courtanet, All Rights Reserved.
+ * Copyright 2017 Courtanet
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.meta.ast;
 
@@ -13,7 +25,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import io.doov.core.dsl.meta.WhenMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.*;
 
@@ -26,7 +39,7 @@ public class AstLinePercentVisitor extends AstLineVisitor {
     }
 
     @Override
-    public void startWhen(WhenMetadata metadata, int depth) {
+    public void startWhen(Metadata metadata, int depth) {
         sb.append(percentage((PredicateMetadata) metadata.children().findFirst().orElse(null)) + " ");
         super.startWhen(metadata, depth);
     }
@@ -51,11 +64,12 @@ public class AstLinePercentVisitor extends AstLineVisitor {
     }
 
     @Override
-    protected String formatLeafMetadata(LeafPredicateMetadata<?> metadata) {
-        if (stackPeek() == BINARY_PREDICATE) {
+    protected String formatLeafMetadata(LeafMetadata<?> metadata) {
+        if (stackPeekType() == BINARY_PREDICATE) {
             return super.formatLeafMetadata(metadata);
         }
-        return percentage(metadata) + super.formatLeafMetadata(metadata);
+        return (metadata instanceof PredicateMetadata) ? percentage((PredicateMetadata) metadata) : ""
+                + super.formatLeafMetadata(metadata);
     }
 
     private String percentage(PredicateMetadata metadata) {

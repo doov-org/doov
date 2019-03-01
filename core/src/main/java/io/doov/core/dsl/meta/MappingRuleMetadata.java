@@ -15,8 +15,6 @@
  */
 package io.doov.core.dsl.meta;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 public class MappingRuleMetadata extends AbstractMetadata {
@@ -44,14 +42,4 @@ public class MappingRuleMetadata extends AbstractMetadata {
         return MetadataType.SINGLE_MAPPING;
     }
 
-    @Override
-    public List<Element> flatten() {
-        final List<Element> flatten = new ArrayList<>(inputMetadata.flatten());
-        flatten.addAll(outputMetadata.flatten());
-        return flatten;
-    }
-
-    public Stream<Element> stream() {
-        return flatten().stream();
-    }
 }

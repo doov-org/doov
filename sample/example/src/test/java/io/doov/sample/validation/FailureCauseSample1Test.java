@@ -12,26 +12,22 @@
  */
 package io.doov.sample.validation;
 
-import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.core.dsl.lang.ReduceType.FAILURE;
-import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
-import static io.doov.core.dsl.time.LocalDateSuppliers.today;
-import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
-import static io.doov.sample.field.dsl.DslSampleModel.accountEmail;
-import static io.doov.sample.field.dsl.DslSampleModel.accountPhoneNumber;
-import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
+import io.doov.core.dsl.lang.Result;
+import io.doov.sample.field.dsl.DslSampleModel;
+import io.doov.sample.field.dsl.DslSampleModel.*;
+import io.doov.sample.model.Country;
+import io.doov.sample.model.SampleModel;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Locale;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-
-import io.doov.core.dsl.lang.Result;
-import io.doov.sample.field.dsl.DslSampleModel;
-import io.doov.sample.field.dsl.DslSampleModel.SampleModelRule;
-import io.doov.sample.model.Country;
-import io.doov.sample.model.SampleModel;
+import static io.doov.assertions.Assertions.assertThat;
+import static io.doov.core.dsl.lang.ReduceType.FAILURE;
+import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
+import static io.doov.core.dsl.time.LocalDateSuppliers.today;
+import static io.doov.sample.field.dsl.DslSampleModel.*;
 
 /**
  * Validate that a profile has an account email is less than 20 characters <br>
@@ -54,7 +50,7 @@ public class FailureCauseSample1Test {
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
                 .hasFailureCause("(account email length is < 20 and (user birthdate age at today > 18 and account " +
-                        "country = FR)) and (account country = FR and account phone number starts with '+33')",
+                                "country = FR)) and (account country = FR and account phone number starts with '+33')",
                         LOCALE);
     }
 
@@ -74,8 +70,8 @@ public class FailureCauseSample1Test {
         model.getUser().setBirthDate(LocalDate.now().minusYears(19));
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("account country = FR and (account country = FR and account phone number starts with" +
-                        " '+33')", LOCALE);
+                .hasFailureCause("account country = FR and (account country = FR and account phone number starts " +
+                        "with '+33')", LOCALE);
 
     }
 

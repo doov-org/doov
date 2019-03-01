@@ -1,46 +1,35 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.count;
-import static io.doov.core.dsl.meta.DefaultOperator.match_all;
-import static io.doov.core.dsl.meta.DefaultOperator.match_any;
-import static io.doov.core.dsl.meta.DefaultOperator.match_none;
-import static io.doov.core.dsl.meta.DefaultOperator.min;
-import static io.doov.core.dsl.meta.DefaultOperator.sum;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
-import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.EMPTY;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.ReduceType;
-import io.doov.core.dsl.meta.ComposeOperator;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.EmptyMetadata;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.*;
 
 public class NaryPredicateMetadata extends NaryMetadata implements PredicateMetadata {
 
@@ -83,19 +72,6 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
 
     public static NaryPredicateMetadata minMetadata(List<Metadata> values) {
         return new NaryPredicateMetadata(min, values);
-    }
-
-    @Override
-    public PredicateMetadata merge(LeafMetadata<?> other) {
-        final List<Element> elts = other.elements().stream().collect(Collectors.toList());
-        if (elts.get(0).getType() == OPERATOR && (elts.get(0).getReadable() == sum || elts.get(0).getReadable() == min
-                || elts.get(0).getReadable() == count)) {
-            // special case to build : count (predicate ...) operator value
-            return new BinaryPredicateMetadata(this, (Operator) elts.get(elts.size() - 2).getReadable(),
-                    new LeafPredicateMetadata<>(LEAF_PREDICATE)
-                            .valueReadable(elts.get(elts.size() - 1).getReadable()));
-        }
-        return new NaryPredicateMetadata(new ComposeOperator(getOperator(), other), getValues());
     }
 
     @Override
@@ -159,7 +135,7 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
     private static boolean sumContentFilter(Context context, Metadata md) {
         if (md.type() != FIELD_PREDICATE)
             return true;
-        final List<Element> elements = md.flatten();
+        final List<Element> elements = new ArrayList<>(((LeafMetadata<?>) md).elements());
         if (elements.size() < 1)
             return true;
         if (elements.get(0).getType() != FIELD)

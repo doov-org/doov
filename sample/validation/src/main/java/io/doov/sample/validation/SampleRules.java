@@ -19,19 +19,7 @@ import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
-import static io.doov.sample.field.dsl.DslSampleModel.accountCompany;
-import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
-import static io.doov.sample.field.dsl.DslSampleModel.accountCreationDate;
-import static io.doov.sample.field.dsl.DslSampleModel.accountEmail;
-import static io.doov.sample.field.dsl.DslSampleModel.accountPhoneNumber;
-import static io.doov.sample.field.dsl.DslSampleModel.accountTimezone;
-import static io.doov.sample.field.dsl.DslSampleModel.configurationMaxEmailSize;
-import static io.doov.sample.field.dsl.DslSampleModel.configurationMinAge;
-import static io.doov.sample.field.dsl.DslSampleModel.favoriteSiteName1;
-import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
-import static io.doov.sample.field.dsl.DslSampleModel.userFirstName;
-import static io.doov.sample.field.dsl.DslSampleModel.userId;
-import static io.doov.sample.field.dsl.DslSampleModel.userLastName;
+import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.model.Company.BLABLACAR;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -49,7 +37,8 @@ import org.apache.commons.io.IOUtils;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.ast.*;
+import io.doov.core.dsl.meta.ast.AstHtmlRenderer;
+import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 import io.doov.sample.model.Country;
 import io.doov.sample.model.Timezone;
 
@@ -147,8 +136,8 @@ public class SampleRules extends DefaultRuleRegistry {
                     .when(accountTimezone.mapToString(Timezone::getDescription).contains("00:00"))
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
-    
-    public static final ValidationRule RULE_COMPANY_NOT_LESFURETS = DOOV
+
+    public static final ValidationRule RULE_COMPANY_NOT_BLABLA = DOOV
                     .when(accountCompany.eq(BLABLACAR).not())
                     .validate()
                     .registerOn(REGISTRY_DEFAULT);
@@ -161,11 +150,11 @@ public class SampleRules extends DefaultRuleRegistry {
                             + IOUtils.toString(AstVisitorUtils.class.getResourceAsStream("rules.css"), defaultCharset())
                             + "</style></head><body>", fos, defaultCharset());
             IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());
-            AstHtmlVisitor visitor = new AstHtmlVisitor(fos, BUNDLE, Locale.FRANCE);
             for (ValidationRule r : rules) {
+                IOUtils.write("<div>", fos, defaultCharset());
                 IOUtils.write(r.readable(Locale.FRANCE), fos, defaultCharset());
-                IOUtils.write(visitor.exclusionBar(r, ExclusionBar.BIG), fos, defaultCharset());
-                visitor.browse(r.metadata(), 0);
+                IOUtils.write("</div>", fos, defaultCharset());
+                new AstHtmlRenderer(Locale.FRANCE, fos, BUNDLE).toHtml(r.metadata());
                 IOUtils.write("<hr/>", fos, defaultCharset());
             }
             IOUtils.write("</div>", fos, defaultCharset());

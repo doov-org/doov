@@ -27,7 +27,7 @@ public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfoImpl im
     }
 
     @Override
-    public DefaultCondition<E> getDefaultCondition() {
+    public DefaultCondition<E> getDefaultFunction() {
         return new DefaultCondition<>(this);
     }
 }

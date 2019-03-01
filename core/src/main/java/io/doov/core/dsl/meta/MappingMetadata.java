@@ -1,5 +1,17 @@
 /*
- * Copyright (C) by Courtanet, All Rights Reserved.
+ * Copyright 2017 Courtanet
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.meta;
 
@@ -15,7 +27,7 @@ import io.doov.core.dsl.DslField;
 public class MappingMetadata extends LeafMetadata<MappingMetadata> {
 
     private MappingMetadata(MetadataType type) {
-        super(new ArrayDeque<>(), type);
+        super(type);
     }
 
     public static MappingMetadata mappings(MappingOperator operator) {
@@ -30,7 +42,7 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         return new MappingMetadata(MAPPING_LEAF).valueSupplier(supplier);
     }
 
-    public static MappingMetadata fieldsInput(List<DslField> fields) {
+    public static MappingMetadata fieldsInput(List<DslField<?>> fields) {
         return new MappingMetadata(MAPPING_LEAF).fields(fields);
     }
 
@@ -38,7 +50,7 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         return new MappingMetadata(MAPPING_LEAF).function();
     }
 
-    public static MappingMetadata fieldInput(DslField field) {
+    public static MappingMetadata fieldInput(DslField<?> field) {
         return new MappingMetadata(MAPPING_LEAF).field(field);
     }
 
@@ -50,7 +62,7 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         return new MappingMetadata(MAPPING_LEAF).valueReadable(() -> readable);
     }
 
-    public static MappingMetadata fieldOutput(DslField field) {
+    public static MappingMetadata fieldOutput(DslField<?> field) {
         return new MappingMetadata(MAPPING_LEAF).field(field);
     }
 
@@ -58,10 +70,10 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         return new MappingMetadata(MAPPING_LEAF).function();
     }
 
-    private MappingMetadata fields(List<DslField> fields) {
-        Iterator<DslField> iterator = fields.iterator();
+    private MappingMetadata fields(List<DslField<?>> fields) {
+        Iterator<DslField<?>> iterator = fields.iterator();
         while (iterator.hasNext()) {
-            DslField f = iterator.next();
+            DslField<?> f = iterator.next();
             this.field(f);
             if (iterator.hasNext()) {
                 this.operator(MappingOperator.and);
@@ -73,8 +85,8 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
     private MappingMetadata mergeMetadata(Metadata... metadata) {
         Iterator<Metadata> iterator = Arrays.asList(metadata).iterator();
         while (iterator.hasNext()) {
-            Metadata m = iterator.next();
-            m.flatten().forEach(this::add);
+            MappingMetadata m = (MappingMetadata) iterator.next();
+            m.elements().forEach(this::add);
             if (iterator.hasNext()) {
                 this.operator(MappingOperator.and);
             }

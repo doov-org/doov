@@ -1,24 +1,28 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.meta.ast;
 
-import java.util.Locale;
-
+import io.doov.core.dsl.meta.DefaultOperator;
 import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.RuleMetadata;
+import io.doov.core.dsl.meta.MetadataType;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+
+import java.util.Locale;
 
 public class AstLineVisitor extends AstTextVisitor {
 
@@ -61,7 +65,10 @@ public class AstLineVisitor extends AstTextVisitor {
     @Override
     public void startBinary(BinaryPredicateMetadata metadata, int depth) {
         super.startBinary(metadata, depth);
-        sb.append(depth > 0 ? "(" : "");
+        if ((metadata.getOperator() == DefaultOperator.and || metadata.getOperator() == DefaultOperator.or)
+                || (metadata.getLeft().type() == MetadataType.NARY_PREDICATE)) {
+            sb.append(depth > 0 ? "(" : "");
+        }
     }
 
     @Override
@@ -76,11 +83,16 @@ public class AstLineVisitor extends AstTextVisitor {
     public void endBinary(BinaryPredicateMetadata metadata, int depth) {
         super.endBinary(metadata, depth);
         sb.delete(sb.length() - 1, sb.length());
-        sb.append(depth > 0 ? ") " : " ");
+        if ((metadata.getOperator() == DefaultOperator.and || metadata.getOperator() == DefaultOperator.or)
+                || (metadata.getLeft().type() == MetadataType.NARY_PREDICATE)) {
+            sb.append(depth > 0 ? ") " : " ");
+        } else {
+            sb.append(" ");
+        }
     }
 
     @Override
-    public void endRule(RuleMetadata metadata, int depth) {
+    public void endRule(Metadata metadata, int depth) {
         super.endRule(metadata, depth);
         formatNewLine();
     }

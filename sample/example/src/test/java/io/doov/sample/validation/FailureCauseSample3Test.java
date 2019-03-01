@@ -61,10 +61,10 @@ public class FailureCauseSample3Test {
     void getFailureCause_setup_1() {
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isFalse()
-                .hasFailureCause("correspond à au moins un [correspond à tous [la date de naissance âge à la date du " +
-                        "jour > 18, le pays = FR, le numéro de téléphone commence par '+33'], correspond à tous [la " +
-                        "date de naissance âge à la date du jour > 21, le pays = CAN, le numéro de téléphone commence" +
-                        " par '+1']]", LOCALE);
+                .hasFailureCause("correspond à au moins un [correspond à tous [la date de naissance âge à la date " +
+                        "du jour > 18, le pays = FR, le numéro de téléphone commence par '+33'], correspond à tous " +
+                        "[la date de naissance âge à la date du jour > 21, le pays = CAN, le numéro de téléphone " +
+                        "commence par '+1']]", LOCALE);
     }
 
     @Test

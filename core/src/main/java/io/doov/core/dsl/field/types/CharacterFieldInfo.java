@@ -27,7 +27,7 @@ public class CharacterFieldInfo extends DelegatingFieldInfoImpl implements BaseF
     }
 
     @Override
-    public DefaultCondition<Character> getDefaultCondition() {
+    public DefaultCondition<Character> getDefaultFunction() {
         return new DefaultCondition<>(this);
     }
 }

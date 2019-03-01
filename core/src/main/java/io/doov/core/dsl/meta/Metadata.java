@@ -1,20 +1,24 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.DefaultOperator.no_operator;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+import static java.util.stream.Collectors.toList;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
@@ -28,6 +32,10 @@ import io.doov.core.dsl.meta.ast.AstVisitorUtils;
  * Interface for the description of a node in the syntax tree.
  */
 public interface Metadata extends Readable {
+    
+    default Operator getOperator() {
+        return no_operator;
+    }
 
     /**
      * Returns the human readable version of this object.
@@ -80,13 +88,20 @@ public interface Metadata extends Readable {
         return Stream.concat(left(), right());
     }
 
-    /**
-     * Returns the tree of elements under this node in a flat list.
-     *
-     * @return the list of elements
-     */
-    default List<Element> flatten() {
-        return Collections.emptyList();
+    default Metadata childAt(int... positions) {
+        if (positions == null)
+            return null;
+        if (positions.length == 0)
+            return null;
+        return childAt(positions, 0);
+    }
+
+    default Metadata childAt(int[] positions, int level) {
+        final List<Metadata> childrens = children().collect(toList());
+        final Metadata child = childrens.get(positions[level]);
+        if (level < positions.length - 1)
+            return child.childAt(positions, level + 1);
+        return child;
     }
 
     /**

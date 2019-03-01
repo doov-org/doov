@@ -15,11 +15,8 @@
  */
 package io.doov.core.dsl.meta;
 
-import static io.doov.core.dsl.meta.ElementType.OPERATOR;
 import static io.doov.core.dsl.meta.MetadataType.MULTIPLE_MAPPING;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 public class ConditionalMappingMetadata extends AbstractMetadata {
@@ -52,7 +49,7 @@ public class ConditionalMappingMetadata extends AbstractMetadata {
 
     @Override
     public Stream<Metadata> children() {
-        return Stream.of(when, then, otherwise).filter(metadata -> metadata.flatten().size() > 1);
+        return Stream.of(when, then, otherwise);
     }
 
     @Override
@@ -60,13 +57,4 @@ public class ConditionalMappingMetadata extends AbstractMetadata {
         return MULTIPLE_MAPPING;
     }
 
-    @Override
-    public List<Element> flatten() {
-        final List<Element> flatten = new ArrayList<>(when.flatten());
-        flatten.add(new Element(MappingOperator.then, OPERATOR));
-        flatten.addAll(then.flatten());
-        flatten.add(new Element(MappingOperator._else, OPERATOR));
-        flatten.addAll(otherwise.flatten());
-        return flatten;
-    }
 }

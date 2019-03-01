@@ -68,9 +68,8 @@ public class FailureCauseSample5Test {
 
         result = rule.withShortCircuit(false).executeOn(model);
         assertThat(result).isTrue().hasNoFailureCause()
-                .hasReduceMessage(
-                        "la date de naissance âge à la date du jour > 18 et (le pays = FR et le numéro de téléphone commence par '+33')",
-                        LOCALE);
+                .hasReduceMessage("la date de naissance âge à la date du jour > 18 et (le pays = FR et le numéro " +
+                                "de téléphone commence par '+33')", LOCALE);
     }
 
     @Test

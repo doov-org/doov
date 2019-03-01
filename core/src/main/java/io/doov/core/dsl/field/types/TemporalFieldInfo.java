@@ -1,14 +1,17 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.field.types;
 
@@ -182,6 +185,17 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
     }
 
     /**
+     * See {@link TemporalCondition#beforeOrEq(Temporal)}
+     *
+     * @param value the right side value
+     * @return the step condition
+     * @see TemporalCondition#beforeOrEq(Temporal)
+     */
+    default StepCondition beforeOrEq(TemporalFieldInfo<N> value) {
+        return getTemporalFunction().beforeOrEq(value);
+    }
+    
+    /**
      * See {@link TemporalCondition#beforeOrEq(Supplier)}
      *
      * @param value the right side value
@@ -256,6 +270,17 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      */
     default StepCondition afterOrEq(N value) {
         return getTemporalFunction().afterOrEq(value);
+    }
+    
+    /**
+     * See {@link TemporalCondition#afterOrEq(Temporal)}
+     *
+     * @param field the right side value
+     * @return the step condition
+     * @see TemporalCondition#afterOrEq(TemporalFieldInfo)
+     */
+    default StepCondition afterOrEq(TemporalFieldInfo<N> field) {
+        return getTemporalFunction().afterOrEq(field);
     }
 
     /**
@@ -500,7 +525,7 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
     TemporalFunction<N> getTemporalFunction();
 
     @Override
-    default TemporalFunction<N> getDefaultCondition() {
+    default TemporalFunction<N> getDefaultFunction() {
         return getTemporalFunction();
     }
 }

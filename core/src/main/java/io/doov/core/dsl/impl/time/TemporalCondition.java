@@ -1,20 +1,21 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.impl.time;
 
-import static io.doov.core.dsl.impl.LeafStepCondition.predicate;
-import static io.doov.core.dsl.meta.function.TemporalFunctionMetadata.*;
-import static io.doov.core.dsl.meta.predicate.LeafPredicateMetadata.equalsMetadata;
+import static io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata.equalsMetadata;
 
 import java.time.temporal.Temporal;
 import java.util.Optional;
@@ -27,6 +28,7 @@ import io.doov.core.dsl.field.types.TemporalFieldInfo;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.meta.function.TemporalBiFunctionMetadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 /**
@@ -48,9 +50,6 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         super(metadata, value);
     }
 
-    abstract TemporalCondition<N> temporalCondition(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> value);
-
     /**
      * Returns a condition checking if the node value is equal to the given condition value.
      *
@@ -58,7 +57,8 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition eq(TemporalCondition<N> value) {
-        return predicate(this, equalsMetadata(metadata, value), value, Object::equals);
+        return LeafStepCondition.stepCondition(equalsMetadata(metadata, value), getFunction(), value.getFunction(),
+                Object::equals);
     }
 
     /**
@@ -68,7 +68,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition before(N value) {
-        return predicate(this, beforeValueMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeValueMetadata(this, value), getFunction(), value,
                 (l, r) -> beforeFunction().apply(l, r));
     }
 
@@ -79,7 +79,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition before(TemporalFieldInfo<N> value) {
-        return predicate(this, beforeTemporalFieldMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeTemporalFieldMetadata(this, value), getFunction(), value,
                 (l, r) -> beforeFunction().apply(l, r));
     }
 
@@ -90,7 +90,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition before(Supplier<N> value) {
-        return predicate(this, beforeSupplierMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeSupplierMetadata(this, value), getFunction(), value,
                 (l, r) -> beforeFunction().apply(l, r));
     }
 
@@ -101,7 +101,8 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition before(TemporalCondition<N> value) {
-        return predicate(this, beforeTemporalConditionMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeTemporalConditionMetadata(this, value), getFunction(),
+                value.getFunction(),
                 (l, r) -> beforeFunction().apply(l, r));
     }
 
@@ -112,7 +113,18 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition beforeOrEq(N value) {
-        return predicate(this, beforeOrEqualsValueMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeOrEqualsValueMetadata(this, value), getFunction(), value,
+                (l, r) -> beforeOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is before the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition beforeOrEq(TemporalFieldInfo<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeOrEqTemporalFieldMetadata(this, value), getFunction(), value,
                 (l, r) -> beforeOrEqualsFunction().apply(l, r));
     }
 
@@ -123,7 +135,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition beforeOrEq(Supplier<N> value) {
-        return predicate(this, beforeOrEqualsSupplierMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeOrEqualsSupplierMetadata(this, value), getFunction(), value,
                 (l, r) -> beforeOrEqualsFunction().apply(l, r));
     }
 
@@ -134,8 +146,8 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition beforeOrEq(TemporalCondition<N> value) {
-        return predicate(this, beforeOrEqualsTemporalConditionMetadata(this, value), value,
-                (l, r) -> beforeOrEqualsFunction().apply(l, r));
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeOrEqualsTemporalConditionMetadata(this, value), getFunction(),
+                value.getFunction(), (l, r) -> beforeOrEqualsFunction().apply(l, r));
     }
 
     /**
@@ -145,7 +157,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition after(N value) {
-        return predicate(this, afterValueMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterValueMetadata(this, value), getFunction(), value,
                 (l, r) -> afterFunction().apply(l, r));
     }
 
@@ -156,7 +168,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition after(TemporalFieldInfo<N> value) {
-        return predicate(this, afterTemporalFieldMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterTemporalFieldMetadata(this, value), getFunction(), value,
                 (l, r) -> afterFunction().apply(l, r));
     }
 
@@ -167,7 +179,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition after(Supplier<N> value) {
-        return predicate(this, afterSupplierMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterSupplierMetadata(this, value), getFunction(), value,
                 (l, r) -> afterFunction().apply(l, r));
     }
 
@@ -178,8 +190,8 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition after(TemporalCondition<N> value) {
-        return predicate(this, afterTemporalConditionMetadata(this, value), value,
-                (l, r) -> afterFunction().apply(l, r));
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterTemporalConditionMetadata(this, value), getFunction(),
+                value.getFunction(), (l, r) -> afterFunction().apply(l, r));
     }
 
     /**
@@ -189,7 +201,18 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition afterOrEq(N value) {
-        return predicate(this, afterOrEqualsValueMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterOrEqualsValueMetadata(this, value), getFunction(), value,
+                (l, r) -> afterOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is after the field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition afterOrEq(TemporalFieldInfo<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterOrEqTemporalFieldMetadata(this, value), getFunction(), value,
                 (l, r) -> afterOrEqualsFunction().apply(l, r));
     }
 
@@ -200,7 +223,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition afterOrEq(Supplier<N> value) {
-        return predicate(this, afterOrEqualsSupplierMetadata(this, value), value,
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterOrEqualsSupplierMetadata(this, value), getFunction(), value,
                 (l, r) -> afterOrEqualsFunction().apply(l, r));
     }
 
@@ -211,8 +234,8 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition afterOrEq(TemporalCondition<N> value) {
-        return predicate(this, afterOrEqualsTemporalConditionMetadata(this, value), value,
-                (l, r) -> afterOrEqualsFunction().apply(l, r));
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterOrEqualsTemporalConditionMetadata(this, value), getFunction(),
+                value.getFunction(), (l, r) -> afterOrEqualsFunction().apply(l, r));
     }
 
     /**

@@ -1,5 +1,17 @@
 /*
- * Copyright (C) by Courtanet, All Rights Reserved.
+ * Copyright 2017 Courtanet
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.doov.core.dsl.impl.time;
 
@@ -12,7 +24,6 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.LocalDateFieldInfo;
@@ -100,9 +111,7 @@ public class TemporalConditionTest {
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A before or equals 0001-01-01");
     }
 
-/*
     @Test
-    @Disabled
     void beforeOrEq_field() {
         rule = when(B.beforeOrEq(A)).validate();
         result = rule.executeOn(model);
@@ -112,7 +121,6 @@ public class TemporalConditionTest {
         assertThat(rule.readable(LOCALE)).isEqualTo("rule when B before or equals A validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("B before or equals A");
     }
-*/
 
     @Test
     void beforeOrEq_supplier() {
@@ -191,9 +199,7 @@ public class TemporalConditionTest {
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A after or equals 2100-01-01");
     }
 
-/*
     @Test
-    @Disabled
     void afterOrEq_field() {
         rule = when(A.afterOrEq(B)).validate();
         result = rule.executeOn(model);
@@ -203,7 +209,6 @@ public class TemporalConditionTest {
         assertThat(rule.readable(LOCALE)).isEqualTo("rule when A after or equals B validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A after or equals B");
     }
-*/
 
     @Test
     void afterOrEq_supplier() {
