@@ -17,7 +17,7 @@ package io.doov.core.dsl.impl;
 
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
@@ -25,9 +25,9 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 public class DefaultStepCondition extends AbstractDSLBuilder implements StepCondition {
 
     private final PredicateMetadata metadata;
-    private final BiPredicate<DslModel, Context> predicate;
+    private final BiPredicate<FieldModel, Context> predicate;
 
-    public DefaultStepCondition(PredicateMetadata metadata, BiPredicate<DslModel, Context> predicate) {
+    public DefaultStepCondition(PredicateMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
         this.metadata = metadata;
         this.predicate = predicate;
     }
@@ -38,7 +38,7 @@ public class DefaultStepCondition extends AbstractDSLBuilder implements StepCond
     }
 
     @Override
-    public BiPredicate<DslModel, Context> predicate() {
+    public BiPredicate<FieldModel, Context> predicate() {
         return (model, context) -> {
             final boolean test = predicate.test(new ModelInterceptor(model, context), context);
             if (test) {

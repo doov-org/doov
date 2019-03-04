@@ -11,7 +11,6 @@ import java.util.List;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
 import io.doov.core.dsl.meta.Metadata;
@@ -39,7 +38,7 @@ public class NaryConverterInput<T> extends AbstractDSLBuilder implements Mapping
     }
 
     @Override
-    public T read(DslModel inModel, Context context) {
+    public T read(FieldModel inModel, Context context) {
         return converter.convert(inModel, context, fields.toArray(new DslField[0]));
     }
 

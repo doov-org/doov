@@ -17,11 +17,12 @@ package io.doov.core.dsl.lang;
 
 import java.util.Locale;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.meta.Metadata;
 
 /**
- * Interface for the execution result after a call to {@link ValidationRule#executeOn(DslModel)}.
+ * Interface for the execution result after a call to {@link ValidationRule#executeOn(FieldModel)}.
  */
 public interface Result {
 

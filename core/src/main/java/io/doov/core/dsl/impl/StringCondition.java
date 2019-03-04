@@ -23,8 +23,8 @@ import static io.doov.core.dsl.meta.function.StringFunctionMetadata.startsWithMe
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.function.StringFunctionMetadata;
@@ -42,7 +42,7 @@ public class StringCondition extends DefaultCondition<String> {
         super(field);
     }
 
-    public StringCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<String>> value) {
+    public StringCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<String>> value) {
         super(metadata, value);
     }
 

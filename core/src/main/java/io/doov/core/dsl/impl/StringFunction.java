@@ -20,8 +20,8 @@ import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.lengthIsMet
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
@@ -32,7 +32,7 @@ public class StringFunction extends StringCondition {
         super(field);
     }
 
-    public StringFunction(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<String>> value) {
+    public StringFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<String>> value) {
         super(metadata, value);
     }
 

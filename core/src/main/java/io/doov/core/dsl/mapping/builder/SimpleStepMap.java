@@ -15,8 +15,8 @@
  */
 package io.doov.core.dsl.mapping.builder;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
 
@@ -75,7 +75,7 @@ public class SimpleStepMap<I> {
      * @param consumer out field info
      * @return the mapping rule
      */
-    public DefaultMappingRule<I> to(TriConsumer<DslModel, Context, I> consumer) {
+    public DefaultMappingRule<I> to(TriConsumer<FieldModel, Context, I> consumer) {
         return this.to(new ConsumerOutput<>(consumer));
     }
 }

@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.Metadata;
@@ -56,7 +56,7 @@ public class DefaultTypeConverter<I, O> extends AbstractDSLBuilder implements Ty
     }
 
     @Override
-    public O convert(DslModel fieldModel, Context context, I input) {
+    public O convert(FieldModel fieldModel, Context context, I input) {
         return function.apply(context, Optional.ofNullable(input));
     }
 }

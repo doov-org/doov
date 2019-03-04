@@ -23,8 +23,8 @@ import static java.lang.Boolean.TRUE;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.LogicalFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
@@ -43,7 +43,7 @@ public class BooleanCondition extends DefaultCondition<Boolean> {
         super(field);
     }
 
-    public BooleanCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<Boolean>> value) {
+    public BooleanCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Boolean>> value) {
         super(metadata, value);
     }
 

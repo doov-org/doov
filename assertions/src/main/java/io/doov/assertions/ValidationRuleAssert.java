@@ -15,9 +15,9 @@
  */
 package io.doov.assertions;
 
+import io.doov.core.FieldModel;
 import org.assertj.core.api.AbstractAssert;
 
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 
@@ -37,7 +37,7 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
      * @return the assert
      * @see ResultAssert#isTrue()
      */
-    public ResultAssert validates(DslModel model) {
+    public ResultAssert validates(FieldModel model) {
         Result result = actual.executeOn(model);
         ResultAssert resultAssert = new ResultAssert(result, ResultAssert.class);
         resultAssert.isTrue();
@@ -51,7 +51,7 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
      * @return the assert
      * @see ResultAssert#isFalse()
      */
-    public ResultAssert doesNotValidate(DslModel model) {
+    public ResultAssert doesNotValidate(FieldModel model) {
         Result result = actual.executeOn(model);
         ResultAssert resultAssert = new ResultAssert(result, ResultAssert.class);
         resultAssert.isFalse();
@@ -64,9 +64,9 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
      * TODO move to LesFurets
      *
      * @param model the model
-     * @see #validates(DslModel)
+     * @see #validates(FieldModel)
      */
-    public void excludes(DslModel model) {
+    public void excludes(FieldModel model) {
         validates(model);
     }
 
@@ -76,9 +76,9 @@ public class ValidationRuleAssert extends AbstractAssert<ValidationRuleAssert, V
      * TODO move to LesFurets
      *
      * @param model the model
-     * @see #doesNotValidate(DslModel)
+     * @see #doesNotValidate(FieldModel)
      */
-    public void doesNotExclude(DslModel model) {
+    public void doesNotExclude(FieldModel model) {
         doesNotValidate(model);
     }
 

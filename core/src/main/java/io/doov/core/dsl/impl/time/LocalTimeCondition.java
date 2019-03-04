@@ -19,8 +19,8 @@ import java.time.LocalTime;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
@@ -34,7 +34,7 @@ public class LocalTimeCondition extends TemporalCondition<LocalTime> implements 
     }
 
     public LocalTimeCondition(PredicateMetadata metadata,
-                    BiFunction<DslModel, Context, Optional<LocalTime>> value) {
+                    BiFunction<FieldModel, Context, Optional<LocalTime>> value) {
         super(metadata, value);
     }
 }

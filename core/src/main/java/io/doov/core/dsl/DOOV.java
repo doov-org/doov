@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.DefaultStepCondition;
@@ -293,7 +294,7 @@ public class DOOV {
      * @param <I> value type
      * @return value map step
      */
-    public static <I> ContextawareStepMap<I> map(BiFunction<DslModel, Context, I> valueFunction) {
+    public static <I> ContextawareStepMap<I> map(BiFunction<FieldModel, Context, I> valueFunction) {
         return new ContextawareStepMap<>(valueFunction);
     }
 

@@ -8,8 +8,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import io.doov.core.FieldInfo;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.converter.*;
 import io.doov.core.serial.TypeAdapter;
@@ -147,7 +147,7 @@ public class TypeConverters {
     // NaryConverters
 
     /**
-     * N-to-1 converter. Converter function takes {@code DslModel} and a list of {@code DslField} and
+     * N-to-1 converter. Converter function takes {@code FieldModel} and a list of {@code DslField} and
      * returns the output value
      *
      * @param function    converter function
@@ -155,7 +155,7 @@ public class TypeConverters {
      * @param <O>         output type
      * @return type converter
      */
-    public static <O> NaryTypeConverter<O> nConverter(BiFunction<DslModel, List<DslField<?>>, O> function,
+    public static <O> NaryTypeConverter<O> nConverter(BiFunction<FieldModel, List<DslField<?>>, O> function,
             String description) {
         return new DefaultNaryTypeConverter<>(function, description);
     }

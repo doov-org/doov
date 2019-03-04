@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl.lang;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 
 /**
  * Interface for the validation rule that encapsulates the validation algorithm and data.
@@ -54,7 +54,7 @@ public interface ValidationRule extends DSLBuilder {
      * @param model the model
      * @return the result
      */
-    Result executeOn(DslModel model);
+    Result executeOn(FieldModel model);
 
     /**
      * Executes the validation rule on the given model.
@@ -63,7 +63,7 @@ public interface ValidationRule extends DSLBuilder {
      * @param context custom context
      * @return the result
      */
-    Result executeOn(DslModel model, Context context);
+    Result executeOn(FieldModel model, Context context);
 
     /**
      * Registers this rule on the given registry.

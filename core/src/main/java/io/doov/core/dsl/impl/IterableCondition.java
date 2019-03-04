@@ -26,8 +26,8 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
@@ -38,7 +38,7 @@ public class IterableCondition<T, C extends Iterable<T>> extends DefaultConditio
         super(field);
     }
 
-    public IterableCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
+    public IterableCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<C>> value) {
         super(metadata, value);
     }
 

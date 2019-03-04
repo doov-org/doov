@@ -17,7 +17,7 @@ package io.doov.core.dsl.lang;
 
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.LogicalBinaryCondition;
 import io.doov.core.dsl.impl.LogicalUnaryCondition;
 
@@ -33,7 +33,7 @@ public interface StepCondition extends DSLBuilder {
      *
      * @return the predicate
      */
-    BiPredicate<DslModel, Context> predicate();
+    BiPredicate<FieldModel, Context> predicate();
 
     /**
      * Returns a condition checking if the node predicate and the given condition predicate evaluate to true.

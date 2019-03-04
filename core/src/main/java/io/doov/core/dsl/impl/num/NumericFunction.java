@@ -27,8 +27,8 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
@@ -41,12 +41,12 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
         super(field);
     }
 
-    public NumericFunction(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<N>> value) {
+    public NumericFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<N>> value) {
         super(metadata, value);
     }
 
     protected abstract NumericFunction<N> numericFunction(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> value);
+            BiFunction<FieldModel, Context, Optional<N>> value);
 
     /**
      * Returns a numeric function that returns the node value multiplied by the given multiplier.

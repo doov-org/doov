@@ -23,8 +23,8 @@ import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.lesserThanM
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LeafStepCondition;
@@ -46,7 +46,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
         super(field);
     }
 
-    protected NumericCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<N>> value) {
+    protected NumericCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<N>> value) {
         super(metadata, value);
     }
 

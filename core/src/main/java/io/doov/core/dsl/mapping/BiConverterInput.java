@@ -19,7 +19,6 @@ import static io.doov.core.dsl.meta.MappingInputMetadata.inputMetadata;
 import static io.doov.core.dsl.meta.MappingMetadata.metadataInput;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
 import io.doov.core.dsl.meta.Metadata;
@@ -50,7 +49,7 @@ public class BiConverterInput<U, S, T> extends AbstractDSLBuilder implements Map
     }
 
     @Override
-    public T read(DslModel inModel, Context context) {
+    public T read(FieldModel inModel, Context context) {
         return converter.convert(inModel, context, mappingInput1.read(inModel, context),
                         mappingInput2.read(inModel, context));
     }

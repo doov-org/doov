@@ -18,8 +18,8 @@ package io.doov.core.dsl.impl.num;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
@@ -32,7 +32,7 @@ public class IntegerCondition extends NumericCondition<Integer> implements Integ
         super(field);
     }
 
-    public IntegerCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<Integer>> value) {
+    public IntegerCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Integer>> value) {
         super(metadata, value);
     }
 

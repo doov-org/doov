@@ -15,8 +15,8 @@
  */
 package io.doov.core.dsl.lang;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 
 /**
  * Generic Type converter
@@ -32,5 +32,5 @@ public interface NaryTypeConverter<O> extends DSLBuilder {
      * @param ins in fields
      * @return out value
      */
-    O convert(DslModel fieldModel, Context context, DslField<?>... ins);
+    O convert(FieldModel fieldModel, Context context, DslField<?>... ins);
 }

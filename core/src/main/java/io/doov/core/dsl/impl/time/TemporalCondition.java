@@ -22,8 +22,8 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.TemporalFieldInfo;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.Context;
@@ -46,7 +46,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
         super(field);
     }
 
-    public TemporalCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<N>> value) {
+    public TemporalCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<N>> value) {
         super(metadata, value);
     }
 

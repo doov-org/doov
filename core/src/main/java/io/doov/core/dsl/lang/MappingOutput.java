@@ -16,7 +16,6 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslModel;
 
 /**
  * Mapping output
@@ -32,7 +31,7 @@ public interface MappingOutput<T> extends DSLBuilder {
      * @param context context
      * @param value value to write
      */
-    void write(DslModel outModel, Context context, T value);
+    void write(FieldModel outModel, Context context, T value);
 
     /**
      * Verifies the output for the given out model

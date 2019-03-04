@@ -4,7 +4,6 @@
 package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
@@ -31,7 +30,7 @@ public class ConverterInput<S, T> extends AbstractDSLBuilder implements MappingI
     }
 
     @Override
-    public T read(DslModel inModel, Context context) {
+    public T read(FieldModel inModel, Context context) {
         return typeConverter.convert(inModel, context, sourceInput.read(inModel, context));
     }
 
