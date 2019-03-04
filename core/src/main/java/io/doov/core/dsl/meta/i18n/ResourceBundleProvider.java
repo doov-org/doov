@@ -54,6 +54,8 @@ public enum ResourceBundleProvider implements ResourceProvider {
     }
 
     private String getString(String key, Locale locale, String name) {
+        if (key == null)
+            return null;
         try {
             return ResourceBundle.getBundle(name, locale).getString(key);
         } catch (MissingResourceException e) {

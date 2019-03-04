@@ -35,6 +35,7 @@ import org.junit.jupiter.api.*;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.EnumFieldInfo;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.runtime.GenericModel;
@@ -48,11 +49,19 @@ public class HtmlAnyMatchTest {
     private EnumFieldInfo<EnumTest> enumField;
 
     static Document documentOf(Result result) {
-        return parseBodyFragment(toHtml(result.getContext().getRootMetadata(), LOCALE));
+        return documentOf(result.getContext());
+    }
+
+    static Document documentOf(Context context) {
+        return parseBodyFragment(toHtml(context.getRootMetadata(), LOCALE));
     }
 
     static String format(Result result, Document doc) {
-        return "<!-- " + AstVisitorUtils.astToString(result.getContext().getRootMetadata(), LOCALE) + " -->\n"
+        return format(result.getContext(), doc);
+    }
+    
+    static String format(Context context, Document doc) {
+        return "<!-- " + AstVisitorUtils.astToString(context.getRootMetadata(), LOCALE) + " -->\n"
                 + doc.outputSettings(new OutputSettings().prettyPrint(true).indentAmount(2)).toString();
     }
 

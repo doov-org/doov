@@ -24,6 +24,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Locale;
 
+import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.*;
