@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.impl;
+package io.doov.core.dsl.impl.base;
 
 import static io.doov.core.dsl.meta.function.BooleanFunctionMetadata.*;
 import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.notMetadata;
@@ -26,6 +26,8 @@ import java.util.function.BiFunction;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.LogicalFieldInfo;
+import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.LeafStepCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.function.BooleanFunctionMetadata;

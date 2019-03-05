@@ -16,7 +16,7 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
-import io.doov.core.dsl.impl.BooleanFunction;
+import io.doov.core.dsl.impl.base.BooleanFunction;
 import io.doov.core.dsl.lang.StepCondition;
 
 /**
