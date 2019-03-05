@@ -19,7 +19,7 @@ import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.impl.IterableCondition;
+import io.doov.core.dsl.impl.IterableFunction;
 import io.doov.core.dsl.lang.StepCondition;
 
 public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingFieldInfoImpl implements BaseFieldInfo<C> {
@@ -34,28 +34,28 @@ public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingField
     }
 
     public StepCondition contains(T value) {
-        return new IterableCondition<>(this).contains(value);
+        return new IterableFunction<>(this).contains(value);
     }
 
     @SafeVarargs
     public final StepCondition containsAll(T... values) {
-        return new IterableCondition<>(this).containsAll(values);
+        return new IterableFunction<>(this).containsAll(values);
     }
 
     public StepCondition isEmpty() {
-        return new IterableCondition<>(this).isEmpty();
+        return new IterableFunction<>(this).isEmpty();
     }
 
     public StepCondition isNotEmpty() {
-        return new IterableCondition<>(this).isNotEmpty();
+        return new IterableFunction<>(this).isNotEmpty();
     }
 
     public StepCondition hasSize(int size) {
-        return new IterableCondition<>(this).hasSize(size);
+        return new IterableFunction<>(this).hasSize(size);
     }
 
     public StepCondition hasNotSize(int size) {
-        return new IterableCondition<>(this).hasNotSize(size);
+        return new IterableFunction<>(this).hasNotSize(size);
     }
 
 }
