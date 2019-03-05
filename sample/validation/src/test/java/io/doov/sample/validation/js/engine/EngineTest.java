@@ -1,5 +1,6 @@
 package io.doov.sample.validation.js.engine;
 
+import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.js.ast.AstJavascriptVisitor;
 import io.doov.sample.validation.SampleRules;
 
@@ -12,22 +13,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Locale;
 
-import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.js.ast.ScriptEngineFactory.create;
 
 public class EngineTest {
-    @BeforeAll
-    public static void init() {
-        new SampleRules();
-    }
 
     @Test
     @Disabled
     // FIXME upgrade test since leafmetadata refactoring 
     public void exec_javascript_syntax_tree() {
+
+        List<ValidationRule> rules = SampleRules.rules();
 
         String mockValue = "var configuration = { max:{email:{size:24}}, min:{age:18}};\n"
                 + "\tvar account = {email:\"potato@tomato.fr\", "
@@ -52,7 +51,7 @@ public class EngineTest {
         final int[] counter = new int[1];
         index[0] = 0;
         counter[0] = 0;
-        REGISTRY_DEFAULT.stream().forEach(rule -> {
+        rules.stream().forEach(rule -> {
             ops.reset();
             try {
                 index[0]++;

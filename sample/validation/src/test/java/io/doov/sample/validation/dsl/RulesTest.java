@@ -13,7 +13,6 @@
 package io.doov.sample.validation.dsl;
 
 import static io.doov.assertions.Assertions.assertThat;
-import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
 
 import java.util.stream.Stream;
 
@@ -32,27 +31,26 @@ public class RulesTest {
 
     private FieldModel model;
 
+    private static Stream<ValidationRule> rules() {
+        return SampleRules.rules().stream();
+    }
+
     @BeforeEach
-    public void before() {
+    void before() {
         model = new SampleModelWrapper(SampleModels.sample());
     }
 
     @MethodSource("rules")
     @ParameterizedTest
-    public void should_rules_validates_with_no_messages(ValidationRule rule) {
+    void should_rules_validates_with_no_messages(ValidationRule rule) {
         assertThat(rule).validates(model).hasNoFailureCause();
     }
 
     @MethodSource("rules")
     @ParameterizedTest
-    public void should_rules_no_exception_on_null_model(ValidationRule rule) {
+    void should_rules_no_exception_on_null_model(ValidationRule rule) {
         rule.executeOn(new SampleModelWrapper());
         rule.executeOn(new SampleModelWrapper(new SampleModel()));
     }
 
-    @SuppressWarnings("unused")
-    private static Stream<ValidationRule> rules() {
-        new SampleRules();
-        return REGISTRY_DEFAULT.stream();
-    }
 }
