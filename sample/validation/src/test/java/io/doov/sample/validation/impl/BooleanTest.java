@@ -7,13 +7,13 @@ import static io.doov.sample.field.dsl.DslSampleModel.configurationMailingCampai
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.sample.model.*;
 import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class BooleanTest {
 
-    private DslModel model;
+    private FieldModel model;
     private Account account;
     private Configuration configuration;
 

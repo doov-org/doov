@@ -39,6 +39,7 @@ import io.doov.benchmark.model.BenchmarkModelWrapper;
 import io.doov.benchmark.model.Driver;
 import io.doov.benchmark.model.Friend;
 import io.doov.benchmark.model.RuntimePaths;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.StringFieldInfo;
@@ -83,7 +84,7 @@ public class CascadedValidation {
     public class DriverSetup {
 
         private Driver driver;
-        private DslModel model;
+        private FieldModel model;
 
         DriverSetup() {
             driver = new Driver("driver", 18, true);

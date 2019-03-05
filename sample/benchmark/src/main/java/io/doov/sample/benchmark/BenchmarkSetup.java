@@ -5,6 +5,7 @@ package io.doov.sample.benchmark;
 
 import io.doov.benchmark.model.BenchmarkModel;
 import io.doov.benchmark.model.Driver;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
@@ -37,9 +38,9 @@ public class BenchmarkSetup {
 
     public boolean expectedResult;
     public int expectedViolationCount;
-    public DslModel model;
+    public FieldModel model;
 
-    public BenchmarkSetup(Function<BenchmarkModel, DslModel> wrapperFunction, ValidationState state) {
+    public BenchmarkSetup(Function<BenchmarkModel, FieldModel> wrapperFunction, ValidationState state) {
         expectedResult = true;
 
         String name = names[state.random().nextInt(10)];

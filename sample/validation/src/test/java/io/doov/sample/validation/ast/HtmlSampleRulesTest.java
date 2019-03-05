@@ -33,7 +33,7 @@ import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Metadata;
@@ -45,7 +45,7 @@ public class HtmlSampleRulesTest {
 
     private static final Locale LOCALE = Locale.US;
 
-    private final DslModel sample = SampleModels.wrapper();
+    private final FieldModel sample = SampleModels.wrapper();
     private Result result;
     private Document doc;
 
