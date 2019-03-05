@@ -16,7 +16,6 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
-import io.doov.core.dsl.impl.StringCondition;
 import io.doov.core.dsl.impl.StringFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.StepCondition;
@@ -24,49 +23,49 @@ import io.doov.core.dsl.lang.StepCondition;
 /**
  * Base interface for text field info.
  * <p>
- * It contains default methods for common checks, which are calls to methods on {@link StringCondition}.
+ * It contains default methods for common checks, which are calls to methods on {@link StringFunction}.
  */
 public interface TextFieldInfo extends BaseFieldInfo<String> {
 
     /**
-     * See {@link StringCondition#contains(String)}
+     * See {@link StringFunction#contains(String)}
      *
      * @param string the string
      * @return the step condition
-     * @see StringCondition#contains(String)
+     * @see StringFunction#contains(String)
      */
     default StepCondition contains(String string) {
         return getStringFunction().contains(string);
     }
 
     /**
-     * See {@link StringCondition#matches(String)}
+     * See {@link StringFunction#matches(String)}
      *
      * @param regex the regex
      * @return the step condition
-     * @see StringCondition#matches(String)
+     * @see StringFunction#matches(String)
      */
     default StepCondition matches(String regex) {
         return getStringFunction().matches(regex);
     }
 
     /**
-     * See {@link StringCondition#startsWith(String)}
+     * See {@link StringFunction#startsWith(String)}
      *
      * @param prefix the prefix
      * @return the step condition
-     * @see StringCondition#startsWith(String)
+     * @see StringFunction#startsWith(String)
      */
     default StepCondition startsWith(String prefix) {
         return getStringFunction().startsWith(prefix);
     }
 
     /**
-     * See {@link StringCondition#endsWith(String)}
+     * See {@link StringFunction#endsWith(String)}
      *
      * @param suffix the suffix
      * @return the step condition
-     * @see StringCondition#endsWith(String)
+     * @see StringFunction#endsWith(String)
      */
     default StepCondition endsWith(String suffix) {
         return getStringFunction().endsWith(suffix);
@@ -100,7 +99,7 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
     StringFunction getStringFunction();
 
     @Override
-    default StringCondition getDefaultFunction() {
+    default StringFunction getDefaultFunction() {
         return getStringFunction();
     }
 

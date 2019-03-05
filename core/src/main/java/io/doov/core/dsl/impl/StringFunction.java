@@ -15,6 +15,10 @@
  */
 package io.doov.core.dsl.impl;
 
+import static io.doov.core.dsl.meta.function.StringFunctionMetadata.containsMetadata;
+import static io.doov.core.dsl.meta.function.StringFunctionMetadata.endsWithMetadata;
+import static io.doov.core.dsl.meta.function.StringFunctionMetadata.matchesMetadata;
+import static io.doov.core.dsl.meta.function.StringFunctionMetadata.startsWithMetadata;
 import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.lengthIsMetadata;
 
 import java.util.Optional;
@@ -24,9 +28,17 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.meta.function.StringFunctionMetadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class StringFunction extends StringCondition {
+/**
+ * Base class for string conditions.
+ * <p>
+ * It contains a {@link DslField} to get the value from the model, a {@link StringFunctionMetadata} to describe this node, and a
+ * {@link BiFunction} to take the value from the model and return an optional value.
+ */
+public class StringFunction extends DefaultCondition<String> {
 
     public StringFunction(DslField<String> field) {
         super(field);
@@ -34,6 +46,46 @@ public class StringFunction extends StringCondition {
 
     public StringFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<String>> value) {
         super(metadata, value);
+    }
+
+    /**
+     * Returns a condition checking if the node value contains the given value.
+     *
+     * @param value the value
+     * @return the step condition
+     */
+    public final StepCondition contains(String value) {
+        return LeafStepCondition.stepCondition(containsMetadata(metadata, value), getFunction(), value, String::contains);
+    }
+
+    /**
+     * Returns a condition checking if the node value matches the given value.
+     *
+     * @param value the value
+     * @return the step condition
+     */
+    public final StepCondition matches(String value) {
+        return LeafStepCondition.stepCondition(matchesMetadata(metadata, value), getFunction(), value, String::matches);
+    }
+
+    /**
+     * Returns a condition checking if the node value starts with the given value.
+     *
+     * @param value the value
+     * @return the step condition
+     */
+    public final StepCondition startsWith(String value) {
+        return LeafStepCondition.stepCondition(startsWithMetadata(metadata, value), getFunction(), value, String::startsWith);
+    }
+
+    /**
+     * Returns a condition checking if the node value ends with the given value.
+     *
+     * @param value the value
+     * @return the step condition
+     */
+    public final StepCondition endsWith(String value) {
+        return LeafStepCondition.stepCondition(endsWithMetadata(metadata, value), getFunction(), value, String::endsWith);
     }
 
     /**
@@ -55,4 +107,5 @@ public class StringFunction extends StringCondition {
         return new IntegerFunction(metadata,
                 (model, context) -> value(model, context).map(Integer::parseInt));
     }
+
 }
