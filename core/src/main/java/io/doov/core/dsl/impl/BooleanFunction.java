@@ -15,15 +15,29 @@
  */
 package io.doov.core.dsl.impl;
 
+import static io.doov.core.dsl.meta.function.BooleanFunctionMetadata.*;
+import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.notMetadata;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.types.LogicalFieldInfo;
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.meta.function.BooleanFunctionMetadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class BooleanFunction extends BooleanCondition {
+/**
+ * Base class for boolean conditions.
+ * <p>
+ * It contains a {@link DslField} to get the value from the model, a {@link BooleanFunctionMetadata} to describe this node, and a
+ * {@link BiFunction} to take the value from the model and return an optional value.
+ */
+public class BooleanFunction extends DefaultCondition<Boolean> {
 
     public BooleanFunction(DslField<Boolean> field) {
         super(field);
@@ -31,6 +45,78 @@ public class BooleanFunction extends BooleanCondition {
 
     public BooleanFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Boolean>> value) {
         super(metadata, value);
+    }
+
+    /**
+     * Returns a step condition checking if the node value is not true.
+     *
+     * @return the step condition
+     */
+    public final StepCondition not() {
+        return LeafStepCondition.stepCondition(notMetadata(metadata), getFunction(), value -> !value);
+    }
+
+    /**
+     * Returns a step condition checking if the node value and the given value is true.
+     *
+     * @param value the right value
+     * @return the step condition
+     */
+    public final StepCondition and(boolean value) {
+        return LeafStepCondition.stepCondition(andMetadata(metadata, value), getFunction(), value,
+                Boolean::logicalAnd);
+    }
+
+    /**
+     * Returns a step condition checking if the node value and the given field value is true.
+     *
+     * @param value the right field value
+     * @return the step condition
+     */
+    public final StepCondition and(LogicalFieldInfo value) {
+        return LeafStepCondition.stepCondition(andMetadata(metadata, value), getFunction(), value,
+                Boolean::logicalAnd);
+    }
+
+    /**
+     * Returns a step condition checking if the node value or the given value is true.
+     *
+     * @param value the right value
+     * @return the step condition
+     */
+    public final StepCondition or(boolean value) {
+        return LeafStepCondition.stepCondition(orMetadata(metadata, value), getFunction(), value,
+                Boolean::logicalOr);
+    }
+
+    /**
+     * Returns a step condition checking if the node value or the given field value is true.
+     *
+     * @param value the right value
+     * @return the step condition
+     */
+    public final StepCondition or(LogicalFieldInfo value) {
+        return LeafStepCondition.stepCondition(orMetadata(metadata, value), getFunction(), value,
+                Boolean::logicalOr);
+    }
+
+    /**
+     * Returns a step condition checking if the node value is true.
+     *
+     * @return the step condition
+     */
+    public final StepCondition isTrue() {
+        return LeafStepCondition.stepCondition(isMetadata(metadata, true), getFunction(), TRUE, Boolean::equals);
+    }
+
+    /**
+     * Returns a step condition checking if the node value is false.
+     *
+     * @return the step condition
+     */
+    public final StepCondition isFalse() {
+        return LeafStepCondition.stepCondition(isMetadata(metadata, false), getFunction(), FALSE,
+                Boolean::equals);
     }
 
 }

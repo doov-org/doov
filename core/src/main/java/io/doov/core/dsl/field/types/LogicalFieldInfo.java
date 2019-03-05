@@ -16,86 +16,85 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
-import io.doov.core.dsl.impl.BooleanCondition;
 import io.doov.core.dsl.impl.BooleanFunction;
 import io.doov.core.dsl.lang.StepCondition;
 
 /**
  * Base interface for logical field info.
  * <p>
- * It contains default methods for common checks, which are calls to methods on {@link BooleanCondition}.
+ * It contains default methods for common checks, which are calls to methods on {@link BooleanFunction}.
  */
 public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
 
     /**
-     * See {@link BooleanCondition#not()}
+     * See {@link BooleanFunction#not()}
      *
      * @return the step condition
-     * @see BooleanCondition#not()
+     * @see BooleanFunction#not()
      */
     default StepCondition not() {
         return getBooleanFunction().not();
     }
 
     /**
-     * See {@link BooleanCondition#and(boolean)}
+     * See {@link BooleanFunction#and(boolean)}
      *
      * @param value the right value
      * @return the step condition
-     * @see BooleanCondition#and(boolean)
+     * @see BooleanFunction#and(boolean)
      */
     default StepCondition and(boolean value) {
         return getBooleanFunction().and(value);
     }
 
     /**
-     * See {@link BooleanCondition#and(LogicalFieldInfo)}
+     * See {@link BooleanFunction#and(LogicalFieldInfo)}
      *
      * @param value the right field value
      * @return the step condition
-     * @see BooleanCondition#and(LogicalFieldInfo)
+     * @see BooleanFunction#and(LogicalFieldInfo)
      */
     default StepCondition and(LogicalFieldInfo value) {
         return getBooleanFunction().and(value);
     }
 
     /**
-     * See {@link BooleanCondition#or(boolean)}
+     * See {@link BooleanFunction#or(boolean)}
      *
      * @param value the right value
      * @return the step condition
-     * @see BooleanCondition#or(boolean)
+     * @see BooleanFunction#or(boolean)
      */
     default StepCondition or(boolean value) {
         return getBooleanFunction().or(value);
     }
 
     /**
-     * See {@link BooleanCondition#or(LogicalFieldInfo)}
+     * See {@link BooleanFunction#or(LogicalFieldInfo)}
      *
      * @param value the right field value
      * @return the step condition
-     * @see BooleanCondition#or(LogicalFieldInfo)
+     * @see BooleanFunction#or(LogicalFieldInfo)
      */
     default StepCondition or(LogicalFieldInfo value) {
         return getBooleanFunction().or(value);
     }
 
     /**
-     * See {@link BooleanCondition#isTrue()}
+     * See {@link BooleanFunction#isTrue()}
      *
      * @return the step condition
-     * @see BooleanCondition#isTrue()
+     * @see BooleanFunction#isTrue()
      */
     default StepCondition isTrue() {
         return getBooleanFunction().isTrue();
     }
 
     /**
-     * See {@link BooleanCondition#isFalse()}
+     * See {@link BooleanFunction#isFalse()}
      *
      * @return the step condition
-     * @see BooleanCondition#isFalse()
+     * @see BooleanFunction#isFalse()
      */
     default StepCondition isFalse() {
         return getBooleanFunction().isFalse();
