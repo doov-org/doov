@@ -28,8 +28,4 @@
             return new ${model.class.name}Rule(getStepWhen(), shortCircuit);
         }
 
-        @Override
-        public ${model.class.name}Rule registerOn(RuleRegistry registry) {
-            return (${model.class.name}Rule) super.registerOn(registry);
-        }
     }
