@@ -20,14 +20,14 @@ import static java.util.stream.Collectors.toList;
 import java.util.*;
 import java.util.stream.Stream;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.DslField;
 import io.doov.core.serial.StringMapper;
 import io.doov.core.serial.TypeAdapter;
 
 /**
  * An model that maps {@code FieldId} to values. Each {@code FieldId} can map to at most one value.
  */
-public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslModel, StringMapper {
+public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, StringMapper {
 
     /**
      * Returns the {@code FieldId} value from the {@code FieldId} to read
@@ -36,8 +36,11 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslMod
      * @param fieldId the field id to get
      * @return the field value
      */
-    @Override
     <T> T get(FieldId fieldId);
+
+    default <T> T get(DslField<T> field) {
+        return get(field.id());
+    }
 
     /**
      * Sets the given value to the given field id.
@@ -46,8 +49,11 @@ public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, DslMod
      * @param fieldId the field id to set
      * @param value   the value to set
      */
-    @Override
     <T> void set(FieldId fieldId, T value);
+
+    default <T> void set(DslField<T> field, T value) {
+        set(field.id(), value);
+    }
 
     /**
      * Returns a sequential {@code Stream} with all key-value pairs

@@ -18,7 +18,6 @@ package io.doov.core.dsl.lang;
 import java.util.Locale;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.meta.Metadata;
 
 /**

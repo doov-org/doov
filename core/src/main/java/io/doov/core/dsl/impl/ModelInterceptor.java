@@ -18,7 +18,6 @@ package io.doov.core.dsl.impl;
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.serial.TypeAdapterRegistry;
 

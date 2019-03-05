@@ -6,7 +6,6 @@ package io.doov.sample.benchmark;
 import io.doov.benchmark.model.BenchmarkModel;
 import io.doov.benchmark.model.Driver;
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Metadata;

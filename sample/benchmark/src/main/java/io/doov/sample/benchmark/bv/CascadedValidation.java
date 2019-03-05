@@ -27,7 +27,6 @@ import org.openjdk.jmh.infra.Blackhole;
 import io.doov.benchmark.model.*;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 
