@@ -355,8 +355,7 @@ public class ModelMapGenTask extends DefaultTask {
                             DefaultValidationRule.class.getName(),
                             Result.class.getName(),
                             StepCondition.class.getName(),
-                            StepWhen.class.getName(),
-                            RuleRegistry.class.getName()) : Collections.emptyList()));
+                            StepWhen.class.getName()) : Collections.emptyList()));
             conf.put("fields", fields(fieldInfoMap, typeProvider, enumFieldInfo.get()));
             conf.put("methods", iterableMethods(fieldInfoMap, typeProvider));
             String entryPointMethods = dslEntrypointMethods.get() ? MacroProcessor.replaceProperties(Templates.dslEntrypointMethod, conf) : "";

@@ -65,11 +65,4 @@ public interface ValidationRule extends DSLBuilder {
      */
     Result executeOn(FieldModel model, Context context);
 
-    /**
-     * Registers this rule on the given registry.
-     *
-     * @param registry the registry
-     * @return the validation rule
-     */
-    ValidationRule registerOn(RuleRegistry registry);
 }

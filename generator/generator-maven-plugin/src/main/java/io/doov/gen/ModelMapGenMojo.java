@@ -294,8 +294,7 @@ public final class ModelMapGenMojo extends AbstractMojo {
                             DefaultValidationRule.class.getName(),
                             Result.class.getName(),
                             StepCondition.class.getName(),
-                            StepWhen.class.getName(),
-                            RuleRegistry.class.getName())));
+                            StepWhen.class.getName())));
             conf.put("fields", fields(fieldInfoMap, typeProvider, enumFieldInfo));
             conf.put("methods", iterableMethods(fieldInfoMap, typeProvider));
             String entryPointMethods = dslEntrypointMethods ? MacroProcessor.replaceProperties(Templates.dslEntrypointMethod, conf) : "";

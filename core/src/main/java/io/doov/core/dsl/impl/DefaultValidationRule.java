@@ -62,12 +62,6 @@ public class DefaultValidationRule extends AbstractDSLBuilder implements Validat
     }
 
     @Override
-    public ValidationRule registerOn(RuleRegistry registry) {
-        registry.register(this);
-        return this;
-    }
-
-    @Override
     public Metadata metadata() {
         return metadata;
     }
