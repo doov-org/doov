@@ -20,12 +20,13 @@ import java.io.Serializable;
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.meta.Metadata;
 
 @SuppressWarnings("serial")
 public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Serializable {
 
     private final FieldId fieldId;
-    private final String readable;
+    private final Metadata metadata;
     private final Class<?> type;
     private boolean _transient;
     private boolean codeValuable;
@@ -33,10 +34,10 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
     private final Class<?>[] genericTypes;
     private final FieldId[] siblings;
 
-    public DefaultFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, boolean codeValuable,
+    public DefaultFieldInfo(FieldId fieldId, Metadata metadata, Class<?> type, boolean _transient, boolean codeValuable,
                             boolean codeLookup, Class<?>[] genericTypes, FieldId... siblings) {
         this.fieldId = fieldId;
-        this.readable = readable;
+        this.metadata = metadata;
         this.type = type;
         this._transient = _transient;
         this.codeValuable = codeValuable;
@@ -47,7 +48,7 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
 
     public DefaultFieldInfo(FieldInfo fieldInfo) {
         this(fieldInfo.id(),
-                fieldInfo.readable(),
+                fieldInfo.getMetadata(),
                 fieldInfo.type(),
                 fieldInfo.isTransient(),
                 fieldInfo.isCodeValuable(),
@@ -62,8 +63,8 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
     }
 
     @Override
-    public String readable() {
-        return readable;
+    public Metadata getMetadata() {
+        return metadata;
     }
 
     @Override

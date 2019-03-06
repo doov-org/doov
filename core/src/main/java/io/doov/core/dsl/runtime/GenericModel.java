@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import io.doov.core.*;
 import io.doov.core.dsl.field.types.*;
+import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
 import io.doov.core.serial.TypeAdapterRegistry;
 import io.doov.core.serial.TypeAdapters;
 
@@ -85,62 +86,62 @@ public final class GenericModel implements FieldModel {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> RuntimeField<GenericModel, T> runtimeField(T value, String readable, Class<?>... genericTypes) {
-        FieldId fieldId = () -> readable;
+    private <T> RuntimeField<GenericModel, T> runtimeField(T value, String fieldName, Class<?>... genericTypes) {
+        FieldId fieldId = () -> fieldName;
         this.set(fieldId, value);
         return from(GenericModel.class, fieldId)
-                .readable(readable)
+                .metadata(ValuePredicateMetadata.fieldMetadata(fieldName))
                 .field(o -> o.get(fieldId), (o, v) -> o.set(fieldId, v),
                         (Class<T>) (value == null ? Void.TYPE : value.getClass()), genericTypes)
                 .register(fields);
     }
 
-    public BooleanFieldInfo booleanField(boolean value, String readable) {
-        return new BooleanFieldInfo(runtimeField(value, readable));
+    public BooleanFieldInfo booleanField(boolean value, String fieldName) {
+        return new BooleanFieldInfo(runtimeField(value, fieldName));
     }
 
-    public CharacterFieldInfo charField(char value, String readable) {
-        return new CharacterFieldInfo(runtimeField(value, readable));
+    public CharacterFieldInfo charField(char value, String fieldName) {
+        return new CharacterFieldInfo(runtimeField(value, fieldName));
     }
 
-    public DoubleFieldInfo doubleField(double value, String readable) {
-        return new DoubleFieldInfo(runtimeField(value, readable));
+    public DoubleFieldInfo doubleField(double value, String fieldName) {
+        return new DoubleFieldInfo(runtimeField(value, fieldName));
     }
 
-    public <E extends Enum<E>> EnumFieldInfo<E> enumField(E value, String readable) {
-        return new EnumFieldInfo<>(runtimeField(value, readable));
+    public <E extends Enum<E>> EnumFieldInfo<E> enumField(E value, String fieldName) {
+        return new EnumFieldInfo<>(runtimeField(value, fieldName));
     }
 
-    public FloatFieldInfo floatField(float value, String readable) {
-        return new FloatFieldInfo(runtimeField(value, readable));
+    public FloatFieldInfo floatField(float value, String fieldName) {
+        return new FloatFieldInfo(runtimeField(value, fieldName));
     }
 
-    public IntegerFieldInfo intField(int value, String readable) {
-        return new IntegerFieldInfo(runtimeField(value, readable));
+    public IntegerFieldInfo intField(int value, String fieldName) {
+        return new IntegerFieldInfo(runtimeField(value, fieldName));
     }
 
-    public LocalDateFieldInfo localDateField(LocalDate value, String readable) {
-        return new LocalDateFieldInfo(runtimeField(value, readable));
+    public LocalDateFieldInfo localDateField(LocalDate value, String fieldName) {
+        return new LocalDateFieldInfo(runtimeField(value, fieldName));
     }
 
-    public LocalDateTimeFieldInfo localDateTimeField(LocalDateTime value, String readable) {
-        return new LocalDateTimeFieldInfo(runtimeField(value, readable));
+    public LocalDateTimeFieldInfo localDateTimeField(LocalDateTime value, String fieldName) {
+        return new LocalDateTimeFieldInfo(runtimeField(value, fieldName));
     }
 
-    public LocalTimeFieldInfo localTimeField(LocalTime value, String readable) {
-        return new LocalTimeFieldInfo(runtimeField(value, readable));
+    public LocalTimeFieldInfo localTimeField(LocalTime value, String fieldName) {
+        return new LocalTimeFieldInfo(runtimeField(value, fieldName));
     }
 
-    public LongFieldInfo longField(long value, String readable) {
-        return new LongFieldInfo(runtimeField(value, readable));
+    public LongFieldInfo longField(long value, String fieldName) {
+        return new LongFieldInfo(runtimeField(value, fieldName));
     }
 
-    public StringFieldInfo stringField(String value, String readable) {
-        return new StringFieldInfo(runtimeField(value, readable));
+    public StringFieldInfo stringField(String value, String fieldName) {
+        return new StringFieldInfo(runtimeField(value, fieldName));
     }
 
-    public <T, C extends Iterable<T>> IterableFieldInfo<T, C> iterableField(C value, String readable) {
-        return new IterableFieldInfo<>(runtimeField(value, readable));
+    public <T, C extends Iterable<T>> IterableFieldInfo<T, C> iterableField(C value, String fieldName) {
+        return new IterableFieldInfo<>(runtimeField(value, fieldName));
     }
 
 }

@@ -19,9 +19,13 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import io.doov.core.*;
+import io.doov.core.CodeLookup;
+import io.doov.core.CodeValuable;
+import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Runtime implementation for {@link FieldInfo} and {@link DslField}.
@@ -36,7 +40,7 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     private final List<PathMethod<Object, Object>> chain;
     private final PathMethod<Object, R> lastLink;
     private final FieldId id;
-    private final String readable;
+    private final Metadata metadata;
     private FieldId[] siblings;
     private Class<R> type;
     private final Class<?>[] genericTypes;
@@ -45,17 +49,17 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     private boolean isTransient;
 
     public RuntimeField(List<PathMethod<Object, Object>> chain,
-                    PathMethod<Object, R> lastLink,
-                    FieldId id,
-                    String readable,
-                    FieldId[] siblings,
-                    Class<R> type,
-                    Class<?>[] genericTypes,
-                    boolean isTransient) {
+            PathMethod<Object, R> lastLink,
+            FieldId id,
+            Metadata metadata,
+            FieldId[] siblings,
+            Class<R> type,
+            Class<?>[] genericTypes,
+            boolean isTransient) {
         this.chain = chain;
         this.lastLink = lastLink;
         this.id = id;
-        this.readable = readable;
+        this.metadata = metadata;
         this.siblings = siblings;
         this.type = type;
         this.genericTypes = genericTypes;
@@ -68,10 +72,10 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     public FieldId id() {
         return id;
     }
-
+    
     @Override
-    public String readable() {
-        return readable;
+    public Metadata getMetadata() {
+        return metadata;
     }
 
     @Override

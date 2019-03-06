@@ -16,6 +16,7 @@
 package io.doov.core;
 
 import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Properties of a {@code FieldId}, generated from the model java bean
@@ -72,4 +73,11 @@ public interface FieldInfo extends Readable {
      */
     boolean isTransient();
 
+
+    @Override
+    default String readable() {
+        return getMetadata().readable();
+    }
+
+    Metadata getMetadata();
 }

@@ -17,6 +17,7 @@ package io.doov.gen;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static io.doov.core.dsl.field.FieldInfoBuilder.fieldInfo;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.fieldMetadata;
 import static io.doov.gen.ModelWrapperGen.getterType;
 import static io.doov.gen.ModelWrapperGen.primitiveBoxingType;
 import static java.util.Arrays.stream;
@@ -57,7 +58,7 @@ public class GeneratorFieldInfo extends DelegatingFieldInfoImpl {
         return new GeneratorFieldInfo(fieldInfo()
                 .fieldId(path.getFieldId())
                 .type(getterType(path))
-                .readable(formatReadable(path))
+                .metadata(fieldMetadata(formatReadable(path)))
                 ._transient(path.isTransient())
                 .codeValuable(isAssignable(path, CodeValuable.class))
                 .codeLookup(isAssignable(path, CodeLookup.class))
@@ -87,7 +88,7 @@ public class GeneratorFieldInfo extends DelegatingFieldInfoImpl {
 
     private static Class[] genericClasses(VisitorPath path) {
         Type returnType = path.getPath().get(path.getPath().size() - 1).getGenericReturnType();
-        Class[] genericClasses = new Class[]{};
+        Class[] genericClasses = new Class[] {};
         if (returnType instanceof ParameterizedType) {
             ParameterizedType genericReturnType = (ParameterizedType) returnType;
             genericClasses = Arrays.stream(genericReturnType.getActualTypeArguments())
@@ -107,9 +108,9 @@ public class GeneratorFieldInfo extends DelegatingFieldInfoImpl {
         constant.append(this.id().toString());
         constant.append(")");
         constant.append("\n                    ");
-        constant.append(".readable(\"");
+        constant.append(".metadata(fieldMetadata(\"");
         constant.append(this.readable());
-        constant.append("\")");
+        constant.append("\"))");
         constant.append("\n                    ");
         constant.append(".type(");
         if (this.type().isPrimitive()) {
