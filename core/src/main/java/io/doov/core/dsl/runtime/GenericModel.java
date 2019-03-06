@@ -15,15 +15,35 @@
  */
 package io.doov.core.dsl.runtime;
 
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 import static io.doov.core.dsl.runtime.FieldChainBuilder.from;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Spliterator;
 import java.util.stream.Stream;
 
-import io.doov.core.*;
-import io.doov.core.dsl.field.types.*;
-import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
+import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
+import io.doov.core.FieldModel;
+import io.doov.core.dsl.field.types.BooleanFieldInfo;
+import io.doov.core.dsl.field.types.CharacterFieldInfo;
+import io.doov.core.dsl.field.types.DoubleFieldInfo;
+import io.doov.core.dsl.field.types.EnumFieldInfo;
+import io.doov.core.dsl.field.types.FloatFieldInfo;
+import io.doov.core.dsl.field.types.IntegerFieldInfo;
+import io.doov.core.dsl.field.types.IterableFieldInfo;
+import io.doov.core.dsl.field.types.LocalDateFieldInfo;
+import io.doov.core.dsl.field.types.LocalDateTimeFieldInfo;
+import io.doov.core.dsl.field.types.LocalTimeFieldInfo;
+import io.doov.core.dsl.field.types.LongFieldInfo;
+import io.doov.core.dsl.field.types.StringFieldInfo;
 import io.doov.core.serial.TypeAdapterRegistry;
 import io.doov.core.serial.TypeAdapters;
 
@@ -90,7 +110,7 @@ public final class GenericModel implements FieldModel {
         FieldId fieldId = () -> fieldName;
         this.set(fieldId, value);
         return from(GenericModel.class, fieldId)
-                .metadata(ValuePredicateMetadata.fieldMetadata(fieldName))
+                .metadata(fieldMetadata(fieldName))
                 .field(o -> o.get(fieldId), (o, v) -> o.set(fieldId, v),
                         (Class<T>) (value == null ? Void.TYPE : value.getClass()), genericTypes)
                 .register(fields);

@@ -1,6 +1,6 @@
 package io.doov.benchmark.model;
 
-import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.fieldMetadata;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 import static io.doov.core.dsl.runtime.FieldChainBuilder.from;
 
 import java.util.ArrayList;

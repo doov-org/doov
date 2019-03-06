@@ -17,7 +17,7 @@ package io.doov.gen;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static io.doov.core.dsl.field.FieldInfoBuilder.fieldInfo;
-import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.fieldMetadata;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 import static io.doov.gen.ModelWrapperGen.getterType;
 import static io.doov.gen.ModelWrapperGen.primitiveBoxingType;
 import static java.util.Arrays.stream;

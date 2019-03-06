@@ -2,7 +2,7 @@ package io.doov.sample.field;
 
 import static io.doov.core.dsl.runtime.FieldChainBuilder.from;
 import static io.doov.core.dsl.runtime.FieldChainBuilder.generify;
-import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.fieldMetadata;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 
 import java.time.LocalDate;
 import java.util.*;

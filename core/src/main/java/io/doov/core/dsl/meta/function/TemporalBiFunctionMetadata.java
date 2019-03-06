@@ -18,7 +18,7 @@ package io.doov.core.dsl.meta.function;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
-import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.fieldMetadata;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
 
 import java.util.function.Supplier;

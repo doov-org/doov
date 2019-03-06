@@ -19,7 +19,7 @@ import static io.doov.core.dsl.meta.function.MapFunctionMetadata.mapAsMetadata;
 import static io.doov.core.dsl.meta.function.MapFunctionMetadata.mapToIntMetadata;
 import static io.doov.core.dsl.meta.function.MapFunctionMetadata.mapToStringMetadata;
 import static io.doov.core.dsl.meta.function.MapFunctionMetadata.mapUsingMetadata;
-import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.fieldMetadata;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.*;
