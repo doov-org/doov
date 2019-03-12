@@ -11,7 +11,7 @@ public class StaticMetadata<T> extends LeafMetadata<StaticMetadata<T>> {
     private StaticMetadata(MetadataType type, T value) {
         super(type);
         this.value = value;
-        this.valueClass = (Class<T>) value.getClass();
+        this.valueClass = value != null ? (Class<T>) value.getClass() : null;
     }
 
     public static <U> StaticMetadata<U> create(Supplier<U> valueSupplier) {
