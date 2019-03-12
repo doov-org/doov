@@ -26,7 +26,6 @@ import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
-import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;

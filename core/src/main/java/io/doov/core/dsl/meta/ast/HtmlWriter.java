@@ -42,6 +42,7 @@ import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
+import org.apache.commons.text.StringEscapeUtils;
 
 public class HtmlWriter {
     static final String SPACE = "&nbsp;";
@@ -248,5 +249,9 @@ public class HtmlWriter {
         } else {
             return "";
         }
+    }
+
+    protected String escapeHtml4(String readable) {
+        return StringEscapeUtils.escapeHtml4(readable);
     }
 }
