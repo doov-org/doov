@@ -15,14 +15,14 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import java.util.Locale;
+
+import io.doov.core.dsl.meta.BinaryMetadata;
 import io.doov.core.dsl.meta.DefaultOperator;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.NaryMetadata;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
-
-import java.util.Locale;
 
 public class AstLineVisitor extends AstTextVisitor {
 
@@ -41,13 +41,13 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void startNary(NaryPredicateMetadata metadata, int depth) {
+    public void startNary(NaryMetadata metadata, int depth) {
         super.startNary(metadata, depth);
         sb.append("[");
     }
 
     @Override
-    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildNary(NaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
         super.visitNary(metadata, depth);
         if (hasNext) {
             sb.delete(sb.length() - 1, sb.length());
@@ -56,14 +56,14 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void endNary(NaryPredicateMetadata metadata, int depth) {
+    public void endNary(NaryMetadata metadata, int depth) {
         super.endNary(metadata, depth);
         sb.delete(sb.length() - 1, sb.length());
         sb.append("] ");
     }
 
     @Override
-    public void startBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void startBinary(BinaryMetadata metadata, int depth) {
         super.startBinary(metadata, depth);
         if ((metadata.getOperator() == DefaultOperator.and || metadata.getOperator() == DefaultOperator.or)
                 || (metadata.getLeft().type() == MetadataType.NARY_PREDICATE)) {
@@ -72,7 +72,7 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildBinary(BinaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
         if (hasNext) {
             sb.append(bundle.get(metadata.getOperator(), locale));
             sb.append(formatNewLine());
@@ -80,7 +80,7 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void endBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void endBinary(BinaryMetadata metadata, int depth) {
         super.endBinary(metadata, depth);
         sb.delete(sb.length() - 1, sb.length());
         if ((metadata.getOperator() == DefaultOperator.and || metadata.getOperator() == DefaultOperator.or)

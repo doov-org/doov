@@ -8,15 +8,14 @@ import static io.doov.core.dsl.meta.DefaultOperator.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Locale;
+
+import org.apache.commons.lang3.StringUtils;
 
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.ast.AbstractAstVisitor;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
-import org.apache.commons.lang3.StringUtils;
 
 public class AstJavascriptVisitor extends AbstractAstVisitor {
 
@@ -37,12 +36,12 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void startBinary(BinaryMetadata metadata, int depth) {
         write("(");
     }
 
     @Override
-    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildBinary(BinaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
         if (hasNext) {
             switch ((DefaultOperator) metadata.getOperator()) {
                 case and:
@@ -75,12 +74,12 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void endBinary(BinaryMetadata metadata, int depth) {
         write(")");
     }
 
     @Override
-    public void startNary(NaryPredicateMetadata metadata, int depth) {
+    public void startNary(NaryMetadata metadata, int depth) {
         if (metadata.getOperator() == match_none) {
             write("!"); // for predicate [a,b,c] will translate as (!a && !b && !c)
         }
@@ -93,7 +92,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildNary(NaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
         if (hasNext) {
             switch ((DefaultOperator) metadata.getOperator()) {
                 case match_any:
@@ -117,7 +116,7 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void endNary(NaryPredicateMetadata metadata, int depth) {
+    public void endNary(NaryMetadata metadata, int depth) {
         if (metadata.getOperator() == count) {
             write("].reduce(function(acc,val){if(val){return acc+1;}return acc;},0)");
         } // using reduce method to count with an accumulator
@@ -168,13 +167,13 @@ public class AstJavascriptVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void beforeChildUnary(UnaryPredicateMetadata metadata, Metadata child, int depth) {
+    public void beforeChildUnary(UnaryMetadata metadata, Metadata child, int depth) {
         manageOperator((DefaultOperator) metadata.getOperator(), null);
 
     }
 
     @Override
-    public void endUnary(UnaryPredicateMetadata metadata, int depth) {
+    public void endUnary(UnaryMetadata metadata, int depth) {
         write(")");
     }
 

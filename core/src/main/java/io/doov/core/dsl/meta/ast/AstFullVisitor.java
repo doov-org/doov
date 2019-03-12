@@ -16,8 +16,12 @@
 package io.doov.core.dsl.meta.ast;
 
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.predicate.*;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.UnaryMetadata;
 
 public class AstFullVisitor extends AbstractAstVisitor {
 
@@ -44,49 +48,49 @@ public class AstFullVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startUnary(UnaryPredicateMetadata metadata, int depth) {
+    public void startUnary(UnaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("start UnaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
     }
 
     @Override
-    public void startBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void startBinary(BinaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("start BinaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
-    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildBinary(BinaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit BinaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
     }
 
     @Override
-    public void endBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void endBinary(BinaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("end BinaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
-    public void startNary(NaryPredicateMetadata metadata, int depth) {
+    public void startNary(NaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("start NaryMetadata ").append(metadata).append(" = ").append(metadata.getOperator());
         sb.append("\n");
     }
 
     @Override
-    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildNary(NaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("visit NaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");
     }
 
     @Override
-    public void endNary(NaryPredicateMetadata metadata, int depth) {
+    public void endNary(NaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append("end NaryMetadata ").append(metadata).append(" = ").append("---");
         sb.append("\n");

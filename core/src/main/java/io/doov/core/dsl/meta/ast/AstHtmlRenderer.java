@@ -55,6 +55,7 @@ public class AstHtmlRenderer {
                     when(metadata, parents);
                     break;
                 case BINARY_PREDICATE:
+                case TEMPLATE_PARAM:
                     binary(metadata, parents);
                     break;
                 case LEAF_PREDICATE:
