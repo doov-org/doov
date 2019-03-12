@@ -9,15 +9,16 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
+import io.doov.core.dsl.meta.StaticMetadata;
 
 public class StaticInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
 
     private final Supplier<T> valueSupplier;
-    private final MappingMetadata metadata;
+    private final StaticMetadata<T> metadata;
 
     public StaticInput(Supplier<T> valueSupplier) {
         this.valueSupplier = valueSupplier;
-        this.metadata = MappingMetadata.valueInput(valueSupplier);
+        this.metadata = StaticMetadata.create(valueSupplier);
     }
 
     @Override
@@ -26,7 +27,7 @@ public class StaticInput<T> extends AbstractDSLBuilder implements MappingInput<T
     }
 
     @Override
-    public MappingMetadata metadata() {
+    public StaticMetadata metadata() {
         return metadata;
     }
 
