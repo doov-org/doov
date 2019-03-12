@@ -24,10 +24,14 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Locale;
 
-import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.MappingOperator;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.*;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 
 public class AstTextVisitor extends AbstractAstVisitor {
 

@@ -3,12 +3,15 @@
  */
 package io.doov.core.dsl.template;
 
+import static io.doov.core.dsl.meta.function.TemplateParamMetadata.templateParamMetadata;
+
+import java.util.function.Function;
+
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.DelegatingFieldInfo;
-
-import java.util.function.Function;
+import io.doov.core.dsl.meta.Metadata;
 
 public class TemplateParam<T extends DslField<?>> {
 
@@ -41,11 +44,11 @@ public class TemplateParam<T extends DslField<?>> {
 
         private FieldInfo fieldInfo;
         private String unInitReadable;
-        private FieldId unInitFieldId;
+        private FieldId templateFieldId;
 
         ProxyFieldInfo(String readable) {
             this.unInitReadable = readable;
-            this.unInitFieldId = () -> readable;
+            this.templateFieldId = () -> readable;
         }
 
         public void setFieldInfo(FieldInfo fieldInfo) {
@@ -59,12 +62,12 @@ public class TemplateParam<T extends DslField<?>> {
 
         @Override
         public FieldId id() {
-            return fieldInfo != null ? fieldInfo.id() : unInitFieldId;
+            return fieldInfo != null ? fieldInfo.id() : templateFieldId;
         }
 
         @Override
-        public String readable() {
-            return fieldInfo != null ? fieldInfo.readable() : unInitReadable;
+        public Metadata getMetadata() {
+            return templateParamMetadata(unInitReadable, fieldInfo);
         }
     }
 }

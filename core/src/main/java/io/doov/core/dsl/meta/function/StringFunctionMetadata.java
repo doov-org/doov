@@ -15,13 +15,13 @@
  */
 package io.doov.core.dsl.meta.function;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.fieldMetadata;
+import static io.doov.core.dsl.meta.DefaultOperator.contains;
+import static io.doov.core.dsl.meta.DefaultOperator.ends_with;
+import static io.doov.core.dsl.meta.DefaultOperator.matches;
+import static io.doov.core.dsl.meta.DefaultOperator.starts_with;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.stringMetadata;
 
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.StringCondition;
-import io.doov.core.dsl.impl.StringFunction;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
