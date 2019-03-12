@@ -15,46 +15,34 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.not;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
-import static io.doov.core.dsl.meta.DefaultOperator.validate;
-import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
+import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.meta.*;
+
+import java.io.ByteArrayOutputStream;
+import java.util.*;
+
+import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.MetadataType.*;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.*;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-
-import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.ElementType;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.Operator;
-import io.doov.core.dsl.meta.i18n.ResourceProvider;
-
-public class AstHtmlRenderer extends HtmlWriter {
+public class AstHtmlRenderer {
     private static final List<Operator> AND_OR = asList(and, or);
+
+    private HtmlWriter writer;
 
     public static String toHtml(Metadata metadata, Locale locale) {
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        new AstHtmlRenderer(locale, ops, BUNDLE).toHtml(metadata);
+        DefaultHtmlWriter htmlWriter = new DefaultHtmlWriter(locale, ops, BUNDLE);
+        new AstHtmlRenderer(htmlWriter).toHtml(metadata);
         return new String(ops.toByteArray(), UTF_8);
     }
 
-    public AstHtmlRenderer(Locale locale, OutputStream os, ResourceProvider resources) {
-        super(locale, os, resources);
+    public AstHtmlRenderer(HtmlWriter writer) {
+        this.writer = writer;
     }
 
     public void toHtml(Metadata metadata) {
@@ -77,6 +65,7 @@ public class AstHtmlRenderer extends HtmlWriter {
                 case LEAF_PREDICATE:
                 case FIELD_PREDICATE:
                 case LEAF_VALUE:
+                case MAPPING_LEAF:
                     leaf(metadata, parents);
                     break;
                 case UNARY_PREDICATE:
@@ -88,6 +77,9 @@ public class AstHtmlRenderer extends HtmlWriter {
                 case FIELD_PREDICATE_MATCH_ANY:
                     fieldMatchAny(metadata, parents);
                     break;
+                case SINGLE_MAPPING:
+                    singleMapping(metadata, parents);
+                    break;
                 default:
                     throw new IllegalStateException(metadata.type().name());
             }
@@ -96,54 +88,60 @@ public class AstHtmlRenderer extends HtmlWriter {
         }
     }
 
-    private void when(Metadata metadata, ArrayDeque<Metadata> parents) {
-        writeBeginSpan(CSS_WHEN);
-        writeFromBundle(metadata.getOperator());
-        writeEndSpan();
-        writeBeginUl(CSS_UL_WHEN);
+    private void singleMapping(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writer.writeBeginSpan(CSS_SINGLE_MAPPING);
         toHtml(metadata.childAt(0), parents);
-        writeEndUl();
-        writeBeginSpan(CSS_VALIDATE);
-        writeFromBundle(validate);
-        writeEndSpan();
+        writer.writeEndSpan();
+    }
+
+    private void when(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writer.writeBeginSpan(CSS_WHEN);
+        writer.writeFromBundle(metadata.getOperator());
+        writer.writeEndSpan();
+        writer.writeBeginUl(CSS_UL_WHEN);
+        toHtml(metadata.childAt(0), parents);
+        writer.writeEndUl();
+        writer.writeBeginSpan(CSS_VALIDATE);
+        writer.writeFromBundle(validate);
+        writer.writeEndSpan();
     }
 
     private void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
-        writeBeginSpan(CSS_VALUE);
+        writer.writeBeginSpan(CSS_VALUE);
         for (Element e : ((LeafMetadata<?>) metadata).elements()) {
-            writeFromBundle(escapeHtml4(e.getReadable().readable()));
+            writer.writeFromBundle(writer.escapeHtml4(e.getReadable().readable()));
         }
-        writeEndSpan();
+        writer.writeEndSpan();
     }
 
     private void nary(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (pmd.map(m -> m.getOperator().returnType() == BOOLEAN).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_count()
-            writeExclusionBar(metadata, parents);
-            writeBeginSpan(CSS_NARY);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            writeBeginOl(CSS_OL_NARY);
+            writer.writeExclusionBar(metadata, parents);
+            writer.writeBeginSpan(CSS_NARY);
+            writer.writeFromBundle(metadata.getOperator());
+            writer.writeEndSpan();
+            writer.writeBeginOl(CSS_OL_NARY);
             metadata.children().forEach(m -> toHtml(m, parents));
-            writeEndOl();
+            writer.writeEndOl();
         } else {
-            writeBeginLi(CSS_LI_NARY);
-            writeExclusionBar(metadata, parents);
-            writeBeginSpan(CSS_NARY);
-            writeFromBundle(metadata.getOperator());
-            writeEndSpan();
-            writeBeginOl(CSS_OL_NARY);
+            writer.writeBeginLi(CSS_LI_NARY);
+            writer.writeExclusionBar(metadata, parents);
+            writer.writeBeginSpan(CSS_NARY);
+            writer.writeFromBundle(metadata.getOperator());
+            writer.writeEndSpan();
+            writer.writeBeginOl(CSS_OL_NARY);
             metadata.children().forEach(m -> toHtml(m, parents));
-            writeEndOl();
-            writeEndLi();
+            writer.writeEndOl();
+            writer.writeEndLi();
         }
     }
 
     private void rule(Metadata metadata, ArrayDeque<Metadata> parents) {
-        writeBeginDiv(CSS_VALIDATION_RULE);
+        writer.writeBeginDiv(CSS_VALIDATION_RULE);
         metadata.children().forEach(m -> toHtml(m, parents));
-        writeEndDiv();
+        writer.writeEndDiv();
     }
 
     private void binary(Metadata metadata, ArrayDeque<Metadata> parents) {
@@ -153,17 +151,17 @@ public class AstHtmlRenderer extends HtmlWriter {
         final boolean leftChild = pmd.map(m -> m.childAt(0) == metadata).orElse(false);
         if (!AND_OR.contains(pmdOperator) && metadata.getOperator() == and) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_and()
-            writeBeginLi(CSS_LI_BINARY);
+            writer.writeBeginLi(CSS_LI_BINARY);
             binary_BR(metadata, parents);
-            writeEndLi();
+            writer.writeEndLi();
         } else if (pmdOperator == and && metadata.getOperator() == and) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_and()
             binary_BR(metadata, parents);
         } else if (!AND_OR.contains(pmdOperator) && metadata.getOperator() == or) {
             // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_or_or()
-            writeBeginLi(CSS_LI_BINARY);
+            writer.writeBeginLi(CSS_LI_BINARY);
             binary_BR(metadata, parents);
-            writeEndLi();
+            writer.writeEndLi();
         } else if (pmdOperator == or && metadata.getOperator() == or) {
             // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_or_or()
             binary_BR(metadata, parents);
@@ -175,33 +173,33 @@ public class AstHtmlRenderer extends HtmlWriter {
             binary_BR(metadata, parents);
         } else if (pmdType == BINARY_PREDICATE && AND_OR.contains(metadata.getOperator())) {
             // @see io.doov.core.dsl.meta.ast.HtmlOrTest.or_true_false_complex()
-            writeBeginUl(CSS_UL_BINARY);
-            writeBeginLi(CSS_LI_BINARY);
+            writer.writeBeginUl(CSS_UL_BINARY);
+            writer.writeBeginLi(CSS_LI_BINARY);
             binary_BR(metadata, parents);
-            writeEndLi();
-            writeEndUl();
+            writer.writeEndLi();
+            writer.writeEndUl();
         } else if (pmdType == BINARY_PREDICATE && !AND_OR.contains(metadata.getOperator())) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_field_true_true_failure()
             binary_SPACE(metadata, parents);
         } else if (pmdType == NARY_PREDICATE && AND_OR.contains(metadata.getOperator())) {
             // @see io.doov.core.dsl.meta.ast.HtmlMatchAnyTest.matchAny_true_false_false_complex
-            writeBeginLi(CSS_LI_BINARY);
+            writer.writeBeginLi(CSS_LI_BINARY);
             binary_BR(metadata, parents);
-            writeEndLi();
+            writer.writeEndLi();
         } else if (pmdType == NARY_PREDICATE && !AND_OR.contains(metadata.getOperator())) {
             // @see io.doov.core.dsl.meta.ast.HtmlCountTest.count_field_true_true_failure()
-            writeBeginLi(CSS_LI_BINARY);
+            writer.writeBeginLi(CSS_LI_BINARY);
             binary_SPACE(metadata, parents);
-            writeEndLi();
+            writer.writeEndLi();
         } else if (pmdType == UNARY_PREDICATE) {
             // @see io.doov.core.dsl.meta.ast.HtmlCountTest.count_field_true_true_failure()
-            writeBeginUl(CSS_UL_UNARY);
+            writer.writeBeginUl(CSS_UL_UNARY);
             binary_SPACE(metadata, parents);
-            writeEndUl();
+            writer.writeEndUl();
         } else if (AND_OR.contains(metadata.getOperator())) {
-            writeBeginLi(CSS_LI_BINARY);
+            writer.writeBeginLi(CSS_LI_BINARY);
             binary_BR(metadata, parents);
-            writeEndLi();
+            writer.writeEndLi();
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
             binary_SPACE(metadata, parents);
@@ -211,11 +209,11 @@ public class AstHtmlRenderer extends HtmlWriter {
 
     private void binary_BR(Metadata metadata, ArrayDeque<Metadata> parents) {
         toHtml(metadata.childAt(0), parents);
-        write(BR);
-        writeBeginSpan(CSS_OPERATOR);
-        writeFromBundle(metadata.getOperator());
-        writeEndSpan();
-        write(SPACE);
+        writer.write(BR);
+        writer.writeBeginSpan(CSS_OPERATOR);
+        writer.writeFromBundle(metadata.getOperator());
+        writer.writeEndSpan();
+        writer.write(SPACE);
         toHtml(metadata.childAt(1), parents);
     }
 
@@ -225,14 +223,14 @@ public class AstHtmlRenderer extends HtmlWriter {
         final boolean leftChild = pmd.map(m -> m.childAt(0) == metadata).orElse(false);
         if ((!leftChild || pmdOperator != or || metadata.getOperator() != and)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_or_and()
-            writeExclusionBar(metadata, parents);
+            writer.writeExclusionBar(metadata, parents);
         }
         toHtml(metadata.childAt(0), parents);
-        write(SPACE);
-        writeBeginSpan(CSS_OPERATOR);
-        writeFromBundle(metadata.getOperator());
-        writeEndSpan();
-        write(SPACE);
+        writer.write(SPACE);
+        writer.writeBeginSpan(CSS_OPERATOR);
+        writer.writeFromBundle(metadata.getOperator());
+        writer.writeEndSpan();
+        writer.write(SPACE);
         toHtml(metadata.childAt(1), parents);
     }
 
@@ -241,86 +239,86 @@ public class AstHtmlRenderer extends HtmlWriter {
         final Operator pmdOperator = pmd.map(Metadata::getOperator).orElse(null);
         if (AND_OR.contains(pmdOperator) && metadata.getOperator() == not) {
             // @see io.doov.core.dsl.meta.ast.HtmlMoreCombinedTest.and_and_and_match_any_and_and()
-            writeExclusionBar(metadata, parents);
+            writer.writeExclusionBar(metadata, parents);
             prefixUnary(metadata, parents);
         } else if (!AND_OR.contains(pmdOperator) && metadata.getOperator() == not) {
-            writeBeginLi(CSS_LI_UNARY);
+            writer.writeBeginLi(CSS_LI_UNARY);
             prefixUnary(metadata, parents);
-            writeEndLi();
+            writer.writeEndLi();
         } else if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
             // @see io.doov.sample.validation.ast.HtmlSampleRulesTest.RULE_USER()
-            writeBeginLi(CSS_LI_LEAF);
-            writeExclusionBar(metadata, parents);
+            writer.writeBeginLi(CSS_LI_LEAF);
+            writer.writeExclusionBar(metadata, parents);
             postfixUnary(metadata, parents);
-            writeEndLi();
+            writer.writeEndLi();
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_null()
-            writeExclusionBar(metadata, parents);
+            writer.writeExclusionBar(metadata, parents);
             postfixUnary(metadata, parents);
         }
     }
 
     private void prefixUnary(Metadata metadata, ArrayDeque<Metadata> parents) {
-        writeBeginSpan(CSS_OPERATOR);
-        writeFromBundle(metadata.getOperator());
-        writeEndSpan();
-        write(SPACE);
+        writer.writeBeginSpan(CSS_OPERATOR);
+        writer.writeFromBundle(metadata.getOperator());
+        writer.writeEndSpan();
+        writer.write(SPACE);
         toHtml(metadata.childAt(0), parents);
     }
 
     private void postfixUnary(Metadata metadata, ArrayDeque<Metadata> parents) {
         toHtml(metadata.childAt(0), parents);
-        write(SPACE);
-        writeBeginSpan(CSS_OPERATOR);
-        writeFromBundle(metadata.getOperator());
-        writeEndSpan();
+        writer.write(SPACE);
+        writer.writeBeginSpan(CSS_OPERATOR);
+        writer.writeFromBundle(metadata.getOperator());
+        writer.writeEndSpan();
     }
 
     private void leaf(Metadata metadata, ArrayDeque<Metadata> parents) {
-        writeExclusionBar(metadata, parents);
+        writer.writeExclusionBar(metadata, parents);
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
-            writeBeginLi(CSS_LI_LEAF);
+            writer.writeBeginLi(CSS_LI_LEAF);
         }
         final List<Element> elts = new ArrayList<Element>(((LeafMetadata<?>) metadata).elements());
         for (Element e : elts) {
-            writeBeginSpan(spanClass(e.getType()));
+            writer.writeBeginSpan(spanClass(e.getType()));
             switch (e.getType()) {
                 case OPERATOR:
-                    writeFromBundle((Operator) e.getReadable());
+                    writer.writeFromBundle((Operator) e.getReadable());
                     break;
                 case TEMPORAL_UNIT:
-                    writeFromBundle(e.getReadable().readable());
+                    writer.writeFromBundle(e.getReadable().readable());
                     break;
                 case FIELD:
                     handleField((DslField<?>) e.getReadable());
                     break;
                 case STRING_VALUE:
-                    write(APOS);
-                    write(escapeHtml4(e.getReadable().readable()));
-                    write(APOS);
+                    writer.write(APOS);
+                    writer.write(writer.escapeHtml4(e.getReadable().readable()));
+                    writer.write(APOS);
                     break;
                 default:
-                    writeFromBundle(escapeHtml4(e.getReadable().readable()));
+                    writer.writeFromBundle(writer.escapeHtml4(e.getReadable().readable()));
             }
-            writeEndSpan();
+            writer.writeEndSpan();
             if (elts.indexOf(e) != elts.size() - 1)
-                write(SPACE);
+                writer.write(SPACE);
         }
         if (pmd.map(m -> m.type() == NARY_PREDICATE).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlSumTest.sum_sum_1_sum_2_greaterThan_3()
-            writeEndLi();
+            writer.writeEndLi();
         }
     }
 
     /**
      * Allows to overrides the default behaviour of the HTML renderer like adding links of tooltip.
-     * 
+     *
      * @param field the field
      */
     protected void handleField(DslField<?> field) {
-        writeFromBundle(escapeHtml4(field.readable()));
+        writer.writeFromBundle(writer.escapeHtml4(field.readable()));
     }
 
     private static String spanClass(ElementType type) {
