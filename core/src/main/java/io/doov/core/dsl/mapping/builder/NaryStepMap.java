@@ -17,8 +17,8 @@ package io.doov.core.dsl.mapping.builder;
 
 import java.util.List;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
 
@@ -85,7 +85,7 @@ public class NaryStepMap {
          * @param consumer out field info
          * @return n-ary mapping rule
          */
-        public DefaultMappingRule<O> to(TriConsumer<DslModel, Context, O> consumer) {
+        public DefaultMappingRule<O> to(TriConsumer<FieldModel, Context, O> consumer) {
             return this.to(new ConsumerOutput<>(consumer));
         }
 

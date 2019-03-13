@@ -16,7 +16,6 @@
 package io.doov.sample.benchmark.runtime;
 
 import static io.doov.benchmark.model.RuntimePaths.*;
-import static io.doov.benchmark.model.dsl.DslBenchmarkModel.*;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,12 +34,11 @@ import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
 import io.doov.benchmark.model.BenchmarkModel;
-import io.doov.benchmark.model.BenchmarkModelWrapper;
 import io.doov.benchmark.model.Driver;
 import io.doov.benchmark.model.Friend;
 import io.doov.benchmark.model.RuntimePaths;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.StringFieldInfo;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
@@ -83,7 +81,7 @@ public class CascadedValidation {
     public class DriverSetup {
 
         private Driver driver;
-        private DslModel model;
+        private FieldModel model;
 
         DriverSetup() {
             driver = new Driver("driver", 18, true);

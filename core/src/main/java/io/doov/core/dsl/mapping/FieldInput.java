@@ -5,7 +5,6 @@ package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 
@@ -30,7 +29,7 @@ public class FieldInput<T> extends AbstractDSLBuilder implements MappingInput<T>
     }
 
     @Override
-    public T read(DslModel inModel, Context context) {
+    public T read(FieldModel inModel, Context context) {
         return inModel.get(field);
     }
 }

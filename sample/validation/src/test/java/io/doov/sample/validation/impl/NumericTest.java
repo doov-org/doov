@@ -8,13 +8,13 @@ import static io.doov.sample.field.dsl.DslSampleModel.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.sample.model.*;
 import io.doov.sample.wrapper.SampleModelWrapper;
 
 public class NumericTest {
 
-    private DslModel model;
+    private FieldModel model;
     private User user;
     private Account account;
     private Configuration configuration;

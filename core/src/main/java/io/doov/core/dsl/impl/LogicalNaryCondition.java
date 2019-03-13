@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
@@ -37,7 +37,7 @@ import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
  */
 public class LogicalNaryCondition extends DefaultStepCondition {
 
-    private LogicalNaryCondition(NaryPredicateMetadata metadata, BiPredicate<DslModel, Context> predicate) {
+    private LogicalNaryCondition(NaryPredicateMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
         super(metadata, predicate);
     }
 
@@ -73,11 +73,11 @@ public class LogicalNaryCondition extends DefaultStepCondition {
                                         : matchAny(steps, model, context));
     }
 
-    private static boolean matchAnyShortCircuit(List<StepCondition> steps, DslModel model, Context context) {
+    private static boolean matchAnyShortCircuit(List<StepCondition> steps, FieldModel model, Context context) {
         return steps.stream().anyMatch(s -> s.predicate().test(model, context));
     }
 
-    private static boolean matchAny(List<StepCondition> steps, DslModel model, Context context) {
+    private static boolean matchAny(List<StepCondition> steps, FieldModel model, Context context) {
         List<Boolean> results = steps.stream().map(s -> s.predicate().test(model, context)).collect(toList());
         return results.stream().anyMatch(Boolean::booleanValue);
     }
@@ -98,11 +98,11 @@ public class LogicalNaryCondition extends DefaultStepCondition {
                                         : matchAll(steps, model, context));
     }
 
-    private static boolean matchAllShortCircuit(List<StepCondition> steps, DslModel model, Context context) {
+    private static boolean matchAllShortCircuit(List<StepCondition> steps, FieldModel model, Context context) {
         return steps.stream().allMatch(s -> s.predicate().test(model, context));
     }
 
-    private static boolean matchAll(List<StepCondition> steps, DslModel model, Context context) {
+    private static boolean matchAll(List<StepCondition> steps, FieldModel model, Context context) {
         List<Boolean> results = steps.stream().map(s -> s.predicate().test(model, context)).collect(toList());
         return results.stream().allMatch(Boolean::booleanValue);
     }
@@ -123,11 +123,11 @@ public class LogicalNaryCondition extends DefaultStepCondition {
                                         : matchNone(steps, model, context));
     }
 
-    private static boolean matchNoneShortCircuit(List<StepCondition> steps, DslModel model, Context context) {
+    private static boolean matchNoneShortCircuit(List<StepCondition> steps, FieldModel model, Context context) {
         return steps.stream().noneMatch(s -> s.predicate().test(model, context));
     }
 
-    private static boolean matchNone(List<StepCondition> steps, DslModel model, Context context) {
+    private static boolean matchNone(List<StepCondition> steps, FieldModel model, Context context) {
         List<Boolean> results = steps.stream().map(s -> s.predicate().test(model, context)).collect(toList());
         return results.stream().noneMatch(Boolean::booleanValue);
     }

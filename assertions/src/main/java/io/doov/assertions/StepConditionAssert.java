@@ -15,10 +15,10 @@
  */
 package io.doov.assertions;
 
+import io.doov.core.FieldModel;
 import org.assertj.core.api.AbstractAssert;
 
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.ValidationRule;
 
@@ -36,9 +36,9 @@ public class StepConditionAssert extends AbstractAssert<StepConditionAssert, Ste
      *
      * @param model the model
      * @return the assert
-     * @see ValidationRuleAssert#validates(DslModel)
+     * @see ValidationRuleAssert#validates(FieldModel)
      */
-    public ValidationRuleAssert validates(DslModel model) {
+    public ValidationRuleAssert validates(FieldModel model) {
         ValidationRule rule = DOOV.when(actual).validate();
         ValidationRuleAssert validationRuleAssert = new ValidationRuleAssert(rule, ValidationRuleAssert.class);
         validationRuleAssert.validates(model);
@@ -50,9 +50,9 @@ public class StepConditionAssert extends AbstractAssert<StepConditionAssert, Ste
      *
      * @param model the model
      * @return the assert
-     * @see ValidationRuleAssert#doesNotValidate(DslModel)
+     * @see ValidationRuleAssert#doesNotValidate(FieldModel)
      */
-    public ValidationRuleAssert doesNotValidate(DslModel model) {
+    public ValidationRuleAssert doesNotValidate(FieldModel model) {
         ValidationRule rule = DOOV.when(actual).validate();
         ValidationRuleAssert validationRuleAssert = new ValidationRuleAssert(rule, ValidationRuleAssert.class);
         validationRuleAssert.doesNotValidate(model);

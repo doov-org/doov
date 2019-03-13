@@ -29,128 +29,130 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.impl.DefaultRuleRegistry;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.AstHtmlRenderer;
 import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 import io.doov.sample.model.Country;
 import io.doov.sample.model.Timezone;
 
-public class SampleRules extends DefaultRuleRegistry {
+public class SampleRules {
+
 
     public static final ValidationRule RULE_EMAIL = DOOV
                     .when(accountEmail.matches("\\w+[@]\\w+\\.com")
                                     .or(accountEmail.matches("\\w+[@]\\w+\\.fr")))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_ACCOUNT = DOOV
                     .when(matchAll(
                                     userBirthdate.ageAt(today()).greaterOrEquals(18),
                                     accountEmail.length().lesserOrEquals(configurationMaxEmailSize),
                                     accountCountry.eq(Country.FR).and(accountPhoneNumber.startsWith("+33"))))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_ACCOUNT_2 = DOOV
                     .when(userBirthdate.ageAt(today()).greaterOrEquals(18)
                                     .and(accountEmail.length().lesserOrEquals(configurationMaxEmailSize))
                                     .and(accountCountry.eq(Country.FR))
                                     .and(accountPhoneNumber.startsWith("+33")))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_USER = DOOV
                     .when(count(userFirstName.isNotNull(),
                                     userLastName.isNotNull().and(userLastName.matches("[A-Z]+")))
                                                     .greaterOrEquals(0))
                     .validate()
-                    .withShortCircuit(false)
-                    .registerOn(REGISTRY_DEFAULT);
+                    .withShortCircuit(false);
 
     public static final ValidationRule RULE_USER_2 = DOOV
                     .when(userLastName.isNotNull().and(userLastName.matches("[A-Z]+")
                                     .and(count(accountPhoneNumber.isNotNull(),
                                                     accountEmail.isNotNull())
                                                                     .greaterThan(0))))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_USER_ADULT = DOOV
                     .when(userBirthdate.ageAt(accountCreationDate).greaterOrEquals(18))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_USER_ADULT_FIRSTDAY = DOOV
                     .when(userBirthdate.ageAt(accountCreationDate.with(firstDayOfYear())).greaterOrEquals(18))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_FIRST_NAME = DOOV
                     .when(matchAll(userFirstName.mapToInt(name -> 1).eq(1)))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_ID = DOOV
                     .when(userId.isNotNull())
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_AGE = DOOV
                     .when(userBirthdate.ageAt(today()).greaterOrEquals(18))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_AGE_2 = DOOV
                     .when(userBirthdate.after(userBirthdate.minus(1, DAYS)))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_SUM = DOOV
                     .when(sum(configurationMinAge.times(0), configurationMaxEmailSize.times(1)).greaterOrEquals(0))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_MIN = DOOV
                     .when(min(configurationMinAge, configurationMaxEmailSize).greaterOrEquals(0))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_DOUBLE_LAMBDA = DOOV
                     .when(favoriteSiteName1.anyMatch(s -> !s.contains("dunno")))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_BORN_1980 = DOOV
                     .when(userBirthdate.mapToInt(LocalDate::getYear).eq(1980))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_ACCOUNT_TIME_CONTAINS = DOOV
                     .when(accountTimezone.mapToString(Timezone::getDescription).contains("00:00"))
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
 
     public static final ValidationRule RULE_COMPANY_NOT_BLABLA = DOOV
                     .when(accountCompany.eq(BLABLACAR).not())
-                    .validate()
-                    .registerOn(REGISTRY_DEFAULT);
+                    .validate();
+
+    public static List<ValidationRule> rules() {
+        return Arrays.asList(
+                RULE_EMAIL,
+                RULE_ACCOUNT,
+                RULE_ACCOUNT_2,
+                RULE_USER,
+                RULE_USER_2,
+                RULE_USER_ADULT,
+                RULE_USER_ADULT_FIRSTDAY,
+                RULE_FIRST_NAME,
+                RULE_ID,
+                RULE_AGE,
+                RULE_AGE_2,
+                RULE_SUM,
+                RULE_MIN,
+                RULE_DOUBLE_LAMBDA,
+                RULE_BORN_1980,
+                RULE_ACCOUNT_TIME_CONTAINS,
+                RULE_COMPANY_NOT_BLABLA);
+    }
 
     public static void main(String[] args) throws IOException {
         final File output = new File("validation_rule.html");
-        final List<ValidationRule> rules = REGISTRY_DEFAULT.stream().collect(toList());
         try (FileOutputStream fos = new FileOutputStream(output)) {
             IOUtils.write("<html><head><meta charset=\"UTF-8\"/><style>"
                             + IOUtils.toString(AstVisitorUtils.class.getResourceAsStream("rules.css"), defaultCharset())
                             + "</style></head><body>", fos, defaultCharset());
             IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());
-            for (ValidationRule r : rules) {
+            for (ValidationRule r : rules()) {
                 IOUtils.write("<div>", fos, defaultCharset());
                 IOUtils.write(r.readable(Locale.FRANCE), fos, defaultCharset());
                 IOUtils.write("</div>", fos, defaultCharset());

@@ -22,20 +22,20 @@ import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.nullMetadat
 import java.util.Optional;
 import java.util.function.*;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class LeafStepCondition<N> extends DefaultStepCondition {
 
-    private LeafStepCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<N>> value,
+    private LeafStepCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<N>> value,
             Function<N, Boolean> predicate) {
         super(metadata, (model, context) -> value.apply(model, context).map(predicate).orElse(false));
     }
 
-    private LeafStepCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<N>> left,
-            BiFunction<DslModel, Context, Optional<N>> right, BiFunction<N, N, Boolean> predicate) {
+    private LeafStepCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<N>> left,
+            BiFunction<FieldModel, Context, Optional<N>> right, BiFunction<N, N, Boolean> predicate) {
         super(metadata, (model, context) -> left.apply(model, context)
                 .flatMap(l -> right.apply(model, context).map(r -> predicate.apply(l, r)))
                 .orElse(false));
@@ -68,30 +68,30 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
     }
 
     public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> left, Function<N, Boolean> predicate) {
+            BiFunction<FieldModel, Context, Optional<N>> left, Function<N, Boolean> predicate) {
         return new LeafStepCondition<>(metadata, left, predicate);
     }
 
     public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> left, BaseFieldInfo<N> right,
+            BiFunction<FieldModel, Context, Optional<N>> left, BaseFieldInfo<N> right,
             BiFunction<N, N, Boolean> predicate) {
         return new LeafStepCondition<>(metadata, left, (model, context) -> valueModel(model, right), predicate);
     }
 
     public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> left, N right, BiFunction<N, N, Boolean> predicate) {
+            BiFunction<FieldModel, Context, Optional<N>> left, N right, BiFunction<N, N, Boolean> predicate) {
         return new LeafStepCondition<>(metadata, left, (model, context) -> Optional.ofNullable(right), predicate);
     }
 
     public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> left, Supplier<N> right,
+            BiFunction<FieldModel, Context, Optional<N>> left, Supplier<N> right,
             BiFunction<N, N, Boolean> predicate) {
         return new LeafStepCondition<>(metadata, left, (model, context) -> Optional.ofNullable(right.get()), predicate);
     }
 
     public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> left, BiFunction<DslModel, Context, Optional<N>> right,
-            BiFunction<N, N, Boolean> predicate) {
+        BiFunction<FieldModel, Context, Optional<N>> left, BiFunction<FieldModel, Context, Optional<N>> right,
+        BiFunction<N, N, Boolean> predicate) {
         return new LeafStepCondition<>(metadata, left, right, predicate);
     }
 

@@ -18,27 +18,27 @@ package io.doov.core.dsl.impl;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.Function;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultFunction<N, M extends Metadata> implements Function<N> {
 
-    protected static <T> Optional<T> valueModel(DslModel model, DslField<T> field) {
+    protected static <T> Optional<T> valueModel(FieldModel model, DslField<T> field) {
         return Optional.ofNullable(model.get(field.id()));
     }
 
     protected final M metadata;
-    protected final BiFunction<DslModel, Context, Optional<N>> function;
+    protected final BiFunction<FieldModel, Context, Optional<N>> function;
 
-    protected DefaultFunction(M metadata, BiFunction<DslModel, Context, Optional<N>> function) {
+    protected DefaultFunction(M metadata, BiFunction<FieldModel, Context, Optional<N>> function) {
         this.metadata = metadata;
         this.function = function;
     }
 
-    public Optional<N> value(DslModel model, Context context) {
+    public Optional<N> value(FieldModel model, Context context) {
         return function.apply(model, context);
     }
 
@@ -46,7 +46,7 @@ public class DefaultFunction<N, M extends Metadata> implements Function<N> {
         return metadata;
     }
 
-    public BiFunction<DslModel, Context, Optional<N>> getFunction() {
+    public BiFunction<FieldModel, Context, Optional<N>> getFunction() {
         return function;
     }
 

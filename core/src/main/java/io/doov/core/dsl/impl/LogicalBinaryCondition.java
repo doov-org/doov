@@ -20,7 +20,7 @@ import static io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata.orMetadata
 
 import java.util.function.BiPredicate;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
@@ -30,7 +30,7 @@ import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
  */
 public class LogicalBinaryCondition extends DefaultStepCondition {
 
-    private LogicalBinaryCondition(BinaryPredicateMetadata metadata, BiPredicate<DslModel, Context> predicate) {
+    private LogicalBinaryCondition(BinaryPredicateMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
         super(metadata, predicate);
     }
 
@@ -51,13 +51,13 @@ public class LogicalBinaryCondition extends DefaultStepCondition {
                                         : and(left, right, model, context));
     }
 
-    private static boolean and(StepCondition left, StepCondition right, DslModel model, Context context) {
+    private static boolean and(StepCondition left, StepCondition right, FieldModel model, Context context) {
         boolean leftResult = left.predicate().test(model, context);
         boolean rightResult = right.predicate().test(model, context);
         return leftResult && rightResult;
     }
 
-    private static boolean andShortCircuit(StepCondition left, StepCondition right, DslModel model, Context context) {
+    private static boolean andShortCircuit(StepCondition left, StepCondition right, FieldModel model, Context context) {
         return left.predicate().and(right.predicate()).test(model, context);
     }
 
@@ -78,13 +78,13 @@ public class LogicalBinaryCondition extends DefaultStepCondition {
                                         : or(left, right, model, context));
     }
 
-    private static boolean or(StepCondition left, StepCondition right, DslModel model, Context context) {
+    private static boolean or(StepCondition left, StepCondition right, FieldModel model, Context context) {
         boolean leftResult = left.predicate().test(model, context);
         boolean rightResult = right.predicate().test(model, context);
         return leftResult || rightResult;
     }
 
-    private static boolean orShortCircuit(StepCondition left, StepCondition right, DslModel model, Context context) {
+    private static boolean orShortCircuit(StepCondition left, StepCondition right, FieldModel model, Context context) {
         return left.predicate().or(right.predicate()).test(model, context);
     }
 

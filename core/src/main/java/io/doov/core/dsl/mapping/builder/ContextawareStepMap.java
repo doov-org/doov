@@ -17,8 +17,8 @@ package io.doov.core.dsl.mapping.builder;
 
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
 
@@ -30,7 +30,7 @@ public class ContextawareStepMap<I> {
         this.input = input;
     }
 
-    public ContextawareStepMap(BiFunction<DslModel, Context, I> valueFunction) {
+    public ContextawareStepMap(BiFunction<FieldModel, Context, I> valueFunction) {
         this(new FunctionInput<>(valueFunction));
     }
 
@@ -60,7 +60,7 @@ public class ContextawareStepMap<I> {
      * @param consumer consumer
      * @return the static mapping rule
      */
-    public DefaultMappingRule<I> to(TriConsumer<DslModel, Context, I> consumer) {
+    public DefaultMappingRule<I> to(TriConsumer<FieldModel, Context, I> consumer) {
         return this.to(new ConsumerOutput<>(consumer));
     }
 

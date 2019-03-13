@@ -17,7 +17,7 @@ package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.StringFunction;
+import io.doov.core.dsl.impl.base.StringFunction;
 
 public class StringFieldInfo extends DelegatingFieldInfoImpl implements TextFieldInfo {
 

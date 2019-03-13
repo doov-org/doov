@@ -25,9 +25,10 @@ import static java.util.Arrays.asList;
 import java.util.*;
 import java.util.function.*;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.BaseFieldInfo;
+import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
@@ -48,7 +49,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
         this(fieldMetadata(field), (model, context) -> valueModel(model, field));
     }
 
-    public DefaultCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<T>> value) {
+    public DefaultCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<T>> value) {
         super(metadata, value);
     }
 

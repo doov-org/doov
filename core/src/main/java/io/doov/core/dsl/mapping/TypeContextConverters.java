@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.converter.*;
 
@@ -61,7 +61,7 @@ public class TypeContextConverters {
      * @param <O>         output type
      * @return type converter
      */
-    public static <O> NaryTypeConverter<O> nConverter(TriFunction<DslModel, Context, List<DslField<?>>, O> function,
+    public static <O> NaryTypeConverter<O> nConverter(TriFunction<FieldModel, Context, List<DslField<?>>, O> function,
             String description) {
         return new DefaultNaryTypeConverter<>(function, description);
     }

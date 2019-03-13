@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.impl;
+package io.doov.core.dsl.impl.base;
 
-import static io.doov.core.dsl.meta.function.IterableFunctionMetadata.*;
+import static io.doov.core.dsl.meta.function.IterableFunctionMetadata.containsMetadata;
+import static io.doov.core.dsl.meta.function.IterableFunctionMetadata.hasNotSizeMetadata;
+import static io.doov.core.dsl.meta.function.IterableFunctionMetadata.hasSizeMetadata;
 import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.isEmptyMetadata;
 import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.isNotEmptyMetadata;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 
@@ -26,19 +27,21 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.LeafStepCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class IterableCondition<T, C extends Iterable<T>> extends DefaultCondition<C> {
+public class IterableFunction<T, C extends Iterable<T>> extends DefaultCondition<C> {
 
-    public IterableCondition(DslField<C> field) {
+    public IterableFunction(DslField<C> field) {
         super(field);
     }
 
-    public IterableCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<C>> value) {
+    public IterableFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<C>> value) {
         super(metadata, value);
     }
 
@@ -50,7 +53,7 @@ public class IterableCondition<T, C extends Iterable<T>> extends DefaultConditio
     @SafeVarargs
     public final StepCondition containsAll(T... values) {
         return LeafStepCondition.stepCondition(containsMetadata(metadata, Arrays.asList(values)), getFunction(),
-                iterable -> stream(iterable.spliterator(), false).collect(toSet()).containsAll(asList(values)));
+                iterable -> stream(iterable.spliterator(), false).collect(toSet()).containsAll(Arrays.asList(values)));
     }
 
     public StepCondition isEmpty() {

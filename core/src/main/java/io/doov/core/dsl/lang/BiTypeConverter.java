@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl.lang;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 
 /**
  * Bi type converter
@@ -34,5 +34,5 @@ public interface BiTypeConverter<I, J, O> extends DSLBuilder {
      * @param in2 2nd input
      * @return output value
      */
-    O convert(DslModel fieldModel, Context context, I in, J in2);
+    O convert(FieldModel fieldModel, Context context, I in, J in2);
 }

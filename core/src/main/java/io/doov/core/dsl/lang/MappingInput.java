@@ -16,7 +16,6 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslModel;
 
 /**
  * Mapping input
@@ -32,7 +31,7 @@ public interface MappingInput<T> extends DSLBuilder {
      * @param context context
      * @return input value
      */
-    T read(DslModel inModel, Context context);
+    T read(FieldModel inModel, Context context);
 
     /**
      * Verifies the input for given in model

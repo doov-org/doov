@@ -12,7 +12,6 @@
  */
 package io.doov.sample.validation.ast;
 
-import static io.doov.core.dsl.impl.DefaultRuleRegistry.REGISTRY_DEFAULT;
 import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.toHtml;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -20,10 +19,11 @@ import static java.util.Locale.ENGLISH;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.AstFullVisitor;
 import io.doov.core.dsl.meta.ast.AstLineVisitor;
 import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
@@ -32,15 +32,12 @@ import io.doov.sample.validation.SampleRules;
 
 public class RulesVisitorTest {
 
-  @BeforeAll
-  public static void init() {
-    new SampleRules();
-  }
+  private static final List<ValidationRule> rules = SampleRules.rules();
 
   @Test
   public void print_full_syntax_tree() {
     StringBuilder sb = new StringBuilder();
-    REGISTRY_DEFAULT.stream()
+    rules.stream()
         .peek(rule -> sb.append("--------------------------------").append("\n"))
         .forEach(rule -> new AstFullVisitor(sb).browse(rule.metadata(), 0));
     System.out.println(sb.toString());
@@ -49,7 +46,7 @@ public class RulesVisitorTest {
   @Test
   public void print_line_syntax_tree() {
     StringBuilder sb = new StringBuilder();
-    REGISTRY_DEFAULT.stream()
+    rules.stream()
         .peek(rule -> sb.append("--------------------------------").append("\n"))
         .forEach(rule -> new AstLineVisitor(sb, BUNDLE, ENGLISH).browse(rule.metadata(), 0));
     System.out.println(sb.toString());
@@ -58,7 +55,7 @@ public class RulesVisitorTest {
   @Test
   public void print_text_syntax_tree() {
     StringBuilder sb = new StringBuilder();
-    REGISTRY_DEFAULT.stream()
+    rules.stream()
         .peek(rule -> sb.append("--------------------------------").append("\n"))
         .forEach(rule -> new AstTextVisitor(sb, BUNDLE, ENGLISH).browse(rule.metadata(), 0));
     System.out.println(sb.toString());
@@ -67,7 +64,7 @@ public class RulesVisitorTest {
   @Test
   public void print_markdown_syntax_tree() {
     StringBuilder sb = new StringBuilder();
-    REGISTRY_DEFAULT.stream()
+    rules.stream()
         .peek(rule -> sb.append("--------------------------------").append("\n"))
         .forEach(rule -> new AstMarkdownVisitor(sb, BUNDLE, ENGLISH).browse(rule.metadata(), 0));
     System.out.println(sb.toString());
@@ -76,7 +73,7 @@ public class RulesVisitorTest {
   @Test
   public void print_html_syntax_tree() {
     ByteArrayOutputStream ops = new ByteArrayOutputStream();
-    REGISTRY_DEFAULT.stream()
+    rules.stream()
         .peek(rule ->
         {
           try {

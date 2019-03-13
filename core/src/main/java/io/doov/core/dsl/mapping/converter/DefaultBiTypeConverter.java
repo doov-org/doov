@@ -18,7 +18,7 @@ package io.doov.core.dsl.mapping.converter;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.Metadata;
@@ -48,7 +48,7 @@ public class DefaultBiTypeConverter<I, J, O> extends AbstractDSLBuilder implemen
     }
 
     @Override
-    public O convert(DslModel fieldModel, Context context, I in, J in2) {
+    public O convert(FieldModel fieldModel, Context context, I in, J in2) {
         return function.apply(context, Optional.ofNullable(in), Optional.ofNullable((in2)));
     }
 }

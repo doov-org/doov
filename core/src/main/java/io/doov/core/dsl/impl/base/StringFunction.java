@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.impl;
+package io.doov.core.dsl.impl.base;
 
 import static io.doov.core.dsl.meta.function.StringFunctionMetadata.containsMetadata;
 import static io.doov.core.dsl.meta.function.StringFunctionMetadata.endsWithMetadata;
 import static io.doov.core.dsl.meta.function.StringFunctionMetadata.matchesMetadata;
 import static io.doov.core.dsl.meta.function.StringFunctionMetadata.startsWithMetadata;
+import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.lengthIsMetadata;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
+import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.LeafStepCondition;
+import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.function.StringFunctionMetadata;
@@ -36,13 +40,13 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
  * It contains a {@link DslField} to get the value from the model, a {@link StringFunctionMetadata} to describe this node, and a
  * {@link BiFunction} to take the value from the model and return an optional value.
  */
-public class StringCondition extends DefaultCondition<String> {
+public class StringFunction extends DefaultCondition<String> {
 
-    public StringCondition(DslField<String> field) {
+    public StringFunction(DslField<String> field) {
         super(field);
     }
 
-    public StringCondition(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<String>> value) {
+    public StringFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<String>> value) {
         super(metadata, value);
     }
 
@@ -84,6 +88,26 @@ public class StringCondition extends DefaultCondition<String> {
      */
     public final StepCondition endsWith(String value) {
         return LeafStepCondition.stepCondition(endsWithMetadata(metadata, value), getFunction(), value, String::endsWith);
+    }
+
+    /**
+     * Returns an integer condition that returns the node value length.
+     *
+     * @return the integer condition
+     */
+    public IntegerFunction length() {
+        return new IntegerFunction(lengthIsMetadata(metadata),
+                (model, context) -> value(model, context).map(String::length));
+    }
+
+    /**
+     * Returns an integer condition that returns the node value as an integer.
+     *
+     * @return the integer condition
+     */
+    public IntegerFunction parseInt() {
+        return new IntegerFunction(metadata,
+                (model, context) -> value(model, context).map(Integer::parseInt));
     }
 
 }

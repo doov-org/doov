@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.RuleMetadata;
@@ -51,20 +51,14 @@ public class DefaultValidationRule extends AbstractDSLBuilder implements Validat
     }
 
     @Override
-    public Result executeOn(DslModel model) {
+    public Result executeOn(FieldModel model) {
         return executeOn(model, new DefaultContext(shortCircuit, stepWhen.stepCondition().metadata()));
     }
 
     @Override
-    public Result executeOn(DslModel model, Context context) {
+    public Result executeOn(FieldModel model, Context context) {
         boolean valid = stepWhen.stepCondition().predicate().test(model, context);
         return new DefaultResult(valid, context);
-    }
-
-    @Override
-    public ValidationRule registerOn(RuleRegistry registry) {
-        registry.register(this);
-        return this;
     }
 
     @Override

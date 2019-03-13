@@ -25,8 +25,8 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 import io.doov.benchmark.model.*;
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 
@@ -67,7 +67,7 @@ public class CascadedValidation {
     public class DriverSetup {
 
         private Driver driver;
-        private DslModel model;
+        private FieldModel model;
 
         DriverSetup() {
             driver = new Driver("driver", 18, true);

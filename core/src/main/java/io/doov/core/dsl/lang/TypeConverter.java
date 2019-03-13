@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl.lang;
 
-import io.doov.core.dsl.DslModel;
+import io.doov.core.FieldModel;
 
 /**
  * Type converter
@@ -32,6 +32,6 @@ public interface TypeConverter<I, O> extends DSLBuilder {
      * @param input input value
      * @return converted output value
      */
-    O convert(DslModel fieldModel, Context context, I input);
+    O convert(FieldModel fieldModel, Context context, I input);
 
 }

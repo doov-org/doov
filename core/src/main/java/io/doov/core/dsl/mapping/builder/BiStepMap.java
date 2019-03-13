@@ -15,8 +15,8 @@
  */
 package io.doov.core.dsl.mapping.builder;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
 
@@ -93,7 +93,7 @@ public class BiStepMap<I, J> {
          * @param consumer consumer
          * @return bi mapping rule
          */
-        public DefaultMappingRule<O> to(TriConsumer<DslModel, Context, O> consumer) {
+        public DefaultMappingRule<O> to(TriConsumer<FieldModel, Context, O> consumer) {
             return new DefaultMappingRule<>(input, new ConsumerOutput<>(consumer));
         }
 

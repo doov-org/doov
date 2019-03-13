@@ -25,8 +25,8 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.DslModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.field.types.TemporalFieldInfo;
 import io.doov.core.dsl.impl.num.IntegerFunction;
@@ -43,12 +43,12 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
         super(field);
     }
 
-    protected TemporalFunction(PredicateMetadata metadata, BiFunction<DslModel, Context, Optional<N>> value) {
+    protected TemporalFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<N>> value) {
         super(metadata, value);
     }
 
     protected abstract TemporalFunction<N> temporalFunction(PredicateMetadata metadata,
-            BiFunction<DslModel, Context, Optional<N>> value);
+            BiFunction<FieldModel, Context, Optional<N>> value);
 
     /**
      * Returns a temporal function that returns the node value with given temporal adjuster applied.
