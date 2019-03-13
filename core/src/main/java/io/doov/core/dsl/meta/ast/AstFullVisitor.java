@@ -16,12 +16,7 @@
 package io.doov.core.dsl.meta.ast;
 
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 
 public class AstFullVisitor extends AbstractAstVisitor {
 

@@ -8,10 +8,7 @@ import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
 
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.*;
 
 public class TemplateParamMetadata extends BinaryMetadata {
 

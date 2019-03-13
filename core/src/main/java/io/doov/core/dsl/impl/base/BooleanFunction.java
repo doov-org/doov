@@ -15,7 +15,9 @@
  */
 package io.doov.core.dsl.impl.base;
 
-import static io.doov.core.dsl.meta.function.BooleanFunctionMetadata.*;
+import static io.doov.core.dsl.meta.function.BooleanFunctionMetadata.andMetadata;
+import static io.doov.core.dsl.meta.function.BooleanFunctionMetadata.isMetadata;
+import static io.doov.core.dsl.meta.function.BooleanFunctionMetadata.orMetadata;
 import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.notMetadata;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;

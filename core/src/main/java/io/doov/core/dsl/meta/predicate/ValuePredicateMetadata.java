@@ -27,9 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.*;
 
 public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends LeafMetadata<M>
         implements PredicateMetadata {

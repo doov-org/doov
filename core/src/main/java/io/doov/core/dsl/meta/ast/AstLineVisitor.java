@@ -17,11 +17,7 @@ package io.doov.core.dsl.meta.ast;
 
 import java.util.Locale;
 
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.DefaultOperator;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class AstLineVisitor extends AstTextVisitor {

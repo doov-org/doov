@@ -15,7 +15,10 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.DOOV.*;
+import static io.doov.core.dsl.DOOV.alwaysFalse;
+import static io.doov.core.dsl.DOOV.alwaysTrue;
+import static io.doov.core.dsl.DOOV.matchAll;
+import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.collectMetadata;
 import static org.assertj.core.api.Assertions.assertThat;

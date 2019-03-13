@@ -24,13 +24,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Locale;
 
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.MappingOperator;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.Operator;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class AstTextVisitor extends AbstractAstVisitor {

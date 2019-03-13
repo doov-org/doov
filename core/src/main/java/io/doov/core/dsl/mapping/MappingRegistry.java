@@ -11,7 +11,8 @@ import java.util.stream.Stream;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.MappingRegistryMetadata;
+import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Immutable, ordered, composable container for {@link MappingRule}s

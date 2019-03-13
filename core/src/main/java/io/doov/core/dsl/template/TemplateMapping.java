@@ -3,15 +3,13 @@
  */
 package io.doov.core.dsl.template;
 
-import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.DSLBuilder;
-import io.doov.core.dsl.lang.MappingRule;
-import io.doov.core.dsl.lang.TriFunction;
-import io.doov.core.dsl.mapping.MappingRegistry;
-import io.doov.core.dsl.meta.Metadata;
-
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.mapping.MappingRegistry;
+import io.doov.core.dsl.meta.Metadata;
 
 public class TemplateMapping {
 

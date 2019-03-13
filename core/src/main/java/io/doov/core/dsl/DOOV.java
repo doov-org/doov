@@ -19,36 +19,18 @@ import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.falseMetada
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.trueMetadata;
 import static java.util.Arrays.asList;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
-import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.impl.DefaultStepCondition;
-import io.doov.core.dsl.impl.DefaultStepWhen;
-import io.doov.core.dsl.impl.LogicalNaryCondition;
-import io.doov.core.dsl.impl.LogicalUnaryCondition;
+import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.impl.num.NumericFunction;
-import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.MappingInput;
-import io.doov.core.dsl.lang.MappingRule;
-import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.lang.StepWhen;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.MappingRegistry;
-import io.doov.core.dsl.mapping.builder.BiStepMap;
-import io.doov.core.dsl.mapping.builder.ContextawareStepMap;
-import io.doov.core.dsl.mapping.builder.NaryStepMap;
-import io.doov.core.dsl.mapping.builder.SimpleStepMap;
-import io.doov.core.dsl.mapping.builder.StaticStepMap;
+import io.doov.core.dsl.mapping.builder.*;
 import io.doov.core.dsl.template.TemplateParam;
 import io.doov.core.dsl.template.TemplateSpec;
 

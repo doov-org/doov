@@ -3,9 +3,9 @@
  */
 package io.doov.core.dsl.template;
 
-import io.doov.core.dsl.field.types.*;
-
 import java.util.function.Supplier;
+
+import io.doov.core.dsl.field.types.*;
 
 public class ParameterTypes {
 

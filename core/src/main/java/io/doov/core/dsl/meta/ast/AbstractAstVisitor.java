@@ -23,13 +23,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.MetadataVisitor;
-import io.doov.core.dsl.meta.NaryMetadata;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 
 public abstract class AbstractAstVisitor implements MetadataVisitor {
 

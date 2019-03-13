@@ -3,15 +3,16 @@
  */
 package io.doov.core.dsl.template;
 
+import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
+import static io.doov.core.dsl.template.ParameterTypes.$String;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.StringFieldInfo;
 import io.doov.core.dsl.lang.BiTypeConverter;
 import io.doov.core.dsl.runtime.GenericModel;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
-import static io.doov.core.dsl.template.ParameterTypes.$String;
 
 public class TemplateMappingTest {
 

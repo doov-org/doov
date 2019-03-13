@@ -21,9 +21,7 @@ import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class TemporalFunctionMetadata extends LeafMetadata<TemporalFunctionMetadata> implements PredicateMetadata {

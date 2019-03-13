@@ -27,7 +27,7 @@ import java.util.function.BiFunction;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.field.types.StringFieldInfo;
+import io.doov.core.dsl.impl.LeafStepCondition;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
@@ -66,7 +66,7 @@ public class StringFunction extends DefaultCondition<String> {
      * @param value another StringCondition
      * @return the step condition
      */
-    public final StepCondition contains(StringCondition value) {
+    public final StepCondition contains(StringFunction value) {
         return LeafStepCondition.stepCondition(containsMetadata(metadata, value), getFunction(), value.getFunction(),
                 String::contains);
     }

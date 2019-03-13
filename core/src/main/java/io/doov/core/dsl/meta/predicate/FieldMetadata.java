@@ -21,10 +21,7 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.meta.Element;
-import io.doov.core.dsl.meta.ElementType;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.*;
 
 public class FieldMetadata<M extends FieldMetadata<M>> extends LeafMetadata<M>
         implements PredicateMetadata {

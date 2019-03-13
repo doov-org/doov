@@ -15,7 +15,10 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.DOOV.*;
+import static io.doov.core.dsl.DOOV.alwaysFalse;
+import static io.doov.core.dsl.DOOV.alwaysTrue;
+import static io.doov.core.dsl.DOOV.matchAny;
+import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.lang.ReduceType.SUCCESS;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.collectMetadata;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,9 +31,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.EmptyMetadata;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.*;
 
 public class ReduceSuccessMatchAnyTest {
 

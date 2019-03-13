@@ -15,15 +15,7 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.meta.DefaultOperator.all_match_values;
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.any_match_values;
-import static io.doov.core.dsl.meta.DefaultOperator.count;
-import static io.doov.core.dsl.meta.DefaultOperator.equals;
-import static io.doov.core.dsl.meta.DefaultOperator.lambda;
-import static io.doov.core.dsl.meta.DefaultOperator.none_match_values;
-import static io.doov.core.dsl.meta.DefaultOperator.not_equals;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
@@ -42,11 +34,7 @@ import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.ReduceType;
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.EmptyMetadata;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.*;
 
 public class BinaryPredicateMetadata extends BinaryMetadata implements PredicateMetadata {
     private final AtomicInteger evalTrue = new AtomicInteger();

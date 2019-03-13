@@ -5,7 +5,8 @@ package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.MappingInputMetadata;
+import io.doov.core.dsl.meta.Metadata;
 
 public class ConverterInput<S, T> extends AbstractDSLBuilder implements MappingInput<T> {
 

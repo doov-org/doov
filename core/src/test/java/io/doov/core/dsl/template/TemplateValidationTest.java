@@ -3,20 +3,20 @@
  */
 package io.doov.core.dsl.template;
 
+import static io.doov.core.dsl.template.ParameterTypes.$Boolean;
+
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.doov.core.dsl.lang.ValidationRule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.*;
+import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.core.dsl.template.TemplateRule.Rule1;
-
-import static io.doov.core.dsl.template.ParameterTypes.$Boolean;
 
 class TemplateValidationTest {
 
