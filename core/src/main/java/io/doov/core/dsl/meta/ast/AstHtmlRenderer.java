@@ -62,6 +62,7 @@ public class AstHtmlRenderer {
                 case FIELD_PREDICATE:
                 case LEAF_VALUE:
                 case MAPPING_LEAF:
+                case TEMPLATE_IDENTIFIER:
                     leaf(metadata, parents);
                     break;
                 case UNARY_PREDICATE:

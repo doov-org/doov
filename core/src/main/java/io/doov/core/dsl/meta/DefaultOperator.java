@@ -86,7 +86,7 @@ public enum DefaultOperator implements Operator {
     last_day_of_year("last day of year"), //
     
     // Template
-    template_field(":"), //
+    template_field("|"), //
     ;
 
     private final String readable;

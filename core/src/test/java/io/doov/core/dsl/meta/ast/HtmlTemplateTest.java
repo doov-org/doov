@@ -30,7 +30,7 @@ public class HtmlTemplateTest {
     @Test
     void templateTest() {
         Rule1<StringFieldInfo> template = template($String).rule(site -> site.contains("google"));
-        result = template.bind(model.stringField("param1", "a")).executeOn(model);
+        result = template.bind(model.stringField("a", "param1")).executeOn(model);
         doc = documentOf(result);
         // TODO test the HTML DOM
     }
@@ -39,7 +39,7 @@ public class HtmlTemplateTest {
     void twoParamsTest() {
         Rule2<StringFieldInfo, StringFieldInfo> template = template($String, $String)
                 .rule((url, name) -> url.contains(name.mapToString(String::toLowerCase)));
-        result = template.bind(model.stringField("param1", "a"), model.stringField("param2", "b"))
+        result = template.bind(model.stringField("a", "param1"), model.stringField("b", "param2"))
                 .executeOn(model);
         doc = documentOf(result);
         // TODO test the HTML DOM
@@ -49,7 +49,7 @@ public class HtmlTemplateTest {
     void mappingTemplateTest() {
         Map2<StringFieldInfo, StringFieldInfo> template = template($String, $String)
                 .mapping((from, dest) -> map(from).to(dest));
-        context = template.bind(model.stringField("param1", "a"), model.stringField("param2", null))
+        context = template.bind(model.stringField("a", "param1"), model.stringField(null, "param2"))
                 .executeOn(model, model);
         doc = documentOf(context);
         // TODO test the HTML DOM

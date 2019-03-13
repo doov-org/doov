@@ -21,6 +21,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.lambda;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
+import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_IDENTIFIER;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -95,6 +96,10 @@ public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends
 
     public static <M extends ValuePredicateMetadata<M>> M anyMatchMetadata(Metadata metadata) {
         return new ValuePredicateMetadata<M>(FIELD_PREDICATE_MATCH_ANY).valueReadable(lambda);
+    }
+
+    public static <M extends ValuePredicateMetadata<M>> M templateParam(String parameterIdentifier) {
+        return new ValuePredicateMetadata<M>(TEMPLATE_IDENTIFIER).valueReadable(() -> parameterIdentifier);
     }
 
 }

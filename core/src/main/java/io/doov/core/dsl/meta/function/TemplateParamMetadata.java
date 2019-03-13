@@ -5,10 +5,14 @@ package io.doov.core.dsl.meta.function;
 
 import static io.doov.core.dsl.meta.DefaultOperator.template_field;
 import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.templateParam;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
 
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.Operator;
 
 public class TemplateParamMetadata extends BinaryMetadata {
 
@@ -16,10 +20,10 @@ public class TemplateParamMetadata extends BinaryMetadata {
         super(left, operator, right);
     }
 
-    public static TemplateParamMetadata templateParamMetadata(String unInitReadable, FieldInfo fieldInfo) {
+    public static TemplateParamMetadata templateParamMetadata(String parameterIdentifier, FieldInfo fieldInfo) {
         if (fieldInfo == null)
-            return new TemplateParamMetadata(valueMetadata(unInitReadable), template_field, valueMetadata(null));
-        return new TemplateParamMetadata(valueMetadata(unInitReadable), template_field, fieldInfo.getMetadata());
+            return new TemplateParamMetadata(templateParam(parameterIdentifier), template_field, valueMetadata(null));
+        return new TemplateParamMetadata(templateParam(parameterIdentifier), template_field, fieldInfo.getMetadata());
     }
 
     @Override

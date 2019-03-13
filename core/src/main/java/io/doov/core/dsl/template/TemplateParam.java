@@ -46,9 +46,9 @@ public class TemplateParam<T extends DslField<?>> {
         private String unInitReadable;
         private FieldId templateFieldId;
 
-        ProxyFieldInfo(String readable) {
-            this.unInitReadable = readable;
-            this.templateFieldId = () -> readable;
+        ProxyFieldInfo(String parameterIdentifier) {
+            this.unInitReadable = parameterIdentifier;
+            this.templateFieldId = () -> parameterIdentifier;
         }
 
         public void setFieldInfo(FieldInfo fieldInfo) {

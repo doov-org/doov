@@ -44,6 +44,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
                 case LEAF_VALUE:
+                case TEMPLATE_IDENTIFIER:
                     startLeaf((LeafMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
@@ -91,6 +92,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 break;
             case LEAF_PREDICATE:
             case LEAF_VALUE:
+            case TEMPLATE_IDENTIFIER:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
@@ -133,6 +135,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 break;
             case LEAF_PREDICATE:
             case LEAF_VALUE:
+            case TEMPLATE_IDENTIFIER:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
@@ -174,6 +177,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
                 case LEAF_VALUE:
+                case TEMPLATE_IDENTIFIER:
                     endLeaf((LeafMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
@@ -354,7 +358,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     protected String formatNewLine() {
         return "\n";
     }
-    
+
     protected Metadata stackPeek() {
         return stack.peek();
     }

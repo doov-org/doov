@@ -20,6 +20,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.validate;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.MappingOperator.using;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Locale;
@@ -55,7 +56,8 @@ public class AstTextVisitor extends AbstractAstVisitor {
     public void startLeaf(LeafMetadata<?> metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatLeafMetadata(metadata));
-        sb.append(formatNewLine());
+        if (stackPeek() != null && stackPeek().type() != TEMPLATE_PARAM)
+            sb.append(formatNewLine());
     }
 
     @Override

@@ -35,5 +35,6 @@ public enum MetadataType {
     TYPE_CONVERTER, //
     TYPE_CONVERTER_IDENTITY, //
     TEMPLATE_PARAM, //
+    TEMPLATE_IDENTIFIER, //
     ;
 }
