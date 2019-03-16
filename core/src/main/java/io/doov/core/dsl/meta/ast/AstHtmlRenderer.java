@@ -21,6 +21,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.validate;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
 import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.HtmlWriter.*;
@@ -197,11 +198,25 @@ public class AstHtmlRenderer {
             writer.writeBeginLi(CSS_LI_BINARY);
             binary_BR(metadata, parents);
             writer.writeEndLi();
+        } else if (metadata.type() == TEMPLATE_PARAM) {
+            templateParam(metadata);
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
             binary_SPACE(metadata, parents);
         }
 
+    }
+
+    private void templateParam(Metadata metadata) {
+        writer.writeBeginSpan(CSS_TEMPLATE_PARAM);
+        writer.write(metadata.childAt(0).readable(writer.getLocale()));
+        writer.writeEndSpan();
+        writer.writeBeginSpan(CSS_OPERATOR);
+        writer.writeFromBundle(metadata.getOperator());
+        writer.writeEndSpan();
+        writer.writeBeginSpan(CSS_FIELD);
+        handleField(metadata.childAt(1));
+        writer.writeEndSpan();
     }
 
     private void binary_BR(Metadata metadata, ArrayDeque<Metadata> parents) {
@@ -280,26 +295,45 @@ public class AstHtmlRenderer {
         }
         final List<Element> elts = new ArrayList<Element>(((LeafMetadata<?>) metadata).elements());
         for (Element e : elts) {
-            writer.writeBeginSpan(spanClass(e.getType()));
             switch (e.getType()) {
                 case OPERATOR:
+                    writer.writeBeginSpan(CSS_OPERATOR);
                     writer.writeFromBundle((Operator) e.getReadable());
+                    writer.writeEndSpan();
                     break;
                 case TEMPORAL_UNIT:
+                    writer.writeBeginSpan(CSS_OPERATOR);
                     writer.writeFromBundle(e.getReadable().readable());
+                    writer.writeEndSpan();
                     break;
                 case FIELD:
-                    handleField((DslField<?>) e.getReadable());
+                    final Metadata fieldMetadata = ((DslField<?>) e.getReadable()).getMetadata();
+                    if (fieldMetadata.type() == TEMPLATE_PARAM) {
+                        templateParam(fieldMetadata);
+                    } else {
+                        writer.writeBeginSpan(CSS_FIELD);
+                        handleField(fieldMetadata);
+                        writer.writeEndSpan();
+                    }
                     break;
                 case STRING_VALUE:
+                    writer.writeBeginSpan(CSS_VALUE);
                     writer.write(APOS);
                     writer.write(writer.escapeHtml4(e.getReadable().readable()));
                     writer.write(APOS);
+                    writer.writeEndSpan();
+                    break;
+                case VALUE:
+                    writer.writeBeginSpan(CSS_VALUE);
+                    writer.writeFromBundle(writer.escapeHtml4(e.getReadable().readable()));
+                    writer.writeEndSpan();
                     break;
                 default:
+                    writer.writeBeginSpan(CSS_UNKNOWN);
                     writer.writeFromBundle(writer.escapeHtml4(e.getReadable().readable()));
+                    writer.writeEndSpan();
+                    break;
             }
-            writer.writeEndSpan();
             if (elts.indexOf(e) != elts.size() - 1)
                 writer.write(SPACE);
         }
@@ -312,26 +346,9 @@ public class AstHtmlRenderer {
     /**
      * Allows to overrides the default behaviour of the HTML renderer like adding links of tooltip.
      *
-     * @param field the field
+     * @param metadata the field metadata
      */
-    protected void handleField(DslField<?> field) {
-        writer.writeFromBundle(writer.escapeHtml4(field.readable()));
-    }
-
-    private static String spanClass(ElementType type) {
-        switch (type) {
-            case OPERATOR:
-            case TEMPORAL_UNIT:
-                return CSS_OPERATOR;
-            case VALUE:
-            case STRING_VALUE:
-                return CSS_VALUE;
-            case FIELD:
-                return CSS_FIELD;
-            case UNKNOWN:
-                return CSS_UNKNOWN;
-            default:
-                throw new IllegalStateException(type.name());
-        }
+    protected void handleField(Metadata metadata) {
+        writer.writeFromBundle(writer.escapeHtml4(metadata.readable()));
     }
 }

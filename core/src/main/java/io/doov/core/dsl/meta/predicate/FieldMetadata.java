@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
+import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 
 import java.util.Locale;
@@ -57,6 +58,6 @@ public class FieldMetadata<M extends FieldMetadata<M>> extends LeafMetadata<M>
                 // @see io.doov.core.dsl.meta.ast.AstTextVisitor.formatLeafMetadata(LeafMetadata<?>)
                 return field;
             }
-        }.add(new Element(() -> field, ElementType.FIELD));
+        }.add(new Element(() -> field, FIELD));
     }
 }
