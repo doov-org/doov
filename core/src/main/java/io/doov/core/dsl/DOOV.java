@@ -141,7 +141,7 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchAny(Stream<? extends DslField<?>> dslFields,
-                                         Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+            Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchAny(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                 .map(stepConditionFunction).collect(Collectors.toList()));
     }
@@ -165,7 +165,7 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchAll(Stream<? extends DslField<?>> dslFields,
-                                         Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+            Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchAll(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                 .map(stepConditionFunction).collect(Collectors.toList()));
     }
@@ -189,7 +189,7 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchNone(Stream<? extends DslField<?>> dslFields,
-                                          Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+            Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchNone(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                 .map(stepConditionFunction).collect(Collectors.toList()));
     }
@@ -312,7 +312,7 @@ public class DOOV {
      * @return mapping registry containing rules
      */
     public static MappingRegistry mapRange(int startInclusive, int endExclusive,
-                                           Function<Integer, MappingRule> mappingRuleFunction) {
+            Function<Integer, MappingRule> mappingRuleFunction) {
         return MappingRegistry.mappings(IntStream.range(startInclusive, endExclusive)
                 .mapToObj(mappingRuleFunction::apply).toArray(MappingRule[]::new));
     }
@@ -326,7 +326,7 @@ public class DOOV {
      * @return mapping registry containing rules
      */
     public static <T extends DslField<?>> MappingRegistry mapFor(Stream<T> fieldStream,
-                                                                 Function<T, MappingRule> mappingRuleFunction) {
+            Function<T, MappingRule> mappingRuleFunction) {
         return MappingRegistry.mappings(fieldStream.filter(Objects::nonNull).map(mappingRuleFunction)
                 .toArray(MappingRule[]::new));
     }
@@ -340,9 +340,10 @@ public class DOOV {
      * @return mapping registry containing rules
      */
     public static <T extends DslField<?>> MappingRegistry mapWithIndex(Stream<T> fieldStream,
-                                                                       BiFunction<T, Integer, MappingRule> mappingRuleFunction) {
-        return MappingRegistry.mappings(Streams.mapWithIndex(fieldStream, (f, l) -> mappingRuleFunction.apply(f, l.intValue()))
-                .toArray(MappingRule[]::new));
+            BiFunction<T, Integer, MappingRule> mappingRuleFunction) {
+        return MappingRegistry
+                .mappings(Streams.mapWithIndex(fieldStream, (f, l) -> mappingRuleFunction.apply(f, l.intValue()))
+                        .toArray(MappingRule[]::new));
     }
 
     /**
@@ -405,23 +406,33 @@ public class DOOV {
         return new TemplateSpec.Template1<>(param1.get());
     }
 
-    public static <
-            T1 extends DslField<?>,
-            T2 extends DslField<?>
-            > TemplateSpec.Template2<T1, T2> template(
+    public static <T1 extends DslField<?>, T2 extends DslField<?>> TemplateSpec.Template2<T1, T2> template(
             Supplier<TemplateParam<T1>> param1,
             Supplier<TemplateParam<T2>> param2) {
         return new TemplateSpec.Template2<>(param1.get(), param2.get());
     }
 
-    public static <
-            T1 extends DslField<?>,
-            T2 extends DslField<?>,
-            T3 extends DslField<?>
-            > TemplateSpec.Template3<T1, T2, T3> template(
+    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>> TemplateSpec.Template3<T1, T2, T3> template(
             Supplier<TemplateParam<T1>> param1,
             Supplier<TemplateParam<T2>> param2,
             Supplier<TemplateParam<T3>> param3) {
         return new TemplateSpec.Template3<>(param1.get(), param2.get(), param3.get());
+    }
+
+    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>> TemplateSpec.Template4<T1, T2, T3, T4> template(
+            Supplier<TemplateParam<T1>> param1,
+            Supplier<TemplateParam<T2>> param2,
+            Supplier<TemplateParam<T3>> param3,
+            Supplier<TemplateParam<T4>> param4) {
+        return new TemplateSpec.Template4<>(param1.get(), param2.get(), param3.get(), param4.get());
+    }
+
+    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>, T5 extends DslField<?>> TemplateSpec.Template5<T1, T2, T3, T4, T5> template(
+            Supplier<TemplateParam<T1>> param1,
+            Supplier<TemplateParam<T2>> param2,
+            Supplier<TemplateParam<T3>> param3,
+            Supplier<TemplateParam<T4>> param4,
+            Supplier<TemplateParam<T5>> param5) {
+        return new TemplateSpec.Template5<>(param1.get(), param2.get(), param3.get(), param4.get(), param5.get());
     }
 }

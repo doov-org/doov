@@ -63,7 +63,7 @@ class TemplateValidationTest {
         IntegerFieldInfo C = model.intField(5, "C");
 
         TemplateRule.Rule3<IntegerFieldInfo, IntegerFieldInfo, IntegerFieldInfo> template =
-                DOOV.template(ParameterTypes.$Integer, ParameterTypes.$Integer, ParameterTypes.$Integer).with(
+                DOOV.template(ParameterTypes.$Integer, ParameterTypes.$Integer, ParameterTypes.$Integer).rule(
                         (a, b, c) -> c.greaterThan(a).and(b.greaterThan(a))
                 );
 
@@ -80,7 +80,7 @@ class TemplateValidationTest {
         BooleanFieldInfo C = model.booleanField(true, "C");
 
         TemplateRule.Rule3<IntegerFieldInfo, StringFieldInfo, BooleanFieldInfo> template =
-                DOOV.template(ParameterTypes.$Integer, ParameterTypes.$String, $Boolean).with(
+                DOOV.template(ParameterTypes.$Integer, ParameterTypes.$String, $Boolean).rule(
                         (a, b, c) -> c.isTrue().and(b.mapToInt(Integer::parseInt).greaterThan(a))
                 );
 

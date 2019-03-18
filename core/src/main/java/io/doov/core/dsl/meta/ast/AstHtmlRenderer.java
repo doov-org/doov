@@ -19,10 +19,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.validate;
-import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
-import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.*;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.HtmlWriter.*;
 import static java.util.Arrays.asList;
@@ -31,6 +28,7 @@ import java.util.*;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.function.TemplateParamMetadata;
 
 public class AstHtmlRenderer {
     private static final List<Operator> AND_OR = asList(and, or);
@@ -199,7 +197,7 @@ public class AstHtmlRenderer {
             binary_BR(metadata, parents);
             writer.writeEndLi();
         } else if (metadata.type() == TEMPLATE_PARAM) {
-            templateParam(metadata);
+            templateParam((TemplateParamMetadata) metadata);
         } else {
             // @see io.doov.core.dsl.meta.ast.HtmlCombinedTest.reduce_list()
             binary_SPACE(metadata, parents);
@@ -207,15 +205,23 @@ public class AstHtmlRenderer {
 
     }
 
-    private void templateParam(Metadata metadata) {
+    private void templateParam(TemplateParamMetadata metadata) {
+        writer.writeBeginSpan();
+        writer.write("{");
+        writer.writeEndSpan();
         writer.writeBeginSpan(CSS_TEMPLATE_PARAM);
         writer.write(metadata.childAt(0).readable(writer.getLocale()));
         writer.writeEndSpan();
-        writer.writeBeginSpan(CSS_OPERATOR);
-        writer.writeFromBundle(metadata.getOperator());
-        writer.writeEndSpan();
-        writer.writeBeginSpan(CSS_FIELD);
-        handleField(metadata.childAt(1));
+        if (metadata.getRight().type() != EMPTY) {
+            writer.writeBeginSpan(CSS_OPERATOR);
+            writer.writeFromBundle(metadata.getOperator());
+            writer.writeEndSpan();
+            writer.writeBeginSpan(CSS_FIELD);
+            handleField(metadata.childAt(1));
+            writer.writeEndSpan();
+        }
+        writer.writeBeginSpan();
+        writer.write("}");
         writer.writeEndSpan();
     }
 
@@ -309,7 +315,7 @@ public class AstHtmlRenderer {
                 case FIELD:
                     final Metadata fieldMetadata = ((DslField<?>) e.getReadable()).getMetadata();
                     if (fieldMetadata.type() == TEMPLATE_PARAM) {
-                        templateParam(fieldMetadata);
+                        templateParam((TemplateParamMetadata) fieldMetadata);
                     } else {
                         writer.writeBeginSpan(CSS_FIELD);
                         handleField(fieldMetadata);

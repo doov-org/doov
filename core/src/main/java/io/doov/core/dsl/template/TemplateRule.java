@@ -8,7 +8,13 @@ import java.util.function.Function;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.DSLBuilder;
+import io.doov.core.dsl.lang.Function4;
+import io.doov.core.dsl.lang.Function5;
+import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.StepWhen;
+import io.doov.core.dsl.lang.TriFunction;
+import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Metadata;
 
 public class TemplateRule {
@@ -71,13 +77,74 @@ public class TemplateRule {
         Rule3(TriFunction<T1, T2, T3, StepCondition> ruleFunction, TemplateSpec.Template3<T1, T2, T3> template) {
             this.ruleFunction = ruleFunction.andThen(DOOV::when).andThen(StepWhen::validate);
             this.template = template;
-            this.validationRule = this.ruleFunction.apply(template.param1.create(), template.param2.create(), template.param3.create());
+            this.validationRule = this.ruleFunction.apply(template.param1.create(), template.param2.create(),
+                    template.param3.create());
         }
 
         public ValidationRule bind(T1 p1, T2 p2, T3 p3) {
             template.param1.bind(p1);
             template.param2.bind(p2);
             template.param3.bind(p3);
+            return validationRule;
+        }
+
+        @Override
+        public Metadata metadata() {
+            return validationRule.metadata();
+        }
+
+    }
+
+    public static class Rule4<T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>>
+            implements DSLBuilder {
+
+        private final Function4<T1, T2, T3, T4, ValidationRule> ruleFunction;
+        private final TemplateSpec.Template4<T1, T2, T3, T4> template;
+        private final ValidationRule validationRule;
+
+        Rule4(Function4<T1, T2, T3, T4, StepCondition> ruleFunction, TemplateSpec.Template4<T1, T2, T3, T4> template) {
+            this.ruleFunction = ruleFunction.andThen(DOOV::when).andThen(StepWhen::validate);
+            this.template = template;
+            this.validationRule = this.ruleFunction.apply(template.param1.create(), template.param2.create(),
+                    template.param3.create(), template.param4.create());
+        }
+
+        public ValidationRule bind(T1 p1, T2 p2, T3 p3, T4 p4) {
+            template.param1.bind(p1);
+            template.param2.bind(p2);
+            template.param3.bind(p3);
+            template.param4.bind(p4);
+            return validationRule;
+        }
+
+        @Override
+        public Metadata metadata() {
+            return validationRule.metadata();
+        }
+
+    }
+
+    public static class Rule5<T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>, T5 extends DslField<?>>
+            implements DSLBuilder {
+
+        private final Function5<T1, T2, T3, T4, T5, ValidationRule> ruleFunction;
+        private final TemplateSpec.Template5<T1, T2, T3, T4, T5> template;
+        private final ValidationRule validationRule;
+
+        Rule5(Function5<T1, T2, T3, T4, T5, StepCondition> ruleFunction,
+                TemplateSpec.Template5<T1, T2, T3, T4, T5> template) {
+            this.ruleFunction = ruleFunction.andThen(DOOV::when).andThen(StepWhen::validate);
+            this.template = template;
+            this.validationRule = this.ruleFunction.apply(template.param1.create(), template.param2.create(),
+                    template.param3.create(), template.param4.create(), template.param5.create());
+        }
+
+        public ValidationRule bind(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5) {
+            template.param1.bind(p1);
+            template.param2.bind(p2);
+            template.param3.bind(p3);
+            template.param4.bind(p4);
+            template.param5.bind(p5);
             return validationRule;
         }
 

@@ -23,13 +23,14 @@ import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.model.Company.BLABLACAR;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.stream.Collectors.toList;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import io.doov.core.dsl.meta.ast.DefaultHtmlWriter;
 import io.doov.core.dsl.meta.ast.HtmlWriter;

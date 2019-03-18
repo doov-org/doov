@@ -17,6 +17,7 @@ package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.MetadataType.EMPTY;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
 
@@ -72,16 +73,18 @@ public class AstLineVisitor extends AstTextVisitor {
                 || (metadata.getLeft().type() == NARY_PREDICATE)) {
             sb.append(depth > 0 ? "(" : "");
         } else if (metadata.type() == TEMPLATE_PARAM) {
-            sb.append("[");
+            sb.append("{");
         }
     }
 
     @Override
     public void afterChildBinary(BinaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
-        if (metadata.type() == TEMPLATE_PARAM) {
+        if (metadata.type() == TEMPLATE_PARAM && metadata.getRight().type() != EMPTY) {
             sb.append(bundle.get(metadata.getOperator(), locale));
+        } else if (hasNext && metadata.type() != TEMPLATE_PARAM) {
+            sb.append(bundle.get(metadata.getOperator(), locale));
+            sb.append(formatNewLine());
         } else if (hasNext) {
-            sb.append(bundle.get(metadata.getOperator(), locale));
             sb.append(formatNewLine());
         }
     }
@@ -94,7 +97,7 @@ public class AstLineVisitor extends AstTextVisitor {
                 || (metadata.getLeft().type() == NARY_PREDICATE)) {
             sb.append(depth > 0 ? ") " : " ");
         } else if (metadata.type() == TEMPLATE_PARAM) {
-            sb.append("]");
+            sb.append("}");
         } else {
             sb.append(" ");
         }

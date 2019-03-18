@@ -118,6 +118,10 @@
     color: #683E40;
 }
 
+.dsl-token-template-param {
+    color: #3f7f5f;
+}
+
 .dsl-token-operator {
     color: black;
     font-weight: bold;
