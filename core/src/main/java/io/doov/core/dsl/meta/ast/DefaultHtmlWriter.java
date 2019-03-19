@@ -147,7 +147,7 @@ public class DefaultHtmlWriter implements HtmlWriter {
                 + endDiv();
     }
 
-    static String exclusionBar(ValidationRule rule, ExclusionBar cssClass, Locale locale) {
+    public static String exclusionBar(ValidationRule rule, ExclusionBar cssClass, Locale locale) {
         Metadata conditionMetadata = rule.getStepWhen().stepCondition().metadata();
         if (conditionMetadata instanceof PredicateMetadata) {
             return exclusionBar((PredicateMetadata) conditionMetadata, cssClass, locale);

@@ -3,7 +3,7 @@
  */
 package io.doov.sample.validation.ast;
 
-import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.toHtml;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.toHtml;
 import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT;
 import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT_2;
 import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT_TIME_CONTAINS;

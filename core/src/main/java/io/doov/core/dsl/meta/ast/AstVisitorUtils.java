@@ -16,6 +16,9 @@
 package io.doov.core.dsl.meta.ast;
 
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -46,5 +49,12 @@ public class AstVisitorUtils {
             }
         }.browse(root, 0);
         return metadatas;
+    }
+
+    public static String toHtml(Metadata metadata, Locale locale) {
+        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
+        DefaultHtmlWriter htmlWriter = new DefaultHtmlWriter(locale, ops, BUNDLE);
+        new AstHtmlRenderer(htmlWriter).toHtml(metadata);
+        return new String(ops.toByteArray(), UTF_8);
     }
 }

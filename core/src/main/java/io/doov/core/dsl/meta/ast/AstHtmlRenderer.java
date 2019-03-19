@@ -18,28 +18,21 @@ package io.doov.core.dsl.meta.ast;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
 
-import java.io.ByteArrayOutputStream;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.MetadataType.*;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.HtmlWriter.*;
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 
 public class AstHtmlRenderer {
     private static final List<Operator> AND_OR = asList(and, or);
 
-    private HtmlWriter writer;
-
-    public static String toHtml(Metadata metadata, Locale locale) {
-        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        DefaultHtmlWriter htmlWriter = new DefaultHtmlWriter(locale, ops, BUNDLE);
-        new AstHtmlRenderer(htmlWriter).toHtml(metadata);
-        return new String(ops.toByteArray(), UTF_8);
-    }
+    protected HtmlWriter writer;
 
     public AstHtmlRenderer(HtmlWriter writer) {
         this.writer = writer;
