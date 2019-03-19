@@ -45,19 +45,19 @@ import io.doov.sample.model.Timezone;
 
 public class SampleTemplates {
 
-    public static final Rule1<StringFieldInfo> TEMPLATE_EMAIL = DOOV
+    public static final Rule1<StringFieldInfo> T_EMAIL = DOOV
             .template($String)
             .rule(email -> email.matches("\\w+[@]\\w+\\.com")
                     .or(email.matches("\\w+[@]\\w+\\.fr")));
 
-    public static final Rule5<LocalDateFieldInfo, StringFieldInfo, IntegerFieldInfo, EnumFieldInfo<Country>, StringFieldInfo> TEMPLATE_ACCOUNT = DOOV
+    public static final Rule5<LocalDateFieldInfo, StringFieldInfo, IntegerFieldInfo, EnumFieldInfo<Country>, StringFieldInfo> T_ACCOUNT = DOOV
             .template($LocalDate, $String, $Integer, $Enum(Country.class), $String)
             .rule((birthdate, email, maxEmailSize, country, phoneNumber) -> matchAll(
                     birthdate.ageAt(today()).greaterOrEquals(18),
                     email.length().lesserOrEquals(maxEmailSize),
                     country.eq(Country.FR).and(phoneNumber.startsWith("+33"))));
 
-    public static final Rule5<LocalDateFieldInfo, StringFieldInfo, IntegerFieldInfo, EnumFieldInfo<Country>, StringFieldInfo> TEMPLATE_ACCOUNT_2 = DOOV
+    public static final Rule5<LocalDateFieldInfo, StringFieldInfo, IntegerFieldInfo, EnumFieldInfo<Country>, StringFieldInfo> T_ACCOUNT_2 = DOOV
             .template($LocalDate, $String, $Integer, $Enum(Country.class), $String)
             .rule((birthdate, email, maxEmailSize, country, phoneNumber) -> birthdate.ageAt(today())
                     .greaterOrEquals(18)
@@ -65,36 +65,35 @@ public class SampleTemplates {
                     .and(country.eq(Country.FR))
                     .and(phoneNumber.startsWith("+33")));
 
-    public static final Rule2<StringFieldInfo, StringFieldInfo> TEMPLATE_USER = DOOV
+    public static final Rule2<StringFieldInfo, StringFieldInfo> T_USER = DOOV
             .template($String, $String)
             .rule((firstName, lastName) -> count(firstName.isNotNull(),
                     lastName.isNotNull().and(lastName.matches("[A-Z]+"))).greaterOrEquals(0));
 
-    public static final Rule3<StringFieldInfo, StringFieldInfo, StringFieldInfo> TEMPLATE_USER_2 = DOOV
+    public static final Rule3<StringFieldInfo, StringFieldInfo, StringFieldInfo> T_USER_2 = DOOV
             .template($String, $String, $String)
             .rule((userLastName, accountPhoneNumber, accountEmail) -> userLastName.isNotNull()
                     .and(userLastName.matches("[A-Z]+").and(count(accountPhoneNumber.isNotNull(),
                             accountEmail.isNotNull()).greaterThan(0))));
 
-    public static final Rule2<LocalDateFieldInfo, LocalDateFieldInfo> TEMPLATE_USER_ADULT = template($LocalDate,
+    public static final Rule2<LocalDateFieldInfo, LocalDateFieldInfo> T_USER_ADULT = template($LocalDate,
             $LocalDate)
                     .rule((birthdate, creationDate) -> birthdate.ageAt(creationDate).greaterOrEquals(18));
 
-    public static final Rule2<LocalDateFieldInfo, LocalDateFieldInfo> TEMPLATE_USER_ADULT_FIRSTDAY = template(
-            $LocalDate,
+    public static final Rule2<LocalDateFieldInfo, LocalDateFieldInfo> T_USER_ADULT_FIRSTDAY = template($LocalDate,
             $LocalDate)
                     .rule((birthdate, creationDate) -> birthdate.ageAt(creationDate.with(firstDayOfYear()))
                             .greaterOrEquals(18));
 
-    public static final Rule1<StringFieldInfo> TEMPLATE_FIRST_NAME = template($String)
+    public static final Rule1<StringFieldInfo> T_FIRST_NAME = template($String)
             .rule((firstName) -> matchAll(firstName.mapToInt(name -> 1).eq(1)));
 
-    public static final Rule1<LongFieldInfo> TEMPLATE_ID = template($Long).rule((userId) -> userId.isNotNull());
+    public static final Rule1<LongFieldInfo> T_ID = template($Long).rule((userId) -> userId.isNotNull());
 
-    public static final Rule1<LocalDateFieldInfo> TEMPLATE_AGE = template($LocalDate)
+    public static final Rule1<LocalDateFieldInfo> T_AGE = template($LocalDate)
             .rule((birthdate) -> birthdate.ageAt(today()).greaterOrEquals(18));
 
-    public static final Rule1<LocalDateFieldInfo> TEMPLATE_AGE_2 = template($LocalDate)
+    public static final Rule1<LocalDateFieldInfo> T_AGE_2 = template($LocalDate)
             .rule((birthdate) -> birthdate.after(birthdate.minus(1, DAYS)));
 
     public static final Rule2<IntegerFieldInfo, IntegerFieldInfo> TEMPLATE_SUM = template($Integer, $Integer)
@@ -117,17 +116,17 @@ public class SampleTemplates {
 
     public static List<DSLBuilder> rules() {
         return Arrays.asList(
-                TEMPLATE_EMAIL,
-                TEMPLATE_ACCOUNT,
-                TEMPLATE_ACCOUNT_2,
-                TEMPLATE_USER,
-                TEMPLATE_USER_2,
-                TEMPLATE_USER_ADULT,
-                TEMPLATE_USER_ADULT_FIRSTDAY,
-                TEMPLATE_FIRST_NAME,
-                TEMPLATE_ID,
-                TEMPLATE_AGE,
-                TEMPLATE_AGE_2,
+                T_EMAIL,
+                T_ACCOUNT,
+                T_ACCOUNT_2,
+                T_USER,
+                T_USER_2,
+                T_USER_ADULT,
+                T_USER_ADULT_FIRSTDAY,
+                T_FIRST_NAME,
+                T_ID,
+                T_AGE,
+                T_AGE_2,
                 TEMPLATE_SUM,
                 TEMPLATE_MIN,
                 TEMPLATE_DOUBLE_LAMBDA,

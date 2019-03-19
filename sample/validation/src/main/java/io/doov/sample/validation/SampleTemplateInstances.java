@@ -27,32 +27,32 @@ import io.doov.core.dsl.meta.ast.*;
 
 public class SampleTemplateInstances {
 
-    public static final ValidationRule RULE_EMAIL = TEMPLATE_EMAIL.bind(accountEmail);
+    public static final ValidationRule RULE_EMAIL = T_EMAIL.bind(accountEmail);
 
-    public static final ValidationRule RULE_ACCOUNT = TEMPLATE_ACCOUNT
+    public static final ValidationRule RULE_ACCOUNT = T_ACCOUNT
             .bind(userBirthdate, accountEmail, configurationMaxEmailSize, accountCountry, accountPhoneNumber);
 
-    public static final ValidationRule RULE_ACCOUNT_2 = TEMPLATE_ACCOUNT_2
+    public static final ValidationRule RULE_ACCOUNT_2 = T_ACCOUNT_2
             .bind(userBirthdate, accountEmail, configurationMaxEmailSize, accountCountry, accountPhoneNumber);
 
-    public static final ValidationRule RULE_USER = TEMPLATE_USER.bind(userFirstName, userLastName)
+    public static final ValidationRule RULE_USER = T_USER.bind(userFirstName, userLastName)
             .withShortCircuit(false);
 
-    public static final ValidationRule RULE_USER_2 = TEMPLATE_USER_2
+    public static final ValidationRule RULE_USER_2 = T_USER_2
             .bind(accountPhoneNumber, accountPhoneNumber, accountEmail);
 
-    public static final ValidationRule RULE_USER_ADULT = TEMPLATE_USER_ADULT.bind(userBirthdate, accountCreationDate);
+    public static final ValidationRule RULE_USER_ADULT = T_USER_ADULT.bind(userBirthdate, accountCreationDate);
 
-    public static final ValidationRule RULE_USER_ADULT_FIRSTDAY = TEMPLATE_USER_ADULT_FIRSTDAY
+    public static final ValidationRule RULE_USER_ADULT_FIRSTDAY = T_USER_ADULT_FIRSTDAY
             .bind(userBirthdate, accountCreationDate);
 
-    public static final ValidationRule RULE_FIRST_NAME = TEMPLATE_FIRST_NAME.bind(userFirstName);
+    public static final ValidationRule RULE_FIRST_NAME = T_FIRST_NAME.bind(userFirstName);
 
-    public static final ValidationRule RULE_ID = TEMPLATE_ID.bind(userId);
+    public static final ValidationRule RULE_ID = T_ID.bind(userId);
 
-    public static final ValidationRule RULE_AGE = TEMPLATE_AGE.bind(userBirthdate);
+    public static final ValidationRule RULE_AGE = T_AGE.bind(userBirthdate);
 
-    public static final ValidationRule RULE_AGE_2 = TEMPLATE_AGE_2.bind(userBirthdate);
+    public static final ValidationRule RULE_AGE_2 = T_AGE_2.bind(userBirthdate);
 
     public static final ValidationRule RULE_SUM = TEMPLATE_SUM.bind(configurationMinAge, configurationMaxEmailSize);
 
