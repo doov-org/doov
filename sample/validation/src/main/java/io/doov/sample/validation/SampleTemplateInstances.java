@@ -24,8 +24,6 @@ import org.apache.commons.io.IOUtils;
 
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.ast.*;
-import io.doov.core.dsl.meta.ast.AstHtmlRenderer;
-import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 
 public class SampleTemplateInstances {
 
