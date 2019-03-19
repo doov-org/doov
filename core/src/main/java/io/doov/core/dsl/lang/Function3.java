@@ -27,7 +27,7 @@ import java.util.function.Function;
  * @param <R> the type of the result of the function
  */
 @FunctionalInterface
-public interface TriFunction<T, U, V, R> {
+public interface Function3<T, U, V, R> {
 
     /**
      * Applies this function to the given arguments.
@@ -49,7 +49,7 @@ public interface TriFunction<T, U, V, R> {
      * applies the {@code after} function
      * @throws NullPointerException if after is null
      */
-    default <W> TriFunction<T, U, V, W> andThen(Function<? super R, ? extends W> after) {
+    default <W> Function3<T, U, V, W> andThen(Function<? super R, ? extends W> after) {
         Objects.requireNonNull(after);
         return (T t, U u, V v) -> after.apply(apply(t, u, v));
     }

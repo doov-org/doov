@@ -62,7 +62,7 @@ public class TemplateMapping {
         private final TemplateSpec.Template3<T1, T2, T3> template;
         private MappingRule mappingRule;
 
-        Map3(TriFunction<T1, T2, T3, MappingRule> ruleFunction, TemplateSpec.Template3<T1, T2, T3> template) {
+        Map3(Function3<T1, T2, T3, MappingRule> ruleFunction, TemplateSpec.Template3<T1, T2, T3> template) {
             this.template = template;
             this.mappingRule = ruleFunction.apply(template.param1.create(),
                     template.param2.create(),
@@ -186,7 +186,7 @@ public class TemplateMapping {
         private final MappingRegistry mappingRegistry;
 
         Registry3(
-                TriFunction<T1, T2, T3, MappingRegistry> registryFunction,
+                Function3<T1, T2, T3, MappingRegistry> registryFunction,
                 TemplateSpec.Template3<T1, T2, T3> template) {
             this.template = template;
             mappingRegistry = registryFunction.apply(template.param1.create(),

@@ -11,7 +11,7 @@ import io.doov.core.dsl.lang.Function4;
 import io.doov.core.dsl.lang.Function5;
 import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.lang.TriFunction;
+import io.doov.core.dsl.lang.Function3;
 import io.doov.core.dsl.mapping.MappingRegistry;
 
 public class TemplateSpec {
@@ -72,15 +72,15 @@ public class TemplateSpec {
             this.param3 = param3;
         }
 
-        public TemplateRule.Rule3<T1, T2, T3> rule(TriFunction<T1, T2, T3, StepCondition> ruleFunction) {
+        public TemplateRule.Rule3<T1, T2, T3> rule(Function3<T1, T2, T3, StepCondition> ruleFunction) {
             return new TemplateRule.Rule3<>(ruleFunction, this);
         }
 
-        public TemplateMapping.Map3<T1, T2, T3> mapping(TriFunction<T1, T2, T3, MappingRule> ruleFunction) {
+        public TemplateMapping.Map3<T1, T2, T3> mapping(Function3<T1, T2, T3, MappingRule> ruleFunction) {
             return new TemplateMapping.Map3<>(ruleFunction, this);
         }
 
-        public TemplateMapping.Registry3<T1, T2, T3> mappings(TriFunction<T1, T2, T3, MappingRegistry> registry) {
+        public TemplateMapping.Registry3<T1, T2, T3> mappings(Function3<T1, T2, T3, MappingRegistry> registry) {
             return new TemplateMapping.Registry3<>(registry, this);
         }
     }

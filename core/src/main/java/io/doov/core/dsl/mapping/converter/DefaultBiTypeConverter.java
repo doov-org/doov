@@ -25,16 +25,16 @@ import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultBiTypeConverter<I, J, O> extends AbstractDSLBuilder implements BiTypeConverter<I, J, O> {
 
-    private TriFunction<Context, Optional<I>, Optional<J>, O> function;
+    private Function3<Context, Optional<I>, Optional<J>, O> function;
     private ConverterMetadata metadata;
 
-    public DefaultBiTypeConverter(TriFunction<Context, Optional<I>, Optional<J>, O> function,
+    public DefaultBiTypeConverter(Function3<Context, Optional<I>, Optional<J>, O> function,
                     ConverterMetadata metadata) {
         this.function = function;
         this.metadata = metadata;
     }
 
-    public DefaultBiTypeConverter(TriFunction<Context, Optional<I>, Optional<J>, O> converter, String description) {
+    public DefaultBiTypeConverter(Function3<Context, Optional<I>, Optional<J>, O> converter, String description) {
         this(converter, ConverterMetadata.metadata(description));
     }
 

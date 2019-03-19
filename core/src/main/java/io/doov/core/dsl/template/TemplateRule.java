@@ -13,7 +13,7 @@ import io.doov.core.dsl.lang.Function4;
 import io.doov.core.dsl.lang.Function5;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.StepWhen;
-import io.doov.core.dsl.lang.TriFunction;
+import io.doov.core.dsl.lang.Function3;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Metadata;
 
@@ -70,11 +70,11 @@ public class TemplateRule {
     public static class Rule3<T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>>
             implements DSLBuilder {
 
-        private final TriFunction<T1, T2, T3, ValidationRule> ruleFunction;
+        private final Function3<T1, T2, T3, ValidationRule> ruleFunction;
         private final TemplateSpec.Template3<T1, T2, T3> template;
         private final ValidationRule validationRule;
 
-        Rule3(TriFunction<T1, T2, T3, StepCondition> ruleFunction, TemplateSpec.Template3<T1, T2, T3> template) {
+        Rule3(Function3<T1, T2, T3, StepCondition> ruleFunction, TemplateSpec.Template3<T1, T2, T3> template) {
             this.ruleFunction = ruleFunction.andThen(DOOV::when).andThen(StepWhen::validate);
             this.template = template;
             this.validationRule = this.ruleFunction.apply(template.param1.create(), template.param2.create(),
