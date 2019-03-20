@@ -15,16 +15,15 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.MetadataType;
 
-public class FieldMetadata<M extends FieldMetadata<M>> extends LeafMetadata<M>
-        implements PredicateMetadata {
+public class FieldMetadata<M extends FieldMetadata<M>> extends LeafMetadata<M> implements PredicateMetadata {
 
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
@@ -56,7 +55,4 @@ public class FieldMetadata<M extends FieldMetadata<M>> extends LeafMetadata<M>
         return new FieldMetadata<M>(FIELD_PREDICATE, field).field(field);
     }
 
-    public static <M extends FieldMetadata<M>> M fieldMetadata(DslField<?> field, String readable) {
-        return new FieldMetadata<M>(FIELD_PREDICATE, field).add(new Element(() -> readable, FIELD));
-    }
 }

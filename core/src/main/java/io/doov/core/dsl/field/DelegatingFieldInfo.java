@@ -17,6 +17,7 @@ package io.doov.core.dsl.field;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Delegates all FieldInfo methods to another.
@@ -63,5 +64,10 @@ public interface DelegatingFieldInfo extends FieldInfo {
     @Override
     default boolean isTransient() {
         return delegate().isTransient();
+    }
+
+    @Override
+    default Metadata getMetadata() {
+        return delegate().getMetadata();
     }
 }

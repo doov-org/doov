@@ -66,7 +66,7 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
         this.isCodeLookup = CodeLookup.class.isAssignableFrom(type);
         this.isCodeValuable = CodeValuable.class.isAssignableFrom(type);
         this.isTransient = isTransient;
-        this.metadata = fieldMetadata(this, readable);
+        this.metadata = fieldMetadata(this);
     }
 
     @Override

@@ -47,7 +47,7 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
         this.codeLookup = codeLookup;
         this.genericTypes = genericTypes;
         this.siblings = siblings;
-        this.metadata = fieldMetadata(this, readable);
+        this.metadata = fieldMetadata(this);
     }
 
     public DefaultFieldInfo(FieldInfo fieldInfo) {
