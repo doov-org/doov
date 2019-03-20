@@ -19,7 +19,6 @@ import java.util.List;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.meta.Metadata;
 
 public class FieldInfoBuilder {
 
@@ -28,7 +27,7 @@ public class FieldInfoBuilder {
     }
 
     private FieldId fieldId;
-    private Metadata metadata;
+    private String readable;
     private Class<?> type;
     private boolean _transient = false;
     private boolean codeValuable = false;
@@ -41,8 +40,8 @@ public class FieldInfoBuilder {
         return this;
     }
 
-    public FieldInfoBuilder metadata(Metadata metadata) {
-        this.metadata = metadata;
+    public FieldInfoBuilder readable(String readable) {
+        this.readable = readable;
         return this;
     }
 
@@ -83,7 +82,7 @@ public class FieldInfoBuilder {
     }
 
     public <T> DefaultFieldInfo<T> build() {
-        return new DefaultFieldInfo<>(fieldId, metadata, type, _transient, codeValuable,
+        return new DefaultFieldInfo<>(fieldId, readable, type, _transient, codeValuable,
                             codeLookup, genericTypes, siblings);
     }
 

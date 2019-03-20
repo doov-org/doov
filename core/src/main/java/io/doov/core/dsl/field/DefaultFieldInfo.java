@@ -15,6 +15,8 @@
  */
 package io.doov.core.dsl.field;
 
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
+
 import java.io.Serializable;
 
 import io.doov.core.FieldId;
@@ -26,6 +28,7 @@ import io.doov.core.dsl.meta.Metadata;
 public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Serializable {
 
     private final FieldId fieldId;
+    private final String readable;
     private final Metadata metadata;
     private final Class<?> type;
     private boolean _transient;
@@ -34,21 +37,22 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
     private final Class<?>[] genericTypes;
     private final FieldId[] siblings;
 
-    public DefaultFieldInfo(FieldId fieldId, Metadata metadata, Class<?> type, boolean _transient, boolean codeValuable,
+    public DefaultFieldInfo(FieldId fieldId, String readable, Class<?> type, boolean _transient, boolean codeValuable,
                             boolean codeLookup, Class<?>[] genericTypes, FieldId... siblings) {
         this.fieldId = fieldId;
-        this.metadata = metadata;
+        this.readable = readable;
         this.type = type;
         this._transient = _transient;
         this.codeValuable = codeValuable;
         this.codeLookup = codeLookup;
         this.genericTypes = genericTypes;
         this.siblings = siblings;
+        this.metadata = fieldMetadata(this, readable);
     }
 
     public DefaultFieldInfo(FieldInfo fieldInfo) {
         this(fieldInfo.id(),
-                fieldInfo.getMetadata(),
+                fieldInfo.readable(),
                 fieldInfo.type(),
                 fieldInfo.isTransient(),
                 fieldInfo.isCodeValuable(),
@@ -60,11 +64,6 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
     @Override
     public FieldId id() {
         return fieldId;
-    }
-
-    @Override
-    public Metadata getMetadata() {
-        return metadata;
     }
 
     @Override
@@ -100,6 +99,16 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
     @Override
     public DefaultCondition<T> getDefaultFunction() {
         return new DefaultCondition<>(this);
+    }
+
+    @Override
+    public String readable() {
+        return readable;
+    }
+
+    @Override
+    public Metadata getMetadata() {
+        return metadata;
     }
 
 }

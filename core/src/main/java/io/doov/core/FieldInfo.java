@@ -73,11 +73,9 @@ public interface FieldInfo extends Readable {
      */
     boolean isTransient();
 
-
-    @Override
-    default String readable() {
-        return getMetadata().readable();
-    }
-
+    /**
+     *
+     * @return metadata assodicated with this field
+     */
     Metadata getMetadata();
 }

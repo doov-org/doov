@@ -18,7 +18,6 @@ package io.doov.core.dsl.meta.predicate;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.doov.core.dsl.DslField;
@@ -30,8 +29,11 @@ public class FieldMetadata<M extends FieldMetadata<M>> extends LeafMetadata<M>
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
 
-    public FieldMetadata(MetadataType type) {
+    private final DslField<?> field;
+
+    public FieldMetadata(MetadataType type, DslField<?> field) {
         super(type);
+        this.field = field;
     }
 
     @Override
@@ -44,20 +46,17 @@ public class FieldMetadata<M extends FieldMetadata<M>> extends LeafMetadata<M>
         return evalFalse;
     }
 
+    public DslField<?> field() {
+        return field;
+    }
+
     // field
 
     public static <M extends FieldMetadata<M>> M fieldMetadata(DslField<?> field) {
-        return new FieldMetadata<M>(FIELD_PREDICATE).field(field);
+        return new FieldMetadata<M>(FIELD_PREDICATE, field).field(field);
     }
 
-    public static <M extends FieldMetadata<M>> M fieldMetadata(String field) {
-        return new FieldMetadata<M>(FIELD_PREDICATE) {
-            @Override
-            public String readable(Locale locale) {
-                // avoid i18n in that case #hack
-                // @see io.doov.core.dsl.meta.ast.AstTextVisitor.formatLeafMetadata(LeafMetadata<?>)
-                return field;
-            }
-        }.add(new Element(() -> field, FIELD));
+    public static <M extends FieldMetadata<M>> M fieldMetadata(DslField<?> field, String readable) {
+        return new FieldMetadata<M>(FIELD_PREDICATE, field).add(new Element(() -> readable, FIELD));
     }
 }

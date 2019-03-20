@@ -69,5 +69,10 @@ public class TemplateParam<T extends DslField<?>> {
         public Metadata getMetadata() {
             return templateParamMetadata(unInitReadable, fieldInfo);
         }
+
+        @Override
+        public String readable() {
+            return getMetadata().readable();
+        }
     }
 }

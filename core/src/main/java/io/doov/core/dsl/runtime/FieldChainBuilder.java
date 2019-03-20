@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.function.*;
 
 import io.doov.core.FieldId;
-import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Builder for {@link RuntimeField}
@@ -33,20 +32,20 @@ public class FieldChainBuilder<B, T, R> {
     private final Class<B> rootType;
     private final List<PathMethod<Object, Object>> chain;
     private final FieldId id;
-    private Metadata metadata;
+    private String readable;
     private FieldId[] siblings;
     private boolean isTransient;
 
     private FieldChainBuilder(Class<B> rootType,
                               List<PathMethod<Object, Object>> chain,
                               FieldId id,
-                              Metadata metadata,
+                              String readable,
                               FieldId[] siblings,
                               boolean isTransient) {
         this.rootType = rootType;
         this.chain = chain;
         this.id = id;
-        this.metadata = metadata;
+        this.readable = readable;
         this.siblings = siblings == null ? new FieldId[0] : siblings;
         this.isTransient = isTransient;
     }
@@ -60,8 +59,8 @@ public class FieldChainBuilder<B, T, R> {
         return new FieldChainBuilder<>(root, new ArrayList<>(), id, null, null, false);
     }
 
-    public FieldChainBuilder<B, T, R> metadata(Metadata metadata) {
-        this.metadata = metadata;
+    public FieldChainBuilder<B, T, R> readable(String readable) {
+        this.readable = readable;
         return this;
     }
 
@@ -81,7 +80,7 @@ public class FieldChainBuilder<B, T, R> {
                                               Supplier<O> supplier) {
         PathMethod<R, O> method = new SimplePathMethod<>(supplier, readMethod, writeMethod);
         chain.add((PathMethod) method);
-        return new FieldChainBuilder<>(this.rootType, this.chain, id, metadata, siblings, isTransient);
+        return new FieldChainBuilder<>(this.rootType, this.chain, id, readable, siblings, isTransient);
     }
 
     @SuppressWarnings("unchecked")
@@ -90,7 +89,7 @@ public class FieldChainBuilder<B, T, R> {
                                                Supplier<O> supplier) {
         PathMethod<R, O> method = new ListPathMethod<>(supplier, readMethod, writeMethod, id.position());
         chain.add((PathMethod) method);
-        return new FieldChainBuilder<>(this.rootType, this.chain, id, metadata, siblings, isTransient);
+        return new FieldChainBuilder<>(this.rootType, this.chain, id, readable, siblings, isTransient);
     }
 
     @SuppressWarnings("unchecked")
@@ -99,7 +98,7 @@ public class FieldChainBuilder<B, T, R> {
                                                Supplier<O> supplier, int positionInList) {
         PathMethod<R, O> method = new ListPathMethod<>(supplier, readMethod, writeMethod, positionInList);
         chain.add((PathMethod) method);
-        return new FieldChainBuilder<>(this.rootType, this.chain, id, metadata, siblings, isTransient);
+        return new FieldChainBuilder<>(this.rootType, this.chain, id, readable, siblings, isTransient);
     }
 
     /**
@@ -118,7 +117,7 @@ public class FieldChainBuilder<B, T, R> {
                                         Class<O> type, Class<?>... genericTypes) {
         PathMethod<R, O> method = new SimplePathMethod<>(null, readMethod, writeMethod);
         PathMethod<Object, O> m = (PathMethod<Object, O>) method;
-        return new RuntimeField<>(this.chain, m, id, metadata, siblings, type, genericTypes, isTransient);
+        return new RuntimeField<>(this.chain, m, id, readable, siblings, type, genericTypes, isTransient);
     }
 
     /**
@@ -138,7 +137,7 @@ public class FieldChainBuilder<B, T, R> {
                                               Class<?>... genericTypes) {
         PathMethod<R, O> method = new ListPathMethod<>(null, readMethod, writeMethod, id.position());
         PathMethod<Object, O> m = (PathMethod<Object, O>) method;
-        return new RuntimeField<>(this.chain, m, id, metadata, siblings, type, genericTypes, isTransient);
+        return new RuntimeField<>(this.chain, m, id, readable, siblings, type, genericTypes, isTransient);
     }
 
 }

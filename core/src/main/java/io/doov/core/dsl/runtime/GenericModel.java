@@ -15,7 +15,6 @@
  */
 package io.doov.core.dsl.runtime;
 
-import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 import static io.doov.core.dsl.runtime.FieldChainBuilder.from;
 
 import java.time.*;
@@ -90,7 +89,7 @@ public final class GenericModel implements FieldModel {
         FieldId fieldId = () -> fieldName;
         this.set(fieldId, value);
         return from(GenericModel.class, fieldId)
-                .metadata(fieldMetadata(fieldName))
+                .readable(fieldName)
                 .field(o -> o.get(fieldId), (o, v) -> o.set(fieldId, v),
                         (Class<T>) (value == null ? Void.TYPE : value.getClass()), genericTypes)
                 .register(fields);

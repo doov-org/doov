@@ -15,6 +15,8 @@
  */
 package io.doov.core.dsl.runtime;
 
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
+
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -38,6 +40,7 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     private final PathMethod<Object, R> lastLink;
     private final FieldId id;
     private final Metadata metadata;
+    private final String readable;
     private FieldId[] siblings;
     private Class<R> type;
     private final Class<?>[] genericTypes;
@@ -48,7 +51,7 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     public RuntimeField(List<PathMethod<Object, Object>> chain,
             PathMethod<Object, R> lastLink,
             FieldId id,
-            Metadata metadata,
+            String readable,
             FieldId[] siblings,
             Class<R> type,
             Class<?>[] genericTypes,
@@ -56,20 +59,26 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
         this.chain = chain;
         this.lastLink = lastLink;
         this.id = id;
-        this.metadata = metadata;
+        this.readable = readable;
         this.siblings = siblings;
         this.type = type;
         this.genericTypes = genericTypes;
         this.isCodeLookup = CodeLookup.class.isAssignableFrom(type);
         this.isCodeValuable = CodeValuable.class.isAssignableFrom(type);
         this.isTransient = isTransient;
+        this.metadata = fieldMetadata(this, readable);
     }
 
     @Override
     public FieldId id() {
         return id;
     }
-    
+
+    @Override
+    public String readable() {
+        return readable;
+    }
+
     @Override
     public Metadata getMetadata() {
         return metadata;

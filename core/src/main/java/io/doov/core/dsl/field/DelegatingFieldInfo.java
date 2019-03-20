@@ -31,6 +31,11 @@ public interface DelegatingFieldInfo extends FieldInfo {
     }
 
     @Override
+    default String readable() {
+        return delegate().readable();
+    }
+
+    @Override
     default FieldId[] siblings() {
         return delegate().siblings();
     }
@@ -59,5 +64,4 @@ public interface DelegatingFieldInfo extends FieldInfo {
     default boolean isTransient() {
         return delegate().isTransient();
     }
-    
 }

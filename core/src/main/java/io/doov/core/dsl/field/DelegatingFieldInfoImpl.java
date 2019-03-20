@@ -36,14 +36,14 @@ public abstract class DelegatingFieldInfoImpl implements DelegatingFieldInfo {
     public FieldId id() {
         return delegate().id();
     }
-    
+
     @Override
     public Metadata getMetadata() {
         return delegate().getMetadata();
     }
-    
+
     @Override
     public String readable() {
-        return getMetadata().readable();
+        return delegate().readable();
     }
 }
