@@ -15,21 +15,6 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.Operator;
-import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.PredicateMetadata;
-import org.apache.commons.text.StringEscapeUtils;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.NumberFormat;
-import java.util.ArrayDeque;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.ExclusionBar.BIG;
@@ -37,6 +22,19 @@ import static io.doov.core.dsl.meta.ast.ExclusionBar.SMALL;
 import static java.lang.Math.floor;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.NumberFormat;
+import java.util.*;
+
+import org.apache.commons.text.StringEscapeUtils;
+
+import io.doov.core.dsl.lang.ValidationRule;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.Operator;
+import io.doov.core.dsl.meta.i18n.ResourceProvider;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class DefaultHtmlWriter implements HtmlWriter {
 

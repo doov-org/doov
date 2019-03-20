@@ -15,11 +15,11 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.Operator;
-
 import java.util.ArrayDeque;
 import java.util.Locale;
+
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.Operator;
 
 public interface HtmlWriter {
     String SPACE = "&nbsp;";

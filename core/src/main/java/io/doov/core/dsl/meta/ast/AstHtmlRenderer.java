@@ -15,19 +15,21 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.meta.*;
-
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.MetadataType.*;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.not;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.validate;
+import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.HtmlWriter.*;
 import static java.util.Arrays.asList;
+
+import java.util.*;
+
+import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.meta.*;
 
 public class AstHtmlRenderer {
     private static final List<Operator> AND_OR = asList(and, or);

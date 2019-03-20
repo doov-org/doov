@@ -15,22 +15,20 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.PredicateMetadata;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Locale;
-
 import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static java.util.stream.Collectors.toList;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Locale;
+
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.i18n.ResourceProvider;
+import io.doov.core.dsl.meta.predicate.*;
 
 public class AstLinePercentVisitor extends AstLineVisitor {
 
