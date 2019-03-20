@@ -15,24 +15,24 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.i18n.ResourceProvider;
+import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Locale;
+
 import static io.doov.core.dsl.meta.DefaultOperator.count;
 import static io.doov.core.dsl.meta.DefaultOperator.sum;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static java.util.stream.Collectors.toList;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
-
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.*;
-
 public class AstLinePercentVisitor extends AstLineVisitor {
-
-    private static final NumberFormat formatter = new DecimalFormat("###.#");
 
     public AstLinePercentVisitor(StringBuilder stringBuilder, ResourceProvider bundle, Locale locale) {
         super(stringBuilder, bundle, locale);
@@ -79,7 +79,12 @@ public class AstLinePercentVisitor extends AstLineVisitor {
         if (f == 0 && t == 0) {
             return "[n/a]";
         } else {
-            return "[" + formatter.format((t / ((double) t + f)) * 100) + "]";
+            BigDecimal percentage = BigDecimal.valueOf(getPercentage(t, f)).setScale(1, RoundingMode.HALF_UP);
+            return "[" + percentage.toPlainString() + "]";
         }
+    }
+
+    protected double getPercentage(int t, int f) {
+        return t / ((double) t + f) * 100;
     }
 }

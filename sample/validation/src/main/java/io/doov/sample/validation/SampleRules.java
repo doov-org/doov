@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
+import io.doov.core.dsl.meta.ast.DefaultHtmlWriter;
+import io.doov.core.dsl.meta.ast.HtmlWriter;
 import org.apache.commons.io.IOUtils;
 
 import io.doov.core.dsl.DOOV;
@@ -156,7 +158,8 @@ public class SampleRules {
                 IOUtils.write("<div>", fos, defaultCharset());
                 IOUtils.write(r.readable(Locale.FRANCE), fos, defaultCharset());
                 IOUtils.write("</div>", fos, defaultCharset());
-                new AstHtmlRenderer(Locale.FRANCE, fos, BUNDLE).toHtml(r.metadata());
+                HtmlWriter writer = new DefaultHtmlWriter(Locale.FRANCE, fos, BUNDLE);
+                new AstHtmlRenderer(writer).toHtml(r.metadata());
                 IOUtils.write("<hr/>", fos, defaultCharset());
             }
             IOUtils.write("</div>", fos, defaultCharset());

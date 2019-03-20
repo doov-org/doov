@@ -12,7 +12,7 @@
  */
 package io.doov.sample.validation.ast;
 
-import static io.doov.core.dsl.meta.ast.AstHtmlRenderer.toHtml;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.toHtml;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ENGLISH;
