@@ -13,28 +13,20 @@
 package io.doov.sample.validation;
 
 import static io.doov.core.dsl.DOOV.*;
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.core.dsl.template.ParameterTypes.*;
 import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.core.dsl.time.TemporalAdjuster.firstDayOfYear;
 import static io.doov.sample.model.Company.BLABLACAR;
-import static java.nio.charset.Charset.defaultCharset;
 import static java.time.temporal.ChronoUnit.DAYS;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-
-import org.apache.commons.io.IOUtils;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.DSLBuilder;
-import io.doov.core.dsl.meta.ast.*;
 import io.doov.core.dsl.template.TemplateRule.Rule1;
 import io.doov.core.dsl.template.TemplateRule.Rule2;
 import io.doov.core.dsl.template.TemplateRule.Rule3;
@@ -136,23 +128,7 @@ public class SampleTemplates {
     }
 
     public static void main(String[] args) throws IOException {
-        final File output = new File("validation_template.html");
-        try (FileOutputStream fos = new FileOutputStream(output)) {
-            IOUtils.write("<html><head><meta charset=\"UTF-8\"/><style>"
-                    + IOUtils.toString(AstVisitorUtils.class.getResourceAsStream("rules.css"), defaultCharset())
-                    + "</style></head><body>", fos, defaultCharset());
-            IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());
-            for (DSLBuilder r : rules()) {
-                IOUtils.write("<div>", fos, defaultCharset());
-                IOUtils.write(r.readable(Locale.FRANCE), fos, defaultCharset());
-                IOUtils.write("</div>", fos, defaultCharset());
-                new AstHtmlRenderer(new DefaultHtmlWriter(Locale.FRANCE, fos, BUNDLE)).toHtml(r.metadata());
-                IOUtils.write("<hr/>", fos, defaultCharset());
-            }
-            IOUtils.write("</div>", fos, defaultCharset());
-            IOUtils.write("</body></html>", fos, defaultCharset());
-        }
-        System.out.println("written " + output.getAbsolutePath());
+        SampleWriter.of("validation_template.html").write(rules());
         System.exit(1);
     }
 }

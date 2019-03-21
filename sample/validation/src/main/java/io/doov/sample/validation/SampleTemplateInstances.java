@@ -12,18 +12,13 @@
  */
 package io.doov.sample.validation;
 
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.validation.SampleTemplates.*;
-import static java.nio.charset.Charset.defaultCharset;
 
 import java.io.*;
 import java.util.*;
 
-import org.apache.commons.io.IOUtils;
-
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.ast.*;
 
 public class SampleTemplateInstances {
 
@@ -89,23 +84,7 @@ public class SampleTemplateInstances {
     }
 
     public static void main(String[] args) throws IOException {
-        final File output = new File("validation_template_instances.html");
-        try (FileOutputStream fos = new FileOutputStream(output)) {
-            IOUtils.write("<html><head><meta charset=\"UTF-8\"/><style>"
-                    + IOUtils.toString(AstVisitorUtils.class.getResourceAsStream("rules.css"), defaultCharset())
-                    + "</style></head><body>", fos, defaultCharset());
-            IOUtils.write("<div style='width:1024px; margin-left:20px;'>", fos, defaultCharset());
-            for (ValidationRule r : rules()) {
-                IOUtils.write("<div>", fos, defaultCharset());
-                IOUtils.write(r.readable(Locale.FRANCE), fos, defaultCharset());
-                IOUtils.write("</div>", fos, defaultCharset());
-                new AstHtmlRenderer(new DefaultHtmlWriter(Locale.FRANCE, fos, BUNDLE)).toHtml(r.metadata());
-                IOUtils.write("<hr/>", fos, defaultCharset());
-            }
-            IOUtils.write("</div>", fos, defaultCharset());
-            IOUtils.write("</body></html>", fos, defaultCharset());
-        }
-        System.out.println("written " + output.getAbsolutePath());
+        SampleWriter.of("validation_template_instances.html").write(rules());
         System.exit(1);
     }
 }
