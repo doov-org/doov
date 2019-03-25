@@ -17,6 +17,7 @@ io.doov.core.dsl.meta.i18n
 io.doov.core.dsl.meta.predicate
 io.doov.core.dsl.path
 io.doov.core.dsl.runtime
+io.doov.core.dsl.template
 io.doov.core.dsl.time
 io.doov.core.serial
 io.doov.core.serial.adapter
