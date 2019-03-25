@@ -75,7 +75,7 @@ public class SampleMappings {
     );
 
     public static void main(String[] args) throws IOException {
-        SampleWriter.of("validation_rule.html").write(rules);
+        SampleWriter.of("mapping_rules.html").write(rules);
         System.exit(1);
     }
 
