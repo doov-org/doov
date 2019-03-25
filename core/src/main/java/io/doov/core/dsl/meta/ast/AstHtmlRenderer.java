@@ -355,6 +355,6 @@ public class AstHtmlRenderer {
      * @param metadata the field metadata
      */
     protected void handleField(Metadata metadata) {
-        writer.writeFromBundle(writer.escapeHtml4(metadata.readable()));
+        writer.writeFromBundle(writer.escapeHtml4(metadata.readable(writer.getLocale())));
     }
 }
