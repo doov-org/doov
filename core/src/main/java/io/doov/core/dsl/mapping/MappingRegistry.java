@@ -11,7 +11,8 @@ import java.util.stream.Stream;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.MappingRegistryMetadata;
+import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Immutable, ordered, composable container for {@link MappingRule}s
@@ -26,7 +27,7 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
     }
 
     private MappingRegistry(MappingRule... mappingRules) {
-        this.mappingRules = Arrays.stream(mappingRules).flatMap(MappingRule::stream).collect(Collectors.toList());
+        this.mappingRules = Arrays.asList(mappingRules);
         // TODO
         this.metadata = MappingRegistryMetadata.mappings(stream().map(MappingRule::metadata).collect(Collectors.toList()));
     }

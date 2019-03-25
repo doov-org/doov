@@ -20,13 +20,13 @@ import static io.doov.core.dsl.meta.DefaultOperator.validate;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.MappingOperator.using;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Locale;
 
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.*;
 
 public class AstTextVisitor extends AbstractAstVisitor {
 
@@ -56,18 +56,19 @@ public class AstTextVisitor extends AbstractAstVisitor {
     public void startLeaf(LeafMetadata<?> metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatLeafMetadata(metadata));
-        sb.append(formatNewLine());
+        if (stackPeek() != null && stackPeek().type() != TEMPLATE_PARAM)
+            sb.append(formatNewLine());
     }
 
     @Override
-    public void endUnary(UnaryPredicateMetadata metadata, int depth) {
+    public void endUnary(UnaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());
     }
 
     @Override
-    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildBinary(BinaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
         if (hasNext) {
             sb.delete(getNewLineIndex(), sb.length());
             sb.append(" ");
@@ -77,7 +78,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
-    public void startNary(NaryPredicateMetadata metadata, int depth) {
+    public void startNary(NaryMetadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append(formatNewLine());

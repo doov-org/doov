@@ -21,9 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.ReduceType;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.Operator;
-import io.doov.core.dsl.meta.UnaryMetadata;
+import io.doov.core.dsl.meta.*;
 
 public class UnaryPredicateMetadata extends UnaryMetadata implements PredicateMetadata {
     private final AtomicInteger evalTrue = new AtomicInteger();

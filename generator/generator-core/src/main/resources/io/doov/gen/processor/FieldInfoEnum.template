@@ -1,6 +1,7 @@
 package ${package.name};
 
 import static io.doov.core.dsl.field.FieldInfoBuilder.fieldInfo;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.annotation.Generated;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.meta.Metadata;
 
 ${imports}
 
@@ -39,4 +41,8 @@ ${constants}
         return delegate;
     }
 
+    @Override
+    public Metadata getMetadata() {
+        return delegate.getMetadata();
+    }
 }

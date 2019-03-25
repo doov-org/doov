@@ -15,9 +15,13 @@
  */
 package io.doov.core.dsl.meta.function;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.DefaultOperator.contains;
+import static io.doov.core.dsl.meta.DefaultOperator.ends_with;
+import static io.doov.core.dsl.meta.DefaultOperator.matches;
+import static io.doov.core.dsl.meta.DefaultOperator.starts_with;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.stringMetadata;
 
+import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
@@ -34,6 +38,9 @@ public class StringFunctionMetadata extends BinaryPredicateMetadata {
 
     public static StringFunctionMetadata containsMetadata(Metadata metadata, String value) {
         return new StringFunctionMetadata(metadata, contains, stringMetadata(value));
+    }
+    public static StringFunctionMetadata containsMetadata(Metadata metadata, StringFunction value) {
+        return new StringFunctionMetadata(metadata, contains, value.getMetadata());
     }
 
     public static StringFunctionMetadata startsWithMetadata(Metadata metadata, String value) {

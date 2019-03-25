@@ -15,11 +15,11 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.Operator;
-
 import java.util.ArrayDeque;
 import java.util.Locale;
+
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.Operator;
 
 public interface HtmlWriter {
     String SPACE = "&nbsp;";
@@ -31,6 +31,7 @@ public interface HtmlWriter {
     String CSS_WHEN = "dsl-token-when";
     String CSS_SINGLE_MAPPING = "dsl-token-single-mapping";
     String CSS_OPERATOR = "dsl-token-operator";
+    String CSS_TEMPLATE_PARAM = "dsl-token-template-param";
     String CSS_VALUE = "dsl-token-value";
     String CSS_FIELD = "dsl-token-field";
     String CSS_UNKNOWN = "dsl-token-unknown";

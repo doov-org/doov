@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.StaticMetadata;
 
 public class StaticInput<T> extends AbstractDSLBuilder implements MappingInput<T> {

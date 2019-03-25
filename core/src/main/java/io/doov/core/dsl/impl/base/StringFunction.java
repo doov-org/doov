@@ -61,6 +61,17 @@ public class StringFunction extends DefaultCondition<String> {
     }
 
     /**
+     * Returns a condition checking if the node value contains the given value.
+     *
+     * @param value another StringCondition
+     * @return the step condition
+     */
+    public final StepCondition contains(StringFunction value) {
+        return LeafStepCondition.stepCondition(containsMetadata(metadata, value), getFunction(), value.getFunction(),
+                String::contains);
+    }
+
+    /**
      * Returns a condition checking if the node value matches the given value.
      *
      * @param value the value

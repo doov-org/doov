@@ -17,6 +17,7 @@ package io.doov.core.dsl.field;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.meta.Metadata;
 
 public abstract class DelegatingFieldInfoImpl implements DelegatingFieldInfo {
 
@@ -34,5 +35,15 @@ public abstract class DelegatingFieldInfoImpl implements DelegatingFieldInfo {
     @Override
     public FieldId id() {
         return delegate().id();
+    }
+
+    @Override
+    public Metadata getMetadata() {
+        return delegate().getMetadata();
+    }
+
+    @Override
+    public String readable() {
+        return delegate().readable();
     }
 }

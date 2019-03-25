@@ -47,7 +47,7 @@ public class TypeContextConverters {
      * @return type converter
      */
     public static <I, J, O> BiTypeConverter<I, J, O> biConverter(
-            TriFunction<Context, Optional<I>, Optional<J>, O> converter, String description) {
+            Function3<Context, Optional<I>, Optional<J>, O> converter, String description) {
         return new DefaultBiTypeConverter<>(converter, description);
     }
 
@@ -61,7 +61,7 @@ public class TypeContextConverters {
      * @param <O>         output type
      * @return type converter
      */
-    public static <O> NaryTypeConverter<O> nConverter(TriFunction<FieldModel, Context, List<DslField<?>>, O> function,
+    public static <O> NaryTypeConverter<O> nConverter(Function3<FieldModel, Context, List<DslField<?>>, O> function,
             String description) {
         return new DefaultNaryTypeConverter<>(function, description);
     }

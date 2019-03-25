@@ -83,7 +83,11 @@ public enum DefaultOperator implements Operator {
     first_day_of_year("first day of year"), //
     first_day_of_next_year("first day of next year"), //
     last_day_of_month("last day of month"), //
-    last_day_of_year("last day of year");
+    last_day_of_year("last day of year"), //
+    
+    // Template
+    template_field("|"), //
+    ;
 
     private final String readable;
     private final ReturnType returnType;

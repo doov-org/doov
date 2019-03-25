@@ -15,9 +15,11 @@
  */
 package io.doov.core.dsl.meta.function;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
+import static io.doov.core.dsl.meta.DefaultOperator.contains;
+import static io.doov.core.dsl.meta.DefaultOperator.has_not_size;
+import static io.doov.core.dsl.meta.DefaultOperator.has_size;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueListMetadata;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
 
 import java.util.Collection;
 

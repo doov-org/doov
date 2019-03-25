@@ -15,22 +15,20 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.PredicateMetadata;
+import static io.doov.core.dsl.meta.DefaultOperator.count;
+import static io.doov.core.dsl.meta.DefaultOperator.sum;
+import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
+import static java.util.stream.Collectors.toList;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Locale;
 
-import static io.doov.core.dsl.meta.DefaultOperator.count;
-import static io.doov.core.dsl.meta.DefaultOperator.sum;
-import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
-import static java.util.stream.Collectors.toList;
+import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.i18n.ResourceProvider;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class AstLinePercentVisitor extends AstLineVisitor {
 
@@ -45,7 +43,7 @@ public class AstLinePercentVisitor extends AstLineVisitor {
     }
 
     @Override
-    public void startBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void startBinary(BinaryMetadata metadata, int depth) {
         super.startBinary(metadata, depth);
         if (metadata.children().collect(toList()).get(0).type() == NARY_PREDICATE) {
             sb.append(percentage(metadata));
@@ -53,7 +51,7 @@ public class AstLinePercentVisitor extends AstLineVisitor {
     }
 
     @Override
-    public void startNary(NaryPredicateMetadata metadata, int depth) {
+    public void startNary(NaryMetadata metadata, int depth) {
         if (metadata.getOperator() != count && metadata.getOperator() != sum) {
             sb.append(percentage(metadata));
         }
@@ -68,20 +66,23 @@ public class AstLinePercentVisitor extends AstLineVisitor {
         if (stackPeekType() == BINARY_PREDICATE) {
             return super.formatLeafMetadata(metadata);
         }
-        return (metadata instanceof PredicateMetadata) ? percentage((PredicateMetadata) metadata) : ""
-                + super.formatLeafMetadata(metadata);
+        return percentage(metadata) + super.formatLeafMetadata(metadata);
     }
 
-    private String percentage(PredicateMetadata metadata) {
-        int t = metadata.trueEvalCount();
-        int f = metadata.falseEvalCount();
+    private String percentage(Metadata metadata) {
+        if (metadata.getOperator().returnType() == BOOLEAN) {
+            final PredicateMetadata pmd = (PredicateMetadata) metadata;
+            int t = pmd.trueEvalCount();
+            int f = pmd.falseEvalCount();
 
-        if (f == 0 && t == 0) {
-            return "[n/a]";
-        } else {
-            BigDecimal percentage = BigDecimal.valueOf(getPercentage(t, f)).setScale(1, RoundingMode.HALF_UP);
+            if (f == 0 && t == 0) {
+                return "[n/a]";
+            } else {
+                BigDecimal percentage = BigDecimal.valueOf(getPercentage(t, f)).setScale(1, RoundingMode.HALF_UP);
             return "[" + percentage.toPlainString() + "]";
+            }
         }
+        return "";
     }
 
     protected double getPercentage(int t, int f) {

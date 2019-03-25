@@ -15,6 +15,8 @@
  */
 package io.doov.core.dsl.runtime;
 
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
+
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -22,6 +24,7 @@ import java.util.function.Function;
 import io.doov.core.*;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Runtime implementation for {@link FieldInfo} and {@link DslField}.
@@ -36,6 +39,7 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     private final List<PathMethod<Object, Object>> chain;
     private final PathMethod<Object, R> lastLink;
     private final FieldId id;
+    private final Metadata metadata;
     private final String readable;
     private FieldId[] siblings;
     private Class<R> type;
@@ -45,13 +49,13 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     private boolean isTransient;
 
     public RuntimeField(List<PathMethod<Object, Object>> chain,
-                    PathMethod<Object, R> lastLink,
-                    FieldId id,
-                    String readable,
-                    FieldId[] siblings,
-                    Class<R> type,
-                    Class<?>[] genericTypes,
-                    boolean isTransient) {
+            PathMethod<Object, R> lastLink,
+            FieldId id,
+            String readable,
+            FieldId[] siblings,
+            Class<R> type,
+            Class<?>[] genericTypes,
+            boolean isTransient) {
         this.chain = chain;
         this.lastLink = lastLink;
         this.id = id;
@@ -62,6 +66,7 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
         this.isCodeLookup = CodeLookup.class.isAssignableFrom(type);
         this.isCodeValuable = CodeValuable.class.isAssignableFrom(type);
         this.isTransient = isTransient;
+        this.metadata = fieldMetadata(this);
     }
 
     @Override
@@ -72,6 +77,11 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     @Override
     public String readable() {
         return readable;
+    }
+
+    @Override
+    public Metadata getMetadata() {
+        return metadata;
     }
 
     @Override

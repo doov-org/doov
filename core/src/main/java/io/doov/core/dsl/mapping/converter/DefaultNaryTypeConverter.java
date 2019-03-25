@@ -27,16 +27,16 @@ import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultNaryTypeConverter<O> extends AbstractDSLBuilder implements NaryTypeConverter<O> {
 
-    private final TriFunction<FieldModel, Context, List<DslField<?>>, O> function;
+    private final Function3<FieldModel, Context, List<DslField<?>>, O> function;
     private final ConverterMetadata metadata;
 
-    public DefaultNaryTypeConverter(TriFunction<FieldModel, Context, List<DslField<?>>, O> function,
+    public DefaultNaryTypeConverter(Function3<FieldModel, Context, List<DslField<?>>, O> function,
                     ConverterMetadata metadata) {
         this.function = function;
         this.metadata = metadata;
     }
 
-    public DefaultNaryTypeConverter(TriFunction<FieldModel, Context, List<DslField<?>>, O> function, String description) {
+    public DefaultNaryTypeConverter(Function3<FieldModel, Context, List<DslField<?>>, O> function, String description) {
         this(function, ConverterMetadata.metadata(description));
     }
 

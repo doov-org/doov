@@ -15,17 +15,12 @@
  */
 package io.doov.core.dsl.impl;
 
-import io.doov.core.FieldId;
-import io.doov.core.FieldInfo;
-import io.doov.core.FieldModel;
+import java.util.*;
+import java.util.stream.Stream;
+
+import io.doov.core.*;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.serial.TypeAdapterRegistry;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Spliterator;
-import java.util.stream.Stream;
 
 public final class ModelInterceptor implements FieldModel {
     private final FieldModel model;

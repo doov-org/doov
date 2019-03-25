@@ -15,6 +15,8 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.MetadataType.EMPTY;
+
 import java.util.Locale;
 
 public class EmptyMetadata extends AbstractMetadata {
@@ -26,6 +28,6 @@ public class EmptyMetadata extends AbstractMetadata {
 
     @Override
     public MetadataType type() {
-        return MetadataType.EMPTY;
+        return EMPTY;
     }
 }

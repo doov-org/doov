@@ -21,37 +21,41 @@ import java.util.function.Function;
 /**
  * This is the three-arity specialization of {@link Function}.
  *
- * @param <T> the type of the first argument to the function
- * @param <U> the type of the second argument to the function
- * @param <V> the type of the third argument to the function
+ * @param <T1> the type of the first argument to the function
+ * @param <T2> the type of the second argument to the function
+ * @param <T3> the type of the third argument to the function
+ * @param <T4> the type of the four argument to the function
+ * @param <T5> the type of the five argument to the function
  * @param <R> the type of the result of the function
  */
 @FunctionalInterface
-public interface TriFunction<T, U, V, R> {
+public interface Function5<T1, T2, T3, T4, T5, R> {
 
     /**
      * Applies this function to the given arguments.
      *
-     * @param t the first function argument
-     * @param u the second function argument
-     * @param v the third function argument
+     * @param t1 the first function argument
+     * @param t2 the second function argument
+     * @param t3 the third function argument
+     * @param t4 the third function argument
+     * @param t5 the third function argument
      * @return the function result
      */
-    R apply(T t, U u, V v);
+    R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5);
 
     /**
      * Returns a composed function that first applies this function
      *
-     * @param <W>   the type of output of the {@code after} function, and of the
+     * @param <R2>   the type of output of the {@code after} function, and of the
      *              composed function
      * @param after the function to apply after this function is applied
      * @return a composed function that first applies this function and then
      * applies the {@code after} function
      * @throws NullPointerException if after is null
      */
-    default <W> TriFunction<T, U, V, W> andThen(Function<? super R, ? extends W> after) {
+    default <R2> Function5<T1, T2, T3, T4, T5, R2> andThen(Function<? super R, ? extends R2> after) {
         Objects.requireNonNull(after);
-        return (T t, U u, V v) -> after.apply(apply(t, u, v));
+        return (T1 t1, T2 t2, T3 t3, T4 t4, T5 t5) -> after.apply(apply(t1, t2, t3, t4, t5));
     }
 
 }

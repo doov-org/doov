@@ -51,6 +51,7 @@ import io.doov.core.dsl.meta.function.StringFunctionMetadata;
 import io.doov.core.dsl.meta.function.TemporalBiFunctionMetadata;
 import io.doov.core.dsl.meta.function.TemporalFunctionMetadata;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
+import io.doov.core.dsl.meta.predicate.FieldMetadata;
 import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
 import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
@@ -74,13 +75,13 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(StringFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
         assertThat(root.childAt(1)).isInstanceOf(StringFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -103,7 +104,7 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(1, 0)).isInstanceOf(UnaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(UNARY_PREDICATE);
-        assertThat(root.childAt(1, 1)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(1, 1)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
 
         assertThat(root.childAt(2)).isInstanceOf(BinaryPredicateMetadata.class)
@@ -127,7 +128,7 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0, 0, 0, 0)).isInstanceOf(TemporalBiFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0, 0, 0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0, 0, 0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 0, 0, 0, 1)).isInstanceOf(TemporalFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -137,17 +138,17 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0, 0, 1, 0)).isInstanceOf(UnaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(UNARY_PREDICATE);
-        assertThat(root.childAt(0, 0, 1, 0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0, 1, 0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1)).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
         assertThat(root.childAt(1)).isInstanceOf(StringFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -166,11 +167,11 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0, 1, 0)).isInstanceOf(UnaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(UNARY_PREDICATE);
-        assertThat(root.childAt(0, 1, 0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 1, 0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1, 1)).isInstanceOf(StringFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 1, 1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 1, 1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1, 1, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -185,14 +186,14 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(UnaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(UNARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
 
         assertThat(root.childAt(1)).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(1, 0)).isInstanceOf(StringFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(1, 0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(1, 0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1, 0, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -203,11 +204,11 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(NARY_PREDICATE);
         assertThat(root.childAt(1, 1, 0, 0)).isInstanceOf(UnaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(UNARY_PREDICATE);
-        assertThat(root.childAt(1, 1, 0, 0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(1, 1, 0, 0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1, 1, 0, 1)).isInstanceOf(UnaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(UNARY_PREDICATE);
-        assertThat(root.childAt(1, 1, 0, 1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(1, 1, 0, 1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
 
         assertThat(root.childAt(1, 1, 1)).isInstanceOf(ValuePredicateMetadata.class)
@@ -221,9 +222,9 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(TemporalBiFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
-        assertThat(root.childAt(0, 1)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 1)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -236,11 +237,11 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(TemporalBiFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1)).isInstanceOf(TemporalBiFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1, 1)).isInstanceOf(TemporalFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -257,7 +258,7 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0, 0)).isInstanceOf(MapFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 0, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -270,7 +271,7 @@ public class SampleRuleI18nTest {
         root = predicate(RULE_ID);
         assertThat(root).isInstanceOf(UnaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(UNARY_PREDICATE);
-        assertThat(root.childAt(0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
 
     }
@@ -280,11 +281,11 @@ public class SampleRuleI18nTest {
         root = predicate(RULE_AGE_2);
         assertThat(root).isInstanceOf(TemporalBiFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1)).isInstanceOf(TemporalBiFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1, 1)).isInstanceOf(TemporalFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -300,14 +301,14 @@ public class SampleRuleI18nTest {
 
         assertThat(root.childAt(0, 0)).isInstanceOf(NumericFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 0, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
 
         assertThat(root.childAt(0, 1)).isInstanceOf(NumericFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -323,9 +324,9 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(NaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(NARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
-        assertThat(root.childAt(0, 1)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 1)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -342,13 +343,13 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0, 0)).isInstanceOf(TemporalBiFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 0, 1)).isInstanceOf(TemporalFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
         assertThat(root.childAt(0, 1)).isInstanceOf(TemporalBiFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1, 1)).isInstanceOf(TemporalFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -366,14 +367,14 @@ public class SampleRuleI18nTest {
 
         assertThat(root.childAt(0)).isInstanceOf(StringFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
 
         assertThat(root.childAt(1)).isInstanceOf(StringFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -390,7 +391,7 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(NARY_PREDICATE);
         assertThat(root.childAt(0, 0)).isInstanceOf(StringFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 0, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -409,11 +410,11 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1)).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 1, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE_MATCH_ANY);
@@ -429,7 +430,7 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(TemporalBiFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1)).isInstanceOf(TemporalFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -442,7 +443,7 @@ public class SampleRuleI18nTest {
         root = predicate(when(userBirthdate.eq(today())).validate());
         assertThat(root).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1)).isInstanceOf(TemporalFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -454,7 +455,7 @@ public class SampleRuleI18nTest {
 
         assertThat(root).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1)).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
@@ -471,7 +472,7 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(TemporalBiFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1)).isInstanceOf(TemporalFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -485,7 +486,7 @@ public class SampleRuleI18nTest {
         root = predicate(RULE_DOUBLE_LAMBDA);
         assertThat(root).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE_MATCH_ANY);
@@ -498,7 +499,7 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(BinaryPredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -513,7 +514,7 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(MapFunctionMetadata.class)
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
-        assertThat(root.childAt(0, 0)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
         assertThat(root.childAt(0, 1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);

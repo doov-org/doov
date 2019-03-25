@@ -15,14 +15,18 @@
  */
 package io.doov.core.dsl.meta.ast;
 
-import io.doov.core.dsl.meta.DefaultOperator;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.i18n.ResourceProvider;
-import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.MetadataType.EMPTY;
+import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
 
 import java.util.Locale;
+
+import io.doov.core.dsl.meta.BinaryMetadata;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class AstLineVisitor extends AstTextVisitor {
 
@@ -41,13 +45,13 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void startNary(NaryPredicateMetadata metadata, int depth) {
+    public void startNary(NaryMetadata metadata, int depth) {
         super.startNary(metadata, depth);
         sb.append("[");
     }
 
     @Override
-    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildNary(NaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
         super.visitNary(metadata, depth);
         if (hasNext) {
             sb.delete(sb.length() - 1, sb.length());
@@ -56,36 +60,44 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
-    public void endNary(NaryPredicateMetadata metadata, int depth) {
+    public void endNary(NaryMetadata metadata, int depth) {
         super.endNary(metadata, depth);
         sb.delete(sb.length() - 1, sb.length());
         sb.append("] ");
     }
 
     @Override
-    public void startBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void startBinary(BinaryMetadata metadata, int depth) {
         super.startBinary(metadata, depth);
-        if ((metadata.getOperator() == DefaultOperator.and || metadata.getOperator() == DefaultOperator.or)
-                || (metadata.getLeft().type() == MetadataType.NARY_PREDICATE)) {
+        if ((metadata.getOperator() == and || metadata.getOperator() == or)
+                || (metadata.getLeft().type() == NARY_PREDICATE)) {
             sb.append(depth > 0 ? "(" : "");
+        } else if (metadata.type() == TEMPLATE_PARAM) {
+            sb.append("{");
         }
     }
 
     @Override
-    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
-        if (hasNext) {
+    public void afterChildBinary(BinaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
+        if (metadata.type() == TEMPLATE_PARAM && metadata.getRight().type() != EMPTY) {
             sb.append(bundle.get(metadata.getOperator(), locale));
+        } else if (hasNext && metadata.type() != TEMPLATE_PARAM) {
+            sb.append(bundle.get(metadata.getOperator(), locale));
+            sb.append(formatNewLine());
+        } else if (hasNext) {
             sb.append(formatNewLine());
         }
     }
 
     @Override
-    public void endBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void endBinary(BinaryMetadata metadata, int depth) {
         super.endBinary(metadata, depth);
         sb.delete(sb.length() - 1, sb.length());
-        if ((metadata.getOperator() == DefaultOperator.and || metadata.getOperator() == DefaultOperator.or)
-                || (metadata.getLeft().type() == MetadataType.NARY_PREDICATE)) {
+        if ((metadata.getOperator() == and || metadata.getOperator() == or)
+                || (metadata.getLeft().type() == NARY_PREDICATE)) {
             sb.append(depth > 0 ? ") " : " ");
+        } else if (metadata.type() == TEMPLATE_PARAM) {
+            sb.append("}");
         } else {
             sb.append(" ");
         }

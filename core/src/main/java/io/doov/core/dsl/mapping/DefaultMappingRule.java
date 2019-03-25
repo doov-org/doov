@@ -7,7 +7,8 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.impl.ModelInterceptor;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.MappingRuleMetadata;
+import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultMappingRule<T> extends AbstractDSLBuilder implements MappingRule {
 

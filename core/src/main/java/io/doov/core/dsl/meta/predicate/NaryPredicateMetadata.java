@@ -21,9 +21,7 @@ import static io.doov.core.dsl.meta.MetadataType.EMPTY;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.doov.core.dsl.DslField;

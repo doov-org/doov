@@ -15,7 +15,10 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.DOOV.*;
+import static io.doov.core.dsl.DOOV.alwaysFalse;
+import static io.doov.core.dsl.DOOV.alwaysTrue;
+import static io.doov.core.dsl.DOOV.matchAll;
+import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.lang.ReduceType.FAILURE;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.collectMetadata;
 import static java.util.Arrays.asList;
@@ -26,13 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Locale;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import io.doov.core.dsl.field.types.EnumFieldInfo;
-import io.doov.core.dsl.field.types.IntegerFieldInfo;
-import io.doov.core.dsl.field.types.IterableFieldInfo;
+import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;

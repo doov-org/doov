@@ -15,20 +15,23 @@
  */
 package io.doov.core.dsl.meta.predicate;
 
-import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.MetadataType.*;
+import static io.doov.core.dsl.meta.DefaultOperator.always_false;
+import static io.doov.core.dsl.meta.DefaultOperator.always_true;
+import static io.doov.core.dsl.meta.DefaultOperator.lambda;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
+import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_IDENTIFIER;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.*;
 
-public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends LeafMetadata<M> implements PredicateMetadata {
+public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends LeafMetadata<M>
+        implements PredicateMetadata {
 
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
@@ -45,12 +48,6 @@ public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends
     @Override
     public AtomicInteger evalFalse() {
         return evalFalse;
-    }
-
-    // field
-
-    public static <M extends ValuePredicateMetadata<M>> M fieldMetadata(DslField<?> field) {
-        return new ValuePredicateMetadata<M>(FIELD_PREDICATE).field(field);
     }
 
     // boolean
@@ -99,6 +96,10 @@ public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends
 
     public static <M extends ValuePredicateMetadata<M>> M anyMatchMetadata(Metadata metadata) {
         return new ValuePredicateMetadata<M>(FIELD_PREDICATE_MATCH_ANY).valueReadable(lambda);
+    }
+
+    public static <M extends ValuePredicateMetadata<M>> M templateParam(String parameterIdentifier) {
+        return new ValuePredicateMetadata<M>(TEMPLATE_IDENTIFIER).valueReadable(() -> parameterIdentifier);
     }
 
 }

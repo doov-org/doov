@@ -23,13 +23,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataType;
-import io.doov.core.dsl.meta.MetadataVisitor;
-import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
+import io.doov.core.dsl.meta.*;
 
 public abstract class AbstractAstVisitor implements MetadataVisitor {
 
@@ -44,16 +38,18 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     startWhen(metadata, depth);
                     break;
                 case UNARY_PREDICATE:
-                    startUnary((UnaryPredicateMetadata) metadata, depth);
+                    startUnary((UnaryMetadata) metadata, depth);
                     break;
                 case FIELD_PREDICATE:
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
                 case LEAF_VALUE:
+                case TEMPLATE_IDENTIFIER:
                     startLeaf((LeafMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
-                    startBinary((BinaryPredicateMetadata) metadata, depth);
+                case TEMPLATE_PARAM:
+                    startBinary((BinaryMetadata) metadata, depth);
                     break;
                 case MAPPING_INPUT:
                 case MAPPING_LEAF:
@@ -64,7 +60,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     startMappingRule(metadata, depth);
                     break;
                 case NARY_PREDICATE:
-                    startNary((NaryPredicateMetadata) metadata, depth);
+                    startNary((NaryMetadata) metadata, depth);
                     break;
                 case RULE:
                     startRule(metadata, depth);
@@ -92,15 +88,17 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 beforeChildRule(metadata, child, depth);
                 break;
             case UNARY_PREDICATE:
-                beforeChildUnary((UnaryPredicateMetadata) metadata, child, depth);
+                beforeChildUnary((UnaryMetadata) metadata, child, depth);
                 break;
             case LEAF_PREDICATE:
             case LEAF_VALUE:
+            case TEMPLATE_IDENTIFIER:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
             case BINARY_PREDICATE:
-                beforeChildBinary((BinaryPredicateMetadata) metadata, child, depth);
+            case TEMPLATE_PARAM:
+                beforeChildBinary((BinaryMetadata) metadata, child, depth);
                 break;
             case MAPPING_INPUT:
             case MAPPING_LEAF:
@@ -111,7 +109,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 beforeChildMappingRule(metadata, child, depth);
                 break;
             case NARY_PREDICATE:
-                beforeChildNary((NaryPredicateMetadata) metadata, child, depth);
+                beforeChildNary((NaryMetadata) metadata, child, depth);
                 break;
             case TYPE_CONVERTER:
             case TYPE_CONVERTER_IDENTITY:
@@ -130,18 +128,20 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 afterChildWhen(metadata, child, hasNext, depth);
                 break;
             case UNARY_PREDICATE:
-                afterChildUnary((UnaryPredicateMetadata) metadata, child, hasNext, depth);
+                afterChildUnary((UnaryMetadata) metadata, child, hasNext, depth);
                 break;
             case RULE:
                 afterChildRule(metadata, child, hasNext, depth);
                 break;
             case LEAF_PREDICATE:
             case LEAF_VALUE:
+            case TEMPLATE_IDENTIFIER:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
             case FIELD_PREDICATE_MATCH_ANY:
             case BINARY_PREDICATE:
-                afterChildBinary((BinaryPredicateMetadata) metadata, child, hasNext, depth);
+            case TEMPLATE_PARAM:
+                afterChildBinary((BinaryMetadata) metadata, child, hasNext, depth);
                 break;
             case MAPPING_INPUT:
             case MAPPING_LEAF:
@@ -152,7 +152,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 afterChildMappingRule(metadata, child, hasNext, depth);
                 break;
             case NARY_PREDICATE:
-                afterChildNary((NaryPredicateMetadata) metadata, child, hasNext, depth);
+                afterChildNary((NaryMetadata) metadata, child, hasNext, depth);
                 break;
             case TYPE_CONVERTER:
             case TYPE_CONVERTER_IDENTITY:
@@ -171,16 +171,18 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     endWhen(metadata, depth);
                     break;
                 case UNARY_PREDICATE:
-                    endUnary((UnaryPredicateMetadata) metadata, depth);
+                    endUnary((UnaryMetadata) metadata, depth);
                     break;
                 case FIELD_PREDICATE:
                 case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
                 case LEAF_VALUE:
+                case TEMPLATE_IDENTIFIER:
                     endLeaf((LeafMetadata<?>) metadata, depth);
                     break;
                 case BINARY_PREDICATE:
-                    endBinary((BinaryPredicateMetadata) metadata, depth);
+                case TEMPLATE_PARAM:
+                    endBinary((BinaryMetadata) metadata, depth);
                     break;
                 case MAPPING_INPUT:
                 case MAPPING_LEAF:
@@ -191,7 +193,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     endMappingRule(metadata, depth);
                     break;
                 case NARY_PREDICATE:
-                    endNary((NaryPredicateMetadata) metadata, depth);
+                    endNary((NaryMetadata) metadata, depth);
                     break;
                 case RULE:
                     endRule(metadata, depth);
@@ -234,47 +236,47 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     // UnaryMetadata
-    public void startUnary(UnaryPredicateMetadata metadata, int depth) {
+    public void startUnary(UnaryMetadata metadata, int depth) {
     }
 
-    public void beforeChildUnary(UnaryPredicateMetadata metadata, Metadata child, int depth) {
+    public void beforeChildUnary(UnaryMetadata metadata, Metadata child, int depth) {
     }
 
-    public void afterChildUnary(UnaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildUnary(UnaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
     }
 
-    public void endUnary(UnaryPredicateMetadata metadata, int depth) {
+    public void endUnary(UnaryMetadata metadata, int depth) {
     }
 
     // BinaryMetadata
 
-    public void startBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void startBinary(BinaryMetadata metadata, int depth) {
     }
 
-    public void beforeChildBinary(BinaryPredicateMetadata metadata, Metadata child, int depth) {
+    public void beforeChildBinary(BinaryMetadata metadata, Metadata child, int depth) {
     }
 
-    public void afterChildBinary(BinaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildBinary(BinaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
     }
 
-    public void endBinary(BinaryPredicateMetadata metadata, int depth) {
+    public void endBinary(BinaryMetadata metadata, int depth) {
     }
 
     // NaryMetadata
 
-    public void startNary(NaryPredicateMetadata metadata, int depth) {
+    public void startNary(NaryMetadata metadata, int depth) {
     }
 
-    public void visitNary(NaryPredicateMetadata metadata, int depth) {
+    public void visitNary(NaryMetadata metadata, int depth) {
     }
 
-    public void beforeChildNary(NaryPredicateMetadata metadata, Metadata child, int depth) {
+    public void beforeChildNary(NaryMetadata metadata, Metadata child, int depth) {
     }
 
-    public void afterChildNary(NaryPredicateMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    public void afterChildNary(NaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
     }
 
-    public void endNary(NaryPredicateMetadata metadata, int depth) {
+    public void endNary(NaryMetadata metadata, int depth) {
     }
 
     // ValidationRule
@@ -356,7 +358,7 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     protected String formatNewLine() {
         return "\n";
     }
-    
+
     protected Metadata stackPeek() {
         return stack.peek();
     }

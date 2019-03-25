@@ -34,5 +34,7 @@ public enum MetadataType {
     MAPPING_LEAF, //
     TYPE_CONVERTER, //
     TYPE_CONVERTER_IDENTITY, //
+    TEMPLATE_PARAM, //
+    TEMPLATE_IDENTIFIER, //
     ;
 }
