@@ -29,6 +29,8 @@ public interface HtmlWriter {
     String CSS_VALIDATE = "dsl-token-validate";
     String CSS_NARY = "dsl-token-nary";
     String CSS_WHEN = "dsl-token-when";
+    String CSS_ELSE = "dsl-token-else";
+    String CSS_THEN = "dsl-token-then";
     String CSS_SINGLE_MAPPING = "dsl-token-single-mapping";
     String CSS_OPERATOR = "dsl-token-operator";
     String CSS_TEMPLATE_PARAM = "dsl-token-template-param";
