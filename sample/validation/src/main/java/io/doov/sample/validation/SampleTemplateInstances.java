@@ -84,7 +84,7 @@ public class SampleTemplateInstances {
     }
 
     public static void main(String[] args) throws IOException {
-        SampleWriter.of("validation_template_instances.html").write(rules());
+        SampleWriter.of("validation_template_instances.html", Locale.FRANCE).write(rules());
         System.exit(1);
     }
 }

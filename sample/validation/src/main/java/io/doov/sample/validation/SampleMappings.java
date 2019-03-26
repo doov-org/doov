@@ -15,6 +15,7 @@ import static java.util.Arrays.asList;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 import io.doov.core.dsl.field.types.StringFieldInfo;
 import io.doov.core.dsl.lang.MappingRule;
@@ -63,7 +64,7 @@ public class SampleMappings {
             SITE_RESOLUTION_TEMPLATE.bind(favoriteSiteName3, favoriteSiteUrl3));
 
     public static void main(String[] args) throws IOException {
-        SampleWriter.of("mapping_rules.html").write(rules);
+        SampleWriter.of("mapping_rules.html", Locale.FRANCE).write(rules);
         System.exit(1);
     }
 

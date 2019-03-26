@@ -15,17 +15,18 @@ import io.doov.core.dsl.lang.DSLBuilder;
 import io.doov.core.dsl.meta.ast.*;
 
 class SampleWriter {
-
+    private final Locale locale;
     private final File file;
     private final FileOutputStream fos;
 
-    private SampleWriter(String path) throws FileNotFoundException {
+    private SampleWriter(String path, Locale locale) throws FileNotFoundException {
         this.file = new File(path);
         this.fos  = new FileOutputStream(file);
+        this.locale = locale;
     }
 
-    public static SampleWriter of(String path) throws FileNotFoundException {
-        return new SampleWriter(path);
+    public static SampleWriter of(String path, Locale locale) throws FileNotFoundException {
+        return new SampleWriter(path, locale);
     }
 
     private void ioWrite(String content) throws IOException {
@@ -47,9 +48,9 @@ class SampleWriter {
         ioWrite("<body><div style='width:1024px; margin-left:20px;'>");
 
         for (DSLBuilder r : rules) {
-            ioWrite("<div>" + r.readable(Locale.FRANCE) + "</div>");
+            ioWrite("<div>" + r.readable(locale) + "</div>");
             ioWrite("<div>");
-            new AstHtmlRenderer(new DefaultHtmlWriter(Locale.FRANCE, fos, BUNDLE)).toHtml(r.metadata());
+            new AstHtmlRenderer(new DefaultHtmlWriter(locale, fos, BUNDLE)).toHtml(r.metadata());
             ioWrite("<hr/>");
             ioWrite("</div>");
         }
