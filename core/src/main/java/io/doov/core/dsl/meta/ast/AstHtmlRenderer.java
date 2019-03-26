@@ -20,7 +20,6 @@ import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.validate;
 import static io.doov.core.dsl.meta.MappingOperator.map;
-import static io.doov.core.dsl.meta.MappingOperator.mappings;
 import static io.doov.core.dsl.meta.MappingOperator.to;
 import static io.doov.core.dsl.meta.MetadataType.*;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
@@ -151,6 +150,7 @@ public class AstHtmlRenderer {
 
     private void nary(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
+        final MetadataType pmdType = pmd.map(Metadata::type).orElse(null);
         if (pmd.map(m -> m.getOperator().returnType() == BOOLEAN).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_count()
             writer.writeExclusionBar(metadata, parents);
@@ -160,10 +160,13 @@ public class AstHtmlRenderer {
             writer.writeBeginOl(CSS_OL_NARY);
             metadata.children().forEach(m -> toHtml(m, parents));
             writer.writeEndOl();
+        } else if (metadata.type() == MULTIPLE_MAPPING && pmdType == MULTIPLE_MAPPING) {
+            writer.writeBeginLi(CSS_LI_NARY);
+            writer.writeBeginUl(CSS_OL_CASCADED_NARY);
+            metadata.children().forEach(m -> toHtml(m, parents));
+            writer.writeEndUl();
+            writer.writeEndLi();
         } else if (metadata.type() == MULTIPLE_MAPPING) {
-            writer.writeBeginSpan(CSS_WHEN);
-            writer.writeFromBundle(mappings);
-            writer.writeEndSpan();
             writer.writeBeginUl(CSS_OL_NARY);
             metadata.children().forEach(m -> toHtml(m, parents));
             writer.writeEndUl();
@@ -174,14 +177,14 @@ public class AstHtmlRenderer {
             writer.writeBeginUl(CSS_OL_NARY);
             metadata.children().forEach(m -> toHtml(m, parents));
             writer.writeEndUl();
-        } else if (metadata.type() == ELSE_MAPPING) {
+        } else if (metadata.type() == ELSE_MAPPING && metadata.children().count() > 0) {
             writer.writeBeginSpan(CSS_ELSE);
             writer.writeFromBundle(metadata.getOperator());
             writer.writeEndSpan();
             writer.writeBeginUl(CSS_OL_NARY);
             metadata.children().forEach(m -> toHtml(m, parents));
             writer.writeEndUl();
-        } else {
+        } else if (metadata.type() != ELSE_MAPPING) {
             writer.writeBeginLi(CSS_LI_NARY);
             writer.writeExclusionBar(metadata, parents);
             writer.writeBeginSpan(CSS_NARY);

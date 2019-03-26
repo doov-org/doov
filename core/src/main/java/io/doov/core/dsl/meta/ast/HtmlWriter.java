@@ -48,6 +48,7 @@ public interface HtmlWriter {
     String CSS_UL_UNARY = "dsl-ul-unary";
 
     String CSS_OL_NARY = "dsl-ol-nary";
+    String CSS_OL_CASCADED_NARY = "dsl-ol-cascaded-nary";
 
     Locale getLocale();
 

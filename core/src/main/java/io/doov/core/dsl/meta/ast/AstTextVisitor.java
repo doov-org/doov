@@ -137,9 +137,11 @@ public class AstTextVisitor extends AbstractAstVisitor {
                 sb.append(formatNewLine());
                 break;
             case ELSE_MAPPING:
-                sb.append(formatCurrentIndent());
-                sb.append(bundle.get(_else, locale));
-                sb.append(formatNewLine());
+                if (metadata.children().count() > 0) {
+                    sb.append(formatCurrentIndent());
+                    sb.append(bundle.get(_else, locale));
+                    sb.append(formatNewLine());
+                }
                 break;
             case MAPPING_LEAF:
                 sb.append(formatCurrentIndent());

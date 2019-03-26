@@ -147,3 +147,6 @@
 .dsl-token-unknown {
     color: red;
 }
+
+.dsl-ol-cascaded-nary {
+	padding-left: 0px;
