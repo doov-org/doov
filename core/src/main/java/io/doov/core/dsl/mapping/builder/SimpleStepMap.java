@@ -17,6 +17,7 @@ package io.doov.core.dsl.mapping.builder;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
 
@@ -28,9 +29,9 @@ import io.doov.core.dsl.mapping.*;
  */
 public class SimpleStepMap<I> {
 
-    private final MappingInput<I> input;
+    private final ContextAccessor<I> input;
 
-    public SimpleStepMap(MappingInput<I> input) {
+    public SimpleStepMap(ContextAccessor<I> input) {
         this.input = input;
     }
 

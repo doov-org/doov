@@ -4,6 +4,7 @@
 package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.impl.ModelInterceptor;
 import io.doov.core.dsl.lang.*;
@@ -12,11 +13,11 @@ import io.doov.core.dsl.meta.Metadata;
 
 public class DefaultMappingRule<T> extends AbstractDSLBuilder implements MappingRule {
 
-    private final MappingInput<T> input;
+    private final ContextAccessor<T> input;
     private final MappingOutput<T> output;
     private final MappingRuleMetadata metadata;
 
-    public DefaultMappingRule(MappingInput<T> input, MappingOutput<T> output) {
+    public DefaultMappingRule(ContextAccessor<T> input, MappingOutput<T> output) {
         this.input = input;
         this.output = output;
         this.metadata = new MappingRuleMetadata(input.metadata(), output.metadata());
@@ -41,7 +42,7 @@ public class DefaultMappingRule<T> extends AbstractDSLBuilder implements Mapping
     public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
         ModelInterceptor in = new ModelInterceptor(inModel, context);
         ModelInterceptor out = new ModelInterceptor(outModel, context);
-        output.write(out, context, input.read(in, context));
+        output.write(out, context, input.value(in, context).orElse(null));
         return context;
     }
 

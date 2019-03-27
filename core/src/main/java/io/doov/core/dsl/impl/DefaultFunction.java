@@ -42,6 +42,16 @@ public class DefaultFunction<N, M extends Metadata> implements Function<N> {
         return function.apply(model, context);
     }
 
+    @Override
+    public boolean validate(FieldModel model) {
+        return false;
+    }
+
+    @Override
+    public Metadata metadata() {
+        return null;
+    }
+
     public M getMetadata() {
         return metadata;
     }

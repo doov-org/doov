@@ -22,6 +22,7 @@ import io.doov.core.FieldModel;
  *
  * @param <T> input value type
  */
+@Deprecated
 public interface MappingInput<T> extends DSLBuilder {
 
     /**

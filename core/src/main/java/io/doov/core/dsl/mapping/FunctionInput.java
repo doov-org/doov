@@ -3,13 +3,15 @@
  */
 package io.doov.core.dsl.mapping;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 
-public class FunctionInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class FunctionInput<T> extends AbstractDSLBuilder implements ContextAccessor<T> {
 
     private final BiFunction<FieldModel, Context, T> valueFunction;
     private final MappingMetadata metadata;
@@ -34,7 +36,7 @@ public class FunctionInput<T> extends AbstractDSLBuilder implements MappingInput
     }
 
     @Override
-    public T read(FieldModel inModel, Context context) {
-        return valueFunction.apply(inModel, context);
+    public Optional<T> value(FieldModel model, Context context) {
+        return Optional.ofNullable(valueFunction.apply(model, context));
     }
 }

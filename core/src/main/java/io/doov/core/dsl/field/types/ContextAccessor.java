@@ -19,8 +19,26 @@ import java.util.Optional;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.meta.Metadata;
 
 public interface ContextAccessor<T> {
-    
+
+    /**
+     * Verifies the input for given in model
+     *
+     * @param model the model
+     * @param context the context
+     * @return true if the input can read a value from the model
+     */
     Optional<T> value(FieldModel model, Context context);
+
+    /**
+     * Verifies the input for given in model
+     *
+     * @param model in model
+     * @return true if the input can read a value from the model
+     */
+    boolean validate(FieldModel model);
+
+    Metadata metadata();
 }

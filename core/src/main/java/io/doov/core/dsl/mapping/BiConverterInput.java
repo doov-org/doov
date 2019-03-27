@@ -18,24 +18,28 @@ package io.doov.core.dsl.mapping;
 import static io.doov.core.dsl.meta.MappingInputMetadata.inputMetadata;
 import static io.doov.core.dsl.meta.MappingMetadata.metadataInput;
 
+import java.util.Optional;
+
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-public class BiConverterInput<U, S, T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class BiConverterInput<U, S, T> extends AbstractDSLBuilder implements ContextAccessor<T> {
 
     private final MappingInputMetadata metadata;
-    private final MappingInput<U> mappingInput1;
-    private final MappingInput<S> mappingInput2;
+    private final ContextAccessor<U> mappingInput1;
+    private final ContextAccessor<S> mappingInput2;
     private final BiTypeConverter<U, S, T> converter;
 
-    public BiConverterInput(MappingInput<U> mappingInput1, MappingInput<S> mappingInput2,
+    public BiConverterInput(ContextAccessor<U> mappingInput1, ContextAccessor<S> mappingInput2,
                     BiTypeConverter<U, S, T> converter) {
         this.mappingInput1 = mappingInput1;
         this.mappingInput2 = mappingInput2;
         this.converter = converter;
-        this.metadata = inputMetadata(metadataInput(mappingInput1.metadata(), mappingInput2.metadata()), converter.metadata());
+        this.metadata = inputMetadata(metadataInput(mappingInput1.metadata(), mappingInput2.metadata()),
+                converter.metadata());
     }
 
     @Override
@@ -49,9 +53,10 @@ public class BiConverterInput<U, S, T> extends AbstractDSLBuilder implements Map
     }
 
     @Override
-    public T read(FieldModel inModel, Context context) {
-        return converter.convert(inModel, context, mappingInput1.read(inModel, context),
-                        mappingInput2.read(inModel, context));
+    public Optional<T> value(FieldModel model, Context context) {
+        Optional<U> lhs = mappingInput1.value(model,context);
+        Optional<S> rhs = mappingInput2.value(model,context);
+        return lhs.flatMap(l -> rhs.flatMap(r -> Optional.ofNullable(converter.convert(model,context,l,r))));
     }
 
 }

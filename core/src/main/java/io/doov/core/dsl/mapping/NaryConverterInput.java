@@ -8,14 +8,16 @@ import static io.doov.core.dsl.meta.MappingMetadata.fieldsInput;
 import static io.doov.core.dsl.meta.MappingMetadata.metadataInput;
 
 import java.util.List;
+import java.util.Optional;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-public class NaryConverterInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class NaryConverterInput<T> extends AbstractDSLBuilder implements ContextAccessor<T> {
 
     private final List<DslField<?>> fields;
     private final NaryTypeConverter<T> converter;
@@ -38,8 +40,8 @@ public class NaryConverterInput<T> extends AbstractDSLBuilder implements Mapping
     }
 
     @Override
-    public T read(FieldModel inModel, Context context) {
-        return converter.convert(inModel, context, fields.toArray(new DslField[0]));
+    public Optional<T> value(FieldModel model, Context context) {
+        return Optional.ofNullable(converter.convert(model, context, fields.toArray(new DslField[0])));
     }
 
 }

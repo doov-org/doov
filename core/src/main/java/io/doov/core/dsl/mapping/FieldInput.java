@@ -3,12 +3,15 @@
  */
 package io.doov.core.dsl.mapping;
 
+import java.util.Optional;
+
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 
-public class FieldInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class FieldInput<T> extends AbstractDSLBuilder implements ContextAccessor<T> {
 
     private final MappingMetadata metadata;
     private final DslField<T> field;
@@ -29,7 +32,7 @@ public class FieldInput<T> extends AbstractDSLBuilder implements MappingInput<T>
     }
 
     @Override
-    public T read(FieldModel inModel, Context context) {
-        return inModel.get(field);
+    public Optional<T> value(FieldModel model, Context context) {
+        return Optional.ofNullable(model.get(field));
     }
 }
