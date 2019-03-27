@@ -6,10 +6,12 @@ package io.doov.core.dsl.mapping;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Single;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 
-public class FunctionInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class FunctionInput<T> implements ContextAccessor<T> {
 
     private final BiFunction<FieldModel, Context, T> valueFunction;
     private final MappingMetadata metadata;
@@ -24,17 +26,12 @@ public class FunctionInput<T> extends AbstractDSLBuilder implements MappingInput
     }
 
     @Override
-    public boolean validate(FieldModel inModel) {
-        return true;
-    }
-
-    @Override
     public MappingMetadata metadata() {
         return metadata;
     }
 
     @Override
-    public T read(FieldModel inModel, Context context) {
-        return valueFunction.apply(inModel, context);
+    public Single<T> value(FieldModel model, Context context) {
+        return Single.supplied(() -> valueFunction.apply(model, context));
     }
 }

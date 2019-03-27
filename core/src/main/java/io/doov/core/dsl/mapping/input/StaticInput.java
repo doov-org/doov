@@ -6,10 +6,12 @@ package io.doov.core.dsl.mapping;
 import java.util.function.Supplier;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Single;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.StaticMetadata;
 
-public class StaticInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class StaticInput<T> implements ContextAccessor<T> {
 
     private final Supplier<T> valueSupplier;
     private final StaticMetadata<T> metadata;
@@ -19,9 +21,9 @@ public class StaticInput<T> extends AbstractDSLBuilder implements MappingInput<T
         this.metadata = StaticMetadata.create(valueSupplier);
     }
 
-    @Override
-    public boolean validate(FieldModel inModel) {
-        return true;
+    public StaticInput(T value) {
+        this.valueSupplier = () -> value;
+        this.metadata = StaticMetadata.create(valueSupplier);
     }
 
     @Override
@@ -30,7 +32,7 @@ public class StaticInput<T> extends AbstractDSLBuilder implements MappingInput<T
     }
 
     @Override
-    public T read(FieldModel inModel, Context context) {
-        return valueSupplier.get();
+    public Single<T> value(FieldModel model, Context context) {
+        return Single.supplied(valueSupplier);
     }
 }

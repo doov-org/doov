@@ -4,11 +4,13 @@
 package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Single;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 
-public class FieldInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class FieldInput<T> implements ContextAccessor<T> {
 
     private final MappingMetadata metadata;
     private final DslField<T> field;
@@ -18,7 +20,6 @@ public class FieldInput<T> extends AbstractDSLBuilder implements MappingInput<T>
         this.metadata = MappingMetadata.fieldInput(field);
     }
 
-    @Override
     public boolean validate(FieldModel inModel) {
         return inModel.getFieldInfos().stream().anyMatch(f -> f.id() == field.id());
     }
@@ -29,7 +30,11 @@ public class FieldInput<T> extends AbstractDSLBuilder implements MappingInput<T>
     }
 
     @Override
-    public T read(FieldModel inModel, Context context) {
-        return inModel.get(field);
+    public Single<T> value(FieldModel model, Context context) {
+        if(validate(model)) {
+            return Single.supplied(() -> model.get(field));
+        } else {
+            return Single.failure(new Throwable("Field " + field + " not present."));
+        }
     }
 }
