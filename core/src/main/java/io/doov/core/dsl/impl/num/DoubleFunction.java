@@ -15,10 +15,10 @@
  */
 package io.doov.core.dsl.impl.num;
 
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
@@ -29,13 +29,13 @@ public class DoubleFunction extends NumericFunction<Double> implements DoubleOpe
         super(field);
     }
 
-    public DoubleFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Double>> value) {
+    public DoubleFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<Double>> value) {
         super(metadata, value);
     }
 
     @Override
     protected DoubleFunction numericFunction(PredicateMetadata metadata,
-                    BiFunction<FieldModel, Context, Optional<Double>> value) {
+                    BiFunction<FieldModel, Context, Try<Double>> value) {
         return new DoubleFunction(metadata, value);
     }
 }

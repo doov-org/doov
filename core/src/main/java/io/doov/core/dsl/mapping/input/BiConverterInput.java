@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.mapping;
+package io.doov.core.dsl.mapping.input;
 
 import static io.doov.core.dsl.meta.MappingInputMetadata.inputMetadata;
 import static io.doov.core.dsl.meta.MappingMetadata.metadataInput;
 
 import io.doov.core.FieldModel;
-import io.doov.core.Single;
+import io.doov.core.Try;
 import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
@@ -49,8 +49,8 @@ public class BiConverterInput<U, S, T> implements ContextAccessor<T> {
     }
 
     @Override
-    public Single<T> value(FieldModel model, Context context) {
-        return Single.combine(
+    public Try<T> value(FieldModel model, Context context) {
+        return Try.combine(
                 (l,r) -> converter.convert(model,context,l,r),
                 mappingInput1.value(model,context),
                 mappingInput2.value(model,context));

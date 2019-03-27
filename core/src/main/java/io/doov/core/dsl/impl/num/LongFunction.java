@@ -15,10 +15,10 @@
  */
 package io.doov.core.dsl.impl.num;
 
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
@@ -29,13 +29,13 @@ public class LongFunction extends NumericFunction<Long> implements LongOperators
         super(field);
     }
 
-    public LongFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Long>> value) {
+    public LongFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<Long>> value) {
         super(metadata, value);
     }
 
     @Override
     protected LongFunction numericFunction(PredicateMetadata metadata,
-                    BiFunction<FieldModel, Context, Optional<Long>> value) {
+                    BiFunction<FieldModel, Context, Try<Long>> value) {
         return new LongFunction(metadata, value);
     }
 

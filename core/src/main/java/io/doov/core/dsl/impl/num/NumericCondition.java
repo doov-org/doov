@@ -20,10 +20,10 @@ import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.greaterThan
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.lesserOrEqualsMetadata;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.lesserThanMetadata;
 
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
@@ -46,7 +46,7 @@ public abstract class NumericCondition<N extends Number> extends DefaultConditio
         super(field);
     }
 
-    protected NumericCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<N>> value) {
+    protected NumericCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<N>> value) {
         super(metadata, value);
     }
 

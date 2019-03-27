@@ -40,7 +40,7 @@ public class StringFunctionMetadata extends BinaryPredicateMetadata {
         return new StringFunctionMetadata(metadata, contains, stringMetadata(value));
     }
     public static StringFunctionMetadata containsMetadata(Metadata metadata, StringFunction value) {
-        return new StringFunctionMetadata(metadata, contains, value.getMetadata());
+        return new StringFunctionMetadata(metadata, contains, value.metadata());
     }
 
     public static StringFunctionMetadata startsWithMetadata(Metadata metadata, String value) {

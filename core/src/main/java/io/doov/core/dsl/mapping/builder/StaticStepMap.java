@@ -19,8 +19,13 @@ import java.util.function.Supplier;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
+import io.doov.core.dsl.mapping.input.ConverterInput;
+import io.doov.core.dsl.mapping.input.StaticInput;
+import io.doov.core.dsl.mapping.output.ConsumerOutput;
+import io.doov.core.dsl.mapping.output.FieldOutput;
 
 /**
  * First step for creating a static mapping rule.
@@ -29,13 +34,13 @@ import io.doov.core.dsl.mapping.*;
  */
 public class StaticStepMap<I> {
 
-    private final MappingInput<I> input;
+    private final ContextAccessor<I> input;
 
     public StaticStepMap(Supplier<I> input) {
         this(new StaticInput<>(input));
     }
 
-    private StaticStepMap(MappingInput<I> input) {
+    private StaticStepMap(ContextAccessor<I> input) {
         this.input = input;
     }
 

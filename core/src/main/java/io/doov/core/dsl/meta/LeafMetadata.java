@@ -101,7 +101,7 @@ public abstract class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMe
 
     @SuppressWarnings("unchecked")
     public M valueCondition(DefaultCondition<?> condition) {
-        LeafMetadata<?> conditionMetadata = (LeafMetadata<?>) condition.getMetadata();
+        LeafMetadata<?> conditionMetadata = (LeafMetadata<?>) condition.metadata();
         conditionMetadata.elements().stream().forEach(e -> add(e));
         return (M) this;
     }

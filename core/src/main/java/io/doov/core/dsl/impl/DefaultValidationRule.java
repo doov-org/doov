@@ -20,7 +20,7 @@ import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.RuleMetadata;
 
-public class DefaultValidationRule extends AbstractDSLBuilder implements ValidationRule {
+public class DefaultValidationRule implements ValidationRule, DSLBuilder {
 
     private final RuleMetadata metadata;
     private final StepWhen stepWhen;

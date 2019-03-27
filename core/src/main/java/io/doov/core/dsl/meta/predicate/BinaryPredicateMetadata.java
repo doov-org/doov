@@ -87,7 +87,7 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
     }
 
     public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, DefaultCondition<?> condition) {
-        return new BinaryPredicateMetadata(metadata, equals, condition.getMetadata());
+        return new BinaryPredicateMetadata(metadata, equals, condition.metadata());
     }
 
     public static BinaryPredicateMetadata notEqualsMetadata(Metadata metadata, Object value) {

@@ -19,14 +19,19 @@ import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
+import io.doov.core.dsl.mapping.input.ConverterInput;
+import io.doov.core.dsl.mapping.input.FunctionInput;
+import io.doov.core.dsl.mapping.output.ConsumerOutput;
+import io.doov.core.dsl.mapping.output.FieldOutput;
 
 public class ContextawareStepMap<I> {
 
-    private MappingInput<I> input;
+    private ContextAccessor<I> input;
 
-    public ContextawareStepMap(MappingInput<I> input) {
+    public ContextawareStepMap(ContextAccessor<I> input) {
         this.input = input;
     }
 

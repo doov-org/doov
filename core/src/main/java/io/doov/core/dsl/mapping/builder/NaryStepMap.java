@@ -21,6 +21,8 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
+import io.doov.core.dsl.mapping.output.ConsumerOutput;
+import io.doov.core.dsl.mapping.output.FieldOutput;
 
 /**
  * First step for creating a n-ary mapping rule.

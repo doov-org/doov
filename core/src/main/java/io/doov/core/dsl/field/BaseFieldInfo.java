@@ -260,7 +260,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
     }
 
     /**
-     * See {@link DefaultCondition#mapUsing(String, io.doov.core.dsl.field.types.Function, BiFunction)}
+     * See {@link DefaultCondition#mapUsing(String, io.doov.core.dsl.field.types.ContextAccessor, BiFunction)}
      *
      * @param readable description
      * @param condition condition

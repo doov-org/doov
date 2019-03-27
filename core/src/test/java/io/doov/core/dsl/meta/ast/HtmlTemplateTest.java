@@ -50,7 +50,7 @@ public class HtmlTemplateTest {
         Map2<StringFieldInfo, StringFieldInfo> template = template($String, $String)
                 .mapping((from, dest) -> map(from).to(dest));
         context = template.bind(model.stringField("a", "param1"), model.stringField(null, "param2"))
-                .executeOn(model, model);
+                .executeOn(model, model).value();
         doc = documentOf(context);
         // TODO test the HTML DOM
     }

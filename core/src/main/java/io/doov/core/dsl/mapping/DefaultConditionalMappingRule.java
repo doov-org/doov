@@ -4,11 +4,12 @@ import static io.doov.core.dsl.meta.ConditionalMappingMetadata.conditional;
 import static java.util.stream.Collectors.toList;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
-public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements ConditionalMappingRule {
+public class DefaultConditionalMappingRule implements ConditionalMappingRule {
 
     private final ConditionalMappingMetadata metadata;
 
@@ -57,22 +58,18 @@ public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements
     }
 
     @Override
-    public boolean validate(FieldModel inModel, FieldModel outModel) {
-        return mappingRules.validate(inModel, outModel) && elseMappingRules.validate(inModel, outModel);
-    }
-
-    @Override
-    public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
+    public <C extends Context> Try<C> executeOn(FieldModel inModel, FieldModel outModel, C context) {
         if (validationRule.executeOn(inModel, context).value()) {
-            mappingRules.executeOn(inModel, outModel, context);
+            return mappingRules.executeOn(inModel, outModel, context);
         } else if (!elseMappingRules.isEmpty()) {
-            elseMappingRules.executeOn(inModel, outModel, context);
+            return elseMappingRules.executeOn(inModel, outModel, context);
+        } else {
+            return Try.success(context);
         }
-        return context;
     }
 
     @Override
-    public Context executeOn(FieldModel inModel, FieldModel outModel) {
+    public Try<Context> executeOn(FieldModel inModel, FieldModel outModel) {
         return this.executeOn(inModel, outModel, new DefaultContext(metadata));
     }
 

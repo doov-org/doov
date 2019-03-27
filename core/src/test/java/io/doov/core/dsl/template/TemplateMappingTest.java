@@ -3,7 +3,7 @@
  */
 package io.doov.core.dsl.template;
 
-import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
+import static io.doov.core.dsl.mapping.converter.TypeConverters.biConverter;
 import static io.doov.core.dsl.template.ParameterTypes.$String;
 
 import org.junit.jupiter.api.Assertions;

@@ -1,10 +1,10 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package io.doov.core.dsl.mapping;
+package io.doov.core.dsl.mapping.input;
 
 import io.doov.core.FieldModel;
-import io.doov.core.Single;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
@@ -30,11 +30,11 @@ public class FieldInput<T> implements ContextAccessor<T> {
     }
 
     @Override
-    public Single<T> value(FieldModel model, Context context) {
+    public Try<T> value(FieldModel model, Context context) {
         if(validate(model)) {
-            return Single.supplied(() -> model.get(field));
+            return Try.supplied(() -> model.get(field));
         } else {
-            return Single.failure(new Throwable("Field " + field + " not present."));
+            return Try.failure(new Throwable("Field " + field + " not present."));
         }
     }
 }

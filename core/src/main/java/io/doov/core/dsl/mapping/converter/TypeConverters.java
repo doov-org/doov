@@ -1,7 +1,7 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package io.doov.core.dsl.mapping;
+package io.doov.core.dsl.mapping.converter;
 
 import java.util.*;
 import java.util.function.BiFunction;

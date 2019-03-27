@@ -18,20 +18,12 @@ package io.doov.core.dsl.lang;
 import java.util.stream.Stream;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 
 /**
  * Mapping rule
  */
 public interface MappingRule extends DSLBuilder {
-    /**
-     * Verifies the mapping rule for given in/out models
-     *
-     * @param inModel in model
-     * @param outModel out model
-     * @return true if this rule can execute on the in/out models
-     */
-    boolean validate(FieldModel inModel, FieldModel outModel);
-
     /**
      * Execute the mapping rule on in/out models
      *
@@ -39,7 +31,7 @@ public interface MappingRule extends DSLBuilder {
      * @param outModel out model
      * @return context
      */
-    Context executeOn(FieldModel inModel, FieldModel outModel);
+    Try<Context> executeOn(FieldModel inModel, FieldModel outModel);
 
     /**
      * Execute the mapping rule on in/out models with given context
@@ -50,7 +42,7 @@ public interface MappingRule extends DSLBuilder {
      * @param context context
      * @return context
      */
-    <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context);
+    <C extends Context> Try<C> executeOn(FieldModel inModel, FieldModel outModel, C context);
 
     /**
      * Stream over mapping rules contained in this rule Default implementation returns a stream of itself.

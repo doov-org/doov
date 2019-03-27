@@ -24,7 +24,7 @@ import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-public class DefaultTypeConverter<I, O> extends AbstractDSLBuilder implements TypeConverter<I, O> {
+public class DefaultTypeConverter<I, O> implements TypeConverter<I, O>, DSLBuilder {
 
     private static final TypeConverter<?, ?> IDENTITY = new DefaultTypeConverter<>((context, i) -> i.orElse(null),
                     ConverterMetadata.identity());

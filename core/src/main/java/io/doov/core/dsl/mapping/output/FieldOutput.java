@@ -1,7 +1,7 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package io.doov.core.dsl.mapping;
+package io.doov.core.dsl.mapping.output;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;

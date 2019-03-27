@@ -15,38 +15,38 @@
  */
 package io.doov.core.dsl.impl;
 
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.field.types.Function;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
-public class DefaultFunction<N, M extends Metadata> implements Function<N> {
+public class DefaultFunction<N, M extends Metadata> implements ContextAccessor<N> {
 
-    protected static <T> Optional<T> valueModel(FieldModel model, DslField<T> field) {
-        return Optional.ofNullable(model.get(field.id()));
+    protected static <T> Try<T> valueModel(FieldModel model, DslField<T> field) {
+        return Try.success(model.get(field.id()));
     }
 
     protected final M metadata;
-    protected final BiFunction<FieldModel, Context, Optional<N>> function;
+    protected final BiFunction<FieldModel, Context, Try<N>> function;
 
-    protected DefaultFunction(M metadata, BiFunction<FieldModel, Context, Optional<N>> function) {
+    protected DefaultFunction(M metadata, BiFunction<FieldModel, Context, Try<N>> function) {
         this.metadata = metadata;
         this.function = function;
     }
 
-    public Optional<N> value(FieldModel model, Context context) {
+    public Try<N> value(FieldModel model, Context context) {
         return function.apply(model, context);
     }
 
-    public M getMetadata() {
+    public M metadata() {
         return metadata;
     }
 
-    public BiFunction<FieldModel, Context, Optional<N>> getFunction() {
+    public BiFunction<FieldModel, Context, Try<N>> getFunction() {
         return function;
     }
 

@@ -24,10 +24,10 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LeafStepCondition;
@@ -41,7 +41,7 @@ public class IterableFunction<T, C extends Iterable<T>> extends DefaultCondition
         super(field);
     }
 
-    public IterableFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<C>> value) {
+    public IterableFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<C>> value) {
         super(metadata, value);
     }
 

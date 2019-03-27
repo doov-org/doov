@@ -67,6 +67,9 @@ public class Try<T> {
     public boolean isNotNull() {
         return value != null;
     }
+    public boolean isNull() {
+        return value == null;
+    }
 
     public T value() {
         return value;
@@ -77,8 +80,10 @@ public class Try<T> {
     }
 
     public <S> Try<S> map(Function<T,S> f) {
-        if(hasValue) {
+        if(hasValue && isNotNull()) {
             return success(f.apply(value));
+        } else if (hasValue) {
+            return success(null);
         } else {
             return failure(reasons);
         }
@@ -97,7 +102,7 @@ public class Try<T> {
     }
 
     public Try<T> recover(T value) {
-        if(isSuccess()) {
+        if(hasValue && isNotNull()) {
             return this;
         } else {
             return Try.success(value);
@@ -105,21 +110,30 @@ public class Try<T> {
     }
 
     public static <T,S,R> Try<R> combine(BiFunction<T,S,R> combinator, Try<T> lhs, Try<S> rhs) {
+
         if(lhs.isSuccess() && rhs.isSuccess()) {
-            return success(combinator.apply(lhs.value,rhs.value));
+            if(lhs.isNotNull() && rhs.isNotNull()) {
+                return success(combinator.apply(lhs.value,rhs.value));
+            } else {
+                return success(null);
+            }
         }
+
         if(lhs.isSuccess() && rhs.isFailure()) {
             return failure(rhs.reasons);
         }
+
         if(lhs.isFailure() && rhs.isSuccess()) {
             return failure(lhs.reasons);
         }
+
         if(lhs.isFailure() && rhs.isFailure()) {
             List<Throwable> res = new ArrayList<>();
             res.addAll(lhs.reasons);
             res.addAll(rhs.reasons);
             return failure(res);
         }
+
         throw new RuntimeException(); // Never triggered
     }
 

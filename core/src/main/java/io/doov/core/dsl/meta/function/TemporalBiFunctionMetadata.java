@@ -65,105 +65,105 @@ public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
     // age at
 
     public static TemporalBiFunctionMetadata ageAtValueMetadata(DefaultCondition<?> condition, Object value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), age_at, valueMetadata(value));
+        return new TemporalBiFunctionMetadata(condition.metadata(), age_at, valueMetadata(value));
     }
 
     public static TemporalBiFunctionMetadata ageAtTemporalFieldMetadata(DefaultCondition<?> condition,
                                                                         DslField<?> field) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), age_at, fieldMetadata(field));
+        return new TemporalBiFunctionMetadata(condition.metadata(), age_at, fieldMetadata(field));
     }
 
     public static TemporalBiFunctionMetadata ageAtTemporalConditionMetadata(DefaultCondition<?> c1,
             DefaultCondition<?> c2) {
-        return new TemporalBiFunctionMetadata(c1.getMetadata(), age_at, c2.getMetadata());
+        return new TemporalBiFunctionMetadata(c1.metadata(), age_at, c2.metadata());
     }
 
     public static TemporalBiFunctionMetadata ageAtSupplierMetadata(DefaultCondition<?> condition, Supplier<?> supplier) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), age_at, valueMetadata(supplier));
+        return new TemporalBiFunctionMetadata(condition.metadata(), age_at, valueMetadata(supplier));
     }
 
     // after
 
     public static TemporalBiFunctionMetadata afterValueMetadata(DefaultCondition<?> condition,
                                                                 Object value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after, valueMetadata(value));
+        return new TemporalBiFunctionMetadata(condition.metadata(), after, valueMetadata(value));
     }
 
     public static TemporalBiFunctionMetadata afterTemporalFieldMetadata(DefaultCondition<?> condition,
                                                                         DslField<?> field) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after, fieldMetadata(field));
+        return new TemporalBiFunctionMetadata(condition.metadata(), after, fieldMetadata(field));
     }
 
     public static TemporalBiFunctionMetadata afterTemporalConditionMetadata(DefaultCondition<?> c1,
             DefaultCondition<?> c2) {
-        return new TemporalBiFunctionMetadata(c1.getMetadata(), after, c2.getMetadata());
+        return new TemporalBiFunctionMetadata(c1.metadata(), after, c2.metadata());
     }
 
     public static TemporalBiFunctionMetadata afterSupplierMetadata(DefaultCondition<?> condition,
                                                                    Supplier<?> value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after, valueMetadata(value));
+        return new TemporalBiFunctionMetadata(condition.metadata(), after, valueMetadata(value));
     }
 
     public static TemporalBiFunctionMetadata afterOrEqualsValueMetadata(DefaultCondition<?> condition,
                                                                         Object value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after_or_equals, valueMetadata(value));
+        return new TemporalBiFunctionMetadata(condition.metadata(), after_or_equals, valueMetadata(value));
     }
 
     public static TemporalBiFunctionMetadata afterOrEqTemporalFieldMetadata(DefaultCondition<?> condition,
                                                                             DslField<?> field) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after_or_equals, fieldMetadata(field));
+        return new TemporalBiFunctionMetadata(condition.metadata(), after_or_equals, fieldMetadata(field));
     }
 
     public static TemporalBiFunctionMetadata afterOrEqualsSupplierMetadata(DefaultCondition<?> condition,
                                                                            Supplier<?> value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), after_or_equals, valueMetadata(value));
+        return new TemporalBiFunctionMetadata(condition.metadata(), after_or_equals, valueMetadata(value));
     }
 
     public static TemporalBiFunctionMetadata afterOrEqualsTemporalConditionMetadata(DefaultCondition<?> c1,
             DefaultCondition<?> c2) {
-        return new TemporalBiFunctionMetadata(c1.getMetadata(), after_or_equals, c2.getMetadata());
+        return new TemporalBiFunctionMetadata(c1.metadata(), after_or_equals, c2.metadata());
     }
 
     // before
 
     public static TemporalBiFunctionMetadata beforeValueMetadata(DefaultCondition<?> condition,
                                                                  Object value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before, valueMetadata(value));
+        return new TemporalBiFunctionMetadata(condition.metadata(), before, valueMetadata(value));
     }
 
     public static TemporalBiFunctionMetadata beforeTemporalFieldMetadata(DefaultCondition<?> condition,
                                                                          DslField<?> field) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before, fieldMetadata(field));
+        return new TemporalBiFunctionMetadata(condition.metadata(), before, fieldMetadata(field));
     }
 
     public static TemporalBiFunctionMetadata beforeTemporalConditionMetadata(DefaultCondition<?> c1,
             DefaultCondition<?> c2) {
-        return new TemporalBiFunctionMetadata(c1.getMetadata(), before, c2.getMetadata());
+        return new TemporalBiFunctionMetadata(c1.metadata(), before, c2.metadata());
     }
 
     public static TemporalBiFunctionMetadata beforeSupplierMetadata(DefaultCondition<?> condition,
                                                                     Supplier<?> value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before, valueMetadata(value));
+        return new TemporalBiFunctionMetadata(condition.metadata(), before, valueMetadata(value));
     }
 
     public static TemporalBiFunctionMetadata beforeOrEqualsValueMetadata(DefaultCondition<?> condition,
                                                                          Object value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before_or_equals, valueMetadata(value));
+        return new TemporalBiFunctionMetadata(condition.metadata(), before_or_equals, valueMetadata(value));
     }
 
     public static TemporalBiFunctionMetadata beforeOrEqTemporalFieldMetadata(DefaultCondition<?> condition,
                                                                              DslField<?> field) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before_or_equals, fieldMetadata(field));
+        return new TemporalBiFunctionMetadata(condition.metadata(), before_or_equals, fieldMetadata(field));
     }
 
     public static TemporalBiFunctionMetadata beforeOrEqualsSupplierMetadata(DefaultCondition<?> condition,
                                                                             Supplier<?> value) {
-        return new TemporalBiFunctionMetadata(condition.getMetadata(), before_or_equals, valueMetadata(value));
+        return new TemporalBiFunctionMetadata(condition.metadata(), before_or_equals, valueMetadata(value));
     }
 
     public static TemporalBiFunctionMetadata beforeOrEqualsTemporalConditionMetadata(DefaultCondition<?> c1,
             DefaultCondition<?> c2) {
-        return new TemporalBiFunctionMetadata(c1.getMetadata(), before_or_equals, c2.getMetadata());
+        return new TemporalBiFunctionMetadata(c1.metadata(), before_or_equals, c2.metadata());
     }
 
 

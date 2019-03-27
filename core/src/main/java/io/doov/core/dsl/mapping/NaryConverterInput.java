@@ -10,12 +10,14 @@ import static io.doov.core.dsl.meta.MappingMetadata.metadataInput;
 import java.util.List;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-public class NaryConverterInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class NaryConverterInput<T> implements ContextAccessor<T> {
 
     private final List<DslField<?>> fields;
     private final NaryTypeConverter<T> converter;
@@ -28,18 +30,13 @@ public class NaryConverterInput<T> extends AbstractDSLBuilder implements Mapping
     }
 
     @Override
-    public boolean validate(FieldModel inModel) {
-        return fields.stream().allMatch(f -> inModel.getFieldIds().contains(f.id()));
-    }
-
-    @Override
     public Metadata metadata() {
         return metadata;
     }
 
     @Override
-    public T read(FieldModel inModel, Context context) {
-        return converter.convert(inModel, context, fields.toArray(new DslField[0]));
+    public Try<T> value(FieldModel model, Context context) {
+        return Try.supplied(
+                () -> converter.convert(model,context,fields.toArray(new DslField[0])));
     }
-
 }

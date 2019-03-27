@@ -17,8 +17,13 @@ package io.doov.core.dsl.mapping.builder;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
+import io.doov.core.dsl.mapping.input.BiConverterInput;
+import io.doov.core.dsl.mapping.input.FieldInput;
+import io.doov.core.dsl.mapping.output.ConsumerOutput;
+import io.doov.core.dsl.mapping.output.FieldOutput;
 
 /**
  * First step for creating mapping rule.
@@ -58,7 +63,7 @@ public class BiStepMap<I, J> {
      */
     public class BiStepMapping<I, J, O> {
 
-        private final MappingInput<O> input;
+        private final ContextAccessor<O> input;
 
         BiStepMapping(DslField<I> inFieldInfo, DslField<J> in2FieldInfo, BiTypeConverter<I, J, O> typeConverter) {
             this.input = new BiConverterInput<>(

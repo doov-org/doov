@@ -22,10 +22,10 @@ import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.notMetadata
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.LogicalFieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
@@ -47,7 +47,7 @@ public class BooleanFunction extends DefaultCondition<Boolean> {
         super(field);
     }
 
-    public BooleanFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Boolean>> value) {
+    public BooleanFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<Boolean>> value) {
         super(metadata, value);
     }
 

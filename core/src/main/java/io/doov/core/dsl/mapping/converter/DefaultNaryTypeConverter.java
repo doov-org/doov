@@ -25,7 +25,7 @@ import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-public class DefaultNaryTypeConverter<O> extends AbstractDSLBuilder implements NaryTypeConverter<O> {
+public class DefaultNaryTypeConverter<O> implements NaryTypeConverter<O>, DSLBuilder {
 
     private final Function3<FieldModel, Context, List<DslField<?>>, O> function;
     private final ConverterMetadata metadata;

@@ -26,8 +26,10 @@ import java.util.*;
 import java.util.function.*;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.BaseFieldInfo;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
@@ -49,7 +51,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
         this(fieldMetadata(field), (model, context) -> valueModel(model, field));
     }
 
-    public DefaultCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<T>> value) {
+    public DefaultCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<T>> value) {
         super(metadata, value);
     }
 
@@ -274,11 +276,11 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     // TODO move into a function provider
     public final <U, R> DefaultCondition<R> mapUsing(String readable,
-            io.doov.core.dsl.field.types.Function<U> condition,
+            ContextAccessor<U> condition,
             BiFunction<T, U, R> mapper) {
         return new DefaultCondition<>(mapUsingMetadata(metadata, readable, condition),
-                (model, context) -> value(model, context).flatMap(l -> Optional.ofNullable(mapper.apply(l,
-                        condition.value(model, context).orElse(null)))));
+                (model, context) -> value(model, context)
+                        .flatMap(l -> Try.supplied(() -> mapper.apply(l, condition.value(model, context).value()))));
     }
 
 }

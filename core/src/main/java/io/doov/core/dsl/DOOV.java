@@ -24,6 +24,7 @@ import java.util.function.*;
 import java.util.stream.*;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.impl.num.IntegerFunction;
@@ -289,7 +290,7 @@ public class DOOV {
      * @param <I>   value type
      * @return value map step
      */
-    public static <I> ContextawareStepMap<I> map(MappingInput<I> input) {
+    public static <I> ContextawareStepMap<I> map(ContextAccessor<I> input) {
         return new ContextawareStepMap<>(input);
     }
 

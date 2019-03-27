@@ -27,13 +27,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.IterableFieldInfo;
+import io.doov.core.dsl.impl.base.IterableFunction;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 
 /**
- * @see IterableCondition
+ * @see IterableFunction
  */
 public class IterableConditionTest {
     private static Locale LOCALE = Locale.US;

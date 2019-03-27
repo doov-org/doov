@@ -19,9 +19,9 @@ import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 import static java.time.format.DateTimeFormatter.BASIC_ISO_DATE;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import io.doov.core.FieldInfo;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.time.LocalDateFunction;
@@ -41,7 +41,7 @@ public class DateIsoFieldInfo extends DelegatingFieldInfoImpl implements Tempora
 
         private DateIsoFunction(DslField<?> field) {
             super(fieldMetadata(field),
-                    ((model, context) -> Optional.ofNullable(model.<String> get(field.id()))
+                    ((model, context) -> Try.success(model.<String> get(field.id()))
                             .map(v -> LocalDate.parse(v, BASIC_ISO_DATE))));
         }
 

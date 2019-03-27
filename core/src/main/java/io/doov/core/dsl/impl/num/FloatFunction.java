@@ -15,10 +15,10 @@
  */
 package io.doov.core.dsl.impl.num;
 
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
@@ -29,13 +29,13 @@ public class FloatFunction extends NumericFunction<Float> implements FloatOperat
         super(field);
     }
 
-    public FloatFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Float>> value) {
+    public FloatFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<Float>> value) {
         super(metadata, value);
     }
 
     @Override
     protected FloatFunction numericFunction(PredicateMetadata metadata,
-                    BiFunction<FieldModel, Context, Optional<Float>> value) {
+                    BiFunction<FieldModel, Context, Try<Float>> value) {
         return new FloatFunction(metadata, value);
     }
 

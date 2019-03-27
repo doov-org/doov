@@ -21,10 +21,10 @@ import static io.doov.core.dsl.meta.function.StringFunctionMetadata.matchesMetad
 import static io.doov.core.dsl.meta.function.StringFunctionMetadata.startsWithMetadata;
 import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.lengthIsMetadata;
 
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LeafStepCondition;
@@ -46,7 +46,7 @@ public class StringFunction extends DefaultCondition<String> {
         super(field);
     }
 
-    public StringFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<String>> value) {
+    public StringFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<String>> value) {
         super(metadata, value);
     }
 

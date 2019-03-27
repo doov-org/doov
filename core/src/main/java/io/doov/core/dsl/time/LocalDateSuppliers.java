@@ -26,6 +26,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 
+import io.doov.core.Try;
 import io.doov.core.dsl.impl.time.LocalDateFunction;
 import io.doov.core.dsl.impl.time.TemporalFunction;
 
@@ -92,7 +93,7 @@ public class LocalDateSuppliers {
      */
     public static TemporalFunction<LocalDate> today() {
         return new LocalDateFunction(todayMetadata(),
-                (model, context) -> Optional.of(LocalDate.now(getClock())));
+                (model, context) -> Try.success(LocalDate.now(getClock())));
     }
 
     /**
@@ -104,7 +105,7 @@ public class LocalDateSuppliers {
      */
     public static TemporalFunction<LocalDate> todayPlus(int amountToAdd, TemporalUnit unit) {
         return new LocalDateFunction(todayPlusMetadata(amountToAdd, unit),
-                        (model, context) -> Optional.of(LocalDate.now(getClock()).plus(amountToAdd, unit)));
+                        (model, context) -> Try.success(LocalDate.now(getClock()).plus(amountToAdd, unit)));
     }
 
     /**
@@ -136,7 +137,7 @@ public class LocalDateSuppliers {
      */
     public static TemporalFunction<LocalDate> todayMinus(int amountToSubstract, TemporalUnit unit) {
         return new LocalDateFunction(todayMinusMetadata(amountToSubstract, unit),
-                        (model, context) -> Optional.of(LocalDate.now(getClock()).minus(amountToSubstract, unit)));
+                        (model, context) -> Try.success(LocalDate.now(getClock()).minus(amountToSubstract, unit)));
     }
 
     /**
@@ -166,7 +167,7 @@ public class LocalDateSuppliers {
      */
     public static TemporalFunction<LocalDate> firstDayOfThisMonth() {
         return new LocalDateFunction(firstDayOfThisMonthMetadata(),
-                        (model, context) -> Optional.of(LocalDate.now(getClock()).with(firstDayOfMonth())));
+                        (model, context) -> Try.success(LocalDate.now(getClock()).with(firstDayOfMonth())));
     }
 
     /**
@@ -176,7 +177,7 @@ public class LocalDateSuppliers {
      */
     public static TemporalFunction<LocalDate> firstDayOfThisYear() {
         return new LocalDateFunction(firstDayOfThisYearMetadata(),
-                        (model, context) -> Optional.of(LocalDate.now(getClock()).with(firstDayOfYear())));
+                        (model, context) -> Try.success(LocalDate.now(getClock()).with(firstDayOfYear())));
     }
 
     /**
@@ -186,7 +187,7 @@ public class LocalDateSuppliers {
      */
     public static TemporalFunction<LocalDate> lastDayOfThisMonth() {
         return new LocalDateFunction(lastDayOfThisMonthMetadata(),
-                        (model, context) -> Optional.of(LocalDate.now(getClock()).with(lastDayOfMonth())));
+                        (model, context) -> Try.success(LocalDate.now(getClock()).with(lastDayOfMonth())));
     }
 
     /**
@@ -196,7 +197,7 @@ public class LocalDateSuppliers {
      */
     public static TemporalFunction<LocalDate> lastDayOfThisYear() {
         return new LocalDateFunction(lastDayOfThisYearMetadata(),
-                        (model, context) -> Optional.of(LocalDate.now(getClock()).with(lastDayOfYear())));
+                        (model, context) -> Try.success(LocalDate.now(getClock()).with(lastDayOfYear())));
     }
 
     /**
@@ -209,7 +210,7 @@ public class LocalDateSuppliers {
      */
     public static TemporalFunction<LocalDate> date(int year, int month, int dayOfMonth) {
         return new LocalDateFunction(dateMetadata(LocalDate.of(year, month, dayOfMonth)),
-                        (model, context) -> Optional.of(LocalDate.of(year, month, dayOfMonth)));
+                        (model, context) -> Try.success(LocalDate.of(year, month, dayOfMonth)));
     }
 
 }

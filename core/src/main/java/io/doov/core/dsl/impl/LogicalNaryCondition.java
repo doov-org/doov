@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
@@ -52,7 +53,7 @@ public class LogicalNaryCondition extends DefaultStepCondition {
      */
     public static IntegerFunction count(List<StepCondition> steps) {
         return new IntegerFunction(countMetadata(getMetadatas(steps)),
-                        (model, context) -> Optional.of((int) steps.stream()
+                        (model, context) -> Try.success((int) steps.stream()
                                         .filter(s -> s.predicate().test(model, context))
                                         .count()));
     }

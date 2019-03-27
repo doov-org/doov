@@ -33,8 +33,7 @@ import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.*;
 
 import io.doov.core.dsl.field.types.*;
-import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.runtime.GenericModel;
 
 public class HtmlCombinedTest {
@@ -160,7 +159,14 @@ public class HtmlCombinedTest {
 
     @Test
     void reduce_null() {
-        result = when(enumField.isNull()).validate().withShortCircuit(false).executeOn(model);
+
+        ValidationRule rule = when(enumField.isNull()).validate().withShortCircuit(false);
+
+        System.out.println(rule.metadata().readable());
+
+        result = rule.executeOn(model);
+
+
         doc = documentOf(result);
 
         assertTrue(result.value());

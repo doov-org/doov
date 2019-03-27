@@ -23,7 +23,7 @@ import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-public class DefaultBiTypeConverter<I, J, O> extends AbstractDSLBuilder implements BiTypeConverter<I, J, O> {
+public class DefaultBiTypeConverter<I, J, O> implements BiTypeConverter<I, J, O>, DSLBuilder {
 
     private Function3<Context, Optional<I>, Optional<J>, O> function;
     private ConverterMetadata metadata;

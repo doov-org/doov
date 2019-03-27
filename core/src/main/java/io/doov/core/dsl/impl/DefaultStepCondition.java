@@ -22,7 +22,7 @@ import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class DefaultStepCondition extends AbstractDSLBuilder implements StepCondition {
+public class DefaultStepCondition implements StepCondition, DSLBuilder {
 
     private final PredicateMetadata metadata;
     private final BiPredicate<FieldModel, Context> predicate;

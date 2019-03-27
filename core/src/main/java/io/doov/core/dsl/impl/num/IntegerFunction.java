@@ -15,10 +15,10 @@
  */
 package io.doov.core.dsl.impl.num;
 
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
@@ -29,18 +29,18 @@ public class IntegerFunction extends NumericFunction<Integer> implements Integer
         super(field);
     }
 
-    public IntegerFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Integer>> value) {
+    public IntegerFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<Integer>> value) {
         super(metadata, value);
     }
 
     public IntegerFunction(NumericCondition<Long> condition) {
-        this(condition.getMetadata(),
+        this(condition.metadata(),
                         (model, context) -> condition.getFunction().apply(model, context).map(Long::intValue));
     }
 
     @Override
     protected IntegerFunction numericFunction(PredicateMetadata metadata,
-                    BiFunction<FieldModel, Context, Optional<Integer>> value) {
+                    BiFunction<FieldModel, Context, Try<Integer>> value) {
         return new IntegerFunction(metadata, value);
     }
 

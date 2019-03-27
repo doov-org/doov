@@ -16,37 +16,298 @@
 package io.doov.core.dsl.impl.time;
 
 import static io.doov.core.dsl.meta.function.TemporalBiFunctionMetadata.withMetadata;
+import static io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata.equalsMetadata;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
 import java.time.temporal.*;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.field.types.TemporalFieldInfo;
+import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.impl.num.*;
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.function.TemporalBiFunctionMetadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 import io.doov.core.dsl.time.TemporalAdjuster;
 
-public abstract class TemporalFunction<N extends Temporal> extends TemporalCondition<N> {
+public abstract class TemporalFunction<N extends Temporal> extends DefaultCondition<N> implements TemporalOperators<N> {
 
     protected TemporalFunction(DslField<N> field) {
         super(field);
     }
 
-    protected TemporalFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<N>> value) {
+    protected TemporalFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<N>> value) {
         super(metadata, value);
     }
 
     protected abstract TemporalFunction<N> temporalFunction(PredicateMetadata metadata,
-            BiFunction<FieldModel, Context, Optional<N>> value);
+            BiFunction<FieldModel, Context, Try<N>> value);
+
+    /**
+     * Returns a condition checking if the node value is equal to the given condition value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition eq(TemporalFunction<N> value) {
+        return LeafStepCondition.stepCondition(equalsMetadata(metadata, value), getFunction(), value.getFunction(),
+                Object::equals);
+    }
+
+    /**
+     * Returns a condition checking if the node value is before the given value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition before(N value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeValueMetadata(this, value), getFunction(), value,
+                (l, r) -> beforeFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is before the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition before(TemporalFieldInfo<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeTemporalFieldMetadata(this, value), getFunction(), value,
+                (l, r) -> beforeFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is before the supplier value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition before(Supplier<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeSupplierMetadata(this, value), getFunction(), value,
+                (l, r) -> beforeFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is before the condition value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition before(TemporalFunction<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeTemporalConditionMetadata(this, value), getFunction(),
+                value.getFunction(),
+                (l, r) -> beforeFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is before or equals the value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition beforeOrEq(N value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeOrEqualsValueMetadata(this, value), getFunction(), value,
+                (l, r) -> beforeOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is before the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition beforeOrEq(TemporalFieldInfo<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeOrEqTemporalFieldMetadata(this, value), getFunction(), value,
+                (l, r) -> beforeOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is before or equals the supplier value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition beforeOrEq(Supplier<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeOrEqualsSupplierMetadata(this, value), getFunction(), value,
+                (l, r) -> beforeOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is before or equals the condition value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition beforeOrEq(TemporalFunction<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeOrEqualsTemporalConditionMetadata(this, value), getFunction(),
+                value.getFunction(), (l, r) -> beforeOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is after the value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition after(N value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterValueMetadata(this, value), getFunction(), value,
+                (l, r) -> afterFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is after the field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition after(TemporalFieldInfo<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterTemporalFieldMetadata(this, value), getFunction(), value,
+                (l, r) -> afterFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is after the supplier value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition after(Supplier<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterSupplierMetadata(this, value), getFunction(), value,
+                (l, r) -> afterFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is after the condition value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition after(TemporalFunction<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterTemporalConditionMetadata(this, value), getFunction(),
+                value.getFunction(), (l, r) -> afterFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is after or equals the value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition afterOrEq(N value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterOrEqualsValueMetadata(this, value), getFunction(), value,
+                (l, r) -> afterOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is after the field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition afterOrEq(TemporalFieldInfo<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterOrEqTemporalFieldMetadata(this, value), getFunction(), value,
+                (l, r) -> afterOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is after or equals the supplier value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition afterOrEq(Supplier<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterOrEqualsSupplierMetadata(this, value), getFunction(), value,
+                (l, r) -> afterOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is after or equals the condition value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition afterOrEq(TemporalFunction<N> value) {
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterOrEqualsTemporalConditionMetadata(this, value), getFunction(),
+                value.getFunction(), (l, r) -> afterOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a condition checking if the node value is between the given min inclusive and max exclusive values.
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     */
+    public final StepCondition between(N minIncluded, N maxExcluded) {
+        return LogicalBinaryCondition.and(beforeOrEq(maxExcluded), afterOrEq(minIncluded));
+    }
+
+    /**
+     * Returns a condition checking if the node value is between the given min inclusive and max exclusive supplier
+     * values.
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     */
+    public final StepCondition between(Supplier<N> minIncluded, Supplier<N> maxExcluded) {
+        return LogicalBinaryCondition.and(beforeOrEq(maxExcluded), afterOrEq(minIncluded));
+    }
+
+    /**
+     * Returns a condition checking if the node value is between the given min inclusive and max exclusive condition
+     * values.
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     */
+    public final StepCondition between(TemporalFunction<N> minIncluded, TemporalFunction<N> maxExcluded) {
+        return LogicalBinaryCondition.and(beforeOrEq(maxExcluded), afterOrEq(minIncluded));
+    }
+
+    /**
+     * Returns a condition checking if the node value is not between the given min inclusive and max exclusive values.
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     */
+    public final StepCondition notBetween(N minIncluded, N maxExcluded) {
+        return LogicalUnaryCondition.negate(between(minIncluded, maxExcluded));
+    }
+
+    /**
+     * Returns a condition checking if the node value is not between the given min inclusive and max exclusive supplier
+     * values.
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     */
+    public final StepCondition notBetween(Supplier<N> minIncluded, Supplier<N> maxExcluded) {
+        return LogicalUnaryCondition.negate(between(minIncluded, maxExcluded));
+    }
+
+    /**
+     * Returns a condition checking if the node value is not between the given min inclusive and max exclusive condition
+     * values.
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     */
+    public final StepCondition notBetween(TemporalFunction<N> minIncluded, TemporalFunction<N> maxExcluded) {
+        return LogicalUnaryCondition.negate(between(minIncluded, maxExcluded));
+    }
 
     /**
      * Returns a temporal function that returns the node value with given temporal adjuster applied.
@@ -81,7 +342,7 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
     public final TemporalFunction<N> minus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
         return temporalFunction(TemporalBiFunctionMetadata.minusMetadata(metadata, value, unit),
                 (model, context) -> value(model, context)
-                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
+                        .flatMap(l -> Try.success(model.<Integer> get(value.id()))
                                 .map(r -> minusFunction(r, unit).apply(l))));
     }
 
@@ -107,7 +368,7 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
     public final TemporalFunction<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
         return temporalFunction(TemporalBiFunctionMetadata.plusMetadata(metadata, value, unit),
                 (model, context) -> value(model, context)
-                        .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
+                        .flatMap(l -> Try.success(model.<Integer> get(value.id()))
                                 .map(r -> plusFunction(r, unit).apply(l))));
     }
 
@@ -273,7 +534,7 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, N value) {
         return new LongFunction(metadata, (model, context) -> value(model, context)
-                .flatMap(l -> Optional.ofNullable(value).map(r -> betweenFunction(unit).apply(l, r))));
+                .flatMap(l -> Try.success(value).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
@@ -283,14 +544,14 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
-            TemporalCondition<N> value) {
-        return new LongFunction(metadata, (model, context) -> value(model, context).flatMap(
-                l -> value.getFunction().apply(model, context).map(r -> betweenFunction(unit).apply(l, r))));
+            TemporalFunction<N> value) {
+        return new LongFunction(metadata, (model, context) -> value(model, context)
+                .flatMap(l -> value.getFunction().apply(model, context).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, Supplier<N> value) {
         return new LongFunction(metadata, (model, context) -> value(model, context)
-                .flatMap(l -> Optional.ofNullable(value.get()).map(r -> betweenFunction(unit).apply(l, r))));
+                .flatMap(l -> Try.supplied(value).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
 }

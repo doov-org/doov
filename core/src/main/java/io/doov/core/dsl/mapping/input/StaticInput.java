@@ -1,12 +1,12 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package io.doov.core.dsl.mapping;
+package io.doov.core.dsl.mapping.input;
 
 import java.util.function.Supplier;
 
 import io.doov.core.FieldModel;
-import io.doov.core.Single;
+import io.doov.core.Try;
 import io.doov.core.dsl.field.types.ContextAccessor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.StaticMetadata;
@@ -32,7 +32,7 @@ public class StaticInput<T> implements ContextAccessor<T> {
     }
 
     @Override
-    public Single<T> value(FieldModel model, Context context) {
-        return Single.supplied(valueSupplier);
+    public Try<T> value(FieldModel model, Context context) {
+        return Try.supplied(valueSupplier);
     }
 }

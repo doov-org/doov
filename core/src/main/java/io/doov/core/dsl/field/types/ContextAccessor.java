@@ -15,12 +15,11 @@
  */
 package io.doov.core.dsl.field.types;
 
-import java.util.Optional;
-
 import io.doov.core.FieldModel;
+import io.doov.core.Try;
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.DSLBuilder;
 
-public interface ContextAccessor<T> {
-    
-    Optional<T> value(FieldModel model, Context context);
+public interface ContextAccessor<T> extends DSLBuilder {
+    Try<T> value(FieldModel model, Context context);
 }
