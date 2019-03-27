@@ -7,6 +7,8 @@ import static io.doov.core.dsl.DOOV.map;
 import static io.doov.core.dsl.DOOV.mappings;
 import static io.doov.core.dsl.DOOV.template;
 import static io.doov.core.dsl.DOOV.when;
+import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
+import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.template.ParameterTypes.$String;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.validation.SampleRules.RULE_USER_ADULT;
@@ -28,9 +30,18 @@ public class SampleMappings {
     public static final MappingRule DEFAULT_CONFIG_CAMPAIGN = map(true).to(configurationMailingCampaign);
     public static final MappingRule DEFAULT_CREATION_DATE = map(LocalDate.now()).to(accountCreationDate);
 
+    public static final MappingRule DEFAULT_DATE_TO_STRING = map(LocalDate.now())
+            .using(converter(date -> date.toString(), "empty", "date to string"))
+            .to(accountLogin);
+
+    public static final MappingRule DEFAULT_NAME_COMBINER = map(userFirstName, userLastName)
+            .using(biConverter((firstName, lastName) -> firstName + " " + lastName, "", "combine names"))
+            .to(userLastName);
+
     public static final MappingRule DEFAULT_MAPPINGS = mappings(DEFAULT_CONFIG_AGE,
             DEFAULT_CONFIG_CAMPAIGN,
-            DEFAULT_CREATION_DATE);
+            DEFAULT_CREATION_DATE,
+            DEFAULT_NAME_COMBINER);
 
     public static final MappingRule DEFAULT_CONDITIONAL = when(RULE_USER_ADULT.getStepWhen().stepCondition())
             .then(DEFAULT_CONFIG_CAMPAIGN)
@@ -56,6 +67,8 @@ public class SampleMappings {
             DEFAULT_CONFIG_AGE,
             DEFAULT_CONFIG_CAMPAIGN,
             DEFAULT_CREATION_DATE,
+            DEFAULT_DATE_TO_STRING,
+            DEFAULT_NAME_COMBINER,
             DEFAULT_MAPPINGS,
             DEFAULT_CONDITIONAL,
             TEMPLATE_MAP_GOOGLE.bind(favoriteSiteName1, favoriteSiteUrl1),

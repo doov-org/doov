@@ -69,6 +69,9 @@ public class AstHtmlRenderer {
                 case TEMPLATE_IDENTIFIER:
                     leaf(metadata, parents);
                     break;
+                case TYPE_CONVERTER:
+                    typeConverter(metadata, parents);
+                    break;
                 case UNARY_PREDICATE:
                     unary(metadata, parents);
                     break;
@@ -77,6 +80,9 @@ public class AstHtmlRenderer {
                 case THEN_MAPPING:
                 case ELSE_MAPPING:
                     nary(metadata, parents);
+                    break;
+                case MAPPING_INPUT:
+                    mappingInput(metadata, parents);
                     break;
                 case FIELD_PREDICATE_MATCH_ANY:
                     fieldMatchAny(metadata, parents);
@@ -90,6 +96,28 @@ public class AstHtmlRenderer {
         } finally {
             parents.pop();
         }
+    }
+
+    private void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writer.write(SPACE);
+        writer.writeBeginSpan(CSS_TYPE_CONVERTER);
+        writer.writeBeginSpan(CSS_OPERATOR);
+        writer.writeFromBundle(MappingOperator.using);
+        writer.writeEndSpan();
+        writer.write(SPACE);
+        ConverterMetadata converterMetadata = (ConverterMetadata) metadata;
+        converterMetadata.elementsAsList().forEach(element -> {
+            writer.writeBeginSpan(CSS_VALUE);
+            writer.write(APOS);
+            writer.write(writer.escapeHtml4(element.getReadable().readable()));
+            writer.write(APOS);
+            writer.writeEndSpan();
+        });
+        writer.writeEndSpan();
+    }
+
+    private void mappingInput(Metadata metadata, ArrayDeque<Metadata> parents) {
+        metadata.children().forEach(m -> toHtml(m, parents));
     }
 
     private void singleMapping(Metadata metadata, ArrayDeque<Metadata> parents) {
