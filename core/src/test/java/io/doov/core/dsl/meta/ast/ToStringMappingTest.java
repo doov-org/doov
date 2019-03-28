@@ -89,7 +89,7 @@ public class ToStringMappingTest {
 
     @Test
     void mapping_to_date_field_with_converter() {
-        rule = map(LocalDate.now())
+        rule = map(LocalDate.of(2019, 3, 27))
                 .using(converter(date -> date.toString(), "empty", "date to string"))
                 .to(stringField);
         assertThat(rule.readable(LOCALE))
