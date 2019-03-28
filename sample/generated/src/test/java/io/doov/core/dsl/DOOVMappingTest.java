@@ -1,9 +1,9 @@
 package io.doov.core.dsl;
 
 import static io.doov.core.dsl.DOOV.*;
-import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
-import static io.doov.core.dsl.mapping.TypeConverters.converter;
-import static io.doov.core.dsl.mapping.TypeConverters.counter;
+import static io.doov.core.dsl.mapping.converter.TypeConverters.biConverter;
+import static io.doov.core.dsl.mapping.converter.TypeConverters.converter;
+import static io.doov.core.dsl.mapping.converter.TypeConverters.counter;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.field.dsl.DslSampleModel.when;
@@ -22,6 +22,9 @@ import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.mapping.*;
+import io.doov.core.dsl.mapping.converter.TypeConverters;
+import io.doov.core.dsl.mapping.input.FunctionInput;
+import io.doov.core.dsl.mapping.output.ConsumerOutput;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MappingOperator;
 import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
@@ -141,7 +144,7 @@ public class DOOVMappingTest {
     void doov() {
         SampleModelWrapper sample = new SampleModelWrapper(sample());
         SampleModelWrapper copy = new SampleModelWrapper();
-        mappings.validateAndExecute(sample, copy, new MyContext());
+        mappings.executeOn(sample, copy, new MyContext());
         assertThat(copy.getModel().getConfiguration().getMaxLong()).isEqualTo(9);
         assertThat(copy.getModel().getConfiguration().getMinAge()).isEqualTo(3);
         assertThat(copy.getModel().getAccount().getPhoneNumber()).isEqualTo("0102030409");
@@ -164,7 +167,7 @@ public class DOOVMappingTest {
         SampleModelWrapper sample = new SampleModelWrapper(sample());
         SampleModelWrapper copy = new SampleModelWrapper();
         sample.set(accountAcceptEmail, false);
-        mappings.validateAndExecute(sample, copy, new MyContext());
+        mappings.executeOn(sample, copy, new MyContext());
         assertThat(copy.getModel().getConfiguration().getMaxLong()).isEqualTo(9);
         assertThat(copy.getModel().getConfiguration().getMinAge()).isEqualTo(3);
         assertThat(copy.getModel().getAccount().getPhoneNumber()).isEqualTo("0102030409");

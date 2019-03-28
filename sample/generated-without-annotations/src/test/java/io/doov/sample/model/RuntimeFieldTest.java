@@ -36,15 +36,15 @@ public class RuntimeFieldTest {
     @Test
     void map_runtime() {
         RuntimeModel<SampleModel> runtimeModel = new RuntimeModel<>(RuntimePath.INSTANCE, new SampleModel());
-        assertThat(mappingRule.validate(wrapper, runtimeModel)).isTrue();
+        assertThat(mappingRule.executeOn(wrapper, runtimeModel).isSuccess()).isTrue();
         mappingRule.executeOn(wrapper, runtimeModel);
         assertThat(runtimeModel.get(userId)).isEqualTo(1L);
 
-        assertThat(mappingRule3.validate(wrapper, runtimeModel)).isTrue();
+        assertThat(mappingRule.executeOn(wrapper, runtimeModel).isSuccess()).isTrue();
         mappingRule3.executeOn(wrapper, runtimeModel);
         assertThat(runtimeModel.get(RuntimePath.TEL)).isNull();
 
-        assertThat(mappingRule2.validate(wrapper, runtimeModel)).isTrue();
+        assertThat(mappingRule.executeOn(wrapper, runtimeModel).isSuccess()).isTrue();
         mappingRule2.executeOn(wrapper, runtimeModel);
         assertThat(runtimeModel.get(RuntimePath.BIRTHDATE)).isEqualTo(LocalDate.of(1980, 8, 1));
 
@@ -55,7 +55,7 @@ public class RuntimeFieldTest {
         SampleModelWrapper modelWrapper = new SampleModelWrapper();
 
         Stopwatch started = Stopwatch.createStarted();
-        assertThat(mappingRule.validate(wrapper, modelWrapper)).isTrue();
+        assertThat(mappingRule.executeOn(wrapper, modelWrapper).isSuccess()).isTrue();
         mappingRule.executeOn(wrapper, modelWrapper);
         System.out.println(started.elapsed(TimeUnit.NANOSECONDS));
         assertThat(modelWrapper.get(userId)).isEqualTo(1L);
@@ -63,11 +63,11 @@ public class RuntimeFieldTest {
         mappingRule.executeOn(wrapper, modelWrapper);
         assertThat(modelWrapper.get(RuntimePath.USER_ID)).isEqualTo(1L);
 
-        assertThat(mappingRule3.validate(wrapper, modelWrapper)).isTrue();
+        assertThat(mappingRule.executeOn(wrapper, modelWrapper).isSuccess()).isTrue();
         mappingRule3.executeOn(wrapper, modelWrapper);
         assertThat(modelWrapper.get(RuntimePath.TEL)).isNull();
 
-        assertThat(mappingRule2.validate(wrapper, modelWrapper)).isTrue();
+        assertThat(mappingRule.executeOn(wrapper, modelWrapper).isSuccess()).isTrue();
         mappingRule2.executeOn(wrapper, modelWrapper);
         assertThat(modelWrapper.get(RuntimePath.BIRTHDATE)).isEqualTo(LocalDate.of(1980, 8, 1));
 
