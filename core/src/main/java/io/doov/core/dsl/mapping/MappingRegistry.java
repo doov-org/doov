@@ -3,6 +3,8 @@
  */
 package io.doov.core.dsl.mapping;
 
+import static io.doov.core.Try.combine;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,7 +62,7 @@ public class MappingRegistry implements MappingRule {
     public <C extends Context> Try<C> executeOn(FieldModel inModel, FieldModel outModel, C context) {
         return mappingRules.stream()
                 .map(rule -> rule.executeOn(inModel, outModel, context))
-                .findFirst().get();
+                .reduce(Try.success(context), (cTry, cTry2) -> combine((c1, c2) -> c1, cTry, cTry2));
     }
 
     @Override
