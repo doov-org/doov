@@ -4,6 +4,7 @@
 package io.doov.core;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.function.*;
 import java.util.stream.Stream;
 
@@ -11,137 +12,185 @@ import java.util.stream.Stream;
  * Name inspired by RxJava
  */
 
-public class Try<T> {
+public interface Try<T> {
 
-    private final T value;
-    private final List<Throwable> reasons;
+    class TryValue<V> implements Try<V> {
 
-    private final boolean hasValue;
+        private static final Try<?> EMPTY = new TryValue<>();
 
-    private Try(T value, List<Throwable> reasons, boolean hasValue) {
-        this.value = value;
-        this.reasons = reasons;
-        this.hasValue = hasValue;
+        private final V value;
+
+        private TryValue() {
+            this.value = null;
+        }
+
+        TryValue(V value) {
+            this.value = Objects.requireNonNull(value);
+        }
+
+        @Override
+        public V value() {
+            return value;
+        }
+
     }
 
-    public static <S> Try<S> success(S value) {
-        return new Try<>(value, null, true);
+    class TryError<T> implements Try<T> {
+
+        private final Exception error;
+
+        TryError(Exception error) {
+            this.error = error;
+        }
+
+        @Override
+        public Exception error() {
+            return error;
+        }
+
     }
 
-    public static <S> Try<S> failure(Throwable... fails) {
-        return failure(Arrays.asList(fails));
+    static <S> Try<S> success(S value) {
+        return (value == null) ? empty() : new TryValue<>(value);
     }
 
-    public static <S> Try<S> failure(List<Throwable> fails) {
-        return new Try<>(null, fails, false);
+    static <S> Try<S> failure(Exception error) {
+        return new TryError<>(error);
     }
 
-    public interface SafeSupplier<T,E extends Throwable> {
-        T get() throws E;
+    static <S> Try<S> empty() {
+        @SuppressWarnings("unchecked")
+        Try<S> empty = (Try<S>) TryValue.EMPTY;
+        return empty;
     }
 
-    public static <S> Try<S> catchable(SafeSupplier<S,?> supplier) {
+    static <S> Try<S> callable(Callable<S> supplier) {
+        try {
+            return success(supplier.call());
+        } catch (Exception Exception) {
+            return failure(Exception);
+        }
+    }
+
+    static <S> Try<S> supplier(Supplier<S> supplier) {
         try {
             return success(supplier.get());
-        } catch (Throwable throwable) {
-            return failure(throwable);
+        } catch (Exception Exception) {
+            return failure(Exception);
         }
     }
 
-    public static <S> Try<S> supplied(Supplier<S> supplier) {
-        try {
-            return success(supplier.get());
-        } catch (Throwable throwable) {
-            return failure(throwable);
-        }
-    }
-
-    public boolean isSuccess() {
-        return hasValue;
-    }
-
-    public boolean isFailure() {
-        return !hasValue;
-    }
-
-    public boolean isNotNull() {
-        return value != null;
-    }
-    public boolean isNull() {
-        return value == null;
-    }
-
-    public T value() {
-        return value;
-    }
-
-    public List<Throwable> reasons() {
-        return reasons;
-    }
-
-    public <S> Try<S> map(Function<T,S> f) {
-        if(hasValue && isNotNull()) {
-            return success(f.apply(value));
-        } else if (hasValue) {
-            return success(null);
+    static <S> Try<S> flatten(Try<Try<S>> nested) {
+        if (nested.isSuccess()) {
+            return nested.value();
         } else {
-            return failure(reasons);
+            return failure(nested.error());
         }
     }
 
-    public static <S> Try<S> flatten(Try<Try<S>> nested) {
-        if(nested.isSuccess()) {
-            return nested.value;
+    static <T, S, R> Try<R> combine(BiFunction<T, S, R> combinator, Try<T> lhs, Try<S> rhs) {
+        if (lhs.isSuccess() && rhs.isSuccess()) {
+            if (lhs.isNotNull() && rhs.isNotNull()) {
+                return success(combinator.apply(lhs.value(), rhs.value()));
+            } else {
+                return empty();
+            }
+        } else if (lhs.isSuccess() && rhs.isFailure()) {
+            return failure(rhs.error());
+        } else if (lhs.isFailure() && rhs.isSuccess()) {
+            return failure(lhs.error());
+        } else { // lhs.isFailure() && rhs.isFailure()
+            return failure(lhs.error());
+        }
+
+    }
+
+    default T value() {
+        throw new RuntimeException("No value present", error());
+    }
+
+    default Exception error() {
+        return null;
+    }
+
+    default boolean isSuccess() {
+        return error() == null;
+    }
+
+    default boolean isFailure() {
+        return error() != null;
+    }
+
+    default boolean isNotNull() {
+        return value() != null;
+    }
+
+    default boolean isNull() {
+        return value() == null;
+    }
+
+    default <S> Try<S> map(Function<T, S> f) {
+        Objects.requireNonNull(f);
+        if (isSuccess()) {
+            return supplier(() -> f.apply(value()));
         } else {
-            return failure(new Throwable("ERROR in FLATTEN")); // Never reached
+            return failure(error());
         }
     }
 
-    public <S> Try<S> flatMap(Function<T, Try<S>> f) {
+    default <S> Try<S> flatMap(Function<T, Try<S>> f) {
+        Objects.requireNonNull(f);
         return flatten(map(f));
     }
 
-    public Try<T> recover(T value) {
-        if(hasValue && isNotNull()) {
+    default Try<T> doOnSuccess(Consumer<T> consumer) {
+        if (isSuccess()) {
+            consumer.accept(value());
+        }
+        return this;
+    }
+
+    default Try<T> doOnError(Consumer<Exception> exceptionConsumer) {
+        Objects.requireNonNull(exceptionConsumer);
+        if (isFailure()) {
+            exceptionConsumer.accept(error());
+        }
+        return this;
+    }
+
+    default Try<T> onErrorReturn(T value) {
+        if (isSuccess()) {
             return this;
         } else {
             return Try.success(value);
         }
     }
 
-    public static <T,S,R> Try<R> combine(BiFunction<T,S,R> combinator, Try<T> lhs, Try<S> rhs) {
-
-        if(lhs.isSuccess() && rhs.isSuccess()) {
-            if(lhs.isNotNull() && rhs.isNotNull()) {
-                return success(combinator.apply(lhs.value,rhs.value));
+    default Try<T> onErrorThrow() {
+        if (isSuccess()) {
+            return this;
+        } else {
+            if (error() instanceof RuntimeException) {
+                throw (RuntimeException) error();
             } else {
-                return success(null);
+                throw new RuntimeException(error());
             }
         }
-
-        if(lhs.isSuccess() && rhs.isFailure()) {
-            return failure(rhs.reasons);
-        }
-
-        if(lhs.isFailure() && rhs.isSuccess()) {
-            return failure(lhs.reasons);
-        }
-
-        if(lhs.isFailure() && rhs.isFailure()) {
-            List<Throwable> res = new ArrayList<>();
-            res.addAll(lhs.reasons);
-            res.addAll(rhs.reasons);
-            return failure(res);
-        }
-
-        throw new RuntimeException(); // Never triggered
     }
 
-    public Stream<T> stream() {
-        if(isNotNull()) {
-            return Stream.of(value);
+    default Stream<T> stream() {
+        if (isSuccess()) {
+            return Stream.of(value());
         } else {
             return Stream.empty();
+        }
+    }
+
+    default Optional<T> optional() {
+        if (isSuccess()) {
+            return Optional.of(value());
+        } else {
+            return Optional.empty();
         }
     }
 

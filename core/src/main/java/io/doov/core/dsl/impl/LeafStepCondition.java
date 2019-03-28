@@ -31,24 +31,24 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
 
     private LeafStepCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<N>> value,
             Function<N, Boolean> predicate) {
-        super(metadata, (model, context) -> {
-            Try<N> tr1 = value.apply(model, context);
-            Try<Boolean> tr2 = tr1.map(predicate);
-            return tr2.recover(false).value();
-        });
+        super(metadata, (model, context) ->
+                value.apply(model, context)
+                        .map(predicate)
+                        .onErrorReturn(false)
+                        .value());
     }
 
     private LeafStepCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Try<N>> left,
             BiFunction<FieldModel, Context, Try<N>> right, BiFunction<N, N, Boolean> predicate) {
         super(metadata, (model, context) -> left.apply(model, context)
                 .flatMap(l -> right.apply(model, context).map(r -> predicate.apply(l, r)))
-                .recover(false)
+                .onErrorReturn(false)
                 .value());
     }
 
     /**
      * Returns a step condition checking if the node value is null.
-     * 
+     *
      * @param <N> the type of the node value
      * @param condition the node value to check
      * @return the step condition
@@ -60,7 +60,7 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
 
     /**
      * Returns a step condition checking if the node value is not null.
-     * 
+     *
      * @param <N> the type of the node value
      * @param condition the node value to check
      * @return the step condition
@@ -83,13 +83,13 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
 
     public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
             BiFunction<FieldModel, Context, Try<N>> left, N right, BiFunction<N, N, Boolean> predicate) {
-        return new LeafStepCondition<>(metadata, left, (model, context) -> Try.supplied(() -> right), predicate);
+        return new LeafStepCondition<>(metadata, left, (model, context) -> Try.success(right), predicate);
     }
 
     public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,
             BiFunction<FieldModel, Context, Try<N>> left, Supplier<N> right,
             BiFunction<N, N, Boolean> predicate) {
-        return new LeafStepCondition<>(metadata, left, (model, context) -> Try.supplied(right), predicate);
+        return new LeafStepCondition<>(metadata, left, (model, context) -> Try.supplier(right), predicate);
     }
 
     public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata,

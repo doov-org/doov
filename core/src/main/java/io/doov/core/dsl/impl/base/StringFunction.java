@@ -118,7 +118,9 @@ public class StringFunction extends DefaultCondition<String> {
      */
     public IntegerFunction parseInt() {
         return new IntegerFunction(metadata,
-                (model, context) -> value(model, context).map(Integer::parseInt));
+                (model, context) -> value(model, context)
+                        .map(Integer::parseInt)
+                        .onErrorThrow());
     }
 
 }

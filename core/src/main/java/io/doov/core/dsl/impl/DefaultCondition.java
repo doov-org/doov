@@ -280,7 +280,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
             BiFunction<T, U, R> mapper) {
         return new DefaultCondition<>(mapUsingMetadata(metadata, readable, condition),
                 (model, context) -> value(model, context)
-                        .flatMap(l -> Try.supplied(() -> mapper.apply(l, condition.value(model, context).value()))));
+                        .flatMap(l -> Try.supplier(() -> mapper.apply(l, condition.value(model, context).value()))));
     }
 
 }

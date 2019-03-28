@@ -551,7 +551,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultCondit
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, Supplier<N> value) {
         return new LongFunction(metadata, (model, context) -> value(model, context)
-                .flatMap(l -> Try.supplied(value).map(r -> betweenFunction(unit).apply(l, r))));
+                .flatMap(l -> Try.supplier(value).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
 }

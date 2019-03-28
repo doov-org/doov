@@ -3,6 +3,8 @@
  */
 package io.doov.core.dsl.mapping.input;
 
+import java.util.NoSuchElementException;
+
 import io.doov.core.FieldModel;
 import io.doov.core.Try;
 import io.doov.core.dsl.DslField;
@@ -32,9 +34,9 @@ public class FieldInput<T> implements ContextAccessor<T> {
     @Override
     public Try<T> value(FieldModel model, Context context) {
         if(validate(model)) {
-            return Try.supplied(() -> model.get(field));
+            return Try.supplier(() -> model.get(field));
         } else {
-            return Try.failure(new Throwable("Field " + field + " not present."));
+            return Try.failure(new NoSuchElementException("Field " + field + " not present."));
         }
     }
 }

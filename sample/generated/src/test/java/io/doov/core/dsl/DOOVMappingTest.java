@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
@@ -28,6 +29,7 @@ import io.doov.core.dsl.mapping.output.ConsumerOutput;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MappingOperator;
 import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
+import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.core.serial.TypeAdapters;
 import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.model.*;
@@ -59,6 +61,8 @@ public class DOOVMappingTest {
 
     @BeforeEach
     void setUp() {
+        GenericModel model = new GenericModel();
+        IntegerFieldInfo testField = model.intField(0, "test field");
         mappings = mappings(
                 when(accountLanguage.eq(Language.FR)).then(
                         map(accountPhoneNumber)
@@ -111,7 +115,9 @@ public class DOOVMappingTest {
 
                 map(Timezone.ETC_GMT).to(accountTimezone),
                 mapNull(accountTimezone),
-                map(accountTimezone).using(TypeConverters.asString(TypeAdapters.INSTANCE)).to(DslSampleModel.userTel)
+                map(accountTimezone).using(TypeConverters.asString(TypeAdapters.INSTANCE)).to(DslSampleModel.userTel),
+
+                map(testField).to((m, c, v) -> System.out.println(v))
         );
     }
 

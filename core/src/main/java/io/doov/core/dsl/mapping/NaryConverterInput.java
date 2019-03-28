@@ -36,7 +36,7 @@ public class NaryConverterInput<T> implements ContextAccessor<T> {
 
     @Override
     public Try<T> value(FieldModel model, Context context) {
-        return Try.supplied(
-                () -> converter.convert(model,context,fields.toArray(new DslField[0])));
+        return Try.supplier(
+                () -> converter.convert(model, context, fields.toArray(new DslField[0])));
     }
 }

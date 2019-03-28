@@ -32,6 +32,6 @@ public class FunctionInput<T> implements ContextAccessor<T> {
 
     @Override
     public Try<T> value(FieldModel model, Context context) {
-        return Try.supplied(() -> valueFunction.apply(model, context));
+        return Try.supplier(() -> valueFunction.apply(model, context));
     }
 }

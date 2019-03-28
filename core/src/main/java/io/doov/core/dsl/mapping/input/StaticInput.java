@@ -33,6 +33,6 @@ public class StaticInput<T> implements ContextAccessor<T> {
 
     @Override
     public Try<T> value(FieldModel model, Context context) {
-        return Try.supplied(valueSupplier);
+        return Try.supplier(valueSupplier);
     }
 }

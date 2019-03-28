@@ -69,7 +69,7 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
         return numericFunction(plusMetadata(metadata, field),
                 (model, context) -> value(model, context)
                         .map(v -> sumFunction().apply(v,
-                                Try.success(model.<N> get(field.id())).recover(identity()).value())));
+                                Try.success(model.<N> get(field.id())).value())));
     }
 
     /**
@@ -83,9 +83,8 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
                 (model, context) -> fields.stream()
                         .map(f -> Try.success(model.<N> get(f.id())))
                         .filter(Try::isNotNull)
-                        .reduce(
-                                Try.success(identity()),
-                                (lhs,rhs) -> Try.combine(minFunction(), lhs,rhs)));
+                        .reduce((lhs, rhs) -> Try.combine(minFunction(), lhs, rhs))
+                        .orElse(Try.success(identity())));
     }
 
     /**
@@ -137,6 +136,6 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
     public final NumericFunction<N> when(StepCondition condition) {
         return numericFunction(whenMetadata(metadata, condition),
                 (model, context) -> condition.predicate().test(model, context) ? value(model, context)
-                        : Try.success(null));
+                        : Try.empty());
     }
 }

@@ -38,13 +38,9 @@ public class DefaultMappingRule<T> implements MappingRule {
     public <C extends Context> Try<C> executeOn(FieldModel inModel, FieldModel outModel, C context) {
         ModelInterceptor in = new ModelInterceptor(inModel, context);
         ModelInterceptor out = new ModelInterceptor(outModel, context);
-        Try<T> res = input.value(in,context);
-        if(res.isSuccess()) {
-            output.write(out, context, res.value());
-            return Try.success(context);
-        } else {
-            return Try.failure(res.reasons());
-        }
+        return input.value(in, context)
+                .doOnSuccess(value -> output.write(out, context, value))
+                .map(t -> context);
     }
 
 }
