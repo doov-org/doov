@@ -84,7 +84,7 @@ public class ToStringMappingTest {
                 map(true).to(booleanField),
                 map(LocalDate.of(2000, 1, 1)).to(dateField));
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("map 18 to intField map true to booleanField map 2000-01-01 to dateField");
+                .isEqualTo("map 18 to intField, map true to booleanField, map 2000-01-01 to dateField");
     }
 
     @Test
