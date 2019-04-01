@@ -32,7 +32,7 @@ import io.doov.core.dsl.meta.ast.AstVisitorUtils;
  * Interface for the description of a node in the syntax tree.
  */
 public interface Metadata extends Readable {
-    
+
     default Operator getOperator() {
         return no_operator;
     }
@@ -102,6 +102,11 @@ public interface Metadata extends Readable {
         if (level < positions.length - 1)
             return child.childAt(positions, level + 1);
         return child;
+    }
+
+    default Metadata lastChild() {
+        final List<Metadata> childrens = children().collect(toList());
+        return childrens.size() > 0 ? childrens.get(childrens.size() - 1) : null;
     }
 
     /**
