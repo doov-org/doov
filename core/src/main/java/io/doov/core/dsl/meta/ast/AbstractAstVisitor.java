@@ -19,6 +19,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -372,6 +373,15 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
 
     protected final Stream<Metadata> stackSteam() {
         return stack.stream();
+    }
+
+    protected final Metadata parent() {
+        final Iterator<Metadata> it = stack.iterator();
+        if (it.hasNext()) {
+            it.next();
+            return it.hasNext() ? it.next() : null;
+        }
+        return null;
     }
 
 }

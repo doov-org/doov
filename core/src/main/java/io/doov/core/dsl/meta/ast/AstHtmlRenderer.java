@@ -19,12 +19,17 @@ import static io.doov.core.dsl.meta.DefaultOperator.and;
 import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.validate;
+import static io.doov.core.dsl.meta.MappingOperator.map;
+import static io.doov.core.dsl.meta.MappingOperator.to;
 import static io.doov.core.dsl.meta.MetadataType.*;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.HtmlWriter.*;
 import static java.util.Arrays.asList;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
@@ -64,11 +69,20 @@ public class AstHtmlRenderer {
                 case TEMPLATE_IDENTIFIER:
                     leaf(metadata, parents);
                     break;
+                case TYPE_CONVERTER:
+                    typeConverter(metadata, parents);
+                    break;
                 case UNARY_PREDICATE:
                     unary(metadata, parents);
                     break;
                 case NARY_PREDICATE:
+                case MULTIPLE_MAPPING:
+                case THEN_MAPPING:
+                case ELSE_MAPPING:
                     nary(metadata, parents);
+                    break;
+                case MAPPING_INPUT:
+                    mappingInput(metadata, parents);
                     break;
                 case FIELD_PREDICATE_MATCH_ANY:
                     fieldMatchAny(metadata, parents);
@@ -84,22 +98,74 @@ public class AstHtmlRenderer {
         }
     }
 
-    private void singleMapping(Metadata metadata, ArrayDeque<Metadata> parents) {
-        writer.writeBeginSpan(CSS_SINGLE_MAPPING);
-        toHtml(metadata.childAt(0), parents);
+    private void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writer.write(SPACE);
+        writer.writeBeginSpan(CSS_TYPE_CONVERTER);
+        writer.writeBeginSpan(CSS_OPERATOR);
+        writer.writeFromBundle(MappingOperator.using);
+        writer.writeEndSpan();
+        writer.write(SPACE);
+        ConverterMetadata converterMetadata = (ConverterMetadata) metadata;
+        converterMetadata.elementsAsList().forEach(element -> {
+            writer.writeBeginSpan(CSS_VALUE);
+            writer.write(APOS);
+            writer.write(writer.escapeHtml4(element.getReadable().readable()));
+            writer.write(APOS);
+            writer.writeEndSpan();
+        });
         writer.writeEndSpan();
     }
 
-    private void when(Metadata metadata, ArrayDeque<Metadata> parents) {
-        writer.writeBeginSpan(CSS_WHEN);
-        writer.writeFromBundle(metadata.getOperator());
+    private void mappingInput(Metadata metadata, ArrayDeque<Metadata> parents) {
+        metadata.children().forEach(m -> toHtml(m, parents));
+    }
+
+    private void singleMapping(Metadata metadata, ArrayDeque<Metadata> parents) {
+        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
+        final MetadataType pmdType = pmd.map(Metadata::type).orElse(null);
+        if (pmdType == MULTIPLE_MAPPING) {
+            writer.writeBeginLi(CSS_LI_NARY);
+        }
+        writer.writeBeginSpan(CSS_SINGLE_MAPPING);
+        writer.writeBeginSpan(CSS_OPERATOR);
+        writer.writeFromBundle(map);
         writer.writeEndSpan();
-        writer.writeBeginUl(CSS_UL_WHEN);
+        writer.write(SPACE);
         toHtml(metadata.childAt(0), parents);
-        writer.writeEndUl();
-        writer.writeBeginSpan(CSS_VALIDATE);
-        writer.writeFromBundle(validate);
+        writer.write(SPACE);
+        writer.writeBeginSpan(CSS_OPERATOR);
+        writer.writeFromBundle(to);
         writer.writeEndSpan();
+        writer.write(SPACE);
+        toHtml(metadata.childAt(1), parents);
+        writer.writeEndSpan();
+        writer.write(SPACE);
+        if (pmdType == MULTIPLE_MAPPING) {
+            writer.writeEndLi();
+        }
+    }
+
+    private void when(Metadata metadata, ArrayDeque<Metadata> parents) {
+        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
+        final MetadataType pmdType = pmd.map(Metadata::type).orElse(null);
+        if (pmdType == MULTIPLE_MAPPING) {
+            writer.writeBeginSpan(CSS_WHEN);
+            writer.writeFromBundle(metadata.getOperator());
+            writer.writeEndSpan();
+            writer.writeBeginUl(CSS_UL_WHEN);
+            toHtml(metadata.childAt(0), parents);
+            writer.writeEndUl();
+        } else {
+            writer.writeBeginSpan(CSS_WHEN);
+            writer.writeFromBundle(metadata.getOperator());
+            writer.writeEndSpan();
+            writer.writeBeginUl(CSS_UL_WHEN);
+            toHtml(metadata.childAt(0), parents);
+            writer.writeEndUl();
+            writer.writeBeginSpan(CSS_VALIDATE);
+            writer.writeFromBundle(validate);
+            writer.writeEndSpan();
+        }
     }
 
     private void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
@@ -112,6 +178,7 @@ public class AstHtmlRenderer {
 
     private void nary(Metadata metadata, ArrayDeque<Metadata> parents) {
         final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
+        final MetadataType pmdType = pmd.map(Metadata::type).orElse(null);
         if (pmd.map(m -> m.getOperator().returnType() == BOOLEAN).orElse(false)) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_count()
             writer.writeExclusionBar(metadata, parents);
@@ -121,7 +188,31 @@ public class AstHtmlRenderer {
             writer.writeBeginOl(CSS_OL_NARY);
             metadata.children().forEach(m -> toHtml(m, parents));
             writer.writeEndOl();
-        } else {
+        } else if (metadata.type() == MULTIPLE_MAPPING && pmdType == MULTIPLE_MAPPING) {
+            writer.writeBeginLi(CSS_LI_NARY);
+            writer.writeBeginUl(CSS_OL_CASCADED_NARY);
+            metadata.children().forEach(m -> toHtml(m, parents));
+            writer.writeEndUl();
+            writer.writeEndLi();
+        } else if (metadata.type() == MULTIPLE_MAPPING) {
+            writer.writeBeginUl(CSS_OL_NARY);
+            metadata.children().forEach(m -> toHtml(m, parents));
+            writer.writeEndUl();
+        } else if (metadata.type() == THEN_MAPPING) {
+            writer.writeBeginSpan(CSS_THEN);
+            writer.writeFromBundle(metadata.getOperator());
+            writer.writeEndSpan();
+            writer.writeBeginUl(CSS_OL_NARY);
+            metadata.children().forEach(m -> toHtml(m, parents));
+            writer.writeEndUl();
+        } else if (metadata.type() == ELSE_MAPPING && metadata.children().count() > 0) {
+            writer.writeBeginSpan(CSS_ELSE);
+            writer.writeFromBundle(metadata.getOperator());
+            writer.writeEndSpan();
+            writer.writeBeginUl(CSS_OL_NARY);
+            metadata.children().forEach(m -> toHtml(m, parents));
+            writer.writeEndUl();
+        } else if (metadata.type() != ELSE_MAPPING) {
             writer.writeBeginLi(CSS_LI_NARY);
             writer.writeExclusionBar(metadata, parents);
             writer.writeBeginSpan(CSS_NARY);
@@ -355,6 +446,6 @@ public class AstHtmlRenderer {
      * @param metadata the field metadata
      */
     protected void handleField(Metadata metadata) {
-        writer.writeFromBundle(writer.escapeHtml4(metadata.readable(writer.getLocale())));
+        writer.write(writer.escapeHtml4(metadata.readable(writer.getLocale())));
     }
 }

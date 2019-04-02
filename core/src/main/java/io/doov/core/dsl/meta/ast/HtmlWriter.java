@@ -29,7 +29,10 @@ public interface HtmlWriter {
     String CSS_VALIDATE = "dsl-token-validate";
     String CSS_NARY = "dsl-token-nary";
     String CSS_WHEN = "dsl-token-when";
+    String CSS_ELSE = "dsl-token-else";
+    String CSS_THEN = "dsl-token-then";
     String CSS_SINGLE_MAPPING = "dsl-token-single-mapping";
+    String CSS_TYPE_CONVERTER = "dsl-token-type-converter";
     String CSS_OPERATOR = "dsl-token-operator";
     String CSS_TEMPLATE_PARAM = "dsl-token-template-param";
     String CSS_VALUE = "dsl-token-value";
@@ -46,6 +49,7 @@ public interface HtmlWriter {
     String CSS_UL_UNARY = "dsl-ul-unary";
 
     String CSS_OL_NARY = "dsl-ol-nary";
+    String CSS_OL_CASCADED_NARY = "dsl-ol-cascaded-nary";
 
     Locale getLocale();
 

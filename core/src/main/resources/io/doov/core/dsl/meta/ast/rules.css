@@ -100,6 +100,14 @@
     color: #983E77;
 }
 
+.dsl-token-then {
+    color: #983E77;
+}
+
+.dsl-token-else {
+    color: #983E77;
+}
+
 .dsl-token-nary {
     color: black;
     font-weight: bold;
@@ -139,3 +147,6 @@
 .dsl-token-unknown {
     color: red;
 }
+
+.dsl-ol-cascaded-nary {
+	padding-left: 0px;

@@ -18,8 +18,14 @@ package io.doov.core.dsl.meta.ast;
 import static io.doov.core.dsl.meta.DefaultOperator.rule;
 import static io.doov.core.dsl.meta.DefaultOperator.validate;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
+import static io.doov.core.dsl.meta.MappingOperator._else;
+import static io.doov.core.dsl.meta.MappingOperator.map;
+import static io.doov.core.dsl.meta.MappingOperator.then;
+import static io.doov.core.dsl.meta.MappingOperator.to;
 import static io.doov.core.dsl.meta.MappingOperator.using;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.MULTIPLE_MAPPING;
+import static io.doov.core.dsl.meta.MetadataType.SINGLE_MAPPING;
 import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
 import static java.util.stream.Collectors.joining;
 
@@ -124,18 +130,20 @@ public class AstTextVisitor extends AbstractAstVisitor {
         switch (metadata.type()) {
             case SINGLE_MAPPING:
                 sb.append(formatCurrentIndent());
-                sb.append(formatOperator(MappingOperator.map));
+                sb.append(bundle.get(map, locale));
                 sb.append(formatNewLine());
                 break;
             case THEN_MAPPING:
                 sb.append(formatCurrentIndent());
-                sb.append(formatOperator(MappingOperator.then));
+                sb.append(bundle.get(then, locale));
                 sb.append(formatNewLine());
                 break;
             case ELSE_MAPPING:
-                sb.append(formatCurrentIndent());
-                sb.append(formatOperator(MappingOperator._else));
-                sb.append(formatNewLine());
+                if (metadata.children().count() > 0) {
+                    sb.append(formatCurrentIndent());
+                    sb.append(bundle.get(_else, locale));
+                    sb.append(formatNewLine());
+                }
                 break;
             case MAPPING_LEAF:
                 sb.append(formatCurrentIndent());
@@ -158,12 +166,24 @@ public class AstTextVisitor extends AbstractAstVisitor {
             case SINGLE_MAPPING:
                 if (hasNext) {
                     sb.append(formatCurrentIndent());
-                    sb.append(formatOperator(MappingOperator.to));
+                    sb.append(bundle.get(to, locale));
                     sb.append(formatNewLine());
                 }
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void endMappingRule(Metadata metadata, int depth) {
+        if (metadata.type() != SINGLE_MAPPING)
+            return;
+        final Metadata pmd = parent();
+        if (pmd != null && pmd.type() == MULTIPLE_MAPPING && pmd.lastChild() != metadata) {
+            sb.delete(sb.length() - 1, sb.length());
+            sb.append(",");
+            sb.append(formatNewLine());
         }
     }
 
@@ -175,8 +195,9 @@ public class AstTextVisitor extends AbstractAstVisitor {
     @Override
     protected int getCurrentIndentSize() {
         if (BINARY_PREDICATE == stackPeekType()) {
-            return (int) stackSteam().filter(e -> !BINARY_PREDICATE.equals(e)).count() *
-                    getIndentSize();
+            return (int) stackSteam()
+                    .filter(e -> !BINARY_PREDICATE.equals(e.type()))
+                    .count() * getIndentSize();
         }
         return super.getCurrentIndentSize();
     }

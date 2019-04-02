@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.ValidationRule;
@@ -138,7 +139,7 @@ public class SampleRules {
     }
 
     public static void main(String[] args) throws IOException {
-        SampleWriter.of("validation_rule.html").write(rules());
+        SampleWriter.of("validation_rule.html", Locale.FRANCE).write(rules());
         System.exit(1);
     }
 }

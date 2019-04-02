@@ -1,0 +1,177 @@
+<!-- map 18 to intField  -->
+<html>
+  <head></head>
+  <body>
+    <span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">18</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span class="dsl-token-field">intField</span></span>&nbsp;
+  </body>
+</html>
+<!-- when dateField age at dateField2 >= 18 then map true to booleanField else map false to booleanField  -->
+<html>
+  <head></head>
+  <body>
+    <ul class="dsl-ol-nary">
+      <span class="dsl-token-when">when</span>
+      <ul class="dsl-ul-when">
+        <div class="percentage-wrapper-big">
+          <div class="percentage-value">
+            0 %
+          </div>
+          <div class="exclusion-border-big">
+            <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+          </div>
+        </div>
+        <span class="dsl-token-field">dateField</span>&nbsp;
+        <span class="dsl-token-operator">age at</span>&nbsp;
+        <span class="dsl-token-field">dateField2</span>&nbsp;
+        <span class="dsl-token-operator">&gt;=</span>&nbsp;
+        <span class="dsl-token-value">18</span>
+      </ul>
+      <span class="dsl-token-then">then</span>
+      <ul class="dsl-ol-nary">
+        <span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">true</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span class="dsl-token-field">booleanField</span></span>&nbsp;
+      </ul>
+      <span class="dsl-token-else">else</span>
+      <ul class="dsl-ol-nary">
+        <span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">false</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span class="dsl-token-field">booleanField</span></span>&nbsp;
+      </ul>
+    </ul>
+  </body>
+</html>
+<!-- when {$String|stringField} = 'Yahoo' then map www.yahou.com to {$String|stringField2}  -->
+<html>
+  <head></head>
+  <body>
+    <ul class="dsl-ol-nary">
+      <span class="dsl-token-when">when</span>
+      <ul class="dsl-ul-when">
+        <div class="percentage-wrapper-big">
+          <div class="percentage-value">
+            100 %
+          </div>
+          <div class="exclusion-border-big">
+            <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+          </div>
+        </div>
+        <span>{</span>
+        <span class="dsl-token-template-param">$String</span>
+        <span class="dsl-token-operator">|</span>
+        <span class="dsl-token-field">stringField</span>
+        <span>}</span>&nbsp;
+        <span class="dsl-token-operator">=</span>&nbsp;
+        <span class="dsl-token-value">'Yahoo'</span>
+      </ul>
+      <span class="dsl-token-then">then</span>
+      <ul class="dsl-ol-nary">
+        <span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">www.yahou.com</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span>{</span><span class="dsl-token-template-param">$String</span><span class="dsl-token-operator">|</span><span class="dsl-token-field">stringField2</span><span>}</span></span>&nbsp;
+      </ul>
+    </ul>
+  </body>
+</html>
+<!-- map true to booleanField  -->
+<html>
+  <head></head>
+  <body>
+    <span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">true</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span class="dsl-token-field">booleanField</span></span>&nbsp;
+  </body>
+</html>
+<!-- map 2019-03-26 to dateField  -->
+<html>
+  <head></head>
+  <body>
+    <span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">2019-03-26</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span class="dsl-token-field">dateField</span></span>&nbsp;
+  </body>
+</html>
+<!-- map 18 to intField map true to booleanField map 2019-03-26 to dateField  -->
+<html>
+  <head></head>
+  <body>
+    <ul class="dsl-ol-nary">
+      <li class="dsl-li-nary"><span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">18</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span class="dsl-token-field">intField</span></span>&nbsp;</li>
+      <li class="dsl-li-nary"><span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">true</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span class="dsl-token-field">booleanField</span></span>&nbsp;</li>
+      <li class="dsl-li-nary"><span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">2019-03-26</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span class="dsl-token-field">dateField</span></span>&nbsp;</li>
+    </ul>
+  </body>
+</html>
+<!-- when {$String|stringField} = 'bing' then map www.bingue.com to {$String|stringField2} when {$String|stringField} = 'Google' then map www.gougeule.com to {$String|stringField2} when {$String|stringField} = 'Yahoo' then map www.yahou.com to {$String|stringField2}  -->
+<html>
+  <head></head>
+  <body>
+    <ul class="dsl-ol-nary">
+      <li class="dsl-li-nary">
+        <ul class="dsl-ol-cascaded-nary">
+          <span class="dsl-token-when">when</span>
+          <ul class="dsl-ul-when">
+            <div class="percentage-wrapper-big">
+              <div class="percentage-value">
+                100 %
+              </div>
+              <div class="exclusion-border-big">
+                <div class="exclusion-furets-blue-big" style="width:100.0%;"></div>
+              </div>
+            </div>
+            <span>{</span>
+            <span class="dsl-token-template-param">$String</span>
+            <span class="dsl-token-operator">|</span>
+            <span class="dsl-token-field">stringField</span>
+            <span>}</span>&nbsp;
+            <span class="dsl-token-operator">=</span>&nbsp;
+            <span class="dsl-token-value">'bing'</span>
+          </ul>
+          <span class="dsl-token-then">then</span>
+          <ul class="dsl-ol-nary">
+            <span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">www.bingue.com</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span>{</span><span class="dsl-token-template-param">$String</span><span class="dsl-token-operator">|</span><span class="dsl-token-field">stringField2</span><span>}</span></span>&nbsp;
+          </ul>
+        </ul></li>
+      <li class="dsl-li-nary">
+        <ul class="dsl-ol-cascaded-nary">
+          <span class="dsl-token-when">when</span>
+          <ul class="dsl-ul-when">
+            <div class="percentage-wrapper-big">
+              <div class="percentage-value">
+                0 %
+              </div>
+              <div class="exclusion-border-big">
+                <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+              </div>
+            </div>
+            <span>{</span>
+            <span class="dsl-token-template-param">$String</span>
+            <span class="dsl-token-operator">|</span>
+            <span class="dsl-token-field">stringField</span>
+            <span>}</span>&nbsp;
+            <span class="dsl-token-operator">=</span>&nbsp;
+            <span class="dsl-token-value">'Google'</span>
+          </ul>
+          <span class="dsl-token-then">then</span>
+          <ul class="dsl-ol-nary">
+            <span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">www.gougeule.com</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span>{</span><span class="dsl-token-template-param">$String</span><span class="dsl-token-operator">|</span><span class="dsl-token-field">stringField2</span><span>}</span></span>&nbsp;
+          </ul>
+        </ul></li>
+      <li class="dsl-li-nary">
+        <ul class="dsl-ol-cascaded-nary">
+          <span class="dsl-token-when">when</span>
+          <ul class="dsl-ul-when">
+            <div class="percentage-wrapper-big">
+              <div class="percentage-value">
+                0 %
+              </div>
+              <div class="exclusion-border-big">
+                <div class="exclusion-furets-blue-big" style="width:0.0%;"></div>
+              </div>
+            </div>
+            <span>{</span>
+            <span class="dsl-token-template-param">$String</span>
+            <span class="dsl-token-operator">|</span>
+            <span class="dsl-token-field">stringField</span>
+            <span>}</span>&nbsp;
+            <span class="dsl-token-operator">=</span>&nbsp;
+            <span class="dsl-token-value">'Yahoo'</span>
+          </ul>
+          <span class="dsl-token-then">then</span>
+          <ul class="dsl-ol-nary">
+            <span class="dsl-token-single-mapping"><span class="dsl-token-operator">map</span>&nbsp;<span class="dsl-token-value">www.yahou.com</span>&nbsp;<span class="dsl-token-operator">to</span>&nbsp;<span>{</span><span class="dsl-token-template-param">$String</span><span class="dsl-token-operator">|</span><span class="dsl-token-field">stringField2</span><span>}</span></span>&nbsp;
+          </ul>
+        </ul></li>
+    </ul>
+  </body>
+</html>
