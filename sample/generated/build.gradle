@@ -29,6 +29,12 @@ doovCodeGen {
         wrapperPackage = 'io.doov.sample2.wrapper'
         enumFieldInfo = false
     }
+    doovMapGenSample3 {
+        packageFilter = 'io.doov.sample3'
+        fieldClass = 'io.doov.sample3.field.EmployeeFieldId'
+        sourceClass = 'io.doov.sample3.model.Employee'
+        wrapperPackage = 'io.doov.sample3.wrapper'
+    }
     doovMapGenBenchmark {
         packageFilter = 'io.doov.benchmark'
         fieldClass = 'io.doov.benchmark.model.BenchmarkFieldId'
@@ -41,6 +47,7 @@ idea {
     module {
         sourceDirs += file("$buildDir/doov/doovMapGenSample")
         sourceDirs += file("$buildDir/doov/doovMapGenSample2")
+        sourceDirs += file("$buildDir/doov/doovMapGenSample3")
         sourceDirs += file("$buildDir/doov/doovMapGenBenchmark")
     }
 }

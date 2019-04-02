@@ -63,7 +63,7 @@ public class SampleModels {
         return model;
     }
 
-    public static FieldModel wrapper() {
+    public static SampleModelWrapper wrapper() {
         return new SampleModelWrapper(sample());
     }
 }
