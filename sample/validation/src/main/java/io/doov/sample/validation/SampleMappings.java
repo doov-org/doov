@@ -10,6 +10,7 @@ import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.template.ParameterTypes.$String;
+import static io.doov.core.dsl.time.LocalDateSuppliers.today;
 import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static io.doov.sample.validation.SampleRules.RULE_USER_ADULT;
 import static java.util.Arrays.asList;
@@ -29,6 +30,8 @@ public class SampleMappings {
     public static final MappingRule DEFAULT_CONFIG_AGE = map(18).to(configurationMinAge);
     public static final MappingRule DEFAULT_CONFIG_CAMPAIGN = map(true).to(configurationMailingCampaign);
     public static final MappingRule DEFAULT_CREATION_DATE = map(LocalDate.now()).to(accountCreationDate);
+
+    public static final MappingRule AGE_AT = map(userBirthdate.ageAt(today())).to(configurationMinAge);
 
     public static final MappingRule DEFAULT_DATE_TO_STRING = map(LocalDate.now())
             .using(converter(date -> date.toString(), "empty", "date to string"))
@@ -71,6 +74,7 @@ public class SampleMappings {
             DEFAULT_NAME_COMBINER,
             DEFAULT_MAPPINGS,
             DEFAULT_CONDITIONAL,
+            AGE_AT,
             TEMPLATE_MAP_GOOGLE.bind(favoriteSiteName1, favoriteSiteUrl1),
             TEMPLATE_MAP_BING.bind(favoriteSiteName2, favoriteSiteUrl2),
             TEMPLATE_MAP_YAHOO.bind(favoriteSiteName3, favoriteSiteUrl3),

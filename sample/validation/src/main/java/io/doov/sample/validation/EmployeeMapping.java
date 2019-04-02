@@ -18,7 +18,6 @@ import static io.doov.sample3.field.dsl.Dslmployee.employeeCompany;
 import static io.doov.sample3.field.dsl.Dslmployee.employeeCountry;
 import static io.doov.sample3.field.dsl.Dslmployee.employeeEmail;
 import static io.doov.sample3.field.dsl.Dslmployee.employeeFullname;
-import static java.time.temporal.ChronoUnit.YEARS;
 import static java.util.Arrays.asList;
 
 import java.io.IOException;
@@ -34,8 +33,7 @@ public class EmployeeMapping {
 
     public static final MappingRule EMAIL_MAPPING = map(accountEmail).to(employeeEmail);
 
-    public static final MappingRule AGE_MAPPING = map(userBirthdate)
-            .using(converter(d -> (int) YEARS.between(d, LocalDate.of(2019, 1, 1)), "age at today"))
+    public static final MappingRule AGE_MAPPING = map(userBirthdate.ageAt(LocalDate.of(2019, 1, 1)))
             .to(employeeAge);
 
     public static final MappingRule COUNTRY_MAPPING = map(accountCountry)

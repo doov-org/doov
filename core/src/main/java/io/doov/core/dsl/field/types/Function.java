@@ -15,9 +15,28 @@
  */
 package io.doov.core.dsl.field.types;
 
+import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.meta.Metadata;
 
-public interface Function<T> extends ContextAccessor<T>, Readable {
+public interface Function<T> extends ContextAccessor<T>, MappingInput<T>, Readable {
 
+    @Override
+    default T read(FieldModel inModel, Context context) {
+        return value(inModel, context)
+                .orElse(null);
+    }
 
+    @Override
+    default boolean validate(FieldModel inModel) {
+        return true;
+    }
+
+    @Override
+    default Metadata metadata() {
+        return getMetadata();
+    }
+
+    Metadata getMetadata();
 }
