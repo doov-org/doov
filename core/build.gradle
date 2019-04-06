@@ -9,6 +9,7 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoCoreVersion
     testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
 	testCompile group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
+	testCompile group: 'com.atlassian.commonmark', name: 'commonmark', version: commonmarkVersion
 }
 
 if (isReleaseVersion) {
