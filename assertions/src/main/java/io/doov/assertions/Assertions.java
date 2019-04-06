@@ -15,13 +15,21 @@
  */
 package io.doov.assertions;
 
-import io.doov.core.dsl.lang.*;
+import org.commonmark.node.Node;
+
+import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.ValidationRule;
 
 /**
  * Entry point for assertions methods for dOOv, see {@link org.assertj.core.api.Assertions}.
  */
 public class Assertions {
 
+    public static MarkdownAssert assertThat(Node node) {
+        return new MarkdownAssert(node, MarkdownAssert.class);
+    }
+    
     /**
      * Create assertion for {@link ValidationRule}.
      *
