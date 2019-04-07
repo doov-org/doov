@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package io.doov.core.dsl.meta.ast;
+
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.meta.ast.MarkdownAndTest.parse;
@@ -39,6 +41,11 @@ public class MarkdownSumTest {
         B = model.intField(1, "B");
         rule = when(sum(A, B).greaterThan(1)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when", "sum", "A", "B >", "1", "validate");
     }
 
     @Test
@@ -47,6 +54,11 @@ public class MarkdownSumTest {
         B = model.intField(1, "B");
         rule = when(sum(A, B).greaterThan(3)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when", "sum", "A", "B >", "3", "validate");
     }
 
     @AfterEach

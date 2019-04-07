@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.count;
@@ -46,6 +47,16 @@ public class MarkdownCountTest {
         B = alwaysFalse("B");
         rule = when(count(A, B).greaterThan(1)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "count",
+                "always false A",
+                "always false B >",
+                "1",
+                "validate");
     }
 
     @Test
@@ -54,6 +65,16 @@ public class MarkdownCountTest {
         B = alwaysFalse("B");
         rule = when(count(A, B).greaterThan(1)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "count",
+                "always true A",
+                "always false B >",
+                "1",
+                "validate");
     }
 
     @Test
@@ -62,6 +83,16 @@ public class MarkdownCountTest {
         B = alwaysFalse("B");
         rule = when(count(A, B).greaterOrEquals(1)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "count",
+                "always true A",
+                "always false B >=",
+                "1",
+                "validate");
     }
 
     @Test
@@ -70,6 +101,16 @@ public class MarkdownCountTest {
         B = alwaysTrue("B");
         rule = when(count(A, B).greaterThan(1)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "count",
+                "always true A",
+                "always true B >",
+                "1",
+                "validate");
     }
 
     @Test
@@ -81,6 +122,16 @@ public class MarkdownCountTest {
         B = yesterday.before(LocalDateSuppliers.today());
         rule = when(count(A, B).greaterThan(1)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "count",
+                "zero < 4",
+                "yesterday before today >",
+                "1",
+                "validate");
     }
 
     @AfterEach

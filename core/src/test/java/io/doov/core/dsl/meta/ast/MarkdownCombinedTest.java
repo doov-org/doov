@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.matchAll;
@@ -66,6 +67,16 @@ public class MarkdownCombinedTest {
         C = alwaysFalse("C");
         rule = when(matchAll(A, B, C)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "match all",
+                "always true A",
+                "always false B",
+                "always false C",
+                "validate");
     }
 
     @Test
@@ -74,24 +85,53 @@ public class MarkdownCombinedTest {
         B = alwaysFalse("B");
         rule = when(A.and(B)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(5);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(5);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "always true A and",
+                "always false B",
+                "validate");
     }
 
     @Test
     void reduce_zeroInt() {
         rule = when(zeroField.notEq(0)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(4);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(4);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "zero != 0",
+                "validate");
     }
 
     @Test
     void reduce_list() {
         rule = when(iterableField.contains("c")).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(4);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(4);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "list contains 'c'",
+                "validate");
     }
 
     @Test
     void reduce_null() {
         rule = when(enumField.isNull()).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(4);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(4);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "enum is null",
+                "validate");
     }
 
     @Test
@@ -99,6 +139,14 @@ public class MarkdownCombinedTest {
         rule = when(stringField.matches("^some.*")
                 .or(stringField2.matches("^other.*"))).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(5);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(5);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "string field 1 matches '^some.*' or",
+                "string field 2 matches '^other.*'",
+                "validate");
     }
 
     @AfterEach

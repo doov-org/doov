@@ -3,48 +3,32 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.meta.ast.AstHtmlVisitor.astToHtml;
 import static io.doov.core.dsl.meta.ast.MarkdownAndTest.parse;
 import static io.doov.core.dsl.meta.ast.MarkdownAndTest.render;
 import static io.doov.core.dsl.meta.ast.MarkdownAnyMatchTest.EnumTest.VAL1;
 import static io.doov.core.dsl.meta.ast.MarkdownAnyMatchTest.EnumTest.VAL2;
 import static io.doov.core.dsl.meta.ast.MarkdownAnyMatchTest.EnumTest.VAL3;
-import static org.jsoup.Jsoup.parseBodyFragment;
-
-import java.util.Locale;
 
 import org.commonmark.node.Node;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Document.OutputSettings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.EnumFieldInfo;
-import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.runtime.GenericModel;
 
 public class MarkdownAnyMatchTest {
-    private static final Locale LOCALE = Locale.US;
     private StepCondition A;
     private ValidationRule rule;
     private Node node;
     private GenericModel model;
     private EnumFieldInfo<EnumTest> enumField;
-
-    static Document documentOf(Result result) {
-        return parseBodyFragment(astToHtml(result.getContext().getRootMetadata(), LOCALE));
-    }
-
-    static String format(Result result, Document doc) {
-        return "<!-- " + AstVisitorUtils.astToString(result.getContext().getRootMetadata(), LOCALE) + " -->\n"
-                + doc.outputSettings(new OutputSettings().prettyPrint(true).indentAmount(2)).toString();
-    }
 
     @BeforeEach
     void beforeEach() {
@@ -56,12 +40,26 @@ public class MarkdownAnyMatchTest {
     void anyMatch_success() {
         rule = when(enumField.anyMatch(VAL1, VAL2, VAL3)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(4);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(4);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "enumField match any  : VAL1, VAL2, VAL3",
+                "validate");
     }
 
     @Test
     void anyMatch_failure() {
         rule = when(enumField.anyMatch(VAL2, VAL3)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(4);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(4);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "enumField match any  : VAL2, VAL3",
+                "validate");
     }
 
     @Test
@@ -69,6 +67,14 @@ public class MarkdownAnyMatchTest {
         A = DOOV.alwaysTrue("A");
         rule = when(A.and(enumField.anyMatch(VAL1, VAL2, VAL3))).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(5);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(5);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "always true A and",
+                "enumField match any  : VAL1, VAL2, VAL3",
+                "validate");
     }
 
     @Test
@@ -81,9 +87,17 @@ public class MarkdownAnyMatchTest {
     @Test
     void matchAny_combined_anyMatch_success() {
         A = DOOV.alwaysTrue("A");
-        rule = when(matchAny(A, enumField.anyMatch(VAL1, VAL2, VAL3))).validate().withShortCircuit(false)
-                ;
+        rule = when(matchAny(A, enumField.anyMatch(VAL1, VAL2, VAL3))).validate().withShortCircuit(false);
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(6);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(6);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "match any",
+                "always true A",
+                "enumField match any  : VAL1, VAL2, VAL3",
+                "validate");
     }
 
     @Test
@@ -91,6 +105,15 @@ public class MarkdownAnyMatchTest {
         A = DOOV.alwaysFalse("A");
         rule = when(matchAny(A, enumField.anyMatch(VAL2, VAL3))).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(6);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(6);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "match any",
+                "always false A",
+                "enumField match any  : VAL2, VAL3",
+                "validate");
     }
 
     @AfterEach

@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.when;
@@ -47,6 +48,13 @@ public class MarkdownAndTest {
         B = alwaysFalse("B");
         rule = when(A.and(B)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(5);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(5);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "always false A and", "always false B",
+                "validate");
     }
 
     @Test
@@ -55,6 +63,13 @@ public class MarkdownAndTest {
         B = alwaysFalse("B");
         rule = when(A.and(B)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(5);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(5);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "always true A and", "always false B",
+                "validate");
     }
 
     @Test
@@ -63,6 +78,13 @@ public class MarkdownAndTest {
         B = alwaysTrue("B");
         rule = when(A.and(B)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(5);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(5);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "always false A and", "always true B",
+                "validate");
     }
 
     @Test
@@ -71,6 +93,13 @@ public class MarkdownAndTest {
         B = alwaysTrue("B");
         rule = when(A.and(B)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(5);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(5);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "always true A and", "always true B",
+                "validate");
     }
 
     @Test
@@ -83,6 +112,13 @@ public class MarkdownAndTest {
 
         rule = when(A.and(B)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countListItem().isEqualTo(5);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(5);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "zero < 4 and", "yesterday before today",
+                "validate");
     }
 
     static Node parse(Metadata metadata) {

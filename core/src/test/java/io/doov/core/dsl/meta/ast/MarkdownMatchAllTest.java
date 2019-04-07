@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.matchAll;
@@ -48,6 +49,16 @@ public class MarkdownMatchAllTest {
         C = alwaysTrue("C");
         rule = when(matchAll(A, B, C)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "match all",
+                "always true A",
+                "always true B",
+                "always true C",
+                "validate");
     }
 
     @Test
@@ -57,6 +68,16 @@ public class MarkdownMatchAllTest {
         C = alwaysFalse("C");
         rule = when(matchAll(A, B, C)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "match all",
+                "always true A",
+                "always true B",
+                "always false C",
+                "validate");
     }
 
     @Test
@@ -66,6 +87,16 @@ public class MarkdownMatchAllTest {
         C = alwaysFalse("C");
         rule = when(matchAll(A, B, C)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "match all",
+                "always true A",
+                "always false B",
+                "always false C",
+                "validate");
     }
 
     @Test
@@ -75,6 +106,16 @@ public class MarkdownMatchAllTest {
         C = alwaysFalse("C");
         rule = when(matchAll(A, B, C)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "match all",
+                "always false A",
+                "always false B",
+                "always false C",
+                "validate");
     }
 
     @Test
@@ -88,6 +129,16 @@ public class MarkdownMatchAllTest {
         C = something.matches("^other.*");
         rule = when(matchAll(A, B, C)).validate();
         node = parse(rule.metadata());
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(7);
+        assertThat(node).textNodes().containsExactly("rule", "when",
+                "match all",
+                "zero > 4",
+                "yesterday after today",
+                "string field matches '^other.*'",
+                "validate");
     }
 
     @AfterEach
