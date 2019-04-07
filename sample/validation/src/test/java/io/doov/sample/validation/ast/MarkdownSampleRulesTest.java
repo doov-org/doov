@@ -3,7 +3,7 @@
  */
 package io.doov.sample.validation.ast;
 
-import static io.doov.assertions.Assertions.assertThat;
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.sample.validation.SampleRules.*;
 
 import java.util.Locale;
