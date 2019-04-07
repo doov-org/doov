@@ -15,13 +15,13 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.toHtml;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL1;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL2;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.EnumTest.VAL3;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.jsoup.Jsoup.parseBodyFragment;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,12 +30,15 @@ import java.util.Locale;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Document.OutputSettings;
-import org.jsoup.nodes.Element;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.EnumFieldInfo;
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.runtime.GenericModel;
 
 public class HtmlAnyMatchTest {
@@ -57,7 +60,7 @@ public class HtmlAnyMatchTest {
     static String format(Result result, Document doc) {
         return format(result.getContext(), doc);
     }
-    
+
     static String format(Context context, Document doc) {
         return "<!-- " + AstVisitorUtils.astToString(context.getRootMetadata(), LOCALE) + " -->\n"
                 + doc.outputSettings(new OutputSettings().prettyPrint(true).indentAmount(2)).toString();
@@ -75,22 +78,18 @@ public class HtmlAnyMatchTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("match any");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly(": VAL1, VAL2, VAL3");
-        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).percentageValue_DIV().containsExactly("100 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("match any");
+        assertThat(doc).tokenValue_SPAN().containsExactly(": VAL1, VAL2, VAL3");
+        assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
 
     @Test
@@ -99,22 +98,18 @@ public class HtmlAnyMatchTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("match any");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly(": VAL2, VAL3");
-        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).percentageValue_DIV().containsExactly("0 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("match any");
+        assertThat(doc).tokenValue_SPAN().containsExactly(": VAL2, VAL3");
+        assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
 
     @Test
@@ -124,22 +119,18 @@ public class HtmlAnyMatchTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %", "100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "and", "match any");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", ": VAL1, VAL2, VAL3");
-        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(1);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).percentageValue_DIV().containsExactly("100 %", "100 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("always true", "and", "match any");
+        assertThat(doc).tokenValue_SPAN().containsExactly("A", ": VAL1, VAL2, VAL3");
+        assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
 
     @Test
@@ -149,22 +140,18 @@ public class HtmlAnyMatchTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %", "0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "and", "match any");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", ": VAL2, VAL3");
-        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(1);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).percentageValue_DIV().containsExactly("100 %", "0 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("always true", "and", "match any");
+        assertThat(doc).tokenValue_SPAN().containsExactly("A", ": VAL2, VAL3");
+        assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
 
     @Test
@@ -175,24 +162,19 @@ public class HtmlAnyMatchTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(1);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("100 %", "100 %", "100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always true", "match any");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", ": VAL1, VAL2, VAL3");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match any");
-        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+        assertThat(doc).nary_OL().hasSize(1);
+        assertThat(doc).binary_LI().hasSize(1);
+        assertThat(doc).nary_LI().hasSize(1);
+        assertThat(doc).leaf_LI().hasSize(1);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).percentageValue_DIV().containsExactly("100 %", "100 %", "100 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("always true", "match any");
+        assertThat(doc).tokenValue_SPAN().containsExactly("A", ": VAL1, VAL2, VAL3");
+        assertThat(doc).tokenNary_SPAN().containsExactly("match any");
+        assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
 
     @Test
@@ -202,24 +184,19 @@ public class HtmlAnyMatchTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(1);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %", "0 %", "0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("always false", "match any");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("A", ": VAL2, VAL3");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                .containsExactly("match any");
-        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                .containsExactly("enumField");
+        assertThat(doc).nary_OL().hasSize(1);
+        assertThat(doc).binary_LI().hasSize(1);
+        assertThat(doc).nary_LI().hasSize(1);
+        assertThat(doc).leaf_LI().hasSize(1);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).percentageValue_DIV().containsExactly("0 %", "0 %", "0 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("always false", "match any");
+        assertThat(doc).tokenValue_SPAN().containsExactly("A", ": VAL2, VAL3");
+        assertThat(doc).tokenNary_SPAN().containsExactly("match any");
+        assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
 
     @AfterEach
