@@ -27,7 +27,6 @@ import java.time.LocalDate;
 
 import org.commonmark.node.Node;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
@@ -120,8 +119,6 @@ public class MarkdownMatchAllTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void matchAll_field_false_false_false_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");

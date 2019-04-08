@@ -27,7 +27,6 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.text.TextContentRenderer;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
@@ -104,8 +103,6 @@ public class MarkdownAndTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void and_field_true_true_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");

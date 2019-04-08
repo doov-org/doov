@@ -29,7 +29,6 @@ import java.util.List;
 import org.commonmark.node.Node;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.EnumFieldInfo;
@@ -97,8 +96,6 @@ public class MarkdownCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void reduce_zeroInt() {
         rule = when(zeroField.notEq(0)).validate();
         node = parse(rule.metadata());
@@ -112,8 +109,6 @@ public class MarkdownCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void reduce_list() {
         rule = when(iterableField.contains("c")).validate();
         node = parse(rule.metadata());
@@ -127,8 +122,6 @@ public class MarkdownCombinedTest {
     }
 
     @Test
-    @Disabled    
-    // FIXME Markdown
     void reduce_null() {
         rule = when(enumField.isNull()).validate();
         node = parse(rule.metadata());
@@ -142,8 +135,6 @@ public class MarkdownCombinedTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void matches_regexp() {
         rule = when(stringField.matches("^some.*")
                 .or(stringField2.matches("^other.*"))).validate();

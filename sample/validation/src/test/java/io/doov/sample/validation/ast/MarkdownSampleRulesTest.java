@@ -4,7 +4,23 @@
 package io.doov.sample.validation.ast;
 
 import static io.doov.assertions.renderer.Assertions.assertThat;
-import static io.doov.sample.validation.SampleRules.*;
+import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT;
+import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT_2;
+import static io.doov.sample.validation.SampleRules.RULE_ACCOUNT_TIME_CONTAINS;
+import static io.doov.sample.validation.SampleRules.RULE_AGE;
+import static io.doov.sample.validation.SampleRules.RULE_AGE_2;
+import static io.doov.sample.validation.SampleRules.RULE_BORN_1980;
+import static io.doov.sample.validation.SampleRules.RULE_COMPANY_NOT_BLABLA;
+import static io.doov.sample.validation.SampleRules.RULE_DOUBLE_LAMBDA;
+import static io.doov.sample.validation.SampleRules.RULE_EMAIL;
+import static io.doov.sample.validation.SampleRules.RULE_FIRST_NAME;
+import static io.doov.sample.validation.SampleRules.RULE_ID;
+import static io.doov.sample.validation.SampleRules.RULE_MIN;
+import static io.doov.sample.validation.SampleRules.RULE_SUM;
+import static io.doov.sample.validation.SampleRules.RULE_USER;
+import static io.doov.sample.validation.SampleRules.RULE_USER_2;
+import static io.doov.sample.validation.SampleRules.RULE_USER_ADULT;
+import static io.doov.sample.validation.SampleRules.RULE_USER_ADULT_FIRSTDAY;
 
 import java.util.Locale;
 
@@ -12,7 +28,6 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.text.TextContentRenderer;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.meta.Metadata;
@@ -22,8 +37,6 @@ public class MarkdownSampleRulesTest {
     private Node node;
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_EMAIL() {
         node = parse(RULE_EMAIL.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -37,8 +50,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_ACCOUNT() {
         node = parse(RULE_ACCOUNT.metadata());
         assertThat(node).countBulletList().isEqualTo(4);
@@ -55,8 +66,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_ACCOUNT_2() {
         node = parse(RULE_ACCOUNT_2.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -72,8 +81,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_USER() {
         node = parse(RULE_USER.metadata());
         assertThat(node).countBulletList().isEqualTo(4);
@@ -90,27 +97,23 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_USER_2() {
         node = parse(RULE_USER_2.metadata());
-        assertThat(node).countBulletList().isEqualTo(3);
-        assertThat(node).countListItem().isEqualTo(7);
+        assertThat(node).countBulletList().isEqualTo(5);
+        assertThat(node).countListItem().isEqualTo(9);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(9);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "user last name is not null and",
                 "user last name matches '[A-Z]+' and",
                 "count",
-                "* account phone number is not null",
-                "* account email is not null >",
+                "account phone number is not null",
+                "account email is not null >",
                 "0",
                 "validate");
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_USER_ADULT() {
         node = parse(RULE_USER_ADULT.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -123,8 +126,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_USER_ADULT_FIRSTDAY() {
         node = parse(RULE_USER_ADULT_FIRSTDAY.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -137,8 +138,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_FIRST_NAME() {
         node = parse(RULE_FIRST_NAME.metadata());
         assertThat(node).countBulletList().isEqualTo(4);
@@ -152,8 +151,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_ID() {
         node = parse(RULE_ID.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -166,8 +163,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_AGE() {
         node = parse(RULE_AGE.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -180,8 +175,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_AGE_2() {
         node = parse(RULE_AGE_2.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -194,8 +187,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_SUM() {
         node = parse(RULE_SUM.metadata());
         assertThat(node).countBulletList().isEqualTo(4);
@@ -226,8 +217,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_DOUBLE_LAMBDA() {
         node = parse(RULE_DOUBLE_LAMBDA.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -235,13 +224,11 @@ public class MarkdownSampleRulesTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(4);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "favorite site name 1 match any -function- -function-",
+                "favorite site name 1 match any -function-",
                 "validate");
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_BORN_1980() {
         node = parse(RULE_BORN_1980.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -254,8 +241,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_ACCOUNT_TIME_CONTAINS() {
         node = parse(RULE_ACCOUNT_TIME_CONTAINS.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -268,8 +253,6 @@ public class MarkdownSampleRulesTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void RULE_COMPANY_NOT_BLABLA() {
         node = parse(RULE_COMPANY_NOT_BLABLA.metadata());
         assertThat(node).countBulletList().isEqualTo(4);

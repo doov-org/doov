@@ -27,7 +27,6 @@ import java.time.LocalDate;
 
 import org.commonmark.node.Node;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
@@ -115,8 +114,6 @@ public class MarkdownCountTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void count_field_true_true_failure() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");

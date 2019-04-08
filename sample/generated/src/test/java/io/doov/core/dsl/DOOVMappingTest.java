@@ -19,12 +19,16 @@ import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.DefaultContext;
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.BiTypeConverter;
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.mapping.*;
+import io.doov.core.dsl.lang.TypeConverter;
+import io.doov.core.dsl.mapping.ConsumerOutput;
+import io.doov.core.dsl.mapping.FunctionInput;
+import io.doov.core.dsl.mapping.MappingRegistry;
+import io.doov.core.dsl.mapping.TypeConverters;
 import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.MappingOperator;
-import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
+import io.doov.core.dsl.meta.ast.AstMarkdownRenderer;
 import io.doov.core.serial.TypeAdapters;
 import io.doov.sample.field.dsl.DslSampleModel;
 import io.doov.sample.model.*;
@@ -183,9 +187,9 @@ public class DOOVMappingTest {
     @Test
     void print_ast_markdown() {
         StringBuilder sb = new StringBuilder();
-        AstMarkdownVisitor visitor = new AstMarkdownVisitor(sb, BUNDLE, Locale.getDefault());
+        AstMarkdownRenderer renderer = new AstMarkdownRenderer(sb, BUNDLE, Locale.getDefault());
         mappings.stream().forEach(m -> {
-            visitor.browse(m.metadata(), 0);
+            renderer.toMarkdown(m.metadata());
             sb.append("\n");
         });
         System.out.println(sb.toString());

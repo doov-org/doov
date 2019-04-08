@@ -26,7 +26,6 @@ import java.time.LocalDate;
 
 import org.commonmark.node.Node;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
@@ -48,7 +47,7 @@ public class MarkdownOrTest {
         C = alwaysTrue("C");
         rule = when(A.or(B.or(C))).validate();
         node = parse(rule.metadata());
-        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countBulletList().isEqualTo(4);
         assertThat(node).countListItem().isEqualTo(6);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(6);
@@ -64,7 +63,7 @@ public class MarkdownOrTest {
         C = alwaysTrue("C");
         rule = when(A.or(B.and(C))).validate();
         node = parse(rule.metadata());
-        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countBulletList().isEqualTo(4);
         assertThat(node).countListItem().isEqualTo(6);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(6);
@@ -95,7 +94,7 @@ public class MarkdownOrTest {
         C = alwaysTrue("C");
         rule = when(A.or(B.and(C))).validate();
         node = parse(rule.metadata());
-        assertThat(node).countBulletList().isEqualTo(3);
+        assertThat(node).countBulletList().isEqualTo(4);
         assertThat(node).countListItem().isEqualTo(6);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(6);
@@ -150,8 +149,6 @@ public class MarkdownOrTest {
     }
 
     @Test
-    @Disabled
-    // FIXME Markdown
     void or_field_true_true() {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");

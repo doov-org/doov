@@ -34,7 +34,7 @@ public class AstVisitorUtils {
 
     public static String astToMarkdown(Metadata metadata, Locale locale) {
         StringBuilder stringBuilder = new StringBuilder();
-        new AstMarkdownVisitor(stringBuilder, BUNDLE, locale).browse(metadata, 0);
+        new AstMarkdownRenderer(stringBuilder, BUNDLE, locale).toMarkdown(metadata);
         return stringBuilder.toString();
     }
 

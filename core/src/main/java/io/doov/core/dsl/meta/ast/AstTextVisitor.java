@@ -57,6 +57,10 @@ public class AstTextVisitor extends AbstractAstVisitor {
         newLineIndex = sb.length();
         return "\n";
     }
+    
+    protected String formatSpace() {
+        return " ";
+    }
 
     @Override
     public void startLeaf(LeafMetadata<?> metadata, int depth) {
