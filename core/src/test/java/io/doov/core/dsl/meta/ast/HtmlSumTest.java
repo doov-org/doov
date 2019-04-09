@@ -27,7 +27,6 @@ import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.assertions.renderer.Assertions;
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.runtime.GenericModel;
@@ -46,7 +45,7 @@ public class HtmlSumTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        Assertions.assertThat(doc).nary_OL().hasSize(1);
+        assertThat(doc).nary_OL().hasSize(1);
         assertThat(doc).binary_LI().hasSize(0);
         assertThat(doc).nary_LI().hasSize(0);
         assertThat(doc).leaf_LI().hasSize(2);
