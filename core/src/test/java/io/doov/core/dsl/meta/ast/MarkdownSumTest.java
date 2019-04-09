@@ -45,7 +45,7 @@ public class MarkdownSumTest {
         assertThat(node).countListItem().isEqualTo(7);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(7);
-        assertThat(node).textNodes().containsExactly("rule", "when", "sum", "A", "B >", "1", "validate");
+        assertThat(node).textNodes().containsExactly("rule", "when", "sum", "A", "B >", "'1'", "validate");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class MarkdownSumTest {
         assertThat(node).countListItem().isEqualTo(7);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(7);
-        assertThat(node).textNodes().containsExactly("rule", "when", "sum", "A", "B >", "3", "validate");
+        assertThat(node).textNodes().containsExactly("rule", "when", "sum", "A", "B >", "'3'", "validate");
     }
 
     @AfterEach

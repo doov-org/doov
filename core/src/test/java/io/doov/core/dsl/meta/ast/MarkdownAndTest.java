@@ -53,7 +53,7 @@ public class MarkdownAndTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(5);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "always false A and", "always false B",
+                "always false 'A' and", "always false 'B'",
                 "validate");
     }
 
@@ -68,7 +68,7 @@ public class MarkdownAndTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(5);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "always true A and", "always false B",
+                "always true 'A' and", "always false 'B'",
                 "validate");
     }
 
@@ -83,7 +83,7 @@ public class MarkdownAndTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(5);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "always false A and", "always true B",
+                "always false 'A' and", "always true 'B'",
                 "validate");
     }
 
@@ -98,7 +98,7 @@ public class MarkdownAndTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(5);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "always true A and", "always true B",
+                "always true 'A' and", "always true 'B'",
                 "validate");
     }
 
@@ -117,7 +117,7 @@ public class MarkdownAndTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(5);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "zero < 4 and", "yesterday before today",
+                "zero < '4' and", "yesterday before today",
                 "validate");
     }
 

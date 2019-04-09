@@ -55,9 +55,9 @@ public class MarkdownMatchAllTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match all",
-                "always true A",
-                "always true B",
-                "always true C",
+                "always true 'A'",
+                "always true 'B'",
+                "always true 'C'",
                 "validate");
     }
 
@@ -74,9 +74,9 @@ public class MarkdownMatchAllTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match all",
-                "always true A",
-                "always true B",
-                "always false C",
+                "always true 'A'",
+                "always true 'B'",
+                "always false 'C'",
                 "validate");
     }
 
@@ -93,9 +93,9 @@ public class MarkdownMatchAllTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match all",
-                "always true A",
-                "always false B",
-                "always false C",
+                "always true 'A'",
+                "always false 'B'",
+                "always false 'C'",
                 "validate");
     }
 
@@ -112,9 +112,9 @@ public class MarkdownMatchAllTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match all",
-                "always false A",
-                "always false B",
-                "always false C",
+                "always false 'A'",
+                "always false 'B'",
+                "always false 'C'",
                 "validate");
     }
 
@@ -135,7 +135,7 @@ public class MarkdownMatchAllTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match all",
-                "zero > 4",
+                "zero > '4'",
                 "yesterday after today",
                 "string field matches '^other.*'",
                 "validate");

@@ -53,9 +53,9 @@ public class MarkdownCountTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "count",
-                "always false A",
-                "always false B >",
-                "1",
+                "always false 'A'",
+                "always false 'B' >",
+                "'1'",
                 "validate");
     }
 
@@ -71,9 +71,9 @@ public class MarkdownCountTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "count",
-                "always true A",
-                "always false B >",
-                "1",
+                "always true 'A'",
+                "always false 'B' >",
+                "'1'",
                 "validate");
     }
 
@@ -89,9 +89,9 @@ public class MarkdownCountTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "count",
-                "always true A",
-                "always false B >=",
-                "1",
+                "always true 'A'",
+                "always false 'B' >=",
+                "'1'",
                 "validate");
     }
 
@@ -107,9 +107,9 @@ public class MarkdownCountTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "count",
-                "always true A",
-                "always true B >",
-                "1",
+                "always true 'A'",
+                "always true 'B' >",
+                "'1'",
                 "validate");
     }
 
@@ -128,9 +128,9 @@ public class MarkdownCountTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "count",
-                "zero < 4",
+                "zero < '4'",
                 "yesterday before today >",
-                "1",
+                "'1'",
                 "validate");
     }
 

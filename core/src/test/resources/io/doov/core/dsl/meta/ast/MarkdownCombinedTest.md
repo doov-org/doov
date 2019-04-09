@@ -1,18 +1,18 @@
 * rule
    * when
-      * always true A and
-      * always false B
+      * always true 'A' and
+      * always false 'B'
    * validate
 * rule
    * when
       * match all
-         * always true A
-         * always false B
-         * always false C
+         * always true 'A'
+         * always false 'B'
+         * always false 'C'
    * validate
 * rule
    * when
-      * zero != 0
+      * zero != '0'
    * validate
 * rule
    * when

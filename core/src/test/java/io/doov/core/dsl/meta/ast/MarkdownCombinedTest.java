@@ -73,9 +73,9 @@ public class MarkdownCombinedTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match all",
-                "always true A",
-                "always false B",
-                "always false C",
+                "always true 'A'",
+                "always false 'B'",
+                "always false 'C'",
                 "validate");
     }
 
@@ -90,8 +90,8 @@ public class MarkdownCombinedTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(5);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "always true A and",
-                "always false B",
+                "always true 'A' and",
+                "always false 'B'",
                 "validate");
     }
 
@@ -104,7 +104,7 @@ public class MarkdownCombinedTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(4);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "zero != 0",
+                "zero != '0'",
                 "validate");
     }
 

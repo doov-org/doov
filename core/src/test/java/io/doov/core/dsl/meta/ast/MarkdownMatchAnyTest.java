@@ -56,10 +56,10 @@ public class MarkdownMatchAnyTest {
         assertThat(node).countText().isEqualTo(8);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
-                "always true A or",
-                "always false D",
-                "always false B",
-                "always false C",
+                "always true 'A' or",
+                "always false 'D'",
+                "always false 'B'",
+                "always false 'C'",
                 "validate");
     }
 
@@ -77,10 +77,10 @@ public class MarkdownMatchAnyTest {
         assertThat(node).countText().isEqualTo(8);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
-                "always false A",
-                "always true B",
-                "always true C and",
-                "always true D",
+                "always false 'A'",
+                "always true 'B'",
+                "always true 'C' and",
+                "always true 'D'",
                 "validate");
     }
 
@@ -97,9 +97,9 @@ public class MarkdownMatchAnyTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
-                "always false A",
-                "always false B",
-                "always false C",
+                "always false 'A'",
+                "always false 'B'",
+                "always false 'C'",
                 "validate");
     }
 
@@ -117,10 +117,10 @@ public class MarkdownMatchAnyTest {
         assertThat(node).countText().isEqualTo(8);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
-                "always false A",
-                "always false B",
-                "always true C and",
-                "always false D",
+                "always false 'A'",
+                "always false 'B'",
+                "always true 'C' and",
+                "always false 'D'",
                 "validate");
     }
 
@@ -137,9 +137,9 @@ public class MarkdownMatchAnyTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
-                "always true A",
-                "always false B",
-                "always false C",
+                "always true 'A'",
+                "always false 'B'",
+                "always false 'C'",
                 "validate");
     }
 
@@ -156,9 +156,9 @@ public class MarkdownMatchAnyTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
-                "always false A",
-                "always true B",
-                "always true C",
+                "always false 'A'",
+                "always true 'B'",
+                "always true 'C'",
                 "validate");
     }
 
@@ -175,9 +175,9 @@ public class MarkdownMatchAnyTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
-                "always true A",
-                "always true B",
-                "always true C",
+                "always true 'A'",
+                "always true 'B'",
+                "always true 'C'",
                 "validate");
     }
 
@@ -198,7 +198,7 @@ public class MarkdownMatchAnyTest {
         assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
-                "zero < 4",
+                "zero < '4'",
                 "yesterday before today",
                 "string field matches '^some.*'",
                 "validate");

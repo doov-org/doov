@@ -45,7 +45,7 @@ public class MarkdownAnyMatchTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(4);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "enumField match any  : VAL1, VAL2, VAL3",
+                "enumField match any ' : VAL1, VAL2, VAL3'",
                 "validate");
     }
 
@@ -58,7 +58,7 @@ public class MarkdownAnyMatchTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(4);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "enumField match any  : VAL2, VAL3",
+                "enumField match any ' : VAL2, VAL3'",
                 "validate");
     }
 
@@ -72,8 +72,8 @@ public class MarkdownAnyMatchTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(5);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "always true A and",
-                "enumField match any  : VAL1, VAL2, VAL3",
+                "always true 'A' and",
+                "enumField match any ' : VAL1, VAL2, VAL3'",
                 "validate");
     }
 
@@ -95,8 +95,8 @@ public class MarkdownAnyMatchTest {
         assertThat(node).countText().isEqualTo(6);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
-                "always true A",
-                "enumField match any  : VAL1, VAL2, VAL3",
+                "always true 'A'",
+                "enumField match any ' : VAL1, VAL2, VAL3'",
                 "validate");
     }
 
@@ -111,8 +111,8 @@ public class MarkdownAnyMatchTest {
         assertThat(node).countText().isEqualTo(6);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
-                "always false A",
-                "enumField match any  : VAL2, VAL3",
+                "always false 'A'",
+                "enumField match any ' : VAL2, VAL3'",
                 "validate");
     }
 

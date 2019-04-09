@@ -9,9 +9,16 @@ import static io.doov.core.dsl.meta.DefaultOperator.any_match_values;
 import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.validate;
+import static io.doov.core.dsl.meta.MappingOperator._else;
+import static io.doov.core.dsl.meta.MappingOperator.map;
+import static io.doov.core.dsl.meta.MappingOperator.mappings;
+import static io.doov.core.dsl.meta.MappingOperator.then;
+import static io.doov.core.dsl.meta.MappingOperator.to;
+import static io.doov.core.dsl.meta.MappingOperator.using;
 import static io.doov.core.dsl.meta.MetadataType.EMPTY;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
+import static io.doov.core.dsl.meta.MetadataType.MULTIPLE_MAPPING;
 import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
@@ -23,16 +30,19 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.Element;
 import io.doov.core.dsl.meta.LeafMetadata;
 import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
 import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.function.TemplateParamMetadata;
 import io.doov.core.dsl.meta.i18n.ResourceBundleProvider;
 
 public class AstMarkdownRenderer {
+
     private static final List<Operator> AND_OR = asList(and, or);
     private static final List<Operator> MATCH_VALUES = asList(all_match_values, any_match_values);
     private StringBuilder sb;
@@ -43,6 +53,11 @@ public class AstMarkdownRenderer {
         this.sb = sb;
         this.bundle = bundle;
         this.locale = locale;
+    }
+
+    @Override
+    public String toString() {
+        return sb.toString();
     }
 
     public void toMarkdown(Metadata metadata) {
@@ -75,19 +90,98 @@ public class AstMarkdownRenderer {
                     unary(metadata, parents, indent);
                     break;
                 case NARY_PREDICATE:
+                    nary(metadata, parents, indent);
+                    break;
+                case SINGLE_MAPPING:
+                    singleMapping(metadata, parents, indent);
+                    break;
                 case MULTIPLE_MAPPING:
+                    multipleMapping(metadata, parents, indent);
+                    break;
+                case TYPE_CONVERTER:
+                    typeConverter(metadata, parents, indent);
                 case THEN_MAPPING:
                 case ELSE_MAPPING:
                 case MAPPING_INPUT:
-                case SINGLE_MAPPING:
-                case TYPE_CONVERTER:
-                    nary(metadata, parents, indent);
+                    mappingFragment(metadata, parents, indent);
                     break;
                 default:
                     throw new IllegalStateException(metadata.type().name());
             }
         } finally {
             parents.pop();
+        }
+    }
+
+    private void mappingFragment(Metadata metadata, ArrayDeque<Metadata> parents, int indent) {
+        switch (metadata.type()) {
+            case THEN_MAPPING:
+                sb.append(bundle.get(then, locale));
+                sb.append("\n");
+                break;
+            case ELSE_MAPPING:
+                sb.append(bundle.get(_else, locale));
+                sb.append("\n");
+                break;
+            default:
+                break;
+        }
+        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
+        final List<Metadata> childs = metadata.children().collect(toList());
+        for (Metadata child : childs) {
+            if (childs.indexOf(child) == 0 && pmd.isPresent() && pmd.get().type() != MULTIPLE_MAPPING) {
+                toMarkdown(child, parents, indent + 1);
+            } else {
+                formatIndent(indent + 2);
+                sb.append("* ");
+                toMarkdown(child, parents, indent + 2);
+            }
+            if (childs.indexOf(child) != childs.size() - 1)
+                sb.append("\n");
+        }
+    }
+
+    private void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents, int indent) {
+        sb.append(bundle.get(using, locale));
+        sb.append(" ");
+        leaf(metadata, parents, indent);
+    }
+
+    private void singleMapping(Metadata metadata, ArrayDeque<Metadata> parents, int indent) {
+        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
+        if (!pmd.isPresent()) {
+            formatIndent(indent);
+            sb.append("* ");
+        }
+        sb.append(bundle.get(map, locale));
+        sb.append(" ");
+        toMarkdown(metadata.childAt(0), parents, indent);
+        sb.append("\n");
+        formatIndent(indent + 1);
+        sb.append("* ");
+        sb.append(bundle.get(to, locale));
+        sb.append(" ");
+        toMarkdown(metadata.childAt(1), parents, indent + 1);
+        sb.append("\n");
+    }
+
+    private void multipleMapping(Metadata metadata, ArrayDeque<Metadata> parents, int indent) {
+        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
+        if (!pmd.isPresent()) {
+            formatIndent(indent);
+            sb.append("* ");
+        }
+        sb.append(bundle.get(mappings, locale));
+        sb.append("\n");
+        final List<Metadata> childs = metadata.children()
+                .filter(m -> m.children().count() > 0)
+                .collect(toList());
+        for (Metadata child : childs) {
+            formatIndent(indent + 1);
+            sb.append("* ");
+            toMarkdown(child, parents, indent + 1);
+            if (childs.indexOf(child) != childs.size() - 1)
+                sb.append("\n");
         }
     }
 
@@ -133,7 +227,7 @@ public class AstMarkdownRenderer {
                     if (fieldMetadata.type() == TEMPLATE_PARAM) {
                         templateParam((TemplateParamMetadata) fieldMetadata);
                     } else {
-                        sb.append(metadata.readable(locale));
+                        sb.append(fieldMetadata.readable(locale));
                     }
                     break;
                 case STRING_VALUE:
@@ -142,7 +236,9 @@ public class AstMarkdownRenderer {
                     sb.append(APOS);
                     break;
                 case VALUE:
+                    sb.append("'");
                     sb.append(e.getReadable().readable());
+                    sb.append("'");
                     break;
                 default:
                     sb.append(e.getReadable().readable());
@@ -221,6 +317,7 @@ public class AstMarkdownRenderer {
     }
 
     private void when(Metadata metadata, ArrayDeque<Metadata> parents, int indent) {
+        final Optional<Metadata> pmd = parents.stream().skip(1).findFirst();
         sb.append(bundle.get(metadata.getOperator(), locale));
         sb.append("\n");
         metadata.children().forEach(md -> {
@@ -228,11 +325,13 @@ public class AstMarkdownRenderer {
             sb.append("* ");
             toMarkdown(md, parents, indent + 1);
         });
-        sb.append("\n");
-        formatIndent(indent);
-        sb.append("* ");
-        sb.append(bundle.get(validate, locale));
-        sb.append("\n");
+        if (pmd.isPresent() && pmd.get().type() == MetadataType.RULE) {
+            sb.append("\n");
+            formatIndent(indent);
+            sb.append("* ");
+            sb.append(bundle.get(validate, locale));
+            sb.append("\n");
+        }
     }
 
     private void rule(Metadata metadata, ArrayDeque<Metadata> parents, int indent) {
