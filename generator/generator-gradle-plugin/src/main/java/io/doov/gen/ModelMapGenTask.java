@@ -21,6 +21,7 @@ import static io.doov.gen.FieldInfoGen.constants;
 import static io.doov.gen.FieldInfoGen.createFieldInfos;
 import static io.doov.gen.ModelWrapperGen.*;
 import static io.doov.gen.utils.ClassUtils.transformPathToMethod;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.createDirectories;
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
@@ -31,25 +32,34 @@ import static java.util.stream.Collectors.toList;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.*;
-import java.nio.charset.Charset;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.provider.Property;
-import org.gradle.api.tasks.*;
+import org.gradle.api.tasks.Classpath;
+import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.TaskAction;
 
 import com.google.common.io.Files;
 
-import io.doov.core.*;
+import io.doov.core.AbstractWrapper;
+import io.doov.core.FieldId;
+import io.doov.core.FieldModel;
+import io.doov.core.PathConstraint;
 import io.doov.core.dsl.field.FieldTypeProvider;
 import io.doov.core.dsl.field.FieldTypes;
 import io.doov.core.dsl.impl.DefaultStepWhen;
 import io.doov.core.dsl.impl.DefaultValidationRule;
-import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.StepWhen;
 import io.doov.core.dsl.path.FieldPath;
 import io.doov.core.dsl.path.FieldPathProvider;
 import io.doov.core.serial.TypeAdapterRegistry;
@@ -199,12 +209,13 @@ public class ModelMapGenTask extends DefaultTask {
             throw new GradleException("Unable to load", e);
         }
         try {
-            List<FieldPath> fieldPaths = fieldPathProviderProperty.isPresent() ?
-                    loadClassWithType(this.fieldPathProviderProperty, FieldPathProvider.class, null, classLoader)
+            List<FieldPath> fieldPaths = fieldPathProviderProperty.isPresent()
+                    ? loadClassWithType(this.fieldPathProviderProperty, FieldPathProvider.class, null, classLoader)
                             .newInstance().values()
                     : Collections.emptyList();
             Class<?> modelClazz = Class.forName(sourceClassProperty.get(), true, classLoader);
-            Class<? extends FieldId> fieldClazz = loadClassWithType(fieldClassProperty, FieldId.class, null, classLoader);
+            Class<? extends FieldId> fieldClazz = loadClassWithType(fieldClassProperty, FieldId.class, null,
+                    classLoader);
             Class<? extends FieldModel> baseClazz = loadClassWithType(baseClassProperty,
                     AbstractWrapper.class, AbstractWrapper.class, classLoader);
             Class<? extends TypeAdapterRegistry> typeAdapterClazz = loadClassWithType(typeAdaptersProperty,
@@ -255,9 +266,11 @@ public class ModelMapGenTask extends DefaultTask {
             final Map<FieldId, VisitorPath> fieldPathMap = validatePath(collected, getLogger());
             final Map<FieldId, GeneratorFieldInfo> fieldInfoMap = createFieldInfos(fieldPathMap);
             Runnable generateCsv = () -> generateCsv(fieldPathMap, modelClazz);
-            Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz, typeAdapterClazz);
+            Runnable generateWrapper = () -> generateWrapper(fieldPathMap, modelClazz, fieldClazz, baseClazz,
+                    typeAdapterClazz);
             Runnable generateFieldInfo = () -> generateFieldInfo(fieldInfoMap, fieldClazz);
-            Runnable generateDslFields = () -> generateDslFields(fieldInfoMap, modelClazz, fieldClazz, baseClazz, typeProvider);
+            Runnable generateDslFields = () -> generateDslFields(fieldInfoMap, modelClazz, fieldClazz, baseClazz,
+                    typeProvider);
             asList(generateWrapper, generateCsv, generateFieldInfo, generateDslFields).parallelStream()
                     .forEach(Runnable::run);
         } catch (Exception e) {
@@ -314,7 +327,7 @@ public class ModelMapGenTask extends DefaultTask {
             conf.put("constants", constants(fieldInfoMap, enumFieldInfo.get()));
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(classTemplate, conf);
-            Files.write(content, targetFile, Charset.forName("UTF8"));
+            Files.write(content, targetFile, UTF_8);
             getLogger().info("written : " + targetFile);
         } catch (IOException e) {
             throw new GradleException("error when generating wrapper", e);
@@ -322,7 +335,8 @@ public class ModelMapGenTask extends DefaultTask {
     }
 
     private static String fieldInfoClassName(Class<?> clazz) {
-        return clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1)
+        return clazz.getSimpleName().endsWith("Id")
+                ? clazz.getSimpleName().substring(0, clazz.getSimpleName().length() - 2) + "Info"
                 : clazz.getSimpleName() + "Info";
     }
 
@@ -348,21 +362,24 @@ public class ModelMapGenTask extends DefaultTask {
             conf.put("target.class.name", targetClassName);
             conf.put("model.class.name", modelClazz.getSimpleName());
             conf.put("process.field.info.class", targetFieldInfoPackage + "." + fieldInfoClassName);
-            conf.put("imports", DslMethodsGen.imports(fieldInfoMap, typeProvider, dslEntrypointMethods.get() ?
-                    Arrays.asList(wrapperFqcn,
-                            modelClazz.getName(),
-                            DefaultStepWhen.class.getName(),
-                            DefaultValidationRule.class.getName(),
-                            Result.class.getName(),
-                            StepCondition.class.getName(),
-                            StepWhen.class.getName()) : Collections.emptyList()));
+            conf.put("imports",
+                    DslMethodsGen.imports(fieldInfoMap, typeProvider,
+                            dslEntrypointMethods.get() ? Arrays.asList(wrapperFqcn,
+                                    modelClazz.getName(),
+                                    DefaultStepWhen.class.getName(),
+                                    DefaultValidationRule.class.getName(),
+                                    Result.class.getName(),
+                                    StepCondition.class.getName(),
+                                    StepWhen.class.getName()) : Collections.emptyList()));
             conf.put("fields", fields(fieldInfoMap, typeProvider, enumFieldInfo.get()));
             conf.put("methods", iterableMethods(fieldInfoMap, typeProvider));
-            String entryPointMethods = dslEntrypointMethods.get() ? MacroProcessor.replaceProperties(Templates.dslEntrypointMethod, conf) : "";
+            String entryPointMethods = dslEntrypointMethods.get()
+                    ? MacroProcessor.replaceProperties(Templates.dslEntrypointMethod, conf)
+                    : "";
             conf.put("entrypoint", entryPointMethods);
             conf.put("source.generator.name", getClass().getName());
             final String content = MacroProcessor.replaceProperties(Templates.dslFieldModel, conf);
-            Files.write(content, targetFile, Charset.forName("UTF8"));
+            Files.write(content, targetFile, UTF_8);
             getLogger().info("written : " + targetFile);
         } catch (IOException e) {
             throw new GradleException("error when generating wrapper", e);
@@ -370,7 +387,7 @@ public class ModelMapGenTask extends DefaultTask {
     }
 
     private static String dslFieldsClassName(Class<?> clazz) {
-        return "Dsl" + (clazz.getSimpleName().startsWith("E") ? clazz.getSimpleName().substring(1) : clazz.getSimpleName());
+        return "Dsl" + clazz.getSimpleName();
     }
 
     private void generateWrapper(Map<FieldId, VisitorPath> fieldPaths,
@@ -407,7 +424,7 @@ public class ModelMapGenTask extends DefaultTask {
             conf.put("source.generator.name", getClass().getName());
 
             String content = MacroProcessor.replaceProperties(Templates.wrapperClass, conf);
-            Files.write(content, targetFile, Charset.forName("UTF8"));
+            Files.write(content, targetFile, UTF_8);
             getLogger().info("written : " + targetFile);
         } catch (IOException e) {
             throw new GradleException("error when generating wrapper", e);

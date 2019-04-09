@@ -13,11 +13,11 @@ import static io.doov.sample.field.dsl.DslSampleModel.accountEmail;
 import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
 import static io.doov.sample.field.dsl.DslSampleModel.userFirstName;
 import static io.doov.sample.field.dsl.DslSampleModel.userLastName;
-import static io.doov.sample3.field.dsl.Dslmployee.employeeAge;
-import static io.doov.sample3.field.dsl.Dslmployee.employeeCompany;
-import static io.doov.sample3.field.dsl.Dslmployee.employeeCountry;
-import static io.doov.sample3.field.dsl.Dslmployee.employeeEmail;
-import static io.doov.sample3.field.dsl.Dslmployee.employeeFullname;
+import static io.doov.sample3.field.dsl.DslEmployee.employeeAge;
+import static io.doov.sample3.field.dsl.DslEmployee.employeeCompany;
+import static io.doov.sample3.field.dsl.DslEmployee.employeeCountry;
+import static io.doov.sample3.field.dsl.DslEmployee.employeeEmail;
+import static io.doov.sample3.field.dsl.DslEmployee.employeeFullname;
 import static java.util.Arrays.asList;
 
 import java.io.IOException;

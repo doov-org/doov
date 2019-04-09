@@ -1,7 +1,6 @@
 package ${package.name};
 
 import static io.doov.core.dsl.field.FieldInfoBuilder.fieldInfo;
-import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.List;
