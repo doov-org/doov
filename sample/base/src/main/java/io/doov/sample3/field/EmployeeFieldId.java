@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Courtanet
+ * Copyright 2017 Courtanet
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.field.types;
+package io.doov.sample3.field;
 
-import io.doov.core.FieldModel;
-import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.Metadata;
+import java.util.Collections;
+import java.util.List;
 
-public interface Function<T> extends ContextAccessor<T>, MappingInput<T>, Readable {
+import io.doov.core.TagId;
+
+public enum EmployeeFieldId implements EmployeeField {
+    FULLNAME, AGE, EMAIL, COUNTRY, COMPANY;
 
     @Override
-    default T read(FieldModel inModel, Context context) {
-        return value(inModel, context)
-                .orElse(null);
+    public String code() {
+        return name();
     }
 
     @Override
-    default boolean validate(FieldModel inModel) {
-        return true;
+    public int position() {
+        return -1;
     }
 
     @Override
-    default Metadata metadata() {
-        return getMetadata();
+    public List<TagId> tags() {
+        return Collections.emptyList();
     }
-
-    Metadata getMetadata();
 }
