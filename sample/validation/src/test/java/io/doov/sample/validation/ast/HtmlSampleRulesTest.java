@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Metadata;
@@ -418,11 +419,19 @@ public class HtmlSampleRulesTest {
     }
 
     static Document documentOf(Result result) {
-        return parseBodyFragment(toHtml(result.getContext().getRootMetadata(), LOCALE));
+        return documentOf(result.getContext());
+    }
+
+    static Document documentOf(Context context) {
+        return parseBodyFragment(toHtml(context.getRootMetadata(), LOCALE));
     }
 
     static String format(Result result, Document doc) {
-        return "<!-- " + AstVisitorUtils.astToString(result.getContext().getRootMetadata(), LOCALE) + " -->\n"
+        return format(result.getContext(), doc);
+    }
+
+    static String format(Context context, Document doc) {
+        return "<!-- " + AstVisitorUtils.astToString(context.getRootMetadata(), LOCALE) + " -->\n"
                 + doc.outputSettings(new OutputSettings().prettyPrint(true).indentAmount(2)).toString();
     }
 
