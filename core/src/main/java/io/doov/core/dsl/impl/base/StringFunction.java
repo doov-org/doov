@@ -26,6 +26,8 @@ import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.grammar.leaf.Constant;
+import io.doov.core.dsl.grammar.string.*;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LeafStepCondition;
 import io.doov.core.dsl.impl.num.IntegerFunction;
@@ -57,7 +59,10 @@ public class StringFunction extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition contains(String value) {
-        return LeafStepCondition.stepCondition(containsMetadata(metadata, value), getFunction(), value, String::contains);
+        return LeafStepCondition.stepCondition(
+                containsMetadata(metadata, value),
+                new Contains(ast,new Constant<>(value)),
+                getFunction(), value, String::contains);
     }
 
     /**
@@ -78,7 +83,9 @@ public class StringFunction extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition matches(String value) {
-        return LeafStepCondition.stepCondition(matchesMetadata(metadata, value), getFunction(), value, String::matches);
+        return LeafStepCondition.stepCondition(matchesMetadata(metadata, value),
+                new Matches(ast, new Constant<>(value)),
+                getFunction(), value, String::matches);
     }
 
     /**
@@ -88,7 +95,10 @@ public class StringFunction extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition startsWith(String value) {
-        return LeafStepCondition.stepCondition(startsWithMetadata(metadata, value), getFunction(), value, String::startsWith);
+        return LeafStepCondition.stepCondition(
+                startsWithMetadata(metadata, value),
+                new StartsWith(ast,new Constant<>(value)),
+                getFunction(), value, String::startsWith);
     }
 
     /**
@@ -98,7 +108,10 @@ public class StringFunction extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition endsWith(String value) {
-        return LeafStepCondition.stepCondition(endsWithMetadata(metadata, value), getFunction(), value, String::endsWith);
+        return LeafStepCondition.stepCondition(
+                endsWithMetadata(metadata, value),
+                new EndsWith(ast, new Constant<>(value)),
+                getFunction(), value, String::endsWith);
     }
 
     /**

@@ -9,7 +9,7 @@ import io.doov.core.FieldId;
 import io.doov.core.PathConstraint;
 
 /**
- * Contains the same information as the {@link io.doov.core.Path} annotation.
+ * IterableContains the same information as the {@link io.doov.core.Path} annotation.
  * Field paths are used for associating a field with a {@link FieldId} without using annotations.
  * This is used at code generation for generating {@link io.doov.core.FieldInfo} class.
  */

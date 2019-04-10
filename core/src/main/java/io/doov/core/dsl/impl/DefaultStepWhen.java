@@ -15,6 +15,8 @@
  */
 package io.doov.core.dsl.impl;
 
+import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.When;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.DefaultConditionalMappingRule;
 import io.doov.core.dsl.meta.Metadata;
@@ -24,9 +26,17 @@ public class DefaultStepWhen extends AbstractDSLBuilder implements StepWhen {
     private final WhenMetadata metadata;
     private final StepCondition stepCondition;
 
+    private final Value<Boolean> input;
+
     public DefaultStepWhen(StepCondition stepCondition) {
         this.metadata = WhenMetadata.when(stepCondition.metadata());
         this.stepCondition = stepCondition;
+        this.input = stepCondition.ast();
+    }
+
+    @Override
+    public Value<Boolean> ast() {
+        return new When(input);
     }
 
     @Override

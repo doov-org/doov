@@ -20,11 +20,17 @@ import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
 
 import java.util.Locale;
 
+import io.doov.core.dsl.grammar.leaf.NotYetImplemented;
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.meta.Metadata;
 
-public interface DSLBuilder extends Readable {
+public interface DSLBuilder<T> extends Readable {
 
     Metadata metadata();
+
+    default Value<T> ast() {
+        return new NotYetImplemented<>(this.getClass());
+    }
 
     /**
      * Returns the human readable version of this object.

@@ -6,6 +6,8 @@ package io.doov.core.dsl.mapping;
 import java.util.function.Supplier;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.leaf.Constant;
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.StaticMetadata;
 
@@ -17,6 +19,11 @@ public class StaticInput<T> extends AbstractDSLBuilder implements MappingInput<T
     public StaticInput(Supplier<T> valueSupplier) {
         this.valueSupplier = valueSupplier;
         this.metadata = StaticMetadata.create(valueSupplier);
+    }
+
+    @Override
+    public Value<T> ast() {
+        return new Constant<>(valueSupplier.get());
     }
 
     @Override

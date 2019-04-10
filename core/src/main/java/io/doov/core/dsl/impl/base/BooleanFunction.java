@@ -28,6 +28,11 @@ import java.util.function.BiFunction;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.LogicalFieldInfo;
+import io.doov.core.dsl.grammar.Equals;
+import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.bool.*;
+import io.doov.core.dsl.grammar.leaf.Constant;
+import io.doov.core.dsl.grammar.leaf.NotYetImplemented;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LeafStepCondition;
 import io.doov.core.dsl.lang.Context;
@@ -57,7 +62,7 @@ public class BooleanFunction extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition not() {
-        return LeafStepCondition.stepCondition(notMetadata(metadata), getFunction(), value -> !value);
+        return LeafStepCondition.stepCondition(notMetadata(metadata), new Not(ast), getFunction(), value -> !value);
     }
 
     /**
@@ -67,7 +72,10 @@ public class BooleanFunction extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition and(boolean value) {
-        return LeafStepCondition.stepCondition(andMetadata(metadata, value), getFunction(), value,
+        return LeafStepCondition.stepCondition(
+                andMetadata(metadata, value),
+                new And(ast,new Constant<>(value)),
+                getFunction(), value,
                 Boolean::logicalAnd);
     }
 
@@ -78,7 +86,10 @@ public class BooleanFunction extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition and(LogicalFieldInfo value) {
-        return LeafStepCondition.stepCondition(andMetadata(metadata, value), getFunction(), value,
+        return LeafStepCondition.stepCondition(
+                andMetadata(metadata, value),
+                new NotYetImplemented<>(LogicalFieldInfo.class),
+                getFunction(), value,
                 Boolean::logicalAnd);
     }
 
@@ -89,7 +100,10 @@ public class BooleanFunction extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition or(boolean value) {
-        return LeafStepCondition.stepCondition(orMetadata(metadata, value), getFunction(), value,
+        return LeafStepCondition.stepCondition(
+                orMetadata(metadata, value),
+                new Or(ast, new Constant<>(value)),
+                getFunction(), value,
                 Boolean::logicalOr);
     }
 
@@ -100,7 +114,9 @@ public class BooleanFunction extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition or(LogicalFieldInfo value) {
-        return LeafStepCondition.stepCondition(orMetadata(metadata, value), getFunction(), value,
+        return LeafStepCondition.stepCondition(orMetadata(metadata, value),
+                new NotYetImplemented<>(LogicalFieldInfo.class),
+                getFunction(), value,
                 Boolean::logicalOr);
     }
 
@@ -110,7 +126,11 @@ public class BooleanFunction extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition isTrue() {
-        return LeafStepCondition.stepCondition(isMetadata(metadata, true), getFunction(), TRUE, Boolean::equals);
+        return LeafStepCondition.stepCondition(
+                isMetadata(metadata, true),
+                new Equals<>(ast,new Constant<>(true)),
+                getFunction(), TRUE,
+                Boolean::equals);
     }
 
     /**
@@ -119,7 +139,10 @@ public class BooleanFunction extends DefaultCondition<Boolean> {
      * @return the step condition
      */
     public final StepCondition isFalse() {
-        return LeafStepCondition.stepCondition(isMetadata(metadata, false), getFunction(), FALSE,
+        return LeafStepCondition.stepCondition(
+                isMetadata(metadata, false),
+                new Equals<>(ast,new Constant<>(false)),
+                getFunction(), FALSE,
                 Boolean::equals);
     }
 

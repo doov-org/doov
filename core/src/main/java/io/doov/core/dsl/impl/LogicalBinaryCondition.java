@@ -21,6 +21,9 @@ import static io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata.orMetadata
 import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.*;
+import io.doov.core.dsl.grammar.bool.And;
+import io.doov.core.dsl.grammar.bool.Or;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
@@ -30,8 +33,9 @@ import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
  */
 public class LogicalBinaryCondition extends DefaultStepCondition {
 
-    private LogicalBinaryCondition(BinaryPredicateMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
-        super(metadata, predicate);
+    private LogicalBinaryCondition(BinaryPredicateMetadata metadata, Value<Boolean> input,
+            BiPredicate<FieldModel, Context> predicate) {
+        super(metadata, input, predicate);
     }
 
     /**
@@ -45,10 +49,12 @@ public class LogicalBinaryCondition extends DefaultStepCondition {
      * @return the binary condition
      */
     public static LogicalBinaryCondition and(StepCondition left, StepCondition right) {
-        return new LogicalBinaryCondition(andMetadata(left.metadata(), right.metadata()),
-                        (model, context) -> context.isShortCircuit()
-                                        ? andShortCircuit(left, right, model, context)
-                                        : and(left, right, model, context));
+        return new LogicalBinaryCondition(
+                andMetadata(left.metadata(), right.metadata()),
+                new And(left.ast(),right.ast()),
+                (model, context) -> context.isShortCircuit()
+                        ? andShortCircuit(left, right, model, context)
+                        : and(left, right, model, context));
     }
 
     private static boolean and(StepCondition left, StepCondition right, FieldModel model, Context context) {
@@ -72,10 +78,12 @@ public class LogicalBinaryCondition extends DefaultStepCondition {
      * @return the binary condition
      */
     public static LogicalBinaryCondition or(StepCondition left, StepCondition right) {
-        return new LogicalBinaryCondition(orMetadata(left.metadata(), right.metadata()),
-                        (model, context) -> context.isShortCircuit()
-                                        ? orShortCircuit(left, right, model, context)
-                                        : or(left, right, model, context));
+        return new LogicalBinaryCondition(
+                orMetadata(left.metadata(), right.metadata()),
+                new Or(left.ast(),right.ast()),
+                (model, context) -> context.isShortCircuit()
+                        ? orShortCircuit(left, right, model, context)
+                        : or(left, right, model, context));
     }
 
     private static boolean or(StepCondition left, StepCondition right, FieldModel model, Context context) {

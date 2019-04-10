@@ -18,6 +18,7 @@ package io.doov.core.dsl.lang;
 import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.impl.LogicalBinaryCondition;
 import io.doov.core.dsl.impl.LogicalUnaryCondition;
 
@@ -26,7 +27,7 @@ import io.doov.core.dsl.impl.LogicalUnaryCondition;
  * <p>
  * A condition is represented by a predicate {@link #predicate()} and a {@link #metadata()} describing the node.
  */
-public interface StepCondition extends DSLBuilder {
+public interface StepCondition extends DSLBuilder<Boolean> {
 
     /**
      * Returns the predicate for this node value.

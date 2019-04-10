@@ -62,7 +62,7 @@ final class FieldInfoGen {
     private static String writeFieldInfo(GeneratorFieldInfo fieldInfo) {
         return "    public static final FieldInfo " + fieldInfo.id().toString()
                 + " = " + fieldInfo.writeBuilder() + "\n                    "
-                + ".build(ALL);";
+                + ".build(All);";
     }
 
     private static String writeFieldInfoEnum(GeneratorFieldInfo fieldInfo) {

@@ -24,10 +24,15 @@ import static java.util.Arrays.asList;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.Collectors;
 
+import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.BaseFieldInfo;
+import io.doov.core.dsl.grammar.*;
+import io.doov.core.dsl.grammar.bool.*;
+import io.doov.core.dsl.grammar.leaf.*;
 import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
@@ -53,13 +58,17 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
         super(metadata, value);
     }
 
+    public DefaultCondition(PredicateMetadata metadata, Value<T> ast,
+            BiFunction<FieldModel, Context, Optional<T>> value) {
+        super(metadata, ast, value);
+    }
     /**
      * Returns a step condition checking if the node value is null.
      *
      * @return the step condition
      */
     public final StepCondition isNull() {
-        return LeafStepCondition.isNull(this);
+        return LeafStepCondition.isNull(this, new IsNull<>(ast));
     }
 
     /**
@@ -68,7 +77,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition isNotNull() {
-        return LeafStepCondition.isNotNull(this);
+        return LeafStepCondition.isNotNull(this, new Not(new IsNull<>(ast)));
     }
 
     /**
@@ -78,8 +87,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition eq(T value) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, value), function, value,
-                Object::equals);
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.equalsMetadata(metadata, value),
+                new Equals<>(ast,new Constant<>(value)),
+                function, value, Object::equals);
     }
 
     /**
@@ -89,8 +100,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition eq(Supplier<T> supplier) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, supplier), function, supplier,
-                Object::equals);
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.equalsMetadata(metadata, supplier),
+                new Equals<>(ast,new Constant<>(supplier.get())),
+                function, supplier, Object::equals);
     }
 
     /**
@@ -100,8 +113,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition eq(BaseFieldInfo<T> value) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, value), function, value,
-                Object::equals);
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.equalsMetadata(metadata, value),
+                new Equals<>(ast, new NotYetImplemented<>(value.getClass())),
+                function, value, Object::equals);
     }
 
     /**
@@ -111,8 +126,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition notEq(T value) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, value), function, value,
-                (l, r) -> !l.equals(r));
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.notEqualsMetadata(metadata, value),
+                new Not(new Equals<>(ast, new Constant<>(value))),
+                function, value, (l, r) -> !l.equals(r));
     }
 
     /**
@@ -122,8 +139,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition notEq(Supplier<T> supplier) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, supplier), function, supplier,
-                (l, r) -> !l.equals(r));
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.notEqualsMetadata(metadata, supplier),
+                new Not(new Equals<>(ast, new Constant<>(supplier.get()))),
+                function, supplier, (l, r) -> !l.equals(r));
     }
 
     /**
@@ -133,7 +152,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition notEq(BaseFieldInfo<T> value) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, value), function, value,
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.notEqualsMetadata(metadata, value),
+                new Not(new Equals<>(ast, new NotYetImplemented<>(value.getClass()))),
+                function, value,
                 (l, r) -> !l.equals(r));
     }
 
@@ -144,8 +166,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition anyMatch(Collection<T> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.anyMatchMetadata(metadata, values), function,
-                value -> values.stream().anyMatch(value::equals));
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.anyMatchMetadata(metadata, values),
+                new Any(values.stream().map(Constant::new).map(c -> new Equals<>(ast, c)).collect(Collectors.toList())),
+                function, value -> values.stream().anyMatch(value::equals));
     }
 
     /**
@@ -155,8 +179,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition anyMatch(List<Predicate<T>> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.anyMatchMetadata(metadata), function,
-                value -> values.stream().anyMatch(v -> v.test(value)));
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.anyMatchMetadata(metadata),
+                new Any(values.stream().map(PredicateValue::new).collect(Collectors.toList())),
+                function, value -> values.stream().anyMatch(v -> v.test(value)));
     }
 
     /**
@@ -167,8 +193,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     @SafeVarargs
     public final StepCondition allMatch(T... values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata, asList(values)), function,
-                value -> Arrays.stream(values).allMatch(value::equals));
+        return allMatch(asList(values));
     }
 
     /**
@@ -178,8 +203,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition allMatch(Collection<T> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata, values), function,
-                value -> values.stream().allMatch(value::equals));
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.allMatchMetadata(metadata, values),
+                new All(values.stream().map(Constant::new).map(c -> new Equals<>(ast, c)).collect(Collectors.toList())),
+                function, value -> values.stream().allMatch(value::equals));
     }
 
     /**
@@ -189,8 +216,9 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition allMatch(List<Predicate<T>> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata), function,
-                value -> values.stream().allMatch(v -> v.test(value)));
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata),
+                new All(values.stream().map(PredicateValue::new).collect(Collectors.toList())),
+                function, value -> values.stream().allMatch(v -> v.test(value)));
     }
 
     /**
@@ -201,8 +229,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     @SafeVarargs
     public final StepCondition noneMatch(T... values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.noneMatchMetadata(metadata, asList(values)), function,
-                value -> Arrays.stream(values).noneMatch(value::equals));
+        return noneMatch(asList(values));
     }
 
     /**
@@ -212,8 +239,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition noneMatch(Collection<T> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.noneMatchMetadata(metadata, values), function,
-                value -> values.stream().noneMatch(value::equals));
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.noneMatchMetadata(metadata, values),
+                new Not(new Any(values.stream().map(c -> new Equals<>(ast,new Constant<>(c))).collect(Collectors.toList()))),
+                function, value -> values.stream().noneMatch(value::equals));
     }
 
     /**
@@ -223,8 +252,10 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition noneMatch(List<Predicate<T>> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchNoneMetadata(metadata), function,
-                value -> values.stream().noneMatch(v -> v.test(value)));
+        return LeafStepCondition.stepCondition(
+                BinaryPredicateMetadata.matchNoneMetadata(metadata),
+                new Not(new Any(values.stream().map(PredicateValue::new).collect(Collectors.toList()))),
+                function, value -> values.stream().noneMatch(v -> v.test(value)));
     }
 
     /**

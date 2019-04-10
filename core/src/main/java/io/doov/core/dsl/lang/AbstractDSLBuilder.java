@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl.lang;
 
-public abstract class AbstractDSLBuilder implements DSLBuilder {
+public abstract class AbstractDSLBuilder<T> implements DSLBuilder<T> {
 
     @Override
     public String toString() {

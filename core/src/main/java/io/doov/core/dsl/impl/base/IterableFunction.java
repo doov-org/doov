@@ -26,9 +26,14 @@ import static java.util.stream.StreamSupport.stream;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.grammar.bool.All;
+import io.doov.core.dsl.grammar.bool.Not;
+import io.doov.core.dsl.grammar.iterable.*;
+import io.doov.core.dsl.grammar.leaf.Constant;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LeafStepCondition;
 import io.doov.core.dsl.lang.Context;
@@ -46,33 +51,49 @@ public class IterableFunction<T, C extends Iterable<T>> extends DefaultCondition
     }
 
     public StepCondition contains(T value) {
-        return LeafStepCondition.stepCondition(containsMetadata(metadata, value), getFunction(),
+        return LeafStepCondition.stepCondition(
+                containsMetadata(metadata, value),
+                new IterableContains<>(ast,new Constant<>(value)),
+                getFunction(),
                 collection -> stream(collection.spliterator(), false).anyMatch(value::equals));
     }
 
     @SafeVarargs
     public final StepCondition containsAll(T... values) {
-        return LeafStepCondition.stepCondition(containsMetadata(metadata, Arrays.asList(values)), getFunction(),
+        return LeafStepCondition.stepCondition(
+                containsMetadata(metadata, Arrays.asList(values)),
+                new All(Arrays.stream(values)
+                        .map(v -> new IterableContains<>(ast, new Constant<>(v)))
+                        .collect(Collectors.toList())),
+                getFunction(),
                 iterable -> stream(iterable.spliterator(), false).collect(toSet()).containsAll(Arrays.asList(values)));
     }
 
     public StepCondition isEmpty() {
-        return LeafStepCondition.stepCondition(isEmptyMetadata(metadata), getFunction(),
+        return LeafStepCondition.stepCondition(isEmptyMetadata(metadata),
+                new IterableEmpty<>(ast),
+                getFunction(),
                 iterable -> !iterable.iterator().hasNext());
     }
 
     public StepCondition isNotEmpty() {
-        return LeafStepCondition.stepCondition(isNotEmptyMetadata(metadata), getFunction(),
+        return LeafStepCondition.stepCondition(isNotEmptyMetadata(metadata),
+                new Not(new IterableEmpty<>(ast)),
+                getFunction(),
                 iterable -> iterable.iterator().hasNext());
     }
 
     public StepCondition hasSize(int size) {
-        return LeafStepCondition.stepCondition(hasSizeMetadata(metadata, size), getFunction(),
+        return LeafStepCondition.stepCondition(hasSizeMetadata(metadata, size),
+                new IterableHasSize<>(ast, new Constant<>(size)),
+                getFunction(),
                 iterable -> stream(iterable.spliterator(), false).count() == size);
     }
 
     public StepCondition hasNotSize(int size) {
-        return LeafStepCondition.stepCondition(hasNotSizeMetadata(metadata, size), getFunction(),
+        return LeafStepCondition.stepCondition(hasNotSizeMetadata(metadata, size),
+                new Not(new IterableHasSize<>(ast, new Constant<>(size))),
+                getFunction(),
                 iterable -> stream(iterable.spliterator(), false).count() != size);
     }
 

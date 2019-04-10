@@ -25,6 +25,7 @@ import java.util.stream.*;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
+import io.doov.core.dsl.grammar.leaf.Constant;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.impl.num.NumericFunction;
@@ -68,7 +69,7 @@ public class DOOV {
      * @return the step condition
      */
     public static StepCondition alwaysTrue() {
-        return new DefaultStepCondition(trueMetadata(), (model, context) -> true);
+        return new DefaultStepCondition(trueMetadata(), new Constant<>(true), (model, context) -> true);
     }
 
     /**
@@ -78,7 +79,9 @@ public class DOOV {
      * @return the step condition
      */
     public static StepCondition alwaysTrue(String readable) {
-        return new DefaultStepCondition(trueMetadata().valueReadable(() -> readable),
+        return new DefaultStepCondition(
+                trueMetadata().valueReadable(() -> readable),
+                new Constant<>(true),
                 (model, context) -> true);
     }
 
@@ -88,7 +91,7 @@ public class DOOV {
      * @return the step condition
      */
     public static StepCondition alwaysFalse() {
-        return new DefaultStepCondition(falseMetadata(), (model, context) -> false);
+        return new DefaultStepCondition(falseMetadata(), new Constant<>(false), (model, context) -> false);
     }
 
     /**
@@ -99,6 +102,7 @@ public class DOOV {
      */
     public static StepCondition alwaysFalse(String readable) {
         return new DefaultStepCondition(falseMetadata().valueReadable(() -> readable),
+                new Constant<>(false),
                 (model, context) -> false);
     }
 

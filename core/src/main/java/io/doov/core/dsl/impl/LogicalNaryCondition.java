@@ -26,6 +26,8 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.bool.*;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
@@ -37,8 +39,9 @@ import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
  */
 public class LogicalNaryCondition extends DefaultStepCondition {
 
-    private LogicalNaryCondition(NaryPredicateMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
-        super(metadata, predicate);
+    private LogicalNaryCondition(NaryPredicateMetadata metadata, Value<Boolean> input,
+            BiPredicate<FieldModel, Context> predicate) {
+        super(metadata, input, predicate);
     }
 
     /**
@@ -67,7 +70,10 @@ public class LogicalNaryCondition extends DefaultStepCondition {
      * @return the nary condition
      */
     public static LogicalNaryCondition matchAny(List<StepCondition> steps) {
+
+
         return new LogicalNaryCondition(matchAnyMetadata(getMetadatas(steps)),
+                new Any(steps.stream().map(StepCondition::ast).collect(toList())),
                         (model, context) -> context.isShortCircuit()
                                         ? matchAnyShortCircuit(steps, model, context)
                                         : matchAny(steps, model, context));
@@ -93,6 +99,7 @@ public class LogicalNaryCondition extends DefaultStepCondition {
      */
     public static LogicalNaryCondition matchAll(List<StepCondition> steps) {
         return new LogicalNaryCondition(matchAllMetadata(getMetadatas(steps)),
+                new All(steps.stream().map(StepCondition::ast).collect(toList())),
                         (model, context) -> context.isShortCircuit()
                                         ? matchAllShortCircuit(steps, model, context)
                                         : matchAll(steps, model, context));
@@ -118,6 +125,7 @@ public class LogicalNaryCondition extends DefaultStepCondition {
      */
     public static LogicalNaryCondition matchNone(List<StepCondition> steps) {
         return new LogicalNaryCondition(matchNoneMetadata(getMetadatas(steps)),
+                new Not(new Any(steps.stream().map(StepCondition::ast).collect(toList()))),
                         (model, context) -> context.isShortCircuit()
                                         ? matchNoneShortCircuit(steps, model, context)
                                         : matchNone(steps, model, context));

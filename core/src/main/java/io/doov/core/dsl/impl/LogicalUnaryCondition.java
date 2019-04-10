@@ -20,6 +20,8 @@ import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.notMetadata
 import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.*;
+import io.doov.core.dsl.grammar.bool.Not;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
@@ -29,8 +31,8 @@ import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
  */
 public class LogicalUnaryCondition extends DefaultStepCondition {
 
-    private LogicalUnaryCondition(UnaryPredicateMetadata metadata, BiPredicate<FieldModel, Context> predicate) {
-        super(metadata, predicate);
+    private LogicalUnaryCondition(UnaryPredicateMetadata metadata, Value<Boolean> input, BiPredicate<FieldModel, Context> predicate) {
+        super(metadata, input, predicate);
     }
 
     /**
@@ -40,7 +42,7 @@ public class LogicalUnaryCondition extends DefaultStepCondition {
      * @return the unary condition
      */
     public static LogicalUnaryCondition negate(StepCondition step) {
-        return new LogicalUnaryCondition(notMetadata(step.metadata()),
+        return new LogicalUnaryCondition(notMetadata(step.metadata()),new Not(step.ast()),
                         (model, context) -> step.predicate().negate().test(model, context));
     }
 

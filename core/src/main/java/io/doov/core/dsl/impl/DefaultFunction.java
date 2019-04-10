@@ -21,6 +21,8 @@ import java.util.function.BiFunction;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.Function;
+import io.doov.core.dsl.grammar.leaf.NotYetImplemented;
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.Metadata;
 
@@ -31,10 +33,18 @@ public class DefaultFunction<N, M extends Metadata> implements Function<N> {
     }
 
     protected final M metadata;
+    protected final Value<N> ast;
     protected final BiFunction<FieldModel, Context, Optional<N>> function;
+
+    protected DefaultFunction(M metadata, Value<N> ast, BiFunction<FieldModel, Context, Optional<N>> function) {
+        this.metadata = metadata;
+        this.ast = ast;
+        this.function = function;
+    }
 
     protected DefaultFunction(M metadata, BiFunction<FieldModel, Context, Optional<N>> function) {
         this.metadata = metadata;
+        this.ast = new NotYetImplemented<>(this.getClass());
         this.function = function;
     }
 
