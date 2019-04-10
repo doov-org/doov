@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class ApplyN<I,O> extends Value<O> {
+public abstract class ApplyN<I,O> extends Application<O> {
 
     public final List<Value<I>> inputs;
 

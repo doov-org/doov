@@ -3,7 +3,7 @@
  */
 package io.doov.core.dsl.grammar;
 
-public abstract class Apply2<I,J,O> extends Value<O> {
+public abstract class Apply2<I,J,O> extends Application<O> {
 
     public final Value<I> lhs;
     public final Value<J> rhs;

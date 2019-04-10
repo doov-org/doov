@@ -4,13 +4,15 @@
 package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.mapping.Mapping;
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.impl.ModelInterceptor;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingRuleMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-public class DefaultMappingRule<T> extends AbstractDSLBuilder implements MappingRule {
+public class DefaultMappingRule<T> extends AbstractDSLBuilder<Void> implements MappingRule {
 
     private final MappingInput<T> input;
     private final MappingOutput<T> output;
@@ -20,6 +22,11 @@ public class DefaultMappingRule<T> extends AbstractDSLBuilder implements Mapping
         this.input = input;
         this.output = output;
         this.metadata = new MappingRuleMetadata(input.metadata(), output.metadata());
+    }
+
+    @Override
+    public Value<Void> ast() {
+        return new Mapping<>(input.ast(),output.ast());
     }
 
     @Override

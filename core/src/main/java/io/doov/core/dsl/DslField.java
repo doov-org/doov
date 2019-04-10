@@ -16,6 +16,7 @@
 package io.doov.core.dsl;
 
 import io.doov.core.FieldId;
+import io.doov.core.FieldInfo;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.Metadata;
@@ -25,7 +26,7 @@ import io.doov.core.dsl.meta.Metadata;
  *
  * Generic type parameter {@link T} defines the type of the field.
  */
-public interface DslField<T> extends Readable {
+public interface DslField<T> extends Readable, FieldInfo {
 
     FieldId id();
 

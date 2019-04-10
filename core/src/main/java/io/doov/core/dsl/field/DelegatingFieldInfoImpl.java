@@ -19,7 +19,7 @@ import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.meta.Metadata;
 
-public abstract class DelegatingFieldInfoImpl implements DelegatingFieldInfo {
+public abstract class DelegatingFieldInfoImpl<T> implements DelegatingFieldInfo<T> {
 
     private FieldInfo fieldInfo;
 

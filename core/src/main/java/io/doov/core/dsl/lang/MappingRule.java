@@ -22,7 +22,7 @@ import io.doov.core.FieldModel;
 /**
  * Mapping rule
  */
-public interface MappingRule extends DSLBuilder {
+public interface MappingRule extends DSLBuilder<Void> {
     /**
      * Verifies the mapping rule for given in/out models
      *

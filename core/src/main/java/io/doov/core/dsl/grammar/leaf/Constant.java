@@ -8,10 +8,11 @@ import io.doov.core.dsl.grammar.Value;
 public class Constant<T> extends Value<T> {
 
     public final T value;
+    public final Class<T> valueClass;
 
     public Constant(T value) {
-        super((Class<T>)value.getClass());
         this.value = value;
+        this.valueClass = (Class<T>) value.getClass();
     }
 
     @Override

@@ -20,7 +20,7 @@ import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.DefaultCondition;
 
-public class CharacterFieldInfo extends DelegatingFieldInfoImpl implements BaseFieldInfo<Character> {
+public class CharacterFieldInfo extends DelegatingFieldInfoImpl<Character> implements BaseFieldInfo<Character> {
 
     public CharacterFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

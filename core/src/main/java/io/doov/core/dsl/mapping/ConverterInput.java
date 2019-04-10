@@ -4,11 +4,13 @@
 package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.Convert1;
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-public class ConverterInput<S, T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class ConverterInput<S, T> extends AbstractDSLBuilder<T> implements MappingInput<T> {
 
     private final MappingInput<S> sourceInput;
     private final TypeConverter<S, T> typeConverter;
@@ -33,6 +35,11 @@ public class ConverterInput<S, T> extends AbstractDSLBuilder implements MappingI
     @Override
     public T read(FieldModel inModel, Context context) {
         return typeConverter.convert(inModel, context, sourceInput.read(inModel, context));
+    }
+
+    @Override
+    public Value<T> ast() {
+        return new Convert1<>(sourceInput.ast(),typeConverter);
     }
 
 }

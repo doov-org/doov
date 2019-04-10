@@ -3,21 +3,19 @@
  */
 package io.doov.core.dsl.grammar.leaf;
 
-import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.grammar.Value;
 
-public class FieldValue<T, F extends DslField<T> & FieldInfo> extends Value<T> {
+public class FieldValue<T> extends Value<T> {
 
-    public final F field;
+    public final DslField<T> field;
 
-    public FieldValue(F field) {
-        super((Class<T>)field.type());
+    public FieldValue(DslField<T> field) {
         this.field = field;
     }
 
     @Override
     public String toString() {
-        return "FieldValue(" + field.readable() + ":" + output.getSimpleName() + ")";
+        return "FieldValue(" + field.readable() + ":" + field.type().getSimpleName() + ")";
     }
 }

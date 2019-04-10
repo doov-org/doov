@@ -3,9 +3,9 @@
  */
 package io.doov.core.dsl.grammar;
 
-import io.doov.core.dsl.field.types.BooleanFieldInfo;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.StringFieldInfo;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.runtime.GenericModel;
 
 public class Grammain {
@@ -13,12 +13,13 @@ public class Grammain {
     public static void main(String[] args) {
         GenericModel model = new GenericModel();
 
-        BooleanFieldInfo a = model.booleanField(true,"a");
-        BooleanFieldInfo b = model.booleanField(true,"b");
-        BooleanFieldInfo c = model.booleanField(true,"c");
-        StringFieldInfo str = model.stringField("toto","c");
+        StringFieldInfo str1 = model.stringField("toto","c");
+        StringFieldInfo str2 = model.stringField("toto","c");
 
-        StepCondition rule = str.contains("yop").and(str.startsWith("yoo"));
+        MappingRule rule  = DOOV.mappings(
+                DOOV.map("totoro").to(str1),
+                DOOV.map("tatara").to(str2)
+        );
 
         System.out.println(rule.ast().toString());
 

@@ -20,7 +20,7 @@ import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.DefaultCondition;
 
-public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfoImpl implements BaseFieldInfo<E> {
+public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfoImpl<E> implements BaseFieldInfo<E> {
 
     public EnumFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

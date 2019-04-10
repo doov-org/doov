@@ -24,9 +24,11 @@ import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.lengthIsMet
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.grammar.leaf.Constant;
+import io.doov.core.dsl.grammar.leaf.FieldValue;
 import io.doov.core.dsl.grammar.string.*;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.LeafStepCondition;
@@ -72,7 +74,9 @@ public class StringFunction extends DefaultCondition<String> {
      * @return the step condition
      */
     public final StepCondition contains(StringFunction value) {
-        return LeafStepCondition.stepCondition(containsMetadata(metadata, value), getFunction(), value.getFunction(),
+        return LeafStepCondition.stepCondition(containsMetadata(metadata, value),
+                new Contains(ast, value.ast),
+                getFunction(), value.getFunction(),
                 String::contains);
     }
 

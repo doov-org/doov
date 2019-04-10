@@ -19,11 +19,13 @@ import static io.doov.core.dsl.meta.MappingInputMetadata.inputMetadata;
 import static io.doov.core.dsl.meta.MappingMetadata.metadataInput;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.Convert2;
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-public class BiConverterInput<U, S, T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class BiConverterInput<U, S, T> extends AbstractDSLBuilder<T> implements MappingInput<T> {
 
     private final MappingInputMetadata metadata;
     private final MappingInput<U> mappingInput1;
@@ -54,4 +56,8 @@ public class BiConverterInput<U, S, T> extends AbstractDSLBuilder implements Map
                         mappingInput2.read(inModel, context));
     }
 
+    @Override
+    public Value<T> ast() {
+        return new Convert2<>(mappingInput1.ast(),mappingInput2.ast(),converter);
+    }
 }

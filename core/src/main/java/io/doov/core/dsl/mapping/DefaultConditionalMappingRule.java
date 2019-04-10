@@ -4,11 +4,13 @@ import static io.doov.core.dsl.meta.ConditionalMappingMetadata.conditional;
 import static java.util.stream.Collectors.toList;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.mapping.Conditional;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
-public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements ConditionalMappingRule {
+public class DefaultConditionalMappingRule extends AbstractDSLBuilder<Void> implements ConditionalMappingRule {
 
     private final ConditionalMappingMetadata metadata;
 
@@ -39,6 +41,11 @@ public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements
         this.metadata = conditional(stepWhen.metadata(),
                 MappingRegistryMetadata.then(mappingRules.stream().map(MappingRule::metadata).collect(toList())),
                 MappingRegistryMetadata.otherwise(elseMappingRules.stream().map(MappingRule::metadata).collect(toList())));
+    }
+
+    @Override
+    public Value<Void> ast() {
+        return new Conditional(validationRule.ast(),mappingRules.ast(),elseMappingRules.ast());
     }
 
     @Override

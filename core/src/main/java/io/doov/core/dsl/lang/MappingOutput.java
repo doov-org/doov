@@ -16,13 +16,14 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.Value;
 
 /**
  * Mapping output
  *
  * @param <T> output value type
  */
-public interface MappingOutput<T> extends DSLBuilder {
+public interface MappingOutput<T> extends DSLBuilder<T> {
 
     /**
      * Writes the output value
@@ -40,4 +41,7 @@ public interface MappingOutput<T> extends DSLBuilder {
      * @return true if the output can write a value to the model
      */
     boolean validate(FieldModel outModel);
+
+    @Override
+    Value<T> ast();
 }

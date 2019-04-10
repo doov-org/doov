@@ -11,6 +11,7 @@ import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.DelegatingFieldInfo;
+import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.meta.Metadata;
 
 public class TemplateParam<T extends DslField<?>> {
@@ -35,8 +36,7 @@ public class TemplateParam<T extends DslField<?>> {
     }
 
     public TemplateParam<T> bind(T field) {
-        // TODO remove this cast
-        fieldInfo.setFieldInfo((FieldInfo) field);
+        fieldInfo.setFieldInfo(field);
         return this;
     }
 
@@ -63,6 +63,11 @@ public class TemplateParam<T extends DslField<?>> {
         @Override
         public FieldId id() {
             return fieldInfo != null ? fieldInfo.id() : templateFieldId;
+        }
+
+        @Override
+        public DefaultCondition getDefaultFunction() {
+            return null;
         }
 
         @Override

@@ -51,7 +51,7 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
 
     public DefaultCondition(DslField<T> field) {
-        this(fieldMetadata(field), (model, context) -> valueModel(model, field));
+        this(fieldMetadata(field), new FieldValue<>(field), (model, context) -> valueModel(model, field));
     }
 
     public DefaultCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<T>> value) {

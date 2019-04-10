@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.mapping.Mapping;
+import io.doov.core.dsl.grammar.mapping.Registry;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingRegistryMetadata;
@@ -17,7 +20,7 @@ import io.doov.core.dsl.meta.Metadata;
 /**
  * Immutable, ordered, composable container for {@link MappingRule}s
  */
-public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
+public class MappingRegistry extends AbstractDSLBuilder<Void> implements MappingRule {
 
     private final List<MappingRule> mappingRules;
     private final MappingRegistryMetadata metadata;
@@ -26,6 +29,7 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
         return new MappingRegistry(mappingRules);
     }
 
+    @SafeVarargs
     private MappingRegistry(MappingRule... mappingRules) {
         this.mappingRules = Arrays.asList(mappingRules);
         // TODO
@@ -35,6 +39,16 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
     @Override
     public Metadata metadata() {
         return metadata;
+    }
+
+    @Override
+    public Value<Void> ast() {
+
+        List<Value> values = mappingRules.stream()
+                .map(MappingRule::ast)
+                .collect(Collectors.toList());
+
+        return new Registry(values);
     }
 
     /**

@@ -11,7 +11,7 @@ import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.StaticMetadata;
 
-public class StaticInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
+public class StaticInput<T> extends AbstractDSLBuilder<T> implements MappingInput<T> {
 
     private final Supplier<T> valueSupplier;
     private final StaticMetadata<T> metadata;

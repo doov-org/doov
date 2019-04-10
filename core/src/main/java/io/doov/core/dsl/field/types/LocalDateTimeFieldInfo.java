@@ -21,7 +21,7 @@ import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.time.LocalDateTimeFunction;
 
-public class LocalDateTimeFieldInfo extends DelegatingFieldInfoImpl implements TemporalFieldInfo<LocalDateTime> {
+public class LocalDateTimeFieldInfo extends DelegatingFieldInfoImpl<LocalDateTime> implements TemporalFieldInfo<LocalDateTime> {
 
     public LocalDateTimeFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

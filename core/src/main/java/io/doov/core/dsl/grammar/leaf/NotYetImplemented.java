@@ -10,7 +10,6 @@ public class NotYetImplemented<T> extends Value<T> {
     public final Class<?> tag;
 
     public NotYetImplemented(Class<?> tag) {
-        super(null);
         this.tag = tag;
     }
 

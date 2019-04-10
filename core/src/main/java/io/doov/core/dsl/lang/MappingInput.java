@@ -16,13 +16,14 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.Value;
 
 /**
  * Mapping input
  *
  * @param <T> input value type
  */
-public interface MappingInput<T> extends DSLBuilder {
+public interface MappingInput<T> extends DSLBuilder<T> {
 
     /**
      * Reads the input value
@@ -40,4 +41,7 @@ public interface MappingInput<T> extends DSLBuilder {
      * @return true if the input can read a value from the model
      */
     boolean validate(FieldModel inModel);
+
+    @Override
+    Value<T> ast();
 }

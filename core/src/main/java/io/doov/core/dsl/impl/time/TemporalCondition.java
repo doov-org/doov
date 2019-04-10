@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.TemporalFieldInfo;
+import io.doov.core.dsl.grammar.Equals;
 import io.doov.core.dsl.grammar.leaf.Constant;
 import io.doov.core.dsl.grammar.leaf.NotYetImplemented;
 import io.doov.core.dsl.grammar.temporal.*;
@@ -60,7 +61,9 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition eq(TemporalCondition<N> value) {
-        return LeafStepCondition.stepCondition(equalsMetadata(metadata, value), getFunction(), value.getFunction(),
+        return LeafStepCondition.stepCondition(equalsMetadata(metadata, value),
+                new Equals<>(ast, value.ast),
+                getFunction(), value.getFunction(),
                 Object::equals);
     }
 
@@ -114,6 +117,7 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      */
     public final StepCondition before(TemporalCondition<N> value) {
         return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeTemporalConditionMetadata(this, value),
+                new Before<>(ast,value.ast),
                 getFunction(),
                 value.getFunction(),
                 (l, r) -> beforeFunction().apply(l, r));
@@ -168,7 +172,10 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition beforeOrEq(TemporalCondition<N> value) {
-        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.beforeOrEqualsTemporalConditionMetadata(this, value), getFunction(),
+        return LeafStepCondition.stepCondition(
+                TemporalBiFunctionMetadata.beforeOrEqualsTemporalConditionMetadata(this, value),
+                new BeforeEq<>(ast,value.ast),
+                getFunction(),
                 value.getFunction(), (l, r) -> beforeOrEqualsFunction().apply(l, r));
     }
 
@@ -221,7 +228,9 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition after(TemporalCondition<N> value) {
-        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterTemporalConditionMetadata(this, value), getFunction(),
+        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterTemporalConditionMetadata(this, value),
+                new After<>(ast,value.ast),
+                getFunction(),
                 value.getFunction(), (l, r) -> afterFunction().apply(l, r));
     }
 
@@ -273,7 +282,10 @@ public abstract class TemporalCondition<N extends Temporal> extends DefaultCondi
      * @return the step condition
      */
     public final StepCondition afterOrEq(TemporalCondition<N> value) {
-        return LeafStepCondition.stepCondition(TemporalBiFunctionMetadata.afterOrEqualsTemporalConditionMetadata(this, value), getFunction(),
+        return LeafStepCondition.stepCondition(
+                TemporalBiFunctionMetadata.afterOrEqualsTemporalConditionMetadata(this, value),
+                new AfterEq<>(ast,value.ast),
+                getFunction(),
                 value.getFunction(), (l, r) -> afterOrEqualsFunction().apply(l, r));
     }
 

@@ -16,13 +16,14 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.Value;
 
 /**
  * Interface for the validation rule that encapsulates the validation algorithm and data.
  * <p>
  * This class should be used when keeping references to specific rules.
  */
-public interface ValidationRule extends DSLBuilder {
+public interface ValidationRule extends DSLBuilder<Boolean> {
 
     /**
      * Returns the root when node of this rule.
@@ -30,6 +31,9 @@ public interface ValidationRule extends DSLBuilder {
      * @return the step when
      */
     StepWhen getStepWhen();
+
+    @Override
+    Value<Boolean> ast();
 
     /**
      * Returns a validation rule with the given short circuit.

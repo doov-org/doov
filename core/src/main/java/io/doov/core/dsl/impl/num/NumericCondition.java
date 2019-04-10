@@ -23,6 +23,7 @@ import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.lesserThanM
 import java.util.Optional;
 import java.util.function.BiFunction;
 
+import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.NumericFieldInfo;

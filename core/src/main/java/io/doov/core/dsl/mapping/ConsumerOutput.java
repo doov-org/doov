@@ -4,10 +4,12 @@
 package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.mapping.FunctionOut;
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
 
-public class ConsumerOutput<T> extends AbstractDSLBuilder implements MappingOutput<T> {
+public class ConsumerOutput<T> extends AbstractDSLBuilder<T> implements MappingOutput<T> {
 
     private final TriConsumer<FieldModel, Context, T> outputFunction;
     private final MappingMetadata metadata;
@@ -24,6 +26,11 @@ public class ConsumerOutput<T> extends AbstractDSLBuilder implements MappingOutp
     @Override
     public boolean validate(FieldModel outModel) {
         return true;
+    }
+
+    @Override
+    public Value<T> ast() {
+        return new FunctionOut<>();
     }
 
     @Override
