@@ -18,9 +18,10 @@ package io.doov.sample3.field;
 import java.util.Collections;
 import java.util.List;
 
+import io.doov.core.FieldId;
 import io.doov.core.TagId;
 
-public enum EmployeeFieldId implements EmployeeField {
+public enum EmployeeFieldId implements FieldId {
     FULLNAME, AGE, EMAIL, COUNTRY, COMPANY;
 
     @Override

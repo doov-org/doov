@@ -24,10 +24,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.ast.AstFullVisitor;
-import io.doov.core.dsl.meta.ast.AstLineVisitor;
-import io.doov.core.dsl.meta.ast.AstMarkdownVisitor;
-import io.doov.core.dsl.meta.ast.AstTextVisitor;
+import io.doov.core.dsl.meta.ast.*;
 import io.doov.sample.validation.SampleRules;
 
 public class RulesVisitorTest {
@@ -66,7 +63,7 @@ public class RulesVisitorTest {
     StringBuilder sb = new StringBuilder();
     rules.stream()
         .peek(rule -> sb.append("--------------------------------").append("\n"))
-        .forEach(rule -> new AstMarkdownVisitor(sb, BUNDLE, ENGLISH).browse(rule.metadata(), 0));
+        .forEach(rule -> new AstMarkdownRenderer(sb, BUNDLE, ENGLISH).toMarkdown(rule.metadata()));
     System.out.println(sb.toString());
   }
 

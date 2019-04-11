@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.map;
 import static io.doov.core.dsl.DOOV.mappings;
 import static io.doov.core.dsl.DOOV.template;
@@ -24,12 +25,10 @@ import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.documentOf;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.format;
 import static io.doov.core.dsl.template.ParameterTypes.$String;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,66 +66,66 @@ public class HtmlMappingTest {
     void map_to_int_field() {
         ctx = map(18).to(intField).executeOn(model, model);
         doc = documentOf(ctx);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text).isEmpty();
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-when")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-then")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-else")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-single-mapping")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly("map", "to");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text).containsExactly("18");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text).isEmpty();
+        assertThat(doc).percentageValue_DIV().isEmpty();
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).tokenWhen_SPAN().hasSize(0);
+        assertThat(doc).tokenThen_SPAN().hasSize(0);
+        assertThat(doc).tokenElse_SPAN().hasSize(0);
+        assertThat(doc).tokenSingleMapping_SPAN().hasSize(1);
+        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("18");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
     @Test
     void map_to_boolean_field() {
         ctx = map(true).to(booleanField).executeOn(model, model);
         doc = documentOf(ctx);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text).isEmpty();
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-when")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-then")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-else")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-single-mapping")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly("map", "to");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text).containsExactly("true");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text).isEmpty();
+        assertThat(doc).percentageValue_DIV().isEmpty();
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).tokenWhen_SPAN().hasSize(0);
+        assertThat(doc).tokenThen_SPAN().hasSize(0);
+        assertThat(doc).tokenElse_SPAN().hasSize(0);
+        assertThat(doc).tokenSingleMapping_SPAN().hasSize(1);
+        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("true");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
     @Test
     void map_to_date_field() {
         ctx = map(LocalDate.of(2000, 1, 1)).to(dateField).executeOn(model, model);
         doc = documentOf(ctx);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text).isEmpty();
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-when")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-then")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-else")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-single-mapping")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly("map", "to");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text).containsExactly("2000-01-01");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text).isEmpty();
+        assertThat(doc).percentageValue_DIV().isEmpty();
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).tokenWhen_SPAN().hasSize(0);
+        assertThat(doc).tokenThen_SPAN().hasSize(0);
+        assertThat(doc).tokenElse_SPAN().hasSize(0);
+        assertThat(doc).tokenSingleMapping_SPAN().hasSize(1);
+        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("2000-01-01");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
     @Test
@@ -135,24 +134,22 @@ public class HtmlMappingTest {
                 map(true).to(booleanField),
                 map(LocalDate.of(2000, 1, 1)).to(dateField)).executeOn(model, model);
         doc = documentOf(ctx);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text).isEmpty();
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(3);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-when")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-then")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-else")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-single-mapping")).hasSize(3);
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("map", "to", "map", "to", "map", "to");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("18", "true", "2000-01-01");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text).isEmpty();
+        assertThat(doc).percentageValue_DIV().isEmpty();
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(3);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).tokenWhen_SPAN().hasSize(0);
+        assertThat(doc).tokenThen_SPAN().hasSize(0);
+        assertThat(doc).tokenElse_SPAN().hasSize(0);
+        assertThat(doc).tokenSingleMapping_SPAN().hasSize(3);
+        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "to", "map", "to", "map", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("18", "true", "2000-01-01");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
     @Test
@@ -161,24 +158,22 @@ public class HtmlMappingTest {
                 .using(converter(date -> date.toString(), "empty", "date to string"))
                 .to(stringField).executeOn(model, model);
         doc = documentOf(ctx);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text).isEmpty();
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-when")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-then")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-else")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-single-mapping")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("map", "using", "to");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("2000-01-01", "'date to string'");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text).isEmpty();
+        assertThat(doc).percentageValue_DIV().isEmpty();
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).tokenWhen_SPAN().hasSize(0);
+        assertThat(doc).tokenThen_SPAN().hasSize(0);
+        assertThat(doc).tokenElse_SPAN().hasSize(0);
+        assertThat(doc).tokenSingleMapping_SPAN().hasSize(1);
+        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "using", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("2000-01-01", "'date to string'");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
     @Test
@@ -188,24 +183,22 @@ public class HtmlMappingTest {
                         "combine names"))
                 .to(stringField2).executeOn(model, model);
         doc = documentOf(ctx);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text).isEmpty();
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-when")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-then")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-else")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-single-mapping")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("map", "and", "using", "to");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("'combine names'");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text).isEmpty();
+        assertThat(doc).percentageValue_DIV().isEmpty();
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).tokenWhen_SPAN().hasSize(0);
+        assertThat(doc).tokenThen_SPAN().hasSize(0);
+        assertThat(doc).tokenElse_SPAN().hasSize(0);
+        assertThat(doc).tokenSingleMapping_SPAN().hasSize(1);
+        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "and", "using", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("'combine names'");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
     @Test
@@ -214,25 +207,22 @@ public class HtmlMappingTest {
                 .then(map(true).to(booleanField))
                 .otherwise(map(false).to(booleanField)).executeOn(model, model);
         doc = documentOf(ctx);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %");
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(1);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-when")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-then")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-else")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-single-mapping")).hasSize(2);
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("age at", ">=", "map", "to", "map", "to");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("18", "true", "false");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text).isEmpty();
+        assertThat(doc).percentageValue_DIV().containsExactly("0 %");
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(1);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).tokenWhen_SPAN().hasSize(1);
+        assertThat(doc).tokenThen_SPAN().hasSize(1);
+        assertThat(doc).tokenElse_SPAN().hasSize(1);
+        assertThat(doc).tokenSingleMapping_SPAN().hasSize(2);
+        assertThat(doc).tokenOperator_SPAN().containsExactly("age at", ">=", "map", "to", "map", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("18", "true", "false");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
     @Test
@@ -241,25 +231,22 @@ public class HtmlMappingTest {
                 .mapping((site, url) -> when(site.eq("Yahoo")).then(map("www.yahou.com").to(url)))
                 .bind(stringField, stringField2).executeOn(model, model);
         doc = documentOf(ctx);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %");
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(1);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-when")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-then")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-else")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-single-mapping")).hasSize(1);
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
-                .containsExactly("|", "=", "map", "to", "|");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("'Yahoo'", "www.yahou.com");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text).isEmpty();
+        assertThat(doc).percentageValue_DIV().containsExactly("0 %");
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(1);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).tokenWhen_SPAN().hasSize(1);
+        assertThat(doc).tokenThen_SPAN().hasSize(1);
+        assertThat(doc).tokenElse_SPAN().hasSize(0);
+        assertThat(doc).tokenSingleMapping_SPAN().hasSize(1);
+        assertThat(doc).tokenOperator_SPAN().containsExactly("|", "=", "map", "to", "|");
+        assertThat(doc).tokenValue_SPAN().containsExactly("'Yahoo'", "www.yahou.com");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
     @Test
@@ -271,25 +258,25 @@ public class HtmlMappingTest {
                         when(site.eq("Yahoo")).then(map("www.yahou.com").to(url))))
                 .bind(stringField, stringField2).executeOn(model, model);
         doc = documentOf(ctx);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                .containsExactly("0 %", "0 %", "0 %");
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(3);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(3);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-when")).hasSize(3);
-        assertThat(doc.select("span.dsl-token-then")).hasSize(3);
-        assertThat(doc.select("span.dsl-token-else")).hasSize(0);
-        assertThat(doc.select("span.dsl-token-single-mapping")).hasSize(3);
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text)
+        assertThat(doc).percentageValue_DIV().containsExactly("0 %", "0 %", "0 %");
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(3);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(3);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).tokenWhen_SPAN().hasSize(3);
+        assertThat(doc).tokenThen_SPAN().hasSize(3);
+        assertThat(doc).tokenElse_SPAN().hasSize(0);
+        assertThat(doc).tokenSingleMapping_SPAN().hasSize(3);
+        assertThat(doc).tokenOperator_SPAN()
                 .containsExactly("|", "=", "map", "to", "|", "|", "=", "map", "to", "|", "|", "=", "map", "to", "|");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                .containsExactly("'bing'", "www.bingue.com", "'Google'", "www.gougeule.com", "'Yahoo'", "www.yahou.com");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text).isEmpty();
+        assertThat(doc).tokenValue_SPAN()
+                .containsExactly("'bing'", "www.bingue.com", "'Google'", "www.gougeule.com", "'Yahoo'",
+                        "www.yahou.com");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
     @AfterEach

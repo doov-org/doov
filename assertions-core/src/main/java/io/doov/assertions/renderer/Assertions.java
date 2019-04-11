@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.core.dsl.meta.ast;
+package io.doov.assertions.renderer;
 
-import java.util.Locale;
+import org.commonmark.node.Node;
+import org.jsoup.nodes.Document;
 
-import io.doov.core.dsl.meta.Operator;
-import io.doov.core.dsl.meta.i18n.ResourceProvider;
+/**
+ * Entry point for assertions methods for dOOv, see {@link org.assertj.core.api.Assertions}.
+ */
+public class Assertions {
 
-public class AstMarkdownVisitor extends AstTextVisitor {
-
-    public AstMarkdownVisitor(StringBuilder stringBuilder, ResourceProvider bundle, Locale locale) {
-        super(stringBuilder, bundle, locale);
+    public static MarkdownAssert assertThat(Node node) {
+        return new MarkdownAssert(node, MarkdownAssert.class);
     }
-
-    @Override
-    protected String formatCurrentIndent() {
-        return super.formatCurrentIndent() + "* ";
+    
+    public static HtmlAssert assertThat(Document doc) {
+        return new HtmlAssert(doc, HtmlAssert.class);
     }
-
-    @Override
-    protected String formatOperator(Operator operator) {
-        return "**" + bundle.get(operator, locale) + "**";
-    }
-
 }

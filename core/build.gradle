@@ -8,7 +8,7 @@ dependencies {
     testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
     testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoCoreVersion
     testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
-	testCompile group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
+    testCompile project(':doov-assertions-core')
 }
 
 if (isReleaseVersion) {

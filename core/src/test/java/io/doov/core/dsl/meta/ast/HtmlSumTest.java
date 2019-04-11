@@ -15,16 +15,15 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.documentOf;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.format;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,23 +45,19 @@ public class HtmlSumTest {
         doc = documentOf(result);
 
         assertTrue(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                        .containsExactly("100 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly(">");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                        .containsExactly("1");
-        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                        .containsExactly("A", "B");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                        .containsExactly("sum");
+        assertThat(doc).nary_OL().hasSize(1);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(2);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).percentageValue_DIV().containsExactly("100 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly(">");
+        assertThat(doc).tokenValue_SPAN().containsExactly("1");
+        assertThat(doc).tokenField_SPAN().containsExactly("A", "B");
+        assertThat(doc).tokenNary_SPAN().containsExactly("sum");
 
     }
 
@@ -74,23 +69,19 @@ public class HtmlSumTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(1);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                        .containsExactly("0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly(">");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                        .containsExactly("3");
-        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                        .containsExactly("A", "B");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                        .containsExactly("sum");
+        assertThat(doc).nary_OL().hasSize(1);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(2);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).percentageValue_DIV().containsExactly("0 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly(">");
+        assertThat(doc).tokenValue_SPAN().containsExactly("3");
+        assertThat(doc).tokenField_SPAN().containsExactly("A", "B");
+        assertThat(doc).tokenNary_SPAN().containsExactly("sum");
     }
 
     @Test
@@ -101,23 +92,19 @@ public class HtmlSumTest {
         doc = documentOf(result);
 
         assertFalse(result.value());
-        assertThat(doc.select("ol.dsl-ol-nary")).hasSize(3);
-        assertThat(doc.select("li.dsl-li-binary")).hasSize(0);
-        assertThat(doc.select("li.dsl-li-nary")).hasSize(2);
-        assertThat(doc.select("li.dsl-li-leaf")).hasSize(2);
-        assertThat(doc.select("ul.dsl-ul-when")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-binary-child")).hasSize(0);
-        assertThat(doc.select("ul.dsl-ul-unary")).hasSize(0);
-        assertThat(doc.select("div.percentage-value")).extracting(Element::text)
-                        .containsExactly("0 %");
-        assertThat(doc.select("span.dsl-token-operator")).extracting(Element::text).containsExactly(">");
-        assertThat(doc.select("span.dsl-token-value")).extracting(Element::text)
-                        .containsExactly("3");
-        assertThat(doc.select("span.dsl-token-field")).extracting(Element::text)
-                        .containsExactly("A", "B");
-        assertThat(doc.select("span.dsl-token-nary")).extracting(Element::text)
-                        .containsExactly("sum", "sum", "sum");
+        assertThat(doc).nary_OL().hasSize(3);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(2);
+        assertThat(doc).leaf_LI().hasSize(2);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).percentageValue_DIV().containsExactly("0 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly(">");
+        assertThat(doc).tokenValue_SPAN().containsExactly("3");
+        assertThat(doc).tokenField_SPAN().containsExactly("A", "B");
+        assertThat(doc).tokenNary_SPAN().containsExactly("sum", "sum", "sum");
     }
 
     @AfterEach
