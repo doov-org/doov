@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import io.doov.core.dsl.utils.JsonGrammar;
-
 public abstract class ApplyN<I,O> extends Application<O> {
 
     public final List<Value<I>> inputs;

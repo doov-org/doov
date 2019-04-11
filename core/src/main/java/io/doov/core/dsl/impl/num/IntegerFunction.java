@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.grammar.Convert1;
+import io.doov.core.dsl.grammar.mapping.Convert1;
 import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;

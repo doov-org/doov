@@ -4,7 +4,7 @@
 package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Convert1;
+import io.doov.core.dsl.grammar.mapping.Convert1;
 import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;

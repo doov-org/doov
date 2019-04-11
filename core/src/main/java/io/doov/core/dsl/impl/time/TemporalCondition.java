@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.TemporalFieldInfo;
-import io.doov.core.dsl.grammar.Equals;
+import io.doov.core.dsl.grammar.bool.Equals;
 import io.doov.core.dsl.grammar.leaf.Constant;
 import io.doov.core.dsl.grammar.leaf.NotYetImplemented;
 import io.doov.core.dsl.grammar.temporal.*;

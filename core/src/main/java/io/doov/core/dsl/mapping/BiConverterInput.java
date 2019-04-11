@@ -19,7 +19,7 @@ import static io.doov.core.dsl.meta.MappingInputMetadata.inputMetadata;
 import static io.doov.core.dsl.meta.MappingMetadata.metadataInput;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Convert2;
+import io.doov.core.dsl.grammar.mapping.Convert2;
 import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;

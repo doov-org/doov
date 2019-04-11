@@ -26,13 +26,13 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collectors;
 
-import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.grammar.*;
 import io.doov.core.dsl.grammar.bool.*;
 import io.doov.core.dsl.grammar.leaf.*;
+import io.doov.core.dsl.grammar.mapping.Convert1;
 import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;

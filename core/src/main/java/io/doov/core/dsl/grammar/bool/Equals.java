@@ -1,7 +1,10 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package io.doov.core.dsl.grammar;
+package io.doov.core.dsl.grammar.bool;
+
+import io.doov.core.dsl.grammar.Apply2;
+import io.doov.core.dsl.grammar.Value;
 
 public class Equals<T> extends Apply2<T,T,Boolean> {
 

@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import io.doov.core.dsl.grammar.Value;
-import io.doov.core.dsl.utils.JsonGrammar;
 
 public class Registry extends Value<Void> {
     public final List<Value> registry;

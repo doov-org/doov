@@ -3,11 +3,13 @@
  */
 package io.doov.core.dsl.grammar.leaf;
 
-import static io.doov.core.dsl.utils.JsonGrammar.*;
+import static io.doov.core.dsl.utils.JsonGrammar.JBind;
+import static io.doov.core.dsl.utils.JsonGrammar.JNode;
+import static io.doov.core.dsl.utils.JsonGrammar.JObject;
+import static io.doov.core.dsl.utils.JsonGrammar.JString;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.grammar.Value;
-import io.doov.core.dsl.utils.JsonGrammar;
 
 public class FieldValue<T> extends Value<T> {
 

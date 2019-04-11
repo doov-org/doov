@@ -1,14 +1,15 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package io.doov.core.dsl.grammar;
+package io.doov.core.dsl.grammar.mapping;
 
-import static io.doov.core.dsl.utils.JsonGrammar.*;
+import static io.doov.core.dsl.utils.JsonGrammar.JBind;
+import static io.doov.core.dsl.utils.JsonGrammar.JNode;
+import static io.doov.core.dsl.utils.JsonGrammar.JObject;
+import static io.doov.core.dsl.utils.JsonGrammar.JString;
 
-import java.util.function.BiFunction;
-
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.BiTypeConverter;
-import io.doov.core.dsl.utils.JsonGrammar;
 
 public class Convert2<I,J,O> extends Value<O> {
 

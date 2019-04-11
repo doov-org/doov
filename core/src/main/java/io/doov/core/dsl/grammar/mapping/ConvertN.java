@@ -1,15 +1,14 @@
 /*
  * Copyright (C) by Courtanet, All Rights Reserved.
  */
-package io.doov.core.dsl.grammar;
+package io.doov.core.dsl.grammar.mapping;
 
 import static io.doov.core.dsl.utils.JsonGrammar.*;
 
 import java.util.List;
-import java.util.function.Function;
 
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.NaryTypeConverter;
-import io.doov.core.dsl.utils.JsonGrammar;
 
 public class ConvertN<I,O> extends Value<O> {
 

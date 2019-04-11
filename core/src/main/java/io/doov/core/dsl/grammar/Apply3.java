@@ -3,9 +3,10 @@
  */
 package io.doov.core.dsl.grammar;
 
-import static io.doov.core.dsl.utils.JsonGrammar.*;
-
-import io.doov.core.dsl.utils.JsonGrammar;
+import static io.doov.core.dsl.utils.JsonGrammar.JBind;
+import static io.doov.core.dsl.utils.JsonGrammar.JNode;
+import static io.doov.core.dsl.utils.JsonGrammar.JObject;
+import static io.doov.core.dsl.utils.JsonGrammar.JString;
 
 public abstract class Apply3<I,J,K,O> extends Application<O> {
 
