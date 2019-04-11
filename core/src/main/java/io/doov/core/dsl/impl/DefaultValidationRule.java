@@ -16,11 +16,12 @@
 package io.doov.core.dsl.impl;
 
 import io.doov.core.FieldModel;
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.RuleMetadata;
 
-public class DefaultValidationRule extends AbstractDSLBuilder implements ValidationRule {
+public class DefaultValidationRule extends AbstractDSLBuilder<Boolean> implements ValidationRule {
 
     private final RuleMetadata metadata;
     private final StepWhen stepWhen;
@@ -64,6 +65,11 @@ public class DefaultValidationRule extends AbstractDSLBuilder implements Validat
     @Override
     public Metadata metadata() {
         return metadata;
+    }
+
+    @Override
+    public Value<Boolean> ast() {
+        return stepWhen.ast();
     }
 
 }

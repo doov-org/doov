@@ -265,7 +265,8 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the integer condition
      */
     public final IntegerFunction mapToInt(Function<T, Integer> mapper) {
-        return new IntegerFunction(mapToIntMetadata(metadata), (model, context) -> value(model, context).map(mapper));
+        return new IntegerFunction(mapToIntMetadata(metadata),new Convert1<>(ast,mapper),
+                (model, context) -> value(model, context).map(mapper));
     }
 
     /**

@@ -28,9 +28,9 @@ import java.util.function.BiPredicate;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.grammar.bool.*;
+import io.doov.core.dsl.grammar.numeric.Count;
 import io.doov.core.dsl.impl.num.IntegerFunction;
-import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
 
@@ -55,6 +55,7 @@ public class LogicalNaryCondition extends DefaultStepCondition {
      */
     public static IntegerFunction count(List<StepCondition> steps) {
         return new IntegerFunction(countMetadata(getMetadatas(steps)),
+                        new Count<>(steps.stream().map(DSLBuilder::ast).collect(toList())),
                         (model, context) -> Optional.of((int) steps.stream()
                                         .filter(s -> s.predicate().test(model, context))
                                         .count()));

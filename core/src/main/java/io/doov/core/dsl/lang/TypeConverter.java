@@ -23,7 +23,7 @@ import io.doov.core.FieldModel;
  * @param <I> in type
  * @param <O> out type
  */
-public interface TypeConverter<I, O> extends DSLBuilder {
+public interface TypeConverter<I, O> extends DSLBuilder<O> {
     /**
      * Convert the given field in with type {@link O}, the model to the value in type {@link O}
      *

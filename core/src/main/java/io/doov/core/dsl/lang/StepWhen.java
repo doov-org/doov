@@ -18,7 +18,7 @@ package io.doov.core.dsl.lang;
 /**
  * Interface for the when step that encapsulates the root condition of the syntax tree and the validation rule.
  */
-public interface StepWhen extends DSLBuilder {
+public interface StepWhen extends DSLBuilder<Boolean> {
     /**
      * Returns the root condition of the syntax tree.
      *

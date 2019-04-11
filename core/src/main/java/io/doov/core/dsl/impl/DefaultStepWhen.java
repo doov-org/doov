@@ -22,7 +22,7 @@ import io.doov.core.dsl.mapping.DefaultConditionalMappingRule;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.WhenMetadata;
 
-public class DefaultStepWhen extends AbstractDSLBuilder implements StepWhen {
+public class DefaultStepWhen extends AbstractDSLBuilder<Boolean> implements StepWhen {
     private final WhenMetadata metadata;
     private final StepCondition stepCondition;
 

@@ -10,4 +10,8 @@ public class When extends Value<Boolean> {
     public When(Value<Boolean> predicate) {
         this.predicate = predicate;
     }
+
+    public String toString() {
+        return "When(" + predicate.toString() + ")";
+    }
 }

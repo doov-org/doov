@@ -56,6 +56,10 @@ public class DefaultFunction<N, M extends Metadata> implements Function<N> {
         return metadata;
     }
 
+    public Value<N> ast() {
+        return ast;
+    }
+
     public BiFunction<FieldModel, Context, Optional<N>> getFunction() {
         return function;
     }

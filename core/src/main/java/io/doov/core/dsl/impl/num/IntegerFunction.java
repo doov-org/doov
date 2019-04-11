@@ -20,6 +20,8 @@ import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.grammar.Convert1;
+import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
@@ -29,19 +31,24 @@ public class IntegerFunction extends NumericFunction<Integer> implements Integer
         super(field);
     }
 
-    public IntegerFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Integer>> value) {
-        super(metadata, value);
+    public IntegerFunction(PredicateMetadata metadata, Value<Integer> ast,BiFunction<FieldModel, Context, Optional<Integer>> value) {
+        super(metadata, ast, value);
     }
 
     public IntegerFunction(NumericCondition<Long> condition) {
-        this(condition.getMetadata(),
-                        (model, context) -> condition.getFunction().apply(model, context).map(Long::intValue));
+        this(condition.getMetadata(),new Convert1<>(condition.ast(),Long::intValue),
+                (model, context) -> condition.getFunction().apply(model, context).map(Long::intValue));
     }
 
     @Override
-    protected IntegerFunction numericFunction(PredicateMetadata metadata,
+    protected IntegerFunction numericFunction(PredicateMetadata metadata, Value<Integer> ast,
                     BiFunction<FieldModel, Context, Optional<Integer>> value) {
-        return new IntegerFunction(metadata, value);
+        return new IntegerFunction(metadata, ast, value);
+    }
+
+    @Override
+    protected Class<Integer> classTag() {
+        return Integer.class;
     }
 
 }

@@ -125,6 +125,7 @@ public class StringFunction extends DefaultCondition<String> {
      */
     public IntegerFunction length() {
         return new IntegerFunction(lengthIsMetadata(metadata),
+                new StringLength(ast),
                 (model, context) -> value(model, context).map(String::length));
     }
 
@@ -134,7 +135,7 @@ public class StringFunction extends DefaultCondition<String> {
      * @return the integer condition
      */
     public IntegerFunction parseInt() {
-        return new IntegerFunction(metadata,
+        return new IntegerFunction(metadata, new ParseInt(ast),
                 (model, context) -> value(model, context).map(Integer::parseInt));
     }
 

@@ -29,6 +29,9 @@ import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.field.types.TemporalFieldInfo;
+import io.doov.core.dsl.grammar.leaf.Constant;
+import io.doov.core.dsl.grammar.leaf.FieldValue;
+import io.doov.core.dsl.grammar.temporal.TimeBetween;
 import io.doov.core.dsl.impl.num.*;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.function.TemporalBiFunctionMetadata;
@@ -272,25 +275,33 @@ public abstract class TemporalFunction<N extends Temporal> extends TemporalCondi
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, N value) {
-        return new LongFunction(metadata, (model, context) -> value(model, context)
-                .flatMap(l -> Optional.ofNullable(value).map(r -> betweenFunction(unit).apply(l, r))));
+        return new LongFunction(metadata,
+                new TimeBetween<>(ast,new Constant<>(value),new Constant<>(unit)),
+                (model, context) -> value(model, context)
+                        .flatMap(l -> Optional.ofNullable(value).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
             TemporalFieldInfo<N> value) {
-        return new LongFunction(metadata, (model, context) -> value(model, context)
-                .flatMap(l -> valueModel(model, value).map(r -> betweenFunction(unit).apply(l, r))));
+        return new LongFunction(metadata,
+                new TimeBetween<>(ast,new FieldValue<>(value),new Constant<>(unit)),
+                (model, context) -> value(model, context)
+                        .flatMap(l -> valueModel(model, value).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
             TemporalCondition<N> value) {
-        return new LongFunction(metadata, (model, context) -> value(model, context).flatMap(
-                l -> value.getFunction().apply(model, context).map(r -> betweenFunction(unit).apply(l, r))));
+        return new LongFunction(metadata,
+                new TimeBetween<>(ast,value.ast(),new Constant<>(unit)),
+                (model, context) -> value(model, context)
+                        .flatMap(l -> value.getFunction().apply(model, context).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, Supplier<N> value) {
-        return new LongFunction(metadata, (model, context) -> value(model, context)
-                .flatMap(l -> Optional.ofNullable(value.get()).map(r -> betweenFunction(unit).apply(l, r))));
+        return new LongFunction(metadata,
+                new TimeBetween<>(ast,new Constant<>(value.get()),new Constant<>(unit)),
+                (model, context) -> value(model, context)
+                        .flatMap(l -> Optional.ofNullable(value.get()).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
 }

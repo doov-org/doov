@@ -15,4 +15,12 @@ public class Conditional extends Value<Void> {
         this.caseTrue = caseTrue;
         this.caseFalse = caseFalse;
     }
+
+    @Override
+    public String toString() {
+        return "Conditional(" +
+                " when : " + condition.toString() +
+                ", then : " + caseTrue.toString() +
+                ", otherwise : " + caseFalse.toString() + ")";
+    }
 }
