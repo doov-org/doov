@@ -3,6 +3,10 @@
  */
 package io.doov.core.dsl.grammar;
 
+import static io.doov.core.dsl.utils.JsonGrammar.*;
+
+import io.doov.core.dsl.utils.JsonGrammar;
+
 public abstract class Apply3<I,J,K,O> extends Application<O> {
 
     public final Value<I> input1;
@@ -19,5 +23,16 @@ public abstract class Apply3<I,J,K,O> extends Application<O> {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "(" + input1.toString() + ", " + input2.toString() + ", " + input3.toString() + ")";
+    }
+
+    @Override
+    public JNode jsonNode() {
+        return new JObject(
+                new JBind("meta", new JString("TERNARY")),
+                new JBind("tag", new JString(this.getClass().getSimpleName())),
+                new JBind("input", input1.jsonNode()),
+                new JBind("input", input2.jsonNode()),
+                new JBind("input", input3.jsonNode())
+        );
     }
 }
