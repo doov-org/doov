@@ -22,7 +22,7 @@ import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.base.IterableFunction;
 import io.doov.core.dsl.lang.StepCondition;
 
-public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingFieldInfoImpl<C> implements BaseFieldInfo<C> {
+public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingFieldInfoImpl implements BaseFieldInfo<C> {
 
     public IterableFieldInfo(FieldInfo fieldInfo) {
         super(fieldInfo);

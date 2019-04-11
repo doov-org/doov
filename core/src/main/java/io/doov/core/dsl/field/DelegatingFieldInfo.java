@@ -17,13 +17,12 @@ package io.doov.core.dsl.field;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.Metadata;
 
 /**
  * Delegates all FieldInfo methods to another.
  */
-public interface DelegatingFieldInfo<T> extends DslField<T> {
+public interface DelegatingFieldInfo extends FieldInfo {
 
     FieldInfo delegate();
 
@@ -67,8 +66,4 @@ public interface DelegatingFieldInfo<T> extends DslField<T> {
         return delegate().isTransient();
     }
 
-    @Override
-    default Metadata getMetadata() {
-        return delegate().getMetadata();
-    }
 }

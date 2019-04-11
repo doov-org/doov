@@ -66,11 +66,6 @@ public class TemplateParam<T extends DslField<?>> {
         }
 
         @Override
-        public DefaultCondition getDefaultFunction() {
-            return null;
-        }
-
-        @Override
         public Metadata getMetadata() {
             return templateParamMetadata(unInitReadable, fieldInfo);
         }

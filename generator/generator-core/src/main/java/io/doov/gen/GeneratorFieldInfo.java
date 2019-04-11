@@ -39,7 +39,7 @@ import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.DefaultCondition;
 
-public class GeneratorFieldInfo<T> extends DelegatingFieldInfoImpl<T> {
+public class GeneratorFieldInfo<T> extends DelegatingFieldInfoImpl {
 
     private static final Pattern UNDER = Pattern.compile("_");
 
@@ -48,11 +48,6 @@ public class GeneratorFieldInfo<T> extends DelegatingFieldInfoImpl<T> {
     public GeneratorFieldInfo(FieldInfo fieldInfo, VisitorPath path) {
         super(fieldInfo);
         this.path = path;
-    }
-
-    @Override
-    public DefaultCondition<T> getDefaultFunction() {
-        return null;
     }
 
     public VisitorPath getPath() {
