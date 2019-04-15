@@ -24,10 +24,7 @@ import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.HtmlWriter.*;
 import static java.util.Arrays.asList;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
@@ -67,6 +64,9 @@ public class AstHtmlRenderer {
                 case TEMPLATE_IDENTIFIER:
                     leaf(metadata, parents);
                     break;
+                case MAPPING_LEAF_ITERABLE:
+                    iterable(metadata,parents);
+                    break;
                 case TYPE_CONVERTER:
                     typeConverter(metadata, parents);
                     break;
@@ -94,6 +94,23 @@ public class AstHtmlRenderer {
         } finally {
             parents.pop();
         }
+    }
+
+    private void iterable(Metadata metadata, ArrayDeque<Metadata> parents) {
+        IterableMetadata<?,?> iterableMetadata = (IterableMetadata) metadata;
+
+        // Prefix
+        writer.writeBeginLi(CSS_LI_ITERABLE);
+
+        // Items
+        iterableMetadata.items().forEach( item -> {
+            writer.writeBeginUl();
+            toHtml(item,parents);
+            writer.writeEndUl();
+        });
+
+        // Postfix
+        writer.writeEndLi();
     }
 
     private void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents) {

@@ -261,6 +261,29 @@ public class DOOV {
     }
 
     /**
+     * Start defining a value mapping for an Iterable field
+     *
+     * @param value value
+     * @param <I>   value type
+     * @return value step map
+     */
+    public static <I,C extends Iterable<I>> IterableStepMap<I, C> map(C value) {
+        return new IterableStepMap<>(() -> value);
+    }
+
+    /**
+     * Start defining a value mapping to form an Iterable field as a List
+     *
+     * @param values values to add to the list
+     * @param <I>   value type
+     * @return value step map
+     */
+    @SafeVarargs
+    public static <I> IterableStepMap<I, List<I>> map(I... values) {
+        return new IterableStepMap<>(() -> Arrays.asList(values));
+    }
+
+    /**
      * Start defining a value mapping with value null
      *
      * @param outFieldInfo output field

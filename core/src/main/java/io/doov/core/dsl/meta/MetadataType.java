@@ -32,6 +32,7 @@ public enum MetadataType {
     ELSE_MAPPING, //
     MAPPING_INPUT, //
     MAPPING_LEAF, //
+    MAPPING_LEAF_ITERABLE, //
     TYPE_CONVERTER, //
     TYPE_CONVERTER_IDENTITY, //
     TEMPLATE_PARAM, //
