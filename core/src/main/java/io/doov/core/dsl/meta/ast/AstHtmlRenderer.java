@@ -100,17 +100,17 @@ public class AstHtmlRenderer {
         IterableMetadata<?,?> iterableMetadata = (IterableMetadata) metadata;
 
         // Prefix
-        writer.writeBeginLi(CSS_LI_ITERABLE);
+        writer.writeBeginUl(CSS_UL_ITERABLE);
 
         // Items
         iterableMetadata.items().forEach( item -> {
-            writer.writeBeginUl();
+            writer.writeBeginLi();
             toHtml(item,parents);
-            writer.writeEndUl();
+            writer.writeEndLi();
         });
 
         // Postfix
-        writer.writeEndLi();
+        writer.writeEndUl();
     }
 
     private void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents) {

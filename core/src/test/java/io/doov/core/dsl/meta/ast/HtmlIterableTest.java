@@ -33,7 +33,7 @@ public class HtmlIterableTest {
 
         Document document = documentOf(rule.executeOn(model,model));
 
-        assertThat(document.select("." + HtmlWriter.CSS_LI_ITERABLE).text())
+        assertThat(document.select("." + HtmlWriter.CSS_UL_ITERABLE).text())
                 .isEqualTo("1 2 3");
 
     }
@@ -48,7 +48,7 @@ public class HtmlIterableTest {
 
         Document document = documentOf(rule.executeOn(model,model));
 
-        assertThat(document.select("." + HtmlWriter.CSS_LI_ITERABLE).text())
+        assertThat(document.select("." + HtmlWriter.CSS_UL_ITERABLE).text())
                 .isEqualTo("1 2 3");
 
     }

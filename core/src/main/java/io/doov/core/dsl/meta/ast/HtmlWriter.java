@@ -44,11 +44,11 @@ public interface HtmlWriter {
     String CSS_LI_BINARY = "dsl-li-binary";
     String CSS_LI_UNARY = "dsl-li-unary";
     String CSS_LI_NARY = "dsl-li-nary";
-    String CSS_LI_ITERABLE = "dsl-li-iterable";
 
     String CSS_UL_WHEN = "dsl-ul-when";
     String CSS_UL_BINARY = "dsl-ul-binary";
     String CSS_UL_UNARY = "dsl-ul-unary";
+    String CSS_UL_ITERABLE = "dsl-ul-iterable";
 
     String CSS_OL_NARY = "dsl-ol-nary";
     String CSS_OL_MAPPING_NARY = "dsl-ol-mapping-nary";
