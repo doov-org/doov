@@ -264,7 +264,8 @@ public class DOOV {
      * Start defining a value mapping for an Iterable field
      *
      * @param value value
-     * @param <I>   value type
+     * @param <I> value type
+     * @param <C> container type
      * @return value step map
      */
     public static <I,C extends Iterable<I>> IterableStepMap<I, C> map(C value) {
