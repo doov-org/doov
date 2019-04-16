@@ -268,7 +268,7 @@ public class DOOV {
      * @param <C> container type
      * @return value step map
      */
-    public static <I,C extends Iterable<I>> IterableStepMap<I, C> map(C value) {
+    public static <I,C extends Iterable<I>> IterableStepMap<I, C> mapIter(C value) {
         return new IterableStepMap<>(() -> value);
     }
 
@@ -280,7 +280,7 @@ public class DOOV {
      * @return value step map
      */
     @SafeVarargs
-    public static <I> IterableStepMap<I, List<I>> map(I... values) {
+    public static <I> IterableStepMap<I, List<I>> mapIter(I... values) {
         return new IterableStepMap<>(() -> Arrays.asList(values));
     }
 
