@@ -68,6 +68,9 @@ public abstract class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMe
     public M operator(Operator op) {
         return add(op == null ? null : new Element(op, OPERATOR));
     }
+    public M operator(String key) {
+        return add(key == null ? null : new Element(key, OPERATOR));
+    }
 
     // value
 
