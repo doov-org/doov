@@ -6,7 +6,7 @@ package io.doov.core.dsl.mapping;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.grammar.mapping.FunctionIn;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
@@ -41,7 +41,7 @@ public class FunctionInput<T> extends AbstractDSLBuilder<T> implements MappingIn
     }
 
     @Override
-    public Value<T> ast(){
+    public ASTNode<T> ast(){
         return new FunctionIn<>();
     }
 }

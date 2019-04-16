@@ -9,9 +9,9 @@ import static io.doov.core.dsl.utils.JsonGrammar.JObject;
 import static io.doov.core.dsl.utils.JsonGrammar.JString;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 
-public class FieldValue<T> extends Value<T> {
+public class FieldValue<T> extends ASTNode<T> {
 
     public final DslField<T> field;
 
@@ -25,7 +25,7 @@ public class FieldValue<T> extends Value<T> {
     }
 
     @Override
-    public JNode jsonNode() {
+    public JNode json() {
         return new JObject(
                 new JBind("meta", new JString("FIELD")),
                 new JBind("class", new JString(field.type().toString())),

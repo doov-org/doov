@@ -58,7 +58,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
         super(metadata, value);
     }
 
-    public DefaultCondition(PredicateMetadata metadata, Value<T> ast,
+    public DefaultCondition(PredicateMetadata metadata, ASTNode<T> ast,
             BiFunction<FieldModel, Context, Optional<T>> value) {
         super(metadata, ast, value);
     }

@@ -16,7 +16,7 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 
 /**
  * Mapping output
@@ -43,5 +43,5 @@ public interface MappingOutput<T> extends DSLBuilder<T> {
     boolean validate(FieldModel outModel);
 
     @Override
-    Value<T> ast();
+    ASTNode<T> ast();
 }

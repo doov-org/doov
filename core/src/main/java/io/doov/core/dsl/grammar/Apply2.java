@@ -10,10 +10,10 @@ import static io.doov.core.dsl.utils.JsonGrammar.JString;
 
 public abstract class Apply2<I,J,O> extends Application<O> {
 
-    public final Value<I> lhs;
-    public final Value<J> rhs;
+    public final ASTNode<I> lhs;
+    public final ASTNode<J> rhs;
 
-    public Apply2(Class<O> output, Value<I> lhs, Value<J> rhs) {
+    public Apply2(Class<O> output, ASTNode<I> lhs, ASTNode<J> rhs) {
         super(output);
         this.lhs = lhs;
         this.rhs = rhs;
@@ -25,12 +25,12 @@ public abstract class Apply2<I,J,O> extends Application<O> {
     }
 
     @Override
-    public JNode jsonNode() {
+    public JNode json() {
         return new JObject(
                 new JBind("meta", new JString("BINARY")),
                 new JBind("tag", new JString(this.getClass().getSimpleName())),
-                new JBind("lhs", lhs.jsonNode()),
-                new JBind("rhs", rhs.jsonNode())
+                new JBind("lhs", lhs.json()),
+                new JBind("rhs", rhs.json())
         );
     }
 }

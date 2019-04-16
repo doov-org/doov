@@ -16,7 +16,7 @@
 package io.doov.core.dsl.lang;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 
 /**
  * Interface for the validation rule that encapsulates the validation algorithm and data.
@@ -33,7 +33,7 @@ public interface ValidationRule extends DSLBuilder<Boolean> {
     StepWhen getStepWhen();
 
     @Override
-    Value<Boolean> ast();
+    ASTNode<Boolean> ast();
 
     /**
      * Returns a validation rule with the given short circuit.

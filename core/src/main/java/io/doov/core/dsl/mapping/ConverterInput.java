@@ -5,7 +5,7 @@ package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.grammar.mapping.Convert1;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
 import io.doov.core.dsl.meta.Metadata;
@@ -38,7 +38,7 @@ public class ConverterInput<S, T> extends AbstractDSLBuilder<T> implements Mappi
     }
 
     @Override
-    public Value<T> ast() {
+    public ASTNode<T> ast() {
         return new Convert1<>(sourceInput.ast(),typeConverter);
     }
 

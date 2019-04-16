@@ -16,7 +16,7 @@
 package io.doov.core.dsl.impl;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.RuleMetadata;
@@ -68,7 +68,7 @@ public class DefaultValidationRule extends AbstractDSLBuilder<Boolean> implement
     }
 
     @Override
-    public Value<Boolean> ast() {
+    public ASTNode<Boolean> ast() {
         return stepWhen.ast();
     }
 

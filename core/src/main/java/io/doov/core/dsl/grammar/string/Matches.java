@@ -4,11 +4,11 @@
 package io.doov.core.dsl.grammar.string;
 
 import io.doov.core.dsl.grammar.Apply2;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 
 public class Matches extends Apply2<String,String,Boolean> {
 
-    public Matches(Value<String> lhs, Value<String> rhs) {
+    public Matches(ASTNode<String> lhs, ASTNode<String> rhs) {
         super(Boolean.class, lhs, rhs);
     }
 }

@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 public abstract class ApplyN<I,O> extends Application<O> {
 
-    public final List<Value<I>> inputs;
+    public final List<ASTNode<I>> inputs;
 
-    public ApplyN(Class<O> output, List<Value<I>> inputs) {
+    public ApplyN(Class<O> output, List<ASTNode<I>> inputs) {
         super(output);
         this.inputs = inputs;
     }
@@ -26,11 +26,11 @@ public abstract class ApplyN<I,O> extends Application<O> {
     }
 
     @Override
-    public JNode jsonNode() {
+    public JNode json() {
         return new JObject(
                 new JBind("meta", new JString("NARY")),
                 new JBind("tag", new JString(this.getClass().getSimpleName())),
-                new JBind("inputs", new JArray(inputs.stream().map(Value::jsonNode)))
+                new JBind("inputs", new JArray(inputs.stream().map(ASTNode::json)))
         );
     }
 }

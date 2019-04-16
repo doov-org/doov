@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
@@ -30,12 +30,12 @@ public class LongFunction extends NumericFunction<Long> implements LongOperators
         super(field);
     }
 
-    public LongFunction(PredicateMetadata metadata, Value<Long> ast, BiFunction<FieldModel, Context, Optional<Long>> value) {
+    public LongFunction(PredicateMetadata metadata, ASTNode<Long> ast, BiFunction<FieldModel, Context, Optional<Long>> value) {
         super(metadata, ast, value);
     }
 
     @Override
-    protected LongFunction numericFunction(PredicateMetadata metadata, Value<Long> ast,
+    protected LongFunction numericFunction(PredicateMetadata metadata, ASTNode<Long> ast,
                     BiFunction<FieldModel, Context, Optional<Long>> value) {
         return new LongFunction(metadata, ast, value);
     }

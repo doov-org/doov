@@ -4,11 +4,11 @@
 package io.doov.core.dsl.grammar.bool;
 
 import io.doov.core.dsl.grammar.Apply1;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 
 public class Not extends Apply1<Boolean,Boolean> {
 
-    public Not(Value<Boolean> input) {
+    public Not(ASTNode<Boolean> input) {
         super(Boolean.class, input);
     }
 }

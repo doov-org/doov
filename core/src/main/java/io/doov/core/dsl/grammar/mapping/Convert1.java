@@ -11,23 +11,23 @@ import static io.doov.core.dsl.utils.JsonGrammar.JString;
 import java.util.function.Function;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.TypeConverter;
 import io.doov.core.dsl.meta.ConverterMetadata;
 import io.doov.core.dsl.meta.Metadata;
 
-public class Convert1<I,O> extends Value<O> {
+public class Convert1<I,O> extends ASTNode<O> {
 
-    public final Value<I> input;
+    public final ASTNode<I> input;
     public final TypeConverter<I,O> process;
 
-    public Convert1(Value<I> input, TypeConverter<I,O> process) {
+    public Convert1(ASTNode<I> input, TypeConverter<I,O> process) {
         this.input = input;
         this.process = process;
     }
 
-    public Convert1(Value<I> input, Function<I,O> process) {
+    public Convert1(ASTNode<I> input, Function<I,O> process) {
         this.input = input;
         this.process = lift(process);
     }
@@ -52,10 +52,10 @@ public class Convert1<I,O> extends Value<O> {
     }
 
     @Override
-    public JNode jsonNode() {
+    public JNode json() {
         return new JObject(
                 new JBind("type",new JString("CONVERT1")),
-                new JBind("input", input.jsonNode()),
+                new JBind("input", input.json()),
                 new JBind("process", new JString(process.metadata().readable()))
         );
     }

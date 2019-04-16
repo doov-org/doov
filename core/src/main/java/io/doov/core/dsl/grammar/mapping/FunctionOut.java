@@ -6,9 +6,9 @@ package io.doov.core.dsl.grammar.mapping;
 import static io.doov.core.dsl.utils.JsonGrammar.JNode;
 import static io.doov.core.dsl.utils.JsonGrammar.JString;
 
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 
-public class FunctionOut<T> extends Value<T> {
+public class FunctionOut<T> extends ASTNode<T> {
 
     @Override
     public String toString() {
@@ -16,7 +16,7 @@ public class FunctionOut<T> extends Value<T> {
     }
 
     @Override
-    public JNode jsonNode() {
+    public JNode json() {
         return new JString("FUNCTION OUT");
     }
 }

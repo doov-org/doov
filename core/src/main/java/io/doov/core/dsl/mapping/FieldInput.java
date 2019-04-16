@@ -5,7 +5,7 @@ package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.grammar.leaf.FieldValue;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingMetadata;
@@ -36,7 +36,7 @@ public class FieldInput<T> extends AbstractDSLBuilder<T> implements MappingInput
     }
 
     @Override
-    public Value<T> ast (){
+    public ASTNode<T> ast (){
         return new FieldValue<>(field);
     }
 }

@@ -8,14 +8,14 @@ import static io.doov.core.dsl.utils.JsonGrammar.JNode;
 import static io.doov.core.dsl.utils.JsonGrammar.JObject;
 import static io.doov.core.dsl.utils.JsonGrammar.JString;
 
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 
-public class Conditional extends Value<Void> {
-    public final Value<Boolean> condition;
-    public final Value<Void> caseTrue;
-    public final Value<Void> caseFalse;
+public class Conditional extends ASTNode<Void> {
+    public final ASTNode<Boolean> condition;
+    public final ASTNode<Void> caseTrue;
+    public final ASTNode<Void> caseFalse;
 
-    public Conditional(Value<Boolean> condition, Value<Void> caseTrue, Value<Void> caseFalse) {
+    public Conditional(ASTNode<Boolean> condition, ASTNode<Void> caseTrue, ASTNode<Void> caseFalse) {
         this.condition = condition;
         this.caseTrue = caseTrue;
         this.caseFalse = caseFalse;
@@ -30,12 +30,12 @@ public class Conditional extends Value<Void> {
     }
 
     @Override
-    public JNode jsonNode() {
+    public JNode json() {
         return new JObject(
                 new JBind("meta", new JString("CONDITIONAL")),
-                new JBind("when", condition.jsonNode()),
-                new JBind("then", caseTrue.jsonNode()),
-                new JBind("else", caseFalse.jsonNode())
+                new JBind("when", condition.json()),
+                new JBind("then", caseTrue.json()),
+                new JBind("else", caseFalse.json())
         );
     }
 }

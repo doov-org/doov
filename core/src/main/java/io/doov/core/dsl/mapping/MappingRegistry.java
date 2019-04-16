@@ -9,8 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Value;
-import io.doov.core.dsl.grammar.mapping.Mapping;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.grammar.mapping.Registry;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
@@ -42,9 +41,9 @@ public class MappingRegistry extends AbstractDSLBuilder<Void> implements Mapping
     }
 
     @Override
-    public Value<Void> ast() {
+    public ASTNode<Void> ast() {
 
-        List<Value> values = mappingRules.stream()
+        List<ASTNode> values = mappingRules.stream()
                 .map(MappingRule::ast)
                 .collect(Collectors.toList());
 

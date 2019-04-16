@@ -9,11 +9,11 @@ import static io.doov.core.dsl.utils.JsonGrammar.JString;
 
 import io.doov.core.dsl.utils.JsonGrammar.JBind;
 
-public class When extends Value<Boolean> {
+public class When extends ASTNode<Boolean> {
 
-    public final Value<Boolean> predicate;
+    public final ASTNode<Boolean> predicate;
 
-    public When(Value<Boolean> predicate) {
+    public When(ASTNode<Boolean> predicate) {
         this.predicate = predicate;
     }
 
@@ -23,10 +23,10 @@ public class When extends Value<Boolean> {
     }
 
     @Override
-    public JNode jsonNode() {
+    public JNode json() {
         return new JObject(
                 new JBind("meta", new JString("When")),
-                new JBind("data", predicate.jsonNode())
+                new JBind("data", predicate.json())
         );
     }
 

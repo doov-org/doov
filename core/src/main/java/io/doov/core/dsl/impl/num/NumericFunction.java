@@ -30,10 +30,9 @@ import java.util.stream.Stream;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.grammar.leaf.*;
 import io.doov.core.dsl.grammar.numeric.*;
-import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
@@ -46,11 +45,11 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
         super(field);
     }
 
-    public NumericFunction(PredicateMetadata metadata, Value<N> ast, BiFunction<FieldModel, Context, Optional<N>> value) {
+    public NumericFunction(PredicateMetadata metadata, ASTNode<N> ast, BiFunction<FieldModel, Context, Optional<N>> value) {
         super(metadata, ast, value);
     }
 
-    protected abstract NumericFunction<N> numericFunction(PredicateMetadata metadata, Value<N> ast,
+    protected abstract NumericFunction<N> numericFunction(PredicateMetadata metadata, ASTNode<N> ast,
             BiFunction<FieldModel, Context, Optional<N>> value);
 
     protected abstract Class<N> classTag();

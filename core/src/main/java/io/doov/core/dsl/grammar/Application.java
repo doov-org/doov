@@ -3,7 +3,7 @@
  */
 package io.doov.core.dsl.grammar;
 
-public abstract class Application<O> extends Value<O> {
+public abstract class Application<O> extends ASTNode<O> {
 
     public final Class<O> output;
 

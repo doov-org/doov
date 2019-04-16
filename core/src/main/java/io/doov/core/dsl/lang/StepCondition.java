@@ -18,7 +18,6 @@ package io.doov.core.dsl.lang;
 import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Value;
 import io.doov.core.dsl.impl.LogicalBinaryCondition;
 import io.doov.core.dsl.impl.LogicalUnaryCondition;
 

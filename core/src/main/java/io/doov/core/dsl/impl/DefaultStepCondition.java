@@ -18,7 +18,7 @@ package io.doov.core.dsl.impl;
 import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
@@ -27,9 +27,9 @@ public class DefaultStepCondition extends AbstractDSLBuilder<Boolean> implements
 
     private final PredicateMetadata metadata;
     private final BiPredicate<FieldModel, Context> predicate;
-    private final Value<Boolean> input;
+    private final ASTNode<Boolean> input;
 
-    public DefaultStepCondition(PredicateMetadata metadata, Value<Boolean> input,
+    public DefaultStepCondition(PredicateMetadata metadata, ASTNode<Boolean> input,
             BiPredicate<FieldModel, Context> predicate) {
         this.metadata = metadata;
         this.predicate = predicate;
@@ -37,7 +37,7 @@ public class DefaultStepCondition extends AbstractDSLBuilder<Boolean> implements
     }
 
     @Override
-    public Value<Boolean> ast() {
+    public ASTNode<Boolean> ast() {
         return input;
     }
 

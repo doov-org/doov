@@ -12,7 +12,7 @@ import java.util.List;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.grammar.mapping.FunctionIn;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
 import io.doov.core.dsl.meta.Metadata;
@@ -45,7 +45,7 @@ public class NaryConverterInput<T> extends AbstractDSLBuilder<T> implements Mapp
     }
 
     @Override
-    public Value<T> ast() {
+    public ASTNode<T> ast() {
         return new FunctionIn<>();
     }
 

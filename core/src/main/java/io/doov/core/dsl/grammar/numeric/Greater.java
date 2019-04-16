@@ -4,11 +4,11 @@
 package io.doov.core.dsl.grammar.numeric;
 
 import io.doov.core.dsl.grammar.Apply2;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 
 public class Greater<N extends Number> extends Apply2<N,N,Boolean> {
 
-    public Greater(Value<N> lhs, Value<N> rhs) {
+    public Greater(ASTNode<N> lhs, ASTNode<N> rhs) {
         super(Boolean.class, lhs, rhs);
     }
 }

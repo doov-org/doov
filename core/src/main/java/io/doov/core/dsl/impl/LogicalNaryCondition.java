@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.grammar.bool.*;
 import io.doov.core.dsl.grammar.numeric.Count;
 import io.doov.core.dsl.impl.num.IntegerFunction;
@@ -39,7 +39,7 @@ import io.doov.core.dsl.meta.predicate.NaryPredicateMetadata;
  */
 public class LogicalNaryCondition extends DefaultStepCondition {
 
-    private LogicalNaryCondition(NaryPredicateMetadata metadata, Value<Boolean> input,
+    private LogicalNaryCondition(NaryPredicateMetadata metadata, ASTNode<Boolean> input,
             BiPredicate<FieldModel, Context> predicate) {
         super(metadata, input, predicate);
     }

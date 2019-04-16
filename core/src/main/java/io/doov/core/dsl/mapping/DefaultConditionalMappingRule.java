@@ -4,7 +4,7 @@ import static io.doov.core.dsl.meta.ConditionalMappingMetadata.conditional;
 import static java.util.stream.Collectors.toList;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.grammar.mapping.Conditional;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.lang.*;
@@ -44,7 +44,7 @@ public class DefaultConditionalMappingRule extends AbstractDSLBuilder<Void> impl
     }
 
     @Override
-    public Value<Void> ast() {
+    public ASTNode<Void> ast() {
         return new Conditional(validationRule.ast(),mappingRules.ast(),elseMappingRules.ast());
     }
 

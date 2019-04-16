@@ -22,23 +22,20 @@ import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.nullMetadat
 import java.util.Optional;
 import java.util.function.*;
 
-import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.BaseFieldInfo;
-import io.doov.core.dsl.grammar.leaf.NotYetImplemented;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class LeafStepCondition<N> extends DefaultStepCondition {
 
-    private LeafStepCondition(PredicateMetadata metadata, Value<Boolean> input,
+    private LeafStepCondition(PredicateMetadata metadata, ASTNode<Boolean> input,
             BiFunction<FieldModel, Context, Optional<N>> value, Function<N, Boolean> predicate) {
         super(metadata, input, (model, context) -> value.apply(model, context).map(predicate).orElse(false));
     }
 
-    private LeafStepCondition(PredicateMetadata metadata, Value<Boolean> input,
+    private LeafStepCondition(PredicateMetadata metadata, ASTNode<Boolean> input,
             BiFunction<FieldModel, Context, Optional<N>> left, BiFunction<FieldModel, Context, Optional<N>> right,
             BiFunction<N, N, Boolean> predicate) {
         super(metadata, input, (model, context) -> left.apply(model, context)
@@ -54,7 +51,7 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
      * @return the step condition
      */
     public static <N> LeafStepCondition<Optional<N>> isNull(
-            DefaultCondition<N> condition, Value<Boolean> ast) {
+            DefaultCondition<N> condition, ASTNode<Boolean> ast) {
         return new LeafStepCondition<>(
                 nullMetadata(condition.getMetadata()), ast,
                 (model, context) -> Optional.of(condition.value(model, context)),
@@ -69,7 +66,7 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
      * @return the step condition
      */
     public static <N> LeafStepCondition<Optional<N>> isNotNull(
-            DefaultCondition<N> condition, Value<Boolean> ast) {
+            DefaultCondition<N> condition, ASTNode<Boolean> ast) {
         return new LeafStepCondition<>(
                 notNullMetadata(condition.getMetadata()), ast,
                 (model, context) -> Optional.of(condition.value(model, context)),
@@ -78,7 +75,7 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
 
     public static <N> LeafStepCondition<N> stepCondition(
             PredicateMetadata metadata,
-            Value<Boolean> ast,
+            ASTNode<Boolean> ast,
             BiFunction<FieldModel, Context, Optional<N>> left,
             Function<N, Boolean> predicate) {
         return new LeafStepCondition<>(metadata, ast, left, predicate);
@@ -86,7 +83,7 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
 
     public static <N> LeafStepCondition<N> stepCondition(
             PredicateMetadata metadata,
-            Value<Boolean> ast,
+            ASTNode<Boolean> ast,
             BiFunction<FieldModel, Context, Optional<N>> left,
             BaseFieldInfo<N> right,
             BiFunction<N, N, Boolean> predicate) {
@@ -96,7 +93,7 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
 
     public static <N> LeafStepCondition<N> stepCondition(
             PredicateMetadata metadata,
-            Value<Boolean> ast,
+            ASTNode<Boolean> ast,
             BiFunction<FieldModel, Context, Optional<N>> left,
             N right,
             BiFunction<N, N, Boolean> predicate) {
@@ -105,7 +102,7 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
 
     public static <N> LeafStepCondition<N> stepCondition(
             PredicateMetadata metadata,
-            Value<Boolean> ast,
+            ASTNode<Boolean> ast,
             BiFunction<FieldModel, Context, Optional<N>> left,
             Supplier<N> right,
             BiFunction<N, N, Boolean> predicate) {
@@ -113,7 +110,7 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
                 (model, context) -> Optional.ofNullable(right.get()), predicate);
     }
 
-    public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata, Value<Boolean> ast,
+    public static <N> LeafStepCondition<N> stepCondition(PredicateMetadata metadata, ASTNode<Boolean> ast,
         BiFunction<FieldModel, Context, Optional<N>> left, BiFunction<FieldModel, Context, Optional<N>> right,
         BiFunction<N, N, Boolean> predicate) {
         return new LeafStepCondition<>(metadata, ast, left, right, predicate);

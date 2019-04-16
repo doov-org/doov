@@ -31,7 +31,7 @@ import io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata;
  */
 public class LogicalUnaryCondition extends DefaultStepCondition {
 
-    private LogicalUnaryCondition(UnaryPredicateMetadata metadata, Value<Boolean> input, BiPredicate<FieldModel, Context> predicate) {
+    private LogicalUnaryCondition(UnaryPredicateMetadata metadata, ASTNode<Boolean> input, BiPredicate<FieldModel, Context> predicate) {
         super(metadata, input, predicate);
     }
 

@@ -5,7 +5,7 @@ package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.grammar.leaf.FieldValue;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.MappingOutput;
@@ -27,7 +27,7 @@ public class FieldOutput<T> implements MappingOutput<T> {
     }
 
     @Override
-    public Value<T> ast() {
+    public ASTNode<T> ast() {
         return new FieldValue<>(field);
     }
 

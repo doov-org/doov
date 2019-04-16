@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.grammar.leaf.Constant;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.StaticMetadata;
 
@@ -22,7 +22,7 @@ public class StaticInput<T> extends AbstractDSLBuilder<T> implements MappingInpu
     }
 
     @Override
-    public Value<T> ast() {
+    public ASTNode<T> ast() {
         return new Constant<>(valueSupplier.get());
     }
 

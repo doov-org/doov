@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
@@ -30,12 +30,12 @@ public class DoubleFunction extends NumericFunction<Double> implements DoubleOpe
         super(field);
     }
 
-    public DoubleFunction(PredicateMetadata metadata, Value<Double> ast, BiFunction<FieldModel, Context, Optional<Double>> value) {
+    public DoubleFunction(PredicateMetadata metadata, ASTNode<Double> ast, BiFunction<FieldModel, Context, Optional<Double>> value) {
         super(metadata, ast, value);
     }
 
     @Override
-    protected DoubleFunction numericFunction(PredicateMetadata metadata, Value<Double> ast,
+    protected DoubleFunction numericFunction(PredicateMetadata metadata, ASTNode<Double> ast,
                     BiFunction<FieldModel, Context, Optional<Double>> value) {
         return new DoubleFunction(metadata, ast, value);
     }

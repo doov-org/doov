@@ -3,14 +3,14 @@
  */
 package io.doov.core.dsl.grammar.mapping;
 
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.utils.JsonGrammar;
 
-public class Mapping<T> extends Value<Void> {
-    public final Value<T> input;
-    public final Value<T> output;
+public class Mapping<T> extends ASTNode<Void> {
+    public final ASTNode<T> input;
+    public final ASTNode<T> output;
 
-    public Mapping(Value<T> input, Value<T> output) {
+    public Mapping(ASTNode<T> input, ASTNode<T> output) {
         this.input = input;
         this.output = output;
     }
@@ -21,11 +21,11 @@ public class Mapping<T> extends Value<Void> {
     }
 
     @Override
-    public JsonGrammar.JNode jsonNode() {
+    public JsonGrammar.JNode json() {
         return new JsonGrammar.JObject(
                 new JsonGrammar.JBind("meta",new JsonGrammar.JString("MAPPING")),
-                new JsonGrammar.JBind("input", input.jsonNode()),
-                new JsonGrammar.JBind("output",output.jsonNode())
+                new JsonGrammar.JBind("input", input.json()),
+                new JsonGrammar.JBind("output",output.json())
         );
     }
 }

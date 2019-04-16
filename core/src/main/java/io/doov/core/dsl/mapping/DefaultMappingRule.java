@@ -5,7 +5,7 @@ package io.doov.core.dsl.mapping;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.grammar.mapping.Mapping;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.impl.DefaultContext;
 import io.doov.core.dsl.impl.ModelInterceptor;
 import io.doov.core.dsl.lang.*;
@@ -25,7 +25,7 @@ public class DefaultMappingRule<T> extends AbstractDSLBuilder<Void> implements M
     }
 
     @Override
-    public Value<Void> ast() {
+    public ASTNode<Void> ast() {
         return new Mapping<>(input.ast(),output.ast());
     }
 

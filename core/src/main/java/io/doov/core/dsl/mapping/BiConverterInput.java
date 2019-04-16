@@ -20,7 +20,7 @@ import static io.doov.core.dsl.meta.MappingMetadata.metadataInput;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.grammar.mapping.Convert2;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.MappingInputMetadata;
 import io.doov.core.dsl.meta.Metadata;
@@ -57,7 +57,7 @@ public class BiConverterInput<U, S, T> extends AbstractDSLBuilder<T> implements 
     }
 
     @Override
-    public Value<T> ast() {
+    public ASTNode<T> ast() {
         return new Convert2<>(mappingInput1.ast(),mappingInput2.ast(),converter);
     }
 }

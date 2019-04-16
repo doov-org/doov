@@ -21,7 +21,7 @@ import java.util.function.BiFunction;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.grammar.mapping.Convert1;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
@@ -31,7 +31,7 @@ public class IntegerFunction extends NumericFunction<Integer> implements Integer
         super(field);
     }
 
-    public IntegerFunction(PredicateMetadata metadata, Value<Integer> ast,BiFunction<FieldModel, Context, Optional<Integer>> value) {
+    public IntegerFunction(PredicateMetadata metadata, ASTNode<Integer> ast,BiFunction<FieldModel, Context, Optional<Integer>> value) {
         super(metadata, ast, value);
     }
 
@@ -41,7 +41,7 @@ public class IntegerFunction extends NumericFunction<Integer> implements Integer
     }
 
     @Override
-    protected IntegerFunction numericFunction(PredicateMetadata metadata, Value<Integer> ast,
+    protected IntegerFunction numericFunction(PredicateMetadata metadata, ASTNode<Integer> ast,
                     BiFunction<FieldModel, Context, Optional<Integer>> value) {
         return new IntegerFunction(metadata, ast, value);
     }

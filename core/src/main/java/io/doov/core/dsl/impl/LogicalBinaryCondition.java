@@ -33,7 +33,7 @@ import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
  */
 public class LogicalBinaryCondition extends DefaultStepCondition {
 
-    private LogicalBinaryCondition(BinaryPredicateMetadata metadata, Value<Boolean> input,
+    private LogicalBinaryCondition(BinaryPredicateMetadata metadata, ASTNode<Boolean> input,
             BiPredicate<FieldModel, Context> predicate) {
         super(metadata, input, predicate);
     }

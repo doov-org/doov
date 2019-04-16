@@ -27,7 +27,7 @@ public class PredicateValue<T> extends Application<Boolean> {
     }
 
     @Override
-    public JNode jsonNode() {
+    public JNode json() {
         return new JObject(
                 new JBind("meta", new JString("PREDICATE")),
                 new JBind("data", new JString(predicate.toString()))

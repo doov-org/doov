@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.grammar.Value;
+import io.doov.core.dsl.grammar.ASTNode;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
@@ -30,12 +30,12 @@ public class FloatFunction extends NumericFunction<Float> implements FloatOperat
         super(field);
     }
 
-    public FloatFunction(PredicateMetadata metadata, Value<Float> ast, BiFunction<FieldModel, Context, Optional<Float>> value) {
+    public FloatFunction(PredicateMetadata metadata, ASTNode<Float> ast, BiFunction<FieldModel, Context, Optional<Float>> value) {
         super(metadata, ast, value);
     }
 
     @Override
-    protected FloatFunction numericFunction(PredicateMetadata metadata, Value<Float> ast,
+    protected FloatFunction numericFunction(PredicateMetadata metadata, ASTNode<Float> ast,
             BiFunction<FieldModel, Context, Optional<Float>> value) {
         return new FloatFunction(metadata, ast, value);
     }

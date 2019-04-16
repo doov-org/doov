@@ -5,14 +5,11 @@ package io.doov.core.dsl.grammar;
 
 import io.doov.core.dsl.utils.JsonGrammar;
 
-public abstract class Value<T> {
+public abstract class ASTNode<T> {
 
     @Override
     abstract public String toString();
 
-    abstract public JsonGrammar.JNode jsonNode();
+    abstract public JsonGrammar.JNode json();
 
-    public String json() {
-        return jsonNode().toString();
-    }
 }

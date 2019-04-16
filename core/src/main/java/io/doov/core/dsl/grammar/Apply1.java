@@ -10,9 +10,9 @@ import static io.doov.core.dsl.utils.JsonGrammar.JString;
 
 public abstract class Apply1<I,O> extends Application<O> {
 
-    public final Value<I> input;
+    public final ASTNode<I> input;
 
-    public Apply1(Class<O> output, Value<I> input) {
+    public Apply1(Class<O> output, ASTNode<I> input) {
         super(output);
         this.input = input;
     }
@@ -23,11 +23,11 @@ public abstract class Apply1<I,O> extends Application<O> {
     }
 
     @Override
-    public JNode jsonNode() {
+    public JNode json() {
         return new JObject(
                 new JBind("meta", new JString("UNARY")),
                 new JBind("tag", new JString(this.getClass().getSimpleName())),
-                new JBind("input", input.jsonNode())
+                new JBind("input", input.json())
         );
     }
 }
