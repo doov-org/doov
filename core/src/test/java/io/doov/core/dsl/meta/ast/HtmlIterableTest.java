@@ -29,7 +29,7 @@ public class HtmlIterableTest {
         GenericModel model =  new GenericModel();
         IterableFieldInfo<String, List<String>> items = model.iterableField(content,"items");
 
-        MappingRule rule = DOOV.map(content).to(items);
+        MappingRule rule = DOOV.mapIter(content).to(items);
 
         Document document = documentOf(rule.executeOn(model,model));
 
@@ -44,7 +44,7 @@ public class HtmlIterableTest {
         GenericModel model =  new GenericModel();
         IterableFieldInfo<String, List<String>> items = model.iterableField(null,"items");
 
-        MappingRule rule = DOOV.map("1","2","3").to(items);
+        MappingRule rule = DOOV.mapIter("1","2","3").to(items);
 
         Document document = documentOf(rule.executeOn(model,model));
 
