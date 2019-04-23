@@ -27,19 +27,19 @@ public class MarkdownEmployeeMappingTest {
         assertThat(node).countListItem().isEqualTo(3);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(3);
-        assertThat(node).textNodes().containsExactly("map user first name and user last name",
-                "using 'combine names'",
-                "to employee full name");
+        assertThat(node).textNodes().containsExactly("map user first name and user last name", "using 'combine names'",
+                        "to employee full name");
     }
 
     @Test
     void EMAIL_MAPPING() {
         node = parse(EMAIL_MAPPING.metadata());
-        assertThat(node).countBulletList().isEqualTo(2);
-        assertThat(node).countListItem().isEqualTo(2);
+        assertThat(node).countBulletList().isEqualTo(5);
+        assertThat(node).countListItem().isEqualTo(6);
         assertThat(node).countOrderedList().isEqualTo(0);
-        assertThat(node).countText().isEqualTo(2);
-        assertThat(node).textNodes().containsExactly("map account email", "to employee email");
+        assertThat(node).countText().isEqualTo(6);
+        assertThat(node).textNodes().containsExactly("mappings", "when", "account accept.email is 'true'", "then",
+                        "map account email", "to employee email");
     }
 
     @Test
@@ -59,9 +59,8 @@ public class MarkdownEmployeeMappingTest {
         assertThat(node).countListItem().isEqualTo(3);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(3);
-        assertThat(node).textNodes().containsExactly("map account country",
-                "using 'country name'",
-                "to employee country");
+        assertThat(node).textNodes().containsExactly("map account country", "using 'country name'",
+                        "to employee country");
 
     }
 
@@ -72,25 +71,23 @@ public class MarkdownEmployeeMappingTest {
         assertThat(node).countListItem().isEqualTo(3);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(3);
-        assertThat(node).textNodes().containsExactly("map account company",
-                "using 'company name'",
-                "to employee company");
+        assertThat(node).textNodes().containsExactly("map account company", "using 'company name'",
+                        "to employee company");
     }
 
     @Test
     void ALL_MAPPINGS() {
         node = parse(ALL_MAPPINGS.metadata());
-        assertThat(node).countBulletList().isEqualTo(7);
-        assertThat(node).countListItem().isEqualTo(14);
+        assertThat(node).countBulletList().isEqualTo(10);
+        assertThat(node).countListItem().isEqualTo(18);
         assertThat(node).countOrderedList().isEqualTo(0);
-        assertThat(node).countText().isEqualTo(14);
-        assertThat(node).textNodes().containsExactly("mappings",
-                "map user first name and user last name",
-                "using 'combine names'", "to employee full name",
-                "map account email", "to employee email",
-                "map user birthdate age at '2019-01-01'", "to employee age",
-                "map account country", "using 'country name'", "to employee country",
-                "map account company", "using 'company name'", "to employee company");
+        assertThat(node).countText().isEqualTo(18);
+        assertThat(node).textNodes().containsExactly("mappings", "mappings", "when", "account accept.email is 'true'",
+                        "then", "map account email", "to employee email",
+                        "map user first name and user last name", "using 'combine names'", "to employee full name",
+                        "map user birthdate age at '2019-01-01'", "to employee age", "map account country",
+                        "using 'country name'", "to employee country", "map account company", "using 'company name'",
+                        "to employee company");
     }
 
     @AfterEach

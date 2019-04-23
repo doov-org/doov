@@ -59,15 +59,15 @@ public class HtmlEmployeeMappingTest {
         assertThat(doc).binary_LI().hasSize(0);
         assertThat(doc).nary_LI().hasSize(0);
         assertThat(doc).leaf_LI().hasSize(0);
-        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).when_UL().hasSize(1);
         assertThat(doc).binary_UL().hasSize(0);
         assertThat(doc).binaryChild_UL().hasSize(0);
         assertThat(doc).unary_UL().hasSize(0);
 
-        assertThat(doc).percentageValue_DIV().isEmpty();
-        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "to");
-        assertThat(doc).tokenValue_SPAN().isEmpty();
-        assertThat(doc).tokenField_SPAN().containsExactly("account email", "employee email");
+        assertThat(doc).percentageValue_DIV().containsExactly("100 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("is", "map", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("true");
+        assertThat(doc).tokenField_SPAN().containsExactly("account accept.email", "account email", "employee email");
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
@@ -143,24 +143,24 @@ public class HtmlEmployeeMappingTest {
         assertThat(doc).binary_LI().hasSize(0);
         assertThat(doc).nary_LI().hasSize(5);
         assertThat(doc).leaf_LI().hasSize(0);
-        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).when_UL().hasSize(1);
         assertThat(doc).binary_UL().hasSize(0);
         assertThat(doc).binaryChild_UL().hasSize(0);
         assertThat(doc).unary_UL().hasSize(0);
 
-        assertThat(doc).percentageValue_DIV().isEmpty();
-        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "and", "using", "to",
-                "map", "to",
-                "map", "age at", "to",
-                "map", "using", "to",
-                "map", "using", "to");
-        assertThat(doc).tokenValue_SPAN().containsExactly("'combine names'", "2019-01-01",
-                "'country name'", "'company name'");
-        assertThat(doc).tokenField_SPAN().containsExactly("user first name", "user last name", "employee full name",
-                "account email", "employee email",
-                "user birthdate", "employee age",
-                "account country", "employee country",
-                "account company", "employee company");
+        assertThat(doc).percentageValue_DIV().containsExactly("100 %");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("is", "map", "to",
+                        "map", "and", "using", "to",
+                        "map", "age at", "to",
+                        "map", "using", "to",
+                        "map", "using", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("true", "'combine names'", "2019-01-01",
+                        "'country name'", "'company name'");
+        assertThat(doc).tokenField_SPAN().containsExactly("account accept.email", "account email", "employee email",
+                        "user first name", "user last name", "employee full name",
+                        "user birthdate", "employee age",
+                        "account country", "employee country",
+                        "account company", "employee company");
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
