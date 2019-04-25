@@ -88,6 +88,16 @@
     margin-top: 0;
 }
 
+.dsl-token-single-mapping ul {
+    margin-bottom: 3px;
+    margin-top: 0;
+}
+
+.dsl-token-multiple-mapping ul {
+    margin-bottom: 3px;
+    margin-top: 0;
+}
+
 .dsl-token-rule {
     color: #983E77;
 }
@@ -148,5 +158,6 @@
     color: red;
 }
 
-.dsl-ol-cascaded-nary {
-	padding-left: 0px;
+.dsl-ol-mapping-nary {
+	padding-left: 15px;
+}
