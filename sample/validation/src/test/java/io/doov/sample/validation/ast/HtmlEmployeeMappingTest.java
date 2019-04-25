@@ -67,7 +67,7 @@ public class HtmlEmployeeMappingTest {
         assertThat(doc).percentageValue_DIV().containsExactly("100 %");
         assertThat(doc).tokenOperator_SPAN().containsExactly("is", "map", "to");
         assertThat(doc).tokenValue_SPAN().containsExactly("true");
-        assertThat(doc).tokenField_SPAN().containsExactly("account accept.email", "account email", "employee email");
+        assertThat(doc).tokenField_SPAN().containsExactly("account accept email", "account email", "employee email");
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
@@ -156,7 +156,7 @@ public class HtmlEmployeeMappingTest {
                         "map", "using", "to");
         assertThat(doc).tokenValue_SPAN().containsExactly("true", "'combine names'", "2019-01-01",
                         "'country name'", "'company name'");
-        assertThat(doc).tokenField_SPAN().containsExactly("account accept.email", "account email", "employee email",
+        assertThat(doc).tokenField_SPAN().containsExactly("account accept email", "account email", "employee email",
                         "user first name", "user last name", "employee full name",
                         "user birthdate", "employee age",
                         "account country", "employee country",

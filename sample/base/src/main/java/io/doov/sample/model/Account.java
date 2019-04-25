@@ -54,7 +54,7 @@ public class Account extends Identity {
     @SamplePath(field = SampleFieldId.EMAIL, readable = "account.email")
     private String email;
 
-    @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED, readable = "account accept.email")
+    @SamplePath(field = SampleFieldId.EMAIL_ACCEPTED, readable = "account.accept.email")
     private boolean acceptEmail;
 
     @SamplePath(field = SampleFieldId.CREATION_DATE, readable = "account.creation.date")

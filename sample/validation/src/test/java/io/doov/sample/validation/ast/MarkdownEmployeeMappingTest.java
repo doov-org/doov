@@ -38,7 +38,7 @@ public class MarkdownEmployeeMappingTest {
         assertThat(node).countListItem().isEqualTo(6);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(6);
-        assertThat(node).textNodes().containsExactly("mappings", "when", "account accept.email is 'true'", "then",
+        assertThat(node).textNodes().containsExactly("mappings", "when", "account accept email is 'true'", "then",
                         "map account email", "to employee email");
     }
 
@@ -82,7 +82,7 @@ public class MarkdownEmployeeMappingTest {
         assertThat(node).countListItem().isEqualTo(18);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(18);
-        assertThat(node).textNodes().containsExactly("mappings", "mappings", "when", "account accept.email is 'true'",
+        assertThat(node).textNodes().containsExactly("mappings", "mappings", "when", "account accept email is 'true'",
                         "then", "map account email", "to employee email",
                         "map user first name and user last name", "using 'combine names'", "to employee full name",
                         "map user birthdate age at '2019-01-01'", "to employee age", "map account country",
