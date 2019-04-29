@@ -71,6 +71,16 @@ public class UnaryPredicateMetadata extends UnaryMetadata implements PredicateMe
         return new UnaryPredicateMetadata(is_not_null, metadata);
     }
 
+    // field values
+
+    public static UnaryPredicateMetadata tagsMetadata(Metadata metadata) {
+        return new UnaryPredicateMetadata(tags, metadata);
+    }
+
+    public static UnaryPredicateMetadata positionMetadata(Metadata metadata) {
+        return new UnaryPredicateMetadata(position, metadata);
+    }
+
     /**
      * Be carrefull about the <em>boolean satisfiability problem</em> when we use the <b>not</b> operator
      * https://en.wikipedia.org/wiki/Boolean_satisfiability_problem

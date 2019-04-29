@@ -29,12 +29,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import io.doov.core.FieldId;
-import io.doov.core.TagId;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.lang.ReduceType;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
 
 public class BinaryPredicateMetadata extends BinaryMetadata implements PredicateMetadata {
@@ -77,10 +75,6 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
 
     public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, Object value) {
         return new BinaryPredicateMetadata(metadata, equals, valueMetadata(value));
-    }
-    
-    public static BinaryPredicateMetadata hasTagMetadata(Metadata metadata, TagId tag) {
-        return new BinaryPredicateMetadata(metadata, has_tag, valueMetadata(tag));
     }
 
     public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, Supplier<?> supplier) {

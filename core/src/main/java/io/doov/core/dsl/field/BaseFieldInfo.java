@@ -22,8 +22,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.*;
 
+import io.doov.core.TagId;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.base.IterableFunction;
 import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.StepCondition;
@@ -272,6 +274,34 @@ public interface BaseFieldInfo<T> extends DslField<T> {
     default <U, R> DefaultCondition<R> mapUsing(String readable, DslField<U> condition,
             BiFunction<T, U, R> mapper) {
         return getDefaultFunction().mapUsing(readable, condition.getDefaultFunction(), mapper);
+    }
+
+    /**
+     * See {@link DefaultCondition#tags()}
+     *
+     * @param tag tag to look for
+     * @return the step function
+     */
+    default StepCondition hasTag(TagId tag) {
+        return getDefaultFunction().tags().contains(tag);
+    }
+
+    /**
+     * See {@link DefaultCondition#tags()}
+     *
+     * @return the iterable function
+     */
+    default IterableFunction<TagId, List<TagId>> tags() {
+        return getDefaultFunction().tags();
+    }
+
+    /**
+     * See {@link DefaultCondition#position()}
+     *
+     * @return the integer function
+     */
+    default IntegerFunction position() {
+        return getDefaultFunction().position();
     }
 
 }

@@ -33,13 +33,12 @@ import io.doov.core.FieldModel;
 import io.doov.core.TagId;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.BaseFieldInfo;
+import io.doov.core.dsl.impl.base.IterableFunction;
 import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.FieldMetadata;
-import io.doov.core.dsl.meta.predicate.PredicateMetadata;
+import io.doov.core.dsl.meta.predicate.*;
 
 /**
  * Base class for all conditions.
@@ -60,15 +59,33 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
     }
 
     /**
-     * Returns a step condition testing if the field is decorated by a particular tag.
-     * 
-     * @param tag the tag decorating the field
-     * @return the step condition
+     * Returns a iterable function encapsulating the tags of this encapsulated field.
+     *
+     * @return the iterable function
      */
-    public final StepCondition hasTag(TagId tag) {
-        final FieldId fieldId = ((FieldMetadata<?>) metadata).field().id();
-        return new DefaultStepCondition(BinaryPredicateMetadata.hasTagMetadata(metadata, tag),
-                        (m, c) -> fieldId.hasTag(tag));
+    public final IterableFunction<TagId, List<TagId>> tags() {
+        return new IterableFunction<>(UnaryPredicateMetadata.tagsMetadata(metadata),
+                (m, c) -> Optional.ofNullable(metadata)
+                        .filter(o -> o instanceof FieldMetadata)
+                        .map(FieldMetadata.class::cast)
+                        .map(FieldMetadata::field)
+                        .map(DslField::id)
+                        .map(FieldId::tags));
+    }
+
+    /**
+     * Returns a integer function encapsulating the position of this encapsulated field.
+     *
+     * @return the integer function
+     */
+    public final IntegerFunction position() {
+        return new IntegerFunction(UnaryPredicateMetadata.positionMetadata(metadata),
+                (m, c) -> Optional.ofNullable(metadata)
+                        .filter(o -> o instanceof FieldMetadata)
+                        .map(FieldMetadata.class::cast)
+                        .map(FieldMetadata::field)
+                        .map(DslField::id)
+                        .map(FieldId::position));
     }
 
     /**
