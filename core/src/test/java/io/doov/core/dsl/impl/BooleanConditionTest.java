@@ -25,6 +25,7 @@ import java.util.Locale;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import io.doov.core.TagId;
 import io.doov.core.dsl.field.types.BooleanFieldInfo;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
@@ -34,7 +35,7 @@ import io.doov.core.dsl.runtime.GenericModel;
 /**
  * @see BooleanCondition
  */
-public class BooeanConditionTest {
+public class BooleanConditionTest {
     private static Locale LOCALE = Locale.US;
     private ValidationRule rule;
     private GenericModel model = new GenericModel();
@@ -120,9 +121,24 @@ public class BooeanConditionTest {
         assertThat(rule.readable(LOCALE)).isEqualTo("rule when A is false validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A is false");
     }
+    
+    @Test
+    void hasTag() {
+        rule = when(A.hasTag(CustomeTag.CUSTOM)).validate();
+        result = rule.executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A tagged with CUSTOM validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A tagged with CUSTOM");
+    }
 
     @AfterEach
     void afterEach() {
         System.out.println(rule + " -> " + reduce);
+    }
+    
+    static enum CustomeTag implements TagId {
+        CUSTOM;
     }
 }

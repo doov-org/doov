@@ -16,8 +16,10 @@
 package io.doov.core.dsl;
 
 import io.doov.core.FieldId;
+import io.doov.core.TagId;
 import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.lang.Readable;
+import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 
 /**
@@ -37,4 +39,8 @@ public interface DslField<T> extends Readable {
     DefaultCondition<T> getDefaultFunction();
 
     Metadata getMetadata();
+    
+    default StepCondition hasTag(TagId tag) {
+        return getDefaultFunction().hasTag(tag);
+    }
 }
