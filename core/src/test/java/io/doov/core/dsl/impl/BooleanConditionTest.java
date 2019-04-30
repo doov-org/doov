@@ -34,7 +34,7 @@ import io.doov.core.dsl.runtime.GenericModel;
 /**
  * @see BooleanCondition
  */
-public class BooeanConditionTest {
+public class BooleanConditionTest {
     private static Locale LOCALE = Locale.US;
     private ValidationRule rule;
     private GenericModel model = new GenericModel();

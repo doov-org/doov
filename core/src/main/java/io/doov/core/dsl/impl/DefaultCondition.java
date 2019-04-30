@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.core.dsl.impl;
 
@@ -22,18 +19,26 @@ import static io.doov.core.dsl.meta.function.MapFunctionMetadata.mapUsingMetadat
 import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 import static java.util.Arrays.asList;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
+import io.doov.core.FieldId;
 import io.doov.core.FieldModel;
+import io.doov.core.TagId;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.BaseFieldInfo;
+import io.doov.core.dsl.impl.base.IterableFunction;
 import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
-import io.doov.core.dsl.meta.predicate.PredicateMetadata;
+import io.doov.core.dsl.meta.predicate.*;
 
 /**
  * Base class for all conditions.
@@ -51,6 +56,36 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
 
     public DefaultCondition(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<T>> value) {
         super(metadata, value);
+    }
+
+    /**
+     * Returns a iterable function encapsulating the tags of this encapsulated field.
+     *
+     * @return the iterable function
+     */
+    public final IterableFunction<TagId, List<TagId>> tags() {
+        return new IterableFunction<>(UnaryPredicateMetadata.tagsMetadata(metadata),
+                (m, c) -> Optional.ofNullable(metadata)
+                        .filter(o -> o instanceof FieldMetadata)
+                        .map(FieldMetadata.class::cast)
+                        .map(FieldMetadata::field)
+                        .map(DslField::id)
+                        .map(FieldId::tags));
+    }
+
+    /**
+     * Returns a integer function encapsulating the position of this encapsulated field.
+     *
+     * @return the integer function
+     */
+    public final IntegerFunction position() {
+        return new IntegerFunction(UnaryPredicateMetadata.positionMetadata(metadata),
+                (m, c) -> Optional.ofNullable(metadata)
+                        .filter(o -> o instanceof FieldMetadata)
+                        .map(FieldMetadata.class::cast)
+                        .map(FieldMetadata::field)
+                        .map(DslField::id)
+                        .map(FieldId::position));
     }
 
     /**
@@ -79,7 +114,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     public final StepCondition eq(T value) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, value), function, value,
-                Object::equals);
+                        Object::equals);
     }
 
     /**
@@ -89,8 +124,9 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition eq(Supplier<T> supplier) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, supplier), function, supplier,
-                Object::equals);
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, supplier), function,
+                        supplier,
+                        Object::equals);
     }
 
     /**
@@ -101,7 +137,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     public final StepCondition eq(BaseFieldInfo<T> value) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, value), function, value,
-                Object::equals);
+                        Object::equals);
     }
 
     /**
@@ -111,8 +147,9 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition notEq(T value) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, value), function, value,
-                (l, r) -> !l.equals(r));
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, value), function,
+                        value,
+                        (l, r) -> !l.equals(r));
     }
 
     /**
@@ -122,8 +159,9 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition notEq(Supplier<T> supplier) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, supplier), function, supplier,
-                (l, r) -> !l.equals(r));
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, supplier), function,
+                        supplier,
+                        (l, r) -> !l.equals(r));
     }
 
     /**
@@ -133,8 +171,9 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @return the step condition
      */
     public final StepCondition notEq(BaseFieldInfo<T> value) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, value), function, value,
-                (l, r) -> !l.equals(r));
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, value), function,
+                        value,
+                        (l, r) -> !l.equals(r));
     }
 
     /**
@@ -145,7 +184,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     public final StepCondition anyMatch(Collection<T> values) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.anyMatchMetadata(metadata, values), function,
-                value -> values.stream().anyMatch(value::equals));
+                        value -> values.stream().anyMatch(value::equals));
     }
 
     /**
@@ -156,7 +195,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     public final StepCondition anyMatch(List<Predicate<T>> values) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.anyMatchMetadata(metadata), function,
-                value -> values.stream().anyMatch(v -> v.test(value)));
+                        value -> values.stream().anyMatch(v -> v.test(value)));
     }
 
     /**
@@ -167,8 +206,9 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     @SafeVarargs
     public final StepCondition allMatch(T... values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata, asList(values)), function,
-                value -> Arrays.stream(values).allMatch(value::equals));
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata, asList(values)),
+                        function,
+                        value -> Arrays.stream(values).allMatch(value::equals));
     }
 
     /**
@@ -179,7 +219,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     public final StepCondition allMatch(Collection<T> values) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata, values), function,
-                value -> values.stream().allMatch(value::equals));
+                        value -> values.stream().allMatch(value::equals));
     }
 
     /**
@@ -190,7 +230,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     public final StepCondition allMatch(List<Predicate<T>> values) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata), function,
-                value -> values.stream().allMatch(v -> v.test(value)));
+                        value -> values.stream().allMatch(v -> v.test(value)));
     }
 
     /**
@@ -201,8 +241,9 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     @SafeVarargs
     public final StepCondition noneMatch(T... values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.noneMatchMetadata(metadata, asList(values)), function,
-                value -> Arrays.stream(values).noneMatch(value::equals));
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.noneMatchMetadata(metadata, asList(values)),
+                        function,
+                        value -> Arrays.stream(values).noneMatch(value::equals));
     }
 
     /**
@@ -213,7 +254,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     public final StepCondition noneMatch(Collection<T> values) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.noneMatchMetadata(metadata, values), function,
-                value -> values.stream().noneMatch(value::equals));
+                        value -> values.stream().noneMatch(value::equals));
     }
 
     /**
@@ -224,7 +265,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     public final StepCondition noneMatch(List<Predicate<T>> values) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchNoneMetadata(metadata), function,
-                value -> values.stream().noneMatch(v -> v.test(value)));
+                        value -> values.stream().noneMatch(v -> v.test(value)));
     }
 
     /**
@@ -245,7 +286,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      */
     public final StringFunction mapToString(Function<T, String> mapper) {
         return new StringFunction(mapToStringMetadata(metadata),
-                (model, context) -> value(model, context).map(mapper));
+                        (model, context) -> value(model, context).map(mapper));
     }
 
     /**
@@ -253,13 +294,13 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      *
      * @param readable text describing the function
      * @param mapper   mapper function to apply
-     * @param <R>      target type
+     * @param          <R> target type
      * @return condition with target type
      */
     // TODO move into a function provider
     public final <R> DefaultCondition<R> map(String readable, Function<T, R> mapper) {
         return new DefaultCondition<>(mapAsMetadata(metadata, readable),
-                (model, context) -> value(model, context).map(mapper));
+                        (model, context) -> value(model, context).map(mapper));
     }
 
     /**
@@ -268,17 +309,17 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
      * @param readable  description
      * @param condition condition
      * @param mapper    mapper function to apply
-     * @param <U>       condition type
-     * @param <R>       target type
+     * @param           <U> condition type
+     * @param           <R> target type
      * @return condition with target type
      */
     // TODO move into a function provider
     public final <U, R> DefaultCondition<R> mapUsing(String readable,
-            io.doov.core.dsl.field.types.Function<U> condition,
-            BiFunction<T, U, R> mapper) {
+                    io.doov.core.dsl.field.types.Function<U> condition,
+                    BiFunction<T, U, R> mapper) {
         return new DefaultCondition<>(mapUsingMetadata(metadata, readable, condition),
-                (model, context) -> value(model, context).flatMap(l -> Optional.ofNullable(mapper.apply(l,
-                        condition.value(model, context).orElse(null)))));
+                        (model, context) -> value(model, context).flatMap(l -> Optional.ofNullable(mapper.apply(l,
+                                        condition.value(model, context).orElse(null)))));
     }
 
 }

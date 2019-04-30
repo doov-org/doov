@@ -40,6 +40,8 @@ public enum DefaultOperator implements Operator {
     times("times"), //
     when("when"), //
     equals("=", BOOLEAN), //
+    tags("tags"), //
+    position("position"), //
     not_equals("!=", BOOLEAN), //
     is_null("is null", BOOLEAN), //
     is_not_null("is not null", BOOLEAN), //
