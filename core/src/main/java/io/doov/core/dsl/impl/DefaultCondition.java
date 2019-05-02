@@ -67,7 +67,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
         return new IterableFunction<>(UnaryPredicateMetadata.tagsMetadata(metadata),
                 (m, c) -> Optional.ofNullable(metadata)
                         .filter(o -> o instanceof FieldMetadata)
-                        .map(FieldMetadata.class::cast)
+                        .map(f -> (FieldMetadata) f)
                         .map(FieldMetadata::field)
                         .map(DslField::id)
                         .map(FieldId::tags));
@@ -82,7 +82,7 @@ public class DefaultCondition<T> extends DefaultFunction<T, PredicateMetadata> {
         return new IntegerFunction(UnaryPredicateMetadata.positionMetadata(metadata),
                 (m, c) -> Optional.ofNullable(metadata)
                         .filter(o -> o instanceof FieldMetadata)
-                        .map(FieldMetadata.class::cast)
+                        .map(f -> (FieldMetadata) f)
                         .map(FieldMetadata::field)
                         .map(DslField::id)
                         .map(FieldId::position));
