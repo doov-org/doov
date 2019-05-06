@@ -268,7 +268,7 @@ public class DOOV {
      * @param <C> container type
      * @return value step map
      */
-    public static <I,C extends Iterable<I>> IterableStepMap<I, C> mapIter(C value) {
+    public static <I, C extends Iterable<I>> IterableStepMap<I, C> mapIter(C value) {
         return new IterableStepMap<>(() -> value);
     }
 
@@ -276,7 +276,7 @@ public class DOOV {
      * Start defining a value mapping to form an Iterable field as a List
      *
      * @param values values to add to the list
-     * @param <I>   value type
+     * @param <I>    value type
      * @return value step map
      */
     @SafeVarargs

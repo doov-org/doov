@@ -31,6 +31,7 @@ import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.function.TemplateParamMetadata;
 
 public class AstHtmlRenderer {
+
     private static final List<Operator> AND_OR = asList(and, or);
 
     protected HtmlWriter writer;
@@ -65,7 +66,7 @@ public class AstHtmlRenderer {
                     leaf(metadata, parents);
                     break;
                 case MAPPING_LEAF_ITERABLE:
-                    iterable(metadata,parents);
+                    iterable(metadata, parents);
                     break;
                 case TYPE_CONVERTER:
                     typeConverter(metadata, parents);
@@ -97,15 +98,15 @@ public class AstHtmlRenderer {
     }
 
     private void iterable(Metadata metadata, ArrayDeque<Metadata> parents) {
-        IterableMetadata<?,?> iterableMetadata = (IterableMetadata) metadata;
+        IterableMetadata<?, ?> iterableMetadata = (IterableMetadata) metadata;
 
         // Prefix
         writer.writeBeginUl(CSS_UL_ITERABLE);
 
         // Items
-        iterableMetadata.items().forEach( item -> {
+        iterableMetadata.items().forEach(item -> {
             writer.writeBeginLi();
-            toHtml(item,parents);
+            toHtml(item, parents);
             writer.writeEndLi();
         });
 
@@ -415,7 +416,7 @@ public class AstHtmlRenderer {
                 case OPERATOR:
                     writer.writeBeginSpan(CSS_OPERATOR);
 
-                    if(e.getReadable() instanceof Operator) {
+                    if (e.getReadable() instanceof Operator) {
                         writer.writeFromBundle((Operator) e.getReadable());
                     } else {
                         writer.writeFromBundle(e.getReadable().readable());
