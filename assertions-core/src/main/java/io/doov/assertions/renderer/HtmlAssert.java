@@ -56,6 +56,10 @@ public class HtmlAssert extends AbstractAssert<HtmlAssert, Document> {
         return new ListAssert<>(actual.select("ul.dsl-li-unary").stream().collect(toList()));
     }
 
+    public ListAssert<Element> iterable_UL() {
+        return new ListAssert<>(actual.select("ul.dsl-ul-iterable").stream().collect(toList()));
+    }
+
     public ListAssert<String> percentageValue_DIV() {
         return new ListAssert<>(actual.select("div.percentage-value").stream().map(Element::text).collect(toList()));
     }

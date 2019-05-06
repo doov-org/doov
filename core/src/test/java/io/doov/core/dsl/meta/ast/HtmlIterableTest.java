@@ -3,13 +3,14 @@
  */
 package io.doov.core.dsl.meta.ast;
 
+import static io.doov.assertions.renderer.Assertions.assertThat;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.documentOf;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
@@ -31,9 +32,13 @@ class HtmlIterableTest {
 
         Document document = documentOf(rule.executeOn(model, model));
 
-        assertThat(document.select("." + HtmlWriter.CSS_UL_ITERABLE).text())
-                .isEqualTo("1 2 3");
-
+        assertThat(document).iterable_UL().extracting(Element::text).containsExactly("1 2 3");
+        assertThat(document).iterable_UL()
+                .extracting(e -> e.selectFirst("li").text()).containsExactly("1");
+        assertThat(document).iterable_UL()
+                .extracting(e -> e.select("li:nth-of-type(2)").text()).containsExactly("2");
+        assertThat(document).iterable_UL()
+                .extracting(e -> e.select("li:nth-of-type(3)").text()).containsExactly("3");
     }
 
     @Test
@@ -46,8 +51,12 @@ class HtmlIterableTest {
 
         Document document = documentOf(rule.executeOn(model, model));
 
-        assertThat(document.select("." + HtmlWriter.CSS_UL_ITERABLE).text())
-                .isEqualTo("1 2 3");
-
+        assertThat(document).iterable_UL().extracting(Element::text).containsExactly("1 2 3");
+        assertThat(document).iterable_UL()
+                .extracting(e -> e.selectFirst("li").text()).containsExactly("1");
+        assertThat(document).iterable_UL()
+                .extracting(e -> e.select("li:nth-of-type(2)").text()).containsExactly("2");
+        assertThat(document).iterable_UL()
+                .extracting(e -> e.select("li:nth-of-type(3)").text()).containsExactly("3");
     }
 }
