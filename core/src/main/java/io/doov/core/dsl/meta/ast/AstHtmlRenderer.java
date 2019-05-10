@@ -415,13 +415,7 @@ public class AstHtmlRenderer {
             switch (e.getType()) {
                 case OPERATOR:
                     writer.writeBeginSpan(CSS_OPERATOR);
-
-                    if (e.getReadable() instanceof Operator) {
-                        writer.writeFromBundle((Operator) e.getReadable());
-                    } else {
-                        writer.writeFromBundle(e.getReadable().readable());
-                    }
-
+                    writer.writeFromBundle((Operator) e.getReadable());
                     writer.writeEndSpan();
                     break;
                 case TEMPORAL_UNIT:
