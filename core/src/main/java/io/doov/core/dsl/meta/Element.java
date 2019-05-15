@@ -30,6 +30,11 @@ public class Element {
         this.type = type;
     }
 
+    public Element(String word, ElementType type) {
+        this.readable = () -> word;
+        this.type = type;
+    }
+
     public Readable getReadable() {
         return readable;
     }
@@ -42,13 +47,4 @@ public class Element {
     public String toString() {
         return readable.readable();
     }
-
-    public static Element leftParenthesis() {
-        return new Element(() -> "(", PARENTHESIS_LEFT);
-    }
-
-    public static Element rightParenthesis() {
-        return new Element(() -> ")", PARENTHESIS_RIGHT);
-    }
-
 }

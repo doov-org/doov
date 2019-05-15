@@ -24,16 +24,14 @@ import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
 import static io.doov.core.dsl.meta.ast.HtmlWriter.*;
 import static java.util.Arrays.asList;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.function.TemplateParamMetadata;
 
 public class AstHtmlRenderer {
+
     private static final List<Operator> AND_OR = asList(and, or);
 
     protected HtmlWriter writer;
@@ -67,6 +65,9 @@ public class AstHtmlRenderer {
                 case TEMPLATE_IDENTIFIER:
                     leaf(metadata, parents);
                     break;
+                case MAPPING_LEAF_ITERABLE:
+                    iterable(metadata, parents);
+                    break;
                 case TYPE_CONVERTER:
                     typeConverter(metadata, parents);
                     break;
@@ -94,6 +95,23 @@ public class AstHtmlRenderer {
         } finally {
             parents.pop();
         }
+    }
+
+    private void iterable(Metadata metadata, ArrayDeque<Metadata> parents) {
+        IterableMetadata<?, ?> iterableMetadata = (IterableMetadata) metadata;
+
+        // Prefix
+        writer.writeBeginUl(CSS_UL_ITERABLE);
+
+        // Items
+        iterableMetadata.items().forEach(item -> {
+            writer.writeBeginLi();
+            toHtml(item, parents);
+            writer.writeEndLi();
+        });
+
+        // Postfix
+        writer.writeEndUl();
     }
 
     private void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents) {
@@ -169,7 +187,7 @@ public class AstHtmlRenderer {
     private void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
         writer.writeBeginSpan(CSS_VALUE);
         for (Element e : ((LeafMetadata<?>) metadata).elements()) {
-            writer.writeFromBundle(writer.escapeHtml4(e.getReadable().readable()));
+            writer.writeFromBundle(e.getReadable().readable());
         }
         writer.writeEndSpan();
     }
@@ -424,12 +442,12 @@ public class AstHtmlRenderer {
                     break;
                 case VALUE:
                     writer.writeBeginSpan(CSS_VALUE);
-                    writer.writeFromBundle(writer.escapeHtml4(e.getReadable().readable()));
+                    writer.writeFromBundle(e.getReadable().readable());
                     writer.writeEndSpan();
                     break;
                 default:
                     writer.writeBeginSpan(CSS_UNKNOWN);
-                    writer.writeFromBundle(writer.escapeHtml4(e.getReadable().readable()));
+                    writer.writeFromBundle(e.getReadable().readable());
                     writer.writeEndSpan();
                     break;
             }

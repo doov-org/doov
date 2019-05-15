@@ -161,3 +161,7 @@
 .dsl-ol-mapping-nary {
 	padding-left: 15px;
 }
+
+.dsl-ul-iterable {
+    list-style: decimal;
+}
