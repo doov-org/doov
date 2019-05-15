@@ -187,7 +187,7 @@ public class AstHtmlRenderer {
     private void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
         writer.writeBeginSpan(CSS_VALUE);
         for (Element e : ((LeafMetadata<?>) metadata).elements()) {
-            writer.writeFromBundle(writer.escapeHtml4(e.getReadable().readable()));
+            writer.writeFromBundle(e.getReadable().readable());
         }
         writer.writeEndSpan();
     }
@@ -442,12 +442,12 @@ public class AstHtmlRenderer {
                     break;
                 case VALUE:
                     writer.writeBeginSpan(CSS_VALUE);
-                    writer.writeFromBundle(writer.escapeHtml4(e.getReadable().readable()));
+                    writer.writeFromBundle(e.getReadable().readable());
                     writer.writeEndSpan();
                     break;
                 default:
                     writer.writeBeginSpan(CSS_UNKNOWN);
-                    writer.writeFromBundle(writer.escapeHtml4(e.getReadable().readable()));
+                    writer.writeFromBundle(e.getReadable().readable());
                     writer.writeEndSpan();
                     break;
             }

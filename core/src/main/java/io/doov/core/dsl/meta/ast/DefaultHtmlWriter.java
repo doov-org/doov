@@ -156,12 +156,12 @@ public class DefaultHtmlWriter implements HtmlWriter {
 
     @Override
     public void writeFromBundle(Operator operator) {
-        write(resources.get(operator, locale));
+        write(escapeHtml4(resources.get(operator, locale)));
     }
 
     @Override
     public void writeFromBundle(String key) {
-        write(resources.get(key, locale));
+        write(escapeHtml4(resources.get(key, locale)));
     }
 
     @Override
