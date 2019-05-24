@@ -21,8 +21,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import java.io.ByteArrayOutputStream;
 import java.util.Locale;
 import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,17 +45,24 @@ public class AstVisitorUtils {
         return collect(root, Stream::of).collect(Collectors.toSet());
     }
 
-    public static <T> T collect(Metadata root, BiFunction<T, Metadata, T> metadataPredicate, T init) {
+    public static <T> T collect(Metadata root, T init, BiFunction<T, Metadata, T> metadataPredicate) {
         FoldVisitor<T> visitor = new FoldVisitor<>(metadataPredicate, init);
         visitor.browse(root, 0);
         return visitor.getResult();
     }
 
     public static <T> Stream<T> collect(Metadata root, Function<Metadata, Stream<T>> accumulator) {
-        FoldVisitor<Stream<T>> visitor = new FoldVisitor<>((Stream<T> res, Metadata metadata) ->
-                Stream.concat(res, accumulator.apply(metadata)), Stream.of());
-        visitor.browse(root, 0);
-        return visitor.getResult();
+        return collect(root, Stream.of(), (Stream<T> r, Metadata m) -> Stream.concat(r, accumulator.apply(m)));
+    }
+
+    public static Stream<Metadata> collectIf(Metadata root, Predicate<Metadata> metadataPredicate) {
+        return collect(root, (Metadata m) -> {
+            if (metadataPredicate.test(m)) {
+                return Stream.of(m);
+            } else {
+                return Stream.of();
+            }
+        });
     }
 
     public static String toHtml(Metadata metadata, Locale locale) {
