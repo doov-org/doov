@@ -19,10 +19,14 @@ import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.ByteArrayOutputStream;
-import java.util.*;
+import java.util.Locale;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.MetadataVisitor;
 
 public class AstVisitorUtils {
 
@@ -39,14 +43,20 @@ public class AstVisitorUtils {
     }
 
     public static Set<Metadata> collectMetadata(Metadata root) {
-        HashSet<Metadata> metadatas = new HashSet<>();
-        new MetadataVisitor() {
-            @Override
-            public void start(Metadata metadata, int depth) {
-                metadatas.add(metadata);
-            }
-        }.browse(root, 0);
-        return metadatas;
+        return collect(root, Stream::of).collect(Collectors.toSet());
+    }
+
+    public static <T> T collect(Metadata root, BiFunction<T, Metadata, T> metadataPredicate, T init) {
+        FoldVisitor<T> visitor = new FoldVisitor<>(metadataPredicate, init);
+        visitor.browse(root, 0);
+        return visitor.getResult();
+    }
+
+    public static <T> Stream<T> collect(Metadata root, Function<Metadata, Stream<T>> accumulator) {
+        FoldVisitor<Stream<T>> visitor = new FoldVisitor<>((Stream<T> res, Metadata metadata) ->
+                Stream.concat(res, accumulator.apply(metadata)), Stream.of());
+        visitor.browse(root, 0);
+        return visitor.getResult();
     }
 
     public static String toHtml(Metadata metadata, Locale locale) {
@@ -55,4 +65,5 @@ public class AstVisitorUtils {
         new AstHtmlRenderer(htmlWriter).toHtml(metadata);
         return new String(ops.toByteArray(), UTF_8);
     }
+
 }
