@@ -318,6 +318,29 @@ public class DOOV {
     }
 
     /**
+     * Start defining a context-aware value mapping
+     *
+     * @param input mapping input
+     * @param <I>   value type
+     * @return value map step
+     */
+    public static <I, J> BiContextawareStepMap<I, J> map(MappingInput<I> input, MappingInput<J> input2) {
+        return new BiContextawareStepMap<>(input, input2);
+    }
+
+    /**
+     * Start defining a context-aware value mapping
+     *
+     * @param valueFunction context dependent value function
+     * @param <I>           value type
+     * @return value map step
+     */
+    public static <I, J> BiContextawareStepMap<I, J> map(BiFunction<FieldModel, Context, I> valueFunction,
+            BiFunction<FieldModel, Context, J> valueFunction2) {
+        return new BiContextawareStepMap<>(valueFunction, valueFunction2);
+    }
+
+    /**
      * Create a mapping registry from given mapping rules See {@link MappingRegistry#mappings(MappingRule...)}
      *
      * @param mappingRules rules
