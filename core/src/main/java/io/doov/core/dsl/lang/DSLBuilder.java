@@ -14,13 +14,13 @@ package io.doov.core.dsl.lang;
 
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToMarkdown;
 import static io.doov.core.dsl.meta.ast.AstVisitorUtils.astToString;
+import static io.doov.core.dsl.meta.ast.AstVisitorUtils.collect;
 
 import java.util.Locale;
 import java.util.Objects;
 
 import io.doov.core.FieldId;
 import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.ast.AstVisitorUtils;
 import io.doov.core.dsl.meta.ast.FieldCollector;
 
 public interface DSLBuilder extends Readable {
@@ -58,7 +58,7 @@ public interface DSLBuilder extends Readable {
      * @return the fieldId usage
      */
     default boolean isUsing(FieldId fieldId) {
-        return AstVisitorUtils.collect(metadata(), FieldCollector::fieldsOf).anyMatch(f -> Objects.equals(f, fieldId));
+        return collect(metadata(), FieldCollector::fieldsOf).anyMatch(f -> Objects.equals(f, fieldId));
     }
 
 }

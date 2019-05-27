@@ -15,9 +15,10 @@ package io.doov.core.dsl.meta.ast;
 import static io.doov.core.dsl.meta.ElementType.FIELD;
 import static io.doov.core.dsl.meta.MetadataType.EMPTY;
 import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.empty;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.doov.core.FieldId;
@@ -30,7 +31,7 @@ import io.doov.core.dsl.meta.predicate.FieldMetadata;
 public class FieldCollector {
 
     public static List<FieldId> collect(Metadata metadata) {
-        return AstVisitorUtils.collect(metadata, FieldCollector::fieldsOf).collect(Collectors.toList());
+        return AstVisitorUtils.collect(metadata, FieldCollector::fieldsOf).collect(toList());
     }
 
     public static Stream<FieldId> fieldsOf(Metadata metadata) {
@@ -46,7 +47,7 @@ public class FieldCollector {
                         }
                     });
         } else {
-            return Stream.of();
+            return empty();
         }
     }
 
