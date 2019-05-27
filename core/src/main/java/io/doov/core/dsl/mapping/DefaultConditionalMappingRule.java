@@ -72,8 +72,18 @@ public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements
     }
 
     @Override
+    public <C extends Context> C executeOn(FieldModel model, C context) {
+        return executeOn(model, model, context);
+    }
+
+    @Override
     public Context executeOn(FieldModel inModel, FieldModel outModel) {
         return this.executeOn(inModel, outModel, new DefaultContext(metadata));
+    }
+
+    @Override
+    public Context executeOn(FieldModel model) {
+        return executeOn(model, model);
     }
 
 }
