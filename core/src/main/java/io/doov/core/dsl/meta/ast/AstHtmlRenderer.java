@@ -19,15 +19,57 @@ import static io.doov.core.dsl.meta.DefaultOperator.validate;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
 import static io.doov.core.dsl.meta.MappingOperator.map;
 import static io.doov.core.dsl.meta.MappingOperator.to;
-import static io.doov.core.dsl.meta.MetadataType.*;
+import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.ELSE_MAPPING;
+import static io.doov.core.dsl.meta.MetadataType.EMPTY;
+import static io.doov.core.dsl.meta.MetadataType.MULTIPLE_MAPPING;
+import static io.doov.core.dsl.meta.MetadataType.NARY_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
+import static io.doov.core.dsl.meta.MetadataType.THEN_MAPPING;
+import static io.doov.core.dsl.meta.MetadataType.UNARY_PREDICATE;
 import static io.doov.core.dsl.meta.ReturnType.BOOLEAN;
-import static io.doov.core.dsl.meta.ast.HtmlWriter.*;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.APOS;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.BR;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_ELSE;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_FIELD;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_LI_BINARY;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_LI_LEAF;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_LI_NARY;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_LI_UNARY;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_NARY;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_OL_MAPPING_NARY;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_OL_NARY;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_OPERATOR;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_SINGLE_MAPPING;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_TEMPLATE_PARAM;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_THEN;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_TYPE_CONVERTER;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_UL_BINARY;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_UL_ITERABLE;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_UL_UNARY;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_UL_WHEN;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_UNKNOWN;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_VALIDATE;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_VALIDATION_RULE;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_VALUE;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.CSS_WHEN;
+import static io.doov.core.dsl.meta.ast.HtmlWriter.SPACE;
 import static java.util.Arrays.asList;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.ConverterMetadata;
+import io.doov.core.dsl.meta.Element;
+import io.doov.core.dsl.meta.IterableMetadata;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.MappingOperator;
+import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.MetadataType;
+import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.function.TemplateParamMetadata;
 
 public class AstHtmlRenderer {
@@ -98,19 +140,13 @@ public class AstHtmlRenderer {
     }
 
     private void iterable(Metadata metadata, ArrayDeque<Metadata> parents) {
-        IterableMetadata<?, ?> iterableMetadata = (IterableMetadata) metadata;
-
-        // Prefix
+        IterableMetadata<?, ?> iterableMetadata = (IterableMetadata<?, ?>) metadata;
         writer.writeBeginUl(CSS_UL_ITERABLE);
-
-        // Items
         iterableMetadata.items().forEach(item -> {
             writer.writeBeginLi();
             toHtml(item, parents);
             writer.writeEndLi();
         });
-
-        // Postfix
         writer.writeEndUl();
     }
 
