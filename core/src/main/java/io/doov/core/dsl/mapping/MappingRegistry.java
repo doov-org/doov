@@ -96,8 +96,18 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
     }
 
     @Override
+    public <C extends Context> C executeOn(FieldModel model, C context) {
+        return this.executeOn(model, model, context);
+    }
+
+    @Override
     public Context executeOn(FieldModel inModel, FieldModel outModel) {
         return this.executeOn(inModel, outModel, new DefaultContext(metadata()));
+    }
+
+    @Override
+    public Context executeOn(FieldModel model) {
+        return this.executeOn(model, model, new DefaultContext(metadata()));
     }
 
     @Override

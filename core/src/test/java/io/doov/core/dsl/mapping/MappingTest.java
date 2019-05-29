@@ -127,4 +127,20 @@ public class MappingTest {
                 .bind(stringField, stringField2).executeOn(model, model);
         assertThat(model.get(stringField2)).isEqualTo("www.bingue.com");
     }
+
+    @Test
+    void context_aware_mapping() {
+        map((m, c) -> 3).to(intField)
+                .executeOn(model, model);
+        assertThat(model.get(intField)).isEqualTo(3);
+    }
+
+    @Test
+    void context_aware_bimapping() {
+        map((m, c) -> 1, (m, c) -> 2)
+                .using(biConverter(Integer::sum, 0,  "sum"))
+                .to(intField)
+                .executeOn(model, model);
+        assertThat(model.get(intField)).isEqualTo(3);
+    }
 }

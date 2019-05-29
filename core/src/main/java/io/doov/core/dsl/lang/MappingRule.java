@@ -42,6 +42,14 @@ public interface MappingRule extends DSLBuilder {
     Context executeOn(FieldModel inModel, FieldModel outModel);
 
     /**
+     * Execute the mapping rule on the same model
+     *
+     * @param model in and out model
+     * @return context
+     */
+    Context executeOn(FieldModel model);
+
+    /**
      * Execute the mapping rule on in/out models with given context
      *
      * @param inModel in model
@@ -51,6 +59,16 @@ public interface MappingRule extends DSLBuilder {
      * @return context
      */
     <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context);
+
+    /**
+     * Execute the mapping rule on the same model with given context
+     *
+     * @param model in and out model
+     * @param <C> context type
+     * @param context context
+     * @return context
+     */
+    <C extends Context> C executeOn(FieldModel model, C context);
 
     /**
      * Stream over mapping rules contained in this rule Default implementation returns a stream of itself.

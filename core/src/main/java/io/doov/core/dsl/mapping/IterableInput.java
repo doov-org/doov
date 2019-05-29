@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.IterableMetadata;
-import io.doov.core.dsl.meta.StaticMetadata;
 
 public class IterableInput<E,T extends Iterable<E>> extends AbstractDSLBuilder implements MappingInput<T> {
 
