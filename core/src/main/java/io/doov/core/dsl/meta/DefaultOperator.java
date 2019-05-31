@@ -51,6 +51,7 @@ public enum DefaultOperator implements Operator {
     with("with"), //
     minus("minus"), //
     plus("plus"), //
+    temporal_minus("temporal_minus"), //
     after("after", BOOLEAN), //
     after_or_equals("after or equals", BOOLEAN), //
     age_at("age at"), //

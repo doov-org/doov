@@ -164,6 +164,38 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
     }
 
     /**
+     * See {@link NumericFunction#plus(NumericFieldInfo)}
+     *
+     * @param value to sum
+     * @return the numeric function
+     * @see NumericFunction#plus(NumericFieldInfo)
+     */
+    default NumericFunction<N> plus(N value) {
+        return getNumericFunction().plus(value);
+    }
+
+    /**
+     * See {@link NumericFunction#plus(NumericFieldInfo)}
+     *
+     * @param field to subtract
+     * @return the numeric function
+     * @see NumericFunction#plus(NumericFieldInfo)
+     */
+    default NumericFunction<N> minus(NumericFieldInfo<N> field) {
+        return getNumericFunction().minus(field);
+    }
+
+    /**
+     * See {@link NumericFunction#plus(NumericFieldInfo)}
+     *
+     * @param value to subtract
+     * @return the numeric function
+     * @see NumericFunction#plus(NumericFieldInfo)
+     */
+    default NumericFunction<N> minus(N value) {
+        return getNumericFunction().minus(value);
+    }
+    /**
      * See {@link NumericFunction#when(StepCondition)}
      *
      * @param condition the condition to evaluate

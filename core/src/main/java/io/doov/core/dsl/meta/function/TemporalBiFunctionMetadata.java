@@ -38,15 +38,15 @@ public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
         super(left, operator, right);
     }
 
-    // minus
+    // temporal_minus
 
     public static TemporalBiFunctionMetadata minusMetadata(Metadata metadata, DslField<?> field2, Object unit) {
-        return new TemporalBiFunctionMetadata(metadata, minus,
+        return new TemporalBiFunctionMetadata(metadata, temporal_minus,
                 new TemporalFunctionMetadata(FIELD_PREDICATE).field(field2).temporalUnit(unit));
     }
 
     public static TemporalBiFunctionMetadata minusMetadata(Metadata metadata, int value, Object unit) {
-        return new TemporalBiFunctionMetadata(metadata, minus,
+        return new TemporalBiFunctionMetadata(metadata, temporal_minus,
                 new TemporalFunctionMetadata(LEAF_VALUE).valueObject(value).temporalUnit(unit));
     }
 
