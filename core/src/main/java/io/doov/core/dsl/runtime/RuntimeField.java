@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl.runtime;
 
-import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
+import static io.doov.core.FieldModel.valueModel;
 import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 
 import java.util.List;
@@ -27,7 +27,6 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.predicate.FieldMetadata;
-import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 /**
  * Runtime implementation for {@link FieldInfo} and {@link DslField}.

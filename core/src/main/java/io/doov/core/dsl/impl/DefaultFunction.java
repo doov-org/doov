@@ -39,10 +39,6 @@ import io.doov.core.dsl.meta.predicate.*;
 
 public class DefaultFunction<T, M extends Metadata> implements Function<T> {
 
-    public static <T> Optional<T> valueModel(FieldModel model, DslField<T> field) {
-        return Optional.ofNullable(model.get(field.id()));
-    }
-
     protected final M metadata;
     protected final BiFunction<FieldModel, Context, Optional<T>> function;
 

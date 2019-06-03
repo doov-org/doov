@@ -546,7 +546,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,
             TemporalFieldInfo<N> value) {
         return new LongFunction(metadata, (model, context) -> value(model, context)
-                .flatMap(l -> valueModel(model, value).map(r -> betweenFunction(unit).apply(l, r))));
+                .flatMap(l -> FieldModel.valueModel(model, value).map(r -> betweenFunction(unit).apply(l, r))));
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit,

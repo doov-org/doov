@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl.impl;
 
-import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
+import static io.doov.core.FieldModel.valueModel;
 import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.notNullMetadata;
 import static io.doov.core.dsl.meta.predicate.UnaryPredicateMetadata.nullMetadata;
 

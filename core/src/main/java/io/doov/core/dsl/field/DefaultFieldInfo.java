@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl.field;
 
-import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
+import static io.doov.core.FieldModel.valueModel;
 import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 
 import java.io.Serializable;

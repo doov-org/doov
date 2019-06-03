@@ -29,6 +29,10 @@ import io.doov.core.serial.TypeAdapter;
  */
 public interface FieldModel extends Iterable<Map.Entry<FieldId, Object>>, StringMapper {
 
+    static <T> Optional<T> valueModel(FieldModel model, DslField<T> field) {
+        return Optional.ofNullable(model.get(field.id()));
+    }
+
     /**
      * Returns the {@code FieldId} value from the {@code FieldId} to read
      *
