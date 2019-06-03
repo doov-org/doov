@@ -100,7 +100,7 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
 
     @Override
     public DefaultFunction<T, FieldMetadata<?>> getDefaultFunction() {
-        return new DefaultFunction<>((FieldMetadata<?>) fieldMetadata(this), (m, c) -> valueModel(m, this));
+        return new DefaultFunction<>(fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 
     @Override

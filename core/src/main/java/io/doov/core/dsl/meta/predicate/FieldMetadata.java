@@ -51,8 +51,8 @@ public class FieldMetadata<M extends FieldMetadata<M>> extends LeafMetadata<M> i
 
     // field
 
-    public static <M extends FieldMetadata<M>> M fieldMetadata(DslField<?> field) {
-        return new FieldMetadata<M>(FIELD_PREDICATE, field).field(field);
+    public static FieldMetadata<?> fieldMetadata(DslField<?> field) {
+        return new FieldMetadata<>(FIELD_PREDICATE, field).field(field);
     }
 
 }

@@ -33,6 +33,6 @@ public class CharacterFieldInfo extends DelegatingFieldInfoImpl implements BaseF
 
     @Override
     public DefaultFunction<Character, PredicateMetadata> getDefaultFunction() {
-        return new DefaultFunction<>((FieldMetadata<?>) fieldMetadata(this), (m, c) -> valueModel(m, this));
+        return new DefaultFunction<>(fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 }

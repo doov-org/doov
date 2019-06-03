@@ -88,7 +88,7 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
 
     @Override
     public DefaultFunction<R, FieldMetadata<?>> getDefaultFunction() {
-        return new DefaultFunction<>((FieldMetadata<?>) fieldMetadata(this), (m, c) -> valueModel(m, this));
+        return new DefaultFunction<>(fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 
     @Override

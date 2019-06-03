@@ -32,6 +32,6 @@ public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfoImpl im
 
     @Override
     public DefaultFunction<E, FieldMetadata<?>> getDefaultFunction() {
-        return new DefaultFunction<>((FieldMetadata<?>) fieldMetadata(this), (m, c) -> valueModel(m, this));
+        return new DefaultFunction<>(fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 }
