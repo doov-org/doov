@@ -16,126 +16,125 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
-import io.doov.core.dsl.impl.num.NumericCondition;
 import io.doov.core.dsl.impl.num.NumericFunction;
 import io.doov.core.dsl.lang.StepCondition;
 
 /**
  * Base interface for numeric field info.
  * <p>
- * It contains default methods for common checks, which are calls to methods on {@link NumericCondition}.
+ * It contains default methods for common checks, which are calls to methods on {@link NumericFunction}.
  *
  * @param <N> the type of the field value
  */
 public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
 
     /**
-     * See {@link NumericCondition#lesserThan(Number)}
+     * See {@link NumericFunction#lesserThan(Number)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see NumericCondition#lesserThan(Number)
+     * @see NumericFunction#lesserThan(Number)
      */
     default StepCondition lesserThan(N value) {
         return getNumericFunction().lesserThan(value);
     }
 
     /**
-     * See {@link NumericCondition#lesserThan(NumericFieldInfo)}
+     * See {@link NumericFunction#lesserThan(NumericFieldInfo)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see NumericCondition#lesserThan(NumericFieldInfo)
+     * @see NumericFunction#lesserThan(NumericFieldInfo)
      */
     default StepCondition lesserThan(NumericFieldInfo<N> value) {
         return getNumericFunction().lesserThan(value);
     }
 
     /**
-     * See {@link NumericCondition#lesserOrEquals(Number)}
+     * See {@link NumericFunction#lesserOrEquals(Number)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see NumericCondition#lesserOrEquals(Number)
+     * @see NumericFunction#lesserOrEquals(Number)
      */
     default StepCondition lesserOrEquals(N value) {
         return getNumericFunction().lesserOrEquals(value);
     }
 
     /**
-     * See {@link NumericCondition#lesserOrEquals(NumericFieldInfo)}
+     * See {@link NumericFunction#lesserOrEquals(NumericFieldInfo)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see NumericCondition#lesserOrEquals(NumericFieldInfo)
+     * @see NumericFunction#lesserOrEquals(NumericFieldInfo)
      */
     default StepCondition lesserOrEquals(NumericFieldInfo<N> value) {
         return getNumericFunction().lesserOrEquals(value);
     }
 
     /**
-     * See {@link NumericCondition#greaterThan(Number)}
+     * See {@link NumericFunction#greaterThan(Number)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see NumericCondition#greaterThan(Number)
+     * @see NumericFunction#greaterThan(Number)
      */
     default StepCondition greaterThan(N value) {
         return getNumericFunction().greaterThan(value);
     }
 
     /**
-     * See {@link NumericCondition#greaterThan(NumericFieldInfo)}
+     * See {@link NumericFunction#greaterThan(NumericFieldInfo)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see NumericCondition#greaterThan(NumericFieldInfo)
+     * @see NumericFunction#greaterThan(NumericFieldInfo)
      */
     default StepCondition greaterThan(NumericFieldInfo<N> value) {
         return getNumericFunction().greaterThan(value);
     }
 
     /**
-     * See {@link NumericCondition#greaterOrEquals(Number)}
+     * See {@link NumericFunction#greaterOrEquals(Number)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see NumericCondition#greaterOrEquals(Number)
+     * @see NumericFunction#greaterOrEquals(Number)
      */
     default StepCondition greaterOrEquals(N value) {
         return getNumericFunction().greaterOrEquals(value);
     }
 
     /**
-     * See {@link NumericCondition#greaterOrEquals(NumericFieldInfo)}
+     * See {@link NumericFunction#greaterOrEquals(NumericFieldInfo)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see NumericCondition#greaterOrEquals(NumericFieldInfo)
+     * @see NumericFunction#greaterOrEquals(NumericFieldInfo)
      */
     default StepCondition greaterOrEquals(NumericFieldInfo<N> value) {
         return getNumericFunction().greaterOrEquals(value);
     }
 
     /**
-     * See {@link NumericCondition#between(Number, Number)}
+     * See {@link NumericFunction#between(Number, Number)}
      *
      * @param minIncluded the min value included
      * @param maxExcluded the max value excluded
      * @return the step condition
-     * @see NumericCondition#between(Number, Number)
+     * @see NumericFunction#between(Number, Number)
      */
     default StepCondition between(N minIncluded, N maxExcluded) {
         return getNumericFunction().between(minIncluded, maxExcluded);
     }
 
     /**
-     * See {@link NumericCondition#between(NumericFieldInfo, NumericFieldInfo)}
+     * See {@link NumericFunction#between(NumericFieldInfo, NumericFieldInfo)}
      *
      * @param minIncluded the min value included
      * @param maxExcluded the max value excluded
      * @return the step condition
-     * @see NumericCondition#between(NumericFieldInfo, NumericFieldInfo)
+     * @see NumericFunction#between(NumericFieldInfo, NumericFieldInfo)
      */
     default StepCondition between(NumericFieldInfo<N> minIncluded, NumericFieldInfo<N> maxExcluded) {
         return getNumericFunction().between(minIncluded, maxExcluded);

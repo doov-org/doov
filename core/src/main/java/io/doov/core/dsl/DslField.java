@@ -16,7 +16,7 @@
 package io.doov.core.dsl;
 
 import io.doov.core.FieldId;
-import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.Metadata;
 
@@ -34,7 +34,7 @@ public interface DslField<T> extends Readable {
      *
      * @return the default condition
      */
-    DefaultCondition<T> getDefaultFunction();
+    DefaultFunction<T, ? extends Metadata> getDefaultFunction();
 
     Metadata getMetadata();
 }

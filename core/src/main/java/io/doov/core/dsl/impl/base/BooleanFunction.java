@@ -28,8 +28,7 @@ import java.util.function.BiFunction;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.LogicalFieldInfo;
-import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.impl.LeafStepCondition;
+import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.function.BooleanFunctionMetadata;
@@ -41,11 +40,7 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
  * It contains a {@link DslField} to get the value from the model, a {@link BooleanFunctionMetadata} to describe this node, and a
  * {@link BiFunction} to take the value from the model and return an optional value.
  */
-public class BooleanFunction extends DefaultCondition<Boolean> {
-
-    public BooleanFunction(DslField<Boolean> field) {
-        super(field);
-    }
+public class BooleanFunction extends DefaultFunction<Boolean, PredicateMetadata> {
 
     public BooleanFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Boolean>> value) {
         super(metadata, value);

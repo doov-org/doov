@@ -19,15 +19,10 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class FloatFunction extends NumericFunction<Float> implements FloatOperators {
-
-    public FloatFunction(DslField<Float> field) {
-        super(field);
-    }
 
     public FloatFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Float>> value) {
         super(metadata, value);

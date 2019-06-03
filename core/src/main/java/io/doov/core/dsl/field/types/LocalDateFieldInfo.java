@@ -15,6 +15,9 @@
  */
 package io.doov.core.dsl.field.types;
 
+import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
+
 import java.time.LocalDate;
 
 import io.doov.core.FieldInfo;
@@ -29,7 +32,7 @@ public class LocalDateFieldInfo extends DelegatingFieldInfoImpl implements Tempo
 
     @Override
     public LocalDateFunction getTemporalFunction() {
-        return new LocalDateFunction(this);
+        return new LocalDateFunction(fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 
 }

@@ -15,6 +15,9 @@
  */
 package io.doov.core.dsl.field.types;
 
+import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
+
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.num.FloatFunction;
@@ -27,7 +30,7 @@ public class FloatFieldInfo extends DelegatingFieldInfoImpl implements NumericFi
 
     @Override
     public FloatFunction getNumericFunction() {
-        return new FloatFunction(this);
+        return new FloatFunction(fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 
 }

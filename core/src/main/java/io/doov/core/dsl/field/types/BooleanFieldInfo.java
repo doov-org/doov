@@ -15,6 +15,9 @@
  */
 package io.doov.core.dsl.field.types;
 
+import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
+
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.base.BooleanFunction;
@@ -27,7 +30,7 @@ public class BooleanFieldInfo extends DelegatingFieldInfoImpl implements Logical
 
     @Override
     public BooleanFunction getBooleanFunction() {
-        return new BooleanFunction(this);
+        return new BooleanFunction(fieldMetadata(this), (m, c) -> valueModel(m ,this));
     }
 
 }

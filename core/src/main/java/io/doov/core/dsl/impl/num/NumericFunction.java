@@ -15,10 +15,7 @@
  */
 package io.doov.core.dsl.impl.num;
 
-import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.minusMetadata;
-import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.plusMetadata;
-import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.timesMetadata;
-import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.whenMetadata;
+import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.*;
 import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.minMetadata;
 import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.sumMetadata;
 import static java.util.stream.Collectors.toList;
@@ -31,16 +28,23 @@ import java.util.stream.Stream;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
+import io.doov.core.dsl.impl.DefaultFunction;
+import io.doov.core.dsl.impl.LeafStepCondition;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public abstract class NumericFunction<N extends Number> extends NumericCondition<N> {
-
-    public NumericFunction(DslField<N> field) {
-        super(field);
-    }
+/**
+ * Base class for numeric functions.
+ * <p>
+ * It contains a {@link DslField} to get the value from the model, a {@link PredicateMetadata} to describe this node,
+ * and a {@link BiFunction} to take the value from the model and return an optional value.
+ *
+ * @param <N> the type of the field value
+ */
+public abstract class NumericFunction<N extends Number> extends DefaultFunction<N, PredicateMetadata>
+        implements NumericOperators<N> {
 
     public NumericFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<N>> value) {
         super(metadata, value);
@@ -48,6 +52,117 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
 
     protected abstract NumericFunction<N> numericFunction(PredicateMetadata metadata,
             BiFunction<FieldModel, Context, Optional<N>> value);
+
+    /**
+     * Returns a step condition checking if the node value is lesser than the given value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition lesserThan(N value) {
+        return LeafStepCondition.stepCondition(lesserThanMetadata(metadata, value), getFunction(), value,
+                (l, r) -> lesserThanFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is lesser than the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition lesserThan(NumericFieldInfo<N> value) {
+        return LeafStepCondition.stepCondition(lesserThanMetadata(metadata, value), getFunction(), value,
+                (l, r) -> lesserThanFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is lesser or equals the given value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition lesserOrEquals(N value) {
+        return LeafStepCondition.stepCondition(lesserOrEqualsMetadata(metadata, value), getFunction(), value,
+                (l, r) -> lesserOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is lesser or equals the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition lesserOrEquals(NumericFieldInfo<N> value) {
+        return LeafStepCondition.stepCondition(lesserOrEqualsMetadata(metadata, value), getFunction(), value,
+                (l, r) -> lesserOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is greater than the given value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition greaterThan(N value) {
+        return LeafStepCondition.stepCondition(greaterThanMetadata(metadata, value), getFunction(), value,
+                (l, r) -> greaterThanFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is greater than the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition greaterThan(NumericFieldInfo<N> value) {
+        return LeafStepCondition.stepCondition(greaterThanMetadata(metadata, value), getFunction(), value,
+                (l, r) -> greaterThanFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is greater or equals the given value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition greaterOrEquals(N value) {
+        return LeafStepCondition.stepCondition(greaterOrEqualsMetadata(metadata, value), getFunction(), value,
+                (l, r) -> greaterOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is greater or equals the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition greaterOrEquals(NumericFieldInfo<N> value) {
+        return LeafStepCondition.stepCondition(greaterOrEqualsMetadata(metadata, value), getFunction(), value,
+                (l, r) -> greaterOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is between the given min included and max excluded values.
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     */
+    public final StepCondition between(N minIncluded, N maxExcluded) {
+        return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is between the given min included and max excluded field
+     * values.
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     */
+    public final StepCondition between(NumericFieldInfo<N> minIncluded, NumericFieldInfo<N> maxExcluded) {
+        return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
+    }
 
     /**
      * Returns a numeric function that returns the node value multiplied by the given multiplier.
@@ -164,7 +279,7 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
      * @param conditions the condition values to sum
      * @return the numeric function
      */
-    public final NumericFunction<N> sumConditions(List<NumericCondition<N>> conditions) {
+    public final NumericFunction<N> sumConditions(List<NumericFunction<N>> conditions) {
         return numericFunction(sumMetadata(getMetadataForConditions(conditions)),
                 (model, context) -> Optional.of(conditions.stream().map(c -> c.getFunction().apply(model, context))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
@@ -175,7 +290,7 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
         return fields.stream().map(field -> field.getNumericFunction().getMetadata()).collect(toList());
     }
 
-    private static <N extends Number> List<Metadata> getMetadataForConditions(List<NumericCondition<N>> conditions) {
+    private static <N extends Number> List<Metadata> getMetadataForConditions(List<NumericFunction<N>> conditions) {
         return conditions.stream().map(condition -> condition.getMetadata()).collect(toList());
     }
 

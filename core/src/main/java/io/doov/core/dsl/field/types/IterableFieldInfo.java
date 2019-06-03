@@ -15,10 +15,12 @@
  */
 package io.doov.core.dsl.field.types;
 
+import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
+
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.base.IterableFunction;
 import io.doov.core.dsl.lang.StepCondition;
 
@@ -29,33 +31,33 @@ public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingField
     }
 
     @Override
-    public DefaultCondition<C> getDefaultFunction() {
-        return new DefaultCondition<>(this);
+    public IterableFunction<T, C> getDefaultFunction() {
+        return new IterableFunction<>(fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 
     public StepCondition contains(T value) {
-        return new IterableFunction<>(this).contains(value);
+        return getDefaultFunction().contains(value);
     }
 
     @SafeVarargs
     public final StepCondition containsAll(T... values) {
-        return new IterableFunction<>(this).containsAll(values);
+        return getDefaultFunction().containsAll(values);
     }
 
     public StepCondition isEmpty() {
-        return new IterableFunction<>(this).isEmpty();
+        return getDefaultFunction().isEmpty();
     }
 
     public StepCondition isNotEmpty() {
-        return new IterableFunction<>(this).isNotEmpty();
+        return getDefaultFunction().isNotEmpty();
     }
 
     public StepCondition hasSize(int size) {
-        return new IterableFunction<>(this).hasSize(size);
+        return getDefaultFunction().hasSize(size);
     }
 
     public StepCondition hasNotSize(int size) {
-        return new IterableFunction<>(this).hasNotSize(size);
+        return getDefaultFunction().hasNotSize(size);
     }
 
 }

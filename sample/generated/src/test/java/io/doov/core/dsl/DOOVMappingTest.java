@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.impl.DefaultCondition;
 import io.doov.core.dsl.impl.DefaultContext;
+import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.lang.BiTypeConverter;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.TypeConverter;
@@ -95,7 +95,7 @@ public class DOOVMappingTest {
                         .using(counter("email size"))
                         .to(configurationMaxEmailSize),
 
-                when(matchAny(favoriteSiteName(), DefaultCondition::isNotNull)).then(
+                when(matchAny(favoriteSiteName(), DefaultFunction::isNotNull)).then(
                         mapRange(1, 4, i ->
                                 map(favoriteSiteName(i)).to(favoriteSiteName(i)))),
 

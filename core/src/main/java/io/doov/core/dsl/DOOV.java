@@ -141,7 +141,7 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchAny(Stream<? extends DslField<?>> dslFields,
-            Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+            Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchAny(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                 .map(stepConditionFunction).collect(Collectors.toList()));
     }
@@ -165,7 +165,7 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchAll(Stream<? extends DslField<?>> dslFields,
-            Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+            Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchAll(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                 .map(stepConditionFunction).collect(Collectors.toList()));
     }
@@ -189,7 +189,7 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchNone(Stream<? extends DslField<?>> dslFields,
-            Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+            Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchNone(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                 .map(stepConditionFunction).collect(Collectors.toList()));
     }

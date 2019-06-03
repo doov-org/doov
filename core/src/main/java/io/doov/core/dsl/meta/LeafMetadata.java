@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.lang.Readable;
 
 public abstract class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMetadata {
@@ -100,7 +100,7 @@ public abstract class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMe
     }
 
     @SuppressWarnings("unchecked")
-    public M valueCondition(DefaultCondition<?> condition) {
+    public M valueCondition(DefaultFunction<?, ?> condition) {
         LeafMetadata<?> conditionMetadata = (LeafMetadata<?>) condition.getMetadata();
         conditionMetadata.elements().stream().forEach(e -> add(e));
         return (M) this;

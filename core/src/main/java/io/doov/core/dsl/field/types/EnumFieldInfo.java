@@ -15,10 +15,14 @@
  */
 package io.doov.core.dsl.field.types;
 
+import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
+
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.DefaultFunction;
+import io.doov.core.dsl.meta.predicate.FieldMetadata;
 
 public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfoImpl implements BaseFieldInfo<E> {
 
@@ -27,7 +31,7 @@ public class EnumFieldInfo<E extends Enum<E>> extends DelegatingFieldInfoImpl im
     }
 
     @Override
-    public DefaultCondition<E> getDefaultFunction() {
-        return new DefaultCondition<>(this);
+    public DefaultFunction<E, FieldMetadata<?>> getDefaultFunction() {
+        return new DefaultFunction<>((FieldMetadata<?>) fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 }

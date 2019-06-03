@@ -23,7 +23,6 @@ import java.util.function.Supplier;
 
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.impl.num.NumericFunction;
-import io.doov.core.dsl.impl.time.TemporalCondition;
 import io.doov.core.dsl.impl.time.TemporalFunction;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.time.TemporalAdjuster;
@@ -31,20 +30,20 @@ import io.doov.core.dsl.time.TemporalAdjuster;
 /**
  * Base interface for temporal field info.
  * <p>
- * It contains default methods for common checks, which are calls to methods on {@link TemporalCondition}.
+ * It contains default methods for common checks, which are calls to methods on {@link TemporalFunction}.
  *
  * @param <N> the type of the field value
  */
 public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> {
 
     /**
-     * See {@link TemporalCondition#eq(TemporalCondition)}
+     * See {@link TemporalFunction#eq(TemporalFunction)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#eq(TemporalCondition)
+     * @see TemporalFunction#eq(TemporalFunction)
      */
-    default StepCondition eq(TemporalCondition<N> value) {
+    default StepCondition eq(TemporalFunction<N> value) {
         return getTemporalFunction().eq(value);
     }
 
@@ -130,212 +129,212 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
     }
 
     /**
-     * See {@link TemporalCondition#before(Temporal)}
+     * See {@link TemporalFunction#before(Temporal)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#before(Temporal)
+     * @see TemporalFunction#before(Temporal)
      */
     default StepCondition before(N value) {
         return getTemporalFunction().before(value);
     }
 
     /**
-     * See {@link TemporalCondition#before(TemporalFieldInfo)}
+     * See {@link TemporalFunction#before(TemporalFieldInfo)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#before(TemporalFieldInfo)
+     * @see TemporalFunction#before(TemporalFieldInfo)
      */
     default StepCondition before(TemporalFieldInfo<N> value) {
         return getTemporalFunction().before(value);
     }
 
     /**
-     * See {@link TemporalCondition#before(Supplier)}
+     * See {@link TemporalFunction#before(Supplier)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#before(Supplier)
+     * @see TemporalFunction#before(Supplier)
      */
     default StepCondition before(Supplier<N> value) {
         return getTemporalFunction().before(value);
     }
 
     /**
-     * See {@link TemporalCondition#before(TemporalCondition)}
+     * See {@link TemporalFunction#before(TemporalFunction)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#before(TemporalCondition)
+     * @see TemporalFunction#before(TemporalFunction)
      */
-    default StepCondition before(TemporalCondition<N> value) {
+    default StepCondition before(TemporalFunction<N> value) {
         return getTemporalFunction().before(value);
     }
 
     /**
-     * See {@link TemporalCondition#beforeOrEq(Temporal)}
+     * See {@link TemporalFunction#beforeOrEq(Temporal)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#beforeOrEq(Temporal)
+     * @see TemporalFunction#beforeOrEq(Temporal)
      */
     default StepCondition beforeOrEq(N value) {
         return getTemporalFunction().beforeOrEq(value);
     }
 
     /**
-     * See {@link TemporalCondition#beforeOrEq(Temporal)}
+     * See {@link TemporalFunction#beforeOrEq(Temporal)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#beforeOrEq(Temporal)
+     * @see TemporalFunction#beforeOrEq(Temporal)
      */
     default StepCondition beforeOrEq(TemporalFieldInfo<N> value) {
         return getTemporalFunction().beforeOrEq(value);
     }
     
     /**
-     * See {@link TemporalCondition#beforeOrEq(Supplier)}
+     * See {@link TemporalFunction#beforeOrEq(Supplier)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#beforeOrEq(Supplier)
+     * @see TemporalFunction#beforeOrEq(Supplier)
      */
     default StepCondition beforeOrEq(Supplier<N> value) {
         return getTemporalFunction().beforeOrEq(value);
     }
 
     /**
-     * See {@link TemporalCondition#beforeOrEq(TemporalCondition)}
+     * See {@link TemporalFunction#beforeOrEq(TemporalFunction)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#beforeOrEq(TemporalCondition)
+     * @see TemporalFunction#beforeOrEq(TemporalFunction)
      */
-    default StepCondition beforeOrEq(TemporalCondition<N> value) {
+    default StepCondition beforeOrEq(TemporalFunction<N> value) {
         return getTemporalFunction().beforeOrEq(value);
     }
 
     /**
-     * See {@link TemporalCondition#after(Temporal)}
+     * See {@link TemporalFunction#after(Temporal)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#after(Temporal)
+     * @see TemporalFunction#after(Temporal)
      */
     default StepCondition after(N value) {
         return getTemporalFunction().after(value);
     }
 
     /**
-     * See {@link TemporalCondition#after(TemporalFieldInfo)}
+     * See {@link TemporalFunction#after(TemporalFieldInfo)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#after(TemporalFieldInfo)
+     * @see TemporalFunction#after(TemporalFieldInfo)
      */
     default StepCondition after(TemporalFieldInfo<N> value) {
         return getTemporalFunction().after(value);
     }
 
     /**
-     * See {@link TemporalCondition#after(Supplier)}
+     * See {@link TemporalFunction#after(Supplier)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#after(Supplier)
+     * @see TemporalFunction#after(Supplier)
      */
     default StepCondition after(Supplier<N> value) {
         return getTemporalFunction().after(value);
     }
 
     /**
-     * See {@link TemporalCondition#after(TemporalCondition)}
+     * See {@link TemporalFunction#after(TemporalFunction)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#after(TemporalCondition)
+     * @see TemporalFunction#after(TemporalFunction)
      */
-    default StepCondition after(TemporalCondition<N> value) {
+    default StepCondition after(TemporalFunction<N> value) {
         return getTemporalFunction().after(value);
     }
 
     /**
-     * See {@link TemporalCondition#afterOrEq(Temporal)}
+     * See {@link TemporalFunction#afterOrEq(Temporal)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#afterOrEq(Temporal)
+     * @see TemporalFunction#afterOrEq(Temporal)
      */
     default StepCondition afterOrEq(N value) {
         return getTemporalFunction().afterOrEq(value);
     }
     
     /**
-     * See {@link TemporalCondition#afterOrEq(Temporal)}
+     * See {@link TemporalFunction#afterOrEq(Temporal)}
      *
      * @param field the right side value
      * @return the step condition
-     * @see TemporalCondition#afterOrEq(TemporalFieldInfo)
+     * @see TemporalFunction#afterOrEq(TemporalFieldInfo)
      */
     default StepCondition afterOrEq(TemporalFieldInfo<N> field) {
         return getTemporalFunction().afterOrEq(field);
     }
 
     /**
-     * See {@link TemporalCondition#afterOrEq(Supplier)}
+     * See {@link TemporalFunction#afterOrEq(Supplier)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#afterOrEq(Supplier)
+     * @see TemporalFunction#afterOrEq(Supplier)
      */
     default StepCondition afterOrEq(Supplier<N> value) {
         return getTemporalFunction().afterOrEq(value);
     }
 
     /**
-     * See {@link TemporalCondition#afterOrEq(TemporalCondition)}
+     * See {@link TemporalFunction#afterOrEq(TemporalFunction)}
      *
      * @param value the right side value
      * @return the step condition
-     * @see TemporalCondition#afterOrEq(TemporalCondition)
+     * @see TemporalFunction#afterOrEq(TemporalFunction)
      */
-    default StepCondition afterOrEq(TemporalCondition<N> value) {
+    default StepCondition afterOrEq(TemporalFunction<N> value) {
         return getTemporalFunction().afterOrEq(value);
     }
 
     /**
-     * See {@link TemporalCondition#between(Temporal, Temporal)}
+     * See {@link TemporalFunction#between(Temporal, Temporal)}
      *
      * @param minIncluded the min value included
      * @param maxExcluded the max value excluded
      * @return the step condition
-     * @see TemporalCondition#between(Temporal, Temporal)
+     * @see TemporalFunction#between(Temporal, Temporal)
      */
     default StepCondition between(N minIncluded, N maxExcluded) {
         return getTemporalFunction().between(minIncluded, maxExcluded);
     }
 
     /**
-     * See {@link TemporalCondition#between(Supplier, Supplier)}
+     * See {@link TemporalFunction#between(Supplier, Supplier)}
      *
      * @param minIncluded the min value included
      * @param maxExcluded the max value excluded
      * @return the step condition
-     * @see TemporalCondition#between(Supplier, Supplier)
+     * @see TemporalFunction#between(Supplier, Supplier)
      */
     default StepCondition between(Supplier<N> minIncluded, Supplier<N> maxExcluded) {
         return getTemporalFunction().between(minIncluded, maxExcluded);
     }
 
     /**
-     * See {@link TemporalCondition#notBetween(Temporal, Temporal)}
+     * See {@link TemporalFunction#notBetween(Temporal, Temporal)}
      *
      * @param minIncluded the min value included
      * @param maxExcluded the max value excluded
      * @return the step condition
-     * @see TemporalCondition#notBetween(Temporal, Temporal)
+     * @see TemporalFunction#notBetween(Temporal, Temporal)
      */
     default StepCondition notBetween(N minIncluded, N maxExcluded) {
         return getTemporalFunction().notBetween(minIncluded, maxExcluded);

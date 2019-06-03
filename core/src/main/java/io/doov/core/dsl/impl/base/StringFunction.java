@@ -26,7 +26,7 @@ import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.impl.LeafStepCondition;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.lang.Context;
@@ -40,11 +40,7 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
  * It contains a {@link DslField} to get the value from the model, a {@link StringFunctionMetadata} to describe this node, and a
  * {@link BiFunction} to take the value from the model and return an optional value.
  */
-public class StringFunction extends DefaultCondition<String> {
-
-    public StringFunction(DslField<String> field) {
-        super(field);
-    }
+public class StringFunction extends DefaultFunction<String, PredicateMetadata> {
 
     public StringFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<String>> value) {
         super(metadata, value);

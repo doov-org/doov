@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl.runtime;
 
+import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
 import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 
 import java.util.List;
@@ -23,8 +24,10 @@ import java.util.function.Function;
 
 import io.doov.core.*;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.predicate.FieldMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 /**
  * Runtime implementation for {@link FieldInfo} and {@link DslField}.
@@ -85,8 +88,8 @@ public class RuntimeField<B, R> implements DslField<R>, FieldInfo, Function<B, R
     }
 
     @Override
-    public DefaultCondition<R> getDefaultFunction() {
-        return new DefaultCondition<>(this);
+    public DefaultFunction<R, FieldMetadata<?>> getDefaultFunction() {
+        return new DefaultFunction<>((FieldMetadata<?>) fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 
     @Override

@@ -15,10 +15,15 @@
  */
 package io.doov.core.dsl.field.types;
 
+import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
+import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
+
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
-import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.DefaultFunction;
+import io.doov.core.dsl.meta.predicate.FieldMetadata;
+import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class CharacterFieldInfo extends DelegatingFieldInfoImpl implements BaseFieldInfo<Character> {
 
@@ -27,7 +32,7 @@ public class CharacterFieldInfo extends DelegatingFieldInfoImpl implements BaseF
     }
 
     @Override
-    public DefaultCondition<Character> getDefaultFunction() {
-        return new DefaultCondition<>(this);
+    public DefaultFunction<Character, PredicateMetadata> getDefaultFunction() {
+        return new DefaultFunction<>((FieldMetadata<?>) fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 }

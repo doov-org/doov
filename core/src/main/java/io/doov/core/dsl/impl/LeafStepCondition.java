@@ -48,7 +48,7 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
      * @param condition the node value to check
      * @return the step condition
      */
-    public static <N> LeafStepCondition<Optional<N>> isNull(DefaultCondition<N> condition) {
+    public static <N> LeafStepCondition<Optional<N>> isNull(DefaultFunction<N, ?> condition) {
         return new LeafStepCondition<>(nullMetadata(condition.getMetadata()),
                 (model, context) -> Optional.of(condition.value(model, context)),
                 t -> !t.isPresent());
@@ -61,7 +61,7 @@ public class LeafStepCondition<N> extends DefaultStepCondition {
      * @param condition the node value to check
      * @return the step condition
      */
-    public static <N> LeafStepCondition<Optional<N>> isNotNull(DefaultCondition<N> condition) {
+    public static <N> LeafStepCondition<Optional<N>> isNotNull(DefaultFunction<N, ?> condition) {
         return new LeafStepCondition<>(notNullMetadata(condition.getMetadata()),
                 (model, context) -> Optional.of(condition.value(model, context)),
                 Optional::isPresent);

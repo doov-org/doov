@@ -15,14 +15,16 @@
  */
 package io.doov.core.dsl.field;
 
+import static io.doov.core.dsl.impl.DefaultFunction.valueModel;
 import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
 
 import java.io.Serializable;
 
 import io.doov.core.FieldId;
 import io.doov.core.FieldInfo;
-import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.predicate.FieldMetadata;
 
 @SuppressWarnings("serial")
 public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Serializable {
@@ -97,8 +99,8 @@ public class DefaultFieldInfo<T> implements FieldInfo, BaseFieldInfo<T>, Seriali
     }
 
     @Override
-    public DefaultCondition<T> getDefaultFunction() {
-        return new DefaultCondition<>(this);
+    public DefaultFunction<T, FieldMetadata<?>> getDefaultFunction() {
+        return new DefaultFunction<>((FieldMetadata<?>) fieldMetadata(this), (m, c) -> valueModel(m, this));
     }
 
     @Override
