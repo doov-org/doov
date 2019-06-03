@@ -28,9 +28,9 @@ public class IntegerFunction extends NumericFunction<Integer> implements Integer
         super(metadata, value);
     }
 
-    public IntegerFunction(NumericFunction<Long> condition) {
-        this(condition.getMetadata(),
-                        (model, context) -> condition.getFunction().apply(model, context).map(Long::intValue));
+    public static IntegerFunction fromLong(NumericFunction<Long> longFunction) {
+        return new IntegerFunction(longFunction.getMetadata(),
+                (m, c) -> longFunction.getFunction().apply(m, c).map(Long::intValue));
     }
 
     @Override

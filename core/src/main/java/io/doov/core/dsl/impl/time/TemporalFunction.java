@@ -385,7 +385,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> ageAt(N value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtValueMetadata(this, value), YEARS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtValueMetadata(this, value), YEARS, value));
     }
 
     /**
@@ -395,7 +395,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> ageAt(TemporalFieldInfo<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalFieldMetadata(this, value), YEARS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalFieldMetadata(this, value), YEARS, value));
     }
 
     /**
@@ -405,7 +405,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> ageAt(TemporalFunction<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalConditionMetadata(this, value), YEARS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalConditionMetadata(this, value), YEARS, value));
     }
 
     /**
@@ -415,7 +415,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> ageAt(Supplier<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtSupplierMetadata(this, value), YEARS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtSupplierMetadata(this, value), YEARS, value));
     }
 
     /**
@@ -425,7 +425,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> daysBetween(N value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtValueMetadata(this, value), DAYS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtValueMetadata(this, value), DAYS, value));
     }
 
     /**
@@ -435,7 +435,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> daysBetween(TemporalFieldInfo<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalFieldMetadata(this, value), DAYS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalFieldMetadata(this, value), DAYS, value));
     }
 
     /**
@@ -445,7 +445,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> daysBetween(TemporalFunction<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalConditionMetadata(this, value), DAYS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalConditionMetadata(this, value), DAYS, value));
     }
 
     /**
@@ -455,7 +455,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> daysBetween(Supplier<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtSupplierMetadata(this, value), DAYS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtSupplierMetadata(this, value), DAYS, value));
     }
 
     /**
@@ -465,7 +465,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> monthsBetween(N value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtValueMetadata(this, value), MONTHS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtValueMetadata(this, value), MONTHS, value));
     }
 
     /**
@@ -475,7 +475,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> monthsBetween(TemporalFieldInfo<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalFieldMetadata(this, value), MONTHS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalFieldMetadata(this, value), MONTHS, value));
     }
 
     /**
@@ -485,7 +485,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> monthsBetween(TemporalFunction<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalConditionMetadata(this, value), MONTHS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalConditionMetadata(this, value), MONTHS, value));
     }
 
     /**
@@ -495,7 +495,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> monthsBetween(Supplier<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtSupplierMetadata(this, value), MONTHS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtSupplierMetadata(this, value), MONTHS, value));
     }
 
     /**
@@ -505,7 +505,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> yearsBetween(N value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtValueMetadata(this, value), YEARS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtValueMetadata(this, value), YEARS, value));
     }
 
     /**
@@ -515,7 +515,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> yearsBetween(TemporalFieldInfo<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalFieldMetadata(this, value), YEARS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalFieldMetadata(this, value), YEARS, value));
     }
 
     /**
@@ -525,7 +525,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric function
      */
     public final NumericFunction<Integer> yearsBetween(TemporalFunction<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalConditionMetadata(this, value), YEARS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtTemporalConditionMetadata(this, value), YEARS, value));
     }
 
     /**
@@ -535,7 +535,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the numeric condition
      */
     public final NumericFunction<Integer> yearsBetween(Supplier<N> value) {
-        return new IntegerFunction(timeBetween(TemporalBiFunctionMetadata.ageAtSupplierMetadata(this, value), YEARS, value));
+        return IntegerFunction.fromLong(timeBetween(TemporalBiFunctionMetadata.ageAtSupplierMetadata(this, value), YEARS, value));
     }
 
     private NumericFunction<Long> timeBetween(PredicateMetadata metadata, ChronoUnit unit, N value) {
