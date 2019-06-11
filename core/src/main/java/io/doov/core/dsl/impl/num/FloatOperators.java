@@ -51,6 +51,11 @@ public interface FloatOperators extends NumericOperators<Float> {
     }
 
     @Override
+    default BinaryOperator<Float> minusFunction() {
+        return (l, r) -> l - r;
+    }
+
+    @Override
     default BiFunction<Float, Integer, Float> timesFunction() {
         return (l, r) -> l * r;
     }

@@ -50,6 +50,11 @@ public interface LongOperators extends NumericOperators<Long> {
     }
 
     @Override
+    default BinaryOperator<Long> minusFunction() {
+        return (l, r) -> l - r;
+    }
+
+    @Override
     default BiFunction<Long, Integer, Long> timesFunction() {
         return (l, r) -> l * r;
     }

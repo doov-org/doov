@@ -32,6 +32,8 @@ public interface NumericOperators<N extends Number> {
 
     BinaryOperator<N> sumFunction();
 
+    BinaryOperator<N> minusFunction();
+
     BiFunction<N, Integer, N> timesFunction();
 
     N identity();

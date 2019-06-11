@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl.impl.num;
 
+import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.minusMetadata;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.plusMetadata;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.timesMetadata;
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.whenMetadata;
@@ -70,6 +71,65 @@ public abstract class NumericFunction<N extends Number> extends NumericCondition
                 (model, context) -> value(model, context)
                         .map(v -> sumFunction().apply(v,
                                 Optional.ofNullable(model.<N> get(field.id())).orElse(identity()))));
+    }
+
+    /**
+     * Returns a numeric function that returns the node value sum with the node value param.
+     *
+     * @param value to sum
+     * @return the numeric function
+     */
+    public final NumericFunction<N> plus(N value) {
+        return numericFunction(plusMetadata(metadata, value),
+                (model, context) -> value(model, context).map(v -> sumFunction().apply(v, value)));
+    }
+
+    /**
+     * Returns a numeric function that returns the node value sum with the node value param.
+     *
+     * @param numericFunction function to sum
+     * @return the numeric function
+     */
+    public final NumericFunction<N> plus(NumericFunction<N> numericFunction) {
+        return numericFunction(plusMetadata(metadata, numericFunction),
+                (model, context) -> value(model, context).map(v ->
+                        sumFunction().apply(v, numericFunction.value(model, context).orElse(identity()))));
+    }
+
+    /**
+     * Returns a numeric function that returns the node value sum with the node value param.
+     *
+     * @param field the field to subtract
+     * @return the numeric function
+     */
+    public final NumericFunction<N> minus(NumericFieldInfo<N> field) {
+        return numericFunction(minusMetadata(metadata, field),
+                (model, context) -> value(model, context)
+                        .map(v -> minusFunction().apply(v,
+                                Optional.ofNullable(model.<N> get(field.id())).orElse(identity()))));
+    }
+
+    /**
+     * Returns a numeric function that returns the node value sum with the node value param.
+     *
+     * @param value to subtract
+     * @return the numeric function
+     */
+    public final NumericFunction<N> minus(N value) {
+        return numericFunction(minusMetadata(metadata, value),
+                (model, context) -> value(model, context).map(v -> minusFunction().apply(v, value)));
+    }
+
+    /**
+     * Returns a numeric function that returns the node value sum with the node value param.
+     *
+     * @param numericFunction function to subtract
+     * @return the numeric function
+     */
+    public final NumericFunction<N> minus(NumericFunction<N> numericFunction) {
+        return numericFunction(minusMetadata(metadata, numericFunction),
+                (model, context) -> value(model, context).map(v ->
+                        minusFunction().apply(v, numericFunction.value(model, context).orElse(identity()))));
     }
 
     /**

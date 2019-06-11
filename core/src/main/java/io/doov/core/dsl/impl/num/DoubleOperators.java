@@ -50,6 +50,11 @@ public interface DoubleOperators extends NumericOperators<Double> {
     }
 
     @Override
+    default BinaryOperator<Double> minusFunction() {
+        return (l, r) -> l - r;
+    }
+
+    @Override
     default BiFunction<Double, Integer, Double> timesFunction() {
         return (l, r) -> l * r;
     }

@@ -51,6 +51,28 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
         return new NumericFunctionMetadata(metadata, plus, fieldMetadata(readable));
     }
 
+    public static NumericFunctionMetadata plusMetadata(Metadata metadata, Readable function) {
+        return new NumericFunctionMetadata(metadata, plus, readableMetadata(function));
+    }
+
+    public static NumericFunctionMetadata plusMetadata(Metadata metadata, Object value) {
+        return new NumericFunctionMetadata(metadata, plus, valueMetadata(value));
+    }
+
+    // minus
+
+    public static NumericFunctionMetadata minusMetadata(Metadata metadata, DslField<?> readable) {
+        return new NumericFunctionMetadata(metadata, minus, fieldMetadata(readable));
+    }
+
+    public static NumericFunctionMetadata minusMetadata(Metadata metadata, Readable function) {
+        return new NumericFunctionMetadata(metadata, minus, readableMetadata(function));
+    }
+
+    public static NumericFunctionMetadata minusMetadata(Metadata metadata, Object value) {
+        return new NumericFunctionMetadata(metadata, minus, valueMetadata(value));
+    }
+
     // lesser
 
     public static NumericFunctionMetadata lesserThanMetadata(Metadata metadata, Object value) {

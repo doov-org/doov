@@ -51,6 +51,11 @@ public interface IntegerOperators extends NumericOperators<Integer> {
     }
 
     @Override
+    default BinaryOperator<Integer> minusFunction() {
+        return (l, r) -> l - r;
+    }
+
+    @Override
     default BiFunction<Integer, Integer, Integer> timesFunction() {
         return (l, r) -> l * r;
     }
