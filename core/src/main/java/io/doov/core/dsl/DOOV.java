@@ -454,20 +454,20 @@ public class DOOV {
     }
 
     public static <T1 extends DslField<?>> TemplateSpec.Template1<T1> template(Supplier<TemplateParam<T1>> param1) {
-        return new TemplateSpec.Template1<>(param1.get());
+        return new TemplateSpec.Template1<>(param1);
     }
 
     public static <T1 extends DslField<?>, T2 extends DslField<?>> TemplateSpec.Template2<T1, T2> template(
             Supplier<TemplateParam<T1>> param1,
             Supplier<TemplateParam<T2>> param2) {
-        return new TemplateSpec.Template2<>(param1.get(), param2.get());
+        return new TemplateSpec.Template2<>(param1, param2);
     }
 
     public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>> TemplateSpec.Template3<T1, T2, T3> template(
             Supplier<TemplateParam<T1>> param1,
             Supplier<TemplateParam<T2>> param2,
             Supplier<TemplateParam<T3>> param3) {
-        return new TemplateSpec.Template3<>(param1.get(), param2.get(), param3.get());
+        return new TemplateSpec.Template3<>(param1, param2, param3);
     }
 
     public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>> TemplateSpec.Template4<T1, T2, T3, T4> template(
@@ -475,7 +475,7 @@ public class DOOV {
             Supplier<TemplateParam<T2>> param2,
             Supplier<TemplateParam<T3>> param3,
             Supplier<TemplateParam<T4>> param4) {
-        return new TemplateSpec.Template4<>(param1.get(), param2.get(), param3.get(), param4.get());
+        return new TemplateSpec.Template4<>(param1, param2, param3, param4);
     }
 
     public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>, T5 extends DslField<?>> TemplateSpec.Template5<T1, T2, T3, T4, T5> template(
@@ -484,6 +484,6 @@ public class DOOV {
             Supplier<TemplateParam<T3>> param3,
             Supplier<TemplateParam<T4>> param4,
             Supplier<TemplateParam<T5>> param5) {
-        return new TemplateSpec.Template5<>(param1.get(), param2.get(), param3.get(), param4.get(), param5.get());
+        return new TemplateSpec.Template5<>(param1, param2, param3, param4, param5);
     }
 }
