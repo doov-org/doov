@@ -137,11 +137,11 @@ class TemplateValidationTest {
 
         Rule1<BooleanFieldInfo> templatedRule = DOOV.template($Boolean).rule(LogicalFieldInfo::isTrue);
 
-        ValidationRule rule = templatedRule.bind(_true);
-        Assertions.assertTrue(rule.executeOn(model).value());
+        ValidationRule rule1 = templatedRule.bind(_true);
+        Assertions.assertTrue(rule1.executeOn(model).value());
 
-        templatedRule.bind(_false);
-        Assertions.assertFalse(rule.executeOn(model).value());
+        ValidationRule rule2 = templatedRule.bind(_false);
+        Assertions.assertFalse(rule2.executeOn(model).value());
 
     }
 }

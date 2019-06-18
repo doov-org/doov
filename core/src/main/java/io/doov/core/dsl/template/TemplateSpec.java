@@ -3,24 +3,19 @@
  */
 package io.doov.core.dsl.template;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.*;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.Function4;
-import io.doov.core.dsl.lang.Function5;
-import io.doov.core.dsl.lang.MappingRule;
-import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.lang.Function3;
+import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.MappingRegistry;
 
 public class TemplateSpec {
 
     public static class Template1<T1 extends DslField<?>> {
 
-        final TemplateParam<T1> param1;
+        final Supplier<TemplateParam<T1>> param1;
 
-        public Template1(TemplateParam<T1> param1) {
+        public Template1(Supplier<TemplateParam<T1>> param1) {
             this.param1 = param1;
         }
 
@@ -39,10 +34,10 @@ public class TemplateSpec {
 
     public static class Template2<T1 extends DslField<?>, T2 extends DslField<?>> {
 
-        final TemplateParam<T1> param1;
-        final TemplateParam<T2> param2;
+        final Supplier<TemplateParam<T1>> param1;
+        final Supplier<TemplateParam<T2>> param2;
 
-        public Template2(TemplateParam<T1> param1, TemplateParam<T2> param2) {
+        public Template2(Supplier<TemplateParam<T1>> param1, Supplier<TemplateParam<T2>> param2) {
             this.param1 = param1;
             this.param2 = param2;
         }
@@ -62,11 +57,12 @@ public class TemplateSpec {
 
     public static class Template3<T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>> {
 
-        final TemplateParam<T1> param1;
-        final TemplateParam<T2> param2;
-        final TemplateParam<T3> param3;
+        final Supplier<TemplateParam<T1>> param1;
+        final Supplier<TemplateParam<T2>> param2;
+        final Supplier<TemplateParam<T3>> param3;
 
-        public Template3(TemplateParam<T1> param1, TemplateParam<T2> param2, TemplateParam<T3> param3) {
+        public Template3(Supplier<TemplateParam<T1>> param1, Supplier<TemplateParam<T2>> param2,
+                Supplier<TemplateParam<T3>> param3) {
             this.param1 = param1;
             this.param2 = param2;
             this.param3 = param3;
@@ -85,15 +81,18 @@ public class TemplateSpec {
         }
     }
 
-    public static class Template4<T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>> {
+    public static class Template4<T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>,
+            T4 extends DslField<?>> {
 
-        final TemplateParam<T1> param1;
-        final TemplateParam<T2> param2;
-        final TemplateParam<T3> param3;
-        final TemplateParam<T4> param4;
+        final Supplier<TemplateParam<T1>> param1;
+        final Supplier<TemplateParam<T2>> param2;
+        final Supplier<TemplateParam<T3>> param3;
+        final Supplier<TemplateParam<T4>> param4;
 
-        public Template4(TemplateParam<T1> param1, TemplateParam<T2> param2, TemplateParam<T3> param3,
-                TemplateParam<T4> param4) {
+        public Template4(Supplier<TemplateParam<T1>> param1,
+                Supplier<TemplateParam<T2>> param2,
+                Supplier<TemplateParam<T3>> param3,
+                Supplier<TemplateParam<T4>> param4) {
             this.param1 = param1;
             this.param2 = param2;
             this.param3 = param3;
@@ -114,16 +113,20 @@ public class TemplateSpec {
         }
     }
 
-    public static class Template5<T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>, T5 extends DslField<?>> {
+    public static class Template5<T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>,
+            T4 extends DslField<?>, T5 extends DslField<?>> {
 
-        final TemplateParam<T1> param1;
-        final TemplateParam<T2> param2;
-        final TemplateParam<T3> param3;
-        final TemplateParam<T4> param4;
-        final TemplateParam<T5> param5;
+        final Supplier<TemplateParam<T1>> param1;
+        final Supplier<TemplateParam<T2>> param2;
+        final Supplier<TemplateParam<T3>> param3;
+        final Supplier<TemplateParam<T4>> param4;
+        final Supplier<TemplateParam<T5>> param5;
 
-        public Template5(TemplateParam<T1> param1, TemplateParam<T2> param2, TemplateParam<T3> param3,
-                TemplateParam<T4> param4, TemplateParam<T5> param5) {
+        public Template5(Supplier<TemplateParam<T1>> param1,
+                Supplier<TemplateParam<T2>> param2,
+                Supplier<TemplateParam<T3>> param3,
+                Supplier<TemplateParam<T4>> param4,
+                Supplier<TemplateParam<T5>> param5) {
             this.param1 = param1;
             this.param2 = param2;
             this.param3 = param3;
