@@ -12,8 +12,8 @@ import io.doov.core.dsl.meta.Metadata;
 public class RuleGenerator2<T1 extends DslField<?>, T2 extends DslField<?>, R extends DSLBuilder>
         implements DSLBuilder {
 
-    private final BiFunction<T1, T2, R> ruleFunction;
-    private final TemplateSpec.Template2<T1, T2> template;
+    protected BiFunction<T1, T2, R> ruleFunction;
+    protected TemplateSpec.Template2<T1, T2> template;
 
     public RuleGenerator2(BiFunction<T1, T2, R> ruleFunction, TemplateSpec.Template2<T1, T2> template) {
         this.ruleFunction = ruleFunction;
@@ -21,11 +21,9 @@ public class RuleGenerator2<T1 extends DslField<?>, T2 extends DslField<?>, R ex
     }
 
     public R bind(T1 p1, T2 p2) {
-        TemplateParam<T1> param1 = template.param1.get();
-        TemplateParam<T2> param2 = template.param2.get();
-        param1.bind(p1);
-        param2.bind(p2);
-        return this.ruleFunction.apply(param1.create(), param2.create());
+        return this.ruleFunction.apply(
+                template.param1.get().bind(p1).create(),
+                template.param2.get().bind(p2).create());
     }
 
     @Override
