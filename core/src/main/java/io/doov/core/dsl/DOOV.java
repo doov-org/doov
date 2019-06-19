@@ -33,6 +33,7 @@ import io.doov.core.dsl.impl.num.NumericFunction;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.MappingRegistry;
 import io.doov.core.dsl.mapping.builder.*;
+import io.doov.core.dsl.meta.predicate.FieldMetadata;
 import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
 import io.doov.core.dsl.template.TemplateParam;
 import io.doov.core.dsl.template.TemplateSpec;
@@ -526,5 +527,19 @@ public class DOOV {
     public static <T> IterableFunction<T, List<T>> lift(T... value) {
         List<T> valueList = asList(value);
         return new IterableFunction<>(valueListMetadata(valueList), (m, c) -> Optional.of(valueList));
+    }
+
+    /**
+     * Wrap given field into a function using the given function constructor reference
+     * @param field field
+     * @param constructorRef function constructor reference
+     * @param <T> field value type
+     * @param <F> function type
+     * @return function that wraps the given field
+     */
+    public static <T, F extends io.doov.core.dsl.field.types.Function<T>> F fieldFunction(DslField<T> field,
+            BiFunction<FieldMetadata<?>, BiFunction<FieldModel, Context, Optional<T>>, F> constructorRef) {
+        return constructorRef.apply(FieldMetadata.fieldMetadata(field),
+                (m, c) -> FieldModel.valueModel(m, field));
     }
 }

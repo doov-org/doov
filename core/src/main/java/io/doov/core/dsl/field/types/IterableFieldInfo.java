@@ -15,10 +15,8 @@
  */
 package io.doov.core.dsl.field.types;
 
-import static io.doov.core.FieldModel.valueModel;
-import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
-
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.base.IterableFunction;
@@ -32,7 +30,7 @@ public class IterableFieldInfo<T, C extends Iterable<T>> extends DelegatingField
 
     @Override
     public IterableFunction<T, C> getDefaultFunction() {
-        return new IterableFunction<>(fieldMetadata(this), (m, c) -> valueModel(m, this));
+        return DOOV.fieldFunction(this, IterableFunction::new);
     }
 
     public StepCondition contains(T value) {
