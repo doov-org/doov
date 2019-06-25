@@ -25,10 +25,6 @@ import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class LongFunction extends NumericFunction<Long> implements LongOperators {
 
-    public LongFunction(DslField<Long> field) {
-        super(field);
-    }
-
     public LongFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Long>> value) {
         super(metadata, value);
     }

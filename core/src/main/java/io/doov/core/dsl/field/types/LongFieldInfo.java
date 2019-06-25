@@ -16,6 +16,7 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.num.LongFunction;
 
@@ -27,7 +28,7 @@ public class LongFieldInfo extends DelegatingFieldInfoImpl implements NumericFie
 
     @Override
     public LongFunction getNumericFunction() {
-        return new LongFunction(this);
+        return DOOV.fieldFunction(this, LongFunction::new);
     }
 
 }

@@ -33,9 +33,9 @@ import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 
 /**
- * @see DefaultCondition
+ * @see DefaultFunction
  */
-public class DefaultConditionTest {
+public class DefaultFunctionTest {
     private static Locale LOCALE = Locale.US;
     private ValidationRule rule;
     private GenericModel model = new GenericModel();

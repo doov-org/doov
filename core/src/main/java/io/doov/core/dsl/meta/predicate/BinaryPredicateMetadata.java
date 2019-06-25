@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 
 import io.doov.core.FieldId;
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.impl.DefaultCondition;
+import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.meta.*;
@@ -85,7 +85,7 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
         return new BinaryPredicateMetadata(metadata, equals, readableMetadata(value));
     }
 
-    public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, DefaultCondition<?> condition) {
+    public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, DefaultFunction<?, ?> condition) {
         return new BinaryPredicateMetadata(metadata, equals, condition.getMetadata());
     }
 

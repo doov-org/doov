@@ -17,6 +17,7 @@ package io.doov.core.dsl;
 
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.falseMetadata;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.trueMetadata;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueListMetadata;
 import static java.util.Arrays.asList;
 
 import java.util.*;
@@ -26,11 +27,14 @@ import java.util.stream.*;
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
+import io.doov.core.dsl.impl.base.IterableFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.impl.num.NumericFunction;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.MappingRegistry;
 import io.doov.core.dsl.mapping.builder.*;
+import io.doov.core.dsl.meta.predicate.FieldMetadata;
+import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
 import io.doov.core.dsl.template.TemplateParam;
 import io.doov.core.dsl.template.TemplateSpec;
 
@@ -141,7 +145,7 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchAny(Stream<? extends DslField<?>> dslFields,
-            Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+            Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchAny(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                 .map(stepConditionFunction).collect(Collectors.toList()));
     }
@@ -165,7 +169,7 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchAll(Stream<? extends DslField<?>> dslFields,
-            Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+            Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchAll(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                 .map(stepConditionFunction).collect(Collectors.toList()));
     }
@@ -189,7 +193,7 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchNone(Stream<? extends DslField<?>> dslFields,
-            Function<DefaultCondition<?>, StepCondition> stepConditionFunction) {
+            Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchNone(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
                 .map(stepConditionFunction).collect(Collectors.toList()));
     }
@@ -485,5 +489,57 @@ public class DOOV {
             Supplier<TemplateParam<T4>> param4,
             Supplier<TemplateParam<T5>> param5) {
         return new TemplateSpec.Template5<>(param1, param2, param3, param4, param5);
+    }
+
+    /**
+     * Wrap given value into a function using the given function constructor reference
+     * Ex.
+     * <pre>
+     * <code class='java'>StringFunction function = DOOV.lift(value, StringFunction::new);</code>
+     * </pre>
+     *
+     * @param value value
+     * @param constructorRef function constructor reference
+     * @param <T> value type
+     * @param <F> function type
+     * @param <M> valuemetadata type
+     * @return function that wraps the given value
+     */
+    public static <T, F extends io.doov.core.dsl.field.types.Function<T>, M extends ValuePredicateMetadata<M>> F lift(
+            T value,
+            BiFunction<ValuePredicateMetadata, BiFunction<FieldModel, Context, Optional<T>>, F> constructorRef) {
+        return constructorRef.apply(ValuePredicateMetadata.<M> valueMetadata(value),
+                (m, c) -> Optional.ofNullable(value));
+    }
+
+    /**
+     * Wrap given value into a function using the given function constructor reference
+     * Ex.
+     * <pre>
+     * <code class='java'>IterableFunction&lt;Integer, List&lt;Integer&gt;&gt; function = DOOV.lift(1, 2, 3, 4);</code>
+     * </pre>
+     *
+     * @param value value
+     * @param <T> value type
+     * @return function that wraps the given value
+     */
+    @SafeVarargs
+    public static <T> IterableFunction<T, List<T>> lift(T... value) {
+        List<T> valueList = asList(value);
+        return new IterableFunction<>(valueListMetadata(valueList), (m, c) -> Optional.of(valueList));
+    }
+
+    /**
+     * Wrap given field into a function using the given function constructor reference
+     * @param field field
+     * @param constructorRef function constructor reference
+     * @param <T> field value type
+     * @param <F> function type
+     * @return function that wraps the given field
+     */
+    public static <T, F extends io.doov.core.dsl.field.types.Function<T>> F fieldFunction(DslField<T> field,
+            BiFunction<FieldMetadata<?>, BiFunction<FieldModel, Context, Optional<T>>, F> constructorRef) {
+        return constructorRef.apply(FieldMetadata.fieldMetadata(field),
+                (m, c) -> FieldModel.valueModel(m, field));
     }
 }

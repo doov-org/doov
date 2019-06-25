@@ -16,6 +16,7 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 
@@ -27,7 +28,7 @@ public class IntegerFieldInfo extends DelegatingFieldInfoImpl implements Numeric
 
     @Override
     public IntegerFunction getNumericFunction() {
-        return new IntegerFunction(this);
+        return DOOV.fieldFunction(this, IntegerFunction::new);
     }
 
 }

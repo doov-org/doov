@@ -19,23 +19,18 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class IntegerFunction extends NumericFunction<Integer> implements IntegerOperators {
 
-    public IntegerFunction(DslField<Integer> field) {
-        super(field);
-    }
-
     public IntegerFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<Integer>> value) {
         super(metadata, value);
     }
 
-    public IntegerFunction(NumericCondition<Long> condition) {
-        this(condition.getMetadata(),
-                        (model, context) -> condition.getFunction().apply(model, context).map(Long::intValue));
+    public static IntegerFunction fromLong(NumericFunction<Long> longFunction) {
+        return new IntegerFunction(longFunction.getMetadata(),
+                (m, c) -> longFunction.getFunction().apply(m, c).map(Long::intValue));
     }
 
     @Override

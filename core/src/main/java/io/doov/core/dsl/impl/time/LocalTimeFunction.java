@@ -20,17 +20,12 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
 public class LocalTimeFunction extends TemporalFunction<LocalTime> implements LocalTimeOperators {
 
-    public LocalTimeFunction(DslField<LocalTime> field) {
-        super(field);
-    }
-
-    protected LocalTimeFunction(PredicateMetadata metadata,
+    public LocalTimeFunction(PredicateMetadata metadata,
                     BiFunction<FieldModel, Context, Optional<LocalTime>> value) {
         super(metadata, value);
     }

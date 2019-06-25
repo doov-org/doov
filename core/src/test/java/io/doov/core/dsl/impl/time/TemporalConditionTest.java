@@ -34,7 +34,7 @@ import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.core.dsl.time.LocalDateSuppliers;
 
 /**
- * @see TemporalCondition
+ * @see TemporalFunction
  */
 public class TemporalConditionTest {
     private static Locale LOCALE = Locale.US;

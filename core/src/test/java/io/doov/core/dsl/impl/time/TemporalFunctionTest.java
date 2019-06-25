@@ -47,6 +47,8 @@ public class TemporalFunctionTest {
     private Result result;
     private Metadata reduce;
 
+
+
     @Test
     void with() {
         rule = when(A.with(firstDayOfYear()).eq(LocalDate.of(1, 1, 1))).validate();

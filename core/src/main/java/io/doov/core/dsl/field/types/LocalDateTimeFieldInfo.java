@@ -18,6 +18,7 @@ package io.doov.core.dsl.field.types;
 import java.time.LocalDateTime;
 
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.time.LocalDateTimeFunction;
 
@@ -29,7 +30,7 @@ public class LocalDateTimeFieldInfo extends DelegatingFieldInfoImpl implements T
 
     @Override
     public LocalDateTimeFunction getTemporalFunction() {
-        return new LocalDateTimeFunction(this);
+        return DOOV.fieldFunction(this, LocalDateTimeFunction::new);
     }
 
 }

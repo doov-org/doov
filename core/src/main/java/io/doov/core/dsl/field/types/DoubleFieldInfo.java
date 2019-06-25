@@ -16,6 +16,7 @@
 package io.doov.core.dsl.field.types;
 
 import io.doov.core.FieldInfo;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.DelegatingFieldInfoImpl;
 import io.doov.core.dsl.impl.num.DoubleFunction;
 
@@ -27,7 +28,7 @@ public class DoubleFieldInfo extends DelegatingFieldInfoImpl implements NumericF
 
     @Override
     public DoubleFunction getNumericFunction() {
-        return new DoubleFunction(this);
+        return DOOV.fieldFunction(this, DoubleFunction::new);
     }
 
 }

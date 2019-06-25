@@ -28,18 +28,13 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 import io.doov.core.FieldModel;
-import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.impl.DefaultCondition;
-import io.doov.core.dsl.impl.LeafStepCondition;
+import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.StepCondition;
+import io.doov.core.dsl.meta.function.IterableFunctionMetadata;
 import io.doov.core.dsl.meta.predicate.PredicateMetadata;
 
-public class IterableFunction<T, C extends Iterable<T>> extends DefaultCondition<C> {
-
-    public IterableFunction(DslField<C> field) {
-        super(field);
-    }
+public class IterableFunction<T, C extends Iterable<T>> extends DefaultFunction<C, PredicateMetadata> {
 
     public IterableFunction(PredicateMetadata metadata, BiFunction<FieldModel, Context, Optional<C>> value) {
         super(metadata, value);
