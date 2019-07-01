@@ -147,6 +147,18 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
     }
 
     /**
+     * Returns a step condition checking if the node value is equal to the given supplier value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition eq(Function<T> value) {
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, value), function,
+                (BiFunction<FieldModel, Context, Optional<T>>) (m, c) -> Optional.ofNullable(value.read(m, c)),
+                Object::equals);
+    }
+
+    /**
      * Returns a step condition checking if the node value is not equal to the given value.
      *
      * @param value the right side value
@@ -179,6 +191,18 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
     public final StepCondition notEq(BaseFieldInfo<T> value) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, value), function,
                 value,
+                (l, r) -> !l.equals(r));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is not equal to the given field value.
+     *
+     * @param value the right side value
+     * @return the step condition
+     */
+    public final StepCondition notEq(Function<T> value) {
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, value), function,
+                (BiFunction<FieldModel, Context, Optional<T>>) (m, c) -> Optional.ofNullable(value.read(m, c)),
                 (l, r) -> !l.equals(r));
     }
 

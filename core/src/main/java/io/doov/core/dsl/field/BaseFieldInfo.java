@@ -95,6 +95,17 @@ public interface BaseFieldInfo<T> extends DslField<T> {
     }
 
     /**
+     * See {@link DefaultFunction#eq(io.doov.core.dsl.field.types.Function)}
+     *
+     * @param function the right side value function
+     * @return the step condition
+     * @see DefaultFunction#eq(io.doov.core.dsl.field.types.Function)
+     */
+    default StepCondition eq(io.doov.core.dsl.field.types.Function<T> function) {
+        return getDefaultFunction().eq(function);
+    }
+
+    /**
      * See {@link DefaultFunction#notEq(Object)}
      *
      * @param value the right side value
@@ -125,6 +136,17 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      */
     default StepCondition notEq(Supplier<T> supplier) {
         return getDefaultFunction().notEq(supplier);
+    }
+
+    /**
+     * See {@link DefaultFunction#eq(io.doov.core.dsl.field.types.Function)}
+     *
+     * @param function the right side value function
+     * @return the step condition
+     * @see DefaultFunction#eq(io.doov.core.dsl.field.types.Function)
+     */
+    default StepCondition notEq(io.doov.core.dsl.field.types.Function<T> function) {
+        return getDefaultFunction().notEq(function);
     }
 
     /**
