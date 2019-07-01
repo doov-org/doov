@@ -71,6 +71,18 @@ public class NumericFunctionTest {
     }
 
     @Test
+    void lesserThan_function() {
+        IntegerFunction numericFunction = A.getNumericFunction();
+        rule = when(B.lesserThan(numericFunction)).validate();
+        result = rule.executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when B < A validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("B < A");
+    }
+
+    @Test
     void lesserOrEquals_value() {
         rule = when(A.lesserOrEquals(0)).validate();
         result = rule.executeOn(model);
@@ -85,6 +97,18 @@ public class NumericFunctionTest {
     @Test
     void lesserOrEquals_field() {
         rule = when(B.lesserOrEquals(A)).validate();
+        result = rule.executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when B <= A validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("B <= A");
+    }
+
+    @Test
+    void lesserOrEquals_function() {
+        IntegerFunction numericFunction = A.getNumericFunction();
+        rule = when(B.lesserOrEquals(numericFunction)).validate();
         result = rule.executeOn(model);
         reduce = result.reduce(FAILURE);
 
@@ -116,6 +140,18 @@ public class NumericFunctionTest {
     }
 
     @Test
+    void greaterThan_function() {
+        IntegerFunction numericFunction = B.getNumericFunction();
+        rule = when(A.greaterThan(numericFunction)).validate();
+        result = rule.executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A > B validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A > B");
+    }
+
+    @Test
     void greaterOrEquals_value() {
         rule = when(A.greaterOrEquals(2)).validate();
         result = rule.executeOn(model);
@@ -129,6 +165,18 @@ public class NumericFunctionTest {
     @Test
     void greaterOrEquals_field() {
         rule = when(A.greaterOrEquals(B)).validate();
+        result = rule.executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A >= B validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A >= B");
+    }
+
+    @Test
+    void greaterOrEquals_function() {
+        IntegerFunction numericFunction = A.getNumericFunction();
+        rule = when(numericFunction.greaterOrEquals(B)).validate();
         result = rule.executeOn(model);
         reduce = result.reduce(FAILURE);
 

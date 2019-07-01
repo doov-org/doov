@@ -83,6 +83,17 @@ public class TemporalFunctionTest {
     }
 
     @Test
+    void minus_function() {
+        rule = when(A.minus(B.getNumericFunction(), ChronoUnit.DAYS).eq(LocalDate.of(1, 1, 1))).validate();
+        result = rule.executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A minus B day(s) = 0001-01-01 validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A minus B day(s) = 0001-01-01");
+    }
+
+    @Test
     void plus_value() {
         rule = when(A.plus(1, ChronoUnit.DAYS).eq(LocalDate.of(1, 1, 1))).validate();
         result = rule.executeOn(model);
@@ -96,6 +107,17 @@ public class TemporalFunctionTest {
     @Test
     void plus_field() {
         rule = when(A.plus(B, ChronoUnit.DAYS).eq(LocalDate.of(1, 1, 1))).validate();
+        result = rule.executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A + B day(s) = 0001-01-01 validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A + B day(s) = 0001-01-01");
+    }
+
+    @Test
+    void plus_function() {
+        rule = when(A.plus(B.getNumericFunction(), ChronoUnit.DAYS).eq(LocalDate.of(1, 1, 1))).validate();
         result = rule.executeOn(model);
         reduce = result.reduce(FAILURE);
 

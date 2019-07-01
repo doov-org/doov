@@ -26,13 +26,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.BooleanFieldInfo;
+import io.doov.core.dsl.impl.base.BooleanFunction;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 
 /**
- * @see BooleanCondition
+ * @see io.doov.core.dsl.impl.base.BooleanFunction
  */
 public class BooleanConditionTest {
     private static Locale LOCALE = Locale.US;
@@ -78,6 +79,18 @@ public class BooleanConditionTest {
     }
 
     @Test
+    void and_function() {
+        BooleanFunction booleanFunction = A.getBooleanFunction();
+        rule = when(booleanFunction.and(B)).validate();
+        result = rule.executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (A and B) validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A and B");
+    }
+
+    @Test
     void or_value() {
         rule = when(B.or(false)).validate();
         result = rule.executeOn(model);
@@ -91,6 +104,18 @@ public class BooleanConditionTest {
     @Test
     void or_field() {
         rule = when(B.or(C)).validate();
+        result = rule.executeOn(model);
+        reduce = result.reduce(FAILURE);
+
+        assertFalse(result.value());
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when (B or C) validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("B or C");
+    }
+
+    @Test
+    void or_function() {
+        BooleanFunction booleanFunction = C.getBooleanFunction();
+        rule = when(B.or(booleanFunction)).validate();
         result = rule.executeOn(model);
         reduce = result.reduce(FAILURE);
 

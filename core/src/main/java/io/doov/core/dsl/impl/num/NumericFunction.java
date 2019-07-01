@@ -76,6 +76,17 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
     }
 
     /**
+     * Returns a step condition checking if the node value is lesser than the given field value.
+     *
+     * @param function the right side value
+     * @return the step condition
+     */
+    public final StepCondition lesserThan(NumericFunction<N> function) {
+        return LeafStepCondition.stepCondition(lesserThanMetadata(metadata, function), getFunction(),
+                function.getFunction(), (l, r) -> lesserThanFunction().apply(l, r));
+    }
+
+    /**
      * Returns a step condition checking if the node value is lesser or equals the given value.
      *
      * @param value the right side value
@@ -95,6 +106,17 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
     public final StepCondition lesserOrEquals(NumericFieldInfo<N> value) {
         return LeafStepCondition.stepCondition(lesserOrEqualsMetadata(metadata, value), getFunction(), value,
                 (l, r) -> lesserOrEqualsFunction().apply(l, r));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is lesser or equals the given field value.
+     *
+     * @param function the right side function
+     * @return the step condition
+     */
+    public final StepCondition lesserOrEquals(NumericFunction<N> function) {
+        return LeafStepCondition.stepCondition(lesserOrEqualsMetadata(metadata, function), getFunction(),
+                function.getFunction(), (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
     /**
@@ -120,6 +142,17 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
     }
 
     /**
+     * Returns a step condition checking if the node value is greater than the given field value.
+     *
+     * @param function the right side function
+     * @return the step condition
+     */
+    public final StepCondition greaterThan(NumericFunction<N> function) {
+        return LeafStepCondition.stepCondition(greaterThanMetadata(metadata, function), getFunction(),
+                function.getFunction(), (l, r) -> greaterThanFunction().apply(l, r));
+    }
+
+    /**
      * Returns a step condition checking if the node value is greater or equals the given value.
      *
      * @param value the right side value
@@ -142,6 +175,17 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
     }
 
     /**
+     * Returns a step condition checking if the node value is greater or equals the given field value.
+     *
+     * @param function the right side value
+     * @return the step condition
+     */
+    public final StepCondition greaterOrEquals(NumericFunction<N> function) {
+        return LeafStepCondition.stepCondition(greaterOrEqualsMetadata(metadata, function), getFunction(),
+                function.getFunction(), (l, r) -> greaterOrEqualsFunction().apply(l, r));
+    }
+
+    /**
      * Returns a step condition checking if the node value is between the given min included and max excluded values.
      *
      * @param minIncluded the min value included
@@ -161,6 +205,18 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
      * @return the step condition
      */
     public final StepCondition between(NumericFieldInfo<N> minIncluded, NumericFieldInfo<N> maxExcluded) {
+        return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
+    }
+
+    /**
+     * Returns a step condition checking if the node value is between the given min included and max excluded field
+     * values.
+     *
+     * @param minIncluded the min function included
+     * @param maxExcluded the max function excluded
+     * @return the step condition
+     */
+    public final StepCondition between(NumericFunction<N> minIncluded, NumericFunction<N> maxExcluded) {
         return greaterOrEquals(minIncluded).and(lesserThan(maxExcluded));
     }
 
@@ -269,8 +325,8 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
     public final NumericFunction<N> sum(List<NumericFieldInfo<N>> fields) {
         return numericFunction(sumMetadata(getMetadataForFields(fields)), (model,
                 context) -> Optional.of(fields.stream().map(f -> Optional.ofNullable(model.<N> get(f.id())))
-                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
-                        .reduce(identity(), sumFunction())));
+                .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+                .reduce(identity(), sumFunction())));
     }
 
     /**

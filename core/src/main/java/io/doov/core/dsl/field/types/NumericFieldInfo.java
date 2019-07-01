@@ -51,6 +51,17 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
     }
 
     /**
+     * See {@link NumericFunction#lesserThan(NumericFunction)}
+     *
+     * @param function the right side function
+     * @return the step condition
+     * @see NumericFunction#lesserThan(NumericFunction)
+     */
+    default StepCondition lesserThan(NumericFunction<N> function) {
+        return getNumericFunction().lesserThan(function);
+    }
+
+    /**
      * See {@link NumericFunction#lesserOrEquals(Number)}
      *
      * @param value the right side value
@@ -70,6 +81,17 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      */
     default StepCondition lesserOrEquals(NumericFieldInfo<N> value) {
         return getNumericFunction().lesserOrEquals(value);
+    }
+
+    /**
+     * See {@link NumericFunction#lesserOrEquals(NumericFunction)}
+     *
+     * @param function the right side function
+     * @return the step condition
+     * @see NumericFunction#lesserOrEquals(NumericFunction)
+     */
+    default StepCondition lesserOrEquals(NumericFunction<N> function) {
+        return getNumericFunction().lesserOrEquals(function);
     }
 
     /**
@@ -95,6 +117,17 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
     }
 
     /**
+     * See {@link NumericFunction#greaterThan(NumericFunction)}
+     *
+     * @param function the right side function
+     * @return the step condition
+     * @see NumericFunction#greaterThan(NumericFunction)
+     */
+    default StepCondition greaterThan(NumericFunction<N> function) {
+        return getNumericFunction().greaterThan(function);
+    }
+
+    /**
      * See {@link NumericFunction#greaterOrEquals(Number)}
      *
      * @param value the right side value
@@ -114,6 +147,17 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
      */
     default StepCondition greaterOrEquals(NumericFieldInfo<N> value) {
         return getNumericFunction().greaterOrEquals(value);
+    }
+
+    /**
+     * See {@link NumericFunction#greaterOrEquals(NumericFunction)}
+     *
+     * @param function the right side function
+     * @return the step condition
+     * @see NumericFunction#greaterOrEquals(NumericFunction)
+     */
+    default StepCondition greaterOrEquals(NumericFunction<N> function) {
+        return getNumericFunction().greaterOrEquals(function);
     }
 
     /**
@@ -141,6 +185,18 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
     }
 
     /**
+     * See {@link NumericFunction#between(NumericFunction, NumericFunction)}
+     *
+     * @param minIncluded the min value included
+     * @param maxExcluded the max value excluded
+     * @return the step condition
+     * @see NumericFunction#between(NumericFunction, NumericFunction)
+     */
+    default StepCondition between(NumericFunction<N> minIncluded, NumericFunction<N> maxExcluded) {
+        return getNumericFunction().between(minIncluded, maxExcluded);
+    }
+
+    /**
      * See {@link NumericFunction#times(int)}
      *
      * @param multiplier the multiplier
@@ -150,7 +206,7 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
     default NumericFunction<N> times(int multiplier) {
         return getNumericFunction().times(multiplier);
     }
-    
+
     /**
      * See {@link NumericFunction#plus(NumericFieldInfo)}
      *
@@ -174,6 +230,17 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
     }
 
     /**
+     * See {@link NumericFunction#plus(NumericFunction)}
+     *
+     * @param function to sum
+     * @return the numeric function
+     * @see NumericFunction#plus(NumericFunction)
+     */
+    default NumericFunction<N> plus(NumericFunction<N> function) {
+        return getNumericFunction().plus(function);
+    }
+
+    /**
      * See {@link NumericFunction#plus(NumericFieldInfo)}
      *
      * @param field to subtract
@@ -194,6 +261,18 @@ public interface NumericFieldInfo<N extends Number> extends BaseFieldInfo<N> {
     default NumericFunction<N> minus(N value) {
         return getNumericFunction().minus(value);
     }
+
+    /**
+     * See {@link NumericFunction#plus(NumericFunction)}
+     *
+     * @param function to subtract
+     * @return the numeric function
+     * @see NumericFunction#plus(NumericFieldInfo)
+     */
+    default NumericFunction<N> minus(NumericFunction<N> function) {
+        return getNumericFunction().minus(function);
+    }
+
     /**
      * See {@link NumericFunction#when(StepCondition)}
      *

@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.Operator;
@@ -40,14 +41,19 @@ public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
 
     // temporal_minus
 
+    public static TemporalBiFunctionMetadata minusMetadata(Metadata metadata, int value, Object unit) {
+        return new TemporalBiFunctionMetadata(metadata, temporal_minus,
+                new TemporalFunctionMetadata(LEAF_VALUE).valueObject(value).temporalUnit(unit));
+    }
+
     public static TemporalBiFunctionMetadata minusMetadata(Metadata metadata, DslField<?> field2, Object unit) {
         return new TemporalBiFunctionMetadata(metadata, temporal_minus,
                 new TemporalFunctionMetadata(FIELD_PREDICATE).field(field2).temporalUnit(unit));
     }
 
-    public static TemporalBiFunctionMetadata minusMetadata(Metadata metadata, int value, Object unit) {
+    public static TemporalBiFunctionMetadata minusMetadata(Metadata metadata, Readable readable, Object unit) {
         return new TemporalBiFunctionMetadata(metadata, temporal_minus,
-                new TemporalFunctionMetadata(LEAF_VALUE).valueObject(value).temporalUnit(unit));
+                new TemporalFunctionMetadata(LEAF_VALUE).valueReadable(readable).temporalUnit(unit));
     }
 
     // plus
@@ -60,6 +66,11 @@ public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
     public static TemporalBiFunctionMetadata plusMetadata(Metadata metadata, DslField<?> field2, Object unit) {
         return new TemporalBiFunctionMetadata(metadata, plus,
                 new TemporalFunctionMetadata(FIELD_PREDICATE).field(field2).temporalUnit(unit));
+    }
+
+    public static TemporalBiFunctionMetadata plusMetadata(Metadata metadata, Readable readable, Object unit) {
+        return new TemporalBiFunctionMetadata(metadata, plus,
+                new TemporalFunctionMetadata(LEAF_VALUE).valueReadable(readable).temporalUnit(unit));
     }
 
     // age at

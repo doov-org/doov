@@ -59,6 +59,17 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
     }
 
     /**
+     * See {@link BooleanFunction#and(BooleanFunction)}
+     *
+     * @param value the right field value
+     * @return the step condition
+     * @see BooleanFunction#and(BooleanFunction)
+     */
+    default StepCondition and(BooleanFunction value) {
+        return getBooleanFunction().and(value);
+    }
+
+    /**
      * See {@link BooleanFunction#or(boolean)}
      *
      * @param value the right value
@@ -78,6 +89,17 @@ public interface LogicalFieldInfo extends BaseFieldInfo<Boolean> {
      */
     default StepCondition or(LogicalFieldInfo value) {
         return getBooleanFunction().or(value);
+    }
+
+    /**
+     * See {@link BooleanFunction#or(BooleanFunction)}
+     *
+     * @param function the right field value
+     * @return the step condition
+     * @see BooleanFunction#or(BooleanFunction)
+     */
+    default StepCondition or(BooleanFunction function) {
+        return getBooleanFunction().or(function);
     }
 
     /**

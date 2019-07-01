@@ -353,6 +353,20 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
     }
 
     /**
+     * Returns a temporal function that returns the node value minus given temporal field value and unit.
+     *
+     * @param function the minus field value
+     * @param unit the minus unit
+     * @return the temporal function
+     */
+    public final TemporalFunction<N> minus(NumericFunction<Integer> function, TemporalUnit unit) {
+        return temporalFunction(TemporalBiFunctionMetadata.minusMetadata(metadata, function, unit),
+                (model, context) -> value(model, context)
+                        .flatMap(l -> function.value(model, context)
+                                .map(r -> minusFunction(r, unit).apply(l))));
+    }
+
+    /**
      * Returns a temporal function that returns the node value plus given temporal value and unit.
      *
      * @param value the plus value
@@ -375,6 +389,20 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
         return temporalFunction(TemporalBiFunctionMetadata.plusMetadata(metadata, value, unit),
                 (model, context) -> value(model, context)
                         .flatMap(l -> Optional.ofNullable(model.<Integer> get(value.id()))
+                                .map(r -> plusFunction(r, unit).apply(l))));
+    }
+
+    /**
+     * Returns a temporal function that returns the node value plus given temporal field value and unit.
+     *
+     * @param function the plus field value
+     * @param unit the plus unit
+     * @return the temporal function
+     */
+    public final TemporalFunction<N> plus(NumericFunction<Integer> function, TemporalUnit unit) {
+        return temporalFunction(TemporalBiFunctionMetadata.plusMetadata(metadata, function, unit),
+                (model, context) -> value(model, context)
+                        .flatMap(l -> function.value(model, context)
                                 .map(r -> plusFunction(r, unit).apply(l))));
     }
 
