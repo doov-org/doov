@@ -80,7 +80,7 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
     }
 
     public static NumericFunctionMetadata lesserThanMetadata(Metadata metadata, Readable field2) {
-        return new NumericFunctionMetadata(metadata, lesser_than, valueMetadata(field2));
+        return new NumericFunctionMetadata(metadata, lesser_than, readableMetadata(field2));
     }
 
     public static NumericFunctionMetadata lesserThanMetadata(Metadata metadata, DslField<?> field2) {
@@ -89,6 +89,10 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
 
     public static NumericFunctionMetadata lesserOrEqualsMetadata(Metadata metadata, Object value) {
         return new NumericFunctionMetadata(metadata, lesser_or_equals, valueMetadata(value));
+    }
+
+    public static NumericFunctionMetadata lesserOrEqualsMetadata(Metadata metadata, Readable value) {
+        return new NumericFunctionMetadata(metadata, lesser_or_equals, readableMetadata(value));
     }
 
     public static NumericFunctionMetadata lesserOrEqualsMetadata(Metadata metadata, DslField<?> field2) {

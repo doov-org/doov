@@ -83,6 +83,18 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
     }
 
     /**
+     * See {@link TemporalFunction#minus(NumericFunction, TemporalUnit)}
+     *
+     * @param function the minus function
+     * @param unit the minus unit
+     * @return the step condition
+     * @see TemporalFunction#minus(NumericFunction, TemporalUnit)
+     */
+    default TemporalFunction<N> minus(NumericFunction<Integer> function, TemporalUnit unit) {
+        return getTemporalFunction().minus(function, unit);
+    }
+
+    /**
      * See {@link TemporalFunction#minus(NumericFieldInfo, TemporalUnit)}
      *
      * @param value the years to remove
@@ -115,6 +127,18 @@ public interface TemporalFieldInfo<N extends Temporal> extends BaseFieldInfo<N> 
      */
     default TemporalFunction<N> plus(NumericFieldInfo<Integer> value, TemporalUnit unit) {
         return getTemporalFunction().plus(value, unit);
+    }
+
+    /**
+     * See {@link TemporalFunction#plus(NumericFunction, TemporalUnit)}
+     *
+     * @param function the plus function
+     * @param unit the plus unit
+     * @return the step condition
+     * @see TemporalFunction#plus(NumericFunction, TemporalUnit)
+     */
+    default TemporalFunction<N> plus(NumericFunction<Integer> function, TemporalUnit unit) {
+        return getTemporalFunction().plus(function, unit);
     }
 
     /**

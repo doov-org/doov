@@ -32,7 +32,7 @@ import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 
 /**
- * @see StringCondition
+ * @see io.doov.core.dsl.impl.base.StringFunction
  */
 public class StringConditionTest {
     private static Locale LOCALE = Locale.US;
