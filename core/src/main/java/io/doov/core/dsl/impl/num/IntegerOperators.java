@@ -46,6 +46,11 @@ public interface IntegerOperators extends NumericOperators<Integer> {
     }
 
     @Override
+    default BinaryOperator<Integer> maxFunction() {
+        return Integer::max;
+    }
+
+    @Override
     default BinaryOperator<Integer> sumFunction() {
         return Integer::sum;
     }

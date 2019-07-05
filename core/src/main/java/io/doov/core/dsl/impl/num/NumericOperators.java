@@ -30,6 +30,8 @@ public interface NumericOperators<N extends Number> {
 
     BinaryOperator<N> minFunction();
 
+    BinaryOperator<N> maxFunction();
+
     BinaryOperator<N> sumFunction();
 
     BinaryOperator<N> minusFunction();

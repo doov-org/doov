@@ -34,6 +34,7 @@ public enum DefaultOperator implements Operator {
     count("count"), //
     sum("sum"), //
     min("min"), //
+    max("max"), //
     not("not", BOOLEAN), //
     always_true("always true", BOOLEAN), //
     always_false("always false", BOOLEAN), //

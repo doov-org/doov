@@ -45,6 +45,11 @@ public interface LongOperators extends NumericOperators<Long> {
     }
 
     @Override
+    default BinaryOperator<Long> maxFunction() {
+        return Long::max;
+    }
+
+    @Override
     default BinaryOperator<Long> sumFunction() {
         return Long::sum;
     }

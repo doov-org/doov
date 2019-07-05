@@ -268,8 +268,8 @@ public class DOOV {
      * Start defining a value mapping for an Iterable field
      *
      * @param value value
-     * @param <I> value type
-     * @param <C> container type
+     * @param <I>   value type
+     * @param <C>   container type
      * @return value step map
      */
     public static <I, C extends Iterable<I>> IterableStepMap<I, C> mapIter(C value) {
@@ -324,10 +324,10 @@ public class DOOV {
     /**
      * Start defining a context-aware value mapping
      *
-     * @param input mapping input
+     * @param input  mapping input
      * @param input2 mapping input
-     * @param <I>   value type
-     * @param <J>   value type 2
+     * @param <I>    value type
+     * @param <J>    value type 2
      * @return value map step
      */
     public static <I, J> BiContextawareStepMap<I, J> map(MappingInput<I> input, MappingInput<J> input2) {
@@ -337,10 +337,10 @@ public class DOOV {
     /**
      * Start defining a context-aware value mapping
      *
-     * @param valueFunction context dependent value function
+     * @param valueFunction  context dependent value function
      * @param valueFunction2 context dependent value function
-     * @param <I>           value type
-     * @param <J>           value type
+     * @param <I>            value type
+     * @param <J>            value type
      * @return value map step
      */
     public static <I, J> BiContextawareStepMap<I, J> map(BiFunction<FieldModel, Context, I> valueFunction,
@@ -429,6 +429,58 @@ public class DOOV {
     }
 
     /**
+     * See {@link NumericFunction#min(List)}
+     *
+     * @param <N>     the type of the field infos
+     * @param numbers the fields to minimize
+     * @return the numeric condition
+     * @see NumericFunction#min(List)
+     */
+    @SafeVarargs
+    public static <N extends Number> NumericFunction<N> min(NumericFunction<N>... numbers) {
+        return Arrays.stream(numbers)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(c -> c.minFunctions(Arrays.asList(numbers)))
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    /**
+     * See {@link NumericFunction#max(List)}
+     *
+     * @param <N>    the type of the field infos
+     * @param fields the fields to minimize
+     * @return the numeric condition
+     * @see NumericFunction#max(List)
+     */
+    @SafeVarargs
+    public static <N extends Number> NumericFunction<N> max(NumericFieldInfo<N>... fields) {
+        return Arrays.stream(fields)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(NumericFieldInfo::getNumericFunction)
+                .map(c -> c.max(Arrays.asList(fields)))
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    /**
+     * See {@link NumericFunction#max(List)}
+     *
+     * @param <N>     the type of the field infos
+     * @param numbers the fields to minimize
+     * @return the numeric condition
+     * @see NumericFunction#max(List)
+     */
+    @SafeVarargs
+    public static <N extends Number> NumericFunction<N> max(NumericFunction<N>... numbers) {
+        return Arrays.stream(numbers)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(c -> c.maxFunctions(Arrays.asList(numbers)))
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    /**
      * See {@link NumericFunction#sum(List)}
      *
      * @param <N>    the type of the field infos
@@ -467,7 +519,8 @@ public class DOOV {
         return new TemplateSpec.Template2<>(param1, param2);
     }
 
-    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>> TemplateSpec.Template3<T1, T2, T3> template(
+    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>> TemplateSpec.Template3<T1,
+            T2, T3> template(
             Supplier<TemplateParam<T1>> param1,
             Supplier<TemplateParam<T2>> param2,
             Supplier<TemplateParam<T3>> param3) {
@@ -482,7 +535,8 @@ public class DOOV {
         return new TemplateSpec.Template4<>(param1, param2, param3, param4);
     }
 
-    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>, T5 extends DslField<?>> TemplateSpec.Template5<T1, T2, T3, T4, T5> template(
+    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>,
+            T5 extends DslField<?>> TemplateSpec.Template5<T1, T2, T3, T4, T5> template(
             Supplier<TemplateParam<T1>> param1,
             Supplier<TemplateParam<T2>> param2,
             Supplier<TemplateParam<T3>> param3,
@@ -492,17 +546,16 @@ public class DOOV {
     }
 
     /**
-     * Wrap given value into a function using the given function constructor reference
-     * Ex.
+     * Wrap given value into a function using the given function constructor reference Ex.
      * <pre>
      * <code class='java'>StringFunction function = DOOV.lift(value, StringFunction::new);</code>
      * </pre>
      *
-     * @param value value
+     * @param value          value
      * @param constructorRef function constructor reference
-     * @param <T> value type
-     * @param <F> function type
-     * @param <M> valuemetadata type
+     * @param <T>            value type
+     * @param <F>            function type
+     * @param <M>            valuemetadata type
      * @return function that wraps the given value
      */
     public static <T, F extends io.doov.core.dsl.field.types.Function<T>, M extends ValuePredicateMetadata<M>> F lift(
@@ -513,14 +566,13 @@ public class DOOV {
     }
 
     /**
-     * Wrap given value into a function using the given function constructor reference
-     * Ex.
+     * Wrap given value into a function using the given function constructor reference Ex.
      * <pre>
      * <code class='java'>IterableFunction&lt;Integer, List&lt;Integer&gt;&gt; function = DOOV.lift(1, 2, 3, 4);</code>
      * </pre>
      *
      * @param value value
-     * @param <T> value type
+     * @param <T>   value type
      * @return function that wraps the given value
      */
     @SafeVarargs
@@ -531,10 +583,11 @@ public class DOOV {
 
     /**
      * Wrap given field into a function using the given function constructor reference
-     * @param field field
+     *
+     * @param field          field
      * @param constructorRef function constructor reference
-     * @param <T> field value type
-     * @param <F> function type
+     * @param <T>            field value type
+     * @param <F>            function type
      * @return function that wraps the given field
      */
     public static <T, F extends io.doov.core.dsl.field.types.Function<T>> F fieldFunction(DslField<T> field,
