@@ -15,6 +15,8 @@
  */
 package io.doov.core.dsl.field.types;
 
+import java.util.Locale;
+
 import io.doov.core.dsl.field.BaseFieldInfo;
 import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
@@ -99,6 +101,108 @@ public interface TextFieldInfo extends BaseFieldInfo<String> {
      */
     default IntegerFunction parseInt() {
         return getStringFunction().parseInt();
+    }
+
+    /**
+     * See {@link StringFunction#trim()}
+     *
+     * @return the string function
+     * @see StringFunction#trim()
+     */
+    default StringFunction trim() {
+        return getStringFunction().trim();
+    }
+
+    /**
+     * See {@link StringFunction#replaceAll(String, String)}
+     *
+     * @param regex regex string
+     * @param replacement replacement function
+     * @return the string function
+     * @see StringFunction#replaceAll(String, String)
+     */
+    default StringFunction replaceAll(String regex, String replacement) {
+        return getStringFunction().replaceAll(regex, replacement);
+    }
+
+    /**
+     * See {@link StringFunction#replaceAll(Function, Function)}
+     *
+     * @param regex regex function
+     * @param replacement replacement function
+     * @return the string function
+     * @see StringFunction#replaceAll(Function, Function)
+     */
+    default StringFunction replaceAll(Function<String> regex, Function<String> replacement) {
+        return getStringFunction().replaceAll(regex, replacement);
+    }
+
+    /**
+     * See {@link StringFunction#substring(Function, Function)}
+     *
+     * @param beginIndex begin index
+     * @param endIndex enc index
+     * @return the string function
+     * @see StringFunction#substring(Function, Function)
+     */
+    default StringFunction substring(int beginIndex, int endIndex) {
+        return getStringFunction().substring(beginIndex, endIndex);
+    }
+
+    /**
+     * See {@link StringFunction#substring(Function, Function)}
+     *
+     * @param beginIndexFunction regex function
+     * @param endIndexFunction replacement function
+     * @return the string function
+     * @see StringFunction#substring(Function, Function)
+     */
+    default StringFunction substring(Function<Integer> beginIndexFunction, Function<Integer> endIndexFunction) {
+        return getStringFunction().substring(beginIndexFunction, endIndexFunction);
+    }
+
+    /**
+     * See {@link StringFunction#upperCase(Locale)}
+     *
+     * @param locale locale
+     * @return the string function
+     * @see StringFunction#upperCase(Locale)
+     */
+    default StringFunction upperCase(Locale locale) {
+        return getStringFunction().upperCase(locale);
+    }
+
+    /**
+     * See {@link StringFunction#lowerCase(Locale)}
+     *
+     * @param locale locale
+     * @return the string function
+     * @see StringFunction#lowerCase(Locale)
+     */
+    default StringFunction lowerCase(Locale locale) {
+        return getStringFunction().lowerCase(locale);
+    }
+
+    /**
+     * See {@link StringFunction#concat(String)}
+     *
+     * @param other string to concat
+     * @return the string function
+     * @see StringFunction#concat(String)
+     */
+    default StringFunction concat(String other) {
+        return getStringFunction().concat(other);
+    }
+
+    /**
+     * See {@link StringFunction#concat(Function)}
+     *
+     * @param other string function to concat
+     * @return the string function
+     * @see StringFunction#concat(Function)
+     */
+    default StringFunction concat(Function<String> other) {
+        return getStringFunction().concat(other);
     }
 
     /**

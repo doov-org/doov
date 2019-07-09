@@ -74,8 +74,20 @@ public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends
         return new ValuePredicateMetadata<M>(LEAF_VALUE).valueReadable(readable);
     }
 
+    public static <M extends ValuePredicateMetadata<M>> M readableMetadata(Readable... readables) {
+        ValuePredicateMetadata<M> metadata = new ValuePredicateMetadata<>(LEAF_VALUE);
+        for (Readable readable : readables) {
+            metadata.valueReadable(readable);
+        }
+        return (M) metadata;
+    }
+
     public static <M extends ValuePredicateMetadata<M>> M stringMetadata(String value) {
         return new ValuePredicateMetadata<M>(LEAF_VALUE).valueString(value);
+    }
+
+    public static <M extends ValuePredicateMetadata<M>> M stringMetadata(String value, String value2) {
+        return new ValuePredicateMetadata<M>(LEAF_VALUE).valueString(value).valueString(value2);
     }
 
     public static <M extends ValuePredicateMetadata<M>> M unknownMetadata(String value) {

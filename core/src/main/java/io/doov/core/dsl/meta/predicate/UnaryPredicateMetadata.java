@@ -61,6 +61,12 @@ public class UnaryPredicateMetadata extends UnaryMetadata implements PredicateMe
         return new UnaryPredicateMetadata(length_is, metadata);
     }
 
+    // trim
+
+    public static UnaryPredicateMetadata trimMetadata(Metadata metadata) {
+        return new UnaryPredicateMetadata(trim, metadata);
+    }
+
     // null
 
     public static UnaryPredicateMetadata nullMetadata(Metadata metadata) {

@@ -72,6 +72,12 @@ public enum DefaultOperator implements Operator {
     is_empty("is empty", BOOLEAN), //
     is_not_empty("is not empty", BOOLEAN), //
     length_is("length is"), //
+    trim("trim"), //
+    concat("concat"), //
+    replace_all("replace all"), //
+    substring("substring"), //
+    upper_case("upper case"), //
+    lower_case("lower case"), //
     lambda("-function-"), //
 
     // TemporalAdjuster
