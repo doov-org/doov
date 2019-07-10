@@ -15,12 +15,16 @@
  */
 package io.doov.core.dsl.meta.function;
 
-import static io.doov.core.dsl.meta.DefaultOperator.contains;
-import static io.doov.core.dsl.meta.DefaultOperator.ends_with;
-import static io.doov.core.dsl.meta.DefaultOperator.matches;
-import static io.doov.core.dsl.meta.DefaultOperator.starts_with;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.readableMetadata;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.stringMetadata;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueListMetadata;
+import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
 
+import java.util.Arrays;
+import java.util.Locale;
+
+import io.doov.core.dsl.field.types.Function;
 import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.Operator;
@@ -49,6 +53,44 @@ public class StringFunctionMetadata extends BinaryPredicateMetadata {
 
     public static StringFunctionMetadata endsWithMetadata(Metadata metadata, String value) {
         return new StringFunctionMetadata(metadata, ends_with, stringMetadata(value));
+    }
+
+    public static StringFunctionMetadata replaceAllMetadata(Metadata metadata, String regex, String replacement) {
+        return new StringFunctionMetadata(metadata, replace_all, stringMetadata(regex, replacement));
+    }
+
+    public static StringFunctionMetadata replaceAllMetadata(Metadata metadata, Function<String> value,
+            Function<String> replacement) {
+        return new StringFunctionMetadata(metadata, concat,
+                readableMetadata(value.getMetadata(), replacement.getMetadata()));
+    }
+
+    public static StringFunctionMetadata substringMetadata(Metadata metadata, int beginIndex, int endIndex) {
+        return new StringFunctionMetadata(metadata, substring, valueListMetadata(Arrays.asList(beginIndex, endIndex)));
+    }
+
+    public static StringFunctionMetadata substringMetadata(Metadata metadata, Function<Integer> value,
+            Function<Integer> replacement) {
+        return new StringFunctionMetadata(metadata, substring,
+                readableMetadata(value.getMetadata(), replacement.getMetadata()));
+    }
+
+
+
+    public static StringFunctionMetadata upperCaseMetadata(Metadata metadata, Locale locale) {
+        return new StringFunctionMetadata(metadata, upper_case, valueMetadata(locale));
+    }
+
+    public static StringFunctionMetadata lowerCaseMetadata(Metadata metadata, Locale locale) {
+        return new StringFunctionMetadata(metadata, lower_case, valueMetadata(locale));
+    }
+
+    public static StringFunctionMetadata concatMetadata(Metadata metadata, String value) {
+        return new StringFunctionMetadata(metadata, concat, stringMetadata(value));
+    }
+
+    public static StringFunctionMetadata concatMetadata(Metadata metadata, Function<String> value) {
+        return new StringFunctionMetadata(metadata, concat, value.getMetadata());
     }
 
 }

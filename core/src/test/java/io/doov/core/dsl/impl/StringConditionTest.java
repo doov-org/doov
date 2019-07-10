@@ -26,6 +26,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.field.types.StringFieldInfo;
+import io.doov.core.dsl.impl.base.StringFunction;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.meta.Metadata;
@@ -34,11 +35,12 @@ import io.doov.core.dsl.runtime.GenericModel;
 /**
  * @see io.doov.core.dsl.impl.base.StringFunction
  */
-public class StringConditionTest {
+class StringConditionTest {
     private static Locale LOCALE = Locale.US;
     private ValidationRule rule;
     private GenericModel model = new GenericModel();
     private StringFieldInfo A = model.stringField("value", "A");
+    private StringFieldInfo B = model.stringField(" value ", "B");
     private Result result;
     private Metadata reduce;
 
@@ -85,6 +87,68 @@ public class StringConditionTest {
         assertThat(rule.readable(LOCALE)).isEqualTo("rule when A ends with 'zz' validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A ends with 'zz'");
     }
+
+    @Test
+    void trim() {
+        StringFunction function = B.trim();
+        String functionValue = function.read(model, new DefaultContext(function.metadata));
+
+        assertThat(function.readable(LOCALE)).isEqualTo("B trim");
+        assertThat(functionValue).isEqualTo("value");
+    }
+
+    @Test
+    void replaceAll() {
+        StringFunction function = B.replaceAll("value", "other");
+        String functionValue = function.read(model, new DefaultContext(function.metadata));
+
+        assertThat(function.readable(LOCALE)).isEqualTo("B replace all 'value' 'other'");
+        assertThat(functionValue).isEqualTo(" other ");
+    }
+
+    @Test
+    void substring() {
+        StringFunction function = A.substring(1, 3);
+        String functionValue = function.read(model, new DefaultContext(function.metadata));
+
+        assertThat(function.readable(LOCALE)).isEqualTo("A substring  : 1, 3");
+        assertThat(functionValue).isEqualTo("al");
+    }
+
+    @Test
+    void upperCase() {
+        StringFunction function = A.upperCase(LOCALE);
+        String functionValue = function.read(model, new DefaultContext(function.metadata));
+
+        assertThat(function.readable(LOCALE)).isEqualTo("A upper case en_US");
+        assertThat(functionValue).isEqualTo("VALUE");
+    }
+
+    @Test
+    void lowerCase() {
+        StringFunction function = A.lowerCase(LOCALE);
+        String functionValue = function.read(model, new DefaultContext(function.metadata));
+
+        assertThat(function.readable(LOCALE)).isEqualTo("A lower case en_US");
+        assertThat(functionValue).isEqualTo("value");
+    }
+
+    @Test
+    void concat() {
+        StringFunction function = A.concat("zz");
+        String functionValue = function.read(model, new DefaultContext(function.metadata));
+
+        assertThat(function.readable(LOCALE)).isEqualTo("A concat 'zz'");
+        assertThat(functionValue).isEqualTo("valuezz");
+
+        function = A.concat(B.getStringFunction());
+        functionValue = function.read(model, new DefaultContext(function.metadata));
+
+        assertThat(function.readable(LOCALE)).isEqualTo("A concat B");
+        assertThat(functionValue).isEqualTo("value value ");
+    }
+
+
 
     @AfterEach
     void afterEach() {
