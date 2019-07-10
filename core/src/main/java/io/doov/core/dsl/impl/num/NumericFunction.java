@@ -16,6 +16,7 @@
 package io.doov.core.dsl.impl.num;
 
 import static io.doov.core.dsl.meta.function.NumericFunctionMetadata.*;
+import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.maxMetadata;
 import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.minMetadata;
 import static io.doov.core.dsl.meta.predicate.NaryPredicateMetadata.sumMetadata;
 import static java.util.stream.Collectors.toList;
@@ -314,6 +315,45 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
                 (model, context) -> fields.stream().map(f -> Optional.ofNullable(model.<N> get(f.id())))
                         .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
                         .reduce(minFunction()));
+    }
+
+    /**
+     * Returns a numeric function that returns the min value of the given field values.
+     *
+     * @param numbers the field values to minimize
+     * @return the numeric function
+     */
+    public final NumericFunction<N> minFunctions(List<NumericFunction<N>> numbers) {
+        return numericFunction(minMetadata(getMetadataForConditions(numbers)),
+                (model, context) -> numbers.stream().map(f -> Optional.ofNullable(f.read(model, context)))
+                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+                        .reduce(minFunction()));
+    }
+
+    /**
+     * Returns a numeric function that returns the max value of the given field values.
+     *
+     * @param fields the field values to maximize
+     * @return the numeric function
+     */
+    public final NumericFunction<N> max(List<NumericFieldInfo<N>> fields) {
+        return numericFunction(maxMetadata(getMetadataForFields(fields)),
+                (model, context) -> fields.stream().map(f -> Optional.ofNullable(model.<N> get(f.id())))
+                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+                        .reduce(maxFunction()));
+    }
+
+    /**
+     * Returns a numeric function that returns the max value of the given field values.
+     *
+     * @param numbers the field values to maximize
+     * @return the numeric function
+     */
+    public final NumericFunction<N> maxFunctions(List<NumericFunction<N>> numbers) {
+        return numericFunction(maxMetadata(getMetadataForConditions(numbers)),
+                (model, context) -> numbers.stream().map(f -> Optional.ofNullable(f.read(model, context)))
+                        .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
+                        .reduce(maxFunction()));
     }
 
     /**

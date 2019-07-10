@@ -46,6 +46,11 @@ public interface FloatOperators extends NumericOperators<Float> {
     }
 
     @Override
+    default BinaryOperator<Float> maxFunction() {
+        return Float::max;
+    }
+
+    @Override
     default BinaryOperator<Float> sumFunction() {
         return Float::sum;
     }

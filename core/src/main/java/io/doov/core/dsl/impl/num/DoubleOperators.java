@@ -45,6 +45,11 @@ public interface DoubleOperators extends NumericOperators<Double> {
     }
 
     @Override
+    default BinaryOperator<Double> maxFunction() {
+        return Double::max;
+    }
+
+    @Override
     default BinaryOperator<Double> sumFunction() {
         return Double::sum;
     }

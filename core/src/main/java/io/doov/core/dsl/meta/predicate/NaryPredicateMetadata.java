@@ -72,6 +72,10 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
         return new NaryPredicateMetadata(min, values);
     }
 
+    public static NaryPredicateMetadata maxMetadata(List<Metadata> values) {
+        return new NaryPredicateMetadata(max, values);
+    }
+
     @Override
     public Metadata reduce(Context context, ReduceType type) {
         if (getOperator() == match_all || getOperator() == match_any) {
