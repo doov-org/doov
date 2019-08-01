@@ -1,0 +1,42 @@
+import {Component, Inject, InjectionToken} from '@angular/core';
+import {TestService1} from './_jangbridge/services/TestService1.service';
+import {Entity1} from './_jangbridge/model/Entity1.model';
+
+
+export const
+    TestService1_MyVariant = new InjectionToken<TestService1>('Contains all fields for AppComponent'),
+    FOO_BAR = 'Hello World!'
+    ;
+
+
+class Noise {
+  private testService1 = {
+    getEntities1() {}
+  };
+
+  constructor(private noise: TestService1) {}
+
+  foo() {
+    let foo = this.testService1.getEntities1();
+  }
+}
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'app';
+  leEntities: Entity1[];
+
+  constructor(private testService1: TestService1, @Inject(TestService1_MyVariant) private testService1Var1: TestService1) {
+    this.testService1.getEntities1().subscribe(value => this.leEntities = value);
+  }
+
+  loadVariant() {
+    this.testService1Var1.getEntities1().subscribe(value => this.leEntities = value);
+  }
+}
+

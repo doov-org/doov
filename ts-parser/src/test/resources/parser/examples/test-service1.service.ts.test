@@ -1,0 +1,45 @@
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs/Observable';
+
+
+import {Entity1} from '../model/Entity1.model';
+
+
+@Injectable()
+export class TestService1 {
+
+  private _foobar;
+
+  get foobar() {
+    return this._foobar;
+  }
+
+  set foobar(value) {
+    this._foobar = value;
+  }
+
+
+  constructor(protected http: HttpClient) {
+  }
+
+
+  getEntities1(): Observable<Entity1[]> {
+
+    return this.http.get<Entity1[]>('http://localhost:8080/jangbridge/VGVzdFNlcnZpY2UxI2dldEVudGl0aWVzMQ==');
+  }
+
+}
+
+
+/*@Injectable()
+export class TestService1MyVariant extends TestService1 {
+
+
+  getEntities1(): Observable<Entity1[]> {
+
+    return this.http.get<Entity1[]>('http://localhost:8080/jangbridge/VGVzdFNlcnZpY2UxI015VmFyaWFudCNnZXRFbnRpdGllczE=');
+  }
+
+}*/

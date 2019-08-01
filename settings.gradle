@@ -1,5 +1,6 @@
 rootProject.name='dOOv'
 
+include 'doov-ts-parser'
 include 'doov-assertions-core'
 include 'doov-core'
 include 'doov-assertions'
@@ -8,6 +9,7 @@ include 'doov-gradle-generator'
 include 'doov-maven-generator'
 include 'doov-js-extension'
 
+project(':doov-ts-parser').projectDir = file('ts-parser')
 project(':doov-assertions-core').projectDir = file('assertions-core')
 project(':doov-core').projectDir = file('core')
 project(':doov-assertions').projectDir = file('assertions')

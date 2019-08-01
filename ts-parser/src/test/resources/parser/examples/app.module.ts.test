@@ -1,0 +1,25 @@
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+
+
+import {AppComponent, TestService1_MyVariant} from './app.component';
+import {TestService1} from './_jangbridge/services/TestService1.service';
+import {HttpClientModule} from '@angular/common/http';
+import {JAngbridgeModule} from './_jangbridge/jangbridge.module';
+
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule, JAngbridgeModule
+  ],
+  providers: [
+    // TestService1,
+    // {provide: TestService1_MyVariant, useClass: TestService1}
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
