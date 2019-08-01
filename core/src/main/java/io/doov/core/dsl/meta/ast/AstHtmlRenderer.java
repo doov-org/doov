@@ -356,13 +356,11 @@ public class AstHtmlRenderer {
         writer.writeBeginSpan();
         writer.write("{");
         writer.writeEndSpan();
-        writer.writeBeginSpan(CSS_TEMPLATE_PARAM);
-        writer.write(metadata.childAt(0).readable(writer.getLocale()));
-        writer.writeEndSpan();
-        if (metadata.getRight().type() != EMPTY) {
-            writer.writeBeginSpan(CSS_OPERATOR);
-            writer.writeFromBundle(metadata.getOperator());
+        if (metadata.getRight().type() == EMPTY) {
+            writer.writeBeginSpan(CSS_TEMPLATE_PARAM);
+            writer.write(metadata.childAt(0).readable(writer.getLocale()));
             writer.writeEndSpan();
+        } else {
             writer.writeBeginSpan(CSS_FIELD);
             handleField(metadata.childAt(1));
             writer.writeEndSpan();

@@ -167,8 +167,8 @@ public class MarkdownMappingTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(6);
         assertThat(node).textNodes().containsExactly("mappings",
-                "when", "{$String|stringField} = 'Yahoo'",
-                "then", "map 'www.yahou.com'", "to {$String|stringField2}");
+                "when", "{stringField} = 'Yahoo'",
+                "then", "map 'www.yahou.com'", "to {stringField2}");
     }
 
     @Test
@@ -185,12 +185,12 @@ public class MarkdownMappingTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(19);
         assertThat(node).textNodes().containsExactly("mappings",
-                "mappings", "when", "{$String|stringField} = 'bing'",
-                "then", "map 'www.bingue.com'", "to {$String|stringField2}",
-                "mappings", "when", "{$String|stringField} = 'Google'",
-                "then", "map 'www.gougeule.com'", "to {$String|stringField2}",
-                "mappings", "when", "{$String|stringField} = 'Yahoo'",
-                "then", "map 'www.yahou.com'", "to {$String|stringField2}");
+                "mappings", "when", "{stringField} = 'bing'",
+                "then", "map 'www.bingue.com'", "to {stringField2}",
+                "mappings", "when", "{stringField} = 'Google'",
+                "then", "map 'www.gougeule.com'", "to {stringField2}",
+                "mappings", "when", "{stringField} = 'Yahoo'",
+                "then", "map 'www.yahou.com'", "to {stringField2}");
     }
 
     @AfterEach

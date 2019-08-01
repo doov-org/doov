@@ -1,17 +1,14 @@
 /*
  * Copyright 2018 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.core.dsl.meta.ast;
 
@@ -130,9 +127,8 @@ public class HtmlMappingTest {
 
     @Test
     void mappings_to_int_field_and_boolean_field() {
-        ctx = mappings(map(18).to(intField),
-                map(true).to(booleanField),
-                map(LocalDate.of(2000, 1, 1)).to(dateField)).executeOn(model, model);
+        ctx = mappings(map(18).to(intField), map(true).to(booleanField), map(LocalDate.of(2000, 1, 1)).to(dateField))
+                        .executeOn(model, model);
         doc = documentOf(ctx);
         assertThat(doc).percentageValue_DIV().isEmpty();
         assertThat(doc).nary_OL().hasSize(0);
@@ -154,9 +150,8 @@ public class HtmlMappingTest {
 
     @Test
     void mapping_to_date_field_with_converter() {
-        ctx = map(LocalDate.of(2000, 1, 1))
-                .using(converter(date -> date.toString(), "empty", "date to string"))
-                .to(stringField).executeOn(model, model);
+        ctx = map(LocalDate.of(2000, 1, 1)).using(converter(date -> date.toString(), "empty", "date to string"))
+                        .to(stringField).executeOn(model, model);
         doc = documentOf(ctx);
         assertThat(doc).percentageValue_DIV().isEmpty();
         assertThat(doc).nary_OL().hasSize(0);
@@ -179,9 +174,9 @@ public class HtmlMappingTest {
     @Test
     void mapping_to_string_field_with_converter() {
         ctx = map(stringField, stringField2)
-                .using(biConverter((stringField, stringField2) -> stringField + " " + stringField2, "",
-                        "combine names"))
-                .to(stringField2).executeOn(model, model);
+                        .using(biConverter((stringField, stringField2) -> stringField + " " + stringField2, "",
+                                        "combine names"))
+                        .to(stringField2).executeOn(model, model);
         doc = documentOf(ctx);
         assertThat(doc).percentageValue_DIV().isEmpty();
         assertThat(doc).nary_OL().hasSize(0);
@@ -203,9 +198,8 @@ public class HtmlMappingTest {
 
     @Test
     void conditional_mapping_to_boolean_field() {
-        ctx = when(dateField.ageAt(dateField2).greaterOrEquals(18))
-                .then(map(true).to(booleanField))
-                .otherwise(map(false).to(booleanField)).executeOn(model, model);
+        ctx = when(dateField.ageAt(dateField2).greaterOrEquals(18)).then(map(true).to(booleanField))
+                        .otherwise(map(false).to(booleanField)).executeOn(model, model);
         doc = documentOf(ctx);
         assertThat(doc).percentageValue_DIV().containsExactly("0 %");
         assertThat(doc).nary_OL().hasSize(0);
@@ -228,8 +222,8 @@ public class HtmlMappingTest {
     @Test
     void template_conditional_mapping_to_string_field() {
         ctx = template($String, $String)
-                .mapping((site, url) -> when(site.eq("Yahoo")).then(map("www.yahou.com").to(url)))
-                .bind(stringField, stringField2).executeOn(model, model);
+                        .mapping((site, url) -> when(site.eq("Yahoo")).then(map("www.yahou.com").to(url)))
+                        .bind(stringField, stringField2).executeOn(model, model);
         doc = documentOf(ctx);
         assertThat(doc).percentageValue_DIV().containsExactly("0 %");
         assertThat(doc).nary_OL().hasSize(0);
@@ -244,19 +238,18 @@ public class HtmlMappingTest {
         assertThat(doc).tokenThen_SPAN().hasSize(1);
         assertThat(doc).tokenElse_SPAN().hasSize(0);
         assertThat(doc).tokenSingleMapping_SPAN().hasSize(1);
-        assertThat(doc).tokenOperator_SPAN().containsExactly("|", "=", "map", "to", "|");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("=", "map", "to");
         assertThat(doc).tokenValue_SPAN().containsExactly("'Yahoo'", "www.yahou.com");
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
     @Test
     void template_conditional_mappings_to_string_field() {
-        ctx = template($String, $String).mappings(
-                (site, url) -> mappings(
-                        when(site.eq("bing")).then(map("www.bingue.com").to(url)),
-                        when(site.eq("Google")).then(map("www.gougeule.com").to(url)),
-                        when(site.eq("Yahoo")).then(map("www.yahou.com").to(url))))
-                .bind(stringField, stringField2).executeOn(model, model);
+        ctx = template($String, $String)
+                        .mappings((site, url) -> mappings(when(site.eq("bing")).then(map("www.bingue.com").to(url)),
+                                        when(site.eq("Google")).then(map("www.gougeule.com").to(url)),
+                                        when(site.eq("Yahoo")).then(map("www.yahou.com").to(url))))
+                        .bind(stringField, stringField2).executeOn(model, model);
         doc = documentOf(ctx);
         assertThat(doc).percentageValue_DIV().containsExactly("0 %", "0 %", "0 %");
         assertThat(doc).nary_OL().hasSize(0);
@@ -271,11 +264,9 @@ public class HtmlMappingTest {
         assertThat(doc).tokenThen_SPAN().hasSize(3);
         assertThat(doc).tokenElse_SPAN().hasSize(0);
         assertThat(doc).tokenSingleMapping_SPAN().hasSize(3);
-        assertThat(doc).tokenOperator_SPAN()
-                .containsExactly("|", "=", "map", "to", "|", "|", "=", "map", "to", "|", "|", "=", "map", "to", "|");
-        assertThat(doc).tokenValue_SPAN()
-                .containsExactly("'bing'", "www.bingue.com", "'Google'", "www.gougeule.com", "'Yahoo'",
-                        "www.yahou.com");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("=", "map", "to", "=", "map", "to", "=", "map", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("'bing'", "www.bingue.com", "'Google'", "www.gougeule.com",
+                        "'Yahoo'", "www.yahou.com");
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 

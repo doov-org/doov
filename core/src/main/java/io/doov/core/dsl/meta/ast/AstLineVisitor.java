@@ -80,7 +80,7 @@ public class AstLineVisitor extends AstTextVisitor {
     @Override
     public void afterChildBinary(BinaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
         if (metadata.type() == TEMPLATE_PARAM && metadata.getRight().type() != EMPTY) {
-            sb.append(bundle.get(metadata.getOperator(), locale));
+            //sb.append(bundle.get(metadata.getOperator(), locale));
         } else if (hasNext && metadata.type() != TEMPLATE_PARAM) {
             sb.append(bundle.get(metadata.getOperator(), locale));
             sb.append(formatNewLine());

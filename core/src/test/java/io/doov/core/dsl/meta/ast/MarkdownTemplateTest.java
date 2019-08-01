@@ -36,7 +36,7 @@ public class MarkdownTemplateTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(4);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "{$String|param1} contains 'google'",
+                "{param1} contains 'google'",
                 "validate");
     }
 
@@ -51,7 +51,7 @@ public class MarkdownTemplateTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(4);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "{$String|param1} contains {$String|param2} as a string -function-",
+                "{param1} contains {param2} as a string -function-",
                 "validate");
     }
 
@@ -65,7 +65,7 @@ public class MarkdownTemplateTest {
         assertThat(node).countListItem().isEqualTo(2);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(2);
-        assertThat(node).textNodes().containsExactly("map {$String|param1}", "to {$String|param2}");
+        assertThat(node).textNodes().containsExactly("map {param1}", "to {param2}");
     }
 
     @AfterEach
