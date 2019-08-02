@@ -5,7 +5,7 @@ apply from: 'dependencyVersions.gradle'
 
 allprojects {
     group = 'io.doov'
-    version = "2.7.2"
+    version = "1.0-SNAPSHOT"
 }
 
 buildscript {
