@@ -23,9 +23,7 @@ import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
 
 import java.util.Locale;
 
-import io.doov.core.dsl.meta.BinaryMetadata;
-import io.doov.core.dsl.meta.Metadata;
-import io.doov.core.dsl.meta.NaryMetadata;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class AstLineVisitor extends AstTextVisitor {
@@ -79,13 +77,13 @@ public class AstLineVisitor extends AstTextVisitor {
 
     @Override
     public void afterChildBinary(BinaryMetadata metadata, Metadata child, boolean hasNext, int depth) {
-        if (metadata.type() == TEMPLATE_PARAM && metadata.getRight().type() != EMPTY) {
-            //sb.append(bundle.get(metadata.getOperator(), locale));
-        } else if (hasNext && metadata.type() != TEMPLATE_PARAM) {
-            sb.append(bundle.get(metadata.getOperator(), locale));
-            sb.append(formatNewLine());
-        } else if (hasNext) {
-            sb.append(formatNewLine());
+        if (metadata.type() != TEMPLATE_PARAM || metadata.getRight().type() == EMPTY) {
+            if (hasNext && metadata.type() != TEMPLATE_PARAM) {
+                sb.append(bundle.get(metadata.getOperator(), locale));
+                sb.append(formatNewLine());
+            } else if (hasNext) {
+                sb.append(formatNewLine());
+            }
         }
     }
 

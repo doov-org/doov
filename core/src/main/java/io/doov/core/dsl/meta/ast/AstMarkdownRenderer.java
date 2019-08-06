@@ -249,9 +249,9 @@ public class AstMarkdownRenderer {
 
     private void templateParam(TemplateParamMetadata metadata) {
         sb.append("{");
-        if (metadata.getRight().type() == EMPTY)
+        if (metadata.getRight().type() == EMPTY) {
             sb.append(metadata.childAt(0).readable(locale));
-        else {
+        } else {
             sb.append(metadata.childAt(1).readable(locale));
         }
         sb.append("}");
