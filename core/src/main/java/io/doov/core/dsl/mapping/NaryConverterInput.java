@@ -5,7 +5,6 @@ package io.doov.core.dsl.mapping;
 
 import static io.doov.core.dsl.meta.MappingInputMetadata.inputMetadata;
 import static io.doov.core.dsl.meta.MappingMetadata.fieldsInput;
-import static io.doov.core.dsl.meta.MappingMetadata.metadataInput;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class NaryConverterInput<T> extends AbstractDSLBuilder implements Mapping
 
     public NaryConverterInput(List<DslField<?>> fields, NaryTypeConverter<T> converter) {
         this.fields = fields;
-        this.metadata = inputMetadata(metadataInput(fieldsInput(fields)), converter.metadata());
+        this.metadata = inputMetadata(converter.metadata(), fieldsInput(fields));
         this.converter = converter;
     }
 

@@ -17,7 +17,7 @@ public class ConverterInput<S, T> extends AbstractDSLBuilder implements MappingI
     public ConverterInput(MappingInput<S> sourceInput, TypeConverter<S, T> typeConverter) {
         this.sourceInput = sourceInput;
         this.typeConverter = typeConverter;
-        this.metadata = MappingInputMetadata.inputMetadata(sourceInput.metadata(), typeConverter.metadata());
+        this.metadata = MappingInputMetadata.inputMetadata(typeConverter.metadata(), sourceInput.metadata());
     }
 
     @Override
