@@ -46,7 +46,7 @@ public class HtmlTemplateTest {
         assertThat(doc).tokenThen_SPAN().hasSize(0);
         assertThat(doc).tokenElse_SPAN().hasSize(0);
         assertThat(doc).tokenSingleMapping_SPAN().hasSize(0);
-        assertThat(doc).tokenOperator_SPAN().containsExactly("|", "contains");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("contains");
         assertThat(doc).tokenValue_SPAN().containsExactly("'google'");
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
@@ -54,9 +54,8 @@ public class HtmlTemplateTest {
     @Test
     void twoParamsTest() {
         Rule2<StringFieldInfo, StringFieldInfo> template = template($String, $String)
-                .rule((url, name) -> url.contains(name.mapToString(String::toLowerCase)));
-        result = template.bind(model.stringField("a", "param1"), model.stringField("b", "param2"))
-                .executeOn(model);
+                        .rule((url, name) -> url.contains(name.mapToString(String::toLowerCase)));
+        result = template.bind(model.stringField("a", "param1"), model.stringField("b", "param2")).executeOn(model);
         doc = documentOf(result);
         assertThat(doc).percentageValue_DIV().containsExactly("0 %");
         assertThat(doc).nary_OL().hasSize(0);
@@ -71,7 +70,7 @@ public class HtmlTemplateTest {
         assertThat(doc).tokenThen_SPAN().hasSize(0);
         assertThat(doc).tokenElse_SPAN().hasSize(0);
         assertThat(doc).tokenSingleMapping_SPAN().hasSize(0);
-        assertThat(doc).tokenOperator_SPAN().containsExactly("|", "contains", "|", "as a string");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("contains", "as a string");
         assertThat(doc).tokenValue_SPAN().isEmpty();
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
@@ -79,9 +78,9 @@ public class HtmlTemplateTest {
     @Test
     void mappingTemplateTest() {
         Map2<StringFieldInfo, StringFieldInfo> template = template($String, $String)
-                .mapping((from, dest) -> map(from).to(dest));
-        context = template.bind(model.stringField("a", "param1"), model.stringField(null, "param2"))
-                .executeOn(model, model);
+                        .mapping((from, dest) -> map(from).to(dest));
+        context = template.bind(model.stringField("a", "param1"), model.stringField(null, "param2")).executeOn(model,
+                        model);
         doc = documentOf(context);
         assertThat(doc).percentageValue_DIV().isEmpty();
         assertThat(doc).nary_OL().hasSize(0);
@@ -96,7 +95,7 @@ public class HtmlTemplateTest {
         assertThat(doc).tokenThen_SPAN().hasSize(0);
         assertThat(doc).tokenElse_SPAN().hasSize(0);
         assertThat(doc).tokenSingleMapping_SPAN().hasSize(1);
-        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "|", "to", "|");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "to");
         assertThat(doc).tokenValue_SPAN().isEmpty();
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }

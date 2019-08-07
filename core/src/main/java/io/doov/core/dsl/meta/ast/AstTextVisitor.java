@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.core.dsl.meta.ast;
 
@@ -23,10 +20,7 @@ import static io.doov.core.dsl.meta.MappingOperator.map;
 import static io.doov.core.dsl.meta.MappingOperator.then;
 import static io.doov.core.dsl.meta.MappingOperator.to;
 import static io.doov.core.dsl.meta.MappingOperator.using;
-import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.MULTIPLE_MAPPING;
-import static io.doov.core.dsl.meta.MetadataType.SINGLE_MAPPING;
-import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_PARAM;
+import static io.doov.core.dsl.meta.MetadataType.*;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Locale;
@@ -57,7 +51,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
         newLineIndex = sb.length();
         return "\n";
     }
-    
+
     protected String formatSpace() {
         return " ";
     }
@@ -65,9 +59,17 @@ public class AstTextVisitor extends AbstractAstVisitor {
     @Override
     public void startLeaf(LeafMetadata<?> metadata, int depth) {
         sb.append(formatCurrentIndent());
-        sb.append(formatLeafMetadata(metadata));
-        if (stackPeek() != null && stackPeek().type() != TEMPLATE_PARAM)
+        if (stackPeek() != null && stackPeek().type() == TEMPLATE_PARAM) {
+            if (stackPeek().childAt(1).type() == EMPTY && stackPeek().childAt(0) == metadata) {
+                sb.append(formatLeafMetadata(metadata));
+            } else if (stackPeek().childAt(1) == metadata) {
+                sb.append(formatLeafMetadata(metadata));
+                sb.append(formatNewLine());
+            }
+        } else {
+            sb.append(formatLeafMetadata(metadata));
             sb.append(formatNewLine());
+        }
     }
 
     @Override
@@ -199,9 +201,7 @@ public class AstTextVisitor extends AbstractAstVisitor {
     @Override
     protected int getCurrentIndentSize() {
         if (BINARY_PREDICATE == stackPeekType()) {
-            return (int) stackSteam()
-                    .filter(e -> !BINARY_PREDICATE.equals(e.type()))
-                    .count() * getIndentSize();
+            return (int) stackSteam().filter(e -> !BINARY_PREDICATE.equals(e.type())).count() * getIndentSize();
         }
         return super.getCurrentIndentSize();
     }

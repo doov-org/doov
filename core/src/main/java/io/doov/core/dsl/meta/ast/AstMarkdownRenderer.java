@@ -173,9 +173,7 @@ public class AstMarkdownRenderer {
         }
         sb.append(bundle.get(mappings, locale));
         sb.append("\n");
-        final List<Metadata> childs = metadata.children()
-                .filter(m -> m.children().count() > 0)
-                .collect(toList());
+        final List<Metadata> childs = metadata.children().filter(m -> m.children().count() > 0).collect(toList());
         for (Metadata child : childs) {
             formatIndent(indent + 1);
             sb.append("* ");
@@ -251,9 +249,9 @@ public class AstMarkdownRenderer {
 
     private void templateParam(TemplateParamMetadata metadata) {
         sb.append("{");
-        sb.append(metadata.childAt(0).readable(locale));
-        if (metadata.getRight().type() != EMPTY) {
-            sb.append(bundle.get(metadata.getOperator(), locale));
+        if (metadata.getRight().type() == EMPTY) {
+            sb.append(metadata.childAt(0).readable(locale));
+        } else {
             sb.append(metadata.childAt(1).readable(locale));
         }
         sb.append("}");
@@ -289,8 +287,7 @@ public class AstMarkdownRenderer {
                     formatIndent(indent);
                     sb.append("* ");
                     toMarkdown(childAt_1, parents, indent);
-                } else if (childAt_0.type() == FIELD_PREDICATE ||
-                        (childAt_0.type() != NARY_PREDICATE
+                } else if (childAt_0.type() == FIELD_PREDICATE || (childAt_0.type() != NARY_PREDICATE
                                 && (childAt_1.type() == LEAF_VALUE || childAt_1.type() == FIELD_PREDICATE))) {
                     toMarkdown(metadata.childAt(0), parents, indent);
                     sb.append(" ");
