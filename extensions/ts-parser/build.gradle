@@ -13,3 +13,7 @@ dependencies {
 generateGrammarSource {
     outputDirectory = file("build/generated-src/antlr/main/io/doov/tsparser")
 }
+
+if (isReleaseVersion) {
+    javadoc.destinationDir = file("${rootProject.projectDir}/docs/site/extensions/ts-parser/apidocs")
+}
