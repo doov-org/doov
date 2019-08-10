@@ -27,7 +27,7 @@ public class UnaryPredicateMetadata extends UnaryMetadata implements PredicateMe
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
 
-    private UnaryPredicateMetadata(Operator operator, Metadata value) {
+    public UnaryPredicateMetadata(Operator operator, Metadata value) {
         super(operator, value);
     }
 

@@ -19,7 +19,8 @@ import static io.doov.core.dsl.meta.ElementType.UNKNOWN;
 import static io.doov.core.dsl.meta.MetadataType.MAPPING_LEAF;
 import static io.doov.core.dsl.meta.MetadataType.MULTIPLE_MAPPING;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.Supplier;
 
 import io.doov.core.dsl.DslField;
@@ -54,10 +55,6 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         return new MappingMetadata(MAPPING_LEAF).field(field);
     }
 
-    public static MappingMetadata metadataInput(Metadata... metadata) {
-        return new MappingMetadata(MAPPING_LEAF).mergeMetadata(metadata);
-    }
-
     public static MappingMetadata outputMetadata(String readable) {
         return new MappingMetadata(MAPPING_LEAF).valueReadable(() -> readable);
     }
@@ -75,18 +72,6 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         while (iterator.hasNext()) {
             DslField<?> f = iterator.next();
             this.field(f);
-            if (iterator.hasNext()) {
-                this.operator(MappingOperator.and);
-            }
-        }
-        return this;
-    }
-
-    private MappingMetadata mergeMetadata(Metadata... metadata) {
-        Iterator<Metadata> iterator = Arrays.asList(metadata).iterator();
-        while (iterator.hasNext()) {
-            LeafMetadata<?> m = (LeafMetadata<?>) iterator.next();
-            m.elements().forEach(this::add);
             if (iterator.hasNext()) {
                 this.operator(MappingOperator.and);
             }

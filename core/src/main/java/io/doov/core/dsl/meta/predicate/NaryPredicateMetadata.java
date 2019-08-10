@@ -34,7 +34,7 @@ public class NaryPredicateMetadata extends NaryMetadata implements PredicateMeta
     private final AtomicInteger evalTrue = new AtomicInteger();
     private final AtomicInteger evalFalse = new AtomicInteger();
 
-    private NaryPredicateMetadata(Operator operator, List<Metadata> values) {
+    public NaryPredicateMetadata(Operator operator, List<Metadata> values) {
         super(operator, values);
     }
 

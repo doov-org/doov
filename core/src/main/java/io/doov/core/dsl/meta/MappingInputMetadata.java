@@ -23,19 +23,26 @@ import java.util.stream.Stream;
 
 public class MappingInputMetadata extends AbstractMetadata {
 
+    private final Metadata converterMetadata;
     private final List<Metadata> metadataList;
 
-    public MappingInputMetadata(List<Metadata> metadata) {
+    public MappingInputMetadata(Metadata converterMetadata, List<Metadata> metadata) {
+        this.converterMetadata = converterMetadata;
         this.metadataList = metadata;
     }
 
-    public static MappingInputMetadata inputMetadata(Metadata... metadata) {
-        return new MappingInputMetadata(Arrays.asList(metadata));
+    public static MappingInputMetadata inputMetadata(Metadata converterMetadata, Metadata... inputs) {
+        return new MappingInputMetadata(converterMetadata, Arrays.asList(inputs));
     }
 
     @Override
-    public Stream<Metadata> children() {
+    public Stream<Metadata> left() {
         return metadataList.stream();
+    }
+
+    @Override
+    public Stream<Metadata> right() {
+        return Stream.of(converterMetadata);
     }
 
     @Override
