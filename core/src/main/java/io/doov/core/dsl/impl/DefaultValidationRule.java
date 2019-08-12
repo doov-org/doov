@@ -22,16 +22,20 @@ import io.doov.core.dsl.meta.RuleMetadata;
 
 public class DefaultValidationRule extends AbstractDSLBuilder implements ValidationRule {
 
-    private final RuleMetadata metadata;
+    private final Metadata metadata;
     private final StepWhen stepWhen;
     private final boolean shortCircuit;
 
     public DefaultValidationRule(StepWhen stepWhen) {
-        this(stepWhen, true);
+        this(stepWhen, RuleMetadata.rule(stepWhen.metadata()), true);
+    }
+    
+    public DefaultValidationRule(StepWhen stepWhen,  boolean shortCircuit) {
+        this(stepWhen, RuleMetadata.rule(stepWhen.metadata()), shortCircuit);
     }
 
-    public DefaultValidationRule(StepWhen stepWhen, boolean shortCircuit) {
-        this.metadata = RuleMetadata.rule(stepWhen.metadata());
+    public DefaultValidationRule(StepWhen stepWhen, Metadata metadata, boolean shortCircuit) {
+        this.metadata = metadata;
         this.stepWhen = stepWhen;
         this.shortCircuit = shortCircuit;
     }
