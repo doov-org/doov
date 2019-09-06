@@ -18,4 +18,4 @@ project(':doov-gradle-generator').projectDir = file('generator/generator-gradle-
 project(':doov-maven-generator').projectDir = file('generator/generator-maven-plugin')
 project(':doov-js-extension').projectDir = file('extensions/js')
 project(':doov-ts-parser').projectDir = file('extensions/ts-parser')
-project(':doov-js-extension').projectDir = file('extensions/ts')
+project(':doov-ts-extension').projectDir = file('extensions/ts')
