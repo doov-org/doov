@@ -3,13 +3,24 @@
  */
 package io.doov.ts.ast;
 
+import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Locale;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.junit.jupiter.api.Test;
 
+import io.doov.core.dsl.DOOV;
+import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.field.types.IntegerFieldInfo;
+import io.doov.core.dsl.lang.MappingRule;
+import io.doov.core.dsl.lang.ValidationRule;
+import io.doov.core.dsl.runtime.GenericModel;
+import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
 import io.doov.tsparser.TypeScriptParser;
 import io.doov.tsparser.TypeScriptParser.*;
 import io.doov.tsparser.util.TypeScriptParserFactory;
@@ -80,5 +91,61 @@ class AstTSRendererTest {
                 });
             }
         });
+    }
+
+    @Test
+    void test_is_null_rule() {
+        GenericModel model = new GenericModel();
+        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
+        DefaultTypeScriptWriter writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE);
+        AstTSRenderer astTSRenderer = new AstTSRenderer(writer);
+        IntegerFieldInfo twelve = model.intField(12, "twelve");
+
+        ValidationRule rule = DOOV.when(twelve.isNull()).validate();
+        astTSRenderer.toTS(rule.metadata());
+        for (DslField<?> field : writer.getFields()) {
+            if (field instanceof IntegerFieldInfo) {
+                System.out.println("const " + field.readable() + " = DOOV.number(DOOV.field('" + field.id().code() + "'))");
+            }
+        }
+        System.out.println(new String(ops.toByteArray()));
+    }
+
+    @Test
+    void test_and_binary_rule() {
+        GenericModel model = new GenericModel();
+        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
+        DefaultTypeScriptWriter writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE);
+        AstTSRenderer astTSRenderer = new AstTSRenderer(writer);
+        IntegerFieldInfo twelve = model.intField(12, "twelve");
+        IntegerFieldInfo zero = model.intField(0, "zero");
+
+        ValidationRule rule = DOOV.when(twelve.isNotNull().and(zero.lesserOrEquals(0))).validate();
+        astTSRenderer.toTS(rule.metadata());
+        for (DslField<?> field : writer.getFields()) {
+            if (field instanceof IntegerFieldInfo) {
+                System.out.println("const " + field.readable() + " = DOOV.number(DOOV.field('" + field.id().code() + "'))");
+            }
+        }
+        System.out.println(new String(ops.toByteArray()));
+    }
+
+    @Test
+    void test_mapping_rule() {
+        GenericModel model = new GenericModel();
+        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
+        DefaultTypeScriptWriter writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE);
+        AstTSRenderer astTSRenderer = new AstTSRenderer(writer);
+        IntegerFieldInfo twelve = model.intField(12, "twelve");
+        IntegerFieldInfo zero = model.intField(0, "zero");
+
+        MappingRule rule = DOOV.map(twelve).to(zero);
+        astTSRenderer.toTS(rule.metadata());
+        for (DslField<?> field : writer.getFields()) {
+            if (field instanceof IntegerFieldInfo) {
+                System.out.println("const " + field.readable() + " = DOOV.number(DOOV.field(('" + field.id().code() + "'))");
+            }
+        }
+        System.out.println(new String(ops.toByteArray()));
     }
 }

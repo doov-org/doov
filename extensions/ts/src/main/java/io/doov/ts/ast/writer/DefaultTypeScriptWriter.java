@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
+import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class DefaultTypeScriptWriter implements TypeScriptWriter {
@@ -17,12 +18,14 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     private final Locale locale;
     private final OutputStream os;
     private final ResourceProvider resources;
+    private final List<DslField<?>> fields;
 
     public DefaultTypeScriptWriter(Locale locale, OutputStream os, ResourceProvider resources) {
         this.locale = locale;
         this.os = os;
         this.resources = resources;
         this.imports = new ArrayList<>();
+        this.fields = new ArrayList<>();
     }
 
     @Override
@@ -40,8 +43,33 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     }
 
     @Override
+    public void writeGlobalDOOV() {
+        write("DOOV");
+    }
+
+    @Override
+    public void writeQuote() {
+        write("\'");
+    }
+
+    @Override
+    public void writeField(DslField<?> field) {
+        fields.add(field);
+        try {
+            os.write(field.id().code().getBytes(UTF_8));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public List<Import> getImports() {
         return imports;
+    }
+
+    @Override
+    public List<DslField<?>> getFields() {
+        return fields;
     }
 
     @Override

@@ -3,9 +3,13 @@
  */
 package io.doov.ts.ast;
 
-import java.util.ArrayDeque;
+import static io.doov.ts.ast.writer.TypeScriptWriter.*;
 
-import io.doov.core.dsl.meta.Metadata;
+import java.util.*;
+
+import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.predicate.FieldMetadata;
 import io.doov.ts.ast.writer.TypeScriptWriter;
 
 public class AstTSRenderer {
@@ -20,7 +24,8 @@ public class AstTSRenderer {
         toTS(metadata, new ArrayDeque<>());
     }
 
-    private void toTS(Metadata metadata, ArrayDeque<Metadata> parents) {
+    // TODO templates are not supported in doov-ts
+    protected void toTS(Metadata metadata, ArrayDeque<Metadata> parents) {
         parents.push(metadata);
         try {
             switch (metadata.type()) {
@@ -51,10 +56,14 @@ public class AstTSRenderer {
                     unary(metadata, parents);
                     break;
                 case NARY_PREDICATE:
+                    nary(metadata, parents);
+                    break;
                 case MULTIPLE_MAPPING:
+                    mappings(metadata, parents);
+                    break;
                 case THEN_MAPPING:
                 case ELSE_MAPPING:
-                    nary(metadata, parents);
+                    then_else(metadata, parents);
                     break;
                 case MAPPING_INPUT:
                     mappingInput(metadata, parents);
@@ -73,48 +82,241 @@ public class AstTSRenderer {
         }
     }
 
-    private void rule(Metadata metadata, ArrayDeque<Metadata> parents) {
-
+    protected String operatorToMethod(Operator operator) {
+        if (operator == DefaultOperator.length_is) {
+            return "length";
+        } else if (operator == DefaultOperator.equals) {
+            return "eq";
+        } else if (operator == DefaultOperator.not_equals) {
+            return "notEq";
+        }
+        return toCamelCase(operator.name());
     }
 
-    private void when(Metadata metadata, ArrayDeque<Metadata> parents) {
-
+    protected String descriptionToVariable(String description) {
+        return toCamelCase(description);
     }
 
-    private void binary(Metadata metadata, ArrayDeque<Metadata> parents) {
-
+    protected String toCamelCase(String operatorName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean afterUnderScoreOrWhitespace = false;
+        for (char c : operatorName.toCharArray()) {
+            if (c != '_' && c != ' ') {
+                if (afterUnderScoreOrWhitespace) {
+                    stringBuilder.append(String.valueOf(c).toUpperCase());
+                } else {
+                    stringBuilder.append(c);
+                }
+                afterUnderScoreOrWhitespace = false;
+            } else {
+                afterUnderScoreOrWhitespace = true;
+            }
+        }
+        return stringBuilder.toString();
     }
 
-    private void leaf(Metadata metadata, ArrayDeque<Metadata> parents) {
-
+    protected void rule(Metadata metadata, ArrayDeque<Metadata> parents) {
+        Metadata when = metadata.lastChild();
+        if (parents.peekLast() == metadata) {
+            writer.write("const");
+            writer.write(SPACE);
+            writer.write("rule");
+            writer.write(SPACE);
+            writer.write(ASSIGN);
+            writer.write(SPACE);
+        }
+        toTS(when, parents);
+        writer.write(DOT);
+        writer.write(operatorToMethod(DefaultOperator.validate));
+        writer.write(LEFT_PARENTHESIS);
+        writer.write(RIGHT_PARENTHESIS);
+        if (parents.peekLast() == metadata) {
+            writer.write(COLUMN);
+        }
     }
 
-    private void iterable(Metadata metadata, ArrayDeque<Metadata> parents) {
-
+    protected void when(Metadata metadata, ArrayDeque<Metadata> parents) {
+        Metadata dsl = metadata.lastChild();
+        if (parents.peekLast() == metadata) {
+            writer.write("const");
+            writer.write(SPACE);
+            writer.write("when");
+            writer.write(SPACE);
+            writer.write(ASSIGN);
+            writer.write(SPACE);
+        }
+        writer.writeGlobalDOOV();
+        writer.write(DOT);
+        writer.write(operatorToMethod(DefaultOperator.when));
+        writer.write(LEFT_PARENTHESIS);
+        toTS(dsl, parents);
+        writer.write(RIGHT_PARENTHESIS);
+        if (parents.peekLast() == metadata) {
+            writer.write(COLUMN);
+        }
     }
 
-    private void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents) {
-
+    protected void binary(Metadata metadata, ArrayDeque<Metadata> parents) {
+        Metadata left = metadata.left().findFirst().get();
+        Metadata right = metadata.right().findFirst().get();
+        toTS(left, parents);
+        writer.write(DOT);
+        writer.write(operatorToMethod(metadata.getOperator()));
+        writer.write(LEFT_PARENTHESIS);
+        toTS(right, parents);
+        writer.write(RIGHT_PARENTHESIS);
     }
 
-    private void unary(Metadata metadata, ArrayDeque<Metadata> parents) {
-
+    protected void leaf(Metadata metadata, ArrayDeque<Metadata> parents) {
+        MetadataType type = metadata.type();
+        LeafMetadata<?> leaf = (LeafMetadata<?>) metadata;
+        final List<Element> elts = new ArrayList<>(leaf.elements());
+        if (type == MetadataType.FIELD_PREDICATE) {
+            FieldMetadata fieldMetadata = (FieldMetadata) metadata;
+            writer.writeField(fieldMetadata.field());
+        } else {
+            for (Element elt : elts) {
+                if (elt.getType() == ElementType.STRING_VALUE) {
+                    writer.writeQuote();
+                    writer.write(elt.getReadable().readable());
+                    writer.writeQuote();
+                } else if (elt.getType() == ElementType.FIELD) {
+                    writer.writeField((DslField<?>) elt.getReadable());
+                } else {
+                    List<Metadata> parentsList = new ArrayList<>(parents);
+                    if (parentsList.size() > 1) {
+                        Operator parentOp = parentsList.get(1).getOperator();
+                        // TODO guess the value type from the parent operator;
+                        writer.write(elt.getReadable().readable());
+                    } else {
+                        writer.write(elt.getReadable().readable());
+                    }
+                }
+            }
+        }
     }
 
-    private void nary(Metadata metadata, ArrayDeque<Metadata> parents) {
-
+    protected void mappingInput(Metadata metadata, ArrayDeque<Metadata> parents) {
+        Metadata converter = metadata.right().findFirst().get();
+        Iterator<Metadata> iterator = metadata.left().iterator();
+        while (iterator.hasNext()) {
+            toTS(iterator.next(), parents);
+            if (iterator.hasNext()) {
+                writer.write(COMMA);
+                writer.write(SPACE);
+            }
+        }
+        // look for #singleMapping
+        writer.write(RIGHT_PARENTHESIS);
+        writer.write(DOT);
+        writer.write(operatorToMethod(MappingOperator.using));
+        writer.write(LEFT_PARENTHESIS);
+        toTS(converter, parents);
     }
 
-    private void mappingInput(Metadata metadata, ArrayDeque<Metadata> parents) {
-
+    protected void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents) {
+        if (metadata instanceof LeafMetadata) {
+            LeafMetadata leaf = (LeafMetadata) metadata;
+            writer.write(descriptionToVariable(String.valueOf(leaf.elements().getLast())));
+        } else {
+            writer.write(metadata.readable());
+        }
     }
 
-    private void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
-
+    protected void unary(Metadata metadata, ArrayDeque<Metadata> parents) {
+        Metadata child = metadata.lastChild();
+        toTS(child, parents);
+        writer.write(DOT);
+        writer.write(operatorToMethod(metadata.getOperator()));
+        writer.write(LEFT_PARENTHESIS);
+        writer.write(RIGHT_PARENTHESIS);
     }
 
-    private void singleMapping(Metadata metadata, ArrayDeque<Metadata> parents) {
+    protected void nary(Metadata metadata, ArrayDeque<Metadata> parents) {
+        // TODO import nary function from other places
+        writer.writeGlobalDOOV();
+        then_else(metadata, parents);
+    }
 
+    protected void mappings(Metadata metadata, ArrayDeque<Metadata> parents) {
+        if (parents.peekLast() == metadata) {
+            writer.write("const");
+            writer.write(SPACE);
+            writer.write("mappings");
+            writer.write(SPACE);
+            writer.write(ASSIGN);
+            writer.write(SPACE);
+        }
+        if (metadata.getOperator() == DefaultOperator.no_operator) {
+            ConditionalMappingMetadata conditional = (ConditionalMappingMetadata) metadata;
+            toTS(conditional.when(), parents);
+            toTS(conditional.then(), parents);
+            if (conditional.otherwise() != null && conditional.otherwise().children().count() > 0) {
+                toTS(conditional.otherwise(), parents);
+            }
+        } else if (metadata.getOperator() == MappingOperator.mappings) {
+            nary(metadata, parents);
+        }
+        if (parents.peekLast() == metadata) {
+            writer.write(COLUMN);
+        }
+    }
+
+    protected void then_else(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writer.write(DOT);
+        writer.write(operatorToMethod(metadata.getOperator()));
+        writer.write(LEFT_PARENTHESIS);
+        Iterator<Metadata> iterator = metadata.children().iterator();
+        while(iterator.hasNext()) {
+            toTS(iterator.next(), parents);
+            if (iterator.hasNext()) {
+                writer.write(COMMA);
+                writer.write(SPACE);
+            }
+        }
+        writer.write(RIGHT_PARENTHESIS);
+    }
+
+    protected void iterable(Metadata metadata, ArrayDeque<Metadata> parents) {
+        Iterator<Metadata> iterator = metadata.children().iterator();
+        while(iterator.hasNext()) {
+            toTS(iterator.next(), parents);
+            if (iterator.hasNext()) {
+                writer.write(COMMA);
+                writer.write(SPACE);
+            }
+        }
+    }
+
+    protected void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
+        nary(metadata, parents);
+    }
+
+    protected void singleMapping(Metadata metadata, ArrayDeque<Metadata> parents) {
+        Metadata left = metadata.left().findFirst().get();
+        Metadata right = metadata.right().findFirst().get();
+        if (parents.peekLast() == metadata) {
+            writer.write("const");
+            writer.write(SPACE);
+            writer.write("mapping");
+            writer.write(SPACE);
+            writer.write(ASSIGN);
+            writer.write(SPACE);
+        }
+        writer.writeGlobalDOOV();
+        writer.write(DOT);
+        writer.write(operatorToMethod(MappingOperator.map));
+        writer.write(LEFT_PARENTHESIS);
+        toTS(left, parents);
+        writer.write(RIGHT_PARENTHESIS);
+        writer.write(DOT);
+        writer.write(operatorToMethod(MappingOperator.to));
+        writer.write(LEFT_PARENTHESIS);
+        toTS(right, parents);
+        writer.write(RIGHT_PARENTHESIS);
+        if (parents.peekLast() == metadata) {
+            writer.write(COLUMN);
+        }
     }
 
 }
