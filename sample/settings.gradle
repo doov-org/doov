@@ -7,6 +7,7 @@ includeBuild('../') {
         substitute module('io.doov:doov-assertions-core') with project(':doov-assertions-core')
         substitute module('io.doov:doov-js-extension') with project(':doov-js-extension')
         substitute module('io.doov:doov-ts-extension') with project(':doov-ts-extension')
+        substitute module('io.doov:doov-ts-parser') with project(':doov-ts-parser')
         substitute module('io.doov:doov-gradle-generator') with project(':doov-gradle-generator')
     }
 }

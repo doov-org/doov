@@ -1,12 +1,11 @@
 package io.doov.tsparser.util;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.function.Function;
 
 import org.antlr.v4.runtime.*;
 
-import io.doov.tsparser.TypeScriptLexer;
-import io.doov.tsparser.TypeScriptParser;
+import io.doov.tsparser.*;
 
 public class TypeScriptParserFactory {
 
@@ -29,5 +28,14 @@ public class TypeScriptParserFactory {
 
     public static TypeScriptParser parse(InputStream input) throws IOException {
         return parse(CharStreams.fromStream(input));
+    }
+
+    public static TypeScriptParser parse(String input) throws IOException {
+        return parse(CharStreams.fromStream(new ByteArrayInputStream(input.getBytes())));
+    }
+
+    public static <T extends TypeScriptParserListener> T parseUsing(String input,
+            Function<TypeScriptParser, T> parserListenerProvider) throws IOException {
+        return parserListenerProvider.apply(parse(input));
     }
 }
