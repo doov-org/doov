@@ -31,7 +31,7 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         super(type);
     }
 
-    public static MappingMetadata mappings(MappingOperator operator) {
+    public static MappingMetadata mappings(Operator operator) {
         return new MappingMetadata(MULTIPLE_MAPPING).operator(operator);
     }
 
