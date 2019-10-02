@@ -27,6 +27,38 @@ public class TypeScriptAssert extends AbstractAssert<TypeScriptAssert, TypeScrip
         return identifierNames().extracting(TypeScriptParser.IdentifierNameContext::getText);
     }
 
+    public ListAssert<TypeScriptParser.IdentifierReferenceContext> identifierReferences() {
+        return new ListAssert<>(this.actual.getIdentifierReferences());
+    }
+
+    public ListAssert<String> identifierReferencesText() {
+        return identifierReferences().extracting(TypeScriptParser.IdentifierReferenceContext::getText);
+    }
+
+    public ListAssert<TypeScriptParser.IdentifierExpressionContext> identifierExpressions() {
+        return new ListAssert<>(this.actual.getIdentifierExpressions());
+    }
+
+    public ListAssert<String> identifierExpressionsText() {
+        return identifierExpressions().extracting(TypeScriptParser.IdentifierExpressionContext::getText);
+    }
+
+    public ListAssert<TypeScriptParser.LiteralContext> literals() {
+        return new ListAssert<>(this.actual.getLiterals());
+    }
+
+    public ListAssert<String> literalsText() {
+        return literals().extracting(TypeScriptParser.LiteralContext::getText);
+    }
+
+    public ListAssert<TypeScriptParser.ArrayLiteralContext> arrayLiterals() {
+        return new ListAssert<>(this.actual.getArrayLiterals());
+    }
+
+    public ListAssert<String> arrayLiteralsText() {
+        return arrayLiterals().extracting(TypeScriptParser.ArrayLiteralContext::getText);
+    }
+
     public ListAssert<ErrorNode> errors() {
         return new ListAssert<>(this.actual.getErrors());
     }

@@ -38,7 +38,8 @@ public class TypeScriptAssertionContext extends TypeScriptParserBaseListener {
     }
 
     public <T extends ParserRuleContext> List<T> getRules(Class<T> ruleType) {
-        return (List<T>) rules.get(ruleType);
+        List<T> rules = (List<T>) this.rules.get(ruleType);
+        return (rules == null) ? Collections.emptyList() : rules;
     }
 
     @Override

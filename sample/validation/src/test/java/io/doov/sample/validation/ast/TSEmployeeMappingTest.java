@@ -42,9 +42,13 @@ class TSEmployeeMappingTest {
         rule = FULLNAME_MAPPING;
         ruleTs = toTS(rule);
         assertParenthesis(ruleTs);
-        TypeScriptAssertionContext context = parseAs(ruleTs, TypeScriptParser::script);
-        assertThat(context).errors().hasSize(0);
-        assertThat(context).numberOfSyntaxErrors().isEqualTo(0);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+        assertThat(script).errors().hasSize(0);
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("map", "and", "using", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "FIRST_NAME");
+        assertThat(script).identifierExpressionsText().containsExactly("LAST_NAME", "combineNames", "FULLNAME");
+        assertThat(script).literalsText().isEmpty();
     }
 
     @Test
@@ -52,9 +56,13 @@ class TSEmployeeMappingTest {
         rule = EMAIL_MAPPING;
         ruleTs = toTS(rule);
         assertParenthesis(ruleTs);
-        TypeScriptAssertionContext context = parseAs(ruleTs, TypeScriptParser::script);
-        assertThat(context).errors().hasSize(0);
-        assertThat(context).numberOfSyntaxErrors().isEqualTo(0);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+        assertThat(script).errors().hasSize(0);
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("when", "is", "then", "map", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "EMAIL_ACCEPTED", "DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("EMAIL", "EMAIL");
+        assertThat(script).literalsText().containsExactly("true");
     }
 
     @Test
@@ -63,9 +71,9 @@ class TSEmployeeMappingTest {
         rule = AGE_MAPPING;
         ruleTs = toTS(rule);
         assertParenthesis(ruleTs);
-        TypeScriptAssertionContext context = parseAs(ruleTs, TypeScriptParser::script);
-        assertThat(context).errors().hasSize(0);
-        assertThat(context).numberOfSyntaxErrors().isEqualTo(0);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+        assertThat(script).errors().hasSize(0);
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
     }
 
     @Test
@@ -73,9 +81,13 @@ class TSEmployeeMappingTest {
         rule = COUNTRY_MAPPING;
         ruleTs = toTS(rule);
         assertParenthesis(ruleTs);
-        TypeScriptAssertionContext context = parseAs(ruleTs, TypeScriptParser::script);
-        assertThat(context).errors().hasSize(0);
-        assertThat(context).numberOfSyntaxErrors().isEqualTo(0);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+        assertThat(script).errors().hasSize(0);
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("map", "using", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("COUNTRY", "countryName", "COUNTRY");
+        assertThat(script).literalsText().isEmpty();
     }
 
     @Test
@@ -83,9 +95,13 @@ class TSEmployeeMappingTest {
         rule = COMPANY_MAPPING;
         ruleTs = toTS(rule);
         assertParenthesis(ruleTs);
-        TypeScriptAssertionContext context = parseAs(ruleTs, TypeScriptParser::script);
-        assertThat(context).errors().hasSize(0);
-        assertThat(context).numberOfSyntaxErrors().isEqualTo(0);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+        assertThat(script).errors().hasSize(0);
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("map", "using", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("COMPANY", "companyName", "COMPANY");
+        assertThat(script).literalsText().isEmpty();
     }
 
     @Test

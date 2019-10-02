@@ -45,7 +45,10 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "matches", "or", "matches", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "EMAIL", "EMAIL");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("'\\w+[@]\\w+\\.com'", "'\\w+[@]\\w+\\.fr'");
     }
 
     @Test
@@ -56,7 +59,13 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText()
+                .containsExactly("when", "matchAll", "ageAt", "greaterOrEquals", "length", "lesserOrEquals", "eq",
+                        "and", "startsWith", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "BIRTHDATE", "EMAIL", "COUNTRY"
+                , "PHONE_NUMBER");
+        assertThat(script).identifierExpressionsText().containsExactly("today", "CONFIGURATION_EMAIL_MAX_SIZE", "FR");
+        assertThat(script).literalsText().containsExactly("18", "'+33'");
     }
 
     @Test
@@ -67,7 +76,22 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText()
+                .containsExactly("when",
+                        "ageAt",
+                        "greaterOrEquals",
+                        "and",
+                        "length",
+                        "lesserOrEquals",
+                        "and",
+                        "eq",
+                        "and",
+                        "startsWith",
+                        "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE", "EMAIL", "COUNTRY",
+                "PHONE_NUMBER");
+        assertThat(script).identifierExpressionsText().containsExactly("today", "CONFIGURATION_EMAIL_MAX_SIZE", "FR");
+        assertThat(script).literalsText().containsExactly("18", "'+33'");
     }
 
     @Test
@@ -78,7 +102,18 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when",
+                "count",
+                "isNotNull",
+                "isNotNull",
+                "and",
+                "matches",
+                "greaterOrEquals",
+                "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "FIRST_NAME", "LAST_NAME",
+                "LAST_NAME");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("'[A-Z]+'", "0");
     }
 
     @Test
@@ -89,7 +124,20 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when",
+                "isNotNull",
+                "and",
+                "matches",
+                "and",
+                "count",
+                "isNotNull",
+                "isNotNull",
+                "greaterThan",
+                "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "LAST_NAME", "LAST_NAME", "DOOV",
+                "PHONE_NUMBER", "EMAIL");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("'[A-Z]+'", "0");
     }
 
     @Test
@@ -100,11 +148,15 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "ageAt", "greaterOrEquals", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE");
+        assertThat(script).identifierExpressionsText().containsExactly("CREATION_DATE");
+        assertThat(script).literalsText().containsExactly("18");
     }
 
     @Test
     @Disabled
+        // FIXME
     void rule_user_adult_firstday() throws IOException {
         rule = RULE_USER_ADULT_FIRSTDAY;
         this.ruleTs = toTS(rule);
@@ -116,7 +168,8 @@ class TSSampleRulesTest {
     }
 
     @Test
-    @Disabled // FIXME
+    @Disabled
+        // FIXME
     void rule_first_name() throws IOException {
         rule = RULE_FIRST_NAME;
         this.ruleTs = toTS(rule);
@@ -135,7 +188,10 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "isNotNull", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "USER_ID");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().isEmpty();
     }
 
     @Test
@@ -146,12 +202,15 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "ageAt", "greaterOrEquals", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE");
+        assertThat(script).identifierExpressionsText().containsExactly("today");
+        assertThat(script).literalsText().containsExactly("18");
     }
 
-
     @Test
-    @Disabled // FIXME
+    @Disabled
+        // FIXME
     void rule_age2() throws IOException {
         rule = RULE_AGE_2;
         this.ruleTs = toTS(rule);
@@ -170,7 +229,12 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "sum", "times", "times", "greaterOrEquals",
+                "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "CONFIGURATION_MIN_AGE",
+                "CONFIGURATION_EMAIL_MAX_SIZE");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("0", "1", "0");
     }
 
     @Test
@@ -181,7 +245,11 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "min", "greaterOrEquals", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("CONFIGURATION_MIN_AGE",
+                "CONFIGURATION_EMAIL_MAX_SIZE");
+        assertThat(script).literalsText().containsExactly("0");
     }
 
     @Test
@@ -192,11 +260,15 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "anyMatchValues", "noOperator", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "FAVORITE_SITE_NAME_1", "DOOV");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().isEmpty();
     }
 
     @Test
-    @Disabled // FIXME
+    @Disabled
+        // FIXME
     void rule_born_1980() throws IOException {
         rule = RULE_BORN_1980;
         this.ruleTs = toTS(rule);
@@ -208,7 +280,8 @@ class TSSampleRulesTest {
     }
 
     @Test
-    @Disabled // FIXME
+    @Disabled
+        // FIXME
     void rule_account_time_contains() throws IOException {
         rule = RULE_ACCOUNT_TIME_CONTAINS;
         this.ruleTs = toTS(rule);
@@ -227,7 +300,10 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "eq", "not", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "COMPANY");
+        assertThat(script).identifierExpressionsText().containsExactly("BLABLACAR");
+        assertThat(script).literalsText().isEmpty();
     }
 
     private String toTS(DSLBuilder dslBuilder) {
