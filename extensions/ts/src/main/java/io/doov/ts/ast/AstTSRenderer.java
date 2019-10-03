@@ -9,6 +9,7 @@ import java.util.*;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.function.TemporalAdjusterMetadata;
 import io.doov.core.dsl.meta.predicate.FieldMetadata;
 import io.doov.ts.ast.writer.TypeScriptWriter;
 
@@ -160,11 +161,25 @@ public class AstTSRenderer {
         Metadata left = metadata.left().findFirst().get();
         Metadata right = metadata.right().findFirst().get();
         toTS(left, parents);
-        writer.write(DOT);
-        writer.write(operatorToMethod(metadata.getOperator()));
-        writer.write(LEFT_PARENTHESIS);
-        toTS(right, parents);
-        writer.write(RIGHT_PARENTHESIS);
+        if (metadata.getOperator() == DefaultOperator.with) {
+            String method;
+            if (right instanceof TemporalAdjusterMetadata) {
+                TemporalAdjusterMetadata adjusterMetadata = (TemporalAdjusterMetadata) right;
+                method = operatorToMethod(adjusterMetadata.getOperator());
+            } else {
+                method = toCamelCase(right.readable());
+            }
+            writer.write(DOT);
+            writer.write(method);
+            writer.write(LEFT_PARENTHESIS);
+            writer.write(RIGHT_PARENTHESIS);
+        } else {
+            writer.write(DOT);
+            writer.write(operatorToMethod(metadata.getOperator()));
+            writer.write(LEFT_PARENTHESIS);
+            toTS(right, parents);
+            writer.write(RIGHT_PARENTHESIS);
+        }
     }
 
     protected void leaf(Metadata metadata, ArrayDeque<Metadata> parents) {
