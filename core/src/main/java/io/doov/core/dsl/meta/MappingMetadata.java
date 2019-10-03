@@ -31,7 +31,7 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         super(type);
     }
 
-    public static MappingMetadata mappings(MappingOperator operator) {
+    public static MappingMetadata mappings(Operator operator) {
         return new MappingMetadata(MULTIPLE_MAPPING).operator(operator);
     }
 
@@ -57,6 +57,10 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
 
     public static MappingMetadata outputMetadata(String readable) {
         return new MappingMetadata(MAPPING_LEAF).valueReadable(() -> readable);
+    }
+
+    public static MappingMetadata outputMetadata(Operator operator) {
+        return new MappingMetadata(MAPPING_LEAF).operator(operator);
     }
 
     public static MappingMetadata fieldOutput(DslField<?> field) {

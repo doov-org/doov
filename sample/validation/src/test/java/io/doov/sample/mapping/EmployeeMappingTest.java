@@ -3,11 +3,7 @@
  */
 package io.doov.sample.mapping;
 
-import static io.doov.sample.validation.EmployeeMapping.AGE_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.COMPANY_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.COUNTRY_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.EMAIL_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.FULLNAME_MAPPING;
+import static io.doov.sample.validation.EmployeeMapping.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
@@ -50,5 +46,13 @@ public class EmployeeMappingTest {
     public void testCompany() {
         COMPANY_MAPPING.executeOn(IN, OUT);
         assertThat(employee.getCompany()).isEqualTo("LES_FURETS");
+    }
+    
+    @Test
+    public void testAccountMapNull() {
+        MAPPING_ACCOUNT_NULL.executeOn(IN, IN);
+        assertThat(IN.getModel().getAccount().getCompany()).isNull();
+        assertThat(IN.getModel().getAccount().getLanguage()).isNull();
+        assertThat(IN.getModel().getAccount().getLogin()).isNull();
     }
 }

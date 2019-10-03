@@ -4,12 +4,7 @@
 package io.doov.sample.validation.ast;
 
 import static io.doov.assertions.renderer.Assertions.assertThat;
-import static io.doov.sample.validation.EmployeeMapping.AGE_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.ALL_MAPPINGS;
-import static io.doov.sample.validation.EmployeeMapping.COMPANY_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.COUNTRY_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.EMAIL_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.FULLNAME_MAPPING;
+import static io.doov.sample.validation.EmployeeMapping.*;
 import static io.doov.sample.validation.ast.MarkdownSampleRulesTest.parse;
 import static io.doov.sample.validation.ast.MarkdownSampleRulesTest.render;
 
@@ -73,6 +68,16 @@ public class MarkdownEmployeeMappingTest {
         assertThat(node).countText().isEqualTo(3);
         assertThat(node).textNodes().containsExactly("map account company", "using 'company name'",
                         "to employee company");
+    }
+
+    @Test
+    void MAPPING_ACCOUNT_NULL() {
+        node = parse(MAPPING_ACCOUNT_NULL.metadata());
+        assertThat(node).countBulletList().isEqualTo(2);
+        assertThat(node).countListItem().isEqualTo(2);
+        assertThat(node).countOrderedList().isEqualTo(0);
+        assertThat(node).countText().isEqualTo(2);
+        assertThat(node).textNodes().containsExactly("map 'null'", "to map fields with tag 'ACCOUNT'");
     }
 
     @Test

@@ -4,12 +4,7 @@
 package io.doov.sample.validation.ast;
 
 import static io.doov.assertions.renderer.Assertions.assertThat;
-import static io.doov.sample.validation.EmployeeMapping.AGE_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.ALL_MAPPINGS;
-import static io.doov.sample.validation.EmployeeMapping.COMPANY_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.COUNTRY_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.EMAIL_MAPPING;
-import static io.doov.sample.validation.EmployeeMapping.FULLNAME_MAPPING;
+import static io.doov.sample.validation.EmployeeMapping.*;
 import static io.doov.sample.validation.ast.HtmlSampleRulesTest.documentOf;
 import static io.doov.sample.validation.ast.HtmlSampleRulesTest.format;
 
@@ -131,6 +126,27 @@ public class HtmlEmployeeMappingTest {
         assertThat(doc).tokenOperator_SPAN().containsExactly("map", "using", "to");
         assertThat(doc).tokenValue_SPAN().containsExactly("'company name'");
         assertThat(doc).tokenField_SPAN().containsExactly("account company", "employee company");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
+    }
+
+    @Test
+    void MAPPING_ACCOUNT_NULL() {
+        context = MAPPING_ACCOUNT_NULL.executeOn(inModel, inModel);
+        doc = documentOf(context);
+
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+
+        assertThat(doc).percentageValue_DIV().isEmpty();
+        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "to", "map fields with tag");
+        assertThat(doc).tokenValue_SPAN().containsExactly("null", "ACCOUNT");
+        assertThat(doc).tokenField_SPAN().isEmpty();
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 

@@ -15,6 +15,7 @@
  */
 package io.doov.core.dsl;
 
+import static io.doov.core.dsl.meta.MappingOperator.map_null_tag;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.falseMetadata;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.trueMetadata;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueListMetadata;
@@ -25,14 +26,17 @@ import java.util.function.*;
 import java.util.stream.*;
 
 import io.doov.core.FieldModel;
+import io.doov.core.TagId;
 import io.doov.core.dsl.field.types.NumericFieldInfo;
 import io.doov.core.dsl.impl.*;
 import io.doov.core.dsl.impl.base.IterableFunction;
 import io.doov.core.dsl.impl.num.IntegerFunction;
 import io.doov.core.dsl.impl.num.NumericFunction;
 import io.doov.core.dsl.lang.*;
+import io.doov.core.dsl.mapping.ConsumerOutput;
 import io.doov.core.dsl.mapping.MappingRegistry;
 import io.doov.core.dsl.mapping.builder.*;
+import io.doov.core.dsl.meta.MappingMetadata;
 import io.doov.core.dsl.meta.predicate.FieldMetadata;
 import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
 import io.doov.core.dsl.template.TemplateParam;
@@ -82,8 +86,7 @@ public class DOOV {
      * @return the step condition
      */
     public static StepCondition alwaysTrue(String readable) {
-        return new DefaultStepCondition(trueMetadata().valueReadable(() -> readable),
-                (model, context) -> true);
+        return new DefaultStepCondition(trueMetadata().valueReadable(() -> readable), (model, context) -> true);
     }
 
     /**
@@ -102,8 +105,7 @@ public class DOOV {
      * @return the step condition
      */
     public static StepCondition alwaysFalse(String readable) {
-        return new DefaultStepCondition(falseMetadata().valueReadable(() -> readable),
-                (model, context) -> false);
+        return new DefaultStepCondition(falseMetadata().valueReadable(() -> readable), (model, context) -> false);
     }
 
     /**
@@ -145,9 +147,9 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchAny(Stream<? extends DslField<?>> dslFields,
-            Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
+                    Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchAny(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
-                .map(stepConditionFunction).collect(Collectors.toList()));
+                        .map(stepConditionFunction).collect(Collectors.toList()));
     }
 
     /**
@@ -169,9 +171,9 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchAll(Stream<? extends DslField<?>> dslFields,
-            Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
+                    Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchAll(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
-                .map(stepConditionFunction).collect(Collectors.toList()));
+                        .map(stepConditionFunction).collect(Collectors.toList()));
     }
 
     /**
@@ -193,16 +195,16 @@ public class DOOV {
      * @return step condition
      */
     public static StepCondition matchNone(Stream<? extends DslField<?>> dslFields,
-            Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
+                    Function<DefaultFunction<?, ?>, StepCondition> stepConditionFunction) {
         return LogicalNaryCondition.matchNone(dslFields.filter(Objects::nonNull).map(DslField::getDefaultFunction)
-                .map(stepConditionFunction).collect(Collectors.toList()));
+                        .map(stepConditionFunction).collect(Collectors.toList()));
     }
 
     /**
      * Start defining a mapping
      *
      * @param inFieldInfo in field
-     * @param <I>         in type
+     * @param             <I> in type
      * @return map step
      */
     public static <I> SimpleStepMap<I> map(DslField<I> inFieldInfo) {
@@ -214,8 +216,8 @@ public class DOOV {
      *
      * @param inFieldInfo  in field
      * @param in2FieldInfo in field 2
-     * @param <I>          in type
-     * @param <J>          in type 2
+     * @param              <I> in type
+     * @param              <J> in type 2
      * @return bi map step
      */
     public static <I, J> BiStepMap<I, J> map(DslField<I> inFieldInfo, DslField<J> in2FieldInfo) {
@@ -246,7 +248,7 @@ public class DOOV {
      * Start defining a value mapping
      *
      * @param valueSupplier value supplier
-     * @param <I>           value type
+     * @param               <I> value type
      * @return value map step
      */
     public static <I> StaticStepMap<I> map(Supplier<I> valueSupplier) {
@@ -257,7 +259,7 @@ public class DOOV {
      * Start defining a value mapping
      *
      * @param value value
-     * @param <I>   value type
+     * @param       <I> value type
      * @return value step map
      */
     public static <I> StaticStepMap<I> map(I value) {
@@ -268,8 +270,8 @@ public class DOOV {
      * Start defining a value mapping for an Iterable field
      *
      * @param value value
-     * @param <I>   value type
-     * @param <C>   container type
+     * @param       <I> value type
+     * @param       <C> container type
      * @return value step map
      */
     public static <I, C extends Iterable<I>> IterableStepMap<I, C> mapIter(C value) {
@@ -280,7 +282,7 @@ public class DOOV {
      * Start defining a value mapping to form an Iterable field as a List
      *
      * @param values values to add to the list
-     * @param <I>    value type
+     * @param        <I> value type
      * @return value step map
      */
     @SafeVarargs
@@ -292,7 +294,7 @@ public class DOOV {
      * Start defining a value mapping with value null
      *
      * @param outFieldInfo output field
-     * @param <O>          value type
+     * @param              <O> value type
      * @return value map step
      */
     public static <O> MappingRule mapNull(DslField<O> outFieldInfo) {
@@ -300,10 +302,33 @@ public class DOOV {
     }
 
     /**
+     * Start defining a value mapping with value null
+     *
+     * @param outFieldInfo output field
+     * @param              <O> value type
+     * @return value map step
+     */
+    public static <O> MappingRule mapNull(MappingOutput<O> outFieldInfo) {
+        return new StaticStepMap<>(() -> (O) null).to(outFieldInfo);
+    }
+
+    /**
+     * Start defining a value mapping with value null
+     *
+     * @param tag the field tag to map with value null
+     * @param     <O> value type
+     * @return value map step
+     */
+    public static <O> MappingRule mapNull(TagId tag) {
+        return new StaticStepMap<>(() -> (O) null).to(new ConsumerOutput<>(
+                        MappingMetadata.outputMetadata(map_null_tag).valueObject(tag), (m, c, v) -> m.clear(tag)));
+    }
+
+    /**
      * Start defining a context-aware value mapping
      *
      * @param valueFunction context dependent value function
-     * @param <I>           value type
+     * @param               <I> value type
      * @return value map step
      */
     public static <I> ContextawareStepMap<I> map(BiFunction<FieldModel, Context, I> valueFunction) {
@@ -314,7 +339,7 @@ public class DOOV {
      * Start defining a context-aware value mapping
      *
      * @param input mapping input
-     * @param <I>   value type
+     * @param       <I> value type
      * @return value map step
      */
     public static <I> ContextawareStepMap<I> map(MappingInput<I> input) {
@@ -326,8 +351,8 @@ public class DOOV {
      *
      * @param input  mapping input
      * @param input2 mapping input
-     * @param <I>    value type
-     * @param <J>    value type 2
+     * @param        <I> value type
+     * @param        <J> value type 2
      * @return value map step
      */
     public static <I, J> BiContextawareStepMap<I, J> map(MappingInput<I> input, MappingInput<J> input2) {
@@ -339,12 +364,12 @@ public class DOOV {
      *
      * @param valueFunction  context dependent value function
      * @param valueFunction2 context dependent value function
-     * @param <I>            value type
-     * @param <J>            value type
+     * @param                <I> value type
+     * @param                <J> value type
      * @return value map step
      */
     public static <I, J> BiContextawareStepMap<I, J> map(BiFunction<FieldModel, Context, I> valueFunction,
-            BiFunction<FieldModel, Context, J> valueFunction2) {
+                    BiFunction<FieldModel, Context, J> valueFunction2) {
         return new BiContextawareStepMap<>(valueFunction, valueFunction2);
     }
 
@@ -367,9 +392,9 @@ public class DOOV {
      * @return mapping registry containing rules
      */
     public static MappingRegistry mapRange(int startInclusive, int endExclusive,
-            Function<Integer, MappingRule> mappingRuleFunction) {
+                    Function<Integer, MappingRule> mappingRuleFunction) {
         return MappingRegistry.mappings(IntStream.range(startInclusive, endExclusive)
-                .mapToObj(mappingRuleFunction::apply).toArray(MappingRule[]::new));
+                        .mapToObj(mappingRuleFunction::apply).toArray(MappingRule[]::new));
     }
 
     /**
@@ -377,13 +402,13 @@ public class DOOV {
      *
      * @param fieldStream         field stream
      * @param mappingRuleFunction field to mapping rule function
-     * @param <T>                 field info type
+     * @param                     <T> field info type
      * @return mapping registry containing rules
      */
     public static <T extends DslField<?>> MappingRegistry mapFor(Stream<T> fieldStream,
-            Function<T, MappingRule> mappingRuleFunction) {
-        return MappingRegistry.mappings(fieldStream.filter(Objects::nonNull).map(mappingRuleFunction)
-                .toArray(MappingRule[]::new));
+                    Function<T, MappingRule> mappingRuleFunction) {
+        return MappingRegistry.mappings(
+                        fieldStream.filter(Objects::nonNull).map(mappingRuleFunction).toArray(MappingRule[]::new));
     }
 
     /**
@@ -391,14 +416,14 @@ public class DOOV {
      *
      * @param fieldStream         field stream
      * @param mappingRuleFunction field to mapping rule function with index in integer
-     * @param <T>                 field info type
+     * @param                     <T> field info type
      * @return mapping registry containing rules
      */
     public static <T extends DslField<?>> MappingRegistry mapWithIndex(Stream<T> fieldStream,
-            BiFunction<T, Integer, MappingRule> mappingRuleFunction) {
-        return MappingRegistry
-                .mappings(Streams.mapWithIndex(fieldStream, (f, l) -> mappingRuleFunction.apply(f, l.intValue()))
-                        .toArray(MappingRule[]::new));
+                    BiFunction<T, Integer, MappingRule> mappingRuleFunction) {
+        return MappingRegistry.mappings(
+                        Streams.mapWithIndex(fieldStream, (f, l) -> mappingRuleFunction.apply(f, l.intValue()))
+                                        .toArray(MappingRule[]::new));
     }
 
     /**
@@ -406,18 +431,18 @@ public class DOOV {
      *
      * @param fieldStream field stream
      * @param index       field list position
-     * @param <T>         field info type
+     * @param             <T> field info type
      * @return field info
      */
     public static <T extends DslField<?>> T fieldInPosition(Stream<T> fieldStream, int index) {
         return fieldStream.filter(Objects::nonNull).filter(f -> f.id().position() == index).findFirst().orElseThrow(
-                () -> new IllegalArgumentException("Field with position " + index + " not found."));
+                        () -> new IllegalArgumentException("Field with position " + index + " not found."));
     }
 
     /**
      * See {@link NumericFunction#min(List)}
      *
-     * @param <N>    the type of the field infos
+     * @param        <N> the type of the field infos
      * @param fields the fields to minimize
      * @return the numeric condition
      * @see NumericFunction#min(List)
@@ -425,65 +450,55 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericFunction<N> min(NumericFieldInfo<N>... fields) {
         return Arrays.stream(fields).filter(Objects::nonNull).findFirst().map(NumericFieldInfo::getNumericFunction)
-                .map(c -> c.min(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
+                        .map(c -> c.min(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
     }
 
     /**
      * See {@link NumericFunction#min(List)}
      *
-     * @param <N>     the type of the field infos
+     * @param         <N> the type of the field infos
      * @param numbers the fields to minimize
      * @return the numeric condition
      * @see NumericFunction#min(List)
      */
     @SafeVarargs
     public static <N extends Number> NumericFunction<N> min(NumericFunction<N>... numbers) {
-        return Arrays.stream(numbers)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .map(c -> c.minFunctions(Arrays.asList(numbers)))
-                .orElseThrow(IllegalArgumentException::new);
+        return Arrays.stream(numbers).filter(Objects::nonNull).findFirst()
+                        .map(c -> c.minFunctions(Arrays.asList(numbers))).orElseThrow(IllegalArgumentException::new);
     }
 
     /**
      * See {@link NumericFunction#max(List)}
      *
-     * @param <N>    the type of the field infos
+     * @param        <N> the type of the field infos
      * @param fields the fields to minimize
      * @return the numeric condition
      * @see NumericFunction#max(List)
      */
     @SafeVarargs
     public static <N extends Number> NumericFunction<N> max(NumericFieldInfo<N>... fields) {
-        return Arrays.stream(fields)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .map(NumericFieldInfo::getNumericFunction)
-                .map(c -> c.max(Arrays.asList(fields)))
-                .orElseThrow(IllegalArgumentException::new);
+        return Arrays.stream(fields).filter(Objects::nonNull).findFirst().map(NumericFieldInfo::getNumericFunction)
+                        .map(c -> c.max(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
     }
 
     /**
      * See {@link NumericFunction#max(List)}
      *
-     * @param <N>     the type of the field infos
+     * @param         <N> the type of the field infos
      * @param numbers the fields to minimize
      * @return the numeric condition
      * @see NumericFunction#max(List)
      */
     @SafeVarargs
     public static <N extends Number> NumericFunction<N> max(NumericFunction<N>... numbers) {
-        return Arrays.stream(numbers)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .map(c -> c.maxFunctions(Arrays.asList(numbers)))
-                .orElseThrow(IllegalArgumentException::new);
+        return Arrays.stream(numbers).filter(Objects::nonNull).findFirst()
+                        .map(c -> c.maxFunctions(Arrays.asList(numbers))).orElseThrow(IllegalArgumentException::new);
     }
 
     /**
      * See {@link NumericFunction#sum(List)}
      *
-     * @param <N>    the type of the field infos
+     * @param        <N> the type of the field infos
      * @param fields the fields to sum
      * @return the numeric condition
      * @see NumericFunction#sum(List)
@@ -491,13 +506,13 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericFunction<N> sum(NumericFieldInfo<N>... fields) {
         return Arrays.stream(fields).filter(Objects::nonNull).findFirst().map(NumericFieldInfo::getNumericFunction)
-                .map(c -> c.sum(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
+                        .map(c -> c.sum(Arrays.asList(fields))).orElseThrow(IllegalArgumentException::new);
     }
 
     /**
      * See {@link NumericFunction#sum(List)}
      *
-     * @param <N>        the type of the field infos
+     * @param            <N> the type of the field infos
      * @param conditions the conditions to sum
      * @return the numeric condition
      * @see NumericFunction#sum(List)
@@ -505,8 +520,8 @@ public class DOOV {
     @SafeVarargs
     public static <N extends Number> NumericFunction<N> sum(NumericFunction<N>... conditions) {
         return Arrays.stream(conditions).filter(Objects::nonNull).findFirst()
-                .map(c -> c.sumConditions(Arrays.asList(conditions)))
-                .orElseThrow(IllegalArgumentException::new);
+                        .map(c -> c.sumConditions(Arrays.asList(conditions)))
+                        .orElseThrow(IllegalArgumentException::new);
     }
 
     public static <T1 extends DslField<?>> TemplateSpec.Template1<T1> template(Supplier<TemplateParam<T1>> param1) {
@@ -514,65 +529,59 @@ public class DOOV {
     }
 
     public static <T1 extends DslField<?>, T2 extends DslField<?>> TemplateSpec.Template2<T1, T2> template(
-            Supplier<TemplateParam<T1>> param1,
-            Supplier<TemplateParam<T2>> param2) {
+                    Supplier<TemplateParam<T1>> param1, Supplier<TemplateParam<T2>> param2) {
         return new TemplateSpec.Template2<>(param1, param2);
     }
 
-    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>> TemplateSpec.Template3<T1,
-            T2, T3> template(
-            Supplier<TemplateParam<T1>> param1,
-            Supplier<TemplateParam<T2>> param2,
-            Supplier<TemplateParam<T3>> param3) {
+    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>> TemplateSpec.Template3<T1, T2, T3> template(
+                    Supplier<TemplateParam<T1>> param1, Supplier<TemplateParam<T2>> param2,
+                    Supplier<TemplateParam<T3>> param3) {
         return new TemplateSpec.Template3<>(param1, param2, param3);
     }
 
     public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>> TemplateSpec.Template4<T1, T2, T3, T4> template(
-            Supplier<TemplateParam<T1>> param1,
-            Supplier<TemplateParam<T2>> param2,
-            Supplier<TemplateParam<T3>> param3,
-            Supplier<TemplateParam<T4>> param4) {
+                    Supplier<TemplateParam<T1>> param1, Supplier<TemplateParam<T2>> param2,
+                    Supplier<TemplateParam<T3>> param3, Supplier<TemplateParam<T4>> param4) {
         return new TemplateSpec.Template4<>(param1, param2, param3, param4);
     }
 
-    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>,
-            T5 extends DslField<?>> TemplateSpec.Template5<T1, T2, T3, T4, T5> template(
-            Supplier<TemplateParam<T1>> param1,
-            Supplier<TemplateParam<T2>> param2,
-            Supplier<TemplateParam<T3>> param3,
-            Supplier<TemplateParam<T4>> param4,
-            Supplier<TemplateParam<T5>> param5) {
+    public static <T1 extends DslField<?>, T2 extends DslField<?>, T3 extends DslField<?>, T4 extends DslField<?>, T5 extends DslField<?>> TemplateSpec.Template5<T1, T2, T3, T4, T5> template(
+                    Supplier<TemplateParam<T1>> param1, Supplier<TemplateParam<T2>> param2,
+                    Supplier<TemplateParam<T3>> param3, Supplier<TemplateParam<T4>> param4,
+                    Supplier<TemplateParam<T5>> param5) {
         return new TemplateSpec.Template5<>(param1, param2, param3, param4, param5);
     }
 
     /**
      * Wrap given value into a function using the given function constructor reference Ex.
+     * 
      * <pre>
      * <code class='java'>StringFunction function = DOOV.lift(value, StringFunction::new);</code>
      * </pre>
      *
      * @param value          value
      * @param constructorRef function constructor reference
-     * @param <T>            value type
-     * @param <F>            function type
-     * @param <M>            valuemetadata type
+     * @param                <T> value type
+     * @param                <F> function type
+     * @param                <M> valuemetadata type
      * @return function that wraps the given value
      */
     public static <T, F extends io.doov.core.dsl.field.types.Function<T>, M extends ValuePredicateMetadata<M>> F lift(
-            T value,
-            BiFunction<ValuePredicateMetadata, BiFunction<FieldModel, Context, Optional<T>>, F> constructorRef) {
+                    T value,
+                    BiFunction<ValuePredicateMetadata, BiFunction<FieldModel, Context, Optional<T>>, F> constructorRef) {
         return constructorRef.apply(ValuePredicateMetadata.<M> valueMetadata(value),
-                (m, c) -> Optional.ofNullable(value));
+                        (m, c) -> Optional.ofNullable(value));
     }
 
     /**
      * Wrap given value into a function using the given function constructor reference Ex.
+     * 
      * <pre>
      * <code class='java'>IterableFunction&lt;Integer, List&lt;Integer&gt;&gt; function = DOOV.lift(1, 2, 3, 4);</code>
      * </pre>
      *
      * @param value value
-     * @param <T>   value type
+     * @param       <T> value type
      * @return function that wraps the given value
      */
     @SafeVarargs
@@ -586,13 +595,12 @@ public class DOOV {
      *
      * @param field          field
      * @param constructorRef function constructor reference
-     * @param <T>            field value type
-     * @param <F>            function type
+     * @param                <T> field value type
+     * @param                <F> function type
      * @return function that wraps the given field
      */
     public static <T, F extends io.doov.core.dsl.field.types.Function<T>> F fieldFunction(DslField<T> field,
-            BiFunction<FieldMetadata<?>, BiFunction<FieldModel, Context, Optional<T>>, F> constructorRef) {
-        return constructorRef.apply(FieldMetadata.fieldMetadata(field),
-                (m, c) -> FieldModel.valueModel(m, field));
+                    BiFunction<FieldMetadata<?>, BiFunction<FieldModel, Context, Optional<T>>, F> constructorRef) {
+        return constructorRef.apply(FieldMetadata.fieldMetadata(field), (m, c) -> FieldModel.valueModel(m, field));
     }
 }

@@ -4,22 +4,14 @@
 package io.doov.sample.validation;
 
 import static io.doov.core.dsl.DOOV.map;
+import static io.doov.core.dsl.DOOV.mapNull;
 import static io.doov.core.dsl.DOOV.mappings;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
-import static io.doov.sample.field.dsl.DslSampleModel.accountAcceptEmail;
-import static io.doov.sample.field.dsl.DslSampleModel.accountCompany;
-import static io.doov.sample.field.dsl.DslSampleModel.accountCountry;
-import static io.doov.sample.field.dsl.DslSampleModel.accountEmail;
-import static io.doov.sample.field.dsl.DslSampleModel.userBirthdate;
-import static io.doov.sample.field.dsl.DslSampleModel.userFirstName;
-import static io.doov.sample.field.dsl.DslSampleModel.userLastName;
-import static io.doov.sample3.field.dsl.DslEmployee.employeeAge;
-import static io.doov.sample3.field.dsl.DslEmployee.employeeCompany;
-import static io.doov.sample3.field.dsl.DslEmployee.employeeCountry;
-import static io.doov.sample3.field.dsl.DslEmployee.employeeEmail;
-import static io.doov.sample3.field.dsl.DslEmployee.employeeFullname;
+import static io.doov.sample.field.SampleTag.ACCOUNT;
+import static io.doov.sample.field.dsl.DslSampleModel.*;
+import static io.doov.sample3.field.dsl.DslEmployee.*;
 import static java.util.Arrays.asList;
 
 import java.io.IOException;
@@ -44,6 +36,8 @@ public class EmployeeMapping {
 
     public static final MappingRule COMPANY_MAPPING = map(accountCompany)
                     .using(converter(c -> c.name(), "company not available", "company name")).to(employeeCompany);
+    
+    public static final MappingRule MAPPING_ACCOUNT_NULL = mapNull(ACCOUNT);
 
     public static final MappingRule ALL_MAPPINGS = mappings(EMAIL_MAPPING, FULLNAME_MAPPING, AGE_MAPPING,
                     COUNTRY_MAPPING, COMPANY_MAPPING);
