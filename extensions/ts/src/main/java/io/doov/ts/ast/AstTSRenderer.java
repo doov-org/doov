@@ -3,6 +3,7 @@
  */
 package io.doov.ts.ast;
 
+import static io.doov.core.dsl.meta.DefaultOperator.age_at;
 import static io.doov.ts.ast.writer.TypeScriptWriter.*;
 
 import java.util.*;
@@ -118,6 +119,16 @@ public class AstTSRenderer {
         return stringBuilder.toString();
     }
 
+    private String deSerializeValue(Element elt, Metadata parentMetadata) {
+        if (parentMetadata instanceof TemporalBiFunctionMetadata) {
+            if (parentMetadata.getOperator() == age_at) {
+                // Date
+                return "DateUtils.newDate('" + elt.getReadable().readable()+"')";
+            }
+        }
+        return elt.getReadable().readable();
+    }
+
     protected void rule(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata when = metadata.lastChild();
         if (parents.peekLast() == metadata) {
@@ -217,15 +228,17 @@ public class AstTSRenderer {
                     writer.write(elt.getReadable().readable().replace("-function- ", ""));
                 } else if (elt.getType() == ElementType.TEMPORAL_UNIT) {
                     // do not write temporal units they are handled as method modifier in #binary
-                } else {
+                } else if (elt.getType() == ElementType.VALUE) {
                     List<Metadata> parentsList = new ArrayList<>(parents);
                     if (parentsList.size() > 1) {
-                        Operator parentOp = parentsList.get(1).getOperator();
+                        Metadata parentMetadata = parentsList.get(1);
                         // TODO guess the value type from the parent operator;
-                        writer.write(elt.getReadable().readable());
+                        writer.write(deSerializeValue(elt, parentMetadata));
                     } else {
                         writer.write(elt.getReadable().readable());
                     }
+                } else {
+                    writer.write(elt.getReadable().readable());
                 }
             }
         }

@@ -66,7 +66,6 @@ class TSEmployeeMappingTest {
     }
 
     @Test
-    @Disabled // FIXME
     void age_mapping() throws IOException {
         rule = AGE_MAPPING;
         ruleTs = toTS(rule);
@@ -74,6 +73,10 @@ class TSEmployeeMappingTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("map", "ageAt", "newDate", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE", "DateUtils");
+        assertThat(script).identifierExpressionsText().containsExactly("AGE");
+        assertThat(script).literalsText().containsExactly("'2019-01-01'");
     }
 
     @Test
@@ -105,7 +108,6 @@ class TSEmployeeMappingTest {
     }
 
     @Test
-    @Disabled // FIXME
     void all_mappings() throws IOException {
         rule = ALL_MAPPINGS;
         ruleTs = toTS(ALL_MAPPINGS);
