@@ -270,8 +270,6 @@ class TSSampleRulesTest {
     }
 
     @Test
-    @Disabled
-        // FIXME
     void rule_born_1980() throws IOException {
         rule = RULE_BORN_1980;
         this.ruleTs = toTS(rule);
@@ -279,12 +277,13 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "asANumber", "eq", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("1980");
     }
 
     @Test
-    @Disabled
-        // FIXME
     void rule_account_time_contains() throws IOException {
         rule = RULE_ACCOUNT_TIME_CONTAINS;
         this.ruleTs = toTS(rule);
@@ -292,7 +291,10 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "asString", "contains", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "TIMEZONE");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("'00:00'");
     }
 
     @Test
