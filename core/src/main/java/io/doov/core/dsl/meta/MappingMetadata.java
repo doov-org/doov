@@ -59,6 +59,10 @@ public class MappingMetadata extends LeafMetadata<MappingMetadata> {
         return new MappingMetadata(MAPPING_LEAF).valueReadable(() -> readable);
     }
 
+    public static MappingMetadata outputMetadata(Operator operator) {
+        return new MappingMetadata(MAPPING_LEAF).operator(operator);
+    }
+
     public static MappingMetadata fieldOutput(DslField<?> field) {
         return new MappingMetadata(MAPPING_LEAF).field(field);
     }

@@ -321,7 +321,7 @@ public class DOOV {
      */
     public static <O> MappingRule mapNull(TagId tag) {
         return new StaticStepMap<>(() -> (O) null).to(new ConsumerOutput<>(
-                        MappingMetadata.mappings(map_null_tag).valueObject(tag), (m, c, v) -> m.clear(tag)));
+                        MappingMetadata.outputMetadata(map_null_tag).valueObject(tag), (m, c, v) -> m.clear(tag)));
     }
 
     /**
