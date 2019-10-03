@@ -33,12 +33,12 @@ public class MapFunctionMetadata extends BinaryPredicateMetadata {
         super(left, operator, right);
     }
 
-    public static MapFunctionMetadata mapToIntMetadata(Metadata metadata) {
-        return new MapFunctionMetadata(metadata, as_a_number, unknownMetadata(""));
+    public static MapFunctionMetadata mapToIntMetadata(Metadata metadata, String functionDescriptor) {
+        return new MapFunctionMetadata(metadata, as_a_number, unknownMetadata(functionDescriptor));
     }
 
-    public static MapFunctionMetadata mapToStringMetadata(Metadata metadata) {
-        return new MapFunctionMetadata(metadata, as_string, unknownMetadata(""));
+    public static MapFunctionMetadata mapToStringMetadata(Metadata metadata, String functionDescriptor) {
+        return new MapFunctionMetadata(metadata, as_string, unknownMetadata(functionDescriptor));
     }
 
     public static MapFunctionMetadata mapAsMetadata(Metadata metadata, String readable) {

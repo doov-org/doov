@@ -305,17 +305,40 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      * @return the integer condition
      */
     public final IntegerFunction mapToInt(java.util.function.Function<T, Integer> mapper) {
-        return new IntegerFunction(mapToIntMetadata(metadata), (model, context) -> value(model, context).map(mapper));
+        return mapToInt("", mapper);
+    }
+
+    /**
+     * Returns an integer step condition that returns the node value mapped by the given mapper.
+     *
+     * @param readable descriptor string for the mapper function
+     * @param mapper the to integer mapper to apply
+     * @return the integer condition
+     */
+    public final IntegerFunction mapToInt(String readable, java.util.function.Function<T, Integer> mapper) {
+        return new IntegerFunction(mapToIntMetadata(metadata, readable),
+                (model, context) -> value(model, context).map(mapper));
     }
 
     /**
      * Returns a string step condition that returns the node value mapped by the given function.
      *
-     * @param mapper function to string to apply
+     * @param mapper function to string mapper to apply
      * @return string condition
      */
     public final StringFunction mapToString(java.util.function.Function<T, String> mapper) {
-        return new StringFunction(mapToStringMetadata(metadata),
+        return mapToString("", mapper);
+    }
+
+    /**
+     * Returns a string step condition that returns the node value mapped by the given function.
+     *
+     * @param readable descriptor string for the mapper function
+     * @param mapper function to string mapper to apply
+     * @return string condition
+     */
+    public final StringFunction mapToString(String readable, java.util.function.Function<T, String> mapper) {
+        return new StringFunction(mapToStringMetadata(metadata, readable),
                 (model, context) -> value(model, context).map(mapper));
     }
 

@@ -169,8 +169,6 @@ class TSSampleRulesTest {
     }
 
     @Test
-    @Disabled
-        // FIXME
     void rule_first_name() throws IOException {
         rule = RULE_FIRST_NAME;
         this.ruleTs = toTS(rule);
@@ -178,7 +176,10 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "matchAll", "asANumber", "eq", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "FIRST_NAME");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("1");
     }
 
     @Test

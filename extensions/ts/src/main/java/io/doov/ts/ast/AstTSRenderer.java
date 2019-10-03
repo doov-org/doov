@@ -197,6 +197,8 @@ public class AstTSRenderer {
                     writer.writeQuote();
                 } else if (elt.getType() == ElementType.FIELD) {
                     writer.writeField((DslField<?>) elt.getReadable());
+                } else if (elt.getType() == ElementType.UNKNOWN) {
+                    writer.write(elt.getReadable().readable().replace("-function- ", ""));
                 } else {
                     List<Metadata> parentsList = new ArrayList<>(parents);
                     if (parentsList.size() > 1) {
