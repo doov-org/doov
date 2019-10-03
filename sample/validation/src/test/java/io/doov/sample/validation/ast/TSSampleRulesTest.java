@@ -211,8 +211,6 @@ class TSSampleRulesTest {
     }
 
     @Test
-    @Disabled
-        // FIXME
     void rule_age2() throws IOException {
         rule = RULE_AGE_2;
         this.ruleTs = toTS(rule);
@@ -220,7 +218,10 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).rules(TypeScriptParser.IdentifierNameContext.class).isNotEmpty();
+        assertThat(script).identifierNamesText().containsExactly("when", "after", "minusDays", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE", "BIRTHDATE");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("1");
     }
 
     @Test

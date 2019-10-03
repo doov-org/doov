@@ -9,7 +9,7 @@ import java.util.*;
 
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
-import io.doov.core.dsl.meta.function.TemporalAdjusterMetadata;
+import io.doov.core.dsl.meta.function.*;
 import io.doov.core.dsl.meta.predicate.FieldMetadata;
 import io.doov.ts.ast.writer.TypeScriptWriter;
 
@@ -90,6 +90,8 @@ public class AstTSRenderer {
             return "eq";
         } else if (operator == DefaultOperator.not_equals) {
             return "notEq";
+        } else if (operator == DefaultOperator.temporal_minus) {
+            return "minus";
         }
         return toCamelCase(operator.name());
     }
@@ -173,6 +175,20 @@ public class AstTSRenderer {
             writer.write(method);
             writer.write(LEFT_PARENTHESIS);
             writer.write(RIGHT_PARENTHESIS);
+        } else if (metadata instanceof TemporalBiFunctionMetadata) {
+            String methodModifier = "";
+            if (right instanceof TemporalFunctionMetadata) {
+                TemporalFunctionMetadata temporalMetadata = (TemporalFunctionMetadata) right;
+                methodModifier = temporalMetadata.elementsAsList().stream()
+                        .filter(e -> e.getType() == ElementType.TEMPORAL_UNIT)
+                        .map(e -> e.getReadable().readable())
+                        .findFirst().orElse("");
+            }
+            writer.write(DOT);
+            writer.write(toCamelCase(operatorToMethod(metadata.getOperator()) +" "+ methodModifier));
+            writer.write(LEFT_PARENTHESIS);
+            toTS(right, parents);
+            writer.write(RIGHT_PARENTHESIS);
         } else {
             writer.write(DOT);
             writer.write(operatorToMethod(metadata.getOperator()));
@@ -199,6 +215,8 @@ public class AstTSRenderer {
                     writer.writeField((DslField<?>) elt.getReadable());
                 } else if (elt.getType() == ElementType.UNKNOWN) {
                     writer.write(elt.getReadable().readable().replace("-function- ", ""));
+                } else if (elt.getType() == ElementType.TEMPORAL_UNIT) {
+                    // do not write temporal units they are handled as method modifier in #binary
                 } else {
                     List<Metadata> parentsList = new ArrayList<>(parents);
                     if (parentsList.size() > 1) {
