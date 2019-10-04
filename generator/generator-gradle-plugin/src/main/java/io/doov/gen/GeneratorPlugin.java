@@ -29,15 +29,14 @@ public class GeneratorPlugin implements Plugin<Project> {
 
         JavaCompile compileJava = target.getTasks().withType(JavaCompile.class).getByName("compileJava");
         JavaPluginConvention javaPluginConvention = target.getConvention().findPlugin(JavaPluginConvention.class);
-        SourceSet generated = javaPluginConvention.getSourceSets().maybeCreate("generated");
+        SourceSet main = javaPluginConvention.getSourceSets().maybeCreate("main");
 
         container.all(modelMap -> {
             ModelMapGenTask task = target.getTasks().create(modelMap.getName(), ModelMapGenTask.class);
-            generated.getJava().srcDir(modelMap.getOutputDirectory());
-            compileJava.source(generated.getJava());
+            main.getJava().srcDir(modelMap.getOutputDirectory());
 
             target.afterEvaluate(project -> {
-                task.setClasspath(project.getConfigurations().getByName("compile"));
+                task.setClasspath(main.getCompileClasspath());
                 task.getBaseClassProperty().set(modelMap.getBaseClass());
                 task.getOutputDirectory().set(modelMap.getOutputDirectory());
                 task.getOutputResourceDirectory().set(modelMap.getOutputResourceDirectory());
