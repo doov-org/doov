@@ -19,6 +19,7 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     private final OutputStream os;
     private final ResourceProvider resources;
     private final List<DslField<?>> fields;
+    private final int indentSpace = 2;
 
     public DefaultTypeScriptWriter(Locale locale, OutputStream os, ResourceProvider resources) {
         this.locale = locale;
@@ -39,6 +40,14 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
             os.write(value.getBytes(UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void writeNewLine(int indent) {
+        write(NEW_LINE);
+        for (int i = 0; i < indent * indentSpace; i++) {
+            write(SPACE);
         }
     }
 

@@ -15,6 +15,7 @@ public interface TypeScriptWriter {
     String COMMA = ",";
     String SPACE = " ";
     String COLUMN = ";";
+    String NEW_LINE = "\n";
     String ASSIGN = "=";
     String LEFT_PARENTHESIS = "(";
     String RIGHT_PARENTHESIS = ")";
@@ -22,6 +23,8 @@ public interface TypeScriptWriter {
     Locale getLocale();
 
     void write(String value);
+
+    void writeNewLine(int indent);
 
     void writeGlobalDOOV();
 

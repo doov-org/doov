@@ -4,7 +4,10 @@
 package io.doov.ts.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.age_at;
+import static io.doov.core.dsl.meta.DefaultOperator.and;
+import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.ts.ast.writer.TypeScriptWriter.*;
+import static java.util.Arrays.asList;
 
 import java.util.*;
 
@@ -16,10 +19,18 @@ import io.doov.ts.ast.writer.TypeScriptWriter;
 
 public class AstTSRenderer {
 
+    private static final List<Operator> AND_OR = asList(and, or);
+
     private final TypeScriptWriter writer;
+    private final boolean prettyPrint;
 
     public AstTSRenderer(TypeScriptWriter writer) {
+        this(writer, false);
+    }
+
+    public AstTSRenderer(TypeScriptWriter writer, boolean prettyPrint) {
         this.writer = writer;
+        this.prettyPrint = prettyPrint;
     }
 
     public void toTS(Metadata metadata) {
@@ -165,6 +176,9 @@ public class AstTSRenderer {
         writer.write(LEFT_PARENTHESIS);
         toTS(dsl, parents);
         writer.write(RIGHT_PARENTHESIS);
+        if (prettyPrint) {
+            writer.writeNewLine(parents.size());
+        }
         if (parents.peekLast() == metadata) {
             writer.write(COLUMN);
         }
@@ -201,6 +215,11 @@ public class AstTSRenderer {
             toTS(right, parents);
             writer.write(RIGHT_PARENTHESIS);
         } else {
+            if (AND_OR.contains(metadata.getOperator())) {
+                if (prettyPrint) {
+                    writer.writeNewLine(parents.size());
+                }
+            }
             writer.write(DOT);
             writer.write(operatorToMethod(metadata.getOperator()));
             writer.write(LEFT_PARENTHESIS);
@@ -314,12 +333,19 @@ public class AstTSRenderer {
         writer.write(DOT);
         writer.write(operatorToMethod(metadata.getOperator()));
         writer.write(LEFT_PARENTHESIS);
+        if (metadata.getOperator() != MappingOperator.then && prettyPrint) {
+            writer.writeNewLine(parents.size());
+        }
         Iterator<Metadata> iterator = metadata.children().iterator();
         while(iterator.hasNext()) {
             toTS(iterator.next(), parents);
             if (iterator.hasNext()) {
                 writer.write(COMMA);
-                writer.write(SPACE);
+                if (prettyPrint) {
+                    writer.writeNewLine(parents.size());
+                } else {
+                    writer.write(SPACE);
+                }
             }
         }
         writer.write(RIGHT_PARENTHESIS);

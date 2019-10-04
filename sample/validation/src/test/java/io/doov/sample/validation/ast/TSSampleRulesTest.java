@@ -314,7 +314,7 @@ class TSSampleRulesTest {
     private String toTS(DSLBuilder dslBuilder) {
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
         TypeScriptWriter writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE);
-        new AstTSRenderer(writer).toTS(dslBuilder.metadata());
+        new AstTSRenderer(writer, true).toTS(dslBuilder.metadata());
         return new String(ops.toByteArray(), UTF_8);
     }
 
