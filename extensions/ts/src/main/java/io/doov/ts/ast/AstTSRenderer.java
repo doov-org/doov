@@ -104,6 +104,12 @@ public class AstTSRenderer {
             return "notEq";
         } else if (operator == DefaultOperator.temporal_minus) {
             return "minus";
+        } else if (operator == DefaultOperator.any_match_values) {
+            return "anyMatch";
+        } else if (operator == DefaultOperator.all_match_values) {
+            return "allMatch";
+        } else if (operator == DefaultOperator.none_match_values) {
+            return "noneMatch";
         }
         return toCamelCase(operator.name());
     }
