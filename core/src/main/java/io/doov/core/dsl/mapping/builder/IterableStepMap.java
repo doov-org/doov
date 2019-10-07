@@ -41,6 +41,10 @@ public class IterableStepMap<E, I extends Iterable<E>> {
         this.input = input;
     }
 
+    public MappingInput<I> getInput() {
+        return input;
+    }
+
     /**
      * Return the static mapping rule
      *
@@ -99,4 +103,7 @@ public class IterableStepMap<E, I extends Iterable<E>> {
         return new SimpleStepMap<>(new CollectInput<>(input, collector));
     }
 
+    public static <O> IterableStepMap<O, List<O>> concat(IterableStepMap<O, ? extends Iterable<O>>... iterables) {
+        return new IterableStepMap<>(new ConcatInput<>(iterables));
+    }
 }

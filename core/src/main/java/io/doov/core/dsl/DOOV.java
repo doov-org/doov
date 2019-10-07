@@ -291,6 +291,17 @@ public class DOOV {
     }
 
     /**
+     *
+     * @param iterables
+     * @param <I>
+     * @return
+     */
+    @SafeVarargs
+    public static <I> IterableStepMap<I, List<I>> concat(IterableStepMap<I, ? extends Iterable<I>>... iterables) {
+        return IterableStepMap.concat(iterables);
+    }
+
+    /**
      * Start defining a value mapping with value null
      *
      * @param outFieldInfo output field
