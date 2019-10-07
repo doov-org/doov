@@ -216,6 +216,18 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      * @param values the values to match
      * @return the step condition
      */
+    @SafeVarargs
+    public final StepCondition anyMatch(T... values) {
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.anyMatchMetadata(metadata, asList(values)),
+                function, value -> asList(values).contains(value));
+    }
+
+    /**
+     * Returns a step condition checking if the node value matches any of the given values.
+     *
+     * @param values the values to match
+     * @return the step condition
+     */
     public final StepCondition anyMatch(Collection<T> values) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.anyMatchMetadata(metadata, values), function,
                 value -> values.stream().anyMatch(value::equals));
