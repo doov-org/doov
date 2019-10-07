@@ -101,25 +101,25 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
         return new BinaryPredicateMetadata(metadata, not_equals, readableMetadata(value));
     }
 
-    public static BinaryPredicateMetadata anyMatchMetadata(Metadata metadata) {
+    public static BinaryPredicateMetadata anyMatchMetadata(Metadata metadata, String... readables) {
         return new BinaryPredicateMetadata(metadata, any_match_values,
-                ValuePredicateMetadata.anyMatchMetadata(metadata));
+                ValuePredicateMetadata.anyMatchMetadata(readables));
     }
 
     public static BinaryPredicateMetadata anyMatchMetadata(Metadata metadata, Collection<?> values) {
         return new BinaryPredicateMetadata(metadata, any_match_values, ValuePredicateMetadata.anyMatchMetadata(values));
     }
 
-    public static BinaryPredicateMetadata allMatchMetadata(Metadata metadata) {
-        return new BinaryPredicateMetadata(metadata, all_match_values, readableMetadata(lambda));
+    public static BinaryPredicateMetadata allMatchMetadata(Metadata metadata, String... readables) {
+        return new BinaryPredicateMetadata(metadata, all_match_values, ValuePredicateMetadata.allMatchMetadata(readables));
     }
 
     public static BinaryPredicateMetadata allMatchMetadata(Metadata metadata, Collection<?> values) {
         return new BinaryPredicateMetadata(metadata, all_match_values, valueListMetadata(values));
     }
 
-    public static BinaryPredicateMetadata matchNoneMetadata(Metadata metadata) {
-        return new BinaryPredicateMetadata(metadata, none_match_values, readableMetadata(lambda));
+    public static BinaryPredicateMetadata matchNoneMetadata(Metadata metadata, String... readables) {
+        return new BinaryPredicateMetadata(metadata, none_match_values, ValuePredicateMetadata.allMatchMetadata(readables));
     }
 
     @Override

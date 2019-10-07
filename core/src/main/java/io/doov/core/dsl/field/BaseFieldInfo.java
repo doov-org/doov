@@ -89,7 +89,9 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @param supplier the right side value supplier
      * @return the step condition
      * @see DefaultFunction#eq(Supplier)
+     * @deprecated use {@link #eq(Object)} or {@link #eq(io.doov.core.dsl.field.types.Function)} instead
      */
+    @Deprecated
     default StepCondition eq(Supplier<T> supplier) {
         return getDefaultFunction().eq(supplier);
     }
@@ -132,8 +134,10 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      *
      * @param supplier the right side value supplier
      * @return the step condition
-     * @see DefaultFunction#eq(Supplier)
+     * @see DefaultFunction#notEq(Supplier)
+     * @deprecated use {@link #notEq(Object)} or {@link #notEq(io.doov.core.dsl.field.types.Function)} instead
      */
+    @Deprecated
     default StepCondition notEq(Supplier<T> supplier) {
         return getDefaultFunction().notEq(supplier);
     }
@@ -150,13 +154,14 @@ public interface BaseFieldInfo<T> extends DslField<T> {
     }
 
     /**
-     * See {@link DefaultFunction#anyMatch(List)}
+     * See {@link DefaultFunction#anyMatch(List, String...)}
      *
      * @param value the value to match
+     * @param readable readable descripbing the given predicate
      * @return the step condition
-     * @see DefaultFunction#anyMatch(List)
+     * @see DefaultFunction#anyMatch(List, String...)
      */
-    default StepCondition anyMatch(Predicate<T> value) {
+    default StepCondition anyMatch(Predicate<T> value, String... readable) {
         return getDefaultFunction().anyMatch(singletonList(value));
     }
 
@@ -184,14 +189,15 @@ public interface BaseFieldInfo<T> extends DslField<T> {
     }
 
     /**
-     * See {@link DefaultFunction#allMatch(List)}
+     * See {@link DefaultFunction#allMatch(List, String...)}
      *
      * @param value the value to match
+     * @param readable readable descripbing the given predicate
      * @return the step condition
-     * @see DefaultFunction#allMatch(List)
+     * @see DefaultFunction#allMatch(List, String...)
      */
-    default StepCondition allMatch(Predicate<T> value) {
-        return getDefaultFunction().allMatch(singletonList(value));
+    default StepCondition allMatch(Predicate<T> value, String... readable) {
+        return getDefaultFunction().allMatch(singletonList(value), readable);
     }
 
     /**
@@ -218,14 +224,15 @@ public interface BaseFieldInfo<T> extends DslField<T> {
     }
 
     /**
-     * See {@link DefaultFunction#noneMatch(List)}
+     * See {@link DefaultFunction#noneMatch(List, String...)}
      *
      * @param value the value to match
+     * @param readable readable descripbing the given predicate
      * @return the step condition
-     * @see DefaultFunction#noneMatch(List)
+     * @see DefaultFunction#noneMatch(List, String...)
      */
-    default StepCondition noneMatch(Predicate<T> value) {
-        return getDefaultFunction().noneMatch(singletonList(value));
+    default StepCondition noneMatch(Predicate<T> value, String... readable) {
+        return getDefaultFunction().noneMatch(singletonList(value), readable);
     }
 
     /**
@@ -257,9 +264,22 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @param mapper the mapper to apply
      * @return the step condition
      * @see DefaultFunction#mapToInt(Function)
+     * @deprecated use {@link #mapToInt(String, Function)} instead
      */
     default IntegerFunction mapToInt(Function<T, Integer> mapper) {
         return getDefaultFunction().mapToInt(mapper);
+    }
+
+    /**
+     * See {@link DefaultFunction#mapToInt(String, Function)}
+     *
+     * @param readable descriptor string for the mapper function
+     * @param mapper the mapper to apply
+     * @return the step condition
+     * @see DefaultFunction#mapToInt(String, Function)
+     */
+    default IntegerFunction mapToInt(String readable, Function<T, Integer> mapper) {
+        return getDefaultFunction().mapToInt(readable, mapper);
     }
 
     /**
@@ -267,9 +287,22 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      *
      * @param mapper mapper function to apply
      * @return string condition
+     * @deprecated use {@link #mapToString(String, Function)} instead
      */
+    @Deprecated
     default StringFunction mapToString(Function<T, String> mapper) {
         return getDefaultFunction().mapToString(mapper);
+    }
+
+    /**
+     * See {@link DefaultFunction#mapToString(String, Function)}
+     *
+     * @param readable descriptor string for the mapper function
+     * @param mapper mapper function to apply
+     * @return string condition
+     */
+    default StringFunction mapToString(String readable, Function<T, String> mapper) {
+        return getDefaultFunction().mapToString(readable, mapper);
     }
 
     /**

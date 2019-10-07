@@ -128,7 +128,9 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      *
      * @param supplier the right side value
      * @return the step condition
+     * @deprecated use {@link #eq(Object)} or {@link #eq(Function)} instead
      */
+    @Deprecated
     public final StepCondition eq(Supplier<T> supplier) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, supplier), function,
                 supplier,
@@ -175,7 +177,9 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      *
      * @param supplier the right side value
      * @return the step condition
+     * @deprecated use {@link #notEq(Object)} or {@link #notEq(Function)} instead
      */
+    @Deprecated
     public final StepCondition notEq(Supplier<T> supplier) {
         return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, supplier), function,
                 supplier,
@@ -221,11 +225,12 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      * Returns a step condition checking if any of the given predicates testing the node value match.
      *
      * @param values the values to match
+     * @param predicateReadables strings defining predicates in order
      * @return the step condition
      */
-    public final StepCondition anyMatch(List<Predicate<T>> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.anyMatchMetadata(metadata), function,
-                value -> values.stream().anyMatch(v -> v.test(value)));
+    public final StepCondition anyMatch(List<Predicate<T>> values, String... predicateReadables) {
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.anyMatchMetadata(metadata, predicateReadables),
+                function, value -> values.stream().anyMatch(v -> v.test(value)));
     }
 
     /**
@@ -256,11 +261,12 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      * Returns a step condition checking if all of the given predicates testing the node value match.
      *
      * @param values the values to match
+     * @param predicateReadables strings defining predicates in order
      * @return the step condition
      */
-    public final StepCondition allMatch(List<Predicate<T>> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata), function,
-                value -> values.stream().allMatch(v -> v.test(value)));
+    public final StepCondition allMatch(List<Predicate<T>> values, String... predicateReadables) {
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.allMatchMetadata(metadata, predicateReadables),
+                function, value -> values.stream().allMatch(v -> v.test(value)));
     }
 
     /**
@@ -291,11 +297,12 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      * Returns a step condition checking if none of the given predicates testing the node value match.
      *
      * @param values the values to match
+     * @param predicateReadables strings defining predicates in order
      * @return the step condition
      */
-    public final StepCondition noneMatch(List<Predicate<T>> values) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchNoneMetadata(metadata), function,
-                value -> values.stream().noneMatch(v -> v.test(value)));
+    public final StepCondition noneMatch(List<Predicate<T>> values, String... predicateReadables) {
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.matchNoneMetadata(metadata, predicateReadables),
+                function, value -> values.stream().noneMatch(v -> v.test(value)));
     }
 
     /**
@@ -303,7 +310,9 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      *
      * @param mapper the to integer mapper to apply
      * @return the integer condition
+     * @deprecated use {@link #mapToInt(String, java.util.function.Function)} instead
      */
+    @Deprecated
     public final IntegerFunction mapToInt(java.util.function.Function<T, Integer> mapper) {
         return mapToInt("", mapper);
     }
@@ -325,7 +334,9 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      *
      * @param mapper function to string mapper to apply
      * @return string condition
+     * @deprecated use {@link #mapToString(String, java.util.function.Function)} instead
      */
+    @Deprecated
     public final StringFunction mapToString(java.util.function.Function<T, String> mapper) {
         return mapToString("", mapper);
     }
