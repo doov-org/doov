@@ -15,24 +15,21 @@
  */
 package io.doov.core.dsl.mapping;
 
-import static io.doov.core.dsl.DOOV.map;
-import static io.doov.core.dsl.DOOV.mappings;
-import static io.doov.core.dsl.DOOV.template;
-import static io.doov.core.dsl.DOOV.when;
+import static io.doov.core.dsl.DOOV.*;
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.template.ParameterTypes.$String;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.doov.core.dsl.field.types.BooleanFieldInfo;
-import io.doov.core.dsl.field.types.IntegerFieldInfo;
-import io.doov.core.dsl.field.types.LocalDateFieldInfo;
-import io.doov.core.dsl.field.types.StringFieldInfo;
+import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.runtime.GenericModel;
 
 public class MappingTest {
@@ -43,6 +40,7 @@ public class MappingTest {
     private LocalDateFieldInfo dateField2;
     private StringFieldInfo stringField;
     private StringFieldInfo stringField2;
+    private IterableFieldInfo<String, List<String>> stringListField;
 
     @BeforeEach
     void beforeEach() {
@@ -53,6 +51,7 @@ public class MappingTest {
         this.dateField2 = model.localDateField(LocalDate.of(2, 2, 2), "dateField2");
         this.stringField = model.stringField("s1", "stringField");
         this.stringField2 = model.stringField("s2", "stringField2");
+        this.stringListField = model.iterableField(null, "stringListField");
     }
 
     @Test
@@ -143,4 +142,26 @@ public class MappingTest {
                 .executeOn(model, model);
         assertThat(model.get(intField)).isEqualTo(3);
     }
+
+    @Test
+    void map_iterable_functions() {
+        mapIter("0", "1", "2", "3")
+                .map(Integer::parseInt, "to int")
+                .filter(Objects::nonNull, "non null")
+                .reduce(s -> s.findFirst().orElse(0), "find first")
+                .to(intField)
+                .executeOn(model);
+        assertThat(model.get(intField)).isEqualTo(0);
+    }
+
+    @Test
+    void map_to_iterable_functions() {
+        mapIter("0", "1", "2", "3")
+                .map(s -> "s" + s, "concat s")
+                .collect(Collectors.toList())
+                .to(stringListField)
+                .executeOn(model);
+        assertThat(model.get(stringListField)).containsExactly("s0", "s1", "s2", "s3");
+    }
+
 }

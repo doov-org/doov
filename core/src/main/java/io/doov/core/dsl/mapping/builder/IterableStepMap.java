@@ -15,7 +15,9 @@
  */
 package io.doov.core.dsl.mapping.builder;
 
-import java.util.function.Supplier;
+import java.util.List;
+import java.util.function.*;
+import java.util.stream.*;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
@@ -67,6 +69,34 @@ public class IterableStepMap<E, I extends Iterable<E>> {
      */
     public DefaultMappingRule<I> to(TriConsumer<FieldModel, Context, I> consumer) {
         return this.to(new ConsumerOutput<>(consumer));
+    }
+
+    public <O> IterableStepMap<O, List<O>> map(TypeConverter<E, O> converter) {
+        return new IterableStepMap<>(new MapEachInput<>(input, converter));
+    }
+
+    public <O> IterableStepMap<O, List<O>> map(Function<E, O> converterFunction, String description) {
+        return this.map(TypeConverters.converter(converterFunction, description));
+    }
+
+    public IterableStepMap<E, List<E>> filter(TypeConverter<E, Boolean> converter) {
+        return new IterableStepMap<>(new FilterInput<>(input, converter));
+    }
+
+    public IterableStepMap<E, List<E>> filter(Predicate<E> predicateFunction, String description) {
+        return this.filter(TypeConverters.converter(predicateFunction::test, description));
+    }
+
+    public <T> SimpleStepMap<T> reduce(TypeConverter<Stream<E>, T> converter) {
+        return new SimpleStepMap<>(new ReduceInput<>(input, converter));
+    }
+
+    public <T> SimpleStepMap<T> reduce(Function<Stream<E>, T> converterFunction, String description) {
+        return this.reduce(TypeConverters.converter(converterFunction, description));
+    }
+
+    public <T extends Iterable<E>> SimpleStepMap<T> collect(Collector<E, ?, T> collector) {
+        return new SimpleStepMap<>(new CollectInput<>(input, collector));
     }
 
 }

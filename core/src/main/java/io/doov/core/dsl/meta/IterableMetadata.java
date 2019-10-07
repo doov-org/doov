@@ -9,7 +9,7 @@ public class IterableMetadata<E, T extends Iterable<E>> extends LeafMetadata<Ite
     private final T value;
     private final List<StaticMetadata<E>> items;
 
-    private IterableMetadata(MetadataType type, T value) {
+    protected IterableMetadata(MetadataType type, T value) {
         super(type);
         this.value = value;
         this.items = new ArrayList<>();
