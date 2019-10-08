@@ -266,6 +266,7 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * @see DefaultFunction#mapToInt(Function)
      * @deprecated use {@link #mapToInt(String, Function)} instead
      */
+    @Deprecated
     default IntegerFunction mapToInt(Function<T, Integer> mapper) {
         return getDefaultFunction().mapToInt(mapper);
     }
