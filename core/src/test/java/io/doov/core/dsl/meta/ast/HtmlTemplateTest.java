@@ -71,7 +71,7 @@ public class HtmlTemplateTest {
         assertThat(doc).tokenElse_SPAN().hasSize(0);
         assertThat(doc).tokenSingleMapping_SPAN().hasSize(0);
         assertThat(doc).tokenOperator_SPAN().containsExactly("contains", "as a string");
-        assertThat(doc).tokenValue_SPAN().isEmpty();
+        assertThat(doc).tokenValue_SPAN().containsExactly("");
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 

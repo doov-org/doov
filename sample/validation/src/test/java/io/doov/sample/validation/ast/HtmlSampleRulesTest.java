@@ -216,10 +216,10 @@ public class HtmlSampleRulesTest {
 
         assertThat(doc).percentageValue_DIV().containsExactly("100 %", "100 %");
         assertThat(doc).tokenOperator_SPAN().containsExactly("as a number", "=");
-        assertThat(doc).tokenValue_SPAN().containsExactly("1");
+        assertThat(doc).tokenValue_SPAN().containsExactly("", "1");
         assertThat(doc).tokenField_SPAN().containsExactly("user first name");
         assertThat(doc).tokenNary_SPAN().containsExactly("match all");
-        assertThat(doc).tokenUnknown_SPAN().containsExactly("-function-");
+        assertThat(doc).tokenUnknown_SPAN().isEmpty();
     }
 
     @Test
@@ -368,8 +368,8 @@ public class HtmlSampleRulesTest {
         assertThat(doc).percentageValue_DIV().containsExactly("100 %");
         assertThat(doc).tokenOperator_SPAN().containsExactly("as a number", "=");
         assertThat(doc).tokenField_SPAN().containsExactly("user birthdate");
-        assertThat(doc).tokenUnknown_SPAN().containsExactly("-function-");
-        assertThat(doc).tokenValue_SPAN().containsExactly("1980");
+        assertThat(doc).tokenUnknown_SPAN().isEmpty();
+        assertThat(doc).tokenValue_SPAN().containsExactly("", "1980");
     }
 
     @Test
@@ -390,8 +390,8 @@ public class HtmlSampleRulesTest {
         assertThat(doc).percentageValue_DIV().containsExactly("100 %");
         assertThat(doc).tokenOperator_SPAN().containsExactly("as a string", "contains");
         assertThat(doc).tokenField_SPAN().containsExactly("account timezone");
-        assertThat(doc).tokenUnknown_SPAN().containsExactly("-function-");
-        assertThat(doc).tokenValue_SPAN().containsExactly("'00:00'");
+        assertThat(doc).tokenUnknown_SPAN().isEmpty();
+        assertThat(doc).tokenValue_SPAN().containsExactly("", "'00:00'");
     }
 
     @Test

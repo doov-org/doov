@@ -20,7 +20,6 @@ import static io.doov.core.dsl.meta.DefaultOperator.as_a_number;
 import static io.doov.core.dsl.meta.DefaultOperator.as_string;
 import static io.doov.core.dsl.meta.DefaultOperator.with;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.readableMetadata;
-import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.unknownMetadata;
 
 import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.Metadata;
@@ -34,11 +33,11 @@ public class MapFunctionMetadata extends BinaryPredicateMetadata {
     }
 
     public static MapFunctionMetadata mapToIntMetadata(Metadata metadata, String functionDescriptor) {
-        return new MapFunctionMetadata(metadata, as_a_number, unknownMetadata(functionDescriptor));
+        return new MapFunctionMetadata(metadata, as_a_number, readableMetadata(() -> functionDescriptor));
     }
 
     public static MapFunctionMetadata mapToStringMetadata(Metadata metadata, String functionDescriptor) {
-        return new MapFunctionMetadata(metadata, as_string, unknownMetadata(functionDescriptor));
+        return new MapFunctionMetadata(metadata, as_string, readableMetadata(() -> functionDescriptor));
     }
 
     public static MapFunctionMetadata mapAsMetadata(Metadata metadata, String readable) {

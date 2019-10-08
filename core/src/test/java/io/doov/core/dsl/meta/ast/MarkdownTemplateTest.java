@@ -43,7 +43,7 @@ public class MarkdownTemplateTest {
     @Test
     void twoParamsTest() {
         Rule2<StringFieldInfo, StringFieldInfo> template = template($String, $String)
-                .rule((url, name) -> url.contains(name.mapToString(String::toLowerCase)));
+                .rule((url, name) -> url.contains(name.mapToString("lower case", String::toLowerCase)));
         ValidationRule rule = template.bind(model.stringField("a", "param1"), model.stringField("b", "param2"));
         node = parse(rule.metadata());
         assertThat(node).countBulletList().isEqualTo(3);
@@ -51,7 +51,7 @@ public class MarkdownTemplateTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(4);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "{param1} contains {param2} as a string -function-",
+                "{param1} contains {param2} as a string 'lower case'",
                 "validate");
     }
 
