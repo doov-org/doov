@@ -17,12 +17,15 @@ package io.doov.core.dsl.mapping.builder;
 
 import java.util.List;
 import java.util.function.*;
-import java.util.stream.*;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
+import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.*;
+import io.doov.core.dsl.meta.Metadata;
 
 /**
  * First step for creating a static mapping rule.
@@ -89,6 +92,10 @@ public class IterableStepMap<E, I extends Iterable<E>> {
 
     public IterableStepMap<E, List<E>> filter(Predicate<E> predicateFunction, String description) {
         return this.filter(TypeConverters.converter(predicateFunction::test, description));
+    }
+
+    public IterableStepMap<E, List<E>> filter(Function<DefaultFunction<E, ? extends Metadata>, StepCondition> conditionFunction) {
+        return new IterableStepMap<>(new FilterConditionInput<>(input, conditionFunction));
     }
 
     public <T> SimpleStepMap<T> reduce(TypeConverter<Stream<E>, T> converter) {

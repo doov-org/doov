@@ -3,16 +3,10 @@
  */
 package io.doov.core.dsl.meta;
 
-import java.util.stream.Stream;
-
-public class FilterMetadata extends AbstractMetadata {
-
-    private final Metadata mappingInputMetadata;
-    private final Metadata converterMetadata;
+public class FilterMetadata extends BinaryMetadata {
 
     public FilterMetadata(Metadata mappingInputMetadata, Metadata converterMetadata) {
-        this.mappingInputMetadata = mappingInputMetadata;
-        this.converterMetadata = converterMetadata;
+        super(mappingInputMetadata, MappingOperator.filter, converterMetadata);
     }
 
     public static FilterMetadata create(Metadata mappingInput, Metadata converter) {
@@ -24,13 +18,4 @@ public class FilterMetadata extends AbstractMetadata {
         return MetadataType.MAPPING_LEAF_FILTER;
     }
 
-    @Override
-    public Stream<Metadata> left() {
-        return Stream.of(mappingInputMetadata);
-    }
-
-    @Override
-    public Stream<Metadata> right() {
-        return Stream.of(converterMetadata);
-    }
 }

@@ -30,6 +30,9 @@ public enum MappingOperator implements Operator {
     mappings("mappings"), //
     to("to"), //
     using("using"),//
+    reduce("reduce"),//
+    filter("filter"),//
+    map_each("map_each"),//
     ; //
     private final String readable;
 

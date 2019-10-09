@@ -3,16 +3,12 @@
  */
 package io.doov.core.dsl.meta;
 
-import java.util.stream.Stream;
+import static io.doov.core.dsl.meta.MappingOperator.map_each;
 
-public class MapEachMetadata extends AbstractMetadata {
-
-    private final Metadata inputMetadata;
-    private final Metadata converterMetadata;
+public class MapEachMetadata extends BinaryMetadata {
 
     public MapEachMetadata(Metadata inputMetadata, Metadata converterMetadata) {
-        this.inputMetadata = inputMetadata;
-        this.converterMetadata = converterMetadata;
+        super(inputMetadata, map_each, converterMetadata);
     }
 
     public static MapEachMetadata create(Metadata metadata, Metadata converterMetadata) {
@@ -22,16 +18,6 @@ public class MapEachMetadata extends AbstractMetadata {
     @Override
     public MetadataType type() {
         return MetadataType.MAPPING_LEAF_FLAT_MAP;
-    }
-
-    @Override
-    public Stream<Metadata> left() {
-        return Stream.of(inputMetadata);
-    }
-
-    @Override
-    public Stream<Metadata> right() {
-        return Stream.of(converterMetadata);
     }
 
 }

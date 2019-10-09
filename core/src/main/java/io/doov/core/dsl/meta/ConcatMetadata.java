@@ -3,24 +3,18 @@
  */
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.DefaultOperator.concat;
+
 import java.util.List;
-import java.util.stream.Stream;
 
-public class ConcatMetadata extends AbstractMetadata {
-
-    private List<Metadata> mappingInputs;
+public class ConcatMetadata extends NaryMetadata {
 
     public ConcatMetadata(List<Metadata> mappingInputs) {
-        this.mappingInputs = mappingInputs;
+        super(concat, mappingInputs);
     }
 
     public static Metadata create(List<Metadata> mappingInputs) {
         return new ConcatMetadata(mappingInputs);
-    }
-
-    @Override
-    public Stream<Metadata> left() {
-        return mappingInputs.stream();
     }
 
     @Override

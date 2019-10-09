@@ -3,30 +3,16 @@
  */
 package io.doov.core.dsl.meta;
 
-import java.util.stream.Stream;
+import static io.doov.core.dsl.meta.MappingOperator.reduce;
 
-public class ReduceMetadata extends AbstractMetadata {
-
-    private Metadata mappingInputMetadata;
-    private Metadata converterMetadata;
+public class ReduceMetadata extends BinaryMetadata {
 
     public ReduceMetadata(Metadata mappingInputMetadata, Metadata converterMetadata) {
-        this.mappingInputMetadata = mappingInputMetadata;
-        this.converterMetadata = converterMetadata;
+        super(mappingInputMetadata, reduce, converterMetadata);
     }
 
     public static ReduceMetadata create(Metadata mappingInput, Metadata converter) {
         return new ReduceMetadata(mappingInput, converter);
-    }
-
-    @Override
-    public Stream<Metadata> left() {
-        return Stream.of(mappingInputMetadata);
-    }
-
-    @Override
-    public Stream<Metadata> right() {
-        return Stream.of(converterMetadata);
     }
 
     @Override
