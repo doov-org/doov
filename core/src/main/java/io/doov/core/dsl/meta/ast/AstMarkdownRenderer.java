@@ -76,12 +76,16 @@ public class AstMarkdownRenderer {
                     break;
                 case BINARY_PREDICATE:
                 case TEMPLATE_PARAM:
+                case MAPPING_LEAF_FLAT_MAP:
+                case MAPPING_LEAF_FILTER:
+                case MAPPING_LEAF_REDUCE:
                     binary(metadata, parents, indent);
                     break;
                 case LEAF_PREDICATE:
                 case FIELD_PREDICATE:
                 case LEAF_VALUE:
                 case MAPPING_LEAF:
+                case MAPPING_LEAF_ITERABLE:
                 case TEMPLATE_IDENTIFIER:
                 case FIELD_PREDICATE_MATCH_ANY:
                     leaf(metadata, parents, indent);
@@ -89,6 +93,7 @@ public class AstMarkdownRenderer {
                 case UNARY_PREDICATE:
                     unary(metadata, parents, indent);
                     break;
+                case MAPPING_LEAF_ITERABLE_CONCAT:
                 case NARY_PREDICATE:
                     nary(metadata, parents, indent);
                     break;

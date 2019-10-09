@@ -17,8 +17,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.not;
 import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.DefaultOperator.validate;
 import static io.doov.core.dsl.meta.DefaultOperator.when;
-import static io.doov.core.dsl.meta.MappingOperator.map;
-import static io.doov.core.dsl.meta.MappingOperator.to;
+import static io.doov.core.dsl.meta.MappingOperator.*;
 import static io.doov.core.dsl.meta.MetadataType.BINARY_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.ELSE_MAPPING;
 import static io.doov.core.dsl.meta.MetadataType.EMPTY;
@@ -75,6 +74,7 @@ import io.doov.core.dsl.meta.function.TemplateParamMetadata;
 public class AstHtmlRenderer {
 
     private static final List<Operator> AND_OR = asList(and, or);
+    private static final List<Operator> MAP_STREAM = asList(filter, reduce, map_each);
 
     protected HtmlWriter writer;
 
@@ -98,6 +98,9 @@ public class AstHtmlRenderer {
                     break;
                 case BINARY_PREDICATE:
                 case TEMPLATE_PARAM:
+                case MAPPING_LEAF_FLAT_MAP:
+                case MAPPING_LEAF_FILTER:
+                case MAPPING_LEAF_REDUCE:
                     binary(metadata, parents);
                     break;
                 case LEAF_PREDICATE:
@@ -120,6 +123,7 @@ public class AstHtmlRenderer {
                 case MULTIPLE_MAPPING:
                 case THEN_MAPPING:
                 case ELSE_MAPPING:
+                case MAPPING_LEAF_ITERABLE_CONCAT:
                     nary(metadata, parents);
                     break;
                 case MAPPING_INPUT:
@@ -292,7 +296,9 @@ public class AstHtmlRenderer {
         final MetadataType pmdType = pmd.map(Metadata::type).orElse(null);
         final Operator pmdOperator = pmd.map(Metadata::getOperator).orElse(null);
         final boolean leftChild = pmd.map(m -> m.childAt(0) == metadata).orElse(false);
-        if (!AND_OR.contains(pmdOperator) && metadata.getOperator() == and) {
+        if (MAP_STREAM.contains(metadata.getOperator())) {
+            binary_BR(metadata, parents);
+        } else if (!AND_OR.contains(pmdOperator) && metadata.getOperator() == and) {
             // @see io.doov.core.dsl.meta.ast.HtmlAndTest.and_and_and()
             writer.writeBeginLi(CSS_LI_BINARY);
             binary_BR(metadata, parents);

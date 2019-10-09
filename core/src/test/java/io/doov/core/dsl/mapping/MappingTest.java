@@ -164,4 +164,16 @@ public class MappingTest {
         assertThat(model.get(stringListField)).containsExactly("s0", "s1", "s2", "s3");
     }
 
+    @Test
+    void map_to_iterable_functions_condition() {
+        mapIter("0", "1", "2", "3")
+                .map(Integer::parseInt, "parse int")
+                .filter(f -> f.eq(intField))
+                .map(String::valueOf, "String value of")
+                .reduce(s -> s.findFirst().orElse(null), "take first")
+                .to(stringField)
+                .executeOn(model);
+        assertThat(model.get(stringField)).isEqualTo("1");
+    }
+
 }

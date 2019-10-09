@@ -13,10 +13,7 @@
 package io.doov.core.dsl.meta.ast;
 
 import static io.doov.assertions.renderer.Assertions.assertThat;
-import static io.doov.core.dsl.DOOV.map;
-import static io.doov.core.dsl.DOOV.mappings;
-import static io.doov.core.dsl.DOOV.template;
-import static io.doov.core.dsl.DOOV.when;
+import static io.doov.core.dsl.DOOV.*;
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.meta.ast.HtmlAnyMatchTest.documentOf;
@@ -26,14 +23,9 @@ import static io.doov.core.dsl.template.ParameterTypes.$String;
 import java.time.LocalDate;
 
 import org.jsoup.nodes.Document;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import io.doov.core.dsl.field.types.BooleanFieldInfo;
-import io.doov.core.dsl.field.types.IntegerFieldInfo;
-import io.doov.core.dsl.field.types.LocalDateFieldInfo;
-import io.doov.core.dsl.field.types.StringFieldInfo;
+import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.runtime.GenericModel;
 
@@ -267,6 +259,35 @@ public class HtmlMappingTest {
         assertThat(doc).tokenOperator_SPAN().containsExactly("=", "map", "to", "=", "map", "to", "=", "map", "to");
         assertThat(doc).tokenValue_SPAN().containsExactly("'bing'", "www.bingue.com", "'Google'", "www.gougeule.com",
                         "'Yahoo'", "www.yahou.com");
+        assertThat(doc).tokenNary_SPAN().isEmpty();
+    }
+
+    @Test
+    void map_stream() {
+        ctx = mapIter("0", "1", "2", "3")
+                .map(Integer::parseInt, "parse int")
+                .filter(f -> f.eq(intField))
+                .map(String::valueOf, "String value of")
+                .reduce(s -> s.findFirst().orElse(null), "take first")
+                .to(stringField)
+                .executeOn(model);
+        doc = documentOf(ctx);
+        assertThat(doc).nary_OL().hasSize(0);
+        assertThat(doc).binary_LI().hasSize(0);
+        assertThat(doc).nary_LI().hasSize(0);
+        assertThat(doc).leaf_LI().hasSize(0);
+        assertThat(doc).when_UL().hasSize(0);
+        assertThat(doc).binary_UL().hasSize(0);
+        assertThat(doc).binaryChild_UL().hasSize(0);
+        assertThat(doc).unary_UL().hasSize(0);
+        assertThat(doc).tokenWhen_SPAN().hasSize(0);
+        assertThat(doc).tokenThen_SPAN().hasSize(0);
+        assertThat(doc).tokenElse_SPAN().hasSize(0);
+        assertThat(doc).tokenSingleMapping_SPAN().hasSize(1);
+        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "map each", "using", "filter", "=", "map each",
+                "using", "reduce", "using", "to");
+        assertThat(doc).tokenValue_SPAN().containsExactly("0", "1", "2", "3", "'parse int'", "item", "intField",
+                "'String value of'", "'take first'");
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
