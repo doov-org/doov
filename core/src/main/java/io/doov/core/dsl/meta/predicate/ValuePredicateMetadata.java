@@ -18,17 +18,16 @@ package io.doov.core.dsl.meta.predicate;
 import static io.doov.core.dsl.meta.DefaultOperator.always_false;
 import static io.doov.core.dsl.meta.DefaultOperator.always_true;
 import static io.doov.core.dsl.meta.DefaultOperator.lambda;
-import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
-import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
-import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_IDENTIFIER;
+import static io.doov.core.dsl.meta.MetadataType.*;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import io.doov.core.dsl.lang.Readable;
-import io.doov.core.dsl.meta.*;
+import io.doov.core.dsl.meta.LeafMetadata;
+import io.doov.core.dsl.meta.MetadataType;
 
 public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends LeafMetadata<M>
         implements PredicateMetadata {
@@ -106,8 +105,26 @@ public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends
         return new ValuePredicateMetadata<M>(FIELD_PREDICATE_MATCH_ANY).valueListObject(values);
     }
 
-    public static <M extends ValuePredicateMetadata<M>> M anyMatchMetadata(Metadata metadata) {
-        return new ValuePredicateMetadata<M>(FIELD_PREDICATE_MATCH_ANY).valueReadable(lambda);
+    public static <M extends ValuePredicateMetadata<M>> M anyMatchMetadata(String... readables) {
+        return new ValuePredicateMetadata<M>(FIELD_PREDICATE_MATCH_ANY)
+                .valueReadable(lambda)
+                .valueListObject(Arrays.asList(readables));
+    }
+
+    // all match
+
+    public static <M extends ValuePredicateMetadata<M>> M allMatchMetadata(String... readables) {
+        return new ValuePredicateMetadata<M>(FIELD_PREDICATE)
+                .valueReadable(lambda)
+                .valueListObject(Arrays.asList(readables));
+    }
+
+    // none match
+
+    public static <M extends ValuePredicateMetadata<M>> M noneMatchMetadata(String... readables) {
+        return new ValuePredicateMetadata<M>(FIELD_PREDICATE)
+                .valueReadable(lambda)
+                .valueListObject(Arrays.asList(readables));
     }
 
     public static <M extends ValuePredicateMetadata<M>> M templateParam(String parameterIdentifier) {

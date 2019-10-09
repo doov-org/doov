@@ -146,7 +146,7 @@ public class MarkdownSampleRulesTest {
         assertThat(node).countText().isEqualTo(5);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match all",
-                "user first name as a number -function-  = '1'",
+                "user first name as a number '' = '1'",
                 "validate");
     }
 
@@ -236,7 +236,7 @@ public class MarkdownSampleRulesTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(4);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "user birthdate as a number -function-  = '1980'",
+                "user birthdate as a number '' = '1980'",
                 "validate");
     }
 
@@ -248,7 +248,7 @@ public class MarkdownSampleRulesTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(4);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "account timezone as a string -function-  contains '00:00'",
+                "account timezone as a string '' contains '00:00'",
                 "validate");
     }
 

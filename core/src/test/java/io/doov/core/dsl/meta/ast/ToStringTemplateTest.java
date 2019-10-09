@@ -31,9 +31,9 @@ public class ToStringTemplateTest {
     @Test
     void twoParamsTest() {
         Rule2<StringFieldInfo, StringFieldInfo> template = template($String, $String)
-                        .rule((url, name) -> url.contains(name.mapToString(String::toLowerCase)));
+                        .rule((url, name) -> url.contains(name.mapToString("lower case", String::toLowerCase)));
         assertThat(template.readable(LOCALE))
-                        .isEqualTo("rule when {$String} contains {$String} as a string -function-  validate");
+                        .isEqualTo("rule when {$String} contains {$String} as a string lower case validate");
     }
 
     @Test
@@ -53,9 +53,9 @@ public class ToStringTemplateTest {
     @Test
     void bindTwoParamsTest() {
         Rule2<StringFieldInfo, StringFieldInfo> template = template($String, $String)
-                        .rule((url, name) -> url.contains(name.mapToString(String::toLowerCase)));
+                        .rule((url, name) -> url.contains(name.mapToString("lower case", String::toLowerCase)));
         assertThat(template.bind(model.stringField("a", "param1"), model.stringField("b", "param2")).readable(LOCALE))
-                        .isEqualTo("rule when {param1} contains {param2} as a string -function-  validate");
+                        .isEqualTo("rule when {param1} contains {param2} as a string lower case validate");
     }
 
     @Test

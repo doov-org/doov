@@ -1,6 +1,7 @@
 ext.pomProjectName = 'dOOv Assertions Core'
 
 dependencies {
+    compile project(':doov-ts-parser')
     compile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
   	compile group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
     compile group: 'com.atlassian.commonmark', name: 'commonmark', version: commonmarkVersion
