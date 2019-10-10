@@ -32,13 +32,13 @@ class HtmlIterableTest {
 
         Document document = documentOf(rule.executeOn(model, model));
 
-        assertThat(document).iterable_UL().extracting(Element::text).containsExactly("1 2 3");
+        assertThat(document).iterable_UL().extracting(Element::text).containsExactly("'1' '2' '3'");
         assertThat(document).iterable_UL()
-                .extracting(e -> e.selectFirst("li").text()).containsExactly("1");
+                .extracting(e -> e.selectFirst("li").text()).containsExactly("'1'");
         assertThat(document).iterable_UL()
-                .extracting(e -> e.select("li:nth-of-type(2)").text()).containsExactly("2");
+                .extracting(e -> e.select("li:nth-of-type(2)").text()).containsExactly("'2'");
         assertThat(document).iterable_UL()
-                .extracting(e -> e.select("li:nth-of-type(3)").text()).containsExactly("3");
+                .extracting(e -> e.select("li:nth-of-type(3)").text()).containsExactly("'3'");
     }
 
     @Test
@@ -51,12 +51,12 @@ class HtmlIterableTest {
 
         Document document = documentOf(rule.executeOn(model, model));
 
-        assertThat(document).iterable_UL().extracting(Element::text).containsExactly("1 2 3");
+        assertThat(document).iterable_UL().extracting(Element::text).containsExactly("'1' '2' '3'");
         assertThat(document).iterable_UL()
-                .extracting(e -> e.selectFirst("li").text()).containsExactly("1");
+                .extracting(e -> e.selectFirst("li").text()).containsExactly("'1'");
         assertThat(document).iterable_UL()
-                .extracting(e -> e.select("li:nth-of-type(2)").text()).containsExactly("2");
+                .extracting(e -> e.select("li:nth-of-type(2)").text()).containsExactly("'2'");
         assertThat(document).iterable_UL()
-                .extracting(e -> e.select("li:nth-of-type(3)").text()).containsExactly("3");
+                .extracting(e -> e.select("li:nth-of-type(3)").text()).containsExactly("'3'");
     }
 }

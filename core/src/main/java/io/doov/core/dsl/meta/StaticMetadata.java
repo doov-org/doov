@@ -19,9 +19,8 @@ public class StaticMetadata<T> extends LeafMetadata<StaticMetadata<T>> {
                 .valueSupplier(valueSupplier);
     }
 
-    public static <U> StaticMetadata<U> leaf(Supplier<U> valueSupplier) {
-        return new StaticMetadata<>(MetadataType.LEAF_VALUE, valueSupplier.get())
-                .valueSupplier(valueSupplier);
+    public static <U> StaticMetadata<U> leaf(U value) {
+        return new StaticMetadata<>(MetadataType.LEAF_VALUE, value).valueObject(value);
     }
 
     public T value() {

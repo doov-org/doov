@@ -60,7 +60,7 @@ public class AstTSRenderer {
                     leaf(metadata, parents);
                     break;
                 case MAPPING_LEAF_ITERABLE:
-                    iterable(metadata, parents);
+                    iterableArray(metadata, parents);
                     break;
                 case TYPE_CONVERTER:
                     typeConverter(metadata, parents);
@@ -361,6 +361,12 @@ public class AstTSRenderer {
             }
         }
         writer.write(RIGHT_PARENTHESIS);
+    }
+
+    protected void iterableArray(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writer.write("[");
+        iterable(metadata, parents);
+        writer.write("]");
     }
 
     protected void iterable(Metadata metadata, ArrayDeque<Metadata> parents) {

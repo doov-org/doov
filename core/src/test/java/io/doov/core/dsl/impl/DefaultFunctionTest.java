@@ -140,7 +140,7 @@ public class DefaultFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match any [a, b, c] validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match any ['a', 'b', 'c'] validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A = 'value'");
     }
 
