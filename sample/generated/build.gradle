@@ -42,12 +42,3 @@ doovCodeGen {
         dslEntrypointMethods = false
     }
 }
-
-idea {
-    module {
-        sourceDirs += file("$buildDir/doov/doovMapGenSample")
-        sourceDirs += file("$buildDir/doov/doovMapGenSample2")
-        sourceDirs += file("$buildDir/doov/doovMapGenSample3")
-        sourceDirs += file("$buildDir/doov/doovMapGenBenchmark")
-    }
-}
