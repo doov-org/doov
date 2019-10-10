@@ -375,7 +375,7 @@ public class AstTSRenderer {
     }
 
     protected void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
-        nary(metadata, parents);
+        iterable(metadata, parents);
     }
 
     protected void singleMapping(Metadata metadata, ArrayDeque<Metadata> parents) {
