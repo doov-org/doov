@@ -126,7 +126,8 @@ public class AstHtmlRenderer {
                     mappingInput(metadata, parents);
                     break;
                 case FIELD_PREDICATE_MATCH_ANY:
-                    fieldMatchAny(metadata, parents);
+                    iterable(metadata, parents);
+//                    fieldMatchAny(metadata, parents);
                     break;
                 case SINGLE_MAPPING:
                     singleMapping(metadata, parents);
@@ -142,7 +143,7 @@ public class AstHtmlRenderer {
     private void iterable(Metadata metadata, ArrayDeque<Metadata> parents) {
         IterableMetadata<?, ?> iterableMetadata = (IterableMetadata<?, ?>) metadata;
         writer.writeBeginUl(CSS_UL_ITERABLE);
-        iterableMetadata.items().forEach(item -> {
+        iterableMetadata.children().forEach(item -> {
             writer.writeBeginLi();
             toHtml(item, parents);
             writer.writeEndLi();
@@ -222,9 +223,7 @@ public class AstHtmlRenderer {
 
     private void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
         writer.writeBeginSpan(CSS_VALUE);
-        for (Element e : ((LeafMetadata<?>) metadata).elements()) {
-            writer.writeFromBundle(e.getReadable().readable());
-        }
+        metadata.children().forEach(this::toHtml);
         writer.writeEndSpan();
     }
 

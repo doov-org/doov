@@ -14,8 +14,13 @@ public class StaticMetadata<T> extends LeafMetadata<StaticMetadata<T>> {
         this.valueClass = value != null ? (Class<T>) value.getClass() : null;
     }
 
-    public static <U> StaticMetadata<U> create(Supplier<U> valueSupplier) {
+    public static <U> StaticMetadata<U> mappingLeaf(Supplier<U> valueSupplier) {
         return new StaticMetadata<>(MetadataType.MAPPING_LEAF, valueSupplier.get())
+                .valueSupplier(valueSupplier);
+    }
+
+    public static <U> StaticMetadata<U> leaf(Supplier<U> valueSupplier) {
+        return new StaticMetadata<>(MetadataType.LEAF_VALUE, valueSupplier.get())
                 .valueSupplier(valueSupplier);
     }
 

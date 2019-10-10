@@ -97,6 +97,12 @@ public class AstTextVisitor extends AbstractAstVisitor {
     }
 
     @Override
+    public void startIterable(IterableMetadata metadata, int depth) {
+        sb.append(formatCurrentIndent());
+        sb.append(formatNewLine());
+    }
+
+    @Override
     public void startRule(Metadata metadata, int depth) {
         sb.append(formatCurrentIndent());
         sb.append(formatRule());

@@ -65,6 +65,31 @@ public class AstLineVisitor extends AstTextVisitor {
     }
 
     @Override
+    public void startIterable(IterableMetadata metadata, int depth) {
+        super.startIterable(metadata, depth);
+        sb.delete(sb.length() - 1, sb.length());
+        sb.append("[");
+    }
+
+    @Override
+    public void afterChildIterable(IterableMetadata metadata, Metadata child, boolean hasNext, int depth) {
+        super.visitIterable(metadata, depth);
+        if (hasNext) {
+            sb.delete(sb.length() - 1, sb.length());
+            sb.append(", ");
+        }
+    }
+
+    @Override
+    public void endIterable(IterableMetadata metadata, int depth) {
+        super.endIterable(metadata, depth);
+        sb.delete(sb.length() - 1, sb.length());
+        if (metadata.children().count() > 0) {
+            sb.append("] ");
+        }
+    }
+
+    @Override
     public void startBinary(BinaryMetadata metadata, int depth) {
         super.startBinary(metadata, depth);
         if ((metadata.getOperator() == and || metadata.getOperator() == or)

@@ -40,12 +40,15 @@ public class MarkdownAnyMatchTest {
     void anyMatch_success() {
         rule = when(enumField.anyMatch(VAL1, VAL2, VAL3)).validate();
         node = parse(rule.metadata());
-        assertThat(node).countBulletList().isEqualTo(3);
-        assertThat(node).countListItem().isEqualTo(4);
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(7);
         assertThat(node).countOrderedList().isEqualTo(0);
-        assertThat(node).countText().isEqualTo(4);
+        assertThat(node).countText().isEqualTo(7);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "enumField match any ' : VAL1, VAL2, VAL3'",
+                "enumField match any",
+                "'VAL1'",
+                "'VAL2'",
+                "'VAL3'",
                 "validate");
     }
 
@@ -53,12 +56,14 @@ public class MarkdownAnyMatchTest {
     void anyMatch_failure() {
         rule = when(enumField.anyMatch(VAL2, VAL3)).validate();
         node = parse(rule.metadata());
-        assertThat(node).countBulletList().isEqualTo(3);
-        assertThat(node).countListItem().isEqualTo(4);
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(6);
         assertThat(node).countOrderedList().isEqualTo(0);
-        assertThat(node).countText().isEqualTo(4);
+        assertThat(node).countText().isEqualTo(6);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "enumField match any ' : VAL2, VAL3'",
+                "enumField match any",
+                "'VAL2'",
+                "'VAL3'",
                 "validate");
     }
 
@@ -67,13 +72,16 @@ public class MarkdownAnyMatchTest {
         A = DOOV.alwaysTrue("A");
         rule = when(A.and(enumField.anyMatch(VAL1, VAL2, VAL3))).validate();
         node = parse(rule.metadata());
-        assertThat(node).countBulletList().isEqualTo(3);
-        assertThat(node).countListItem().isEqualTo(5);
+        assertThat(node).countBulletList().isEqualTo(4);
+        assertThat(node).countListItem().isEqualTo(8);
         assertThat(node).countOrderedList().isEqualTo(0);
-        assertThat(node).countText().isEqualTo(5);
+        assertThat(node).countText().isEqualTo(8);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "always true 'A' and",
-                "enumField match any ' : VAL1, VAL2, VAL3'",
+                "enumField match any",
+                "'VAL1'",
+                "'VAL2'",
+                "'VAL3'",
                 "validate");
     }
 
@@ -89,14 +97,17 @@ public class MarkdownAnyMatchTest {
         A = DOOV.alwaysTrue("A");
         rule = when(matchAny(A, enumField.anyMatch(VAL1, VAL2, VAL3))).validate().withShortCircuit(false);
         node = parse(rule.metadata());
-        assertThat(node).countBulletList().isEqualTo(4);
-        assertThat(node).countListItem().isEqualTo(6);
+        assertThat(node).countBulletList().isEqualTo(5);
+        assertThat(node).countListItem().isEqualTo(9);
         assertThat(node).countOrderedList().isEqualTo(0);
-        assertThat(node).countText().isEqualTo(6);
+        assertThat(node).countText().isEqualTo(9);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
                 "always true 'A'",
-                "enumField match any ' : VAL1, VAL2, VAL3'",
+                "enumField match any",
+                "'VAL1'",
+                "'VAL2'",
+                "'VAL3'",
                 "validate");
     }
 
@@ -105,14 +116,16 @@ public class MarkdownAnyMatchTest {
         A = DOOV.alwaysFalse("A");
         rule = when(matchAny(A, enumField.anyMatch(VAL2, VAL3))).validate();
         node = parse(rule.metadata());
-        assertThat(node).countBulletList().isEqualTo(4);
-        assertThat(node).countListItem().isEqualTo(6);
+        assertThat(node).countBulletList().isEqualTo(5);
+        assertThat(node).countListItem().isEqualTo(8);
         assertThat(node).countOrderedList().isEqualTo(0);
-        assertThat(node).countText().isEqualTo(6);
+        assertThat(node).countText().isEqualTo(8);
         assertThat(node).textNodes().containsExactly("rule", "when",
                 "match any",
                 "always false 'A'",
-                "enumField match any ' : VAL2, VAL3'",
+                "enumField match any",
+                "'VAL2'",
+                "'VAL3'",
                 "validate");
     }
 

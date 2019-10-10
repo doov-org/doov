@@ -36,14 +36,14 @@ public class ToStringAnyMatchTest {
     @Test
     void anyMatch_success() {
         rule = when(enumField.anyMatch(VAL1, VAL2, VAL3)).validate();
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when enumField match any  : VAL1, VAL2, VAL3 validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when enumField match any [VAL1, VAL2, VAL3] validate");
 
     }
 
     @Test
     void anyMatch_failure() {
         rule = when(enumField.anyMatch(VAL2, VAL3)).validate();
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when enumField match any  : VAL2, VAL3 validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when enumField match any [VAL2, VAL3] validate");
     }
 
     @Test
@@ -51,7 +51,7 @@ public class ToStringAnyMatchTest {
         A = DOOV.alwaysTrue("A");
         rule = when(A.and(enumField.anyMatch(VAL1, VAL2, VAL3))).validate();
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when (always true A and enumField match any  : VAL1, VAL2, VAL3) validate");
+                .isEqualTo("rule when (always true A and enumField match any [VAL1, VAL2, VAL3]) validate");
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ToStringAnyMatchTest {
         A = DOOV.alwaysTrue("A");
         rule = when(A.and(enumField.anyMatch(VAL2, VAL3))).validate();
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when (always true A and enumField match any  : VAL2, VAL3) validate");
+                .isEqualTo("rule when (always true A and enumField match any [VAL2, VAL3]) validate");
     }
 
     @Test
@@ -67,7 +67,7 @@ public class ToStringAnyMatchTest {
         A = DOOV.alwaysTrue("A");
         rule = when(matchAny(A, enumField.anyMatch(VAL1, VAL2, VAL3))).validate();
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when match any [always true A, enumField match any  : VAL1, VAL2, VAL3] validate");
+                .isEqualTo("rule when match any [always true A, enumField match any [VAL1, VAL2, VAL3]] validate");
     }
 
     @Test
@@ -75,7 +75,7 @@ public class ToStringAnyMatchTest {
         A = DOOV.alwaysFalse("A");
         rule = when(matchAny(A, enumField.anyMatch(VAL2, VAL3))).validate();
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when match any [always false A, enumField match any  : VAL2, VAL3] validate");
+                .isEqualTo("rule when match any [always false A, enumField match any [VAL2, VAL3]] validate");
     }
 
     @AfterEach

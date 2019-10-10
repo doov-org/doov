@@ -88,7 +88,7 @@ public class HtmlAnyMatchTest {
         assertThat(doc).unary_UL().hasSize(0);
         assertThat(doc).percentageValue_DIV().containsExactly("100 %");
         assertThat(doc).tokenOperator_SPAN().containsExactly("match any");
-        assertThat(doc).tokenValue_SPAN().containsExactly(": VAL1, VAL2, VAL3");
+        assertThat(doc).tokenValue_SPAN().containsExactly("VAL1", "VAL2", "VAL3");
         assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
 
@@ -108,7 +108,7 @@ public class HtmlAnyMatchTest {
         assertThat(doc).unary_UL().hasSize(0);
         assertThat(doc).percentageValue_DIV().containsExactly("0 %");
         assertThat(doc).tokenOperator_SPAN().containsExactly("match any");
-        assertThat(doc).tokenValue_SPAN().containsExactly(": VAL2, VAL3");
+        assertThat(doc).tokenValue_SPAN().containsExactly("VAL2", "VAL3");
         assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
 
@@ -129,7 +129,7 @@ public class HtmlAnyMatchTest {
         assertThat(doc).unary_UL().hasSize(0);
         assertThat(doc).percentageValue_DIV().containsExactly("100 %", "100 %");
         assertThat(doc).tokenOperator_SPAN().containsExactly("always true", "and", "match any");
-        assertThat(doc).tokenValue_SPAN().containsExactly("A", ": VAL1, VAL2, VAL3");
+        assertThat(doc).tokenValue_SPAN().containsExactly("A", "VAL1", "VAL2", "VAL3");
         assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
 
@@ -150,7 +150,7 @@ public class HtmlAnyMatchTest {
         assertThat(doc).unary_UL().hasSize(0);
         assertThat(doc).percentageValue_DIV().containsExactly("100 %", "0 %");
         assertThat(doc).tokenOperator_SPAN().containsExactly("always true", "and", "match any");
-        assertThat(doc).tokenValue_SPAN().containsExactly("A", ": VAL2, VAL3");
+        assertThat(doc).tokenValue_SPAN().containsExactly("A", "VAL2", "VAL3");
         assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
 
@@ -172,7 +172,7 @@ public class HtmlAnyMatchTest {
         assertThat(doc).unary_UL().hasSize(0);
         assertThat(doc).percentageValue_DIV().containsExactly("100 %", "100 %", "100 %");
         assertThat(doc).tokenOperator_SPAN().containsExactly("always true", "match any");
-        assertThat(doc).tokenValue_SPAN().containsExactly("A", ": VAL1, VAL2, VAL3");
+        assertThat(doc).tokenValue_SPAN().containsExactly("A", "VAL1", "VAL2", "VAL3");
         assertThat(doc).tokenNary_SPAN().containsExactly("match any");
         assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }
@@ -194,7 +194,7 @@ public class HtmlAnyMatchTest {
         assertThat(doc).unary_UL().hasSize(0);
         assertThat(doc).percentageValue_DIV().containsExactly("0 %", "0 %", "0 %");
         assertThat(doc).tokenOperator_SPAN().containsExactly("always false", "match any");
-        assertThat(doc).tokenValue_SPAN().containsExactly("A", ": VAL2, VAL3");
+        assertThat(doc).tokenValue_SPAN().containsExactly("A", "VAL2", "VAL3");
         assertThat(doc).tokenNary_SPAN().containsExactly("match any");
         assertThat(doc).tokenField_SPAN().containsExactly("enumField");
     }

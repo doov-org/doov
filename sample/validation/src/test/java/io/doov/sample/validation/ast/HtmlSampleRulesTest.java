@@ -347,7 +347,7 @@ public class HtmlSampleRulesTest {
         assertThat(doc).tokenOperator_SPAN().containsExactly("match any");
         assertThat(doc).tokenField_SPAN().containsExactly("favorite site name 1");
         assertThat(doc).tokenUnknown_SPAN().isEmpty();
-        assertThat(doc).tokenValue_SPAN().containsExactly("-function-");
+        assertThat(doc).tokenValue_SPAN().isEmpty();
     }
 
     @Test

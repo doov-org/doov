@@ -103,11 +103,11 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
 
     public static BinaryPredicateMetadata anyMatchMetadata(Metadata metadata, String... readables) {
         return new BinaryPredicateMetadata(metadata, any_match_values,
-                ValuePredicateMetadata.anyMatchMetadata(readables));
+                IterableMetadata.anyMatchMetadata(readables));
     }
 
     public static BinaryPredicateMetadata anyMatchMetadata(Metadata metadata, Collection<?> values) {
-        return new BinaryPredicateMetadata(metadata, any_match_values, ValuePredicateMetadata.anyMatchMetadata(values));
+        return new BinaryPredicateMetadata(metadata, any_match_values, IterableMetadata.anyMatchMetadata(values));
     }
 
     public static BinaryPredicateMetadata allMatchMetadata(Metadata metadata, String... readables) {

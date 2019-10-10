@@ -140,18 +140,18 @@ public class DefaultFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match any  : a, b, c validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match any [a, b, c] validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A = 'value'");
     }
 
     @Test
     void anyMatch_predicate() {
-        rule = when(A.anyMatch(v -> v.equals("a"))).validate();
+        rule = when(A.anyMatch(v -> v.equals("a"), "equals a")).validate();
         result = rule.executeOn(model);
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match any -function- validate");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match any [equals a] validate");
         assertThat(result.getFailureCause(LOCALE)).isEqualTo("A = 'value'");
     }
 

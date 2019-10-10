@@ -29,6 +29,7 @@ public enum DefaultOperator implements Operator {
     match_all("match all", BOOLEAN), //
     match_none("match none", BOOLEAN), //
     any_match_values("match any", BOOLEAN), //
+    any_match_predicates("match any", BOOLEAN), //
     all_match_values("match all", BOOLEAN), //
     none_match_values("match none", BOOLEAN), //
     count("count"), //

@@ -16,7 +16,7 @@ public class IterableInput<E,T extends Iterable<E>> extends AbstractDSLBuilder i
 
     public IterableInput(Supplier<T> valueSupplier) {
         this.valueSupplier = valueSupplier;
-        this.metadata = IterableMetadata.create(valueSupplier);
+        this.metadata = IterableMetadata.mappingIterableMetadata(valueSupplier);
     }
 
     @Override

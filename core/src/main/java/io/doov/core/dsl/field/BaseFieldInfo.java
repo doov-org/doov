@@ -157,12 +157,12 @@ public interface BaseFieldInfo<T> extends DslField<T> {
      * See {@link DefaultFunction#anyMatch(List, String...)}
      *
      * @param value the value to match
-     * @param readable readable descripbing the given predicate
+     * @param readables readable descripbing the given predicate
      * @return the step condition
      * @see DefaultFunction#anyMatch(List, String...)
      */
-    default StepCondition anyMatch(Predicate<T> value, String... readable) {
-        return getDefaultFunction().anyMatch(singletonList(value));
+    default StepCondition anyMatch(Predicate<T> value, String... readables) {
+        return getDefaultFunction().anyMatch(singletonList(value), readables);
     }
 
     /**

@@ -224,7 +224,7 @@ public class MarkdownSampleRulesTest {
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(4);
         assertThat(node).textNodes().containsExactly("rule", "when",
-                "favorite site name 1 match any '-function-'",
+                "favorite site name 1 match any",
                 "validate");
     }
 
