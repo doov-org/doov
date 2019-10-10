@@ -20,13 +20,22 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     private final ResourceProvider resources;
     private final List<DslField<?>> fields;
     private final int indentSpace = 2;
+    private final FieldNameProvider fieldNameProvider;
 
     public DefaultTypeScriptWriter(Locale locale, OutputStream os, ResourceProvider resources) {
+        this(locale, os, resources, new DefaultFieldNameProvider());
+    }
+
+    public DefaultTypeScriptWriter(Locale locale,
+            OutputStream os,
+            ResourceProvider resources,
+            FieldNameProvider fieldNameProvider) {
         this.locale = locale;
         this.os = os;
         this.resources = resources;
         this.imports = new ArrayList<>();
         this.fields = new ArrayList<>();
+        this.fieldNameProvider = fieldNameProvider;
     }
 
     @Override
@@ -65,7 +74,7 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     public void writeField(DslField<?> field) {
         fields.add(field);
         try {
-            os.write(field.id().code().getBytes(UTF_8));
+            os.write(fieldNameProvider.getFieldName(field).getBytes(UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

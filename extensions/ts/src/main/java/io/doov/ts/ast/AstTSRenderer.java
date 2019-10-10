@@ -110,6 +110,10 @@ public class AstTSRenderer {
             return "allMatch";
         } else if (operator == DefaultOperator.none_match_values) {
             return "noneMatch";
+        } else if (operator == DefaultOperator.always_false) {
+            return "alwaysFalse";
+        } else if (operator == DefaultOperator.always_true) {
+            return "alwaysTrue";
         }
         return toCamelCase(operator.name());
     }
@@ -243,7 +247,9 @@ public class AstTSRenderer {
             writer.writeField(fieldMetadata.field());
         } else {
             for (Element elt : elts) {
-                if (elt.getType() == ElementType.STRING_VALUE) {
+                if (elt.getType() == ElementType.OPERATOR) {
+                    writer.write(operatorToMethod((Operator) elt.getReadable()));
+                } else if (elt.getType() == ElementType.STRING_VALUE) {
                     writer.writeQuote();
                     writer.write(elt.getReadable().readable());
                     writer.writeQuote();
