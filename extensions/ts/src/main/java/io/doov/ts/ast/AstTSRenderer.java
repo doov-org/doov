@@ -9,6 +9,7 @@ import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.ts.ast.writer.TypeScriptWriter.*;
 import static java.util.Arrays.asList;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import io.doov.core.dsl.DslField;
@@ -114,6 +115,8 @@ public class AstTSRenderer {
             return "alwaysFalse";
         } else if (operator == DefaultOperator.always_true) {
             return "alwaysTrue";
+        } else if (operator == MappingOperator._else) {
+            return "else";
         }
         return toCamelCase(operator.name());
     }
@@ -140,10 +143,15 @@ public class AstTSRenderer {
         return stringBuilder.toString();
     }
 
-    private String deSerializeValue(Element elt, Metadata parentMetadata) {
+    private String deSerializeValue(Element elt, Metadata metadata, Metadata parentMetadata) {
         if (parentMetadata instanceof TemporalBiFunctionMetadata) {
             if (parentMetadata.getOperator() == age_at) {
                 // Date
+                return "DateUtils.newDate('" + elt.getReadable().readable()+"')";
+            }
+        }
+        if (metadata instanceof StaticMetadata) {
+            if (((StaticMetadata) metadata).valueClass().equals(LocalDate.class)) {
                 return "DateUtils.newDate('" + elt.getReadable().readable()+"')";
             }
         }
@@ -264,7 +272,7 @@ public class AstTSRenderer {
                     if (parentsList.size() > 1) {
                         Metadata parentMetadata = parentsList.get(1);
                         // TODO guess the value type from the parent operator;
-                        writer.write(deSerializeValue(elt, parentMetadata));
+                        writer.write(deSerializeValue(elt, metadata, parentMetadata));
                     } else {
                         writer.write(elt.getReadable().readable());
                     }

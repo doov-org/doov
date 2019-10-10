@@ -239,7 +239,7 @@ public class HtmlMappingTest {
         assertThat(doc).tokenElse_SPAN().hasSize(0);
         assertThat(doc).tokenSingleMapping_SPAN().hasSize(1);
         assertThat(doc).tokenOperator_SPAN().containsExactly("=", "map", "to");
-        assertThat(doc).tokenValue_SPAN().containsExactly("'Yahoo'", "www.yahou.com");
+        assertThat(doc).tokenValue_SPAN().containsExactly("'Yahoo'", "'www.yahou.com'");
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
@@ -265,8 +265,8 @@ public class HtmlMappingTest {
         assertThat(doc).tokenElse_SPAN().hasSize(0);
         assertThat(doc).tokenSingleMapping_SPAN().hasSize(3);
         assertThat(doc).tokenOperator_SPAN().containsExactly("=", "map", "to", "=", "map", "to", "=", "map", "to");
-        assertThat(doc).tokenValue_SPAN().containsExactly("'bing'", "www.bingue.com", "'Google'", "www.gougeule.com",
-                        "'Yahoo'", "www.yahou.com");
+        assertThat(doc).tokenValue_SPAN().containsExactly("'bing'", "'www.bingue.com'", "'Google'", "'www.gougeule.com'",
+                        "'Yahoo'", "'www.yahou.com'");
         assertThat(doc).tokenNary_SPAN().isEmpty();
     }
 
