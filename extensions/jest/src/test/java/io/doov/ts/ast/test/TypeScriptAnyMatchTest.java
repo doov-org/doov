@@ -19,34 +19,25 @@ import static io.doov.assertions.ts.Assertions.assertParenthesis;
 import static io.doov.assertions.ts.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
+import static io.doov.ts.ast.test.JestExtension.parseAs;
 import static io.doov.ts.ast.test.TypeScriptAnyMatchTest.EnumTest.VAL1;
 import static io.doov.ts.ast.test.TypeScriptAnyMatchTest.EnumTest.VAL2;
 import static io.doov.ts.ast.test.TypeScriptAnyMatchTest.EnumTest.VAL3;
-import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.function.Function;
 
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.EnumFieldInfo;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
-import io.doov.ts.ast.AstTSRenderer;
-import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
-import io.doov.ts.ast.writer.TypeScriptWriter;
+import io.doov.ts.ast.writer.ImportSpec;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptAnyMatchTest {
@@ -58,6 +49,9 @@ class TypeScriptAnyMatchTest {
     private GenericModel model;
     private EnumFieldInfo<EnumTest> enumField;
 
+    @RegisterExtension
+    static JestExtension jestExtension = new JestExtension();
+
     @BeforeEach
     void beforeEach() {
         this.model = new GenericModel();
@@ -67,7 +61,7 @@ class TypeScriptAnyMatchTest {
     @Test
     void anyMatch_success() throws IOException {
         result = when(enumField.anyMatch(VAL1, VAL2, VAL3)).validate().executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
@@ -84,7 +78,7 @@ class TypeScriptAnyMatchTest {
     @Test
     void anyMatch_failure() throws IOException {
         result = when(enumField.anyMatch(VAL2, VAL3)).validate().executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
@@ -102,7 +96,7 @@ class TypeScriptAnyMatchTest {
     void and_combined_anyMatch_success() throws IOException {
         A = DOOV.alwaysTrue("A");
         result = when(A.and(enumField.anyMatch(VAL1, VAL2, VAL3))).validate().executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
@@ -120,7 +114,7 @@ class TypeScriptAnyMatchTest {
     void and_combined_anyMatch_failure() throws IOException {
         A = DOOV.alwaysTrue("A");
         result = when(A.and(enumField.anyMatch(VAL2, VAL3))).validate().executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
@@ -139,7 +133,7 @@ class TypeScriptAnyMatchTest {
         A = DOOV.alwaysTrue("A");
         result = when(matchAny(A, enumField.anyMatch(VAL1, VAL2, VAL3))).validate().withShortCircuit(false)
                 .executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
@@ -157,7 +151,7 @@ class TypeScriptAnyMatchTest {
     void matchAny_combined_anyMatch_failure() throws IOException {
         A = DOOV.alwaysFalse("A");
         result = when(matchAny(A, enumField.anyMatch(VAL2, VAL3))).validate().executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
@@ -171,25 +165,14 @@ class TypeScriptAnyMatchTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
-    private static String toTS(Metadata metadata) {
-        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        TypeScriptWriter writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
-                field -> field.id().code().replace(" ", ""));
-        new AstTSRenderer(writer, true).toTS(metadata);
-        return new String(ops.toByteArray(), UTF_8);
-    }
-
-    private static TypeScriptAssertionContext parseAs(String ruleTs,
-            Function<TypeScriptParser, ParseTree> contextGetter)
-            throws IOException {
-        TypeScriptAssertionContext context = parseUsing(ruleTs, TypeScriptAssertionContext::new);
-        new ParseTreeWalker().walk(context, contextGetter.apply(context.getParser()));
-        return context;
-    }
-
-    @AfterEach
-    void afterEach() {
-        System.out.println(ruleTs);
+    @AfterAll
+    static void tearDown() {
+        jestExtension.getJestTestSpec().getImports().add(new ImportSpec("BooleanFunction", "doov"));
+        jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseA = DOOV.lift(BooleanFunction, false);");
+        jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
+        jestExtension.getJestTestSpec().getTestStates().add("let model = {};");
+        jestExtension.getJestTestSpec().getTestStates().add("enum EnumTest { VAL1, VAL2, VAL3 }");
+        jestExtension.getJestTestSpec().getBeforeEachs().add("model = { enumField: EnumTest.VAL1 };");
     }
 
     enum EnumTest {

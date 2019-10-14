@@ -4,7 +4,7 @@ dependencies {
     compile project(':doov-core')
     compile project(':doov-ts-extension')
     compile project(':doov-ts-parser')
-    testCompile project(':doov-assertions-core')
+    compile project(':doov-assertions-core')
     implementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
     implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.29'
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
