@@ -151,8 +151,12 @@ public class AstTSRenderer {
             }
         }
         if (metadata instanceof StaticMetadata) {
-            if (((StaticMetadata) metadata).valueClass().equals(LocalDate.class)) {
+            Class valueClass = ((StaticMetadata) metadata).valueClass();
+            if (valueClass.equals(LocalDate.class)) {
                 return "DateUtils.newDate('" + elt.getReadable().readable()+"')";
+            }
+            if (valueClass.isEnum()) {
+                return valueClass.getSimpleName() + "." + elt.getReadable().readable();
             }
         }
         return elt.getReadable().readable();

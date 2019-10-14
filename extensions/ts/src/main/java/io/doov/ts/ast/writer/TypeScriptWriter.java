@@ -32,9 +32,9 @@ public interface TypeScriptWriter {
 
     void writeField(DslField<?> field);
 
-    List<Import> getImports();
+    List<ImportSpec> getImports();
 
-    List<DslField<?>> getFields();
+    List<FieldSpec> getFields();
 
     OutputStream getOutput();
 

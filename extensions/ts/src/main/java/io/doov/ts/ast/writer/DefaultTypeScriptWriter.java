@@ -9,16 +9,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
+import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class DefaultTypeScriptWriter implements TypeScriptWriter {
 
-    private final List<Import> imports;
+    private final List<ImportSpec> imports;
     private final Locale locale;
     private final OutputStream os;
     private final ResourceProvider resources;
-    private final List<DslField<?>> fields;
+    private final List<FieldSpec> fields;
     private final int indentSpace = 2;
     private final FieldNameProvider fieldNameProvider;
 
@@ -63,6 +64,7 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     @Override
     public void writeGlobalDOOV() {
         write("DOOV");
+        imports.add(new ImportSpec("*", "DOOV", "doov"));
     }
 
     @Override
@@ -72,55 +74,29 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
 
     @Override
     public void writeField(DslField<?> field) {
-        fields.add(field);
+        FieldSpec spec = new FieldSpec(fieldNameProvider.getFieldName(field), field, field instanceof FieldInfo ?
+                (FieldInfo) field : null);
+        fields.add(spec);
         try {
-            os.write(fieldNameProvider.getFieldName(field).getBytes(UTF_8));
+            os.write(spec.name().getBytes(UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public List<Import> getImports() {
+    public List<ImportSpec> getImports() {
         return imports;
     }
 
     @Override
-    public List<DslField<?>> getFields() {
+    public List<FieldSpec> getFields() {
         return fields;
     }
 
     @Override
     public OutputStream getOutput() {
         return os;
-    }
-
-    public static class DefaultImport implements Import {
-
-        private final Map<String, String> symbols;
-        private final String from;
-
-        public DefaultImport(String symbol, String as, String from) {
-            this.from = from;
-            Map<String, String> symbolMap = this.symbols = new HashMap<>();
-            symbolMap.put(symbol, as);
-        }
-
-        public DefaultImport(String symbol, String from) {
-            this.from = from;
-            Map<String, String> symbolMap = this.symbols = new HashMap<>();
-            symbolMap.put(symbol, null);
-        }
-
-        @Override
-        public Map<String, String> symbols() {
-            return symbols;
-        }
-
-        @Override
-        public String from() {
-            return from;
-        }
     }
 
 }
