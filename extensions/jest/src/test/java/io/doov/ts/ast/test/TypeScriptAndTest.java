@@ -178,7 +178,7 @@ class TypeScriptAndTest {
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
         assertThat(script).identifierNamesText().containsExactly("lesserThan", "and", "before", "and", "startsWith",
-                "and", "is");
+                "and", "eq");
         assertThat(script).identifierReferencesText().containsExactly("zero", "yesterday", "name", "isTrue");
         assertThat(script).identifierExpressionsText().containsExactly("today");
         assertThat(script).literalsText().containsExactly("4", "'B'", "false");
@@ -207,7 +207,7 @@ class TypeScriptAndTest {
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
         assertThat(script).identifierNamesText().containsExactly("lesserThan", "and", "before", "and", "count",
-                "startsWith", "is", "greaterThan");
+                "startsWith", "eq", "greaterThan");
         assertThat(script).identifierReferencesText().containsExactly("zero", "yesterday", "DOOV", "name", "isTrue");
         assertThat(script).identifierExpressionsText().containsExactly("today");
         assertThat(script).literalsText().containsExactly("4", "'B'", "false", "1");
@@ -237,7 +237,7 @@ class TypeScriptAndTest {
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
         assertThat(script).identifierNamesText().containsExactly("lesserThan", "and", "before", "or", "startsWith",
-                "and", "is");
+                "and", "eq");
         assertThat(script).identifierReferencesText().containsExactly("zero", "yesterday", "name", "isTrue");
         assertThat(script).identifierExpressionsText().containsExactly("today");
         assertThat(script).literalsText().containsExactly("4", "'B'", "false");

@@ -224,7 +224,7 @@ class TypeScriptOrTest {
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("lesserThan", "or", "before", "or", "startsWith", "or", "is");
+        assertThat(script).identifierNamesText().containsExactly("lesserThan", "or", "before", "or", "startsWith", "or", "eq");
         assertThat(script).identifierReferencesText().containsExactly("zero", "yesterday", "name", "isTrue");
         assertThat(script).identifierExpressionsText().containsExactly("today");
         assertThat(script).literalsText().containsExactly("4", "'B'", "false");

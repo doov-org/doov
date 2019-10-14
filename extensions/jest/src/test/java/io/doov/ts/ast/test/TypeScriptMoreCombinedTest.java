@@ -90,7 +90,7 @@ class TypeScriptMoreCombinedTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("eq", "and", "is", "and", "matchAny", "is", "not",
+        assertThat(script).identifierNamesText().containsExactly("eq", "and", "eq", "and", "matchAny", "eq", "not",
                 "and", "greaterOrEquals", "and", "lesserThan", "and", "eq");
         assertThat(script).identifierReferencesText().containsExactly("enumField", "boolean1", "DOOV", "boolean1",
                 "boolean2", "zero", "zero", "zero");
@@ -112,7 +112,7 @@ class TypeScriptMoreCombinedTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("isNull", "or", "eq", "and", "is", "and", "ageAt",
+        assertThat(script).identifierNamesText().containsExactly("isNull", "or", "eq", "and", "eq", "and", "ageAt",
                 "lesserThan", "and", "ageAt", "greaterOrEquals");
         assertThat(script).identifierReferencesText().containsExactly("zero", "zero", "boolean1", "date1", "date2");
         assertThat(script).identifierExpressionsText().containsExactly("date2", "date1");

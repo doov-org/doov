@@ -117,6 +117,8 @@ public class AstTSRenderer {
             return "alwaysTrue";
         } else if (operator == MappingOperator._else) {
             return "else";
+        } else if (operator == DefaultOperator.is) {
+            return "eq";
         }
         return toCamelCase(operator.name());
     }

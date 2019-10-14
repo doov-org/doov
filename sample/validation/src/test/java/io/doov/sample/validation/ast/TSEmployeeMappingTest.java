@@ -59,7 +59,7 @@ class TSEmployeeMappingTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("when", "is", "then", "map", "to");
+        assertThat(script).identifierNamesText().containsExactly("when", "eq", "then", "map", "to");
         assertThat(script).identifierReferencesText().containsExactly("DOOV", "EMAIL_ACCEPTED", "DOOV");
         assertThat(script).identifierExpressionsText().containsExactly("EMAIL", "EMAIL");
         assertThat(script).literalsText().containsExactly("true");
