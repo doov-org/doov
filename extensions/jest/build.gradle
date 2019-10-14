@@ -1,0 +1,19 @@
+ext.pomProjectName = 'dOOv Jest TypeScript Extension'
+
+dependencies {
+    compile project(':doov-core')
+    compile project(':doov-ts-extension')
+    compile project(':doov-ts-parser')
+    testCompile project(':doov-assertions-core')
+    implementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
+    implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.29'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
+    testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+    testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoCoreVersion
+    testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
+}
+
+if (isReleaseVersion) {
+    javadoc.destinationDir = file("${rootProject.projectDir}/docs/site/extensions/ts/apidocs")
+}
