@@ -73,9 +73,9 @@ class TypeScriptAnyMatchTest {
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("anyMatch");
+        assertThat(script).identifierNamesText().containsExactly("matchAny", "VAL1", "VAL2", "VAL3");
         assertThat(script).identifierReferencesText().containsExactly("enumField");
-        assertThat(script).identifierExpressionsText().containsExactly("VAL1", "VAL2", "VAL3");
+        assertThat(script).identifierExpressionsText().containsExactly("EnumTest", "EnumTest", "EnumTest");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
@@ -90,9 +90,9 @@ class TypeScriptAnyMatchTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("anyMatch");
+        assertThat(script).identifierNamesText().containsExactly("matchAny", "VAL2", "VAL3");
         assertThat(script).identifierReferencesText().containsExactly("enumField");
-        assertThat(script).identifierExpressionsText().containsExactly("VAL2", "VAL3");
+        assertThat(script).identifierExpressionsText().containsExactly("EnumTest", "EnumTest");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
@@ -108,9 +108,9 @@ class TypeScriptAnyMatchTest {
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("and", "anyMatch");
+        assertThat(script).identifierNamesText().containsExactly("and", "matchAny", "VAL1", "VAL2", "VAL3");
         assertThat(script).identifierReferencesText().containsExactly("alwaysTrueA", "enumField");
-        assertThat(script).identifierExpressionsText().containsExactly("VAL1", "VAL2", "VAL3");
+        assertThat(script).identifierExpressionsText().containsExactly("EnumTest", "EnumTest","EnumTest");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
@@ -126,9 +126,9 @@ class TypeScriptAnyMatchTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("and", "anyMatch");
+        assertThat(script).identifierNamesText().containsExactly("and", "matchAny", "VAL2", "VAL3");
         assertThat(script).identifierReferencesText().containsExactly("alwaysTrueA", "enumField");
-        assertThat(script).identifierExpressionsText().containsExactly("VAL2", "VAL3");
+        assertThat(script).identifierExpressionsText().containsExactly("EnumTest", "EnumTest");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
@@ -145,9 +145,9 @@ class TypeScriptAnyMatchTest {
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny", "anyMatch");
+        assertThat(script).identifierNamesText().containsExactly("matchAny", "matchAny", "VAL1", "VAL2", "VAL3");
         assertThat(script).identifierReferencesText().containsExactly("DOOV", "enumField");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "VAL1", "VAL2", "VAL3");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "EnumTest", "EnumTest", "EnumTest");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
@@ -163,9 +163,9 @@ class TypeScriptAnyMatchTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny", "anyMatch");
+        assertThat(script).identifierNamesText().containsExactly("matchAny", "matchAny", "VAL2", "VAL3");
         assertThat(script).identifierReferencesText().containsExactly("DOOV", "enumField");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseA", "VAL2", "VAL3");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseA", "EnumTest", "EnumTest");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
