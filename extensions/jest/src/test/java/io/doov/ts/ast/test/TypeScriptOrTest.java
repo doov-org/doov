@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.ts.ast;
+package io.doov.ts.ast.test;
 
 import static io.doov.assertions.ts.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
-import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
@@ -44,172 +43,191 @@ import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.core.dsl.time.LocalDateSuppliers;
+import io.doov.ts.ast.AstTSRenderer;
 import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
 import io.doov.ts.ast.writer.TypeScriptWriter;
 import io.doov.tsparser.TypeScriptParser;
 
-class TypeScriptMatchAnyTest {
-
+class TypeScriptOrTest {
     private StepCondition A, B, C, D;
     private Result result;
     private String ruleTs;
 
     @Test
-    void matchAny_true_false_false_complex() throws IOException {
+    void or_true_false_complex() throws IOException {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
-        C = alwaysFalse("C");
-        D = alwaysFalse("D");
-        result = when(matchAny(A.or(D), B, C)).validate().withShortCircuit(false).execute();
+        C = alwaysTrue("C");
+        result = when(A.or(B.or(C))).validate().withShortCircuit(false).execute();
         ruleTs = toTS(result.getContext().getRootMetadata());
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny", "or");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "alwaysTrueA");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseD", "alwaysFalseB", "alwaysFalseC");
+        assertThat(script).identifierNamesText().containsExactly("or", "or");
+        assertThat(script).identifierReferencesText().containsExactly("alwaysTrueA", "alwaysFalseB");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueC");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
     @Test
-    void matchAny_false_true_true_complex() throws IOException {
+    void or_false_true_complex() throws IOException {
         A = alwaysFalse("A");
         B = alwaysTrue("B");
         C = alwaysTrue("C");
-        D = alwaysTrue("D");
-        result = when(matchAny(A, B, C.and(D))).validate().withShortCircuit(false).execute();
+        result = when(A.or(B.and(C))).validate().withShortCircuit(false).execute();
         ruleTs = toTS(result.getContext().getRootMetadata());
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny", "and");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "alwaysTrueC");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseA", "alwaysTrueB", "alwaysTrueD");
+        assertThat(script).identifierNamesText().containsExactly("or", "and");
+        assertThat(script).identifierReferencesText().containsExactly("alwaysFalseA", "alwaysTrueB");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueC");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
     @Test
-    void matchAny_false_false_false() throws IOException {
+    void or_false_false() throws IOException {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
-        C = alwaysFalse("C");
-        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
+        result = when(A.or(B)).validate().withShortCircuit(false).execute();
         ruleTs = toTS(result.getContext().getRootMetadata());
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseA", "alwaysFalseB", "alwaysFalseC");
+        assertThat(script).identifierNamesText().containsExactly("or");
+        assertThat(script).identifierReferencesText().containsExactly("alwaysFalseA");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseB");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
     @Test
-    void matchAny_false_false_false_complex() throws IOException {
+    void or_false_false_complex() throws IOException {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
         C = alwaysTrue("C");
-        D = alwaysFalse("D");
-        result = when(matchAny(A, B, C.and(D))).validate().withShortCircuit(false).execute();
+        result = when(A.or(B.and(C))).validate().withShortCircuit(false).execute();
         ruleTs = toTS(result.getContext().getRootMetadata());
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny", "and");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "alwaysTrueC");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseA", "alwaysFalseB", "alwaysFalseD");
+        assertThat(script).identifierNamesText().containsExactly("or", "and");
+        assertThat(script).identifierReferencesText().containsExactly("alwaysFalseA", "alwaysFalseB");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueC");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
     @Test
-    void matchAny_true_false_false() throws IOException {
+    void or_true_false() throws IOException {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
-        C = alwaysFalse("C");
-        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
+        result = when(A.or(B)).validate().withShortCircuit(false).execute();
         ruleTs = toTS(result.getContext().getRootMetadata());
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysFalseB", "alwaysFalseC");
+        assertThat(script).identifierNamesText().containsExactly("or");
+        assertThat(script).identifierReferencesText().containsExactly("alwaysTrueA");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseB");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
     @Test
-    void matchAny_false_true_true() throws IOException {
+    void or_false_true() throws IOException {
         A = alwaysFalse("A");
         B = alwaysTrue("B");
-        C = alwaysTrue("C");
-        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
+        result = when(A.or(B)).validate().withShortCircuit(false).execute();
         ruleTs = toTS(result.getContext().getRootMetadata());
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseA", "alwaysTrueB", "alwaysTrueC");
+        assertThat(script).identifierNamesText().containsExactly("or");
+        assertThat(script).identifierReferencesText().containsExactly("alwaysFalseA");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueB");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
     @Test
-    void matchAny_true_true_true() throws IOException {
+    void or_true_true() throws IOException {
         A = alwaysTrue("A");
         B = alwaysTrue("B");
-        C = alwaysTrue("C");
-        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).execute();
+        result = when(A.or(B)).validate().withShortCircuit(false).execute();
         ruleTs = toTS(result.getContext().getRootMetadata());
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysTrueB", "alwaysTrueC");
+        assertThat(script).identifierNamesText().containsExactly("or");
+        assertThat(script).identifierReferencesText().containsExactly("alwaysTrueA");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueB");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
     @Test
-    void matchAny_field_true_true_true_failure() throws IOException {
+    void or_field_true_true() throws IOException {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");
         LocalDateFieldInfo yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
-        StringFieldInfo something = model.stringField("something", "string field");
         A = zero.lesserThan(4);
         B = yesterday.before(LocalDateSuppliers.today());
-        C = something.matches("^some.*");
-        result = when(matchAny(A, B, C)).validate().withShortCircuit(false).executeOn(model);
+        result = when(A.or(B)).validate().withShortCircuit(false).executeOn(model);
         ruleTs = toTS(result.getContext().getRootMetadata());
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny", "lesserThan", "before", "matches");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "yesterday", "stringfield");
+        assertThat(script).identifierNamesText().containsExactly("lesserThan", "or", "before");
+        assertThat(script).identifierReferencesText().containsExactly("zero", "yesterday");
         assertThat(script).identifierExpressionsText().containsExactly("today");
-        assertThat(script).literalsText().containsExactly("4", "'^some.*'");
+        assertThat(script).literalsText().containsExactly("4");
+        assertThat(script).arrayLiteralsText().isEmpty();
+    }
+
+    @Test
+    void or_or_or() throws IOException {
+        GenericModel model = new GenericModel();
+        IntegerFieldInfo zero = model.intField(0, "zero");
+        LocalDateFieldInfo yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
+        StringFieldInfo bob = model.stringField("Bob", "name");
+        BooleanFieldInfo is_true = model.booleanField(false, "is True");
+        A = zero.lesserThan(4);
+        B = yesterday.before(LocalDateSuppliers.today());
+        C = bob.startsWith("B");
+        D = is_true.isFalse();
+
+        result = when(A.or(B)
+                .or(C)
+                .or(D)).validate().withShortCircuit(false).executeOn(model);
+        ruleTs = toTS(result.getContext().getRootMetadata());
+
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+
+        assertTrue(result.value());
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("lesserThan", "or", "before", "or", "startsWith", "or", "is");
+        assertThat(script).identifierReferencesText().containsExactly("zero", "yesterday", "name", "isTrue");
+        assertThat(script).identifierExpressionsText().containsExactly("today");
+        assertThat(script).literalsText().containsExactly("4", "'B'", "false");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 

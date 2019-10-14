@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.ts.ast;
+package io.doov.ts.ast.test;
 
 import static io.doov.assertions.ts.Assertions.assertParenthesis;
 import static io.doov.assertions.ts.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
-import static io.doov.ts.ast.TypeScriptAnyMatchTest.EnumTest.VAL1;
-import static io.doov.ts.ast.TypeScriptAnyMatchTest.EnumTest.VAL2;
-import static io.doov.ts.ast.TypeScriptAnyMatchTest.EnumTest.VAL3;
+import static io.doov.ts.ast.test.TypeScriptAnyMatchTest.EnumTest.VAL1;
+import static io.doov.ts.ast.test.TypeScriptAnyMatchTest.EnumTest.VAL2;
+import static io.doov.ts.ast.test.TypeScriptAnyMatchTest.EnumTest.VAL3;
 import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -44,6 +44,7 @@ import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
+import io.doov.ts.ast.AstTSRenderer;
 import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
 import io.doov.ts.ast.writer.TypeScriptWriter;
 import io.doov.tsparser.TypeScriptParser;

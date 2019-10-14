@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.ts.ast;
+package io.doov.ts.ast.test;
 
+import static io.doov.assertions.ts.Assertions.assertParenthesis;
 import static io.doov.assertions.ts.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
-import static io.doov.core.dsl.DOOV.matchAll;
+import static io.doov.core.dsl.DOOV.count;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
@@ -38,118 +39,119 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
-import io.doov.core.dsl.field.types.*;
+import io.doov.core.dsl.field.types.IntegerFieldInfo;
+import io.doov.core.dsl.field.types.LocalDateFieldInfo;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.core.dsl.time.LocalDateSuppliers;
+import io.doov.ts.ast.AstTSRenderer;
 import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
 import io.doov.ts.ast.writer.TypeScriptWriter;
 import io.doov.tsparser.TypeScriptParser;
 
-class TypeScriptMatchAllTest {
+class TypeScriptCountTest {
 
-    private StepCondition A, B, C;
+    private StepCondition A, B;
     private Result result;
     private String ruleTs;
 
     @Test
-    void matchAll_true_true_true() throws IOException {
-        A = alwaysTrue("A");
-        B = alwaysTrue("B");
-        C = alwaysTrue("C");
-        result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
+    void count_false_false() throws IOException {
+        A = alwaysFalse("A");
+        B = alwaysFalse("B");
+        result = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false).execute();
         ruleTs = toTS(result.getContext().getRootMetadata());
 
+        assertParenthesis(ruleTs);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+
+        assertFalse(result.value());
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("count", "greaterThan");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseA", "alwaysFalseB");
+        assertThat(script).literalsText().containsExactly("1");
+        assertThat(script).arrayLiteralsText().isEmpty();
+    }
+
+    @Test
+    void count_true_false_greaterThan() throws IOException {
+        A = alwaysTrue("A");
+        B = alwaysFalse("B");
+        result = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false).execute();
+        ruleTs = toTS(result.getContext().getRootMetadata());
+
+        assertParenthesis(ruleTs);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+
+        assertFalse(result.value());
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("count", "greaterThan");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysFalseB");
+        assertThat(script).literalsText().containsExactly("1");
+        assertThat(script).arrayLiteralsText().isEmpty();
+    }
+
+    @Test
+    void count_true_false_greaterOrEquals() throws IOException {
+        A = alwaysTrue("A");
+        B = alwaysFalse("B");
+        result = when(count(A, B).greaterOrEquals(1)).validate().withShortCircuit(false).execute();
+        ruleTs = toTS(result.getContext().getRootMetadata());
+
+        assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll");
+        assertThat(script).identifierNamesText().containsExactly("count", "greaterOrEquals");
         assertThat(script).identifierReferencesText().containsExactly("DOOV");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysTrueB", "alwaysTrueC");
-        assertThat(script).literalsText().isEmpty();
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysFalseB");
+        assertThat(script).literalsText().containsExactly("1");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
     @Test
-    void matchAll_true_true_false() throws IOException {
+    void count_true_true() throws IOException {
         A = alwaysTrue("A");
         B = alwaysTrue("B");
-        C = alwaysFalse("C");
-        result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
+        result = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false).execute();
         ruleTs = toTS(result.getContext().getRootMetadata());
 
+        assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
-        assertFalse(result.value());
+        assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll");
+        assertThat(script).identifierNamesText().containsExactly("count", "greaterThan");
         assertThat(script).identifierReferencesText().containsExactly("DOOV");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysTrueB", "alwaysFalseC");
-        assertThat(script).literalsText().isEmpty();
+        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysTrueB");
+        assertThat(script).literalsText().containsExactly("1");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
     @Test
-    void matchAll_true_false_false() throws IOException {
-        A = alwaysTrue("A");
-        B = alwaysFalse("B");
-        C = alwaysFalse("C");
-        result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
-
-        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
-
-        assertFalse(result.value());
-        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysFalseB", "alwaysFalseC");
-        assertThat(script).literalsText().isEmpty();
-        assertThat(script).arrayLiteralsText().isEmpty();
-    }
-
-    @Test
-    void matchAll_false_false_false() throws IOException {
-        A = alwaysFalse("A");
-        B = alwaysFalse("B");
-        C = alwaysFalse("C");
-        result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
-
-        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
-
-        assertFalse(result.value());
-        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseA", "alwaysFalseB", "alwaysFalseC");
-        assertThat(script).literalsText().isEmpty();
-        assertThat(script).arrayLiteralsText().isEmpty();
-    }
-
-    @Test
-    void matchAll_field_false_false_false_failure() throws IOException {
+    void count_field_true_true_failure() throws IOException {
         GenericModel model = new GenericModel();
         IntegerFieldInfo zero = model.intField(0, "zero");
         LocalDateFieldInfo yesterday = model.localDateField(LocalDate.now().minusDays(1), "yesterday");
-        StringFieldInfo something = model.stringField("something", "string field");
-        A = zero.greaterThan(4);
-        B = yesterday.after(LocalDateSuppliers.today());
-        C = something.matches("^other.*");
-        result = when(matchAll(A, B, C)).validate().withShortCircuit(false).executeOn(model);
+        A = zero.lesserThan(4);
+        B = yesterday.before(LocalDateSuppliers.today());
+        result = when(count(A, B).greaterThan(1)).validate().withShortCircuit(false).executeOn(model);
         ruleTs = toTS(result.getContext().getRootMetadata());
 
+        assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
-        assertFalse(result.value());
+        assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll", "greaterThan", "after", "matches");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "yesterday", "stringfield");
+        assertThat(script).identifierNamesText().containsExactly("count", "lesserThan", "before", "greaterThan");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "yesterday");
         assertThat(script).identifierExpressionsText().containsExactly("today");
-        assertThat(script).literalsText().containsExactly("4", "'^other.*'");
+        assertThat(script).literalsText().containsExactly("4", "1");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 

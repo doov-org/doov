@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.doov.ts.ast;
+package io.doov.ts.ast.test;
 
 import static io.doov.assertions.ts.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.sum;
@@ -39,6 +39,7 @@ import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
+import io.doov.ts.ast.AstTSRenderer;
 import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
 import io.doov.ts.ast.writer.TypeScriptWriter;
 import io.doov.tsparser.TypeScriptParser;
