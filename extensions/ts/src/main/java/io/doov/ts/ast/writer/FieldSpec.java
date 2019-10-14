@@ -3,6 +3,7 @@
  */
 package io.doov.ts.ast.writer;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 import io.doov.core.FieldInfo;
@@ -61,6 +62,8 @@ public class FieldSpec {
             return "number";
         } else if (fieldInfo.type().equals(Boolean.class)) {
             return "boolean";
+        } else if (fieldInfo.type().equals(LocalDate.class)) {
+            return "date";
         } else {
             return "any";
         }
@@ -75,6 +78,8 @@ public class FieldSpec {
             return "number";
         } else if (fieldInfo.type().equals(Boolean.class)) {
             return "boolean";
+        } else if (fieldInfo.type().equals(LocalDate.class)) {
+            return "Date";
         } else {
             return "any";
         }
