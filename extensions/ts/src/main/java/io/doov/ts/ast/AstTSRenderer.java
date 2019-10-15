@@ -189,8 +189,13 @@ public class AstTSRenderer {
     protected void binary(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata left = metadata.left().findFirst().get();
         Metadata right = metadata.right().findFirst().get();
+        Metadata parent = new ArrayList<>(parents).get(1);
         toTS(left, parents);
-        if (metadata.getOperator() == DefaultOperator.with) {
+        if (parent.type() == MetadataType.MAPPING_INPUT) {
+            writer.write(COMMA);
+            writer.write(SPACE);
+            toTS(right);
+        } else if (metadata.getOperator() == DefaultOperator.with) {
             String method;
             if (right instanceof TemporalAdjusterMetadata) {
                 TemporalAdjusterMetadata adjusterMetadata = (TemporalAdjusterMetadata) right;

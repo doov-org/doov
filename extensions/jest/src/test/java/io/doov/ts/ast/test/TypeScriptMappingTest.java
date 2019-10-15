@@ -32,6 +32,7 @@ import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.runtime.GenericModel;
+import io.doov.ts.ast.writer.ImportSpec;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptMappingTest {
@@ -142,13 +143,14 @@ class TypeScriptMappingTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("map", "and", "using", "to");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "stringField");
-        assertThat(script).identifierExpressionsText().containsExactly("stringField2", "combineNames", "stringField2");
+        assertThat(script).identifierNamesText().containsExactly("map", "using", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("stringField", "stringField2", "combineNames", "stringField2");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
+    @Disabled
     @Test
     void conditional_mapping_to_boolean_field() throws IOException {
         ctx = when(dateField.ageAt(dateField2).greaterOrEquals(18)).then(map(true).to(booleanField))
@@ -201,9 +203,19 @@ class TypeScriptMappingTest {
                 ".com'", "'Yahoo'", "'www.yahou.com'");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
-
-    @AfterEach
-    void afterEach() {
-        System.out.println(ruleTs);
+    @AfterAll
+    static void tearDown() {
+        jestExtension.getJestTestSpec().getImports().add(new ImportSpec("Function", "doov"));
+        jestExtension.getJestTestSpec().getTestStates().add("const combineNames = DOOV.biConverter((obj, input: " +
+                "Function<string>, input2: Function<string>, ctx) => {\n" +
+                "  return input.get(obj, ctx) + \" \" + input2.get(obj, ctx);\n" +
+                "}, 'combine names');");
+        jestExtension.getJestTestSpec().getTestStates().add("const dateToString = DOOV.converter((obj, input: " +
+                "Function<Date>, ctx) => {\n" +
+                "  let d = input.get(obj, ctx);\n" +
+                "  return d ? d.toISOString().substr(0, 10) : null;\n" +
+                "}, 'date to string');");
+        jestExtension.getJestTestSpec().getBeforeEachs().add("model = {stringField: 's1', stringField2: 's2', intField: 1, booleanField: false, dateField: new Date(-1899, 1, 1)}");
+        jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
     }
 }
