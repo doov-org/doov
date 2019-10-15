@@ -36,11 +36,20 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
     private Result result;
     private Context executionContext;
 
-    private Gson gson;
+    private final String testGenerateDir;
+    private final Gson gson;
+
+    public JestExtension() {
+        this("./");
+    }
+
+    public JestExtension(String testGenerateDir) {
+        this.testGenerateDir = testGenerateDir;
+        this.gson = new GsonBuilder().create();
+    }
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        gson = new GsonBuilder().create();
         jestTestSpec = new JestTestSpec(context.getTestClass().get().getSimpleName());
         jestTestSpec.getTestStates().add("let model = {};");
     }
@@ -69,7 +78,7 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
         jestTestSpec.getFields().addAll(writer.getFields());
     }
 
-    private String getExpectedValue(FieldSpec f) {
+    protected String getExpectedValue(FieldSpec f) {
         Object evalValue = executionContext.getEvalValue(f.field().id());
         if (evalValue != null) {
             Class<?> valueType = evalValue.getClass();
@@ -84,8 +93,8 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
 
     @Override
     public void afterAll(ExtensionContext context) {
-        JestTemplate.writeToFile(toTemplateParameters(jestTestSpec), new File(jestTestSpec.getTestSuiteName() +
-                ".test.ts"));
+        JestTemplate.writeToFile(toTemplateParameters(jestTestSpec),
+                new File(testGenerateDir, jestTestSpec.getTestSuiteName() + ".test.ts"));
     }
 
     public JestTestSpec getJestTestSpec() {

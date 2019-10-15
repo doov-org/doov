@@ -6,6 +6,7 @@ package io.doov.ts.ast.test;
 import static java.util.stream.Collectors.toList;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,8 +33,7 @@ public class JestTemplate {
             Template template = configuration.getTemplate("jest-test.ftl");
             template.process(parameters, writer);
         } catch (IOException | TemplateException e) {
-            e.printStackTrace();
-            return null;
+            throw new IllegalStateException(e);
         }
         return writer.toString();
     }
@@ -57,10 +57,11 @@ public class JestTemplate {
 
     public static File writeToFile(Map<String, Object> parameters, File file) {
         try {
+            Files.createDirectories(file.getParentFile().toPath());
             FileWriter fileWriter = new FileWriter(file);
             write(parameters, fileWriter);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
         return file;
     }
