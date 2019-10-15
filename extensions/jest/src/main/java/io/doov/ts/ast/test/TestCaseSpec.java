@@ -9,12 +9,14 @@ import java.util.List;
 public class TestCaseSpec {
 
     private final String description;
-    private final RuleAssertionSpec ruleAssertion;
+    private final List<String> testStates;
+    private final List<AssertionSpec> ruleAssertions;
     private final List<FieldAssertionSpec> fieldAssertions;
 
-    public TestCaseSpec(String description, RuleAssertionSpec ruleAssertion) {
+    public TestCaseSpec(String description) {
         this.description = description;
-        this.ruleAssertion = ruleAssertion;
+        this.testStates = new ArrayList<>();
+        this.ruleAssertions = new ArrayList<>();
         this.fieldAssertions = new ArrayList<>();
     }
 
@@ -22,8 +24,12 @@ public class TestCaseSpec {
         return description;
     }
 
-    public RuleAssertionSpec getRuleAssertion() {
-        return ruleAssertion;
+    public List<String> getTestStates() {
+        return testStates;
+    }
+
+    public List<AssertionSpec> getRuleAssertions() {
+        return ruleAssertions;
     }
 
     public List<FieldAssertionSpec> getFieldAssertions() {

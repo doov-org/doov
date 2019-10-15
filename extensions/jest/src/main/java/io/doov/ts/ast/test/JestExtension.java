@@ -42,13 +42,21 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
     public void beforeAll(ExtensionContext context) {
         gson = new GsonBuilder().create();
         jestTestSpec = new JestTestSpec(context.getTestClass().get().getSimpleName());
+        jestTestSpec.getTestStates().add("let model = {};");
     }
 
     @Override
     public void afterEach(ExtensionContext context) {
         String output = new String(((ByteArrayOutputStream) writer.getOutput()).toByteArray());
-        TestCaseSpec testCaseSpec = new TestCaseSpec(context.getTestMethod().get().getName(),
-                new RuleAssertionSpec("DOOV.when(" + output + ").validate()", String.valueOf(result.value())));
+        TestCaseSpec testCaseSpec = new TestCaseSpec(context.getTestMethod().get().getName());
+        if (result != null) {
+            testCaseSpec.getTestStates().add("const rule = DOOV.when(" + output + ").validate();");
+            testCaseSpec.getTestStates().add("const result = rule.execute(model);");
+            testCaseSpec.getRuleAssertions().add(new AssertionSpec("result.value", String.valueOf(result.value())));
+        } else {
+            testCaseSpec.getTestStates().add("const rule = " + output + ";");
+            testCaseSpec.getTestStates().add("model = rule.execute(model);");
+        }
         testCaseSpec.getFieldAssertions().addAll(
                 writer.getFields().stream()
                         .map(f -> new FieldAssertionSpec(f.field(), f.name(), getExpectedValue(f)))
@@ -92,7 +100,7 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
     }
 
     public String toTS(Context context) {
-        this.executionContext = result.getContext();
+        this.executionContext = context;
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
         writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
                 field -> field.id().code().replace(" ", ""));

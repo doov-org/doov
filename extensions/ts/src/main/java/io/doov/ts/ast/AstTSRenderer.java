@@ -166,34 +166,15 @@ public class AstTSRenderer {
 
     protected void rule(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata when = metadata.lastChild();
-        if (parents.peekLast() == metadata) {
-            writer.write("const");
-            writer.write(SPACE);
-            writer.write("rule");
-            writer.write(SPACE);
-            writer.write(ASSIGN);
-            writer.write(SPACE);
-        }
         toTS(when, parents);
         writer.write(DOT);
         writer.write(operatorToMethod(DefaultOperator.validate));
         writer.write(LEFT_PARENTHESIS);
         writer.write(RIGHT_PARENTHESIS);
-        if (parents.peekLast() == metadata) {
-            writer.write(COLUMN);
-        }
     }
 
     protected void when(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata dsl = metadata.lastChild();
-        if (parents.peekLast() == metadata) {
-            writer.write("const");
-            writer.write(SPACE);
-            writer.write("when");
-            writer.write(SPACE);
-            writer.write(ASSIGN);
-            writer.write(SPACE);
-        }
         writer.writeGlobalDOOV();
         writer.write(DOT);
         writer.write(operatorToMethod(DefaultOperator.when));
@@ -202,9 +183,6 @@ public class AstTSRenderer {
         writer.write(RIGHT_PARENTHESIS);
         if (prettyPrint) {
             writer.writeNewLine(parents.size());
-        }
-        if (parents.peekLast() == metadata) {
-            writer.write(COLUMN);
         }
     }
 
@@ -332,14 +310,6 @@ public class AstTSRenderer {
     }
 
     protected void mappings(Metadata metadata, ArrayDeque<Metadata> parents) {
-        if (parents.peekLast() == metadata) {
-            writer.write("const");
-            writer.write(SPACE);
-            writer.write("mappings");
-            writer.write(SPACE);
-            writer.write(ASSIGN);
-            writer.write(SPACE);
-        }
         if (metadata.getOperator() == DefaultOperator.no_operator) {
             ConditionalMappingMetadata conditional = (ConditionalMappingMetadata) metadata;
             toTS(conditional.when(), parents);
@@ -349,9 +319,6 @@ public class AstTSRenderer {
             }
         } else if (metadata.getOperator() == MappingOperator.mappings) {
             nary(metadata, parents);
-        }
-        if (parents.peekLast() == metadata) {
-            writer.write(COLUMN);
         }
     }
 
@@ -401,14 +368,6 @@ public class AstTSRenderer {
     protected void singleMapping(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata left = metadata.left().findFirst().get();
         Metadata right = metadata.right().findFirst().get();
-        if (parents.peekLast() == metadata) {
-            writer.write("const");
-            writer.write(SPACE);
-            writer.write("mapping");
-            writer.write(SPACE);
-            writer.write(ASSIGN);
-            writer.write(SPACE);
-        }
         writer.writeGlobalDOOV();
         writer.write(DOT);
         writer.write(operatorToMethod(MappingOperator.map));
@@ -420,9 +379,6 @@ public class AstTSRenderer {
         writer.write(LEFT_PARENTHESIS);
         toTS(right, parents);
         writer.write(RIGHT_PARENTHESIS);
-        if (parents.peekLast() == metadata) {
-            writer.write(COLUMN);
-        }
     }
 
 }

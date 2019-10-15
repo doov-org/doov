@@ -253,7 +253,6 @@ class TypeScriptAndTest {
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueB = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseB = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const today = DateFunction.today();");
-        jestExtension.getJestTestSpec().getTestStates().add("let model = {};");
         String now = LocalDate.now().minus(1, ChronoUnit.DAYS).toString();
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = { zero: 0, name: 'Bob', isTrue: false, yesterday: new Date('" + now + "') };");
     }

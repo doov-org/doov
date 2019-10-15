@@ -170,7 +170,6 @@ class TypeScriptAnyMatchTest {
         jestExtension.getJestTestSpec().getImports().add(new ImportSpec("BooleanFunction", "doov"));
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseA = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
-        jestExtension.getJestTestSpec().getTestStates().add("let model = {};");
         jestExtension.getJestTestSpec().getTestStates().add("enum EnumTest { VAL1, VAL2, VAL3 }");
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = { enumField: EnumTest.VAL1 };");
     }

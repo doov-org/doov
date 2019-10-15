@@ -19,9 +19,12 @@ beforeEach(() => {
 describe('${suiteName}', () => {
   <#list tests as test>
   it('${test.description}', () => {
-    const rule = ${test.ruleAssertion.rule};
-    const result = rule.execute(model);
-    expect(result.value).toEqual(${test.ruleAssertion.expected});
+    <#list test.testStates as testState>
+    ${testState}
+    </#list>
+    <#list test.ruleAssertions as ruleAssertion>
+    expect(${ruleAssertion.value}).toEqual(${ruleAssertion.expected});
+    </#list>
     <#list test.fieldAssertions as fieldAssertion>
     expect(${fieldAssertion.fieldName}.get(model)).toEqual(${fieldAssertion.expected});
     </#list>

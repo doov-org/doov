@@ -3,17 +3,17 @@
  */
 package io.doov.ts.ast.test;
 
-public class RuleAssertionSpec {
-    private final String rule;
+public class AssertionSpec {
+    private final String value;
     private final String expected;
 
-    public RuleAssertionSpec(String rule, String expected) {
-        this.rule = rule;
+    public AssertionSpec(String value, String expected) {
+        this.value = value;
         this.expected = expected;
     }
 
-    public String getRule() {
-        return rule;
+    public String getValue() {
+        return value;
     }
 
     public String getExpected() {

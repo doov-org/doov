@@ -139,8 +139,8 @@ public final class GenericModel implements FieldModel {
         return new StringFieldInfo(runtimeField(value, fieldName));
     }
 
-    public <T, C extends Iterable<T>> IterableFieldInfo<T, C> iterableField(C value, String fieldName) {
-        return new IterableFieldInfo<>(runtimeField(value, fieldName));
+    public <T, C extends Iterable<T>> IterableFieldInfo<T, C> iterableField(C value, String fieldName, Class<?>... genericTypes) {
+        return new IterableFieldInfo<>(runtimeField(value, fieldName, genericTypes));
     }
 
 }

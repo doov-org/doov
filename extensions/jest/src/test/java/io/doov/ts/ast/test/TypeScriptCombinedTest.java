@@ -177,7 +177,6 @@ class TypeScriptCombinedTest {
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseB = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseC = DOOV.lift(BooleanFunction, false);");
-        jestExtension.getJestTestSpec().getTestStates().add("let model = {};");
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = { zero: 0, stringfield1: 'some string', " +
                 "stringfield2: 'other string', list: ['a', 'b'], enumField: null}");
     }

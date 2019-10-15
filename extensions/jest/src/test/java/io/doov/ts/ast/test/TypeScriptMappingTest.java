@@ -19,29 +19,19 @@ import static io.doov.core.dsl.DOOV.template;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.core.dsl.template.ParameterTypes.$String;
-import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static io.doov.ts.ast.test.JestExtension.parseAs;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Locale;
-import java.util.function.Function;
 
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
-import io.doov.ts.ast.AstTSRenderer;
-import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
-import io.doov.ts.ast.writer.TypeScriptWriter;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptMappingTest {
@@ -55,6 +45,9 @@ class TypeScriptMappingTest {
     private StringFieldInfo stringField2;
     private Context ctx;
     private String ruleTs;
+    
+    @RegisterExtension
+    static JestExtension jestExtension = new JestExtension();
 
     @BeforeEach
     void beforeEach() {
@@ -70,7 +63,7 @@ class TypeScriptMappingTest {
     @Test
     void map_to_int_field() throws IOException {
         ctx = map(18).to(intField).executeOn(model, model);
-        ruleTs = toTS(ctx.getRootMetadata());
+        ruleTs = jestExtension.toTS(ctx);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
@@ -84,7 +77,7 @@ class TypeScriptMappingTest {
     @Test
     void map_to_boolean_field() throws IOException {
         ctx = map(true).to(booleanField).executeOn(model, model);
-        ruleTs = toTS(ctx.getRootMetadata());
+        ruleTs = jestExtension.toTS(ctx);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
@@ -98,7 +91,7 @@ class TypeScriptMappingTest {
     @Test
     void map_to_date_field() throws IOException {
         ctx = map(LocalDate.of(2000, 1, 1)).to(dateField).executeOn(model, model);
-        ruleTs = toTS(ctx.getRootMetadata());
+        ruleTs = jestExtension.toTS(ctx);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
@@ -113,7 +106,7 @@ class TypeScriptMappingTest {
     void mappings_to_int_field_and_boolean_field() throws IOException {
         ctx = mappings(map(18).to(intField), map(true).to(booleanField), map(LocalDate.of(2000, 1, 1)).to(dateField))
                 .executeOn(model, model);
-        ruleTs = toTS(ctx.getRootMetadata());
+        ruleTs = jestExtension.toTS(ctx);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
@@ -129,7 +122,7 @@ class TypeScriptMappingTest {
     void mapping_to_date_field_with_converter() throws IOException {
         ctx = map(LocalDate.of(2000, 1, 1)).using(converter(date -> date.toString(), "empty", "date to string"))
                 .to(stringField).executeOn(model, model);
-        ruleTs = toTS(ctx.getRootMetadata());
+        ruleTs = jestExtension.toTS(ctx);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
@@ -146,7 +139,7 @@ class TypeScriptMappingTest {
                 .using(biConverter((stringField, stringField2) -> stringField + " " + stringField2, "",
                         "combine names"))
                 .to(stringField2).executeOn(model, model);
-        ruleTs = toTS(ctx.getRootMetadata());
+        ruleTs = jestExtension.toTS(ctx);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
@@ -161,7 +154,7 @@ class TypeScriptMappingTest {
     void conditional_mapping_to_boolean_field() throws IOException {
         ctx = when(dateField.ageAt(dateField2).greaterOrEquals(18)).then(map(true).to(booleanField))
                 .otherwise(map(false).to(booleanField)).executeOn(model, model);
-        ruleTs = toTS(ctx.getRootMetadata());
+        ruleTs = jestExtension.toTS(ctx);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
@@ -178,7 +171,7 @@ class TypeScriptMappingTest {
         ctx = template($String, $String)
                 .mapping((site, url) -> when(site.eq("Yahoo")).then(map("www.yahou.com").to(url)))
                 .bind(stringField, stringField2).executeOn(model, model);
-        ruleTs = toTS(ctx.getRootMetadata());
+        ruleTs = jestExtension.toTS(ctx);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
@@ -196,7 +189,7 @@ class TypeScriptMappingTest {
                         when(site.eq("Google")).then(map("www.gougeule.com").to(url)),
                         when(site.eq("Yahoo")).then(map("www.yahou.com").to(url))))
                 .bind(stringField, stringField2).executeOn(model, model);
-        ruleTs = toTS(ctx.getRootMetadata());
+        ruleTs = jestExtension.toTS(ctx);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
@@ -208,22 +201,6 @@ class TypeScriptMappingTest {
         assertThat(script).literalsText().containsExactly("'bing'", "'www.bingue.com'", "'Google'", "'www.gougeule" +
                 ".com'", "'Yahoo'", "'www.yahou.com'");
         assertThat(script).arrayLiteralsText().isEmpty();
-    }
-
-    private static String toTS(Metadata metadata) {
-        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        TypeScriptWriter writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
-                field -> field.id().code().replace(" ", ""));
-        new AstTSRenderer(writer, true).toTS(metadata);
-        return new String(ops.toByteArray(), UTF_8);
-    }
-
-    private static TypeScriptAssertionContext parseAs(String ruleTs,
-            Function<TypeScriptParser, ParseTree> contextGetter)
-            throws IOException {
-        TypeScriptAssertionContext context = parseUsing(ruleTs, TypeScriptAssertionContext::new);
-        new ParseTreeWalker().walk(context, contextGetter.apply(context.getParser()));
-        return context;
     }
 
     @AfterEach
