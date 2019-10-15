@@ -50,7 +50,7 @@ class TypeScriptAndTest {
     private String ruleTs;
 
     @RegisterExtension
-    static JestExtension jestExtension = new JestExtension();
+    static JestExtension jestExtension = new JestExtension("build/jest");
 
     @Test
     void and_false_false() throws IOException {
@@ -181,7 +181,6 @@ class TypeScriptAndTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
-    @Disabled
     @Test
     void and_and_count() throws IOException {
         GenericModel model = new GenericModel();

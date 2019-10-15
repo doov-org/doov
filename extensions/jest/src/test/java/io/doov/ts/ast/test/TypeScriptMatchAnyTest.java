@@ -50,7 +50,7 @@ class TypeScriptMatchAnyTest {
     private String ruleTs;
     
     @RegisterExtension
-    static JestExtension jestExtension = new JestExtension();
+    static JestExtension jestExtension = new JestExtension("build/jest");
 
     @Test
     void matchAny_true_false_false_complex() throws IOException {

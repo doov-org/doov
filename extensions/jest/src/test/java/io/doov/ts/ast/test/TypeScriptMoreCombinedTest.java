@@ -38,7 +38,7 @@ class TypeScriptMoreCombinedTest {
     private String ruleTs;
 
     @RegisterExtension
-    static JestExtension jestExtension = new JestExtension();
+    static JestExtension jestExtension = new JestExtension("build/jest");
 
     @BeforeEach
     void beforeEach() {
@@ -51,7 +51,6 @@ class TypeScriptMoreCombinedTest {
         this.zeroField = model.intField(0, "zero");
     }
 
-    @Disabled
     @Test
     void or_and_sum() throws IOException {
         result = when((dateField1.ageAt(dateField2).greaterOrEquals(0)
@@ -96,7 +95,6 @@ class TypeScriptMoreCombinedTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
-    @Disabled
     @Test
     void or_and_and_and() throws IOException {
         result = when(zeroField.isNull().or(zeroField.eq(0))
@@ -125,6 +123,8 @@ class TypeScriptMoreCombinedTest {
         jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
         jestExtension.getJestTestSpec().getImports().add(new ImportSpec( "doov", symbols));
         jestExtension.getJestTestSpec().getTestStates().add("enum AccessMode { READ, WRITE, EXECUTE };");
-        jestExtension.getJestTestSpec().getBeforeEachs().add("model = {enumField: AccessMode.READ, boolean1: false, boolean2: false, zero: 0};");
+        LocalDate now = LocalDate.now();
+        jestExtension.getJestTestSpec().getBeforeEachs().add("model = {enumField: AccessMode.READ, boolean1: false, " +
+                "boolean2: false, zero: 0, date1: new Date('" + now + "'), date2: new Date('" + now + "') };");
     }
 }

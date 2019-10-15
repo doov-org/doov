@@ -48,7 +48,7 @@ class TypeScriptMappingTest {
     private String ruleTs;
     
     @RegisterExtension
-    static JestExtension jestExtension = new JestExtension();
+    static JestExtension jestExtension = new JestExtension("build/jest");
 
     @BeforeEach
     void beforeEach() {
@@ -150,7 +150,6 @@ class TypeScriptMappingTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
-    @Disabled
     @Test
     void conditional_mapping_to_boolean_field() throws IOException {
         ctx = when(dateField.ageAt(dateField2).greaterOrEquals(18)).then(map(true).to(booleanField))
@@ -215,7 +214,10 @@ class TypeScriptMappingTest {
                 "  let d = input.get(obj, ctx);\n" +
                 "  return d ? d.toISOString().substr(0, 10) : null;\n" +
                 "}, 'date to string');");
-        jestExtension.getJestTestSpec().getBeforeEachs().add("model = {stringField: 's1', stringField2: 's2', intField: 1, booleanField: false, dateField: new Date(-1899, 1, 1)}");
+        LocalDate date1 = LocalDate.of(1, 1, 1);
+        LocalDate date2 = LocalDate.of(2, 2, 2);
+        jestExtension.getJestTestSpec().getBeforeEachs().add("model = {stringField: 's1', stringField2: 's2', " +
+                "intField: 1, booleanField: false, dateField: new Date('"+ date1 +"'), dateField2: new Date('" + date2 + "') }");
         jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
     }
 }

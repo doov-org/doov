@@ -55,7 +55,7 @@ class TypeScriptOrTest {
     private String ruleTs;
     
     @RegisterExtension
-    static JestExtension jestExtension = new JestExtension();
+    static JestExtension jestExtension = new JestExtension("build/jest");
 
     @Test
     void or_true_false_complex() throws IOException {

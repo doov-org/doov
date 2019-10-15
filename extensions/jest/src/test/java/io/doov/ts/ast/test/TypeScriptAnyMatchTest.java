@@ -50,7 +50,7 @@ class TypeScriptAnyMatchTest {
     private EnumFieldInfo<EnumTest> enumField;
 
     @RegisterExtension
-    static JestExtension jestExtension = new JestExtension();
+    static JestExtension jestExtension = new JestExtension("build/jest");
 
     @BeforeEach
     void beforeEach() {

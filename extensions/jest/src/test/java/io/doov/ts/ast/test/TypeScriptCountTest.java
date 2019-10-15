@@ -52,7 +52,7 @@ class TypeScriptCountTest {
     private String ruleTs;
     
     @RegisterExtension
-    static JestExtension jestExtension = new JestExtension();
+    static JestExtension jestExtension = new JestExtension("build/jest");
 
     @Test
     void count_false_false() throws IOException {

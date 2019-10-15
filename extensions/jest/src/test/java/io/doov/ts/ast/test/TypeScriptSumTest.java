@@ -18,31 +18,20 @@ package io.doov.ts.ast.test;
 import static io.doov.assertions.ts.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.ts.ast.test.JestExtension.parseAs;
-import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.function.Function;
 
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
-import io.doov.ts.ast.AstTSRenderer;
-import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
-import io.doov.ts.ast.writer.TypeScriptWriter;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptSumTest {
@@ -53,9 +42,8 @@ class TypeScriptSumTest {
     private String ruleTs;
     
     @RegisterExtension
-    static JestExtension jestExtension = new JestExtension();
+    static JestExtension jestExtension = new JestExtension("build/jest");
 
-    @Disabled
     @Test
     void sum_1_2_greaterThan_1() throws IOException {
         A = model.intField(1, "A");
@@ -74,7 +62,6 @@ class TypeScriptSumTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
-    @Disabled
     @Test
     void sum_1_2_greaterThan_3() throws IOException {
         A = model.intField(1, "A");
@@ -93,7 +80,6 @@ class TypeScriptSumTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
-    @Disabled
     @Test
     void sum_sum_1_sum_2_greaterThan_3() throws IOException {
         A = model.intField(1, "A");
@@ -111,9 +97,8 @@ class TypeScriptSumTest {
         assertThat(script).literalsText().containsExactly("3");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
-
-    @AfterEach
-    void afterEach() {
-        System.out.println(ruleTs);
+    @AfterAll
+    static void tearDown() {
+        jestExtension.getJestTestSpec().getBeforeEachs().add("model = { A: 1, B:1 };");
     }
 }

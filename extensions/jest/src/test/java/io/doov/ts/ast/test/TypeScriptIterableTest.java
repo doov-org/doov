@@ -28,7 +28,7 @@ class TypeScriptIterableTest {
     private String ruleTs;
     
     @RegisterExtension
-    static JestExtension jestExtension = new JestExtension();
+    static JestExtension jestExtension = new JestExtension("build/jest");
 
     @Test
     void test_iterable() throws IOException {

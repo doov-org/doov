@@ -49,7 +49,7 @@ class TypeScriptMatchAllTest {
     private String ruleTs;
     
     @RegisterExtension
-    static JestExtension jestExtension = new JestExtension();
+    static JestExtension jestExtension = new JestExtension("build/jest");
 
     @Test
     void matchAll_true_true_true() throws IOException {
