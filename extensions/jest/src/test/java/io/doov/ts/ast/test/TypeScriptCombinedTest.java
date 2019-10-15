@@ -21,32 +21,23 @@ import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
-import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static io.doov.ts.ast.test.JestExtension.parseAs;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
-import java.util.function.Function;
 
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
-import io.doov.ts.ast.AstTSRenderer;
-import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
-import io.doov.ts.ast.writer.TypeScriptWriter;
+import io.doov.ts.ast.writer.ImportSpec;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptCombinedTest {
@@ -60,6 +51,9 @@ class TypeScriptCombinedTest {
     private IntegerFieldInfo zeroField;
     private IterableFieldInfo<String, List<String>> iterableField;
     private EnumFieldInfo<?> enumField;
+    
+    @RegisterExtension
+    static JestExtension jestExtension = new JestExtension();
 
     @BeforeEach
     void beforeEach() {
@@ -77,7 +71,7 @@ class TypeScriptCombinedTest {
         B = alwaysFalse("B");
         C = alwaysFalse("C");
         result = when(matchAll(A, B, C)).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
@@ -96,7 +90,7 @@ class TypeScriptCombinedTest {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
         result = when(A.and(B)).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -112,7 +106,7 @@ class TypeScriptCombinedTest {
     @Test
     void reduce_zeroInt() throws IOException {
         result = when(zeroField.notEq(0)).validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -128,7 +122,7 @@ class TypeScriptCombinedTest {
     @Test
     void reduce_list() throws IOException {
         result = when(iterableField.contains("c")).validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -144,7 +138,7 @@ class TypeScriptCombinedTest {
     @Test
     void reduce_null() throws IOException {
         result = when(enumField.isNull()).validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
@@ -162,7 +156,7 @@ class TypeScriptCombinedTest {
     void matches_regexp() throws IOException {
         result = when(stringField.matches("^some.*")
                 .or(stringField2.matches("^other.*"))).validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         assertParenthesis(ruleTs);
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
@@ -176,24 +170,16 @@ class TypeScriptCombinedTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
-
-    private static String toTS(Metadata metadata) {
-        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        TypeScriptWriter writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
-                field -> field.id().code().replace(" ", ""));
-        new AstTSRenderer(writer, true).toTS(metadata);
-        return new String(ops.toByteArray(), UTF_8);
+    @AfterAll
+    static void tearDown() {
+        jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
+        jestExtension.getJestTestSpec().getImports().add(new ImportSpec("BooleanFunction", "doov"));
+        jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
+        jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseB = DOOV.lift(BooleanFunction, false);");
+        jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseC = DOOV.lift(BooleanFunction, false);");
+        jestExtension.getJestTestSpec().getTestStates().add("let model = {};");
+        jestExtension.getJestTestSpec().getBeforeEachs().add("model = { zero: 0, stringfield1: 'some string', " +
+                "stringfield2: 'other string', list: ['a', 'b'], enumField: null}");
     }
 
-    private static TypeScriptAssertionContext parseAs(String ruleTs,
-            Function<TypeScriptParser, ParseTree> contextGetter)
-            throws IOException {
-        TypeScriptAssertionContext context = parseUsing(ruleTs, TypeScriptAssertionContext::new);
-        new ParseTreeWalker().walk(context, contextGetter.apply(context.getParser()));
-        return context;
-    }
-    @AfterEach
-    void afterEach() {
-        System.out.println(ruleTs);
-    }
 }

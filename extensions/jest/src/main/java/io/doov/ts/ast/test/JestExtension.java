@@ -18,6 +18,9 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.jupiter.api.extension.*;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Result;
@@ -33,8 +36,11 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
     private Result result;
     private Context executionContext;
 
+    private Gson gson;
+
     @Override
     public void beforeAll(ExtensionContext context) {
+        gson = new GsonBuilder().create();
         jestTestSpec = new JestTestSpec(context.getTestClass().get().getSimpleName());
     }
 
@@ -59,22 +65,25 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
             Class<?> valueType = evalValue.getClass();
             if (valueType.isEnum()) {
                 return valueType.getSimpleName() + "." + evalValue;
-            } else if (String.class.equals(valueType)) {
-                return "'" + evalValue + "'";
             } else if (LocalDate.class.equals(valueType)) {
                 return "new Date('" + evalValue + "')";
             }
         }
-        return String.valueOf(evalValue);
+        return gson.toJson(evalValue);
     }
 
     @Override
     public void afterAll(ExtensionContext context) {
-        JestTemplate.writeToFile(toTemplateParameters(jestTestSpec), new File(jestTestSpec.getTestSuiteName() + ".test.ts"));
+        JestTemplate.writeToFile(toTemplateParameters(jestTestSpec), new File(jestTestSpec.getTestSuiteName() +
+                ".test.ts"));
     }
 
     public JestTestSpec getJestTestSpec() {
         return jestTestSpec;
+    }
+
+    public Gson getGson() {
+        return gson;
     }
 
     public String toTS(Result result) {

@@ -56,6 +56,8 @@ public class FieldSpec {
     public String functionTypeString() {
         if (fieldInfo.type().isEnum()) {
             return "f";
+        } else if (Iterable.class.isAssignableFrom(fieldInfo.type())) {
+            return "iterable";
         } else if (fieldInfo.type().equals(String.class)) {
             return "string";
         } else if (Number.class.isAssignableFrom(fieldInfo.type())) {
@@ -65,23 +67,38 @@ public class FieldSpec {
         } else if (fieldInfo.type().equals(LocalDate.class)) {
             return "date";
         } else {
-            return "any";
+            return "f";
         }
     }
 
     public String fieldTypeString() {
-        if (fieldInfo.type().isEnum()) {
-            return fieldInfo.type().getSimpleName();
-        } else if (fieldInfo.type().equals(String.class)) {
+        if (Iterable.class.isAssignableFrom(fieldInfo.type())) {
+            if(fieldInfo.genericTypes().length > 0) {
+                return fieldType(fieldInfo.genericTypes()[0]) + "[]";
+            } else {
+                return "unknown[]";
+            }
+        } else {
+            return fieldType(fieldInfo.type());
+        }
+    }
+
+    public String fieldType(Class<?> type) {
+        if (type == null) {
+            return "unknown";
+        }
+        if (type.isEnum()) {
+            return type.getSimpleName();
+        } else if (type.equals(String.class)) {
             return "string";
-        } else if (Number.class.isAssignableFrom(fieldInfo.type())) {
+        } else if (Number.class.isAssignableFrom(type)) {
             return "number";
-        } else if (fieldInfo.type().equals(Boolean.class)) {
+        } else if (type.equals(Boolean.class)) {
             return "boolean";
-        } else if (fieldInfo.type().equals(LocalDate.class)) {
+        } else if (type.equals(LocalDate.class)) {
             return "Date";
         } else {
-            return "any";
+            return "unknown";
         }
     }
 }
