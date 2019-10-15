@@ -95,8 +95,8 @@ class TypeScriptMappingTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("map", "newDate", "to");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DateUtils");
+        assertThat(script).identifierNamesText().containsExactly("map", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "Date");
         assertThat(script).identifierExpressionsText().containsExactly("dateField");
         assertThat(script).literalsText().containsExactly("'2000-01-01'");
         assertThat(script).arrayLiteralsText().isEmpty();
@@ -110,9 +110,8 @@ class TypeScriptMappingTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("mappings", "map", "to", "map", "to", "map",
-                "newDate", "to");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "DOOV", "DOOV", "DateUtils");
+        assertThat(script).identifierNamesText().containsExactly("mappings", "map", "to", "map", "to", "map", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "DOOV", "DOOV", "Date");
         assertThat(script).identifierExpressionsText().containsExactly("intField", "booleanField", "dateField");
         assertThat(script).literalsText().containsExactly("18", "true", "'2000-01-01'");
         assertThat(script).arrayLiteralsText().isEmpty();
@@ -126,8 +125,8 @@ class TypeScriptMappingTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("map", "newDate", "using", "to");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DateUtils");
+        assertThat(script).identifierNamesText().containsExactly("map", "using", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "Date");
         assertThat(script).identifierExpressionsText().containsExactly("dateToString", "stringField");
         assertThat(script).literalsText().containsExactly("'2000-01-01'");
         assertThat(script).arrayLiteralsText().isEmpty();

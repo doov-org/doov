@@ -149,13 +149,13 @@ public class AstTSRenderer {
         if (parentMetadata instanceof TemporalBiFunctionMetadata) {
             if (parentMetadata.getOperator() == age_at) {
                 // Date
-                return "DateUtils.newDate('" + elt.getReadable().readable()+"')";
+                return "new Date('" + elt.getReadable().readable()+"')";
             }
         }
         if (metadata instanceof StaticMetadata) {
             Class valueClass = ((StaticMetadata) metadata).valueClass();
             if (valueClass.equals(LocalDate.class)) {
-                return "DateUtils.newDate('" + elt.getReadable().readable()+"')";
+                return "new Date('" + elt.getReadable().readable()+"')";
             }
             if (valueClass.isEnum()) {
                 return valueClass.getSimpleName() + "." + elt.getReadable().readable();

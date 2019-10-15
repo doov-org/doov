@@ -73,8 +73,8 @@ class TSEmployeeMappingTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("map", "ageAt", "newDate", "to");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE", "DateUtils");
+        assertThat(script).identifierNamesText().containsExactly("map", "ageAt", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE", "Date");
         assertThat(script).identifierExpressionsText().containsExactly("AGE");
         assertThat(script).literalsText().containsExactly("'2019-01-01'");
     }
