@@ -18,3 +18,10 @@ dependencies {
 if (isReleaseVersion) {
     javadoc.destinationDir = file("${rootProject.projectDir}/docs/site/extensions/ts/apidocs")
 }
+
+tasks.getByName('test').outputs.dir('build/jest')
+
+task runYarnTests(type: Exec) {
+    inputs.dir('build/jest')
+    commandLine 'yarn', 'test'
+}
