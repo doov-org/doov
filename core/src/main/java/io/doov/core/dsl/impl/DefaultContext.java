@@ -93,4 +93,8 @@ public class DefaultContext implements Context {
         return Collections.unmodifiableList(evalFalse);
     }
 
+    @Override
+    public Map<FieldId, Object> getEvalValues() {
+        return Collections.unmodifiableMap(values);
+    }
 }

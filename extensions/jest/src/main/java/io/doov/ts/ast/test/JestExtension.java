@@ -59,6 +59,8 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
         }
         testCaseSpec.getFieldAssertions().addAll(
                 writer.getFields().stream()
+                        .distinct()
+                        .filter(f -> executionContext.getEvalValues().containsKey(f.field().id()))
                         .map(f -> new FieldAssertionSpec(f.field(), f.name(), getExpectedValue(f)))
                         .collect(Collectors.toList())
         );
