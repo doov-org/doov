@@ -19,6 +19,7 @@ import static io.doov.assertions.ts.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
+import static io.doov.ts.ast.test.JestExtension.parseAs;
 import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -31,8 +32,8 @@ import java.util.function.Function;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
@@ -50,13 +51,17 @@ class TypeScriptSumTest {
     private IntegerFieldInfo A, B;
     private Result result;
     private String ruleTs;
+    
+    @RegisterExtension
+    static JestExtension jestExtension = new JestExtension();
 
+    @Disabled
     @Test
     void sum_1_2_greaterThan_1() throws IOException {
         A = model.intField(1, "A");
         B = model.intField(1, "B");
         result = when(sum(A, B).greaterThan(1)).validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -69,12 +74,13 @@ class TypeScriptSumTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
+    @Disabled
     @Test
     void sum_1_2_greaterThan_3() throws IOException {
         A = model.intField(1, "A");
         B = model.intField(1, "B");
         result = when(sum(A, B).greaterThan(3)).validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -87,12 +93,13 @@ class TypeScriptSumTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
+    @Disabled
     @Test
     void sum_sum_1_sum_2_greaterThan_3() throws IOException {
         A = model.intField(1, "A");
         B = model.intField(1, "B");
         result = when(sum(sum(A), sum(B)).greaterThan(3)).validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -103,22 +110,6 @@ class TypeScriptSumTest {
         assertThat(script).identifierExpressionsText().containsExactly("A", "B");
         assertThat(script).literalsText().containsExactly("3");
         assertThat(script).arrayLiteralsText().isEmpty();
-    }
-
-    private static String toTS(Metadata metadata) {
-        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        TypeScriptWriter writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
-                field -> field.id().code().replace(" ", ""));
-        new AstTSRenderer(writer, true).toTS(metadata);
-        return new String(ops.toByteArray(), UTF_8);
-    }
-
-    private static TypeScriptAssertionContext parseAs(String ruleTs,
-            Function<TypeScriptParser, ParseTree> contextGetter)
-            throws IOException {
-        TypeScriptAssertionContext context = parseUsing(ruleTs, TypeScriptAssertionContext::new);
-        new ParseTreeWalker().walk(context, contextGetter.apply(context.getParser()));
-        return context;
     }
 
     @AfterEach

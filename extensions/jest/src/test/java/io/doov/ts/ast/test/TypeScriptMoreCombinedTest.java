@@ -7,30 +7,23 @@ import static io.doov.assertions.ts.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
-import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static io.doov.ts.ast.test.JestExtension.parseAs;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.AccessMode;
 import java.time.LocalDate;
-import java.util.Locale;
-import java.util.function.Function;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
-import io.doov.ts.ast.AstTSRenderer;
-import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
-import io.doov.ts.ast.writer.TypeScriptWriter;
+import io.doov.ts.ast.writer.ImportSpec;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptMoreCombinedTest {
@@ -44,6 +37,9 @@ class TypeScriptMoreCombinedTest {
 
     private String ruleTs;
 
+    @RegisterExtension
+    static JestExtension jestExtension = new JestExtension();
+
     @BeforeEach
     void beforeEach() {
         this.model = new GenericModel();
@@ -55,13 +51,14 @@ class TypeScriptMoreCombinedTest {
         this.zeroField = model.intField(0, "zero");
     }
 
+    @Disabled
     @Test
     void or_and_sum() throws IOException {
         result = when((dateField1.ageAt(dateField2).greaterOrEquals(0)
                 .or(dateField2.ageAt(dateField1).greaterOrEquals(0)))
                 .and(sum(zeroField, zeroField).lesserThan(0)))
                 .validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -84,21 +81,22 @@ class TypeScriptMoreCombinedTest {
                                 .and(zeroField.between(0, 1))))
                 .and(zeroField.eq(1)))
                 .validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("eq", "and", "eq", "and", "matchAny", "eq", "not",
+        assertThat(script).identifierNamesText().containsExactly("eq", "WRITE", "and", "eq", "and", "matchAny", "eq", "not",
                 "and", "greaterOrEquals", "and", "lesserThan", "and", "eq");
         assertThat(script).identifierReferencesText().containsExactly("enumField", "boolean1", "DOOV", "boolean1",
                 "boolean2", "zero", "zero", "zero");
-        assertThat(script).identifierExpressionsText().containsExactly("WRITE");
+        assertThat(script).identifierExpressionsText().containsExactly("AccessMode");
         assertThat(script).literalsText().containsExactly("false", "true", "0", "1", "1");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
+    @Disabled
     @Test
     void or_and_and_and() throws IOException {
         result = when(zeroField.isNull().or(zeroField.eq(0))
@@ -106,7 +104,7 @@ class TypeScriptMoreCombinedTest {
                 .and(dateField1.ageAt(dateField2).lesserThan(0)
                         .and(dateField2.ageAt(dateField1).greaterOrEquals(0))))
                 .validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -119,25 +117,14 @@ class TypeScriptMoreCombinedTest {
         assertThat(script).literalsText().containsExactly("0", "false", "0", "0");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
-
-    private static String toTS(Metadata metadata) {
-        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        TypeScriptWriter writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
-                field -> field.id().code().replace(" ", ""));
-        new AstTSRenderer(writer, true).toTS(metadata);
-        return new String(ops.toByteArray(), UTF_8);
-    }
-
-    private static TypeScriptAssertionContext parseAs(String ruleTs,
-            Function<TypeScriptParser, ParseTree> contextGetter)
-            throws IOException {
-        TypeScriptAssertionContext context = parseUsing(ruleTs, TypeScriptAssertionContext::new);
-        new ParseTreeWalker().walk(context, contextGetter.apply(context.getParser()));
-        return context;
-    }
-
-    @AfterEach
-    void afterEach() {
-        System.out.println(ruleTs);
+    @AfterAll
+    static void tearDown() {
+        Map<String, String> symbols = new HashMap<>();
+        symbols.put("BooleanFunction", null);
+        symbols.put("DateFunction", null);
+        jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
+        jestExtension.getJestTestSpec().getImports().add(new ImportSpec( "doov", symbols));
+        jestExtension.getJestTestSpec().getTestStates().add("enum AccessMode { READ, WRITE, EXECUTE };");
+        jestExtension.getJestTestSpec().getBeforeEachs().add("model = {enumField: AccessMode.READ, boolean1: false, boolean2: false, zero: 0};");
     }
 }

@@ -20,6 +20,7 @@ import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
+import static io.doov.ts.ast.test.JestExtension.parseAs;
 import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,13 +29,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Locale;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.function.Function;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.*;
@@ -44,14 +46,16 @@ import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.core.dsl.time.LocalDateSuppliers;
 import io.doov.ts.ast.AstTSRenderer;
-import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
-import io.doov.ts.ast.writer.TypeScriptWriter;
+import io.doov.ts.ast.writer.*;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptOrTest {
     private StepCondition A, B, C, D;
     private Result result;
     private String ruleTs;
+    
+    @RegisterExtension
+    static JestExtension jestExtension = new JestExtension();
 
     @Test
     void or_true_false_complex() throws IOException {
@@ -59,7 +63,7 @@ class TypeScriptOrTest {
         B = alwaysFalse("B");
         C = alwaysTrue("C");
         result = when(A.or(B.or(C))).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -78,7 +82,7 @@ class TypeScriptOrTest {
         B = alwaysTrue("B");
         C = alwaysTrue("C");
         result = when(A.or(B.and(C))).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -96,7 +100,7 @@ class TypeScriptOrTest {
         A = alwaysFalse("A");
         B = alwaysFalse("B");
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -115,7 +119,7 @@ class TypeScriptOrTest {
         B = alwaysFalse("B");
         C = alwaysTrue("C");
         result = when(A.or(B.and(C))).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -133,7 +137,7 @@ class TypeScriptOrTest {
         A = alwaysTrue("A");
         B = alwaysFalse("B");
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -151,7 +155,7 @@ class TypeScriptOrTest {
         A = alwaysFalse("A");
         B = alwaysTrue("B");
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -169,7 +173,7 @@ class TypeScriptOrTest {
         A = alwaysTrue("A");
         B = alwaysTrue("B");
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -190,7 +194,7 @@ class TypeScriptOrTest {
         A = zero.lesserThan(4);
         B = yesterday.before(LocalDateSuppliers.today());
         result = when(A.or(B)).validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -218,7 +222,7 @@ class TypeScriptOrTest {
         result = when(A.or(B)
                 .or(C)
                 .or(D)).validate().withShortCircuit(false).executeOn(model);
-        ruleTs = toTS(result.getContext().getRootMetadata());
+        ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
@@ -231,24 +235,20 @@ class TypeScriptOrTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
-    private static String toTS(Metadata metadata) {
-        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        TypeScriptWriter writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
-                field -> field.id().code().replace(" ", ""));
-        new AstTSRenderer(writer, true).toTS(metadata);
-        return new String(ops.toByteArray(), UTF_8);
-    }
-
-    private static TypeScriptAssertionContext parseAs(String ruleTs,
-            Function<TypeScriptParser, ParseTree> contextGetter)
-            throws IOException {
-        TypeScriptAssertionContext context = parseUsing(ruleTs, TypeScriptAssertionContext::new);
-        new ParseTreeWalker().walk(context, contextGetter.apply(context.getParser()));
-        return context;
-    }
-
-    @AfterEach
-    void afterEach() {
-        System.out.println(ruleTs);
+    @AfterAll
+    static void tearDown() {
+        Map<String, String> symbols = new HashMap<>();
+        symbols.put("BooleanFunction", null);
+        symbols.put("DateFunction", null);
+        jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
+        jestExtension.getJestTestSpec().getImports().add(new ImportSpec( "doov", symbols));
+        jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
+        jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseA = DOOV.lift(BooleanFunction, false);");
+        jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueB = DOOV.lift(BooleanFunction, true);");
+        jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseB = DOOV.lift(BooleanFunction, false);");
+        jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueC = DOOV.lift(BooleanFunction, true);");
+        jestExtension.getJestTestSpec().getTestStates().add("const today = DateFunction.today();");
+        String now = LocalDate.now().minus(1, ChronoUnit.DAYS).toString();
+        jestExtension.getJestTestSpec().getBeforeEachs().add("model = { zero: 0, yesterday: new Date('" + now + "'), name: 'Bob', isTrue: false };");
     }
 }

@@ -3,15 +3,14 @@
  */
 package io.doov.ts.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.age_at;
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.ts.ast.writer.TypeScriptWriter.*;
 import static java.util.Arrays.asList;
 
 import java.time.LocalDate;
 import java.util.*;
 
+import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.function.*;
@@ -161,6 +160,24 @@ public class AstTSRenderer {
                 return valueClass.getSimpleName() + "." + elt.getReadable().readable();
             }
         }
+        // FIXME -> EnumClass.ENUM_LITERAL this should me more generic
+        if (metadata instanceof LeafMetadata) {
+            if (parentMetadata.getOperator() == as_string
+                    || parentMetadata.getOperator() == as_a_number
+                    || parentMetadata.getOperator() == as) {
+                return elt.getReadable().readable();
+            }
+            String classPrefix = parentMetadata.left().findFirst()
+                    .filter(m -> m.type() == MetadataType.FIELD_PREDICATE)
+                    .map(m -> (FieldMetadata<?>) m)
+                    .map(f -> ((FieldInfo) f.field()))
+                    .filter(f -> f.type().isEnum())
+                    .map(f -> f.type().getSimpleName())
+                    .orElse(null);
+            if (classPrefix != null) {
+                return classPrefix + "." + elt.getReadable().readable();
+            }
+        }
         return elt.getReadable().readable();
     }
 
@@ -189,9 +206,9 @@ public class AstTSRenderer {
     protected void binary(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata left = metadata.left().findFirst().get();
         Metadata right = metadata.right().findFirst().get();
-        Metadata parent = new ArrayList<>(parents).get(1);
+        Metadata parent = parents.size() > 1 ? new ArrayList<>(parents).get(1) : null;
         toTS(left, parents);
-        if (parent.type() == MetadataType.MAPPING_INPUT) {
+        if (parent != null && parent.type() == MetadataType.MAPPING_INPUT) {
             writer.write(COMMA);
             writer.write(SPACE);
             toTS(right);
