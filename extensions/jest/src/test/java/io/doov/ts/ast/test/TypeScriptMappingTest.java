@@ -159,7 +159,7 @@ class TypeScriptMappingTest {
 
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
         assertThat(script).identifierNamesText().containsExactly("when", "ageAt", "greaterOrEquals", "then", "map",
-                "to", "else", "map", "to");
+                "to", "otherwise", "map", "to");
         assertThat(script).identifierReferencesText().containsExactly("DOOV", "dateField", "DOOV", "DOOV");
         assertThat(script).identifierExpressionsText().containsExactly("dateField2", "booleanField", "booleanField");
         assertThat(script).literalsText().containsExactly("18", "true", "false");

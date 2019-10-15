@@ -116,7 +116,7 @@ public class AstTSRenderer {
         } else if (operator == DefaultOperator.always_true) {
             return "alwaysTrue";
         } else if (operator == MappingOperator._else) {
-            return "else";
+            return "otherwise";
         } else if (operator == DefaultOperator.is) {
             return "eq";
         }
