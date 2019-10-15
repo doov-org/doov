@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/doov-io/doov#readme",
   "devDependencies": {
-    "doov": "0.10.1",
+    "doov": "0.10.3",
     "typescript": "3.4.3",
     "jest": "24.9.0",
     "@types/jest": "24.0.18",
