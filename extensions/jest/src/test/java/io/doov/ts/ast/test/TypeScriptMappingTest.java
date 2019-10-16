@@ -13,10 +13,7 @@
 package io.doov.ts.ast.test;
 
 import static io.doov.assertions.ts.Assertions.assertThat;
-import static io.doov.core.dsl.DOOV.map;
-import static io.doov.core.dsl.DOOV.mappings;
-import static io.doov.core.dsl.DOOV.template;
-import static io.doov.core.dsl.DOOV.when;
+import static io.doov.core.dsl.DOOV.*;
 import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.template.ParameterTypes.$String;
@@ -202,6 +199,21 @@ class TypeScriptMappingTest {
                 ".com'", "'Yahoo'", "'www.yahou.com'");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
+
+    @Test
+    void map_null() throws IOException {
+        ctx = mapNull(stringField).executeOn(model);
+        ruleTs = jestExtension.toTS(ctx);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("mapNull");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("stringField");
+        assertThat(script).literalsText().isEmpty();
+        assertThat(script).arrayLiteralsText().isEmpty();
+    }
+
     @AfterAll
     static void tearDown() {
         jestExtension.getJestTestSpec().getImports().add(new ImportSpec("Function", "doov"));

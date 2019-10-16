@@ -392,12 +392,16 @@ public class AstTSRenderer {
         Metadata right = metadata.right().findFirst().get();
         writer.writeGlobalDOOV();
         writer.write(DOT);
-        writer.write(operatorToMethod(MappingOperator.map));
-        writer.write(LEFT_PARENTHESIS);
-        toTS(left, parents);
-        writer.write(RIGHT_PARENTHESIS);
-        writer.write(DOT);
-        writer.write(operatorToMethod(MappingOperator.to));
+        if (left instanceof StaticMetadata && ((StaticMetadata) left).value() == null) {
+            writer.write("mapNull");
+        } else {
+            writer.write(operatorToMethod(MappingOperator.map));
+            writer.write(LEFT_PARENTHESIS);
+            toTS(left, parents);
+            writer.write(RIGHT_PARENTHESIS);
+            writer.write(DOT);
+            writer.write(operatorToMethod(MappingOperator.to));
+        }
         writer.write(LEFT_PARENTHESIS);
         toTS(right, parents);
         writer.write(RIGHT_PARENTHESIS);
