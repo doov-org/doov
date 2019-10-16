@@ -4,6 +4,7 @@
 package io.doov.ts.ast.writer;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 import io.doov.core.FieldInfo;
@@ -60,11 +61,15 @@ public class FieldSpec {
             return "iterable";
         } else if (fieldInfo.type().equals(String.class)) {
             return "string";
-        } else if (Number.class.isAssignableFrom(fieldInfo.type())) {
+        } else if (Number.class.isAssignableFrom(fieldInfo.type())
+                || fieldInfo.type().equals(Integer.TYPE)
+                || fieldInfo.type().equals(Double.TYPE)
+                || fieldInfo.type().equals(Long.TYPE)
+                ) {
             return "number";
-        } else if (fieldInfo.type().equals(Boolean.class)) {
+        } else if (fieldInfo.type().equals(Boolean.class) || fieldInfo.type().equals(Boolean.TYPE)) {
             return "boolean";
-        } else if (fieldInfo.type().equals(LocalDate.class)) {
+        } else if (fieldInfo.type().equals(LocalDate.class) || fieldInfo.type().equals(Date.class)) {
             return "date";
         } else {
             return "f";
@@ -91,11 +96,14 @@ public class FieldSpec {
             return type.getSimpleName();
         } else if (type.equals(String.class)) {
             return "string";
-        } else if (Number.class.isAssignableFrom(type)) {
+        } else if (Number.class.isAssignableFrom(type)
+                || type.equals(Integer.TYPE)
+                || type.equals(Double.TYPE)
+                || type.equals(Long.TYPE)) {
             return "number";
-        } else if (type.equals(Boolean.class)) {
+        } else if (type.equals(Boolean.class) || type.equals(Boolean.TYPE)) {
             return "boolean";
-        } else if (type.equals(LocalDate.class)) {
+        } else if (type.equals(LocalDate.class) || type.equals(Date.class)) {
             return "Date";
         } else {
             return "unknown";
