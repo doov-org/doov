@@ -37,6 +37,8 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.*;
@@ -95,20 +97,21 @@ class TypeScriptOrTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
-    @Test
-    void or_false_false() throws IOException {
+    @ParameterizedTest
+    @ValueSource(strings = {"true", "false"})
+    void or_false(boolean isFalse) throws IOException {
         A = alwaysFalse("A");
-        B = alwaysFalse("B");
+        B = isFalse ? alwaysFalse("B") : alwaysTrue("B");
         result = when(A.or(B)).validate().withShortCircuit(false).execute();
         ruleTs = jestExtension.toTS(result);
 
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
 
-        assertFalse(result.value());
+        assertThat(result.value()).isEqualTo(!isFalse);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
         assertThat(script).identifierNamesText().containsExactly("or");
         assertThat(script).identifierReferencesText().containsExactly("alwaysFalseA");
-        assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseB");
+        assertThat(script).identifierExpressionsText().containsExactly(isFalse ? "alwaysFalseB" : "alwaysTrueB");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
     }

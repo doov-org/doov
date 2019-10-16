@@ -57,7 +57,7 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
     @Override
     public void afterEach(ExtensionContext context) {
         String output = new String(((ByteArrayOutputStream) writer.getOutput()).toByteArray());
-        TestCaseSpec testCaseSpec = new TestCaseSpec(context.getTestMethod().get().getName());
+        TestCaseSpec testCaseSpec = new TestCaseSpec(getTestName(context));
         if (result != null) {
             testCaseSpec.getTestStates().add("const rule = DOOV.when(" + output + ").validate();");
             testCaseSpec.getTestStates().add("const result = rule.execute(model);");
@@ -76,6 +76,14 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
         jestTestSpec.getTestCases().add(testCaseSpec);
         jestTestSpec.getImports().addAll(writer.getImports());
         jestTestSpec.getFields().addAll(writer.getFields());
+    }
+
+    protected String getTestName(ExtensionContext context) {
+        if (!context.getDisplayName().contains(context.getTestMethod().get().getName())) {
+            return context.getTestMethod().get().getName() + "(" + context.getDisplayName() + ")";
+        } else {
+            return context.getDisplayName();
+        }
     }
 
     protected String getExpectedValue(FieldSpec f) {
