@@ -89,9 +89,4 @@ class TypeScriptIterableTest {
         assertThat(script).arrayLiteralsText().containsExactly("[1,2,3]");
     }
 
-    @AfterAll
-    static void tearDown() {
-        jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
-    }
-
 }

@@ -30,7 +30,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
@@ -143,9 +144,11 @@ class TypeScriptMatchAllTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll", "greaterThan", "after", "matches");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "yesterday", "stringfield");
-        assertThat(script).identifierExpressionsText().containsExactly("today");
+        assertThat(script).identifierNamesText().containsExactly("matchAll", "greaterThan", "after", "today",
+                "matches");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "yesterday", "DateFunction",
+                "stringfield");
+        assertThat(script).identifierExpressionsText().isEmpty();
         assertThat(script).literalsText().containsExactly("4", "'^other.*'");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
@@ -154,7 +157,6 @@ class TypeScriptMatchAllTest {
     static void tearDown() {
         Map<String, String> symbols = new HashMap<>();
         symbols.put("BooleanFunction", null);
-        symbols.put("DateFunction", null);
         jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
         jestExtension.getJestTestSpec().getImports().add(new ImportSpec( "doov", symbols));
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
@@ -163,7 +165,6 @@ class TypeScriptMatchAllTest {
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseB = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueC = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseC = DOOV.lift(BooleanFunction, false);");
-        jestExtension.getJestTestSpec().getTestStates().add("const today = DateFunction.today();");
         String now = LocalDate.now().minus(1, ChronoUnit.DAYS).toString();
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = { zero: 0, yesterday: new Date('" + now + "'), stringfield: 'something' };");
     }

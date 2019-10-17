@@ -4,8 +4,11 @@
 package io.doov.ts.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.MappingOperator.map;
+import static io.doov.core.dsl.meta.MappingOperator.mappings;
 import static io.doov.ts.ast.writer.TypeScriptWriter.*;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -15,11 +18,14 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.function.*;
 import io.doov.core.dsl.meta.predicate.FieldMetadata;
+import io.doov.ts.ast.writer.ImportSpec;
 import io.doov.ts.ast.writer.TypeScriptWriter;
 
 public class AstTSRenderer {
 
     private static final List<Operator> AND_OR = asList(and, or);
+    private static final List<Operator> BUILT_IN_NARY = asList(count, sum, min, max,
+            map, mappings, match_any, match_all, match_none);
 
     private final TypeScriptWriter writer;
     private final boolean prettyPrint;
@@ -295,6 +301,12 @@ public class AstTSRenderer {
     }
 
     protected String importRequest(Operator operator, Metadata metadata, ArrayDeque<Metadata> parents) {
+        if (operator == today) {
+            writer.getImports().add(new ImportSpec("DateFunction", "doov"));
+            writer.write("DateFunction");
+            writer.write(DOT);
+            return operatorToMethod(operator) + LEFT_PARENTHESIS + RIGHT_PARENTHESIS;
+        }
         return operatorToMethod(operator);
     }
 
@@ -319,6 +331,7 @@ public class AstTSRenderer {
     protected void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents) {
         if (metadata instanceof LeafMetadata) {
             LeafMetadata leaf = (LeafMetadata) metadata;
+            // TODO handle type converter imports
             writer.write(descriptionToVariable(String.valueOf(leaf.elements().getLast())));
         } else {
             writer.write(metadata.readable());
@@ -335,9 +348,14 @@ public class AstTSRenderer {
     }
 
     protected void nary(Metadata metadata, ArrayDeque<Metadata> parents) {
-        // TODO import nary function from other places
-        writer.writeGlobalDOOV();
-        then_else(metadata, parents);
+        if (BUILT_IN_NARY.contains(metadata.getOperator())) {
+            writer.writeGlobalDOOV();
+            writer.write(DOT);
+            writer.write(operatorToMethod(metadata.getOperator()));
+        } else {
+            writer.write(importRequest(metadata.getOperator(), metadata, parents));
+        }
+        nary_elements(metadata, parents);
     }
 
     protected void mappings(Metadata metadata, ArrayDeque<Metadata> parents) {
@@ -348,7 +366,7 @@ public class AstTSRenderer {
             if (conditional.otherwise() != null && conditional.otherwise().children().count() > 0) {
                 toTS(conditional.otherwise(), parents);
             }
-        } else if (metadata.getOperator() == MappingOperator.mappings) {
+        } else if (metadata.getOperator() == mappings) {
             nary(metadata, parents);
         }
     }
@@ -356,11 +374,16 @@ public class AstTSRenderer {
     protected void then_else(Metadata metadata, ArrayDeque<Metadata> parents) {
         writer.write(DOT);
         writer.write(operatorToMethod(metadata.getOperator()));
+        nary_elements(metadata, parents);
+    }
+
+    protected void nary_elements(Metadata metadata, ArrayDeque<Metadata> parents) {
         writer.write(LEFT_PARENTHESIS);
-        if (metadata.getOperator() != MappingOperator.then && prettyPrint) {
+        List<Metadata> children = metadata.children().collect(toList());
+        if (metadata.getOperator() != MappingOperator.then && prettyPrint && children.size() > 2) {
             writer.writeNewLine(parents.size());
         }
-        Iterator<Metadata> iterator = metadata.children().iterator();
+        Iterator<Metadata> iterator = children.iterator();
         while(iterator.hasNext()) {
             toTS(iterator.next(), parents);
             if (iterator.hasNext()) {
@@ -404,7 +427,7 @@ public class AstTSRenderer {
         if (left instanceof StaticMetadata && ((StaticMetadata) left).value() == null) {
             writer.write("mapNull");
         } else {
-            writer.write(operatorToMethod(MappingOperator.map));
+            writer.write(operatorToMethod(map));
             writer.write(LEFT_PARENTHESIS);
             toTS(left, parents);
             writer.write(RIGHT_PARENTHESIS);

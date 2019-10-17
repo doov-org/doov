@@ -145,9 +145,10 @@ class TypeScriptCountTest {
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("count", "lesserThan", "before", "greaterThan");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "yesterday");
-        assertThat(script).identifierExpressionsText().containsExactly("today");
+        assertThat(script).identifierNamesText().containsExactly("count", "lesserThan", "before", "today",
+                "greaterThan");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "yesterday", "DateFunction");
+        assertThat(script).identifierExpressionsText().isEmpty();
         assertThat(script).literalsText().containsExactly("4", "1");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
@@ -156,14 +157,12 @@ class TypeScriptCountTest {
     static void tearDown() {
         Map<String, String> symbols = new HashMap<>();
         symbols.put("BooleanFunction", null);
-        symbols.put("DateFunction", null);
         jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
         jestExtension.getJestTestSpec().getImports().add(new ImportSpec( "doov", symbols));
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseA = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueB = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseB = DOOV.lift(BooleanFunction, false);");
-        jestExtension.getJestTestSpec().getTestStates().add("const today = DateFunction.today();");
         String now = LocalDate.now().minus(1, ChronoUnit.DAYS).toString();
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = { zero: 0, yesterday: new Date('" + now + "') };");
     }

@@ -203,9 +203,9 @@ class TypeScriptOrTest {
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("lesserThan", "or", "before");
-        assertThat(script).identifierReferencesText().containsExactly("zero", "yesterday");
-        assertThat(script).identifierExpressionsText().containsExactly("today");
+        assertThat(script).identifierNamesText().containsExactly("lesserThan", "or", "before", "today");
+        assertThat(script).identifierReferencesText().containsExactly("zero", "yesterday", "DateFunction");
+        assertThat(script).identifierExpressionsText().isEmpty();
         assertThat(script).literalsText().containsExactly("4");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
@@ -231,9 +231,9 @@ class TypeScriptOrTest {
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("lesserThan", "or", "before", "or", "startsWith", "or", "eq");
-        assertThat(script).identifierReferencesText().containsExactly("zero", "yesterday", "name", "isTrue");
-        assertThat(script).identifierExpressionsText().containsExactly("today");
+        assertThat(script).identifierNamesText().containsExactly("lesserThan", "or", "before", "today", "or", "startsWith", "or", "eq");
+        assertThat(script).identifierReferencesText().containsExactly("zero", "yesterday", "DateFunction", "name", "isTrue");
+        assertThat(script).identifierExpressionsText().isEmpty();
         assertThat(script).literalsText().containsExactly("4", "'B'", "false");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
@@ -242,7 +242,6 @@ class TypeScriptOrTest {
     static void tearDown() {
         Map<String, String> symbols = new HashMap<>();
         symbols.put("BooleanFunction", null);
-        symbols.put("DateFunction", null);
         jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
         jestExtension.getJestTestSpec().getImports().add(new ImportSpec( "doov", symbols));
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
@@ -250,7 +249,6 @@ class TypeScriptOrTest {
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueB = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseB = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueC = DOOV.lift(BooleanFunction, true);");
-        jestExtension.getJestTestSpec().getTestStates().add("const today = DateFunction.today();");
         String now = LocalDate.now().minus(1, ChronoUnit.DAYS).toString();
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = { zero: 0, yesterday: new Date('" + now + "'), name: 'Bob', isTrue: false };");
     }

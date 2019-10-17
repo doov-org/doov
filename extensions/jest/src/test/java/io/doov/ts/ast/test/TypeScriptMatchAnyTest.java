@@ -204,9 +204,10 @@ class TypeScriptMatchAnyTest {
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAny", "lesserThan", "before", "matches");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "yesterday", "stringfield");
-        assertThat(script).identifierExpressionsText().containsExactly("today");
+        assertThat(script).identifierNamesText().containsExactly("matchAny", "lesserThan", "before", "today",
+                "matches");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "yesterday", "DateFunction", "stringfield");
+        assertThat(script).identifierExpressionsText().isEmpty();
         assertThat(script).literalsText().containsExactly("4", "'^some.*'");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
@@ -215,7 +216,6 @@ class TypeScriptMatchAnyTest {
     static void tearDown() {
         Map<String, String> symbols = new HashMap<>();
         symbols.put("BooleanFunction", null);
-        symbols.put("DateFunction", null);
         jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
         jestExtension.getJestTestSpec().getImports().add(new ImportSpec( "doov", symbols));
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
@@ -226,7 +226,6 @@ class TypeScriptMatchAnyTest {
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseC = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueD = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseD = DOOV.lift(BooleanFunction, false);");
-        jestExtension.getJestTestSpec().getTestStates().add("const today = DateFunction.today();");
         String now = LocalDate.now().minus(1, ChronoUnit.DAYS).toString();
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = { zero: 0, yesterday: new Date('" + now + "'), stringfield: 'something' };");
     }
