@@ -23,12 +23,12 @@ import io.doov.ts.ast.writer.TypeScriptWriter;
 
 public class AstTSRenderer {
 
-    private static final List<Operator> AND_OR = asList(and, or);
-    private static final List<Operator> BUILT_IN_NARY = asList(count, sum, min, max,
+    protected static final List<Operator> AND_OR = asList(and, or);
+    protected static final List<Operator> BUILT_IN_NARY = asList(count, sum, min, max,
             map, mappings, match_any, match_all, match_none);
 
-    private final TypeScriptWriter writer;
-    private final boolean prettyPrint;
+    protected final TypeScriptWriter writer;
+    protected final boolean prettyPrint;
 
     public AstTSRenderer(TypeScriptWriter writer) {
         this(writer, false);
@@ -150,7 +150,7 @@ public class AstTSRenderer {
         return stringBuilder.toString();
     }
 
-    private String deSerializeValue(Element elt, Metadata metadata, Metadata parentMetadata) {
+    protected String deSerializeValue(Element elt, Metadata metadata, Metadata parentMetadata) {
         if (parentMetadata instanceof TemporalBiFunctionMetadata) {
             if (parentMetadata.getOperator() == age_at) {
                 // Date
