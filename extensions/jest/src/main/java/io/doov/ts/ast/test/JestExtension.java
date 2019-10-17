@@ -30,17 +30,18 @@ import io.doov.tsparser.TypeScriptParser;
 
 public class JestExtension implements BeforeAllCallback, AfterAllCallback, AfterEachCallback {
 
-    public static final Function<TypeScriptWriter, AstTSRenderer> DEFAULT_RENDERER_FUNCTION = w -> new AstTSRenderer(w, true);
-    private JestTestSpec jestTestSpec;
-    private TypeScriptWriter writer;
+    public static final Function<TypeScriptWriter, AstTSRenderer> DEFAULT_RENDERER_FUNCTION =
+            w -> new AstTSRenderer(w, true);
+    protected JestTestSpec jestTestSpec;
+    protected TypeScriptWriter writer;
 
-    private Result result;
-    private Context executionContext;
+    protected Result result;
+    protected Context executionContext;
 
-    private final String testGenerateDir;
-    private final Gson gson;
+    protected final String testGenerateDir;
+    protected final Gson gson;
 
-    private final Function<TypeScriptWriter, AstTSRenderer> tsRendererFunction;
+    protected final Function<TypeScriptWriter, AstTSRenderer> tsRendererFunction;
 
     public JestExtension() {
         this("./", DEFAULT_RENDERER_FUNCTION);
