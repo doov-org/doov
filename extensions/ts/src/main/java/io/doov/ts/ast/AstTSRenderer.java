@@ -260,35 +260,35 @@ public class AstTSRenderer {
             FieldMetadata fieldMetadata = (FieldMetadata) metadata;
             writer.writeField(fieldMetadata.field());
         } else {
-            for (Element elt : elts) {
-                if (elt.getType() == ElementType.OPERATOR) {
-                    if (elts.size() == 1) {
-                        // This is 'probably' an external function
-                        writer.write(importRequest((Operator) elt.getReadable(), metadata, parents));
-                    } else {
+            if (elts.size() == 1 && elts.get(0).getType() == ElementType.OPERATOR) {
+                // This is 'probably' an external function
+                writer.write(importRequest((Operator) elts.get(0).getReadable(), metadata, parents));
+            } else {
+                for (Element elt : elts) {
+                    if (elt.getType() == ElementType.OPERATOR) {
                         writer.write(operatorToMethod((Operator) elt.getReadable()));
-                    }
-                } else if (elt.getType() == ElementType.STRING_VALUE) {
-                    writer.writeQuote();
-                    writer.write(elt.getReadable().readable());
-                    writer.writeQuote();
-                } else if (elt.getType() == ElementType.FIELD) {
-                    writer.writeField((DslField<?>) elt.getReadable());
-                } else if (elt.getType() == ElementType.UNKNOWN) {
-                    writer.write(elt.getReadable().readable().replace("-function- ", ""));
-                } else if (elt.getType() == ElementType.TEMPORAL_UNIT) {
-                    // do not write temporal units they are handled as method modifier in #binary
-                } else if (elt.getType() == ElementType.VALUE) {
-                    List<Metadata> parentsList = new ArrayList<>(parents);
-                    if (parentsList.size() > 1) {
-                        Metadata parentMetadata = parentsList.get(1);
-                        // TODO guess the value type from the parent operator;
-                        writer.write(deSerializeValue(elt, metadata, parentMetadata));
+                    } else if (elt.getType() == ElementType.STRING_VALUE) {
+                        writer.writeQuote();
+                        writer.write(elt.getReadable().readable());
+                        writer.writeQuote();
+                    } else if (elt.getType() == ElementType.FIELD) {
+                        writer.writeField((DslField<?>) elt.getReadable());
+                    } else if (elt.getType() == ElementType.UNKNOWN) {
+                        writer.write(elt.getReadable().readable().replace("-function- ", ""));
+                    } else if (elt.getType() == ElementType.TEMPORAL_UNIT) {
+                        // do not write temporal units they are handled as method modifier in #binary
+                    } else if (elt.getType() == ElementType.VALUE) {
+                        List<Metadata> parentsList = new ArrayList<>(parents);
+                        if (parentsList.size() > 1) {
+                            Metadata parentMetadata = parentsList.get(1);
+                            // TODO guess the value type from the parent operator;
+                            writer.write(deSerializeValue(elt, metadata, parentMetadata));
+                        } else {
+                            writer.write(elt.getReadable().readable());
+                        }
                     } else {
                         writer.write(elt.getReadable().readable());
                     }
-                } else {
-                    writer.write(elt.getReadable().readable());
                 }
             }
         }
