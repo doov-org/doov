@@ -262,7 +262,12 @@ public class AstTSRenderer {
         } else {
             for (Element elt : elts) {
                 if (elt.getType() == ElementType.OPERATOR) {
-                    writer.write(operatorToMethod((Operator) elt.getReadable()));
+                    if (elts.size() == 1) {
+                        // This is 'probably' an external function
+                        writer.write(importRequest((Operator) elt.getReadable(), metadata, parents));
+                    } else {
+                        writer.write(operatorToMethod((Operator) elt.getReadable()));
+                    }
                 } else if (elt.getType() == ElementType.STRING_VALUE) {
                     writer.writeQuote();
                     writer.write(elt.getReadable().readable());
@@ -287,6 +292,10 @@ public class AstTSRenderer {
                 }
             }
         }
+    }
+
+    protected String importRequest(Operator operator, Metadata metadata, ArrayDeque<Metadata> parents) {
+        return operatorToMethod(operator);
     }
 
     protected void mappingInput(Metadata metadata, ArrayDeque<Metadata> parents) {
