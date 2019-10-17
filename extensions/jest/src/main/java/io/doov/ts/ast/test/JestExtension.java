@@ -30,6 +30,7 @@ import io.doov.tsparser.TypeScriptParser;
 
 public class JestExtension implements BeforeAllCallback, AfterAllCallback, AfterEachCallback {
 
+    public static final Function<TypeScriptWriter, AstTSRenderer> DEFAULT_RENDERER_FUNCTION = w -> new AstTSRenderer(w, true);
     private JestTestSpec jestTestSpec;
     private TypeScriptWriter writer;
 
@@ -39,12 +40,19 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
     private final String testGenerateDir;
     private final Gson gson;
 
+    private final Function<TypeScriptWriter, AstTSRenderer> tsRendererFunction;
+
     public JestExtension() {
-        this("./");
+        this("./", DEFAULT_RENDERER_FUNCTION);
     }
 
     public JestExtension(String testGenerateDir) {
+        this(testGenerateDir, DEFAULT_RENDERER_FUNCTION);
+    }
+
+    public JestExtension(String testGenerateDir, Function<TypeScriptWriter, AstTSRenderer> tsRendererFunction) {
         this.testGenerateDir = testGenerateDir;
+        this.tsRendererFunction = tsRendererFunction;
         this.gson = new GsonBuilder().create();
     }
 
@@ -123,7 +131,7 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
         writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
                 field -> field.id().code().replace(" ", ""));
-        new AstTSRenderer(writer, true).toTS(context.getRootMetadata());
+        tsRendererFunction.apply(writer).toTS(context.getRootMetadata());
         return new String(ops.toByteArray(), UTF_8);
     }
 
