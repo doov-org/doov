@@ -332,7 +332,7 @@ public class AstTSRenderer {
     }
 
     protected void mappings(Metadata metadata, ArrayDeque<Metadata> parents) {
-        if (metadata.getOperator() == DefaultOperator.no_operator) {
+        if (metadata.getOperator() == MappingOperator.conditional_mappings) {
             ConditionalMappingMetadata conditional = (ConditionalMappingMetadata) metadata;
             toTS(conditional.when(), parents);
             toTS(conditional.then(), parents);

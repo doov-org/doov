@@ -48,6 +48,11 @@ public class ConditionalMappingMetadata extends AbstractMetadata {
     }
 
     @Override
+    public Operator getOperator() {
+        return MappingOperator.conditional_mappings;
+    }
+
+    @Override
     public Stream<Metadata> children() {
         return Stream.of(when, then, otherwise);
     }

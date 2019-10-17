@@ -25,12 +25,13 @@ public enum MappingOperator implements Operator {
     _else("else"),
 
     // mappings
-    map("map"), //
-    map_null_tag("map_null_tag"), //
-    mappings("mappings"), //
-    to("to"), //
-    using("using"),//
-    ; //
+    map("map"),
+    map_null_tag("map_null_tag"),
+    mappings("mappings"),
+    conditional_mappings("mappings"),
+    to("to"),
+    using("using"),
+    ;
     private final String readable;
 
     MappingOperator(String readable) {

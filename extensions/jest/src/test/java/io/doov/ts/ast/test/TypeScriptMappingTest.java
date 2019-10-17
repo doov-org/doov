@@ -214,6 +214,20 @@ class TypeScriptMappingTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
+    @Test
+    void empty_mappings() throws IOException {
+        ctx = mappings().executeOn(model);
+        ruleTs = jestExtension.toTS(ctx);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("mappings");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().isEmpty();
+        assertThat(script).arrayLiteralsText().isEmpty();
+    }
+
     @AfterAll
     static void tearDown() {
         jestExtension.getJestTestSpec().getImports().add(new ImportSpec("Function", "doov"));
