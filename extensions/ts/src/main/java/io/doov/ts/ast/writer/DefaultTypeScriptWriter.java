@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
-import io.doov.core.FieldInfo;
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class DefaultTypeScriptWriter implements TypeScriptWriter {
@@ -21,22 +19,15 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     private final ResourceProvider resources;
     private final Set<FieldSpec> fields;
     private final int indentSpace = 2;
-    private final FieldNameProvider fieldNameProvider;
-
-    public DefaultTypeScriptWriter(Locale locale, OutputStream os, ResourceProvider resources) {
-        this(locale, os, resources, new DefaultFieldNameProvider());
-    }
 
     public DefaultTypeScriptWriter(Locale locale,
             OutputStream os,
-            ResourceProvider resources,
-            FieldNameProvider fieldNameProvider) {
+            ResourceProvider resources) {
         this.locale = locale;
         this.os = os;
         this.resources = resources;
         this.imports = new HashSet<>();
         this.fields = new HashSet<>();
-        this.fieldNameProvider = fieldNameProvider;
     }
 
     @Override
@@ -73,15 +64,9 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     }
 
     @Override
-    public void writeField(DslField<?> field) {
-        FieldSpec spec = new FieldSpec(fieldNameProvider.getFieldName(field), field, field instanceof FieldInfo ?
-                (FieldInfo) field : null);
-        addField(spec);
-        try {
-            os.write(spec.name().getBytes(UTF_8));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void writeField(FieldSpec fieldSpec) {
+        addField(fieldSpec);
+        write(fieldSpec.name());
     }
 
     @Override
@@ -98,7 +83,6 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     public OutputStream getOutput() {
         return os;
     }
-
 
     @Override
     public synchronized void addImport(ImportSpec importSpec) {

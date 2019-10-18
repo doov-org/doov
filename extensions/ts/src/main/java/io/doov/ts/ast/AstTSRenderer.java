@@ -18,8 +18,7 @@ import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.function.*;
 import io.doov.core.dsl.meta.predicate.FieldMetadata;
-import io.doov.ts.ast.writer.ImportSpec;
-import io.doov.ts.ast.writer.TypeScriptWriter;
+import io.doov.ts.ast.writer.*;
 
 public class AstTSRenderer {
 
@@ -28,14 +27,20 @@ public class AstTSRenderer {
             map, mappings, match_any, match_all, match_none);
 
     protected final TypeScriptWriter writer;
+    protected final FieldNameProvider fieldNameProvider;
     protected final boolean prettyPrint;
 
     public AstTSRenderer(TypeScriptWriter writer) {
-        this(writer, false);
+        this(writer, new DefaultFieldNameProvider(), false);
     }
 
     public AstTSRenderer(TypeScriptWriter writer, boolean prettyPrint) {
+        this(writer, new DefaultFieldNameProvider(), prettyPrint);
+    }
+
+    public AstTSRenderer(TypeScriptWriter writer, FieldNameProvider fieldNameProvider, boolean prettyPrint) {
         this.writer = writer;
+        this.fieldNameProvider = fieldNameProvider;
         this.prettyPrint = prettyPrint;
     }
 
@@ -258,13 +263,18 @@ public class AstTSRenderer {
         }
     }
 
+    protected FieldSpec fieldSpec(DslField<?> field) {
+        return new FieldSpec(fieldNameProvider.getFieldName(field), field,
+                field instanceof FieldInfo ? (FieldInfo) field : null);
+    }
+
     protected void leaf(Metadata metadata, ArrayDeque<Metadata> parents) {
         MetadataType type = metadata.type();
         LeafMetadata<?> leaf = (LeafMetadata<?>) metadata;
         final List<Element> elts = new ArrayList<>(leaf.elements());
         if (type == MetadataType.FIELD_PREDICATE) {
             FieldMetadata fieldMetadata = (FieldMetadata) metadata;
-            writer.writeField(fieldMetadata.field());
+            writer.writeField(fieldSpec(fieldMetadata.field()));
         } else {
             if (elts.size() == 1 && elts.get(0).getType() == ElementType.OPERATOR) {
                 // This is 'probably' an external function
@@ -278,7 +288,7 @@ public class AstTSRenderer {
                         writer.write(elt.getReadable().readable());
                         writer.writeQuote();
                     } else if (elt.getType() == ElementType.FIELD) {
-                        writer.writeField((DslField<?>) elt.getReadable());
+                        writer.writeField(fieldSpec((DslField<?>) elt.getReadable()));
                     } else if (elt.getType() == ElementType.UNKNOWN) {
                         writer.write(elt.getReadable().readable().replace("-function- ", ""));
                     } else if (elt.getType() == ElementType.TEMPORAL_UNIT) {

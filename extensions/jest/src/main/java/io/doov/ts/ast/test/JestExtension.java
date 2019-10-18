@@ -34,7 +34,7 @@ import io.doov.tsparser.TypeScriptParser;
 public class JestExtension implements BeforeAllCallback, AfterAllCallback, AfterEachCallback {
 
     public static final Function<TypeScriptWriter, AstTSRenderer> DEFAULT_RENDERER_FUNCTION =
-            w -> new AstTSRenderer(w, true);
+            w -> new AstTSRenderer(w, field -> field.id().code().replace(" ", ""), true);
 
     protected ThreadLocal<TypeScriptWriter> writer;
     protected ThreadLocal<Result> result;
@@ -146,8 +146,7 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
         this.result.set(result);
         this.executionContext.set(result.getContext());
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        writer.set(new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
-                field -> field.id().code().replace(" ", "")));
+        writer.set(new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE));
         RuleMetadata rule = RuleMetadata.rule(WhenMetadata.when(result.getContext().getRootMetadata()));
         tsRendererFunction.apply(getWriter()).toTS(rule);
         return new String(ops.toByteArray(), UTF_8);
@@ -156,8 +155,7 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
     public String toTS(Context context) {
         this.executionContext.set(context);
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        writer.set(new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
-                field -> field.id().code().replace(" ", "")));
+        writer.set(new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE));
         tsRendererFunction.apply(getWriter()).toTS(context.getRootMetadata());
         return new String(ops.toByteArray(), UTF_8);
     }

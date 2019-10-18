@@ -29,7 +29,7 @@ public interface TypeScriptWriter {
 
     void writeQuote();
 
-    void writeField(DslField<?> field);
+    void writeField(FieldSpec fieldSpec);
 
     Collection<ImportSpec> getImports();
 
