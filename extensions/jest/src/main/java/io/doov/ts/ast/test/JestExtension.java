@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.*;
 
 import com.google.gson.Gson;
@@ -70,26 +71,28 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
 
     @Override
     public void afterEach(ExtensionContext context) {
-        String output = new String(((ByteArrayOutputStream) getWriter().getOutput()).toByteArray());
-        TestCaseSpec testCaseSpec = new TestCaseSpec(getTestName(context));
-        testCaseSpec.getTestStates().add("const rule = " + output + ";");
-        if (getResult() != null) {
-            testCaseSpec.getTestStates().add("const result = rule.execute(model);");
-            testCaseSpec.getRuleAssertions().add(new AssertionSpec("result.value",
-                    String.valueOf(getResult().value())));
-        } else {
-            testCaseSpec.getTestStates().add("model = rule.execute(model);");
+        if (!context.getElement().get().isAnnotationPresent(Disabled.class)) {
+            String output = new String(((ByteArrayOutputStream) getWriter().getOutput()).toByteArray());
+            TestCaseSpec testCaseSpec = new TestCaseSpec(getTestName(context));
+            testCaseSpec.getTestStates().add("const rule = " + output + ";");
+            if (getResult() != null) {
+                testCaseSpec.getTestStates().add("const result = rule.execute(model);");
+                testCaseSpec.getRuleAssertions().add(new AssertionSpec("result.value",
+                        String.valueOf(getResult().value())));
+            } else {
+                testCaseSpec.getTestStates().add("model = rule.execute(model);");
+            }
+            testCaseSpec.getFieldAssertions().addAll(
+                    getWriter().getFields().stream()
+                            .distinct()
+                            .filter(f -> getContext().getEvalValues().containsKey(f.field().id()))
+                            .map(f -> new FieldAssertionSpec(f.field(), f.name(), getExpectedValue(f)))
+                            .collect(Collectors.toList())
+            );
+            jestTestSpec.getTestCases().add(testCaseSpec);
+            jestTestSpec.getImports().addAll(getWriter().getImports());
+            jestTestSpec.getFields().addAll(getWriter().getFields());
         }
-        testCaseSpec.getFieldAssertions().addAll(
-                getWriter().getFields().stream()
-                        .distinct()
-                        .filter(f -> getContext().getEvalValues().containsKey(f.field().id()))
-                        .map(f -> new FieldAssertionSpec(f.field(), f.name(), getExpectedValue(f)))
-                        .collect(Collectors.toList())
-        );
-        jestTestSpec.getTestCases().add(testCaseSpec);
-        jestTestSpec.getImports().addAll(getWriter().getImports());
-        jestTestSpec.getFields().addAll(getWriter().getFields());
     }
 
     protected String getTestName(ExtensionContext context) {
