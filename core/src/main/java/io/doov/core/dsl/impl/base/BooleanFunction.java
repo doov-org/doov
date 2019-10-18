@@ -85,8 +85,8 @@ public class BooleanFunction extends DefaultFunction<Boolean, PredicateMetadata>
      * @return the step condition
      */
     public final StepCondition and(BooleanFunction function) {
-        return LeafStepCondition.stepCondition(andMetadata(metadata, function), getFunction(), function.getFunction(),
-                Boolean::logicalAnd);
+        return LeafStepCondition.stepCondition(andMetadata(metadata, function.metadata), getFunction(),
+                function.getFunction(), Boolean::logicalAnd);
     }
 
     /**
@@ -118,8 +118,8 @@ public class BooleanFunction extends DefaultFunction<Boolean, PredicateMetadata>
      * @return the step condition
      */
     public final StepCondition or(BooleanFunction function) {
-        return LeafStepCondition.stepCondition(orMetadata(metadata, function), getFunction(), function.getFunction(),
-                Boolean::logicalOr);
+        return LeafStepCondition.stepCondition(orMetadata(metadata, function.metadata), getFunction(),
+                function.getFunction(), Boolean::logicalOr);
     }
 
     /**

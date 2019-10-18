@@ -60,11 +60,11 @@ class TSSampleRulesTest {
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
         assertThat(script).identifierNamesText()
-                .containsExactly("when", "matchAll", "ageAt", "greaterOrEquals", "length", "lesserOrEquals", "eq", "FR",
+                .containsExactly("when", "matchAll", "ageAt", "today", "greaterOrEquals", "length", "lesserOrEquals", "eq", "FR",
                         "and", "startsWith", "validate");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "BIRTHDATE", "EMAIL", "COUNTRY"
-                , "PHONE_NUMBER");
-        assertThat(script).identifierExpressionsText().containsExactly("today", "CONFIGURATION_EMAIL_MAX_SIZE", "Country");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "BIRTHDATE", "DateFunction",
+                "EMAIL", "COUNTRY", "PHONE_NUMBER");
+        assertThat(script).identifierExpressionsText().containsExactly("CONFIGURATION_EMAIL_MAX_SIZE", "Country");
         assertThat(script).literalsText().containsExactly("18", "'+33'");
     }
 
@@ -79,6 +79,7 @@ class TSSampleRulesTest {
         assertThat(script).identifierNamesText()
                 .containsExactly("when",
                         "ageAt",
+                        "today",
                         "greaterOrEquals",
                         "and",
                         "length",
@@ -89,9 +90,9 @@ class TSSampleRulesTest {
                         "and",
                         "startsWith",
                         "validate");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE", "EMAIL", "COUNTRY",
-                "PHONE_NUMBER");
-        assertThat(script).identifierExpressionsText().containsExactly("today", "CONFIGURATION_EMAIL_MAX_SIZE", "Country");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE", "DateFunction",
+                "EMAIL", "COUNTRY", "PHONE_NUMBER");
+        assertThat(script).identifierExpressionsText().containsExactly("CONFIGURATION_EMAIL_MAX_SIZE", "Country");
         assertThat(script).literalsText().containsExactly("18", "'+33'");
     }
 
@@ -205,9 +206,9 @@ class TSSampleRulesTest {
         TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(script).errors().hasSize(0);
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("when", "ageAt", "greaterOrEquals", "validate");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE");
-        assertThat(script).identifierExpressionsText().containsExactly("today");
+        assertThat(script).identifierNamesText().containsExactly("when", "ageAt", "today", "greaterOrEquals", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "BIRTHDATE", "DateFunction");
+        assertThat(script).identifierExpressionsText().isEmpty();
         assertThat(script).literalsText().containsExactly("18");
     }
 
