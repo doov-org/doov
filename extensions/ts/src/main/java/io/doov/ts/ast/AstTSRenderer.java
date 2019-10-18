@@ -302,7 +302,7 @@ public class AstTSRenderer {
 
     protected String importRequest(Operator operator, Metadata metadata, ArrayDeque<Metadata> parents) {
         if (operator == today) {
-            writer.getImports().add(new ImportSpec("DateFunction", "doov"));
+            writer.addImport(new ImportSpec("DateFunction", "doov"));
             writer.write("DateFunction");
             writer.write(DOT);
             return operatorToMethod(operator) + LEFT_PARENTHESIS + RIGHT_PARENTHESIS;

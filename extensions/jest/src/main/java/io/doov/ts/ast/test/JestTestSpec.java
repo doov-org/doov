@@ -3,8 +3,7 @@
  */
 package io.doov.ts.ast.test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import io.doov.ts.ast.writer.FieldSpec;
 import io.doov.ts.ast.writer.ImportSpec;
@@ -12,16 +11,16 @@ import io.doov.ts.ast.writer.ImportSpec;
 public class JestTestSpec {
 
     private final String testSuiteName;
-    private final List<ImportSpec> imports;
-    private final List<FieldSpec> fields;
+    private final Set<ImportSpec> imports;
+    private final Set<FieldSpec> fields;
     private final List<String> testStates;
     private final List<String> beforeEachs;
     private final List<TestCaseSpec> testCases;
 
     public JestTestSpec(String testSuiteName) {
         this.testSuiteName = testSuiteName;
-        this.imports = new ArrayList<>();
-        this.fields = new ArrayList<>();
+        this.imports = new HashSet<>();
+        this.fields = new HashSet<>();
         this.testStates = new ArrayList<>();
         this.testCases = new ArrayList<>();
         this.beforeEachs = new ArrayList<>();
@@ -31,11 +30,11 @@ public class JestTestSpec {
         return testSuiteName;
     }
 
-    public List<ImportSpec> getImports() {
+    public Set<ImportSpec> getImports() {
         return imports;
     }
 
-    public List<FieldSpec> getFields() {
+    public Set<FieldSpec> getFields() {
         return fields;
     }
 

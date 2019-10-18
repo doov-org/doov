@@ -40,8 +40,8 @@ public class JestTemplate {
 
     public static Map<String, Object> toTemplateParameters(JestTestSpec jestTestSpec) {
         HashMap<String, Object> cfg = new HashMap<>();
-        cfg.put("imports", jestTestSpec.getImports().stream().distinct().collect(toList()));
-        cfg.put("fields", jestTestSpec.getFields().stream().distinct().collect(toList()));
+        cfg.put("imports", jestTestSpec.getImports());
+        cfg.put("fields", jestTestSpec.getFields());
         cfg.put("beforeEachs", jestTestSpec.getBeforeEachs());
         cfg.put("testStates", jestTestSpec.getTestStates());
         cfg.put("suiteName", jestTestSpec.getTestSuiteName());

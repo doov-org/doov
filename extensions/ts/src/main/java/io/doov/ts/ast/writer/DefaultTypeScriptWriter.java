@@ -15,11 +15,11 @@ import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class DefaultTypeScriptWriter implements TypeScriptWriter {
 
-    private final List<ImportSpec> imports;
+    private final Set<ImportSpec> imports;
     private final Locale locale;
     private final OutputStream os;
     private final ResourceProvider resources;
-    private final List<FieldSpec> fields;
+    private final Set<FieldSpec> fields;
     private final int indentSpace = 2;
     private final FieldNameProvider fieldNameProvider;
 
@@ -34,8 +34,8 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
         this.locale = locale;
         this.os = os;
         this.resources = resources;
-        this.imports = new ArrayList<>();
-        this.fields = new ArrayList<>();
+        this.imports = new HashSet<>();
+        this.fields = new HashSet<>();
         this.fieldNameProvider = fieldNameProvider;
     }
 
@@ -64,7 +64,7 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     @Override
     public void writeGlobalDOOV() {
         write("DOOV");
-        imports.add(new ImportSpec("*", "DOOV", "doov"));
+        addImport(new ImportSpec("*", "DOOV", "doov"));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     public void writeField(DslField<?> field) {
         FieldSpec spec = new FieldSpec(fieldNameProvider.getFieldName(field), field, field instanceof FieldInfo ?
                 (FieldInfo) field : null);
-        fields.add(spec);
+        addField(spec);
         try {
             os.write(spec.name().getBytes(UTF_8));
         } catch (IOException e) {
@@ -85,18 +85,29 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     }
 
     @Override
-    public List<ImportSpec> getImports() {
-        return imports;
+    public Set<ImportSpec> getImports() {
+        return Collections.unmodifiableSet(imports);
     }
 
     @Override
-    public List<FieldSpec> getFields() {
-        return fields;
+    public Set<FieldSpec> getFields() {
+        return Collections.unmodifiableSet(fields);
     }
 
     @Override
     public OutputStream getOutput() {
         return os;
+    }
+
+
+    @Override
+    public synchronized void addImport(ImportSpec importSpec) {
+        imports.add(importSpec);
+    }
+
+    @Override
+    public synchronized void addField(FieldSpec fieldSpec) {
+        fields.add(fieldSpec);
     }
 
 }
