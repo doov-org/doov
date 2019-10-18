@@ -24,6 +24,8 @@ import com.google.gson.GsonBuilder;
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Result;
+import io.doov.core.dsl.meta.RuleMetadata;
+import io.doov.core.dsl.meta.WhenMetadata;
 import io.doov.ts.ast.AstTSRenderer;
 import io.doov.ts.ast.writer.*;
 import io.doov.tsparser.TypeScriptParser;
@@ -67,12 +69,11 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
     public void afterEach(ExtensionContext context) {
         String output = new String(((ByteArrayOutputStream) writer.getOutput()).toByteArray());
         TestCaseSpec testCaseSpec = new TestCaseSpec(getTestName(context));
+        testCaseSpec.getTestStates().add("const rule = " + output + ";");
         if (result != null) {
-            testCaseSpec.getTestStates().add("const rule = DOOV.when(" + output + ").validate();");
             testCaseSpec.getTestStates().add("const result = rule.execute(model);");
             testCaseSpec.getRuleAssertions().add(new AssertionSpec("result.value", String.valueOf(result.value())));
         } else {
-            testCaseSpec.getTestStates().add("const rule = " + output + ";");
             testCaseSpec.getTestStates().add("model = rule.execute(model);");
         }
         testCaseSpec.getFieldAssertions().addAll(
@@ -124,7 +125,13 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
 
     public String toTS(Result result) {
         this.result = result;
-        return toTS(result.getContext());
+        this.executionContext = result.getContext();
+        final ByteArrayOutputStream ops = new ByteArrayOutputStream();
+        writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
+                field -> field.id().code().replace(" ", ""));
+        RuleMetadata rule = RuleMetadata.rule(WhenMetadata.when(result.getContext().getRootMetadata()));
+        tsRendererFunction.apply(writer).toTS(rule);
+        return new String(ops.toByteArray(), UTF_8);
     }
 
     public String toTS(Context context) {

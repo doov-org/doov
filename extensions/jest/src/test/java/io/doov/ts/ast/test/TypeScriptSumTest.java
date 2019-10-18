@@ -55,8 +55,8 @@ class TypeScriptSumTest {
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("sum", "greaterThan");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierNamesText().containsExactly("when", "sum", "greaterThan", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV");
         assertThat(script).identifierExpressionsText().containsExactly("A", "B");
         assertThat(script).literalsText().containsExactly("1");
         assertThat(script).arrayLiteralsText().isEmpty();
@@ -73,8 +73,8 @@ class TypeScriptSumTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("sum", "greaterThan");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierNamesText().containsExactly("when", "sum", "greaterThan", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV");
         assertThat(script).identifierExpressionsText().containsExactly("A", "B");
         assertThat(script).literalsText().containsExactly("3");
         assertThat(script).arrayLiteralsText().isEmpty();
@@ -91,8 +91,8 @@ class TypeScriptSumTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("sum", "sum", "sum", "greaterThan");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "DOOV");
+        assertThat(script).identifierNamesText().containsExactly("when", "sum", "sum", "sum", "greaterThan", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "DOOV", "DOOV");
         assertThat(script).identifierExpressionsText().containsExactly("A", "B");
         assertThat(script).literalsText().containsExactly("3");
         assertThat(script).arrayLiteralsText().isEmpty();

@@ -63,9 +63,9 @@ class TypeScriptMoreCombinedTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("ageAt", "greaterOrEquals", "or", "ageAt",
-                "greaterOrEquals", "and", "sum", "lesserThan");
-        assertThat(script).identifierReferencesText().containsExactly("date1", "date2", "DOOV");
+        assertThat(script).identifierNamesText().containsExactly("when", "ageAt", "greaterOrEquals", "or", "ageAt",
+                "greaterOrEquals", "and", "sum", "lesserThan", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "date1", "date2", "DOOV");
         assertThat(script).identifierExpressionsText().containsExactly("date2", "date1", "zero", "zero");
         assertThat(script).literalsText().containsExactly("0", "0", "0");
         assertThat(script).arrayLiteralsText().isEmpty();
@@ -86,9 +86,9 @@ class TypeScriptMoreCombinedTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("eq", "WRITE", "and", "eq", "and", "matchAny", "eq", "not",
-                "and", "greaterOrEquals", "and", "lesserThan", "and", "eq");
-        assertThat(script).identifierReferencesText().containsExactly("enumField", "boolean1", "DOOV", "boolean1",
+        assertThat(script).identifierNamesText().containsExactly("when", "eq", "WRITE", "and", "eq", "and", "matchAny", "eq", "not",
+                "and", "greaterOrEquals", "and", "lesserThan", "and", "eq", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "enumField", "boolean1", "DOOV", "boolean1",
                 "boolean2", "zero", "zero", "zero");
         assertThat(script).identifierExpressionsText().containsExactly("AccessMode");
         assertThat(script).literalsText().containsExactly("false", "true", "0", "1", "1");
@@ -108,20 +108,16 @@ class TypeScriptMoreCombinedTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("isNull", "or", "eq", "and", "eq", "and", "ageAt",
-                "lesserThan", "and", "ageAt", "greaterOrEquals");
-        assertThat(script).identifierReferencesText().containsExactly("zero", "zero", "boolean1", "date1", "date2");
+        assertThat(script).identifierNamesText().containsExactly("when", "isNull", "or", "eq", "and", "eq", "and", "ageAt",
+                "lesserThan", "and", "ageAt", "greaterOrEquals", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "zero", "boolean1", "date1", "date2");
         assertThat(script).identifierExpressionsText().containsExactly("date2", "date1");
         assertThat(script).literalsText().containsExactly("0", "false", "0", "0");
         assertThat(script).arrayLiteralsText().isEmpty();
     }
     @AfterAll
     static void tearDown() {
-        Map<String, String> symbols = new HashMap<>();
-        symbols.put("BooleanFunction", null);
-        symbols.put("DateFunction", null);
-        jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
-        jestExtension.getJestTestSpec().getImports().add(new ImportSpec( "doov", symbols));
+        jestExtension.getJestTestSpec().getImports().add(new ImportSpec("BooleanFunction", "doov"));
         jestExtension.getJestTestSpec().getTestStates().add("enum AccessMode { READ, WRITE, EXECUTE };");
         LocalDate now = LocalDate.now();
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = {enumField: AccessMode.READ, boolean1: false, " +

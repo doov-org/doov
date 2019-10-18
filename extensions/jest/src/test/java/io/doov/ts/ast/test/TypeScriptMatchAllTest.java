@@ -64,8 +64,8 @@ class TypeScriptMatchAllTest {
 
         assertTrue(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierNamesText().containsExactly("when", "matchAll", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV");
         assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysTrueB", "alwaysTrueC");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
@@ -83,8 +83,8 @@ class TypeScriptMatchAllTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierNamesText().containsExactly("when", "matchAll", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV");
         assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysTrueB", "alwaysFalseC");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
@@ -102,8 +102,8 @@ class TypeScriptMatchAllTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierNamesText().containsExactly("when", "matchAll", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV");
         assertThat(script).identifierExpressionsText().containsExactly("alwaysTrueA", "alwaysFalseB", "alwaysFalseC");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
@@ -121,8 +121,8 @@ class TypeScriptMatchAllTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierNamesText().containsExactly("when", "matchAll", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV");
         assertThat(script).identifierExpressionsText().containsExactly("alwaysFalseA", "alwaysFalseB", "alwaysFalseC");
         assertThat(script).literalsText().isEmpty();
         assertThat(script).arrayLiteralsText().isEmpty();
@@ -144,10 +144,10 @@ class TypeScriptMatchAllTest {
 
         assertFalse(result.value());
         assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
-        assertThat(script).identifierNamesText().containsExactly("matchAll", "greaterThan", "after", "today",
-                "matches");
-        assertThat(script).identifierReferencesText().containsExactly("DOOV", "zero", "yesterday", "DateFunction",
-                "stringfield");
+        assertThat(script).identifierNamesText().containsExactly("when", "matchAll", "greaterThan", "after", "today",
+                "matches", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV", "zero", "yesterday",
+                "DateFunction", "stringfield");
         assertThat(script).identifierExpressionsText().isEmpty();
         assertThat(script).literalsText().containsExactly("4", "'^other.*'");
         assertThat(script).arrayLiteralsText().isEmpty();
@@ -155,10 +155,7 @@ class TypeScriptMatchAllTest {
 
     @AfterAll
     static void tearDown() {
-        Map<String, String> symbols = new HashMap<>();
-        symbols.put("BooleanFunction", null);
-        jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
-        jestExtension.getJestTestSpec().getImports().add(new ImportSpec( "doov", symbols));
+        jestExtension.getJestTestSpec().getImports().add(new ImportSpec("BooleanFunction", "doov"));
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseA = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueB = DOOV.lift(BooleanFunction, true);");
