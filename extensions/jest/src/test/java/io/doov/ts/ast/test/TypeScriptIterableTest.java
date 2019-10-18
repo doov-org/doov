@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -19,7 +18,6 @@ import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.field.types.IterableFieldInfo;
 import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.runtime.GenericModel;
-import io.doov.ts.ast.writer.ImportSpec;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptIterableTest {

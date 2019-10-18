@@ -21,14 +21,13 @@ import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.ts.ast.test.JestExtension.parseAs;
+import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,6 @@ import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.core.dsl.time.LocalDateSuppliers;
-import io.doov.ts.ast.writer.ImportSpec;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptMatchAnyTest {
@@ -214,7 +212,7 @@ class TypeScriptMatchAnyTest {
 
     @AfterAll
     static void tearDown() {
-        jestExtension.getJestTestSpec().getImports().add(new ImportSpec("BooleanFunction", "doov"));
+        jestExtension.getJestTestSpec().getImports().add(newImport("doov", "BooleanFunction"));
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseA = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueB = DOOV.lift(BooleanFunction, true);");

@@ -19,23 +19,17 @@ import static io.doov.assertions.ts.Assertions.assertThat;
 import static io.doov.core.dsl.DOOV.alwaysFalse;
 import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.when;
-import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
 import static io.doov.ts.ast.test.JestExtension.parseAs;
-import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.function.Function;
 
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -44,11 +38,8 @@ import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
-import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.core.dsl.time.LocalDateSuppliers;
-import io.doov.ts.ast.AstTSRenderer;
-import io.doov.ts.ast.writer.*;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptOrTest {
@@ -240,7 +231,7 @@ class TypeScriptOrTest {
 
     @AfterAll
     static void tearDown() {
-        jestExtension.getJestTestSpec().getImports().add(new ImportSpec("BooleanFunction", "doov"));
+        jestExtension.getJestTestSpec().getImports().add(newImport("doov", "BooleanFunction"));
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseA = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueB = DOOV.lift(BooleanFunction, true);");

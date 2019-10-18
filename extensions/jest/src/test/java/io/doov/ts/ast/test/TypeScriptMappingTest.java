@@ -18,6 +18,7 @@ import static io.doov.core.dsl.mapping.TypeConverters.biConverter;
 import static io.doov.core.dsl.mapping.TypeConverters.converter;
 import static io.doov.core.dsl.template.ParameterTypes.$String;
 import static io.doov.ts.ast.test.JestExtension.parseAs;
+import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.runtime.GenericModel;
-import io.doov.ts.ast.writer.ImportSpec;
+import io.doov.ts.ast.writer.DefaultImportSpec;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptMappingTest {
@@ -230,7 +231,7 @@ class TypeScriptMappingTest {
 
     @AfterAll
     static void tearDown() {
-        jestExtension.getJestTestSpec().getImports().add(new ImportSpec("Function", "doov"));
+        jestExtension.getJestTestSpec().getImports().add(newImport("doov", "Function"));
         jestExtension.getJestTestSpec().getTestStates().add("const combineNames = DOOV.biConverter((obj, input: " +
                 "Function<string>, input2: Function<string>, ctx) => {\n" +
                 "  return input.get(obj, ctx) + \" \" + input2.get(obj, ctx);\n" +
@@ -244,6 +245,6 @@ class TypeScriptMappingTest {
         LocalDate date2 = LocalDate.of(2, 2, 2);
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = {stringField: 's1', stringField2: 's2', " +
                 "intField: 1, booleanField: false, dateField: new Date('"+ date1 +"'), dateField2: new Date('" + date2 + "') }");
-        jestExtension.getJestTestSpec().getImports().add(ImportSpec.starImport("DOOV", "doov"));
+        jestExtension.getJestTestSpec().getImports().add(DefaultImportSpec.starImport("DOOV", "doov"));
     }
 }

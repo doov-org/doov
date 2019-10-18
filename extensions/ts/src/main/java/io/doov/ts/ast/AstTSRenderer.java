@@ -6,6 +6,7 @@ package io.doov.ts.ast;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.MappingOperator.map;
 import static io.doov.core.dsl.meta.MappingOperator.mappings;
+import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 import static io.doov.ts.ast.writer.TypeScriptWriter.*;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -264,7 +265,7 @@ public class AstTSRenderer {
     }
 
     protected FieldSpec fieldSpec(DslField<?> field) {
-        return new FieldSpec(fieldNameProvider.getFieldName(field), field,
+        return new DefaultFieldSpec(fieldNameProvider.getFieldName(field), field,
                 field instanceof FieldInfo ? (FieldInfo) field : null);
     }
 
@@ -312,7 +313,7 @@ public class AstTSRenderer {
 
     protected String importRequest(Operator operator, Metadata metadata, ArrayDeque<Metadata> parents) {
         if (operator == today) {
-            writer.addImport(new ImportSpec("DateFunction", "doov"));
+            writer.addImport(newImport("doov", "DateFunction"));
             writer.write("DateFunction");
             writer.write(DOT);
             return operatorToMethod(operator) + LEFT_PARENTHESIS + RIGHT_PARENTHESIS;

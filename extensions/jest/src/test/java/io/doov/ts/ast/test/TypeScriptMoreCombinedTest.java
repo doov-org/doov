@@ -8,13 +8,12 @@ import static io.doov.core.dsl.DOOV.matchAny;
 import static io.doov.core.dsl.DOOV.sum;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.ts.ast.test.JestExtension.parseAs;
+import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.IOException;
 import java.nio.file.AccessMode;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -23,7 +22,6 @@ import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.runtime.GenericModel;
-import io.doov.ts.ast.writer.ImportSpec;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptMoreCombinedTest {
@@ -117,7 +115,7 @@ class TypeScriptMoreCombinedTest {
     }
     @AfterAll
     static void tearDown() {
-        jestExtension.getJestTestSpec().getImports().add(new ImportSpec("BooleanFunction", "doov"));
+        jestExtension.getJestTestSpec().getImports().add(newImport("doov", "BooleanFunction"));
         jestExtension.getJestTestSpec().getTestStates().add("enum AccessMode { READ, WRITE, EXECUTE };");
         LocalDate now = LocalDate.now();
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = {enumField: AccessMode.READ, boolean1: false, " +

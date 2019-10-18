@@ -3,6 +3,7 @@
  */
 package io.doov.ts.ast.writer;
 
+import static io.doov.ts.ast.writer.DefaultImportSpec.starImport;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
@@ -13,10 +14,10 @@ import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class DefaultTypeScriptWriter implements TypeScriptWriter {
 
-    private final Set<ImportSpec> imports;
     private final Locale locale;
     private final OutputStream os;
     private final ResourceProvider resources;
+    private final Set<ImportSpec> imports;
     private final Set<FieldSpec> fields;
     private final int indentSpace = 2;
 
@@ -55,7 +56,7 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     @Override
     public void writeGlobalDOOV() {
         write("DOOV");
-        addImport(new ImportSpec("*", "DOOV", "doov"));
+        addImport(starImport("DOOV", "doov"));
     }
 
     @Override

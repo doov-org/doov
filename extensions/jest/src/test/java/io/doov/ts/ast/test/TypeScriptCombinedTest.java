@@ -22,6 +22,7 @@ import static io.doov.core.dsl.DOOV.alwaysTrue;
 import static io.doov.core.dsl.DOOV.matchAll;
 import static io.doov.core.dsl.DOOV.when;
 import static io.doov.ts.ast.test.JestExtension.parseAs;
+import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,7 +38,6 @@ import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Result;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.runtime.GenericModel;
-import io.doov.ts.ast.writer.ImportSpec;
 import io.doov.tsparser.TypeScriptParser;
 
 class TypeScriptCombinedTest {
@@ -172,7 +172,7 @@ class TypeScriptCombinedTest {
 
     @AfterAll
     static void tearDown() {
-        jestExtension.getJestTestSpec().getImports().add(new ImportSpec("BooleanFunction", "doov"));
+        jestExtension.getJestTestSpec().getImports().add(newImport("doov", "BooleanFunction"));
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysTrueA = DOOV.lift(BooleanFunction, true);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseB = DOOV.lift(BooleanFunction, false);");
         jestExtension.getJestTestSpec().getTestStates().add("const alwaysFalseC = DOOV.lift(BooleanFunction, false);");

@@ -4,9 +4,8 @@
 package io.doov.ts.ast.writer;
 
 import java.io.OutputStream;
-import java.util.*;
-
-import io.doov.core.dsl.DslField;
+import java.util.Collection;
+import java.util.Locale;
 
 public interface TypeScriptWriter {
 
