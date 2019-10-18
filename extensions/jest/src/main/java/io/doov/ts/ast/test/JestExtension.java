@@ -34,12 +34,12 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
 
     public static final Function<TypeScriptWriter, AstTSRenderer> DEFAULT_RENDERER_FUNCTION =
             w -> new AstTSRenderer(w, true);
+
+    protected ThreadLocal<TypeScriptWriter> writer;
+    protected ThreadLocal<Result> result;
+    protected ThreadLocal<Context> executionContext;
+
     protected JestTestSpec jestTestSpec;
-    protected TypeScriptWriter writer;
-
-    protected Result result;
-    protected Context executionContext;
-
     protected final String testGenerateDir;
     protected final Gson gson;
 
@@ -57,6 +57,9 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
         this.testGenerateDir = testGenerateDir;
         this.tsRendererFunction = tsRendererFunction;
         this.gson = new GsonBuilder().create();
+        this.writer = new ThreadLocal<>();
+        this.result = new ThreadLocal<>();
+        this.executionContext = new ThreadLocal<>();
     }
 
     @Override
@@ -67,25 +70,26 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
 
     @Override
     public void afterEach(ExtensionContext context) {
-        String output = new String(((ByteArrayOutputStream) writer.getOutput()).toByteArray());
+        String output = new String(((ByteArrayOutputStream) getWriter().getOutput()).toByteArray());
         TestCaseSpec testCaseSpec = new TestCaseSpec(getTestName(context));
         testCaseSpec.getTestStates().add("const rule = " + output + ";");
-        if (result != null) {
+        if (getResult() != null) {
             testCaseSpec.getTestStates().add("const result = rule.execute(model);");
-            testCaseSpec.getRuleAssertions().add(new AssertionSpec("result.value", String.valueOf(result.value())));
+            testCaseSpec.getRuleAssertions().add(new AssertionSpec("result.value",
+                    String.valueOf(getResult().value())));
         } else {
             testCaseSpec.getTestStates().add("model = rule.execute(model);");
         }
         testCaseSpec.getFieldAssertions().addAll(
-                writer.getFields().stream()
+                getWriter().getFields().stream()
                         .distinct()
-                        .filter(f -> executionContext.getEvalValues().containsKey(f.field().id()))
+                        .filter(f -> getContext().getEvalValues().containsKey(f.field().id()))
                         .map(f -> new FieldAssertionSpec(f.field(), f.name(), getExpectedValue(f)))
                         .collect(Collectors.toList())
         );
         jestTestSpec.getTestCases().add(testCaseSpec);
-        jestTestSpec.getImports().addAll(writer.getImports());
-        jestTestSpec.getFields().addAll(writer.getFields());
+        jestTestSpec.getImports().addAll(getWriter().getImports());
+        jestTestSpec.getFields().addAll(getWriter().getFields());
     }
 
     protected String getTestName(ExtensionContext context) {
@@ -97,7 +101,7 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
     }
 
     protected String getExpectedValue(FieldSpec f) {
-        Object evalValue = executionContext.getEvalValue(f.field().id());
+        Object evalValue = getContext().getEvalValue(f.field().id());
         if (evalValue != null) {
             Class<?> valueType = evalValue.getClass();
             if (valueType.isEnum()) {
@@ -123,23 +127,35 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
         return gson;
     }
 
+    public TypeScriptWriter getWriter() {
+        return writer.get();
+    }
+
+    public Result getResult() {
+        return result.get();
+    }
+
+    public Context getContext() {
+        return executionContext.get();
+    }
+
     public String toTS(Result result) {
-        this.result = result;
-        this.executionContext = result.getContext();
+        this.result.set(result);
+        this.executionContext.set(result.getContext());
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
-                field -> field.id().code().replace(" ", ""));
+        writer.set(new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
+                field -> field.id().code().replace(" ", "")));
         RuleMetadata rule = RuleMetadata.rule(WhenMetadata.when(result.getContext().getRootMetadata()));
-        tsRendererFunction.apply(writer).toTS(rule);
+        tsRendererFunction.apply(getWriter()).toTS(rule);
         return new String(ops.toByteArray(), UTF_8);
     }
 
     public String toTS(Context context) {
-        this.executionContext = context;
+        this.executionContext.set(context);
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
-        writer = new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
-                field -> field.id().code().replace(" ", ""));
-        tsRendererFunction.apply(writer).toTS(context.getRootMetadata());
+        writer.set(new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE,
+                field -> field.id().code().replace(" ", "")));
+        tsRendererFunction.apply(getWriter()).toTS(context.getRootMetadata());
         return new String(ops.toByteArray(), UTF_8);
     }
 
