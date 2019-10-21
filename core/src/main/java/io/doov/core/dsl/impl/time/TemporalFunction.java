@@ -359,7 +359,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the temporal function
      */
     public final TemporalFunction<N> minus(NumericFunction<Integer> function, TemporalUnit unit) {
-        return temporalFunction(TemporalBiFunctionMetadata.minusMetadata(metadata, function, unit),
+        return temporalFunction(TemporalBiFunctionMetadata.minusMetadata(metadata, function.metadata(), unit),
                 (model, context) -> value(model, context)
                         .flatMap(l -> function.value(model, context)
                                 .map(r -> minusFunction(r, unit).apply(l))));
@@ -399,7 +399,7 @@ public abstract class TemporalFunction<N extends Temporal> extends DefaultFuncti
      * @return the temporal function
      */
     public final TemporalFunction<N> plus(NumericFunction<Integer> function, TemporalUnit unit) {
-        return temporalFunction(TemporalBiFunctionMetadata.plusMetadata(metadata, function, unit),
+        return temporalFunction(TemporalBiFunctionMetadata.plusMetadata(metadata, function.metadata(), unit),
                 (model, context) -> value(model, context)
                         .flatMap(l -> function.value(model, context)
                                 .map(r -> plusFunction(r, unit).apply(l))));

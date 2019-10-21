@@ -21,7 +21,6 @@ import static io.doov.core.dsl.meta.DefaultOperator.or;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.readableMetadata;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
 
-import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.Operator;
 import io.doov.core.dsl.meta.predicate.BinaryPredicateMetadata;
@@ -38,7 +37,7 @@ public class BooleanFunctionMetadata extends BinaryPredicateMetadata {
         return new BooleanFunctionMetadata(metadata, and, valueMetadata(value));
     }
 
-    public static BooleanFunctionMetadata andMetadata(Metadata metadata, Readable value) {
+    public static BooleanFunctionMetadata andMetadata(Metadata metadata, Metadata value) {
         return new BooleanFunctionMetadata(metadata, and, readableMetadata(value));
     }
 
@@ -46,7 +45,7 @@ public class BooleanFunctionMetadata extends BinaryPredicateMetadata {
         return new BooleanFunctionMetadata(metadata, or, valueMetadata(value));
     }
 
-    public static BooleanFunctionMetadata orMetadata(Metadata metadata, Readable value) {
+    public static BooleanFunctionMetadata orMetadata(Metadata metadata, Metadata value) {
         return new BooleanFunctionMetadata(metadata, or, readableMetadata(value));
     }
 

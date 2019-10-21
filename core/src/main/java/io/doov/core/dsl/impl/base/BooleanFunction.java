@@ -74,7 +74,7 @@ public class BooleanFunction extends DefaultFunction<Boolean, PredicateMetadata>
      * @return the step condition
      */
     public final StepCondition and(LogicalFieldInfo value) {
-        return LeafStepCondition.stepCondition(andMetadata(metadata, value), getFunction(), value,
+        return LeafStepCondition.stepCondition(andMetadata(metadata, value.getMetadata()), getFunction(), value,
                 Boolean::logicalAnd);
     }
 
@@ -107,7 +107,7 @@ public class BooleanFunction extends DefaultFunction<Boolean, PredicateMetadata>
      * @return the step condition
      */
     public final StepCondition or(LogicalFieldInfo value) {
-        return LeafStepCondition.stepCondition(orMetadata(metadata, value), getFunction(), value,
+        return LeafStepCondition.stepCondition(orMetadata(metadata, value.getMetadata()), getFunction(), value,
                 Boolean::logicalOr);
     }
 

@@ -95,6 +95,7 @@ public enum DefaultOperator implements Operator {
     first_day_of_next_year("first day of next year"), //
     last_day_of_month("last day of month"), //
     last_day_of_year("last day of year"), //
+    temporal_unit(""), //
     
     // Template
     template_field("|"), //
