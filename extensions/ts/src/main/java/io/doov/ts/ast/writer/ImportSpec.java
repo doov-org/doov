@@ -5,9 +5,13 @@ package io.doov.ts.ast.writer;
 
 import java.util.Map;
 
-public interface Import {
+public interface ImportSpec {
+
+    String from();
 
     Map<String, String> symbols();
 
-    String from();
+    boolean isStarImport();
+
+    String toImportStatement();
 }

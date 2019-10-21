@@ -124,7 +124,7 @@ public class ToStringMappingTest {
                 .bind(stringField, stringField2);
         assertThat(rule.readable(LOCALE))
                 .isEqualTo("when {stringField} = 'Yahoo' "
-                        + "then map www.yahou.com to {stringField2}");
+                        + "then map 'www.yahou.com' to {stringField2}");
     }
 
     @Test
@@ -137,9 +137,9 @@ public class ToStringMappingTest {
                         when(site.eq("Yahoo")).then(map("www.yahou.com").to(url))))
                 .bind(stringField, stringField2);
         assertThat(rule.readable(LOCALE)).isEqualTo(
-                "when {stringField} = 'bing' then map www.bingue.com to {stringField2} "
-                        + "when {stringField} = 'Google' then map www.gougeule.com to {stringField2} "
-                        + "when {stringField} = 'Yahoo' then map www.yahou.com to {stringField2}");
+                "when {stringField} = 'bing' then map 'www.bingue.com' to {stringField2} "
+                        + "when {stringField} = 'Google' then map 'www.gougeule.com' to {stringField2} "
+                        + "when {stringField} = 'Yahoo' then map 'www.yahou.com' to {stringField2}");
     }
 
     @AfterEach

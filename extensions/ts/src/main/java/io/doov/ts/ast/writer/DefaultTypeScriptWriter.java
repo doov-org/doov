@@ -3,30 +3,32 @@
  */
 package io.doov.ts.ast.writer;
 
+import static io.doov.ts.ast.writer.DefaultImportSpec.starImport;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.i18n.ResourceProvider;
 
 public class DefaultTypeScriptWriter implements TypeScriptWriter {
 
-    private final List<Import> imports;
     private final Locale locale;
     private final OutputStream os;
     private final ResourceProvider resources;
-    private final List<DslField<?>> fields;
+    private final Set<ImportSpec> imports;
+    private final Set<FieldSpec> fields;
     private final int indentSpace = 2;
 
-    public DefaultTypeScriptWriter(Locale locale, OutputStream os, ResourceProvider resources) {
+    public DefaultTypeScriptWriter(Locale locale,
+            OutputStream os,
+            ResourceProvider resources) {
         this.locale = locale;
         this.os = os;
         this.resources = resources;
-        this.imports = new ArrayList<>();
-        this.fields = new ArrayList<>();
+        this.imports = new HashSet<>();
+        this.fields = new HashSet<>();
     }
 
     @Override
@@ -54,6 +56,7 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     @Override
     public void writeGlobalDOOV() {
         write("DOOV");
+        addImport(starImport("DOOV", "doov"));
     }
 
     @Override
@@ -62,23 +65,19 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
     }
 
     @Override
-    public void writeField(DslField<?> field) {
-        fields.add(field);
-        try {
-            os.write(field.id().code().getBytes(UTF_8));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void writeField(FieldSpec fieldSpec) {
+        addField(fieldSpec);
+        write(fieldSpec.name());
     }
 
     @Override
-    public List<Import> getImports() {
-        return imports;
+    public Set<ImportSpec> getImports() {
+        return Collections.unmodifiableSet(imports);
     }
 
     @Override
-    public List<DslField<?>> getFields() {
-        return fields;
+    public Set<FieldSpec> getFields() {
+        return Collections.unmodifiableSet(fields);
     }
 
     @Override
@@ -86,32 +85,14 @@ public class DefaultTypeScriptWriter implements TypeScriptWriter {
         return os;
     }
 
-    public static class DefaultImport implements Import {
+    @Override
+    public synchronized void addImport(ImportSpec importSpec) {
+        imports.add(importSpec);
+    }
 
-        private final Map<String, String> symbols;
-        private final String from;
-
-        public DefaultImport(String symbol, String as, String from) {
-            this.from = from;
-            Map<String, String> symbolMap = this.symbols = new HashMap<>();
-            symbolMap.put(symbol, as);
-        }
-
-        public DefaultImport(String symbol, String from) {
-            this.from = from;
-            Map<String, String> symbolMap = this.symbols = new HashMap<>();
-            symbolMap.put(symbol, null);
-        }
-
-        @Override
-        public Map<String, String> symbols() {
-            return symbols;
-        }
-
-        @Override
-        public String from() {
-            return from;
-        }
+    @Override
+    public synchronized void addField(FieldSpec fieldSpec) {
+        fields.add(fieldSpec);
     }
 
 }

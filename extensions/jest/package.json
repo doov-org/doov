@@ -1,0 +1,31 @@
+{
+  "name": "doov-test",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.org/doov-io/doov.svg?branch=master)](https://travis-ci.org/doov-io/doov) [![Build status](https://ci.appveyor.com/api/projects/status/xpesv3x6bwt00ucj/branch/master?svg=true)](https://ci.appveyor.com/project/ozangunalp/doov-j6ky3/branch/master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.doov/doov-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.doov/doov-core)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "tsc index.ts",
+    "test": "jest test --ci --reporters=default --reporters=jest-junit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doov-io/doov.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/doov-io/doov/issues"
+  },
+  "homepage": "https://github.com/doov-io/doov#readme",
+  "devDependencies": {
+    "doov": "0.10.4",
+    "typescript": "3.4.3",
+    "jest": "24.9.0",
+    "@types/jest": "24.0.18",
+    "ts-jest": "24.1.0",
+    "jest-junit": "8.0.0"
+  }
+}

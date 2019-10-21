@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.impl.DefaultFunction;
 import io.doov.core.dsl.lang.Context;
-import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.ReduceType;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.Operator;
@@ -51,9 +50,9 @@ public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
                 new TemporalFunctionMetadata(FIELD_PREDICATE).field(field2).temporalUnit(unit));
     }
 
-    public static TemporalBiFunctionMetadata minusMetadata(Metadata metadata, Readable readable, Object unit) {
+    public static TemporalBiFunctionMetadata minusMetadata(Metadata metadata, Metadata value, Object unit) {
         return new TemporalBiFunctionMetadata(metadata, temporal_minus,
-                new TemporalFunctionMetadata(LEAF_VALUE).valueReadable(readable).temporalUnit(unit));
+                new TemporalFunctionMetadata(LEAF_VALUE).valueReadable(value).temporalUnit(unit));
     }
 
     // plus
@@ -68,9 +67,9 @@ public class TemporalBiFunctionMetadata extends BinaryPredicateMetadata {
                 new TemporalFunctionMetadata(FIELD_PREDICATE).field(field2).temporalUnit(unit));
     }
 
-    public static TemporalBiFunctionMetadata plusMetadata(Metadata metadata, Readable readable, Object unit) {
+    public static TemporalBiFunctionMetadata plusMetadata(Metadata metadata, Metadata value, Object unit) {
         return new TemporalBiFunctionMetadata(metadata, plus,
-                new TemporalFunctionMetadata(LEAF_VALUE).valueReadable(readable).temporalUnit(unit));
+                new TemporalFunctionMetadata(LEAF_VALUE).valueReadable(value).temporalUnit(unit));
     }
 
     // age at

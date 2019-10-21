@@ -1,32 +1,44 @@
 package io.doov.core.dsl.meta;
 
-import java.util.ArrayList;
-import java.util.List;
+import static io.doov.core.dsl.meta.DefaultOperator.any_match_predicates;
+import static io.doov.core.dsl.meta.DefaultOperator.any_match_values;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
+import static java.util.stream.Collectors.toList;
+
+import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.StreamSupport;
 
-public class IterableMetadata<E, T extends Iterable<E>> extends LeafMetadata<IterableMetadata<E,T>> {
+import io.doov.core.dsl.lang.Readable;
 
-    private final T value;
-    private final List<StaticMetadata<E>> items;
+public class IterableMetadata<E, T extends Iterable<E>> extends NaryMetadata {
 
-    private IterableMetadata(MetadataType type, T value) {
-        super(type);
-        this.value = value;
-        this.items = new ArrayList<>();
-        value.forEach(e -> items.add(StaticMetadata.create(() -> e)));
+    private final MetadataType type;
+
+    public IterableMetadata(MetadataType type, Operator operator, T values) {
+        super(operator, StreamSupport.stream(values.spliterator(), false)
+                .map(StaticMetadata::leaf)
+                .collect(toList()));
+        this.type = type;
     }
 
-    public static <V,U extends Iterable<V>> IterableMetadata<V,U> create(Supplier<U> valueSupplier) {
-        return new IterableMetadata<>(MetadataType.MAPPING_LEAF_ITERABLE, valueSupplier.get())
-                .valueSupplier(valueSupplier);
+    public static <T> IterableMetadata<T, Collection<T>> anyMatchMetadata(Collection<T> values) {
+        return new IterableMetadata<>(FIELD_PREDICATE_MATCH_ANY, any_match_values, values);
     }
 
-    public T value() {
-        return value;
+    public static IterableMetadata<Readable, Collection<Readable>> anyMatchMetadataPredicates(String... readables) {
+        return new IterableMetadata<>(FIELD_PREDICATE_MATCH_ANY, any_match_predicates, Arrays.stream(readables)
+                .map(r -> (Readable) () -> r)
+                .collect(toList()));
     }
 
-    public List<StaticMetadata<E>> items() {
-        return items;
+    public static <V,U extends Iterable<V>> IterableMetadata<V,U> mappingIterableMetadata(Supplier<U> valueSupplier) {
+        return new IterableMetadata<>(MetadataType.MAPPING_LEAF_ITERABLE, MappingOperator.map, valueSupplier.get());
+    }
+
+    @Override
+    public MetadataType type() {
+        return type;
     }
 
 }

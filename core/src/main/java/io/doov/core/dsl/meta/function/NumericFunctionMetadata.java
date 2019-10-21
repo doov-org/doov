@@ -17,11 +17,9 @@ package io.doov.core.dsl.meta.function;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.predicate.FieldMetadata.fieldMetadata;
-import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.readableMetadata;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueMetadata;
 
 import io.doov.core.dsl.DslField;
-import io.doov.core.dsl.lang.Readable;
 import io.doov.core.dsl.lang.StepCondition;
 import io.doov.core.dsl.meta.Metadata;
 import io.doov.core.dsl.meta.Operator;
@@ -55,10 +53,6 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
         return new NumericFunctionMetadata(metadata, plus, fieldMetadata(readable));
     }
 
-    public static NumericFunctionMetadata plusMetadata(Metadata metadata, Readable function) {
-        return new NumericFunctionMetadata(metadata, plus, readableMetadata(function));
-    }
-
     public static NumericFunctionMetadata plusMetadata(Metadata metadata, Object value) {
         return new NumericFunctionMetadata(metadata, plus, valueMetadata(value));
     }
@@ -71,10 +65,6 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
 
     public static NumericFunctionMetadata minusMetadata(Metadata metadata, DslField<?> readable) {
         return new NumericFunctionMetadata(metadata, minus, fieldMetadata(readable));
-    }
-
-    public static NumericFunctionMetadata minusMetadata(Metadata metadata, Readable function) {
-        return new NumericFunctionMetadata(metadata, minus, readableMetadata(function));
     }
 
     public static NumericFunctionMetadata minusMetadata(Metadata metadata, Object value) {
@@ -91,10 +81,6 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
         return new NumericFunctionMetadata(metadata, lesser_than, valueMetadata(value));
     }
 
-    public static NumericFunctionMetadata lesserThanMetadata(Metadata metadata, Readable field2) {
-        return new NumericFunctionMetadata(metadata, lesser_than, readableMetadata(field2));
-    }
-
     public static NumericFunctionMetadata lesserThanMetadata(Metadata metadata, DslField<?> field2) {
         return new NumericFunctionMetadata(metadata, lesser_than, fieldMetadata(field2));
     }
@@ -105,10 +91,6 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
 
     public static NumericFunctionMetadata lesserOrEqualsMetadata(Metadata metadata, Object value) {
         return new NumericFunctionMetadata(metadata, lesser_or_equals, valueMetadata(value));
-    }
-
-    public static NumericFunctionMetadata lesserOrEqualsMetadata(Metadata metadata, Readable value) {
-        return new NumericFunctionMetadata(metadata, lesser_or_equals, readableMetadata(value));
     }
 
     public static NumericFunctionMetadata lesserOrEqualsMetadata(Metadata metadata, DslField<?> field2) {
@@ -125,10 +107,6 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
         return new NumericFunctionMetadata(metadata, greater_than, valueMetadata(value));
     }
 
-    public static NumericFunctionMetadata greaterThanMetadata(Metadata metadata, Readable field2) {
-        return new NumericFunctionMetadata(metadata, greater_than, readableMetadata(field2));
-    }
-
     public static NumericFunctionMetadata greaterThanMetadata(Metadata metadata, DslField<?> field2) {
         return new NumericFunctionMetadata(metadata, greater_than, fieldMetadata(field2));
     }
@@ -139,10 +117,6 @@ public class NumericFunctionMetadata extends BinaryPredicateMetadata {
 
     public static NumericFunctionMetadata greaterOrEqualsMetadata(Metadata metadata, Object value) {
         return new NumericFunctionMetadata(metadata, greater_or_equals, valueMetadata(value));
-    }
-
-    public static NumericFunctionMetadata greaterOrEqualsMetadata(Metadata metadata, Readable field2) {
-        return new NumericFunctionMetadata(metadata, greater_or_equals, readableMetadata(field2));
     }
 
     public static NumericFunctionMetadata greaterOrEqualsMetadata(Metadata metadata, DslField<?> field2) {

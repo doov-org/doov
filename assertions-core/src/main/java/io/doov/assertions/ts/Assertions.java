@@ -5,7 +5,7 @@ package io.doov.assertions.ts;
 
 import org.assertj.core.api.IntegerAssert;
 
-public class Assertions {
+public class Assertions extends org.assertj.core.api.Assertions {
 
     public static TypeScriptAssert assertThat(TypeScriptAssertionContext context) {
         return new TypeScriptAssert(context, TypeScriptAssert.class);

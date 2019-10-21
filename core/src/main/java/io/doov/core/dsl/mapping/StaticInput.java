@@ -16,7 +16,7 @@ public class StaticInput<T> extends AbstractDSLBuilder implements MappingInput<T
 
     public StaticInput(Supplier<T> valueSupplier) {
         this.valueSupplier = valueSupplier;
-        this.metadata = StaticMetadata.create(valueSupplier);
+        this.metadata = StaticMetadata.mappingLeaf(valueSupplier);
     }
 
     @Override

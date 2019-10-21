@@ -29,6 +29,7 @@ public enum DefaultOperator implements Operator {
     match_all("match all", BOOLEAN), //
     match_none("match none", BOOLEAN), //
     any_match_values("match any", BOOLEAN), //
+    any_match_predicates("match any", BOOLEAN), //
     all_match_values("match all", BOOLEAN), //
     none_match_values("match none", BOOLEAN), //
     count("count"), //
@@ -94,6 +95,7 @@ public enum DefaultOperator implements Operator {
     first_day_of_next_year("first day of next year"), //
     last_day_of_month("last day of month"), //
     last_day_of_year("last day of year"), //
+    temporal_unit(""), //
     
     // Template
     template_field("|"), //

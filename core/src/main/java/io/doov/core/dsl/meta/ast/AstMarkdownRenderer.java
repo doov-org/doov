@@ -83,12 +83,12 @@ public class AstMarkdownRenderer {
                 case LEAF_VALUE:
                 case MAPPING_LEAF:
                 case TEMPLATE_IDENTIFIER:
-                case FIELD_PREDICATE_MATCH_ANY:
                     leaf(metadata, parents, indent);
                     break;
                 case UNARY_PREDICATE:
                     unary(metadata, parents, indent);
                     break;
+                case FIELD_PREDICATE_MATCH_ANY:
                 case NARY_PREDICATE:
                     nary(metadata, parents, indent);
                     break;
@@ -184,7 +184,9 @@ public class AstMarkdownRenderer {
     }
 
     private void nary(Metadata metadata, ArrayDeque<Metadata> parents, int indent) {
-        sb.append(bundle.get(metadata.getOperator(), locale));
+        if (metadata.type() != MetadataType.FIELD_PREDICATE_MATCH_ANY) {
+            sb.append(bundle.get(metadata.getOperator(), locale));
+        }
         sb.append("\n");
         final List<Metadata> childs = metadata.children().collect(toList());
         for (Metadata child : childs) {

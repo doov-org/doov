@@ -15,12 +15,12 @@ import org.antlr.v4.runtime.tree.RuleNode;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.DOOV;
-import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.field.types.IntegerFieldInfo;
 import io.doov.core.dsl.lang.MappingRule;
 import io.doov.core.dsl.lang.ValidationRule;
 import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
+import io.doov.ts.ast.writer.FieldSpec;
 import io.doov.tsparser.TypeScriptParser;
 import io.doov.tsparser.TypeScriptParser.*;
 import io.doov.tsparser.util.TypeScriptParserFactory;
@@ -103,9 +103,9 @@ class AstTSRendererTest {
 
         ValidationRule rule = DOOV.when(twelve.isNull()).validate();
         astTSRenderer.toTS(rule.metadata());
-        for (DslField<?> field : writer.getFields()) {
-            if (field instanceof IntegerFieldInfo) {
-                System.out.println("const " + field.readable() + " = DOOV.number(DOOV.field('" + field.id().code() + "'))");
+        for (FieldSpec fieldSpec : writer.getFields()) {
+            if (fieldSpec.fieldInfo() instanceof IntegerFieldInfo) {
+                System.out.println("const " + fieldSpec.field().readable() + " = DOOV.number(DOOV.field('" + fieldSpec.field().id().code() + "'))");
             }
         }
         System.out.println(new String(ops.toByteArray()));
@@ -122,9 +122,9 @@ class AstTSRendererTest {
 
         ValidationRule rule = DOOV.when(twelve.isNotNull().and(zero.lesserOrEquals(0))).validate();
         astTSRenderer.toTS(rule.metadata());
-        for (DslField<?> field : writer.getFields()) {
-            if (field instanceof IntegerFieldInfo) {
-                System.out.println("const " + field.readable() + " = DOOV.number(DOOV.field('" + field.id().code() + "'))");
+        for (FieldSpec fieldSpec : writer.getFields()) {
+            if (fieldSpec.fieldInfo() instanceof IntegerFieldInfo) {
+                System.out.println("const " + fieldSpec.field().readable() + " = DOOV.number(DOOV.field('" + fieldSpec.field().id().code() + "'))");
             }
         }
         System.out.println(new String(ops.toByteArray()));
@@ -141,9 +141,9 @@ class AstTSRendererTest {
 
         MappingRule rule = DOOV.map(twelve).to(zero);
         astTSRenderer.toTS(rule.metadata());
-        for (DslField<?> field : writer.getFields()) {
-            if (field instanceof IntegerFieldInfo) {
-                System.out.println("const " + field.readable() + " = DOOV.number(DOOV.field(('" + field.id().code() + "'))");
+        for (FieldSpec fieldSpec : writer.getFields()) {
+            if (fieldSpec.fieldInfo() instanceof IntegerFieldInfo) {
+                System.out.println("const " + fieldSpec.field().readable() + " = DOOV.number(DOOV.field(('" + fieldSpec.field().id().code() + "'))");
             }
         }
         System.out.println(new String(ops.toByteArray()));

@@ -42,7 +42,6 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     startUnary((UnaryMetadata) metadata, depth);
                     break;
                 case FIELD_PREDICATE:
-                case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
                 case LEAF_VALUE:
                 case TEMPLATE_IDENTIFIER:
@@ -59,6 +58,9 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case THEN_MAPPING:
                 case ELSE_MAPPING:
                     startMappingRule(metadata, depth);
+                    break;
+                case FIELD_PREDICATE_MATCH_ANY:
+                    startIterable((IterableMetadata) metadata, depth);
                     break;
                 case NARY_PREDICATE:
                     startNary((NaryMetadata) metadata, depth);
@@ -96,7 +98,6 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
             case TEMPLATE_IDENTIFIER:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
-            case FIELD_PREDICATE_MATCH_ANY:
             case BINARY_PREDICATE:
             case TEMPLATE_PARAM:
                 beforeChildBinary((BinaryMetadata) metadata, child, depth);
@@ -108,6 +109,9 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
             case THEN_MAPPING:
             case ELSE_MAPPING:
                 beforeChildMappingRule(metadata, child, depth);
+                break;
+            case FIELD_PREDICATE_MATCH_ANY:
+                beforeChildIterable((IterableMetadata) metadata, child, depth);
                 break;
             case NARY_PREDICATE:
                 beforeChildNary((NaryMetadata) metadata, child, depth);
@@ -139,7 +143,6 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
             case TEMPLATE_IDENTIFIER:
                 throw new IllegalStateException("no visit : there is no children");
             case FIELD_PREDICATE:
-            case FIELD_PREDICATE_MATCH_ANY:
             case BINARY_PREDICATE:
             case TEMPLATE_PARAM:
                 afterChildBinary((BinaryMetadata) metadata, child, hasNext, depth);
@@ -151,6 +154,9 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
             case THEN_MAPPING:
             case ELSE_MAPPING:
                 afterChildMappingRule(metadata, child, hasNext, depth);
+                break;
+            case FIELD_PREDICATE_MATCH_ANY:
+                afterChildIterable((IterableMetadata) metadata, child, hasNext, depth);
                 break;
             case NARY_PREDICATE:
                 afterChildNary((NaryMetadata) metadata, child, hasNext, depth);
@@ -175,7 +181,6 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                     endUnary((UnaryMetadata) metadata, depth);
                     break;
                 case FIELD_PREDICATE:
-                case FIELD_PREDICATE_MATCH_ANY:
                 case LEAF_PREDICATE:
                 case LEAF_VALUE:
                 case TEMPLATE_IDENTIFIER:
@@ -192,6 +197,9 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
                 case THEN_MAPPING:
                 case ELSE_MAPPING:
                     endMappingRule(metadata, depth);
+                    break;
+                case FIELD_PREDICATE_MATCH_ANY:
+                    endIterable((IterableMetadata) metadata, depth);
                     break;
                 case NARY_PREDICATE:
                     endNary((NaryMetadata) metadata, depth);
@@ -335,6 +343,23 @@ public abstract class AbstractAstVisitor implements MetadataVisitor {
     }
 
     public void endMappingRule(Metadata metadata, int depth) {
+    }
+
+    // Iterable Metadata
+
+    public void startIterable(IterableMetadata metadata, int depth) {
+    }
+
+    public void visitIterable(IterableMetadata metadata, int depth) {
+    }
+
+    public void beforeChildIterable(IterableMetadata metadata, Metadata child, int depth) {
+    }
+
+    public void afterChildIterable(IterableMetadata metadata, Metadata child, boolean hasNext, int depth) {
+    }
+
+    public void endIterable(IterableMetadata metadata, int depth) {
     }
 
     // StepCondition

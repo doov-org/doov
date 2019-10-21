@@ -83,7 +83,7 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
      * @return the step condition
      */
     public final StepCondition lesserThan(NumericFunction<N> function) {
-        return LeafStepCondition.stepCondition(lesserThanMetadata(metadata, function), getFunction(),
+        return LeafStepCondition.stepCondition(lesserThanMetadata(metadata, function.metadata), getFunction(),
                 function.getFunction(), (l, r) -> lesserThanFunction().apply(l, r));
     }
 
@@ -116,7 +116,7 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
      * @return the step condition
      */
     public final StepCondition lesserOrEquals(NumericFunction<N> function) {
-        return LeafStepCondition.stepCondition(lesserOrEqualsMetadata(metadata, function), getFunction(),
+        return LeafStepCondition.stepCondition(lesserOrEqualsMetadata(metadata, function.metadata), getFunction(),
                 function.getFunction(), (l, r) -> lesserOrEqualsFunction().apply(l, r));
     }
 
@@ -149,7 +149,7 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
      * @return the step condition
      */
     public final StepCondition greaterThan(NumericFunction<N> function) {
-        return LeafStepCondition.stepCondition(greaterThanMetadata(metadata, function), getFunction(),
+        return LeafStepCondition.stepCondition(greaterThanMetadata(metadata, function.metadata), getFunction(),
                 function.getFunction(), (l, r) -> greaterThanFunction().apply(l, r));
     }
 
@@ -182,7 +182,7 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
      * @return the step condition
      */
     public final StepCondition greaterOrEquals(NumericFunction<N> function) {
-        return LeafStepCondition.stepCondition(greaterOrEqualsMetadata(metadata, function), getFunction(),
+        return LeafStepCondition.stepCondition(greaterOrEqualsMetadata(metadata, function.metadata), getFunction(),
                 function.getFunction(), (l, r) -> greaterOrEqualsFunction().apply(l, r));
     }
 
@@ -263,7 +263,7 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
      * @return the numeric function
      */
     public final NumericFunction<N> plus(NumericFunction<N> numericFunction) {
-        return numericFunction(plusMetadata(metadata, numericFunction),
+        return numericFunction(plusMetadata(metadata, numericFunction.metadata),
                 (model, context) -> value(model, context).map(v ->
                         sumFunction().apply(v, numericFunction.value(model, context).orElse(identity()))));
     }
@@ -299,7 +299,7 @@ public abstract class NumericFunction<N extends Number> extends DefaultFunction<
      * @return the numeric function
      */
     public final NumericFunction<N> minus(NumericFunction<N> numericFunction) {
-        return numericFunction(minusMetadata(metadata, numericFunction),
+        return numericFunction(minusMetadata(metadata, numericFunction.metadata),
                 (model, context) -> value(model, context).map(v ->
                         minusFunction().apply(v, numericFunction.value(model, context).orElse(identity()))));
     }

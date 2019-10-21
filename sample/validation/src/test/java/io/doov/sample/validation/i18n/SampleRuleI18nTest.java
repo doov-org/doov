@@ -43,8 +43,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import io.doov.core.dsl.lang.ValidationRule;
-import io.doov.core.dsl.meta.LeafMetadata;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.function.MapFunctionMetadata;
 import io.doov.core.dsl.meta.function.NumericFunctionMetadata;
 import io.doov.core.dsl.meta.function.StringFunctionMetadata;
@@ -416,7 +415,7 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0, 1, 0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
-        assertThat(root.childAt(0, 1, 1)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(0, 1, 1)).isInstanceOf(IterableMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE_MATCH_ANY);
         assertThat(root.childAt(1)).isInstanceOf(ValuePredicateMetadata.class)
                 .extracting(Metadata::type).containsExactly(LEAF_VALUE);
@@ -488,7 +487,7 @@ public class SampleRuleI18nTest {
                 .extracting(Metadata::type).containsExactly(BINARY_PREDICATE);
         assertThat(root.childAt(0)).isInstanceOf(FieldMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE);
-        assertThat(root.childAt(1)).isInstanceOf(ValuePredicateMetadata.class)
+        assertThat(root.childAt(1)).isInstanceOf(IterableMetadata.class)
                 .extracting(Metadata::type).containsExactly(FIELD_PREDICATE_MATCH_ANY);
     }
 

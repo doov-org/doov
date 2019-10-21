@@ -18,7 +18,10 @@ package io.doov.core.dsl.meta.predicate;
 import static io.doov.core.dsl.meta.DefaultOperator.always_false;
 import static io.doov.core.dsl.meta.DefaultOperator.always_true;
 import static io.doov.core.dsl.meta.DefaultOperator.lambda;
-import static io.doov.core.dsl.meta.MetadataType.*;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_PREDICATE;
+import static io.doov.core.dsl.meta.MetadataType.LEAF_VALUE;
+import static io.doov.core.dsl.meta.MetadataType.TEMPLATE_IDENTIFIER;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -100,16 +103,6 @@ public class ValuePredicateMetadata<M extends ValuePredicateMetadata<M>> extends
     }
 
     // any match
-
-    public static <M extends ValuePredicateMetadata<M>> M anyMatchMetadata(Collection<?> values) {
-        return new ValuePredicateMetadata<M>(FIELD_PREDICATE_MATCH_ANY).valueListObject(values);
-    }
-
-    public static <M extends ValuePredicateMetadata<M>> M anyMatchMetadata(String... readables) {
-        return new ValuePredicateMetadata<M>(FIELD_PREDICATE_MATCH_ANY)
-                .valueReadable(lambda)
-                .valueListObject(Arrays.asList(readables));
-    }
 
     // all match
 

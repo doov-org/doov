@@ -75,3 +75,6 @@ doc/cdr/Backup_of_*.cdr
 .gradle
 build
 bin
+
+node_modules
+junit.xml

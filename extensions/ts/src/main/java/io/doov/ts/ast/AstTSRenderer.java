@@ -3,33 +3,45 @@
  */
 package io.doov.ts.ast;
 
-import static io.doov.core.dsl.meta.DefaultOperator.age_at;
-import static io.doov.core.dsl.meta.DefaultOperator.and;
-import static io.doov.core.dsl.meta.DefaultOperator.or;
+import static io.doov.core.dsl.meta.DefaultOperator.*;
+import static io.doov.core.dsl.meta.MappingOperator.map;
+import static io.doov.core.dsl.meta.MappingOperator.mappings;
+import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 import static io.doov.ts.ast.writer.TypeScriptWriter.*;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
+import java.time.LocalDate;
 import java.util.*;
 
+import io.doov.core.FieldInfo;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.function.*;
 import io.doov.core.dsl.meta.predicate.FieldMetadata;
-import io.doov.ts.ast.writer.TypeScriptWriter;
+import io.doov.ts.ast.writer.*;
 
 public class AstTSRenderer {
 
-    private static final List<Operator> AND_OR = asList(and, or);
+    protected static final List<Operator> AND_OR = asList(and, or);
+    protected static final List<Operator> BUILT_IN_NARY = asList(count, sum, min, max,
+            map, mappings, match_any, match_all, match_none);
 
-    private final TypeScriptWriter writer;
-    private final boolean prettyPrint;
+    protected final TypeScriptWriter writer;
+    protected final FieldNameProvider fieldNameProvider;
+    protected final boolean prettyPrint;
 
     public AstTSRenderer(TypeScriptWriter writer) {
-        this(writer, false);
+        this(writer, new DefaultFieldNameProvider(), false);
     }
 
     public AstTSRenderer(TypeScriptWriter writer, boolean prettyPrint) {
+        this(writer, new DefaultFieldNameProvider(), prettyPrint);
+    }
+
+    public AstTSRenderer(TypeScriptWriter writer, FieldNameProvider fieldNameProvider, boolean prettyPrint) {
         this.writer = writer;
+        this.fieldNameProvider = fieldNameProvider;
         this.prettyPrint = prettyPrint;
     }
 
@@ -60,7 +72,7 @@ public class AstTSRenderer {
                     leaf(metadata, parents);
                     break;
                 case MAPPING_LEAF_ITERABLE:
-                    iterable(metadata, parents);
+                    iterableArray(metadata, parents);
                     break;
                 case TYPE_CONVERTER:
                     typeConverter(metadata, parents);
@@ -105,11 +117,19 @@ public class AstTSRenderer {
         } else if (operator == DefaultOperator.temporal_minus) {
             return "minus";
         } else if (operator == DefaultOperator.any_match_values) {
-            return "anyMatch";
+            return "matchAny";
         } else if (operator == DefaultOperator.all_match_values) {
             return "allMatch";
         } else if (operator == DefaultOperator.none_match_values) {
             return "noneMatch";
+        } else if (operator == DefaultOperator.always_false) {
+            return "alwaysFalse";
+        } else if (operator == DefaultOperator.always_true) {
+            return "alwaysTrue";
+        } else if (operator == MappingOperator._else) {
+            return "otherwise";
+        } else if (operator == DefaultOperator.is) {
+            return "eq";
         }
         return toCamelCase(operator.name());
     }
@@ -136,11 +156,38 @@ public class AstTSRenderer {
         return stringBuilder.toString();
     }
 
-    private String deSerializeValue(Element elt, Metadata parentMetadata) {
+    protected String deSerializeValue(Element elt, Metadata metadata, Metadata parentMetadata) {
         if (parentMetadata instanceof TemporalBiFunctionMetadata) {
             if (parentMetadata.getOperator() == age_at) {
                 // Date
-                return "DateUtils.newDate('" + elt.getReadable().readable()+"')";
+                return "new Date('" + elt.getReadable().readable()+"')";
+            }
+        }
+        if (metadata instanceof StaticMetadata) {
+            Class valueClass = ((StaticMetadata) metadata).valueClass();
+            if (valueClass.equals(LocalDate.class)) {
+                return "new Date('" + elt.getReadable().readable()+"')";
+            }
+            if (valueClass.isEnum()) {
+                return valueClass.getSimpleName() + "." + elt.getReadable().readable();
+            }
+        }
+        // FIXME -> EnumClass.ENUM_LITERAL this should me more generic
+        if (metadata instanceof LeafMetadata) {
+            if (parentMetadata.getOperator() == as_string
+                    || parentMetadata.getOperator() == as_a_number
+                    || parentMetadata.getOperator() == as) {
+                return elt.getReadable().readable();
+            }
+            String classPrefix = parentMetadata.left().findFirst()
+                    .filter(m -> m.type() == MetadataType.FIELD_PREDICATE)
+                    .map(m -> (FieldMetadata<?>) m)
+                    .map(f -> ((FieldInfo) f.field()))
+                    .filter(f -> f.type().isEnum())
+                    .map(f -> f.type().getSimpleName())
+                    .orElse(null);
+            if (classPrefix != null) {
+                return classPrefix + "." + elt.getReadable().readable();
             }
         }
         return elt.getReadable().readable();
@@ -148,34 +195,15 @@ public class AstTSRenderer {
 
     protected void rule(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata when = metadata.lastChild();
-        if (parents.peekLast() == metadata) {
-            writer.write("const");
-            writer.write(SPACE);
-            writer.write("rule");
-            writer.write(SPACE);
-            writer.write(ASSIGN);
-            writer.write(SPACE);
-        }
         toTS(when, parents);
         writer.write(DOT);
         writer.write(operatorToMethod(DefaultOperator.validate));
         writer.write(LEFT_PARENTHESIS);
         writer.write(RIGHT_PARENTHESIS);
-        if (parents.peekLast() == metadata) {
-            writer.write(COLUMN);
-        }
     }
 
     protected void when(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata dsl = metadata.lastChild();
-        if (parents.peekLast() == metadata) {
-            writer.write("const");
-            writer.write(SPACE);
-            writer.write("when");
-            writer.write(SPACE);
-            writer.write(ASSIGN);
-            writer.write(SPACE);
-        }
         writer.writeGlobalDOOV();
         writer.write(DOT);
         writer.write(operatorToMethod(DefaultOperator.when));
@@ -185,16 +213,18 @@ public class AstTSRenderer {
         if (prettyPrint) {
             writer.writeNewLine(parents.size());
         }
-        if (parents.peekLast() == metadata) {
-            writer.write(COLUMN);
-        }
     }
 
     protected void binary(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata left = metadata.left().findFirst().get();
         Metadata right = metadata.right().findFirst().get();
+        Metadata parent = parents.size() > 1 ? new ArrayList<>(parents).get(1) : null;
         toTS(left, parents);
-        if (metadata.getOperator() == DefaultOperator.with) {
+        if (parent != null && parent.type() == MetadataType.MAPPING_INPUT) {
+            writer.write(COMMA);
+            writer.write(SPACE);
+            toTS(right);
+        } else if (metadata.getOperator() == DefaultOperator.with) {
             String method;
             if (right instanceof TemporalAdjusterMetadata) {
                 TemporalAdjusterMetadata adjusterMetadata = (TemporalAdjusterMetadata) right;
@@ -234,39 +264,61 @@ public class AstTSRenderer {
         }
     }
 
+    protected FieldSpec fieldSpec(DslField<?> field) {
+        return new DefaultFieldSpec(fieldNameProvider.getFieldName(field), field,
+                field instanceof FieldInfo ? (FieldInfo) field : null);
+    }
+
     protected void leaf(Metadata metadata, ArrayDeque<Metadata> parents) {
         MetadataType type = metadata.type();
         LeafMetadata<?> leaf = (LeafMetadata<?>) metadata;
         final List<Element> elts = new ArrayList<>(leaf.elements());
         if (type == MetadataType.FIELD_PREDICATE) {
             FieldMetadata fieldMetadata = (FieldMetadata) metadata;
-            writer.writeField(fieldMetadata.field());
+            writer.writeField(fieldSpec(fieldMetadata.field()));
         } else {
-            for (Element elt : elts) {
-                if (elt.getType() == ElementType.STRING_VALUE) {
-                    writer.writeQuote();
-                    writer.write(elt.getReadable().readable());
-                    writer.writeQuote();
-                } else if (elt.getType() == ElementType.FIELD) {
-                    writer.writeField((DslField<?>) elt.getReadable());
-                } else if (elt.getType() == ElementType.UNKNOWN) {
-                    writer.write(elt.getReadable().readable().replace("-function- ", ""));
-                } else if (elt.getType() == ElementType.TEMPORAL_UNIT) {
-                    // do not write temporal units they are handled as method modifier in #binary
-                } else if (elt.getType() == ElementType.VALUE) {
-                    List<Metadata> parentsList = new ArrayList<>(parents);
-                    if (parentsList.size() > 1) {
-                        Metadata parentMetadata = parentsList.get(1);
-                        // TODO guess the value type from the parent operator;
-                        writer.write(deSerializeValue(elt, parentMetadata));
+            if (elts.size() == 1 && elts.get(0).getType() == ElementType.OPERATOR) {
+                // This is 'probably' an external function
+                writer.write(importRequest((Operator) elts.get(0).getReadable(), metadata, parents));
+            } else {
+                for (Element elt : elts) {
+                    if (elt.getType() == ElementType.OPERATOR) {
+                        writer.write(operatorToMethod((Operator) elt.getReadable()));
+                    } else if (elt.getType() == ElementType.STRING_VALUE) {
+                        writer.writeQuote();
+                        writer.write(elt.getReadable().readable());
+                        writer.writeQuote();
+                    } else if (elt.getType() == ElementType.FIELD) {
+                        writer.writeField(fieldSpec((DslField<?>) elt.getReadable()));
+                    } else if (elt.getType() == ElementType.UNKNOWN) {
+                        writer.write(elt.getReadable().readable().replace("-function- ", ""));
+                    } else if (elt.getType() == ElementType.TEMPORAL_UNIT) {
+                        // do not write temporal units they are handled as method modifier in #binary
+                    } else if (elt.getType() == ElementType.VALUE) {
+                        List<Metadata> parentsList = new ArrayList<>(parents);
+                        if (parentsList.size() > 1) {
+                            Metadata parentMetadata = parentsList.get(1);
+                            // TODO guess the value type from the parent operator;
+                            writer.write(deSerializeValue(elt, metadata, parentMetadata));
+                        } else {
+                            writer.write(elt.getReadable().readable());
+                        }
                     } else {
                         writer.write(elt.getReadable().readable());
                     }
-                } else {
-                    writer.write(elt.getReadable().readable());
                 }
             }
         }
+    }
+
+    protected String importRequest(Operator operator, Metadata metadata, ArrayDeque<Metadata> parents) {
+        if (operator == today) {
+            writer.addImport(newImport("doov", "DateFunction"));
+            writer.write("DateFunction");
+            writer.write(DOT);
+            return operatorToMethod(operator) + LEFT_PARENTHESIS + RIGHT_PARENTHESIS;
+        }
+        return operatorToMethod(operator);
     }
 
     protected void mappingInput(Metadata metadata, ArrayDeque<Metadata> parents) {
@@ -290,6 +342,7 @@ public class AstTSRenderer {
     protected void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents) {
         if (metadata instanceof LeafMetadata) {
             LeafMetadata leaf = (LeafMetadata) metadata;
+            // TODO handle type converter imports
             writer.write(descriptionToVariable(String.valueOf(leaf.elements().getLast())));
         } else {
             writer.write(metadata.readable());
@@ -306,43 +359,42 @@ public class AstTSRenderer {
     }
 
     protected void nary(Metadata metadata, ArrayDeque<Metadata> parents) {
-        // TODO import nary function from other places
-        writer.writeGlobalDOOV();
-        then_else(metadata, parents);
+        if (BUILT_IN_NARY.contains(metadata.getOperator())) {
+            writer.writeGlobalDOOV();
+            writer.write(DOT);
+            writer.write(operatorToMethod(metadata.getOperator()));
+        } else {
+            writer.write(importRequest(metadata.getOperator(), metadata, parents));
+        }
+        nary_elements(metadata, parents);
     }
 
     protected void mappings(Metadata metadata, ArrayDeque<Metadata> parents) {
-        if (parents.peekLast() == metadata) {
-            writer.write("const");
-            writer.write(SPACE);
-            writer.write("mappings");
-            writer.write(SPACE);
-            writer.write(ASSIGN);
-            writer.write(SPACE);
-        }
-        if (metadata.getOperator() == DefaultOperator.no_operator) {
+        if (metadata.getOperator() == MappingOperator.conditional_mappings) {
             ConditionalMappingMetadata conditional = (ConditionalMappingMetadata) metadata;
             toTS(conditional.when(), parents);
             toTS(conditional.then(), parents);
             if (conditional.otherwise() != null && conditional.otherwise().children().count() > 0) {
                 toTS(conditional.otherwise(), parents);
             }
-        } else if (metadata.getOperator() == MappingOperator.mappings) {
+        } else if (metadata.getOperator() == mappings) {
             nary(metadata, parents);
-        }
-        if (parents.peekLast() == metadata) {
-            writer.write(COLUMN);
         }
     }
 
     protected void then_else(Metadata metadata, ArrayDeque<Metadata> parents) {
         writer.write(DOT);
         writer.write(operatorToMethod(metadata.getOperator()));
+        nary_elements(metadata, parents);
+    }
+
+    protected void nary_elements(Metadata metadata, ArrayDeque<Metadata> parents) {
         writer.write(LEFT_PARENTHESIS);
-        if (metadata.getOperator() != MappingOperator.then && prettyPrint) {
+        List<Metadata> children = metadata.children().collect(toList());
+        if (metadata.getOperator() != MappingOperator.then && prettyPrint && children.size() > 2) {
             writer.writeNewLine(parents.size());
         }
-        Iterator<Metadata> iterator = metadata.children().iterator();
+        Iterator<Metadata> iterator = children.iterator();
         while(iterator.hasNext()) {
             toTS(iterator.next(), parents);
             if (iterator.hasNext()) {
@@ -357,6 +409,12 @@ public class AstTSRenderer {
         writer.write(RIGHT_PARENTHESIS);
     }
 
+    protected void iterableArray(Metadata metadata, ArrayDeque<Metadata> parents) {
+        writer.write("[");
+        iterable(metadata, parents);
+        writer.write("]");
+    }
+
     protected void iterable(Metadata metadata, ArrayDeque<Metadata> parents) {
         Iterator<Metadata> iterator = metadata.children().iterator();
         while(iterator.hasNext()) {
@@ -369,34 +427,27 @@ public class AstTSRenderer {
     }
 
     protected void fieldMatchAny(Metadata metadata, ArrayDeque<Metadata> parents) {
-        nary(metadata, parents);
+        iterable(metadata, parents);
     }
 
     protected void singleMapping(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata left = metadata.left().findFirst().get();
         Metadata right = metadata.right().findFirst().get();
-        if (parents.peekLast() == metadata) {
-            writer.write("const");
-            writer.write(SPACE);
-            writer.write("mapping");
-            writer.write(SPACE);
-            writer.write(ASSIGN);
-            writer.write(SPACE);
-        }
         writer.writeGlobalDOOV();
         writer.write(DOT);
-        writer.write(operatorToMethod(MappingOperator.map));
-        writer.write(LEFT_PARENTHESIS);
-        toTS(left, parents);
-        writer.write(RIGHT_PARENTHESIS);
-        writer.write(DOT);
-        writer.write(operatorToMethod(MappingOperator.to));
+        if (left instanceof StaticMetadata && ((StaticMetadata) left).value() == null) {
+            writer.write("mapNull");
+        } else {
+            writer.write(operatorToMethod(map));
+            writer.write(LEFT_PARENTHESIS);
+            toTS(left, parents);
+            writer.write(RIGHT_PARENTHESIS);
+            writer.write(DOT);
+            writer.write(operatorToMethod(MappingOperator.to));
+        }
         writer.write(LEFT_PARENTHESIS);
         toTS(right, parents);
         writer.write(RIGHT_PARENTHESIS);
-        if (parents.peekLast() == metadata) {
-            writer.write(COLUMN);
-        }
     }
 
 }

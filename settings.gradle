@@ -9,6 +9,7 @@ include 'doov-maven-generator'
 include 'doov-js-extension'
 include 'doov-ts-parser'
 include 'doov-ts-extension'
+include 'doov-jest-extension'
 
 project(':doov-assertions-core').projectDir = file('assertions-core')
 project(':doov-core').projectDir = file('core')
@@ -19,3 +20,4 @@ project(':doov-maven-generator').projectDir = file('generator/generator-maven-pl
 project(':doov-js-extension').projectDir = file('extensions/js')
 project(':doov-ts-parser').projectDir = file('extensions/ts-parser')
 project(':doov-ts-extension').projectDir = file('extensions/ts')
+project(':doov-jest-extension').projectDir = file('extensions/jest')

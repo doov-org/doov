@@ -144,8 +144,8 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      * @return the step condition
      */
     public final StepCondition eq(BaseFieldInfo<T> value) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, value), function, value,
-                Object::equals);
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, value.getMetadata()),
+                function, value, Object::equals);
     }
 
     /**
@@ -155,7 +155,8 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      * @return the step condition
      */
     public final StepCondition eq(Function<T> value) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, value), function,
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.equalsMetadata(metadata, value.metadata()),
+                function,
                 (BiFunction<FieldModel, Context, Optional<T>>) (m, c) -> Optional.ofNullable(value.read(m, c)),
                 Object::equals);
     }
@@ -205,7 +206,8 @@ public class DefaultFunction<T, M extends Metadata> implements Function<T> {
      * @return the step condition
      */
     public final StepCondition notEq(Function<T> value) {
-        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, value), function,
+        return LeafStepCondition.stepCondition(BinaryPredicateMetadata.notEqualsMetadata(metadata, value.metadata()),
+                function,
                 (BiFunction<FieldModel, Context, Optional<T>>) (m, c) -> Optional.ofNullable(value.read(m, c)),
                 (l, r) -> !l.equals(r));
     }

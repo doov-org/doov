@@ -60,7 +60,7 @@ public class ReduceAnyMatchTest {
         reduce = result.reduce(SUCCESS);
 
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when enumField match any  : VAL1, VAL2, VAL3 validate");
+                .isEqualTo("rule when enumField match any [VAL1, VAL2, VAL3] validate");
 
         assertTrue(result.value());
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class)
@@ -75,7 +75,7 @@ public class ReduceAnyMatchTest {
         reduce = result.reduce(FAILURE);
 
         assertThat(rule.readable(LOCALE))
-                .isEqualTo("rule when enumField match any  : VAL2, VAL3 validate");
+                .isEqualTo("rule when enumField match any [VAL2, VAL3] validate");
 
         assertFalse(result.value());
         assertThat(reduce).isInstanceOf(BinaryPredicateMetadata.class)

@@ -16,6 +16,7 @@
 package io.doov.core.dsl.lang;
 
 import java.util.List;
+import java.util.Map;
 
 import io.doov.core.FieldId;
 import io.doov.core.dsl.meta.Metadata;
@@ -109,5 +110,11 @@ public interface Context extends ContextAudit {
      * @return the eval list
      */
     List<Metadata> getEvalFalse();
+
+    /**
+     * Returns a map of evaluated values.
+     * @return fieldid value map
+     */
+    Map<FieldId, Object> getEvalValues();
 
 }

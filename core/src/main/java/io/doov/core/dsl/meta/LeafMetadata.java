@@ -76,6 +76,8 @@ public abstract class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMe
             return valueReadable(() -> "null");
         if (readable instanceof String)
             return valueString((String) readable);
+        if (readable instanceof Readable)
+            return valueReadable((Readable) readable);
         return valueReadable(() -> String.valueOf(readable));
     }
 

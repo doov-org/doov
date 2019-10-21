@@ -4,10 +4,8 @@
 package io.doov.ts.ast.writer;
 
 import java.io.OutputStream;
-import java.util.List;
+import java.util.Collection;
 import java.util.Locale;
-
-import io.doov.core.dsl.DslField;
 
 public interface TypeScriptWriter {
 
@@ -30,11 +28,15 @@ public interface TypeScriptWriter {
 
     void writeQuote();
 
-    void writeField(DslField<?> field);
+    void writeField(FieldSpec fieldSpec);
 
-    List<Import> getImports();
+    Collection<ImportSpec> getImports();
 
-    List<DslField<?>> getFields();
+    Collection<FieldSpec> getFields();
+
+    void addField(FieldSpec fieldSpec);
+
+    void addImport(ImportSpec importSpec);
 
     OutputStream getOutput();
 
