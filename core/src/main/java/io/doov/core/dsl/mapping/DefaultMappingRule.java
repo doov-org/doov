@@ -44,10 +44,17 @@ public class DefaultMappingRule<T> extends AbstractDSLBuilder implements Mapping
 
     @Override
     public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
-        ModelInterceptor in = new ModelInterceptor(inModel, context);
-        ModelInterceptor out = new ModelInterceptor(outModel, context);
-        output.write(out, context, input.read(in, context));
-        return context;
+        context.beforeMapping(this);
+        try {
+            ModelInterceptor in = new ModelInterceptor(inModel, context);
+            ModelInterceptor out = new ModelInterceptor(outModel, context);
+            output.write(out, context, input.read(in, context));
+            return context;
+        } catch (Throwable t) {
+            throw new RuntimeException(readable(), t);
+        } finally {
+            context.afterMapping(this);
+        }
     }
 
     @Override

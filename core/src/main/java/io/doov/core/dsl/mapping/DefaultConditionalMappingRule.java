@@ -27,8 +27,10 @@ public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements
         this.mappingRules = MappingRegistry.mappings(thenRules);
         this.elseMappingRules = MappingRegistry.mappings(elseRules);
         this.metadata = conditional(stepWhen.metadata(),
-                MappingRegistryMetadata.then(mappingRules.stream().map(MappingRule::metadata).collect(toList())),
-                MappingRegistryMetadata.otherwise(elseMappingRules.stream().map(MappingRule::metadata).collect(toList())));
+                        MappingRegistryMetadata
+                                        .then(mappingRules.stream().map(MappingRule::metadata).collect(toList())),
+                        MappingRegistryMetadata.otherwise(
+                                        elseMappingRules.stream().map(MappingRule::metadata).collect(toList())));
     }
 
     private DefaultConditionalMappingRule(StepWhen stepWhen, MappingRegistry thenRules, MappingRule[] elseRules) {
@@ -37,8 +39,10 @@ public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements
         this.mappingRules = thenRules;
         this.elseMappingRules = MappingRegistry.mappings(elseRules);
         this.metadata = conditional(stepWhen.metadata(),
-                MappingRegistryMetadata.then(mappingRules.stream().map(MappingRule::metadata).collect(toList())),
-                MappingRegistryMetadata.otherwise(elseMappingRules.stream().map(MappingRule::metadata).collect(toList())));
+                        MappingRegistryMetadata
+                                        .then(mappingRules.stream().map(MappingRule::metadata).collect(toList())),
+                        MappingRegistryMetadata.otherwise(
+                                        elseMappingRules.stream().map(MappingRule::metadata).collect(toList())));
     }
 
     @Override
@@ -63,10 +67,15 @@ public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements
 
     @Override
     public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
-        if (validationRule.executeOn(inModel, context).value()) {
-            mappingRules.executeOn(inModel, outModel, context);
-        } else if (!elseMappingRules.isEmpty()) {
-            elseMappingRules.executeOn(inModel, outModel, context);
+        context.beforeConditionalMapping(this);
+        try {
+            if (validationRule.executeOn(inModel, context).value()) {
+                mappingRules.executeOn(inModel, outModel, context);
+            } else if (!elseMappingRules.isEmpty()) {
+                elseMappingRules.executeOn(inModel, outModel, context);
+            }
+        } finally {
+            context.afterConditionalMapping(this);
         }
         return context;
     }
@@ -78,7 +87,7 @@ public class DefaultConditionalMappingRule extends AbstractDSLBuilder implements
 
     @Override
     public Context executeOn(FieldModel inModel, FieldModel outModel) {
-        return this.executeOn(inModel, outModel, new DefaultContext(metadata));
+        return executeOn(inModel, outModel, new DefaultContext(metadata));
     }
 
     @Override

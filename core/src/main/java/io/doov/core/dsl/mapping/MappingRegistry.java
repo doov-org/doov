@@ -29,7 +29,8 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
     private MappingRegistry(MappingRule... mappingRules) {
         this.mappingRules = Arrays.asList(mappingRules);
         // TODO
-        this.metadata = MappingRegistryMetadata.mappings(stream().map(MappingRule::metadata).collect(Collectors.toList()));
+        this.metadata = MappingRegistryMetadata
+                        .mappings(stream().map(MappingRule::metadata).collect(Collectors.toList()));
     }
 
     @Override
@@ -51,7 +52,7 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
     /**
      * Validate and execute rules in this registry with contained order on given models
      *
-     * @param inModel in model
+     * @param inModel  in model
      * @param outModel out model
      * @return context
      */
@@ -65,15 +66,20 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
     /**
      * Validate and execute rules in this registry with contained order on given models
      *
-     * @param inModel in model
+     * @param inModel  in model
      * @param outModel out model
-     * @param context context
-     * @param <C> context type
+     * @param context  context
+     * @param <C>      context type
      * @return context
      */
     public <C extends Context> C validateAndExecute(FieldModel inModel, FieldModel outModel, C context) {
-        mappingRules.stream().filter(m -> m.validate(inModel, outModel))
-                        .forEach(m -> m.executeOn(inModel, outModel, context));
+        context.beforeMappingRegistry(this);
+        try {
+            mappingRules.stream().filter(m -> m.validate(inModel, outModel))
+                            .forEach(m -> m.executeOn(inModel, outModel, context));
+        } finally {
+            context.afterMappingRegistry(this);
+        }
         return context;
     }
 
@@ -91,23 +97,28 @@ public class MappingRegistry extends AbstractDSLBuilder implements MappingRule {
 
     @Override
     public <C extends Context> C executeOn(FieldModel inModel, FieldModel outModel, C context) {
-        mappingRules.forEach(rule -> rule.executeOn(inModel, outModel, context));
+        context.beforeMappingRegistry(this);
+        try {
+            mappingRules.forEach(rule -> rule.executeOn(inModel, outModel, context));
+        } finally {
+            context.afterMappingRegistry(this);
+        }
         return context;
     }
 
     @Override
     public <C extends Context> C executeOn(FieldModel model, C context) {
-        return this.executeOn(model, model, context);
+        return executeOn(model, model, context);
     }
 
     @Override
     public Context executeOn(FieldModel inModel, FieldModel outModel) {
-        return this.executeOn(inModel, outModel, new DefaultContext(metadata()));
+        return executeOn(inModel, outModel, new DefaultContext(metadata()));
     }
 
     @Override
     public Context executeOn(FieldModel model) {
-        return this.executeOn(model, model, new DefaultContext(metadata()));
+        return executeOn(model, model, new DefaultContext(metadata()));
     }
 
     @Override

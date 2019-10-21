@@ -1,17 +1,14 @@
 /*
  * Copyright 2017 Courtanet
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package io.doov.core.dsl.impl;
 
@@ -29,8 +26,8 @@ public class DefaultValidationRule extends AbstractDSLBuilder implements Validat
     public DefaultValidationRule(StepWhen stepWhen) {
         this(stepWhen, RuleMetadata.rule(stepWhen.metadata()), true);
     }
-    
-    public DefaultValidationRule(StepWhen stepWhen,  boolean shortCircuit) {
+
+    public DefaultValidationRule(StepWhen stepWhen, boolean shortCircuit) {
         this(stepWhen, RuleMetadata.rule(stepWhen.metadata()), shortCircuit);
     }
 
@@ -61,8 +58,14 @@ public class DefaultValidationRule extends AbstractDSLBuilder implements Validat
 
     @Override
     public Result executeOn(FieldModel model, Context context) {
-        boolean valid = stepWhen.stepCondition().predicate().test(model, context);
-        return new DefaultResult(valid, context);
+        context.beforeValidate(this);
+        try {
+            return new DefaultResult(stepWhen.stepCondition().predicate().test(model, context), context);
+        } catch (Throwable t) {
+            throw new RuntimeException(readable(), t);
+        } finally {
+            context.afterValidate(this);
+        }
     }
 
     @Override

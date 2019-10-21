@@ -25,7 +25,7 @@ import io.doov.core.dsl.meta.Metadata;
  * <p>
  * You have for example node values (see {@link #getEvalValue(FieldId)}), failed nodes (see {@link #getEvalFalse()}), etc.
  */
-public interface Context {
+public interface Context extends ContextAudit {
 
     /**
      * Returns the root node of the syntax tree.
