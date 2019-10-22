@@ -15,6 +15,8 @@ ext {
     hibernateValidatorVersion = '6.0.7.Final'
     jsoupVersion = '1.11.3'
     commonmarkVersion = '0.12.1'
+    freemarkerVersion = '2.3.29'
+    gsonVersion = '2.8.6'
 
     gradleMavenPluginBuilderVersion = '1.2.1'
     gradleJmhPluginVersion = '0.4.5'
