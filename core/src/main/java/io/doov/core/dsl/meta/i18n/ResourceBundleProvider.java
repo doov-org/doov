@@ -16,6 +16,7 @@
 package io.doov.core.dsl.meta.i18n;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import io.doov.core.dsl.meta.Operator;
 
@@ -23,7 +24,7 @@ public enum ResourceBundleProvider implements ResourceProvider {
 
     BUNDLE;
 
-    private final List<String> providers = new ArrayList<>();
+    private final List<String> providers = new CopyOnWriteArrayList<>();
 
     ResourceBundleProvider() {
         register("io.doov.core.dsl.meta.i18n.DefaultResourceBundle");
