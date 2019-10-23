@@ -27,7 +27,7 @@ public class JestTemplate {
         return CONFIGURATION;
     }
 
-    public static String write(Map<String, Object> parameters, Writer writer) {
+    public static void write(Map<String, Object> parameters, Writer writer) {
         Configuration configuration = getConfiguration();
         try {
             Template template = configuration.getTemplate("jest-test.ftl");
@@ -35,7 +35,6 @@ public class JestTemplate {
         } catch (IOException | TemplateException e) {
             throw new IllegalStateException(e);
         }
-        return writer.toString();
     }
 
     public static Map<String, Object> toTemplateParameters(JestTestSpec jestTestSpec) {
@@ -50,16 +49,20 @@ public class JestTemplate {
     }
 
     public static String writetoString(Map<String, Object> parameters) {
-        StringWriter writer = new StringWriter();
-        write(parameters, writer);
-        return writer.toString();
+        try (StringWriter writer = new StringWriter()) {
+            write(parameters, writer);
+            writer.flush();
+            return writer.toString();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public static File writeToFile(Map<String, Object> parameters, File file) {
-        try {
+        try(FileWriter fileWriter = new FileWriter(file)) {
             Files.createDirectories(file.getParentFile().toPath());
-            FileWriter fileWriter = new FileWriter(file);
             write(parameters, fileWriter);
+            fileWriter.flush();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
