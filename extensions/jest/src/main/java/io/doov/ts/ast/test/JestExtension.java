@@ -25,8 +25,7 @@ import com.google.gson.GsonBuilder;
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.lang.Context;
 import io.doov.core.dsl.lang.Result;
-import io.doov.core.dsl.meta.RuleMetadata;
-import io.doov.core.dsl.meta.WhenMetadata;
+import io.doov.core.dsl.meta.*;
 import io.doov.ts.ast.AstTSRenderer;
 import io.doov.ts.ast.writer.*;
 import io.doov.tsparser.TypeScriptParser;
@@ -147,7 +146,13 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
         this.executionContext.set(result.getContext());
         final ByteArrayOutputStream ops = new ByteArrayOutputStream();
         writer.set(new DefaultTypeScriptWriter(Locale.US, ops, BUNDLE));
-        RuleMetadata rule = RuleMetadata.rule(WhenMetadata.when(result.getContext().getRootMetadata()));
+        Metadata rootMetadata = result.getContext().getRootMetadata();
+        Metadata rule;
+        if (rootMetadata.type() != MetadataType.RULE) {
+            rule = RuleMetadata.rule(WhenMetadata.when(rootMetadata));
+        } else {
+            rule = rootMetadata;
+        }
         tsRendererFunction.apply(getWriter()).toTS(rule);
         return new String(ops.toByteArray(), UTF_8);
     }
