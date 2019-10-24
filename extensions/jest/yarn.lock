@@ -944,10 +944,10 @@ domexception@^1.0.1:
   dependencies:
     webidl-conversions "^4.0.2"
 
-doov@0.10.4:
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/doov/-/doov-0.10.4.tgz#422d0152b65be7b9a3b6a8a73cc69fab90565e6e"
-  integrity sha512-LapnKJzK2jZ8zT99bwbhmZS/+chzv6GsOeplYnSt1HzXxgVUHjEAEsVgnZIC7OUGhj9qFqq0HYN2Jbdto0lIgw==
+doov@0.10.5:
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/doov/-/doov-0.10.5.tgz#ba7a4cb8d8231f87cb22d099b275cdcf9633074e"
+  integrity sha512-ggnQkT2IoRyWSRWTUaBf++lzVWSlwwX0NGoXdpwzoWKXPfJst7fnn7ARqpv/ALPAZpmFpZTcXk+db5OA7jdWsg==
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"

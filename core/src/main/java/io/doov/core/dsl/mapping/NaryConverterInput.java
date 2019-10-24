@@ -4,15 +4,13 @@
 package io.doov.core.dsl.mapping;
 
 import static io.doov.core.dsl.meta.MappingInputMetadata.inputMetadata;
-import static io.doov.core.dsl.meta.MappingMetadata.fieldsInput;
 
 import java.util.List;
 
 import io.doov.core.FieldModel;
 import io.doov.core.dsl.DslField;
 import io.doov.core.dsl.lang.*;
-import io.doov.core.dsl.meta.MappingInputMetadata;
-import io.doov.core.dsl.meta.Metadata;
+import io.doov.core.dsl.meta.*;
 
 public class NaryConverterInput<T> extends AbstractDSLBuilder implements MappingInput<T> {
 
@@ -22,7 +20,9 @@ public class NaryConverterInput<T> extends AbstractDSLBuilder implements Mapping
 
     public NaryConverterInput(List<DslField<?>> fields, NaryTypeConverter<T> converter) {
         this.fields = fields;
-        this.metadata = inputMetadata(converter.metadata(), fieldsInput(fields));
+        this.metadata = inputMetadata(converter.metadata(), fields.stream()
+                .map(MappingMetadata::fieldInput)
+                .toArray(Metadata[]::new));
         this.converter = converter;
     }
 

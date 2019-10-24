@@ -6,6 +6,7 @@ package io.doov.ts.ast;
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.MappingOperator.map;
 import static io.doov.core.dsl.meta.MappingOperator.mappings;
+import static io.doov.core.dsl.meta.MetadataType.MAPPING_INPUT;
 import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 import static io.doov.ts.ast.writer.TypeScriptWriter.*;
 import static java.util.Arrays.asList;
@@ -437,6 +438,13 @@ public class AstTSRenderer {
         writer.write(DOT);
         if (left instanceof StaticMetadata && ((StaticMetadata) left).value() == null) {
             writer.write("mapNull");
+        } else if (left.type() == MAPPING_INPUT && left.left().count() > 2) {
+            writer.write("mapAll");
+            writer.write(LEFT_PARENTHESIS);
+            toTS(left, parents);
+            writer.write(RIGHT_PARENTHESIS);
+            writer.write(DOT);
+            writer.write(operatorToMethod(MappingOperator.to));
         } else {
             writer.write(operatorToMethod(map));
             writer.write(LEFT_PARENTHESIS);

@@ -30,7 +30,7 @@ import io.doov.ts.ast.AstTSRenderer;
 import io.doov.ts.ast.writer.*;
 import io.doov.tsparser.TypeScriptParser;
 
-public class JestExtension implements BeforeAllCallback, AfterAllCallback, AfterEachCallback {
+public class JestExtension implements BeforeAllCallback, BeforeEachCallback, AfterAllCallback, AfterEachCallback {
 
     public static final Function<TypeScriptWriter, AstTSRenderer> DEFAULT_RENDERER_FUNCTION =
             w -> new AstTSRenderer(w, field -> field.id().code().replace(" ", ""), true);
@@ -66,6 +66,13 @@ public class JestExtension implements BeforeAllCallback, AfterAllCallback, After
     public void beforeAll(ExtensionContext context) {
         jestTestSpec = new JestTestSpec(context.getTestClass().get().getSimpleName());
         jestTestSpec.getTestStates().add("let model = {};");
+    }
+
+    @Override
+    public void beforeEach(ExtensionContext context) {
+        this.result.remove();
+        this.executionContext.remove();
+        this.writer.remove();
     }
 
     @Override

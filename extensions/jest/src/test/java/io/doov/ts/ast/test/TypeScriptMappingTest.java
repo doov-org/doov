@@ -22,6 +22,8 @@ import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -29,6 +31,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import io.doov.assertions.ts.TypeScriptAssertionContext;
 import io.doov.core.dsl.field.types.*;
 import io.doov.core.dsl.lang.Context;
+import io.doov.core.dsl.mapping.TypeConverters;
 import io.doov.core.dsl.runtime.GenericModel;
 import io.doov.ts.ast.writer.DefaultImportSpec;
 import io.doov.tsparser.TypeScriptParser;
@@ -42,6 +45,7 @@ class TypeScriptMappingTest {
     private LocalDateFieldInfo dateField2;
     private StringFieldInfo stringField;
     private StringFieldInfo stringField2;
+    private IterableFieldInfo<String, List<String>> iterField;
     private Context ctx;
     private String ruleTs;
     
@@ -57,6 +61,7 @@ class TypeScriptMappingTest {
         this.dateField2 = model.localDateField(LocalDate.of(2, 2, 2), "dateField2");
         this.stringField = model.stringField("s1", "stringField");
         this.stringField2 = model.stringField("s2", "stringField2");
+        this.iterField = model.iterableField(Arrays.asList("str1", "str2"), "iterField", String.class);
     }
 
     @Test
@@ -229,6 +234,65 @@ class TypeScriptMappingTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
+    @Test
+    void bi_mapping() throws IOException {
+        ctx = map(stringField, booleanField)
+                .using(TypeConverters.biConverter((str, bln) -> {
+                    if (bln.isPresent() && bln.get()) {
+                        return new StringBuilder(str.get()).reverse().toString();
+                    } else {
+                        return str.get();
+                    }
+                }, "invert if true")).to(stringField2)
+                .executeOn(model);
+        ruleTs = jestExtension.toTS(ctx);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("map", "using", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("stringField", "booleanField", "invertIfTrue", "stringField2");
+        assertThat(script).literalsText().isEmpty();
+        assertThat(script).arrayLiteralsText().isEmpty();
+    }
+
+    @Test
+    void nary_mapping() throws IOException {
+        ctx = map(stringField, booleanField, dateField2)
+                .using(TypeConverters.nConverter((model, dslFields) -> {
+                    String s = (String) model.get(dslFields.get(0));
+                    Boolean b = (Boolean) model.get(dslFields.get(1));
+                    LocalDate d = (LocalDate) model.get(dslFields.get(2));
+                    return String.valueOf(d.getDayOfMonth()) + b + s;
+                }, "concat values")).to(stringField2)
+                .executeOn(model);
+        ruleTs = jestExtension.toTS(ctx);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+        System.out.println(ruleTs);
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("mapAll", "using", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("stringField", "booleanField", "dateField2", "concatValues", "stringField2");
+        assertThat(script).literalsText().isEmpty();
+        assertThat(script).arrayLiteralsText().isEmpty();
+    }
+
+
+    @Test
+    void iterable_mapping() throws IOException {
+        ctx = mapIter(Arrays.asList("s1", "s2")).to(iterField)
+                .executeOn(model);
+        ruleTs = jestExtension.toTS(ctx);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+        System.out.println(ruleTs);
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("map", "to");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("iterField");
+        assertThat(script).literalsText().containsExactly("'s1'", "'s2'");
+        assertThat(script).arrayLiteralsText().containsExactly("['s1','s2']");
+    }
+
     @AfterAll
     static void tearDown() {
         jestExtension.getJestTestSpec().getImports().add(newImport("doov", "Function"));
@@ -241,6 +305,22 @@ class TypeScriptMappingTest {
                 "  let d = input.get(obj, ctx);\n" +
                 "  return d ? d.toISOString().substr(0, 10) : null;\n" +
                 "}, 'date to string');");
+        jestExtension.getJestTestSpec().getTestStates().add("const invertIfTrue = DOOV.biConverter((obj, input: " +
+                "Function<string>, input2: Function<boolean>, ctx) => {\n" +
+                "  const str = input.get(obj, ctx);\n" +
+                "  if (input2.get(obj, ctx)) {\n" +
+                "    return str ? str.split('').reverse().join('') : str; \n" +
+                "  } else {\n" +
+                "    return str; \n" +
+                "  }\n" +
+                "});");
+        jestExtension.getJestTestSpec().getTestStates().add("const concatValues = DOOV.naryConverter((obj, inputs, " +
+                "ctx) => {\n" +
+                "  const s = inputs[0].get(obj, ctx) as string;\n" +
+                "  const b = inputs[1].get(obj, ctx) as boolean;\n" +
+                "  const d = inputs[2].get(obj, ctx) as Date;\n" +
+                "  return '' + d.getDate() + b + s;\n" +
+                "});");
         LocalDate date1 = LocalDate.of(1, 1, 1);
         LocalDate date2 = LocalDate.of(2, 2, 2);
         jestExtension.getJestTestSpec().getBeforeEachs().add("model = {stringField: 's1', stringField2: 's2', " +
