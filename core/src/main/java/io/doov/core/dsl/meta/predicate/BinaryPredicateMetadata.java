@@ -70,7 +70,7 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
     }
 
     public static BinaryPredicateMetadata noneMatchMetadata(Metadata metadata, Collection<?> values) {
-        return new BinaryPredicateMetadata(metadata, none_match_values, valueListMetadata(values));
+        return new BinaryPredicateMetadata(metadata, none_match_values, IterableMetadata.noneMatchMetadata(values));
     }
 
     public static BinaryPredicateMetadata equalsMetadata(Metadata metadata, Object value) {
@@ -107,7 +107,7 @@ public class BinaryPredicateMetadata extends BinaryMetadata implements Predicate
     }
 
     public static BinaryPredicateMetadata allMatchMetadata(Metadata metadata, Collection<?> values) {
-        return new BinaryPredicateMetadata(metadata, all_match_values, valueListMetadata(values));
+        return new BinaryPredicateMetadata(metadata, all_match_values, IterableMetadata.allMatchMetadata(values));
     }
 
     public static BinaryPredicateMetadata matchNoneMetadata(Metadata metadata, String... readables) {

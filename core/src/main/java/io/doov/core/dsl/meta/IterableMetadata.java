@@ -1,7 +1,10 @@
 package io.doov.core.dsl.meta;
 
+import static io.doov.core.dsl.meta.DefaultOperator.all_match_values;
 import static io.doov.core.dsl.meta.DefaultOperator.any_match_predicates;
 import static io.doov.core.dsl.meta.DefaultOperator.any_match_values;
+import static io.doov.core.dsl.meta.DefaultOperator.none_match_values;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE_MATCH_ANY;
 import static java.util.stream.Collectors.toList;
 
@@ -24,6 +27,14 @@ public class IterableMetadata<E, T extends Iterable<E>> extends NaryMetadata {
 
     public static <T> IterableMetadata<T, Collection<T>> anyMatchMetadata(Collection<T> values) {
         return new IterableMetadata<>(FIELD_PREDICATE_MATCH_ANY, any_match_values, values);
+    }
+
+    public static <T> IterableMetadata<T, Collection<T>> noneMatchMetadata(Collection<T> values) {
+        return new IterableMetadata<>(FIELD_PREDICATE_MATCH_ANY, none_match_values, values);
+    }
+
+    public static <T> IterableMetadata<T, Collection<T>> allMatchMetadata(Collection<T> values) {
+        return new IterableMetadata<>(FIELD_PREDICATE_MATCH_ANY, all_match_values, values);
     }
 
     public static IterableMetadata<Readable, Collection<Readable>> anyMatchMetadataPredicates(String... readables) {
