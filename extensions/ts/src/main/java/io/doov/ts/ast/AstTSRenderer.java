@@ -186,6 +186,10 @@ public class AstTSRenderer {
             if (classPrefix != null) {
                 return classPrefix + "." + elt.getReadable().readable();
             }
+            // tags are translated to strings
+            if (parentMetadata.left().anyMatch(m -> m.getOperator() == tags)) {
+                return "'" + elt.getReadable().readable() + "'";
+            }
         }
         return elt.getReadable().readable();
     }
@@ -292,10 +296,9 @@ public class AstTSRenderer {
                     } else if (elt.getType() == ElementType.TEMPORAL_UNIT) {
                         // do not write temporal units they are handled as method modifier in #binary
                     } else if (elt.getType() == ElementType.VALUE) {
-                        List<Metadata> parentsList = new ArrayList<>(parents);
-                        if (parentsList.size() > 1) {
+                        if (parents.size() > 1) {
+                            List<Metadata> parentsList = new ArrayList<>(parents);
                             Metadata parentMetadata = parentsList.get(1);
-                            // TODO guess the value type from the parent operator;
                             writer.write(deSerializeValue(elt, metadata, parentMetadata));
                         } else {
                             writer.write(elt.getReadable().readable());
@@ -350,12 +353,21 @@ public class AstTSRenderer {
     }
 
     protected void unary(Metadata metadata, ArrayDeque<Metadata> parents) {
-        Metadata child = metadata.lastChild();
-        toTS(child, parents);
-        writer.write(DOT);
-        writer.write(operatorToMethod(metadata.getOperator()));
-        writer.write(LEFT_PARENTHESIS);
-        writer.write(RIGHT_PARENTHESIS);
+        if (metadata.getOperator() == tags || metadata.getOperator() == position) {
+            writer.writeGlobalDOOV();
+            writer.write(DOT);
+            writer.write(operatorToMethod(metadata.getOperator()));
+            writer.write(LEFT_PARENTHESIS);
+            toTS(metadata.lastChild(), parents);
+            writer.write(RIGHT_PARENTHESIS);
+        } else {
+            Metadata child = metadata.lastChild();
+            toTS(child, parents);
+            writer.write(DOT);
+            writer.write(operatorToMethod(metadata.getOperator()));
+            writer.write(LEFT_PARENTHESIS);
+            writer.write(RIGHT_PARENTHESIS);
+        }
     }
 
     protected void nary(Metadata metadata, ArrayDeque<Metadata> parents) {

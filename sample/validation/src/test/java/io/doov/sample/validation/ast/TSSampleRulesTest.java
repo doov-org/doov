@@ -6,6 +6,8 @@ package io.doov.sample.validation.ast;
 import static io.doov.assertions.ts.Assertions.assertParenthesis;
 import static io.doov.assertions.ts.Assertions.assertThat;
 import static io.doov.core.dsl.meta.i18n.ResourceBundleProvider.BUNDLE;
+import static io.doov.sample.field.dsl.DslSampleModel.accountCompany;
+import static io.doov.sample.field.dsl.DslSampleModel.favoriteSiteName1;
 import static io.doov.sample.validation.SampleRules.*;
 import static io.doov.tsparser.util.TypeScriptParserFactory.parseUsing;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -20,8 +22,10 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.jupiter.api.*;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.DSLBuilder;
 import io.doov.core.dsl.lang.ValidationRule;
+import io.doov.sample.field.SampleTag;
 import io.doov.ts.ast.AstTSRenderer;
 import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
 import io.doov.ts.ast.writer.TypeScriptWriter;
@@ -313,6 +317,34 @@ class TSSampleRulesTest {
         assertThat(script).identifierReferencesText().containsExactly("DOOV", "COMPANY");
         assertThat(script).identifierExpressionsText().containsExactly("Company");
         assertThat(script).literalsText().isEmpty();
+    }
+
+    @Test
+    void tags() throws IOException {
+        rule = DOOV.when(accountCompany.hasTag(SampleTag.ACCOUNT)).validate();
+        this.ruleTs = toTS(rule);
+        assertParenthesis(ruleTs);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+        assertThat(script).errors().hasSize(0);
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("when", "tags", "contains", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("COMPANY");
+        assertThat(script).literalsText().containsExactly("'ACCOUNT'");
+    }
+
+    @Test
+    void position() throws IOException {
+        rule = DOOV.when(favoriteSiteName1.position().eq(1)).validate();
+        this.ruleTs = toTS(rule);
+        assertParenthesis(ruleTs);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+        assertThat(script).errors().hasSize(0);
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("when", "position", "eq", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "DOOV");
+        assertThat(script).identifierExpressionsText().containsExactly("FAVORITE_SITE_NAME_1");
+        assertThat(script).literalsText().containsExactly("1");
     }
 
     private String toTS(DSLBuilder dslBuilder) {
