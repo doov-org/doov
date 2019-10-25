@@ -135,10 +135,6 @@ public class AstTSRenderer {
         return toCamelCase(operator.name());
     }
 
-    protected String descriptionToVariable(String description) {
-        return toCamelCase(description);
-    }
-
     protected String toCamelCase(String operatorName) {
         StringBuilder stringBuilder = new StringBuilder();
         boolean afterUnderScoreOrWhitespace = false;
@@ -322,6 +318,10 @@ public class AstTSRenderer {
         return operatorToMethod(operator);
     }
 
+    protected String importRequest(String reference, Metadata metadata, ArrayDeque<Metadata> parents) {
+        return toCamelCase(reference);
+    }
+
     protected void mappingInput(Metadata metadata, ArrayDeque<Metadata> parents) {
         Metadata converter = metadata.right().findFirst().get();
         Iterator<Metadata> iterator = metadata.left().iterator();
@@ -343,10 +343,9 @@ public class AstTSRenderer {
     protected void typeConverter(Metadata metadata, ArrayDeque<Metadata> parents) {
         if (metadata instanceof LeafMetadata) {
             LeafMetadata leaf = (LeafMetadata) metadata;
-            // TODO handle type converter imports
-            writer.write(descriptionToVariable(String.valueOf(leaf.elements().getLast())));
+            writer.write(importRequest(String.valueOf(leaf.elements().getLast()), metadata, parents));
         } else {
-            writer.write(metadata.readable());
+            writer.write(importRequest(metadata.readable(), metadata, parents));
         }
     }
 
