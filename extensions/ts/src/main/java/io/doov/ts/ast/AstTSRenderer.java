@@ -64,8 +64,10 @@ public class AstTSRenderer {
                     when(metadata, parents);
                     break;
                 case BINARY_PREDICATE:
-                case TEMPLATE_PARAM:
                     binary(metadata, parents);
+                    break;
+                case TEMPLATE_PARAM:
+                    templateParam(metadata, parents);
                     break;
                 case LEAF_PREDICATE:
                 case FIELD_PREDICATE:
@@ -265,6 +267,11 @@ public class AstTSRenderer {
             toTS(right, parents);
             writer.write(RIGHT_PARENTHESIS);
         }
+    }
+
+    private void templateParam(Metadata metadata, ArrayDeque<Metadata> parents) {
+        Metadata fieldMetadata = metadata.right().findFirst().get();
+        toTS(fieldMetadata, parents);
     }
 
     protected FieldSpec fieldSpec(DslField<?> field) {
