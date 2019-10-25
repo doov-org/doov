@@ -5,8 +5,10 @@ package io.doov.ts.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
 import static io.doov.core.dsl.meta.MappingOperator.map;
+import static io.doov.core.dsl.meta.MappingOperator.fields_with_tag;
 import static io.doov.core.dsl.meta.MappingOperator.mappings;
 import static io.doov.core.dsl.meta.MetadataType.MAPPING_INPUT;
+import static io.doov.core.dsl.meta.MetadataType.MAPPING_LEAF;
 import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 import static io.doov.ts.ast.writer.TypeScriptWriter.*;
 import static java.util.Arrays.asList;
@@ -281,6 +283,15 @@ public class AstTSRenderer {
             if (elts.size() == 1 && elts.get(0).getType() == ElementType.OPERATOR) {
                 // This is 'probably' an external function
                 writer.write(importRequest((Operator) elts.get(0).getReadable(), metadata, parents));
+            // map null to tags is a function
+            // TODO clear this hack
+            } else if (elts.size() == 2 && elts.get(0).getReadable() == fields_with_tag) {
+                writer.write(importRequest((Operator) elts.get(0).getReadable(), metadata, parents));
+                writer.write(LEFT_PARENTHESIS);
+                writer.writeQuote();
+                writer.write(elts.get(1).getReadable().readable());
+                writer.writeQuote();
+                writer.write(RIGHT_PARENTHESIS);
             } else {
                 for (Element elt : elts) {
                     if (elt.getType() == ElementType.OPERATOR) {

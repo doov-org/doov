@@ -15,7 +15,7 @@
  */
 package io.doov.core.dsl;
 
-import static io.doov.core.dsl.meta.MappingOperator.map_null_tag;
+import static io.doov.core.dsl.meta.MappingOperator.fields_with_tag;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.falseMetadata;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.trueMetadata;
 import static io.doov.core.dsl.meta.predicate.ValuePredicateMetadata.valueListMetadata;
@@ -36,7 +36,7 @@ import io.doov.core.dsl.lang.*;
 import io.doov.core.dsl.mapping.ConsumerOutput;
 import io.doov.core.dsl.mapping.MappingRegistry;
 import io.doov.core.dsl.mapping.builder.*;
-import io.doov.core.dsl.meta.MappingMetadata;
+import io.doov.core.dsl.meta.*;
 import io.doov.core.dsl.meta.predicate.FieldMetadata;
 import io.doov.core.dsl.meta.predicate.ValuePredicateMetadata;
 import io.doov.core.dsl.template.TemplateParam;
@@ -321,7 +321,7 @@ public class DOOV {
      */
     public static <O> MappingRule mapNull(TagId tag) {
         return new StaticStepMap<>(() -> (O) null).to(new ConsumerOutput<>(
-                        MappingMetadata.outputMetadata(map_null_tag).valueObject(tag), (m, c, v) -> m.clear(tag)));
+                        MappingMetadata.outputMetadata(fields_with_tag).valueObject(tag), (m, c, v) -> m.clear(tag)));
     }
 
     /**

@@ -77,7 +77,7 @@ public class MarkdownEmployeeMappingTest {
         assertThat(node).countListItem().isEqualTo(2);
         assertThat(node).countOrderedList().isEqualTo(0);
         assertThat(node).countText().isEqualTo(2);
-        assertThat(node).textNodes().containsExactly("map 'null'", "to map fields with tag 'ACCOUNT'");
+        assertThat(node).textNodes().containsExactly("map 'null'", "to fields with tag 'ACCOUNT'");
     }
 
     @Test

@@ -26,7 +26,7 @@ public enum MappingOperator implements Operator {
 
     // mappings
     map("map"),
-    map_null_tag("map_null_tag"),
+    fields_with_tag("fields_with_tag"),
     mappings("mappings"),
     conditional_mappings("mappings"),
     to("to"),

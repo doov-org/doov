@@ -144,7 +144,7 @@ public class HtmlEmployeeMappingTest {
         assertThat(doc).unary_UL().hasSize(0);
 
         assertThat(doc).percentageValue_DIV().isEmpty();
-        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "to", "map fields with tag");
+        assertThat(doc).tokenOperator_SPAN().containsExactly("map", "to", "fields with tag");
         assertThat(doc).tokenValue_SPAN().containsExactly("null", "ACCOUNT");
         assertThat(doc).tokenField_SPAN().isEmpty();
         assertThat(doc).tokenNary_SPAN().isEmpty();

@@ -20,8 +20,10 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.jupiter.api.*;
 
 import io.doov.assertions.ts.TypeScriptAssertionContext;
+import io.doov.core.dsl.DOOV;
 import io.doov.core.dsl.lang.DSLBuilder;
 import io.doov.core.dsl.lang.MappingRule;
+import io.doov.sample.field.SampleTag;
 import io.doov.ts.ast.AstTSRenderer;
 import io.doov.ts.ast.writer.DefaultTypeScriptWriter;
 import io.doov.ts.ast.writer.TypeScriptWriter;
@@ -115,6 +117,20 @@ class TSEmployeeMappingTest {
         TypeScriptAssertionContext context = parseAs(ruleTs, TypeScriptParser::script);
         assertThat(context).errors().hasSize(0);
         assertThat(context).numberOfSyntaxErrors().isEqualTo(0);
+    }
+
+    @Test
+    void map_null_tag() throws IOException {
+        rule = DOOV.mapNull(SampleTag.ACCOUNT);
+        ruleTs = toTS(rule);
+        assertParenthesis(ruleTs);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+        assertThat(script).errors().hasSize(0);
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("mapNull");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "fieldsWithTag");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("'ACCOUNT'");
     }
 
     private String toTS(DSLBuilder dslBuilder) {
