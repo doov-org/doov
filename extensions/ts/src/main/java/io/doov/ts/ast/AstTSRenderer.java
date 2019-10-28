@@ -4,11 +4,11 @@
 package io.doov.ts.ast;
 
 import static io.doov.core.dsl.meta.DefaultOperator.*;
-import static io.doov.core.dsl.meta.MappingOperator.map;
 import static io.doov.core.dsl.meta.MappingOperator.fields_with_tag;
+import static io.doov.core.dsl.meta.MappingOperator.map;
 import static io.doov.core.dsl.meta.MappingOperator.mappings;
+import static io.doov.core.dsl.meta.MetadataType.FIELD_PREDICATE;
 import static io.doov.core.dsl.meta.MetadataType.MAPPING_INPUT;
-import static io.doov.core.dsl.meta.MetadataType.MAPPING_LEAF;
 import static io.doov.ts.ast.writer.DefaultImportSpec.newImport;
 import static io.doov.ts.ast.writer.TypeScriptWriter.*;
 import static java.util.Arrays.asList;
@@ -157,7 +157,9 @@ public class AstTSRenderer {
         return stringBuilder.toString();
     }
 
-    protected String deSerializeValue(Element elt, Metadata metadata, Metadata parentMetadata) {
+    protected String deSerializeValue(Element elt, Metadata metadata, ArrayDeque<Metadata> parents) {
+        List<Metadata> parentsList = new ArrayList<>(parents);
+        Metadata parentMetadata = parentsList.get(1);
         if (parentMetadata instanceof TemporalBiFunctionMetadata) {
             if (parentMetadata.getOperator() == age_at) {
                 // Date
@@ -188,6 +190,7 @@ public class AstTSRenderer {
                     .map(f -> f.type().getSimpleName())
                     .orElse(null);
             if (classPrefix != null) {
+                importRequest(classPrefix, metadata, parents);
                 return classPrefix + "." + elt.getReadable().readable();
             }
             // tags are translated to strings
@@ -315,9 +318,7 @@ public class AstTSRenderer {
                         // do not write temporal units they are handled as method modifier in #binary
                     } else if (elt.getType() == ElementType.VALUE) {
                         if (parents.size() > 1) {
-                            List<Metadata> parentsList = new ArrayList<>(parents);
-                            Metadata parentMetadata = parentsList.get(1);
-                            writer.write(deSerializeValue(elt, metadata, parentMetadata));
+                            writer.write(deSerializeValue(elt, metadata, parents));
                         } else {
                             writer.write(elt.getReadable().readable());
                         }
