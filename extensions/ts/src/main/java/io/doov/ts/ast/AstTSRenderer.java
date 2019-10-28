@@ -172,6 +172,7 @@ public class AstTSRenderer {
                 return "new Date('" + elt.getReadable().readable()+"')";
             }
             if (valueClass.isEnum()) {
+                importRequest(valueClass.getSimpleName(), metadata, parents);
                 return valueClass.getSimpleName() + "." + elt.getReadable().readable();
             }
         }
