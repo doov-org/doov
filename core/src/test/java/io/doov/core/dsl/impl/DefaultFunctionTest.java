@@ -162,8 +162,8 @@ public class DefaultFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match all  : value, b, c validate");
-        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match all  : value, b, c");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match all ['value', 'b', 'c'] validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match all ['value', 'b', 'c']");
     }
 
     @Test
@@ -173,8 +173,8 @@ public class DefaultFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match all  : value, b, c validate");
-        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match all  : value, b, c");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match all ['value', 'b', 'c'] validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match all ['value', 'b', 'c']");
     }
 
     @Test
@@ -195,8 +195,8 @@ public class DefaultFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match none  : value, b, c validate");
-        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match none  : value, b, c");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match none ['value', 'b', 'c'] validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match none ['value', 'b', 'c']");
     }
 
     @Test
@@ -206,8 +206,8 @@ public class DefaultFunctionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match none  : value, b, c validate");
-        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match none  : value, b, c");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A match none ['value', 'b', 'c'] validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A match none ['value', 'b', 'c']");
     }
 
     @Test
