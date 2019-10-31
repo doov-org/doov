@@ -172,7 +172,7 @@ public class AstTSRenderer {
                 return "new Date('" + elt.getReadable().readable()+"')";
             }
             if (valueClass.isEnum()) {
-                importRequest(valueClass.getSimpleName(), metadata, parents);
+                importRequest(valueClass, metadata, parents);
                 return valueClass.getSimpleName() + "." + elt.getReadable().readable();
             }
         }
@@ -183,16 +183,15 @@ public class AstTSRenderer {
                     || parentMetadata.getOperator() == as) {
                 return elt.getReadable().readable();
             }
-            String classPrefix = parentMetadata.left().findFirst()
-                    .filter(m -> m.type() == MetadataType.FIELD_PREDICATE)
+            Class<?> type = parentMetadata.left().findFirst()
+                    .filter(m -> m.type() == FIELD_PREDICATE)
                     .map(m -> (FieldMetadata<?>) m)
                     .map(f -> ((FieldInfo) f.field()))
                     .filter(f -> f.type().isEnum())
-                    .map(f -> f.type().getSimpleName())
+                    .map(f -> f.type())
                     .orElse(null);
-            if (classPrefix != null) {
-                importRequest(classPrefix, metadata, parents);
-                return classPrefix + "." + elt.getReadable().readable();
+            if (type != null) {
+                return importRequest(type, metadata, parents) + "." + elt.getReadable().readable();
             }
             // tags are translated to strings
             if (parentMetadata.left().anyMatch(m -> m.getOperator() == tags)) {
@@ -343,6 +342,10 @@ public class AstTSRenderer {
 
     protected String importRequest(String reference, Metadata metadata, ArrayDeque<Metadata> parents) {
         return toCamelCase(reference);
+    }
+
+    protected String importRequest(Class<?> type, Metadata metadata, ArrayDeque<Metadata> parents) {
+        return type.getSimpleName();
     }
 
     protected void mappingInput(Metadata metadata, ArrayDeque<Metadata> parents) {
