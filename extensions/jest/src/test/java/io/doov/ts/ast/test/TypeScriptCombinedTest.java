@@ -170,6 +170,44 @@ class TypeScriptCombinedTest {
         assertThat(script).arrayLiteralsText().isEmpty();
     }
 
+    @Test
+    void substring() throws IOException {
+        result = when(stringField.substring(0, 2).length().greaterOrEquals(2)).validate()
+                .withShortCircuit(false).executeOn(model);
+        ruleTs = jestExtension.toTS(result);
+
+        System.out.println(ruleTs);
+        assertParenthesis(ruleTs);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+
+        assertTrue(result.value());
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("when", "substring", "length", "greaterOrEquals", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "stringfield1");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("0", "2", "2");
+        assertThat(script).arrayLiteralsText().isEmpty();
+    }
+
+    @Test
+    void replaceAll() throws IOException {
+        result = when(stringField.replaceAll("-", "_").length().greaterOrEquals(2)).validate()
+                .withShortCircuit(false).executeOn(model);
+        ruleTs = jestExtension.toTS(result);
+
+        System.out.println(ruleTs);
+        assertParenthesis(ruleTs);
+        TypeScriptAssertionContext script = parseAs(ruleTs, TypeScriptParser::script);
+
+        assertTrue(result.value());
+        assertThat(script).numberOfSyntaxErrors().isEqualTo(0);
+        assertThat(script).identifierNamesText().containsExactly("when", "replaceAll", "length", "greaterOrEquals", "validate");
+        assertThat(script).identifierReferencesText().containsExactly("DOOV", "stringfield1");
+        assertThat(script).identifierExpressionsText().isEmpty();
+        assertThat(script).literalsText().containsExactly("'-'", "'_'", "2");
+        assertThat(script).arrayLiteralsText().isEmpty();
+    }
+
     @AfterAll
     static void tearDown() {
         jestExtension.getJestTestSpec().getImports().add(newImport("doov", "BooleanFunction"));

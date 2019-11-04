@@ -62,8 +62,8 @@ public class IterableConditionTest {
         reduce = result.reduce(FAILURE);
 
         assertFalse(result.value());
-        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A contains  : a, b validate");
-        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A contains  : a, b");
+        assertThat(rule.readable(LOCALE)).isEqualTo("rule when A contains 'a' , 'b' validate");
+        assertThat(result.getFailureCause(LOCALE)).isEqualTo("A contains 'a' , 'b'");
     }
 
     @Test

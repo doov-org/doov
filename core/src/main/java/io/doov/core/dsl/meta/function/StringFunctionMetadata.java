@@ -56,7 +56,7 @@ public class StringFunctionMetadata extends BinaryPredicateMetadata {
     }
 
     public static StringFunctionMetadata replaceAllMetadata(Metadata metadata, String regex, String replacement) {
-        return new StringFunctionMetadata(metadata, replace_all, stringMetadata(regex, replacement));
+        return new StringFunctionMetadata(metadata, replace_all, valueListMetadata(Arrays.asList(regex, replacement)));
     }
 
     public static StringFunctionMetadata replaceAllMetadata(Metadata metadata, Function<String> value,

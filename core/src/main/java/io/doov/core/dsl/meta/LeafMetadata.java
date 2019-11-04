@@ -108,20 +108,30 @@ public abstract class LeafMetadata<M extends LeafMetadata<M>> extends AbstractMe
         return (M) this;
     }
 
+    @Deprecated
     public M valueListReadable(Collection<? extends Readable> readables) {
         return add(readables == null || readables.isEmpty() ? null
                         : new Element(() -> formatListReadable(readables), VALUE));
     }
 
     public M valueListObject(Collection<?> readables) {
-        return add(readables == null || readables.isEmpty() ? null
-                        : new Element(() -> formatListObject(readables), VALUE));
+        Iterator<?> iterator = readables.iterator();
+        while (iterator.hasNext()) {
+            Object next = iterator.next();
+            valueObject(next);
+            if (iterator.hasNext()) {
+                add(new Element(() -> ",", VALUE));
+            }
+        }
+        return (M) this;
     }
 
+    @Deprecated
     private static String formatListReadable(Collection<? extends Readable> readables) {
         return readables.stream().map(Readable::readable).collect(COLLECTOR_LIST);
     }
 
+    @Deprecated
     private static String formatListObject(Collection<?> readables) {
         return readables.stream().map(Object::toString).collect(COLLECTOR_LIST);
     }

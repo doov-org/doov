@@ -102,7 +102,7 @@ class StringConditionTest {
         StringFunction function = B.replaceAll("value", "other");
         String functionValue = function.read(model, new DefaultContext(function.metadata));
 
-        assertThat(function.readable(LOCALE)).isEqualTo("B replace all 'value' 'other'");
+        assertThat(function.readable(LOCALE)).isEqualTo("B replace all 'value' , 'other'");
         assertThat(functionValue).isEqualTo(" other ");
     }
 
@@ -111,7 +111,7 @@ class StringConditionTest {
         StringFunction function = A.substring(1, 3);
         String functionValue = function.read(model, new DefaultContext(function.metadata));
 
-        assertThat(function.readable(LOCALE)).isEqualTo("A substring  : 1, 3");
+        assertThat(function.readable(LOCALE)).isEqualTo("A substring 1 , 3");
         assertThat(functionValue).isEqualTo("al");
     }
 
