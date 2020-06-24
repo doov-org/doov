@@ -6,7 +6,7 @@
 
 dOOv is a fluent API for typesafe domain model validation and mapping. It uses annotations, code generation and a type safe DSL to make domain model validation and mapping fast and easy.
 
-![dOOv logo](docs/png/doov_io_logo_dark_small.png)
+![dOOv logo](docs/svg/doov_logo_2020_blue.svg)
 
 ## Documentation
 
