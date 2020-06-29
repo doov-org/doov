@@ -12,45 +12,33 @@
  */
 package io.doov.sample;
 
-import static com.datastax.driver.core.DataType.text;
-import static com.datastax.driver.core.DataType.timeuuid;
-import static com.datastax.driver.core.schemabuilder.SchemaBuilder.Direction.DESC;
+import static io.doov.sample.CassandraQueryBuilderTest.codecRegistry;
+import static io.doov.sample.CassandraQueryBuilderTest.cqlType;
+import static io.doov.sample.CassandraQueryBuilderTest.registerTypeCodecs;
 import static io.doov.sample.field.SampleFieldId.EMAIL;
 import static io.doov.sample.field.SampleFieldId.LOGIN;
 import static java.util.stream.Collectors.toMap;
 
-import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.CodecRegistry;
-import com.datastax.driver.core.ColumnMetadata;
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.Statement;
-import com.datastax.driver.core.querybuilder.Insert;
-import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.datastax.driver.core.schemabuilder.Create;
-import com.datastax.driver.core.schemabuilder.SchemaBuilder;
-import com.datastax.driver.core.utils.UUIDs;
-import com.datastax.driver.extras.codecs.enums.EnumNameCodec;
-import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
+import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
+import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
+import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
+import com.datastax.oss.driver.api.querybuilder.insert.Insert;
+import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
+import com.datastax.oss.driver.api.querybuilder.schema.CreateTableWithOptions;
+import com.datastax.oss.driver.api.querybuilder.term.Term;
 
-import io.doov.core.FieldId;
-import io.doov.core.FieldInfo;
-import io.doov.core.FieldModel;
+import io.doov.core.*;
 import io.doov.sample.field.SampleTag;
-import io.doov.sample.model.Account;
-import io.doov.sample.model.Company;
-import io.doov.sample.model.Country;
-import io.doov.sample.model.EmailType;
-import io.doov.sample.model.Language;
-import io.doov.sample.model.SampleModel;
-import io.doov.sample.model.SampleModels;
-import io.doov.sample.model.Timezone;
+import io.doov.sample.model.*;
 import io.doov.sample.wrapper.SampleModelWrapper;
 
 /**
@@ -89,7 +77,7 @@ public class LiveCodeCassandraMeetup {
         model.stream().forEach(System.out::println);
 
         Map<FieldId, Object> map = model.stream().filter(e -> Objects.nonNull(e.getValue()))
-                        .collect(toMap(Entry::getKey, Entry::getValue));
+                .collect(toMap(Entry::getKey, Entry::getValue));
         System.out.println(map);
 
         SampleModelWrapper newModel = map.entrySet().stream().collect(SampleModelWrapper.toFieldModel());
@@ -102,86 +90,65 @@ public class LiveCodeCassandraMeetup {
 
         Map<FieldId, Object> map = model.stream().collect(toMap(Entry::getKey, Entry::getValue));
         SampleModelWrapper newModel = map.entrySet().stream()
-                        .filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
-                        // .filter(e -> e.getKey().hasTag(SampleTag.USER))
-                        .collect(SampleModelWrapper.toFieldModel());
+                .filter(e -> e.getKey().hasTag(SampleTag.ACCOUNT))
+                // .filter(e -> e.getKey().hasTag(SampleTag.USER))
+                .collect(SampleModelWrapper.toFieldModel());
 
         newModel.stream().forEach(System.out::println);
     }
 
     static void cqlCreate() {
         FieldModel model = SampleModels.wrapper();
-        Create create = SchemaBuilder.createTable("meetup", "sample_model")
-                        .addPartitionKey(LOGIN.name(), text())
-                        .addClusteringColumn("snapshot_id", timeuuid());
 
-        model.getFieldInfos().stream().filter(f -> f.id() != LOGIN)
-                        .forEach(f -> create.addColumn(f.id().code(), cqlType(f)));
+        CreateTable createTable = SchemaBuilder.createTable("sample", "model")
+                .withPartitionKey("snapshot_id", DataTypes.TIMEUUID)
+                .withClusteringColumn(LOGIN.name(), DataTypes.TEXT);
 
-        Create.Options createWithOptions = create.withOptions().clusteringOrder(LOGIN.name(), DESC);
-        execute(createWithOptions);
+        for (FieldInfo info : model.getFieldInfos().stream()
+                .filter(info -> info.id() != LOGIN)
+                .toArray(FieldInfo[]::new)) {
+            createTable = createTable.withColumn(info.id().code(), cqlType(info));
+        }
+
+        CreateTableWithOptions createTableWithOptions = createTable.withClusteringOrder(LOGIN.name(),
+                ClusteringOrder.DESC);
+
+        execute(createTableWithOptions.build());
     }
 
     static void cqlInsert() {
         FieldModel model = SampleModels.wrapper();
-        Insert insert = QueryBuilder.insertInto("meetup", "sample_model");
-        model.stream().forEach(e -> insert.value(e.getKey().code(), e.getValue()));
-        insert.value("snapshot_id", UUIDs.timeBased());
-        execute(insert);
+
+        Map<String, Term> values = model.stream().collect(Collectors.toMap(
+                e -> e.getKey().code(),
+                e -> QueryBuilder.literal(e.getValue(), codecRegistry())));
+        Insert insertInto = QueryBuilder.insertInto("sample", "model")
+                .value("snapshot_id", QueryBuilder.literal(Uuids.timeBased()))
+                .values(values);
+
+        execute(insertInto.build());
     }
 
     static void cqlAlter() {
         FieldModel model = SampleModels.wrapper();
-        model.getFieldInfos().stream().filter(f -> {
-            ColumnMetadata column = cluster().getMetadata()
-                            .getKeyspace("meetup").getTable("sample_model")
-                            .getColumn(f.id().code());
-            return column == null;
-        }).forEach(f -> execute(SchemaBuilder.alterTable("meetup", "sample_model")
-                        .addColumn(f.id().code()).type(cqlType(f))));
+        try (CqlSession session = CqlSession.builder().build()) {
+            model.getFieldInfos().stream()
+                    .filter(f -> !session.getMetadata()
+                            .getKeyspace("sample").get()
+                            .getTable("model").get()
+                            .getColumn(f.id().code()).isPresent())
+                    .forEach(f -> session.execute(SchemaBuilder.alterTable("sample", "model")
+                            .addColumn(f.id().code(), cqlType(f)).build()));
+        }
     }
 
-    static void execute(Statement statement) {
-        try (Cluster cluster = cluster(); Session session = cluster.connect()) {
+    static void execute(SimpleStatement statement) {
+        try (CqlSession session = session()) {
             session.execute(statement);
         }
     }
 
-    static Cluster cluster() {
-        return new Cluster.Builder().addContactPoint("localhost").withCodecRegistry(codecRegistry()).build();
-    }
-
-    static CodecRegistry codecRegistry() {
-        final CodecRegistry registry = new CodecRegistry();
-        registry.register(LocalDateCodec.instance);
-        registry.register(new EnumNameCodec<>(Country.class));
-        registry.register(new EnumNameCodec<>(EmailType.class));
-        registry.register(new EnumNameCodec<>(Language.class));
-        registry.register(new EnumNameCodec<>(Timezone.class));
-        registry.register(new EnumNameCodec<>(Company.class));
-        return registry;
-    }
-
-    static DataType cqlType(FieldInfo info) {
-        if (String.class.equals(info.type())) {
-            return text();
-        } else if (Boolean.class.equals(info.type()) || Boolean.TYPE.equals(info.type())) {
-            return DataType.cboolean();
-        } else if (Integer.class.equals(info.type()) || Integer.TYPE.equals(info.type())) {
-            return DataType.cint();
-        } else if (Double.class.equals(info.type()) || Double.TYPE.equals(info.type())) {
-            return DataType.cdouble();
-        } else if (Float.class.equals(info.type()) || Float.TYPE.equals(info.type())) {
-            return DataType.cfloat();
-        } else if (Long.class.equals(info.type()) || Long.TYPE.equals(info.type())) {
-            return DataType.cint();
-        } else if (LocalDate.class.equals(info.type())) {
-            return DataType.date();
-        } else if (Enum.class.isAssignableFrom(info.type())) {
-            return DataType.text();
-        } else if (Collection.class.isAssignableFrom(info.type())) {
-            return DataType.set(text());
-        }
-        throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
+    static CqlSession session() {
+        return registerTypeCodecs(CqlSession.builder().build());
     }
 }

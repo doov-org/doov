@@ -15,89 +15,106 @@
  */
 package io.doov.sample;
 
-import static com.datastax.driver.core.DataType.text;
-import static com.datastax.driver.core.DataType.timeuuid;
-import static com.datastax.driver.core.schemabuilder.SchemaBuilder.Direction.DESC;
 import static io.doov.sample.field.SampleFieldId.LOGIN;
-import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Map.Entry;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-import com.datastax.driver.core.CodecRegistry;
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.querybuilder.Insert;
-import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.datastax.driver.core.schemabuilder.Create;
-import com.datastax.driver.core.schemabuilder.Create.Options;
-import com.datastax.driver.core.schemabuilder.SchemaBuilder;
-import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
+import com.datastax.oss.driver.api.core.type.DataType;
+import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
+import com.datastax.oss.driver.api.core.type.codec.registry.MutableCodecRegistry;
+import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
+import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
+import com.datastax.oss.driver.api.querybuilder.insert.Insert;
+import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
+import com.datastax.oss.driver.api.querybuilder.schema.CreateTableWithOptions;
+import com.datastax.oss.driver.api.querybuilder.term.Term;
+import com.datastax.oss.driver.internal.core.type.codec.registry.DefaultCodecRegistry;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.FieldModel;
-import io.doov.sample.model.SampleModels;
+import io.doov.sample.model.*;
 
 public class CassandraQueryBuilderTest {
 
-    private static DataType cqlType(FieldInfo info) {
+    static DataType cqlType(FieldInfo info) {
         if (String.class.equals(info.type())) {
-            return DataType.text();
+            return DataTypes.TEXT;
         } else if (Boolean.class.equals(info.type()) || Boolean.TYPE.equals(info.type())) {
-            return DataType.cboolean();
+            return DataTypes.BOOLEAN;
         } else if (Long.class.equals(info.type()) || Long.TYPE.equals(info.type())) {
-            return DataType.cint();
+            return DataTypes.BIGINT;
         } else if (Double.class.equals(info.type()) || Double.TYPE.equals(info.type())) {
-            return DataType.cint();
+            return DataTypes.DOUBLE;
         } else if (Float.class.equals(info.type()) || Float.TYPE.equals(info.type())) {
-            return DataType.cint();
+            return DataTypes.FLOAT;
         } else if (Integer.class.equals(info.type()) || Integer.TYPE.equals(info.type())) {
-            return DataType.cint();
+            return DataTypes.INT;
         } else if (LocalDate.class.equals(info.type())) {
-            return DataType.date();
+            return DataTypes.DATE;
         } else if (Enum.class.isAssignableFrom(info.type())) {
-            return DataType.set(DataType.text());
+            return DataTypes.TEXT;
         } else if (Collection.class.isAssignableFrom(info.type())) {
-            return DataType.set(DataType.text());
+            return DataTypes.setOf(DataTypes.TEXT);
         }
         throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
     }
 
-    private static CodecRegistry codecRegistry() {
-        CodecRegistry registry = new CodecRegistry();
-        registry.register(LocalDateCodec.instance);
+    static CodecRegistry codecRegistry() {
+        return registerTypeCodecs(new DefaultCodecRegistry("cutomRegistry"));
+    }
+
+    static CqlSession registerTypeCodecs(CqlSession session) {
+        registerTypeCodecs((MutableCodecRegistry) session.getContext().getCodecRegistry());
+        return session;
+    }
+
+    static MutableCodecRegistry registerTypeCodecs(MutableCodecRegistry registry) {
+        registry.register(new EnumNameCodec<>(Country.class));
+        registry.register(new EnumNameCodec<>(EmailType.class));
+        registry.register(new EnumNameCodec<>(Language.class));
+        registry.register(new EnumNameCodec<>(Timezone.class));
+        registry.register(new EnumNameCodec<>(Company.class));
         return registry;
     }
 
     @Test
-    public void simpleCassandraSchema() {
+    void simpleCassandraSchema() {
         FieldModel model = SampleModels.wrapper();
 
-        Create createRequest = SchemaBuilder.createTable("fields_model")
-                .addClusteringColumn(LOGIN.name(), text())
-                .addPartitionKey("snapshot_id", timeuuid());
+        CreateTable createTable = SchemaBuilder.createTable("fields_model")
+                .withPartitionKey("snapshot_id", DataTypes.TIMEUUID)
+                .withClusteringColumn(LOGIN.name(), DataTypes.TEXT);
 
-        model.getFieldInfos().stream()
+        for (FieldInfo info : model.getFieldInfos().stream()
                 .filter(info -> info.id() != LOGIN)
-                .filter(info -> !info.isTransient())
-                .forEach(info -> createRequest.addColumn(info.id().code(), cqlType(info)));
+                .filter(info -> !info.isTransient()).toArray(FieldInfo[]::new)) {
+            createTable = createTable.withColumn(info.id().code(), cqlType(info));
+        }
 
-        Options createRequestWithOptions = createRequest.withOptions().clusteringOrder(LOGIN.name(), DESC);
-        System.out.println(createRequestWithOptions.getQueryString());
+        CreateTableWithOptions createTableWithOptions = createTable.withClusteringOrder(LOGIN.name(),
+                ClusteringOrder.DESC);
+        System.out.println(createTableWithOptions.asCql());
     }
 
     @Test
-    public void simpleCasandraInsert() {
+    void simpleCasandraInsert() {
         FieldModel model = SampleModels.wrapper();
-        Insert insertRequest = QueryBuilder.insertInto("fields_model");
-        insertRequest.value("snapshot_id", UUID.randomUUID());
-        insertRequest.values(
-                model.stream().map(e -> e.getKey().code()).collect(toList()),
-                model.stream().map(Entry::getValue).collect(toList()));
-        System.out.println(insertRequest.getQueryString(codecRegistry()));
+        CodecRegistry codecRegistry = codecRegistry();
+        Map<String, Term> values = model.stream().collect(Collectors.toMap(
+                e -> e.getKey().code(),
+                e -> QueryBuilder.literal(e.getValue(), codecRegistry)));
+        Insert insertRequest = QueryBuilder.insertInto("fields_model")
+                .value("snapshot_id", QueryBuilder.literal(Uuids.timeBased()))
+                .values(values);
+        System.out.println(insertRequest.asCql());
     }
 
 }

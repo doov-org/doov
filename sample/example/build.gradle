@@ -1,6 +1,6 @@
 dependencies {
     compile project(':doov-sample-generated')
     compile group: 'io.doov', name: 'doov-assertions', version: '1.0-SNAPSHOT'
-    compile group: 'com.datastax.cassandra', name: 'cassandra-driver-extras'
-    compile group: 'com.datastax.cassandra', name: 'cassandra-driver-core'
+    compile group: 'com.datastax.oss', name: 'java-driver-core'
+    compile group: 'com.datastax.oss', name: 'java-driver-query-builder'
 }

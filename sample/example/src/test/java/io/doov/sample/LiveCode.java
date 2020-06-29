@@ -12,13 +12,11 @@
  */
 package io.doov.sample;
 
-import static com.datastax.driver.core.DataType.text;
-import static com.datastax.driver.core.DataType.timeuuid;
-import static com.datastax.driver.core.schemabuilder.SchemaBuilder.Direction.DESC;
+import static io.doov.sample.CassandraQueryBuilderTest.codecRegistry;
+import static io.doov.sample.CassandraQueryBuilderTest.cqlType;
 import static io.doov.sample.field.SampleFieldId.*;
 import static java.util.stream.Collectors.toMap;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.*;
@@ -27,13 +25,15 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.datastax.driver.core.CodecRegistry;
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.querybuilder.Insert;
-import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.datastax.driver.core.schemabuilder.Create;
-import com.datastax.driver.core.schemabuilder.SchemaBuilder;
-import com.datastax.driver.extras.codecs.jdk8.LocalDateCodec;
+import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
+import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
+import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
+import com.datastax.oss.driver.api.querybuilder.insert.Insert;
+import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
+import com.datastax.oss.driver.api.querybuilder.schema.CreateTableWithOptions;
+import com.datastax.oss.driver.api.querybuilder.term.Term;
 
 import io.doov.core.*;
 import io.doov.sample.field.SampleTag;
@@ -91,19 +91,29 @@ public class LiveCode {
 
     private static void cqlBuilders() {
         FieldModel model = SampleModels.wrapper();
-        Create create = SchemaBuilder.createTable("Field").addClusteringColumn(LOGIN.name(), text())
-                        .addPartitionKey("snapshot_id", timeuuid());
 
-        model.getFieldInfos().stream().filter(f -> f.id() != LOGIN)
-                        .forEach(f -> create.addColumn(f.id().code(), cqlType(f)));
+        CreateTable createTable = SchemaBuilder.createTable("fields_model")
+                .withPartitionKey("snapshot_id", DataTypes.TIMEUUID)
+                .withClusteringColumn(LOGIN.name(), DataTypes.TEXT);
 
-        Create.Options createWithOptions = create.withOptions().clusteringOrder(LOGIN.name(), DESC);
-        System.out.println(createWithOptions);
-
-        Insert insert = QueryBuilder.insertInto("Field");
-        model.stream().forEach(e -> insert.value(e.getKey().code(), e.getValue()));
-
-        System.out.println(insert.getQueryString(codecRegistry()));
+        for (FieldInfo info : model.getFieldInfos().stream()
+                .filter(info -> info.id() != LOGIN)
+                .filter(info -> !info.isTransient()).toArray(FieldInfo[]::new)) {
+            createTable = createTable.withColumn(info.id().code(), cqlType(info));
+        }
+        CreateTableWithOptions createTableWithOptions = createTable.withClusteringOrder(LOGIN.name(),
+                ClusteringOrder.DESC);
+        
+        System.out.println(createTableWithOptions.asCql());
+        
+        Map<String, Term> values = model.stream().collect(toMap(
+                e -> e.getKey().code(),
+                e -> QueryBuilder.literal(e.getValue(), codecRegistry())));
+        Insert insertRequest = QueryBuilder.insertInto("fields_model")
+                .value("snapshot_id", QueryBuilder.literal(Uuids.timeBased()))
+                .values(values);
+        
+        System.out.println(insertRequest.asCql());
     }
 
     private static void modelDiff() {
@@ -129,34 +139,7 @@ public class LiveCode {
                         .forEach(System.out::println);
     }
 
-    private static CodecRegistry codecRegistry() {
-        final CodecRegistry registry = new CodecRegistry();
-        registry.register(LocalDateCodec.instance);
-        return registry;
-    }
 
-    private static DataType cqlType(FieldInfo info) {
-        if (String.class.equals(info.type())) {
-            return text();
-        } else if (Boolean.class.equals(info.type()) || Boolean.TYPE.equals(info.type())) {
-            return DataType.cboolean();
-        } else if (Integer.class.equals(info.type()) || Integer.TYPE.equals(info.type())) {
-            return DataType.cint();
-        } else if (Double.class.equals(info.type()) || Double.TYPE.equals(info.type())) {
-            return DataType.cdouble();
-        } else if (Float.class.equals(info.type()) || Float.TYPE.equals(info.type())) {
-            return DataType.cfloat();
-        } else if (Long.class.equals(info.type()) || Long.TYPE.equals(info.type())) {
-            return DataType.cint();
-        } else if (LocalDate.class.equals(info.type())) {
-            return DataType.date();
-        } else if (Enum.class.isAssignableFrom(info.type())) {
-            return DataType.set(text());
-        } else if (Collection.class.isAssignableFrom(info.type())) {
-            return DataType.set(text());
-        }
-        throw new IllegalArgumentException("unknown type " + info.type() + " for " + info.id());
-    }
 
     private static Function<Entry<FieldId, Object>, Triple<Object, FieldId, Object>> buildLeft = (entry) -> Triple
                     .of(entry.getValue(), entry.getKey(), null);
