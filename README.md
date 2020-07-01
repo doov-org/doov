@@ -18,13 +18,13 @@ See the [the sample project in dOOv](sample). It contains two model domains, mav
 
 ## Conferences
 
-See our [presentation slides](https://doov.io/conference/dsl_to_go_beyond_bean_validation_jdk_io.html) at JDK.IO.
+See our [presentation slides](https://doov.org/conference/dsl_to_go_beyond_bean_validation_jdk_io.html) at JDK.IO.
 
-See our [presentation slides](https://doov.io/conference/dsl_to_go_beyond_bean_validation_ocode.html) at Oracle Code One.
+See our [presentation slides](https://doov.org/conference/dsl_to_go_beyond_bean_validation_ocode.html) at Oracle Code One.
 
-See our [presentation slides](https://doov.io/conference/implementing_failure_causes_with_doov.html) about the implementation of failure cause at Sorbonne University.
+See our [presentation slides](https://doov.org/conference/implementing_failure_causes_with_doov.html) about the implementation of failure cause at Sorbonne University.
 
-See our [presentation slides](https://doov.io/conference/how_to_create_dsl_with_lambda_builders_roma.html) latest update done at Oracle Code Rome.
+See our [presentation slides](https://doov.org/conference/how_to_create_dsl_with_lambda_builders_roma.html) latest update done at Oracle Code Rome.
 
 ## Usage
 
