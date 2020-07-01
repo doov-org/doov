@@ -93,9 +93,7 @@ public class CassandraQueryBuilderTest {
                 .withPartitionKey("snapshot_id", DataTypes.TIMEUUID)
                 .withClusteringColumn(LOGIN.name(), DataTypes.TEXT);
 
-        for (FieldInfo info : model.getFieldInfos().stream()
-                .filter(info -> info.id() != LOGIN)
-                .filter(info -> !info.isTransient()).toArray(FieldInfo[]::new)) {
+        for (FieldInfo info : model.getFieldInfos()) {
             createTable = createTable.withColumn(info.id().code(), cqlType(info));
         }
 
