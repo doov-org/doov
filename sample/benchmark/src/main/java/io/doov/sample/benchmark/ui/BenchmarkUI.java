@@ -47,7 +47,7 @@ public class BenchmarkUI {
         final TimeSeriesCollection dataSet = new TimeSeriesCollection();
         final TimeSeries series_doov = new TimeSeries("dOOv");
         final TimeSeries series_bareMetal = new TimeSeries("Bare Metal");
-        final TimeSeries series_beanValidation = new TimeSeries("Bean Validation - HV 6.0.7");
+        final TimeSeries series_beanValidation = new TimeSeries("Bean Validation - HV 6.1.5");
         dataSet.addSeries(series_doov);
         dataSet.addSeries(series_bareMetal);
         dataSet.addSeries(series_beanValidation);
