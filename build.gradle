@@ -112,7 +112,7 @@ subprojects {
 
     def pomProject = {
         description = 'dOOv, a fluent API for type-safe domain model validation'
-        url = 'https://www.dOOv.io'
+        url = 'https://www.dOOv.org'
         scm {
             url 'https://github.com/lesfurets/dOOv'
             connection 'scm:git:git://github.com/lesfurets/dOOv.git'
