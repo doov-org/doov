@@ -18,7 +18,9 @@ ext {
     commonmarkVersion = '0.15.1'
     freemarkerVersion = '2.3.30'
     gsonVersion = '2.8.6'
-
-    gradleMavenPluginBuilderVersion = '1.2.1'
-    gradleJmhPluginVersion = '0.4.5'
+    cglibVersion = '3.2.5'
+    slf4jVersion = '1.7.25'
+    
+    gradleMavenPluginBuilderVersion = '1.2.8'
+    gradleJmhPluginVersion = '0.6.5'
 }

@@ -1,8 +1,9 @@
 ext.pomProjectName = 'dOOv JavaScript Extension'
 
 dependencies {
-    compile project(':doov-core')
-    compile group: 'org.webjars', name: 'momentjs', version: '2.10.3'
+    implementation project(':doov-core')
+    implementation group: 'org.webjars', name: 'momentjs', version: '2.10.3'
+    implementation group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
 }
 
 if (isReleaseVersion) {

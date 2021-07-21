@@ -1,18 +1,18 @@
 ext.pomProjectName = 'dOOv Jest TypeScript Extension'
 
 dependencies {
-    compile project(':doov-core')
-    compile project(':doov-ts-extension')
-    compile project(':doov-ts-parser')
-    compile project(':doov-assertions-core')
-    compile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
-    compile group: 'org.freemarker', name: 'freemarker', version: freemarkerVersion
-    compile group: 'com.google.code.gson', name: 'gson', version: gsonVersion
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
+    implementation project(':doov-core')
+    implementation project(':doov-ts-extension')
+    implementation project(':doov-ts-parser')
+    implementation project(':doov-assertions-core')
+    implementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
+    implementation group: 'org.freemarker', name: 'freemarker', version: freemarkerVersion
+    implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
-    testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
-    testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoCoreVersion
-    testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoCoreVersion
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
 }
 
 if (isReleaseVersion) {

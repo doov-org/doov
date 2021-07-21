@@ -10,7 +10,8 @@ buildscript {
 apply plugin: 'io.doov.generator'
 
 dependencies {
-    compile project(':doov-sample-base-without-annotations')
+    implementation group: 'io.doov', name: 'doov-core', version: '1.0-SNAPSHOT'
+    implementation project(':doov-sample-base-without-annotations')
 }
 
 doovCodeGen {

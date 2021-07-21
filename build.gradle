@@ -8,36 +8,14 @@ allprojects {
     version = "1.0-SNAPSHOT"
 }
 
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
-    }
-}
-
 repositories {
     mavenCentral()
 }
 
 apply plugin: VersionsPlugin
-apply plugin: "io.codearte.nexus-staging"
 apply plugin: 'jacoco'
 
-defaultTasks 'verify'
-
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
-
-def userName = project.hasProperty('ossrhUsername') ? project.ossrhUsername : 'userName'
-def password = project.hasProperty('ossrhPassword') ? project.ossrhPassword : 'password'
-
-def repo = project.hasProperty('repository') ? project.repository : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-def snapRepo = project.hasProperty('snapshotRepository') ? project.snapshotRepository : "https://oss.sonatype.org/content/repositories/snapshots/"
-
-ext.isSonaTypeRepository = isReleaseVersion ? repo.startsWith('https://oss.sonatype.org') : snapRepo.startsWith('https://oss.sonatype.org')
 
 subprojects {
 
@@ -47,21 +25,18 @@ subprojects {
 
     apply plugin: 'java'
     apply plugin: 'java-library'
-    apply plugin: 'maven'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'signing'
     apply plugin: 'jacoco'
 
     compileJava {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
+        sourceCompatibility = '11'
+        targetCompatibility = '11'
     }
 
     javadoc {
         source = sourceSets.main.allJava
-        classpath += configurations.compile
-        classpath += configurations.compileOnly
     }
 
     test {
@@ -74,14 +49,6 @@ subprojects {
 
     jacoco {
         toolVersion = "0.8.2"
-    }
-
-    jacocoTestReport {
-        reports {
-            csv.enabled false
-            xml.enabled true
-            html.enabled true
-        }
     }
     
     check.dependsOn(jacocoTestReport)
@@ -128,71 +95,15 @@ subprojects {
         developers {
             developer {
                 name 'Alexandre Dubreuil'
-                email 'alexandre.dubreuil@lesfurets.com'
-                organization 'LesFurets.com'
-                organizationUrl 'https://www.lesfurets.com'
             }
             developer {
                 name 'Gilles DiGuglielmo'
-                email 'gilles.diguglielmo@lesfurets.com'
-                organization 'LesFurets.com'
-                organizationUrl 'https://www.lesfurets.com'
-            }
-            developer {
-                name 'Yohann Fouquer'
-                email 'yohann.fouquer@lesfurets.com'
-                organization 'LesFurets.com'
-                organizationUrl 'https://www.lesfurets.com'
             }
             developer {
                 name 'Ozan Gunalp'
-                email 'ozan.gunalp@lesfurets.com'
-                organization 'LesFurets.com'
-                organizationUrl 'https://www.lesfurets.com'
             }
         }
     }
-
-    install {
-        repositories {
-            mavenInstaller {
-                pom.project pomProject
-                pom.whenConfigured { pom ->
-                    pom.project {
-                        name = pomProjectName
-                    }
-                }
-            }
-        }
-    }
-
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                repository(url: repo) {
-                    authentication(userName: userName, password: password)
-                }
-
-                snapshotRepository(url: snapRepo) {
-                    authentication(userName: userName, password: password)
-                }
-                pom.project pomProject
-                pom.whenConfigured { pom ->
-                    pom.project {
-                        name = pomProjectName
-                    }
-                }
-            }
-        }
-    }
-
-    task verify(dependsOn: build)
-    task deploy(dependsOn: [build, uploadArchives, project.rootProject.closeAndReleaseRepository])
-    project.rootProject.closeRepository.dependsOn(uploadArchives)
-    project.rootProject.releaseRepository.dependsOn(uploadArchives)
-
 }
 
 task codeCoverageReport(type: JacocoReport) {
@@ -203,10 +114,8 @@ task codeCoverageReport(type: JacocoReport) {
     }
 
     reports {
-        xml.enabled true
         xml.destination file("$buildDir/reports/jacoco/codeCoverageReport/jacocoCoverageReport.xml")
-        csv.enabled false
-        html.enabled true
+        html.destination file("$buildDir/reports/jacoco/codeCoverageReport/html")
     }
 }
 
@@ -215,29 +124,6 @@ codeCoverageReport.dependsOn {
 }
 
 wrapper {
-    gradleVersion = '4.10.2'
+    gradleVersion = '6.8.1'
     distributionType = Wrapper.DistributionType.ALL
 }
-
-nexusStaging {
-    delayBetweenRetriesInMillis = 5000
-    numberOfRetries = 50
-}
-
-// Deploy tasks
-closeRepository.enabled = isReleaseVersion && isSonaTypeRepository
-releaseRepository.enabled = isReleaseVersion && isSonaTypeRepository
-
-// Release commits and tag
-task commitRelease(type: GitCommitTask, dependsOn: writeVersion)
-commitRelease.mustRunAfter(subprojects.deploy)
-task tagVersion(type: GitTagTask, dependsOn: commitRelease)
-task writeDevVersion(type: SetVersionTask, dependsOn: [tagVersion, subprojects.deploy]) {
-    newVersion = "1.0-SNAPSHOT"
-}
-task commitDevVersion(type: GitCommitTask, dependsOn: writeDevVersion) {
-    message = "[release] Revert versions to SNAPSHOT"
-}
-task pushRelease(type: GitPushTask, dependsOn: commitDevVersion)
-
-task release(dependsOn: pushRelease)
