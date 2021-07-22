@@ -1,9 +1,8 @@
 ext.pomProjectName = 'dOOv Assertions'
 
 dependencies {
-    implementation project(':doov-core')
-    implementation group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
-    implementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+    api project(':doov-core')
+    api group: 'org.assertj', name: 'assertj-core', version: assertjVersion
 }
 
 if (isReleaseVersion) {

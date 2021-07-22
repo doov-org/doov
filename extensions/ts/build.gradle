@@ -1,15 +1,10 @@
 ext.pomProjectName = 'dOOv Typescript Extension'
 
 dependencies {
-    implementation project(':doov-core')
+    api project(':doov-core')
     testImplementation project(':doov-ts-parser')
     testImplementation project(':doov-assertions-core')
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
     testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoCoreVersion
-    testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
 }
 
 if (isReleaseVersion) {

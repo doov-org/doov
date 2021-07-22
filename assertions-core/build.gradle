@@ -1,10 +1,10 @@
 ext.pomProjectName = 'dOOv Assertions Core'
 
 dependencies {
-    implementation project(':doov-ts-parser')
-    implementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
-  	implementation group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
-    implementation group: 'com.atlassian.commonmark', name: 'commonmark', version: commonmarkVersion
+    api project(':doov-ts-parser')
+    api group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+  	api group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
+    api group: 'com.atlassian.commonmark', name: 'commonmark', version: commonmarkVersion
 }
 
 if (isReleaseVersion) {

@@ -1,16 +1,9 @@
 ext.pomProjectName = 'dOOv Core'
 
 dependencies {
-    implementation group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
-    implementation group: 'javax.annotation', name: 'javax.annotation-api', version: javaxAnnotationVersion
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
-    testImplementation group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
-    testImplementation group: 'com.atlassian.commonmark', name: 'commonmark', version: commonmarkVersion
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+    api group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
+    api group: 'javax.annotation', name: 'javax.annotation-api', version: javaxAnnotationVersion
     testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoCoreVersion
-    testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
     testImplementation project(':doov-assertions-core')
 }
 

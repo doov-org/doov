@@ -12,13 +12,9 @@ buildscript {
 apply plugin: "me.champeau.jmh"
 
 dependencies {
-    implementation project(':doov-sample-base')
-    implementation project(':doov-sample-generated')
-    implementation project(':doov-sample-example')
-    implementation group: 'io.doov', name: 'doov-core'
-    implementation group: 'io.doov', name: 'doov-assertions'
-    implementation group: 'javax.validation', name: 'validation-api'
-    implementation group: 'org.assertj', name: 'assertj-core'
+    api project(':doov-sample-generated')
+    api project(':doov-sample-example')
+    api group: 'io.doov', name: 'doov-assertions'
     implementation group: 'org.openjdk.jmh', name: 'jmh-core'
     implementation group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess'
     implementation (group: 'org.jfree', name: 'jfreechart') {

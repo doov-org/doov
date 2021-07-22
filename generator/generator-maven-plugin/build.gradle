@@ -16,13 +16,9 @@ archivesBaseName = 'doov-generator'
 ext.pomProjectName = 'dOOv Generator Maven Plugin'
 
 dependencies {
-    implementation project(':doov-core')
-    implementation project(':doov-generator-core')
-    implementation group: 'cglib', name: 'cglib', version: cglibVersion
-    implementation group: 'com.google.guava', name: 'guava', version: guavaVersion
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-    implementation group:'org.apache.maven', name: 'maven-plugin-api', version: mavenPluginApiVersion
-    implementation group:'org.apache.maven', name: 'maven-core', version: mavenPluginApiVersion
+    api project(':doov-generator-core')
+    api group:'org.apache.maven', name: 'maven-plugin-api', version: mavenPluginApiVersion
+    api group:'org.apache.maven', name: 'maven-core', version: mavenPluginApiVersion
     compileOnly group:'org.apache.maven.plugin-tools', name:'maven-plugin-annotations', version: mavenPluginAnnotationsVersion
 }
 

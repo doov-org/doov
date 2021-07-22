@@ -5,11 +5,10 @@ plugins {
 ext.pomProjectName = 'dOOv Generator Core'
 
 dependencies {
-    implementation group: 'cglib', name: 'cglib', version: cglibVersion
-    implementation group: 'com.google.guava', name: 'guava', version: guavaVersion
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-    implementation project(':doov-core')
-    implementation project(':doov-generator-core')
+    api group: 'cglib', name: 'cglib', version: cglibVersion
+    api group: 'com.google.guava', name: 'guava', version: guavaVersion
+    api group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+    api project(':doov-generator-core')
 }
 
 gradlePlugin {

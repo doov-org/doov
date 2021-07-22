@@ -30,6 +30,13 @@ subprojects {
     apply plugin: 'signing'
     apply plugin: 'jacoco'
 
+    dependencies {
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
+        testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
+        testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
+    }
+
     compileJava {
         sourceCompatibility = '11'
         targetCompatibility = '11'

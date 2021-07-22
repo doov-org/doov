@@ -1,13 +1,11 @@
 ext.pomProjectName = 'dOOv Generator Core'
 
 dependencies {
-    implementation project(':doov-core')
-    implementation group: 'cglib', name: 'cglib', version: cglibVersion
-    implementation group: 'com.google.guava', name: 'guava', version: guavaVersion
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+    api project(':doov-core')
+    api group: 'cglib', name: 'cglib', version: cglibVersion
+    api group: 'com.google.guava', name: 'guava', version: guavaVersion
+    api group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+   testImplementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
 }
 
 if (isReleaseVersion) {

@@ -1,4 +1,4 @@
 dependencies {
-    implementation group: 'io.doov', name: 'doov-core'
-    implementation group: 'javax.validation', name: 'validation-api'
+    api group: 'io.doov', name: 'doov-core'
+    api group: 'javax.validation', name: 'validation-api'
 }
