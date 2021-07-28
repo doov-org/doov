@@ -44,6 +44,8 @@ subprojects {
 
     javadoc {
         source = sourceSets.main.allJava
+        // options.outputLevel = 'QUIET'
+        options.addStringOption('Xdoclint:none', '-quiet')
     }
 
     test {

@@ -4,7 +4,7 @@ dependencies {
     api project(':doov-ts-parser')
     api group: 'org.assertj', name: 'assertj-core', version: assertjVersion
   	api group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
-    api group: 'com.atlassian.commonmark', name: 'commonmark', version: commonmarkVersion
+    api group: 'org.commonmark', name: 'commonmark', version: commonmarkVersion
 }
 
 if (isReleaseVersion) {

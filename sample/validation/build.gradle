@@ -1,14 +1,8 @@
 dependencies {
-    implementation project(':doov-sample-base')
-    implementation project(':doov-sample-generated')
-    implementation group: 'io.doov', name: 'doov-core'
-    implementation group: 'io.doov', name: 'doov-js-extension'
-    testImplementation group: 'io.doov', name: 'doov-ts-extension'
-    implementation group: 'commons-io', name:'commons-io'
-    implementation group: 'org.webjars', name: 'momentjs', version: '2.10.3'
+    api project(':doov-sample-generated')
+    api group: 'io.doov', name: 'doov-ts-extension'
+    api group: 'commons-io', name:'commons-io'
     testImplementation group: 'io.doov', name: 'doov-assertions'
     testImplementation group: 'io.doov', name: 'doov-assertions-core'
     testImplementation group: 'io.doov', name: 'doov-ts-parser'
-    testImplementation group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
-    testImplementation group: 'com.atlassian.commonmark', name: 'commonmark', version: commonmarkVersion
 }
