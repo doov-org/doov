@@ -3,15 +3,19 @@
  */
 package io.doov.ts.ast.test;
 
-import static java.util.stream.Collectors.toList;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
 import freemarker.cache.ClassTemplateLoader;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 public class JestTemplate {
 

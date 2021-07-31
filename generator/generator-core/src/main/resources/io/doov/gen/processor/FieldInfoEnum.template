@@ -6,7 +6,7 @@ import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 
 import io.doov.core.FieldInfo;
 import io.doov.core.dsl.field.DelegatingFieldInfo;

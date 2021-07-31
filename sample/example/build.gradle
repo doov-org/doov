@@ -1,6 +1,8 @@
 dependencies {
-    compile project(':doov-sample-generated')
-    compile group: 'io.doov', name: 'doov-assertions', version: '1.0-SNAPSHOT'
-    compile group: 'com.datastax.oss', name: 'java-driver-core'
-    compile group: 'com.datastax.oss', name: 'java-driver-query-builder'
+    // api project(':doov-sample-base')
+    api project(':doov-sample-generated')
+    // api group: 'io.doov', name: 'doov-core', version: '1.0-SNAPSHOT'
+    api group: 'io.doov', name: 'doov-assertions', version: '1.0-SNAPSHOT'
+    api group: 'com.datastax.oss', name: 'java-driver-core'
+    api group: 'com.datastax.oss', name: 'java-driver-query-builder'
 }

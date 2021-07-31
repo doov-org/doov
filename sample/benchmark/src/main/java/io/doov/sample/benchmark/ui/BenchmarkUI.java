@@ -15,6 +15,7 @@
  */
 package io.doov.sample.benchmark.ui;
 
+import static io.doov.sample.field.dsl.DslSampleModel.*;
 import static org.jfree.chart.ChartFactory.createTimeSeriesChart;
 
 import java.awt.BorderLayout;
@@ -27,8 +28,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import javax.validation.Validation;
-import javax.validation.Validator;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.data.time.Second;
@@ -40,6 +39,8 @@ import io.doov.sample.benchmark.BenchmarkRule;
 import io.doov.sample.model.SampleModel;
 import io.doov.sample.model.SampleModels;
 import io.doov.sample.validation.RulesOld;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 
 public class BenchmarkUI {
 
@@ -47,7 +48,7 @@ public class BenchmarkUI {
         final TimeSeriesCollection dataSet = new TimeSeriesCollection();
         final TimeSeries series_doov = new TimeSeries("dOOv");
         final TimeSeries series_bareMetal = new TimeSeries("Bare Metal");
-        final TimeSeries series_beanValidation = new TimeSeries("Bean Validation - HV 6.1.5");
+        final TimeSeries series_beanValidation = new TimeSeries("Hibernate Validator - 7.0.1");
         dataSet.addSeries(series_doov);
         dataSet.addSeries(series_bareMetal);
         dataSet.addSeries(series_beanValidation);

@@ -87,8 +87,6 @@ public class ModelMapGenTask extends DefaultTask {
     private final Property<Boolean> dslEntrypointMethods;
 
     public ModelMapGenTask() {
-        this.outputDirectory = getProject().getObjects().property(File.class);
-        this.outputResourceDirectory = getProject().getObjects().property(File.class);
         this.sourceClassProperty = getProject().getObjects().property(String.class);
         this.fieldClassProperty = getProject().getObjects().property(String.class);
         this.packageFilter = getProject().getObjects().property(String.class);
@@ -101,6 +99,8 @@ public class ModelMapGenTask extends DefaultTask {
         this.fieldInfoPackage = getProject().getObjects().property(String.class);
         this.dslModelPackage = getProject().getObjects().property(String.class);
         this.dslEntrypointMethods = getProject().getObjects().property(Boolean.class);
+        this.outputDirectory = getProject().getObjects().property(File.class);
+        this.outputResourceDirectory = getProject().getObjects().property(File.class);
     }
 
     @Classpath

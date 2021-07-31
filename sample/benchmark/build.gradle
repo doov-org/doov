@@ -5,28 +5,25 @@ buildscript {
         }
     }
     dependencies {
-        classpath "me.champeau.gradle:jmh-gradle-plugin:${gradleJmhPluginVersion}"
+        classpath "me.champeau.jmh:jmh-gradle-plugin:${gradleJmhPluginVersion}"
     }
 }
 
-apply plugin: "me.champeau.gradle.jmh"
+apply plugin: "me.champeau.jmh"
 
 dependencies {
-    compile project(':doov-sample-generated')
-    compile project(':doov-sample-example')
-    compile group: 'io.doov', name: 'doov-core'
-    compile group: 'io.doov', name: 'doov-assertions'
-    compile group: 'org.openjdk.jmh', name: 'jmh-core'
-    compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess'
-    compile(group: 'org.jfree', name: 'jfreechart') {
+    api project(':doov-sample-generated')
+    api project(':doov-sample-example')
+    api group: 'io.doov', name: 'doov-assertions'
+    implementation group: 'org.openjdk.jmh', name: 'jmh-core'
+    implementation group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess'
+    implementation (group: 'org.jfree', name: 'jfreechart') {
         exclude group: 'javax.servlet', module: 'servlet-api'
         exclude group: 'junit', module: 'junit'
     }
-    runtime group: 'org.glassfish.web', name: 'javax.el'
-    runtime group: 'javax.el', name: 'javax.el-api'
-    runtime group: 'org.hibernate.validator', name: 'hibernate-validator'
-    jmh group: 'org.openjdk.jmh', name: 'jmh-core', version: jmhVersion
-    jmh group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: jmhVersion
+    api group: 'org.hibernate.validator', name: 'hibernate-validator'
+    api group: 'org.hibernate.validator', name: 'hibernate-validator-cdi'
+    api group: 'org.glassfish', name: 'jakarta.el'
 }
 
 task copyEmptyBmList(type: Copy) {

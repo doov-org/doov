@@ -3,7 +3,7 @@ package ${package.name};
 import static io.doov.core.dsl.DOOV.fieldInPosition;
 import static ${process.field.info.class}.*;
 
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 
 import java.util.stream.Stream;
 

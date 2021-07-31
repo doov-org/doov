@@ -1,4 +1,4 @@
 dependencies {
-    compile group: 'io.doov', name: 'doov-core'
-    compile group: 'javax.validation', name: 'validation-api'
+    api group: 'io.doov', name: 'doov-core'
+    api group: 'org.hibernate.validator', name: 'hibernate-validator'
 }

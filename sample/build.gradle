@@ -13,41 +13,40 @@ subprojects {
 
     apply plugin: 'java'
     apply plugin: 'java-library'
-    apply plugin: 'maven'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'jacoco'
 
     dependencies {
         constraints {
-            compile group: 'io.doov', name: 'doov-core', version: '1.0-SNAPSHOT'
-            compile group: 'io.doov', name: 'doov-assertions', version: '1.0-SNAPSHOT'
-            compile group: 'io.doov', name: 'doov-assertions-core', version: '1.0-SNAPSHOT'
-            compile group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
-            compile group: 'com.datastax.oss', name: 'java-driver-core', version: '4.7.2'
-            compile group: 'com.datastax.oss', name: 'java-driver-query-builder', version: '4.7.2'
-            compile group: 'commons-io', name:'commons-io', version: commonsIoVersion
-            compile group: 'org.openjdk.jmh', name: 'jmh-core', version: jmhVersion
-            compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: jmhVersion
-            compile group: 'org.jfree', name: 'jfreechart', version: jfreechartVersion
+            api group: 'io.doov', name: 'doov-core', version: '1.0-SNAPSHOT'
+            api group: 'io.doov', name: 'doov-assertions', version: '1.0-SNAPSHOT'
+            api group: 'io.doov', name: 'doov-assertions-core', version: '1.0-SNAPSHOT'
+            api group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+            api group: 'com.datastax.oss', name: 'java-driver-core', version: '4.7.2'
+            api group: 'com.datastax.oss', name: 'java-driver-query-builder', version: '4.7.2'
+            api group: 'commons-io', name:'commons-io', version: commonsIoVersion
+            api group: 'org.openjdk.jmh', name: 'jmh-core', version: jmhVersion
+            api group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: jmhVersion
+            api group: 'org.jfree', name: 'jfreechart', version: jfreechartVersion
 
-            runtime group: 'org.glassfish.web', name: 'javax.el', version: javaxElVersion
-            runtime group: 'javax.el', name: 'javax.el-api', version: javaxElApiVersion
-            runtime group: 'org.hibernate.validator', name: 'hibernate-validator', version: hibernateValidatorVersion
+            api group: 'org.hibernate.validator', name: 'hibernate-validator', version: hibernateValidatorVersion
+            api group: 'org.hibernate.validator', name: 'hibernate-validator-cdi', version: hibernateValidatorCdiVersion
+            api group: 'org.glassfish', name: 'jakarta.el', version: jakartaElVersion
         }
-        compile group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
-        compile group: 'com.google.guava', name: 'guava', version: guavaVersion
+        api group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
+        api group: 'com.google.guava', name: 'guava', version: guavaVersion
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
-        testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
         testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
-        testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
-        testCompile group: 'org.mockito', name: 'mockito-core', version: mockitoCoreVersion
-        testCompile group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
+        testImplementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+        testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoCoreVersion
+        testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: junitPlatformLauncherVersion
     }
 
     compileJava {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
+        sourceCompatibility = '11'
+        targetCompatibility = '11'
     }
 
     tasks.withType(JavaCompile) {
@@ -64,14 +63,13 @@ subprojects {
     }
 
     jacoco {
-        toolVersion = "0.8.2"
+        toolVersion = "0.8.7"
     }
 
     jacocoTestReport {
         reports {
-            csv.enabled false
-            xml.enabled true
-            html.enabled true
+            xml
+            html
         }
     }
 
@@ -79,6 +77,6 @@ subprojects {
 }
 
 wrapper {
-    gradleVersion = '4.10.2'
+    gradleVersion = '6.8.1'
     distributionType = Wrapper.DistributionType.ALL
 }

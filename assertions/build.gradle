@@ -1,8 +1,8 @@
 ext.pomProjectName = 'dOOv Assertions'
 
 dependencies {
-    compile project(':doov-core')
-    compile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+    api project(':doov-core')
+    api group: 'org.assertj', name: 'assertj-core', version: assertjVersion
 }
 
 if (isReleaseVersion) {
