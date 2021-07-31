@@ -21,9 +21,9 @@ dependencies {
         exclude group: 'javax.servlet', module: 'servlet-api'
         exclude group: 'junit', module: 'junit'
     }
-    runtimeOnly group: 'org.glassfish.web', name: 'javax.el'
-    runtimeOnly group: 'javax.el', name: 'javax.el-api'
-    runtimeOnly group: 'org.hibernate.validator', name: 'hibernate-validator'
+    api group: 'org.hibernate.validator', name: 'hibernate-validator'
+    api group: 'org.hibernate.validator', name: 'hibernate-validator-cdi'
+    api group: 'org.glassfish', name: 'jakarta.el'
 }
 
 task copyEmptyBmList(type: Copy) {

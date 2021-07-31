@@ -17,10 +17,10 @@ package io.doov.sample.model;
 
 import java.time.LocalDate;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 
 import io.doov.sample.field.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 
 public class User extends Identity {
 

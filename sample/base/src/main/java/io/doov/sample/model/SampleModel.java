@@ -12,7 +12,7 @@
  */
 package io.doov.sample.model;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 public class SampleModel {
 

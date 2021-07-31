@@ -2,7 +2,7 @@ ext.pomProjectName = 'dOOv Core'
 
 dependencies {
     api group: 'org.apache.commons', name: 'commons-text', version: commonsTextVersion
-    api group: 'javax.annotation', name: 'javax.annotation-api', version: javaxAnnotationVersion
+    api group: 'org.hibernate.validator', name: 'hibernate-validator', version: hibernateValidatorVersion
     testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoCoreVersion
     testImplementation project(':doov-assertions-core')
 }

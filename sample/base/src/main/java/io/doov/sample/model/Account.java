@@ -13,15 +13,17 @@
 package io.doov.sample.model;
 
 import java.time.LocalDate;
-import java.util.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 import io.doov.core.FieldTransient;
 import io.doov.sample.field.SampleFieldId;
 import io.doov.sample.field.SamplePath;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class Account extends Identity {
 
