@@ -14,6 +14,11 @@ dependencies {
     api project(':doov-sample-base-without-annotations')
 }
 
+task cleanOutputDirectories(type: Delete) {
+  delete "$buildDir/doov/doovMapGenSample"
+  delete "$buildDir/doov/doovMapGenSample2"
+}
+
 doovCodeGen {
     doovMapGenSample {
         packageFilter = 'io.doov.sample'
